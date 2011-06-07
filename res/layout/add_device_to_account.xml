@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2008 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:fadingEdge="horizontal|vertical" 
+	android:scrollbars="vertical" android:background="@drawable/border" 
+	android:layout_height="wrap_content" 
+	android:layout_width="fill_parent" android:padding="0px" android:layout_margin="10px" android:layout_gravity="center_vertical">
+
+	
+	<!-- Data entry layout -->
+	<ScrollView android:id="@+id/ScrollView01" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_margin="0px">
+	
+	
+	
+	<LinearLayout android:layout_height="wrap_content"
+		android:id="@+id/LinearLayoutData"
+		android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_gravity="top|center_horizontal">
+		
+	<!-- Title Layout -->
+	<LinearLayout android:layout_height="wrap_content"
+		android:id="@+id/LinearLayoutTitle" android:layout_width="fill_parent">
+		<ImageView android:id="@+id/ImageView01"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:background="@drawable/logo"
+			android:paddingTop="5px" android:layout_marginTop="10px" android:layout_marginLeft="10px"></ImageView>
+		<TextView android:id="@+id/TextView01" android:layout_height="fill_parent"
+			android:layout_width="fill_parent" android:text="@string/set_old_user_dialog_title"
+			android:paddingRight="10px" android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center_vertical" android:paddingLeft="10px"></TextView>
+	</LinearLayout>
+		
+	<View android:id="@+id/divider"
+    android:background="@drawable/gradient_line"
+    android:layout_width="fill_parent"
+    android:layout_height="1dp" android:layout_marginTop="10px" android:layout_marginLeft="15dp" android:layout_marginRight="15dp"/>
+    
+
+    <TextView 
+        android:id="@+id/email_label"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:text="@string/set_old_user_dialog_email"
+        android:gravity="left"
+        android:textAppearance="?android:attr/textAppearanceMedium" android:paddingTop="10px"/>
+            
+    <EditText
+        android:id="@+id/set_old_user_dialog_email_edit"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:scrollHorizontally="true"
+        android:autoText="false"
+        android:capitalize="none"
+        android:gravity="fill_horizontal"
+        android:textAppearance="?android:attr/textAppearanceMedium" 
+        android:inputType="textEmailAddress"  android:lines="1" android:imeOptions="actionNext|flagNoAccessoryAction|flagNoEnterAction"/>
+
+    <TextView
+        android:id="@+id/password_view"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:text="@string/set_old_user_dialog_password"
+        android:gravity="left"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+            
+    <EditText
+        android:id="@+id/set_old_user_dialog_password_edit"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:scrollHorizontally="true"
+        android:gravity="fill_horizontal"
+        android:textAppearance="?android:attr/textAppearanceMedium" android:lines="1" android:inputType="textPassword" android:imeOptions="actionDone" android:layout_marginLeft="20dip" android:layout_marginBottom="15dip" android:layout_marginRight="20dip"/>
+     
+     <!-- Button Layout -->
+	<TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_gravity="center_horizontal" android:gravity="center_horizontal" android:layout_marginBottom="15dip" android:layout_marginLeft="20dip" android:layout_marginRight="20dip" android:id="@+id/add_device_info_text" android:text="@string/add_device_info_text"></TextView><LinearLayout android:layout_height="wrap_content"
+		android:id="@+id/LinearLayoutButtons" android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:background="#CCC" android:gravity="center_vertical|center_horizontal|center" android:paddingTop="4px" android:paddingBottom="1px" android:layout_marginLeft="3px" android:layout_marginRight="3px" android:layout_marginBottom="3px">
+		<Button android:text="@string/set_old_user_dialog_create"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_gravity="center_horizontal"
+			android:id="@+id/ButtonAddAccount" android:gravity="center_vertical|center_horizontal|center"></Button>
+	</LinearLayout>
+     
+     
+</LinearLayout>
+     </ScrollView>
+</LinearLayout>

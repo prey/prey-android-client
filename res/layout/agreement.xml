@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!--
+		Copyright (C) 2008 The Android Open Source Project Licensed under the
+		Apache License, Version 2.0 (the "License"); you may not use this file
+		except in compliance with the License. You may obtain a copy of the
+		License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
+		by applicable law or agreed to in writing, software distributed under
+		the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:fadingEdge="horizontal|vertical" 
+	android:scrollbars="vertical" android:background="@drawable/border" 
+	android:layout_height="wrap_content" 
+	android:layout_gravity="center_horizontal|center_vertical" android:layout_width="280px" android:padding="0px" android:layout_marginTop="10px" android:layout_marginBottom="10px">
+
+	
+	<!-- Data entry layout -->
+	<ScrollView android:id="@+id/ScrollView01" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_margin="0px">
+	
+	
+	
+	<LinearLayout android:layout_height="wrap_content"
+		android:id="@+id/LinearLayoutData"
+		android:orientation="vertical"
+		android:layout_width="fill_parent">
+		
+	<!-- Title Layout -->
+	<LinearLayout android:layout_height="wrap_content"
+		android:id="@+id/LinearLayoutTitle" android:layout_width="fill_parent">
+		<ImageView android:id="@+id/ImageView01"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:background="@drawable/logo"
+			android:paddingTop="5px" android:layout_marginTop="10px" android:layout_marginLeft="10px"></ImageView>
+		<TextView android:id="@+id/TextView01" android:layout_height="fill_parent"
+			android:layout_width="fill_parent" android:paddingRight="10px" android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center_vertical" android:paddingLeft="10px" android:text="@string/agreements_title"></TextView>
+	</LinearLayout>
+		
+	<View android:id="@+id/divider"
+    android:background="@drawable/gradient_line"
+    android:layout_width="fill_parent"
+    android:layout_height="1dp" android:layout_marginTop="10px" android:layout_marginLeft="15dp" android:layout_marginRight="15dp"/>
+    
+	<TextView android:id="@+id/username_label" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:layout_marginLeft="20dip"
+		android:layout_marginRight="20dip" android:paddingTop="10px" android:text="@string/agreements_message1" android:gravity="center_horizontal" android:paddingBottom="20px"/>
+	
+	
+		
+	
+
+	
+
+	
+
+	
+
+	
+	
+		<!-- Button Layout -->
+	<LinearLayout android:id="@+id/LinearLayout01" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_gravity="center_vertical|center_horizontal" android:gravity="center_vertical|center_horizontal" android:layout_width="fill_parent" android:layout_marginBottom="15dip">
+		<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" 
+			android:layout_gravity="center_vertical|center_horizontal" 
+			android:clickable="false" 
+			android:gravity="center_vertical" android:text="@string/agreements_message2" android:id="@+id/linkToTosText"/>
+			
+		
+	</LinearLayout>
+	<LinearLayout android:layout_height="wrap_content"
+		android:id="@+id/LinearLayoutButtons" android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:background="#CCC" android:gravity="center_vertical|center_horizontal|center" android:paddingTop="4px" android:paddingBottom="1px" android:layout_marginLeft="3px" android:layout_marginRight="3px" android:layout_marginBottom="3px">
+		<Button android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_gravity="center_horizontal"
+			android:gravity="center_vertical|center_horizontal|center" android:id="@+id/agree_tos_button" android:minWidth="100px" android:text="@string/agree"></Button>
+		
+		<Button android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_gravity="center_horizontal"
+			android:gravity="center_vertical|center_horizontal|center" android:id="@+id/dont_agree_tos_button" android:minWidth="100px" android:text="@string/dontagree"></Button>
+	</LinearLayout>
+	
+	
+
+</LinearLayout>
+	</ScrollView>
+	
+
+
+
+
+</LinearLayout>
