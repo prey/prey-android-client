@@ -29,8 +29,8 @@ public class PreyController {
 				isPhoneConnected = (tm.getDataState() == TelephonyManager.DATA_CONNECTED) || activeNetInfo.isConnected();
 				while (!isPhoneConnected) {
 					isPhoneConnected = (tm.getDataState() == TelephonyManager.DATA_CONNECTED) || activeNetInfo.isConnected();
-					PreyLogger.d("Phone doesn't have internet connection now. Waiting 5 secs for it");
-					Thread.sleep(5000);
+					PreyLogger.d("Phone doesn't have internet connection now. Waiting 10 secs for it");
+					Thread.sleep(10000);
 				}
 			} catch (InterruptedException e1) {
 				PreyLogger.e("Can't wait for connection state. Execution will continue but we're not sure we could connect to internet", e1);

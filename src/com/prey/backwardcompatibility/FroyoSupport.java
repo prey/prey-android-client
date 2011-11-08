@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.prey.PreyConfig;
+import com.prey.PreyLogger;
 import com.prey.receivers.PreyDeviceAdmin;
 
 public class FroyoSupport {
@@ -27,11 +28,15 @@ public class FroyoSupport {
 
 	
 	public void changePasswordAndLock(String newPass, boolean lock){
-	    if (isAdminActive()) {
-	    	policyManager.resetPassword(newPass,DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
-	    	if (lock)
-	    		policyManager.lockNow();
-	    }
+	    try {
+			if (isAdminActive()) {
+				policyManager.resetPassword(newPass,DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
+				if (lock)
+					policyManager.lockNow();
+			}
+		} catch (Exception e) {
+			PreyLogger.e("This device couldn't be locked. Honeycomb bug?", e);
+		}
 	}
 	
 	public void lockNow(){

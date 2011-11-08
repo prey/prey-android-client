@@ -208,9 +208,7 @@ public class PreyWebServices {
 
 	public String sendPreyHttpReport(Context ctx, ArrayList<HttpDataService> dataToSend) {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("devices/").concat(preyConfig.getDeviceID())
-				.concat("/reports.xml");
-		PreyConfig.postUrl = null;
+		
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		for (HttpDataService httpDataService : dataToSend) {
 			parameters.putAll(httpDataService.getDataAsParameters());
@@ -220,6 +218,8 @@ public class PreyWebServices {
 
 		String response = null;
 		try {
+			String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
+			PreyConfig.postUrl = null;
 			response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig).getResponseAsString();
 			PreyLogger.d("Report sent: " + response);
 			if (preyConfig.isShouldNotify()) {
@@ -227,6 +227,8 @@ public class PreyWebServices {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (PreyException e) {
+			PreyLogger.e("Report wasn't send",e);
 		}
 		return response;
 	}
@@ -261,11 +263,12 @@ public class PreyWebServices {
 			parameters.put("device[missing]", "0");
 
 		try {
-			PreyRestHttpClient.getInstance(ctx).methodAsParameter(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("devices/").concat(preyConfig.getDeviceID()).concat(".xml"),
-					"PUT", parameters, preyConfig);
+			PreyRestHttpClient.getInstance(ctx).methodAsParameter(this.getDeviceUrl(ctx),"PUT", parameters, preyConfig);
 			PreyLogger.d("device[missing]=" + isMissing + " set succesfully");
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (PreyException e) {
+			PreyLogger.e("Couldn't change missing state to the device", e);
 		}
 
 	}
@@ -291,11 +294,12 @@ public class PreyWebServices {
 		parameters.put("device["+key+"]", value);
 
 		try {
-			PreyRestHttpClient.getInstance(ctx).methodAsParameter(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("devices/").concat(preyConfig.getDeviceID()).concat(".xml"),
-					"PUT", parameters, preyConfig);
+			PreyRestHttpClient.getInstance(ctx).methodAsParameter(this.getDeviceUrl(ctx),"PUT", parameters, preyConfig);
 			PreyLogger.d("Update device attribute ["+ key + "] with value: " + value);
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (PreyException e) {
+			PreyLogger.e("Attribute ["+key+"] wasn't updated to ["+value+"]", e);
 		}
 		
 	}
@@ -325,7 +329,7 @@ public class PreyWebServices {
 		String xml;
 		try {
 			xml = PreyRestHttpClient.getInstance(ctx)
-					.delete(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("devices/").concat(preyConfig.getDeviceID()).concat(".xml"), parameters, preyConfig)
+					.delete(this.getDeviceUrl(ctx), parameters, preyConfig)
 					.getResponseAsString();
 
 		} catch (IOException e) {
@@ -359,19 +363,12 @@ public class PreyWebServices {
 		checkForError(xml);
 	}
 
-	public String getDeviceWebControlPanelUrl(Context ctx) {
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		return PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("devices/").concat(preyConfig.getDeviceID());
-	}
-
-
 	public String getActionsToPerform(Context ctx) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 
 		Map<String, String> parameters = new HashMap<String, String>();
 		try {
-			return PreyRestHttpClient.getInstance(ctx)
-					.get(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("devices/").concat(preyConfig.getDeviceID()).concat(".xml"), parameters, preyConfig).getResponseAsString();
+			return PreyRestHttpClient.getInstance(ctx).get(this.getDeviceUrl(ctx), parameters, preyConfig).getResponseAsString();
 		} catch (IOException e) {
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
 		}
@@ -404,13 +401,28 @@ public class PreyWebServices {
 		}
 		parameters.put("api_key", preyConfig.getApiKey());
 		try {
-			PreyRestHttpClient.getInstance(ctx).methodAsParameter(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("devices/").concat(preyConfig.getDeviceID()).concat(".xml"),
-					"PUT", parameters, preyConfig);
+			PreyRestHttpClient.getInstance(ctx).methodAsParameter(this.getDeviceUrl(ctx),"PUT", parameters, preyConfig);
 			PreyLogger.d("Modules deactivation instruction sent");
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (PreyException e) {
+			PreyLogger.e("Modules weren't deactivated", e);
 		}
 		
 	}
+	
+	public String getDeviceWebControlPanelUrl(Context ctx) throws PreyException {
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		String deviceKey = preyConfig.getDeviceID();
+		if (deviceKey == null || deviceKey == "")
+			throw new PreyException("Device key not found on the configuration");
+		return PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("devices/").concat(deviceKey);
+	}
+	
+	private String getDeviceUrl(Context ctx) throws PreyException{
+		return this.getDeviceWebControlPanelUrl(ctx).concat(".xml");
+	}
+	
+	
 
 }
