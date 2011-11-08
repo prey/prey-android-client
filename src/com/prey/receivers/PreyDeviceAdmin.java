@@ -2,15 +2,20 @@ package com.prey.receivers;
 
 import java.util.ArrayList;
 
+import android.app.ProgressDialog;
 import android.app.admin.DeviceAdminReceiver;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.prey.PreyConfig;
+import com.prey.PreyException;
 import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.actions.LockAction;
+import com.prey.activities.CheckPasswordActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.net.PreyWebServices;
 
@@ -43,12 +48,31 @@ public class PreyDeviceAdmin extends DeviceAdminReceiver {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
 		if (preyConfig.isLockSet()){
 			PreyLogger.d("Password was entered successfully");
-			ArrayList<String> modulesList = new ArrayList<String>();
-	        modulesList.add(LockAction.DATA_ID);
-	        PreyWebServices.getInstance().deactivateModules(context,modulesList);
+			new DeactivateModulesTask().execute(context);
 	        preyConfig.setLock(false);
 	        FroyoSupport.getInstance(context).changePasswordAndLock("", false);
 		}
+	}
+	
+	private class DeactivateModulesTask extends AsyncTask<Context, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+		}
+
+		@Override
+		protected Void doInBackground(Context... ctx) {
+			ArrayList<String> modulesList = new ArrayList<String>();
+	        modulesList.add(LockAction.DATA_ID);
+	        PreyWebServices.getInstance().deactivateModules(ctx[0],modulesList);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void unused) {
+
+		}
+
 	}
 
 }

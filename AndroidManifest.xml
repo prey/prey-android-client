@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.prey"
-      android:versionName="0.5" android:versionCode="26">
+      android:versionName="0.5" android:versionCode="27">
    	  
-   	  <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="8" />
+   	  <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="13" />
           
       <!-- Only this application can receive the messages and registration result --> 
 	 <permission android:name="com.prey.permission.C2D_MESSAGE" android:protectionLevel="signature" />
@@ -128,6 +128,7 @@
 	<uses-permission android:name="android.permission.SEND_SMS"/>
 	<uses-permission android:name="android.permission.BIND_DEVICE_ADMIN"/>
 	<uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+	<uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"/>
 
     <!-- This app has permission to register and receive message -->
 	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />

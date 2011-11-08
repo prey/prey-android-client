@@ -22,6 +22,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
@@ -50,7 +51,16 @@ public class PreyRestHttpClient {
 		httpclient = new DefaultHttpClient();
 
 		HttpParams params = new BasicHttpParams();
-
+		
+		// Set the timeout in milliseconds until a connection is established.
+		int timeoutConnection = 30000;
+		HttpConnectionParams.setConnectionTimeout(params, timeoutConnection);
+		
+		// Set the default socket timeout (SO_TIMEOUT) 
+		// in milliseconds which is the timeout for waiting for data.
+		int timeoutSocket = 50000;
+		HttpConnectionParams.setSoTimeout(params, timeoutSocket);
+		
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		HttpProtocolParams.setContentCharset(params, "UTF_8");
 		HttpProtocolParams.setUseExpectContinue(params, false);
