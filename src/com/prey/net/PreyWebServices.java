@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi.
+ * Copyright 2011 Fork Ltd. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.net;
 
 import java.io.IOException;
@@ -9,8 +15,10 @@ import java.util.Map;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 
@@ -263,12 +271,38 @@ public class PreyWebServices {
 			parameters.put("device[missing]", "0");
 
 		try {
-			PreyRestHttpClient.getInstance(ctx).methodAsParameter(this.getDeviceUrl(ctx),"PUT", parameters, preyConfig);
-			PreyLogger.d("device[missing]=" + isMissing + " set succesfully");
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (PreyException e) {
+			
+			new SetAsMissingTask().execute(ctx,parameters);
+			
+		} catch (Exception e) {
 			PreyLogger.e("Couldn't change missing state to the device", e);
+		}
+	}
+	
+	private class SetAsMissingTask extends AsyncTask<Object, Void, Void> {
+
+		
+		 
+		@Override
+		protected void onPreExecute() {
+		}
+
+		@Override
+		protected Void doInBackground(Object... data) {
+			try {
+				Context ctx = (Context)data[0];
+				HashMap<String, String> params = (HashMap<String, String>)data[1];
+				PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+				PreyRestHttpClient.getInstance(ctx).methodAsParameter(getDeviceUrl(ctx),"PUT", params, preyConfig);
+			} catch (Exception e) {
+				PreyLogger.e("Couldn't update missing state", e);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void unused) {
+			PreyLogger.d("device[missing] updated succesfully");
 		}
 
 	}

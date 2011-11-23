@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi.
+ * Copyright 2011 Fork Ltd. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.parser;
 
 import org.xml.sax.Attributes;
