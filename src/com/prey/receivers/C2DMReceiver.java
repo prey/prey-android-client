@@ -3,6 +3,7 @@ package com.prey.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 
 import com.prey.PreyConfig;
 import com.prey.PreyController;
@@ -59,10 +60,29 @@ public class C2DMReceiver extends BroadcastReceiver {
 	    } else if (registration != null) {
 	    	PreyLogger.d("Registration id: " + registration);
 	    	PreyWebServices.getInstance().setPushRegistrationId(context, registration);
+	    	new UpdateCD2MId().execute(registration, context);
 	       // Send the registration ID to the 3rd party site that is sending the messages.
 	       // This should be done in a separate thread.
 	       // When done, remember that all registration is done. 
 	    }
+	}
+	
+	private class UpdateCD2MId extends AsyncTask<Object, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Object... data) {
+			try {
+				String registration = (String)data[0];
+				PreyLogger.d("Registration id: " + registration);
+		    	PreyWebServices.getInstance().setPushRegistrationId((Context)data[1], registration);
+		    	
+			} catch (Exception e) {
+				
+				PreyLogger.e("Failed registering to CD2M: " + e.getLocalizedMessage(),e);
+			}
+			return null;
+		}
+
 	}
 
 }

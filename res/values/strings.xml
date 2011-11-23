@@ -12,6 +12,7 @@
     <string name="back">Back</string>
     <string name="agree">I agree</string>
     <string name="dontagree">I don\'t agree</string>
+    <string name="updating_info_message">Updating information, please wait...</string>
 
 
     <string name="agreements_title">Welcome to\nPrey for Android™!</string>

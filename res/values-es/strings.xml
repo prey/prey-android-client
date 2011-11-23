@@ -11,6 +11,7 @@
     <string name="back">Volver</string>
     <string name="agree">Acepto</string>
     <string name="dontagree">No acepto</string>
+    <string name="updating_info_message">Actualizando información, un segundo...</string>
     
     
     <string name="agreements_title">Bienvenido a\nPrey para Android™!</string>

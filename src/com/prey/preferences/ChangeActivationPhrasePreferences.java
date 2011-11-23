@@ -1,16 +1,21 @@
 package com.prey.preferences;
 
-import com.prey.PreyLogger;
-import com.prey.net.PreyWebServices;
-
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.preference.EditTextPreference;
 import android.util.AttributeSet;
+
+import com.prey.PreyLogger;
+import com.prey.R;
+import com.prey.net.PreyWebServices;
 
 public class ChangeActivationPhrasePreferences extends EditTextPreference {
 	
 	
 	Context ctx = null;
+	private String error = null;
+	
 	public ChangeActivationPhrasePreferences(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		this.ctx = context;
@@ -32,8 +37,41 @@ public class ChangeActivationPhrasePreferences extends EditTextPreference {
 		super.onDialogClosed(positiveResult);
 		if (positiveResult){
 			PreyLogger.d("Activation phrase changed to:" + getText());
-			PreyWebServices.getInstance().updateActivationPhrase(ctx, getText());
+			new ChangeActivationPhraseTask().execute(getText());
+			
 		}
+	}
+	
+	
+	private class ChangeActivationPhraseTask extends AsyncTask<String, Void, Void> {
+
+		ProgressDialog progressDialog = null;
+		 
+		@Override
+		protected void onPreExecute() {
+			
+			progressDialog = new ProgressDialog(getContext());
+			progressDialog.setMessage(getContext().getText(R.string.updating_info_message).toString());
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(false);
+			progressDialog.show();
+		}
+
+		@Override
+		protected Void doInBackground(String... data) {
+			try {
+				PreyWebServices.getInstance().updateActivationPhrase(getContext(), getText());
+			} catch (Exception e) {
+				error = e.getMessage();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void unused) {
+			progressDialog.dismiss();
+		}
+
 	}
 
 }
