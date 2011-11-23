@@ -59,7 +59,6 @@ public class C2DMReceiver extends BroadcastReceiver {
 	    	PreyLogger.d("Unregistered from c2dm: " + intent.getStringExtra("unregistered"));
 	    } else if (registration != null) {
 	    	PreyLogger.d("Registration id: " + registration);
-	    	PreyWebServices.getInstance().setPushRegistrationId(context, registration);
 	    	new UpdateCD2MId().execute(registration, context);
 	       // Send the registration ID to the 3rd party site that is sending the messages.
 	       // This should be done in a separate thread.
