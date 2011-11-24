@@ -280,9 +280,6 @@ public class PreyWebServices {
 	}
 	
 	private class SetAsMissingTask extends AsyncTask<Object, Void, Void> {
-
-		
-		 
 		@Override
 		protected void onPreExecute() {
 		}
@@ -304,7 +301,6 @@ public class PreyWebServices {
 		protected void onPostExecute(Void unused) {
 			PreyLogger.d("device[missing] updated succesfully");
 		}
-
 	}
 
 	public void setPushRegistrationId(Context ctx, String regId) {
