@@ -47,6 +47,7 @@ public class ChangePasswordPreferences extends DialogPreference {
 		super.onClick(dialog, which);
 		if (changePassword != null && which == DialogInterface.BUTTON_POSITIVE) {
 
+			final String old_password = ((EditText) changePassword.findViewById(R.id.old_password)).getText().toString();
 			final String password = ((EditText) changePassword.findViewById(R.id.password)).getText().toString();
 			final String repassword = ((EditText) changePassword.findViewById(R.id.password_confirm)).getText().toString();
 
@@ -54,7 +55,7 @@ public class ChangePasswordPreferences extends DialogPreference {
 				Toast.makeText(getContext(), R.string.preferences_password_length_error, Toast.LENGTH_LONG).show();
 				showDialog(new Bundle());
 			} else if (password.equals(repassword)) {
-				new ChangePassword().execute(password);
+				new ChangePassword().execute(old_password,password);
 			} else {
 				Toast.makeText(getContext(), R.string.preferences_passwords_do_not_match, Toast.LENGTH_LONG).show();
 				showDialog(new Bundle());
@@ -79,9 +80,8 @@ public class ChangePasswordPreferences extends DialogPreference {
 		@Override
 		protected Void doInBackground(String... passwords) {
 			try {
-
-				PreyWebServices.getInstance().changePassword(getContext(), PreyConfig.getPreyConfig(getContext()).getEmail(),
-						PreyConfig.getPreyConfig(getContext()).getPassword(), passwords[0]);
+				String email = PreyConfig.getPreyConfig(getContext()).getEmail();
+				PreyWebServices.getInstance().changePassword(getContext(), email,passwords[0], passwords[1]);
 
 			} catch (PreyException e) {
 				e.printStackTrace();

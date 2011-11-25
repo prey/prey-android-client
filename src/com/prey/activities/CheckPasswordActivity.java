@@ -157,8 +157,8 @@ public class CheckPasswordActivity extends Activity {
 			try {
 				String email = PreyConfig.getPreyConfig(getBaseContext()).getEmail();
 				isPasswordOk = PreyWebServices.getInstance().checkPassword(CheckPasswordActivity.this, email, password[0]);
-				if (isPasswordOk)
-					PreyConfig.getPreyConfig(CheckPasswordActivity.this).setPassword(password[0]);
+				//if (isPasswordOk)
+					//PreyConfig.getPreyConfig(CheckPasswordActivity.this).setPassword(password[0]);
 
 			} catch (PreyException e) {
 				error = e.getMessage();

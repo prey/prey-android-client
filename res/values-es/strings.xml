@@ -95,6 +95,7 @@
     <string name="preferences_password_title">Cambiar contraseña</string>
     <string name="preferences_password_summary">Define tu nueva contraseña de administración</string>
     <string name="preferences_password_dialog_title">Por favor ingresa\ntu nueva contraseña</string>
+    <string name="preferences_password_old">Contraseña actual</string>
     <string name="preferences_password_new">Nueva contraseña</string>
     <string name="preferences_password_confirm">Confirma la contraseña</string>
     <string name="preferences_password_updated">¡Contraseña actualizada!</string>
@@ -201,7 +202,7 @@
      <string name="error_cant_create_acount">No se pudo registrar la cuenta. Por favor revisa los datos ingresados e intenta nuevamente.</string>
      <string name="error_communication_exception">Prey no se pudo conectar con el Panel de Control web.\n\nRevisa tu conexión y vuelve a intentarlo.</string>
      <string name="error_cant_add_this_device">El teléfono no se pudo agregar a tu cuenta Prey.\n\nPor favor revisa nuevamente el email y contraseña que ingresaste.</string>
-     <string name="error_registered_password_has_changed">No se pudo cambiar la contraseña, ya que fue cambiada previamente en el Panel de Control web.</string>
+     <string name="error_registered_password_has_changed">La contraseña actual ingresada no es válida.</string>
      <string name="error_cant_change_password_unknown_error">La contraseña no fue cambiada. Por favor inténtalo nuevamente.</string>
      <string name="error_cant_report_forgotten_password">La contraseña no se pudo reportar como olvidada. Por favor inténtalo nuevamente.</string>
  	 <string name="error_all_fields_are_required">Todos los campos son requeridos</string>

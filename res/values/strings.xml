@@ -98,6 +98,7 @@
     <string name="preferences_password_title">Change password</string>
     <string name="preferences_password_summary">Set your new Prey administration password</string>
     <string name="preferences_password_dialog_title">Please type your\nnew password</string>
+    <string name="preferences_password_old">Current password</string>
     <string name="preferences_password_new">New password</string>
     <string name="preferences_password_confirm">Confirm password</string>
     <string name="preferences_password_updated">Password updated!</string>
@@ -212,7 +213,7 @@
      <string name="error_cant_create_acount">Can\'t register account. Please check again the information provided.</string>
      <string name="error_communication_exception">Prey couldn\'t connect to the web Control Panel.\n\nCheck your settings and try again.</string>
      <string name="error_cant_add_this_device">Can\'t add this device to your prey account. Please check again the email and password provided.</string>
-     <string name="error_registered_password_has_changed">Can\'t change password. Control Panel password has changed since your last login here.</string>
+     <string name="error_registered_password_has_changed">Can\'t change password. The current password entered is invalid.</string>
      <string name="error_cant_change_password_unknown_error">Password couldn\'t be changed. Please try again later.</string>
      <string name="error_cant_report_forgotten_password">Can\'t report forgotten password. Please try again later.</string>
  	 <string name="error_all_fields_are_required">All fields are required</string>

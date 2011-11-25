@@ -47,7 +47,7 @@ public class PreyConfig {
 	public static final String PREFS_API_KEY = "API_KEY";
 	public static final String PREFS_LOGIN = "LOGIN";
 	public static final String PREFS_EMAIL = "EMAIL";
-	public static final String PREFS_PASSWORD = "PASSWORD";
+	//public static final String PREFS_PASSWORD = "PASSWORD";
 	public static final String PREFS_PREY_VERSION = "PREY_VERSION";
 	public static final String PREFS_IS_MISSING = "IS_MISSING";
 	public static final String PREFS_SMS_RUN = "PREFS_SMS_RUN";
@@ -217,6 +217,7 @@ public class PreyConfig {
 		return locked;
 	}
 
+	/*
 	public void setPassword(String password) {
 		this.password = password;
 		this.saveString(PreyConfig.PREFS_PASSWORD, password);
@@ -224,7 +225,7 @@ public class PreyConfig {
 
 	public String getPassword() {
 		return password;
-	}
+	}*/
 
 	public String getSmsToStop() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
