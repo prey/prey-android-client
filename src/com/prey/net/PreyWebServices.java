@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Looper;
 import android.telephony.TelephonyManager;
 
 import com.prey.NoMoreDevicesAllowedException;
@@ -261,7 +262,7 @@ public class PreyWebServices {
 	}
 
 	public void setMissing(Context ctx, boolean isMissing) {
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		final PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		HashMap<String, String> parameters = new HashMap<String, String>();
 
 		parameters.put("api_key", preyConfig.getApiKey());
@@ -270,15 +271,26 @@ public class PreyWebServices {
 		else
 			parameters.put("device[missing]", "0");
 
+		final HashMap<String, String> params = parameters;
+		final Context context = ctx;
 		try {
-			
-			new SetAsMissingTask().execute(ctx,parameters);
+			new Thread(new Runnable() {
+				
+				public void run() {
+					try {
+						PreyRestHttpClient.getInstance(context).methodAsParameter(getDeviceUrl(context),"PUT", params, preyConfig);
+					} catch (Exception e) {
+						PreyLogger.e("Couldn't update missing state", e);
+					}
+				}
+			});
+			//new SetAsMissingTask().execute(ctx,parameters);
 			
 		} catch (Exception e) {
 			PreyLogger.e("Couldn't change missing state to the device", e);
 		}
 	}
-	
+	/*
 	private class SetAsMissingTask extends AsyncTask<Object, Void, Void> {
 		@Override
 		protected void onPreExecute() {
@@ -287,6 +299,7 @@ public class PreyWebServices {
 		@Override
 		protected Void doInBackground(Object... data) {
 			try {
+				Looper.prepare();
 				Context ctx = (Context)data[0];
 				HashMap<String, String> params = (HashMap<String, String>)data[1];
 				PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
@@ -294,6 +307,7 @@ public class PreyWebServices {
 			} catch (Exception e) {
 				PreyLogger.e("Couldn't update missing state", e);
 			}
+			Looper.loop();
 			return null;
 		}
 
@@ -301,7 +315,7 @@ public class PreyWebServices {
 		protected void onPostExecute(Void unused) {
 			PreyLogger.d("device[missing] updated succesfully");
 		}
-	}
+	}*/
 
 	public void setPushRegistrationId(Context ctx, String regId) {
 		this.updateDeviceAttribute(ctx, "notification_id", regId);

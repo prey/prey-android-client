@@ -13,6 +13,8 @@ import android.preference.DialogPreference;
 import android.util.AttributeSet;
 
 import com.prey.PreyController;
+import com.prey.PreyLogger;
+import com.prey.net.PreyRestHttpClient;
 
 public class StopPreyPreference extends DialogPreference {
 
@@ -23,9 +25,22 @@ public class StopPreyPreference extends DialogPreference {
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		super.onClick(dialog, which);
+		PreyLogger.d("Stopping Prey");
 		if (which == DialogInterface.BUTTON_POSITIVE) {
-			new StopPreyTask().execute();
-			
+			new Thread(new Runnable() {
+
+				public void run() {
+					try {
+						
+						PreyController.stopPrey(getContext());
+					} catch (Exception e) {
+						PreyLogger.e("Couldn't stop Prey", e);
+					}
+				}
+			});
+
+			// new StopPreyTask().execute();
+
 		}
 	}
 
