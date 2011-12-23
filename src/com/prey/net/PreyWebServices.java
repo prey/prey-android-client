@@ -271,51 +271,13 @@ public class PreyWebServices {
 		else
 			parameters.put("device[missing]", "0");
 
-		final HashMap<String, String> params = parameters;
-		final Context context = ctx;
 		try {
-			new Thread(new Runnable() {
-				
-				public void run() {
-					try {
-						PreyRestHttpClient.getInstance(context).methodAsParameter(getDeviceUrl(context),"PUT", params, preyConfig);
-					} catch (Exception e) {
-						PreyLogger.e("Couldn't update missing state", e);
-					}
-				}
-			}).run();
-			//new SetAsMissingTask().execute(ctx,parameters);
-			
+			PreyRestHttpClient.getInstance(ctx).methodAsParameter(getDeviceUrl(ctx),"PUT", parameters, preyConfig);
 		} catch (Exception e) {
-			PreyLogger.e("Couldn't change missing state to the device", e);
+			PreyLogger.e("Couldn't update missing state", e);
 		}
 	}
-	/*
-	private class SetAsMissingTask extends AsyncTask<Object, Void, Void> {
-		@Override
-		protected void onPreExecute() {
-		}
 
-		@Override
-		protected Void doInBackground(Object... data) {
-			try {
-				Looper.prepare();
-				Context ctx = (Context)data[0];
-				HashMap<String, String> params = (HashMap<String, String>)data[1];
-				PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-				PreyRestHttpClient.getInstance(ctx).methodAsParameter(getDeviceUrl(ctx),"PUT", params, preyConfig);
-			} catch (Exception e) {
-				PreyLogger.e("Couldn't update missing state", e);
-			}
-			Looper.loop();
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void unused) {
-			PreyLogger.d("device[missing] updated succesfully");
-		}
-	}*/
 
 	public void setPushRegistrationId(Context ctx, String regId) {
 		this.updateDeviceAttribute(ctx, "notification_id", regId);

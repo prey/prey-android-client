@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
+import com.prey.net.PreyRestHttpClient;
 import com.prey.net.PreyWebServices;
 import com.prey.services.PreyRunnerService;
 
@@ -43,9 +44,16 @@ public class PreyController {
 			} catch (NullPointerException npe) {
 				PreyLogger.e("A manager couldn't be instanciated. Execution will continue but we're not sure we could connect to internet", npe);
 			}
-			//First need to stop a previous running instance.
-			ctx.stopService(new Intent(ctx, PreyRunnerService.class));
-			ctx.startService(new Intent(ctx, PreyRunnerService.class));
+			final Context context = ctx;
+			new Thread(new Runnable() {
+				
+				public void run() {
+					//First need to stop a previous running instance.
+					context.stopService(new Intent(context, PreyRunnerService.class));
+					context.startService(new Intent(context, PreyRunnerService.class));
+				}
+			}).start();
+			
 		}
 	}
 
