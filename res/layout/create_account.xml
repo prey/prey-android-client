@@ -15,11 +15,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:scrollbars="vertical" android:background="@drawable/border" 
 	android:layout_height="wrap_content" 
-	android:padding="0px" android:layout_width="fill_parent" android:layout_margin="10px" android:layout_gravity="center_vertical">
+	android:padding="0dp" android:layout_width="280dp" android:layout_margin="10dp" android:layout_gravity="center_horizontal|center_vertical">
 
 	
 	<!-- Data entry layout -->
-	<ScrollView android:id="@+id/ScrollView01" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_margin="0px">
+	<ScrollView android:id="@+id/ScrollView01" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_margin="0dp">
 	
 	
 	
@@ -34,21 +34,21 @@
 		<ImageView android:id="@+id/ImageView01"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:background="@drawable/logo"
-			android:paddingTop="5px" android:layout_marginTop="10px" android:layout_marginLeft="10px"></ImageView>
+			android:paddingTop="5dp" android:layout_marginTop="10dp" android:layout_marginLeft="10dp"></ImageView>
 		<TextView android:id="@+id/TextView01" android:layout_height="fill_parent"
 			android:layout_width="fill_parent" android:text="@string/set_new_user_dialog_title"
-			android:paddingRight="10px" android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center_vertical" android:paddingLeft="10px"></TextView>
+			android:paddingRight="10dp" android:textAppearance="?android:attr/textAppearanceMedium" android:gravity="center_vertical" android:paddingLeft="10dp"></TextView>
 	</LinearLayout>
 		
 	<View android:id="@+id/divider"
     android:background="@drawable/gradient_line"
     android:layout_width="fill_parent"
-    android:layout_height="1dp" android:layout_marginTop="10px" android:layout_marginLeft="15dp" android:layout_marginRight="15dp"/>
+    android:layout_height="1dp" android:layout_marginTop="10dp" android:layout_marginLeft="15dp" android:layout_marginRight="15dp"/>
     
 	<TextView android:id="@+id/username_label" android:layout_height="wrap_content"
 		android:layout_width="wrap_content" android:layout_marginLeft="20dip"
 		android:layout_marginRight="20dip" android:text="@string/set_new_user_dialog_name"
-		android:gravity="left" android:paddingTop="10px" android:textAppearance="?android:attr/textAppearanceMedium"/>
+		android:gravity="left" android:paddingTop="10dp" android:textAppearance="?android:attr/textAppearanceMedium"/>
 	
 	
 		
@@ -62,7 +62,7 @@
 
 	<TextView android:id="@+id/email_view" android:layout_height="wrap_content"
 		android:layout_width="wrap_content" android:text="@string/set_new_user_dialog_email"
-		android:gravity="left" android:textAppearance="?android:attr/textAppearanceMedium" android:layout_marginLeft="20dip" android:width="200px"/>
+		android:gravity="left" android:textAppearance="?android:attr/textAppearanceMedium" android:layout_marginLeft="20dip" android:width="200dp"/>
 
 	<EditText android:id="@+id/set_new_user_dialog_email_edit"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
@@ -88,7 +88,7 @@
 	<LinearLayout android:layout_height="wrap_content"
 		android:id="@+id/LinearLayoutButtons" android:orientation="horizontal"
 		android:layout_width="fill_parent" 
-		android:background="#CCC" android:gravity="center_vertical|center_horizontal|center" android:paddingTop="4px" android:paddingBottom="1px" android:layout_marginLeft="3px" android:layout_marginRight="3px" android:layout_marginBottom="3px">
+		android:background="#CCC" android:gravity="center_vertical|center_horizontal|center" android:paddingTop="4dp" android:paddingBottom="1dp" android:layout_marginLeft="3dp" android:layout_marginRight="3dp" android:layout_marginBottom="3dp">
 		<Button android:text="@string/set_new_user_dialog_create"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:layout_gravity="center_horizontal"

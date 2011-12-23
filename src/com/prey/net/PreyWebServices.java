@@ -283,7 +283,7 @@ public class PreyWebServices {
 						PreyLogger.e("Couldn't update missing state", e);
 					}
 				}
-			});
+			}).run();
 			//new SetAsMissingTask().execute(ctx,parameters);
 			
 		} catch (Exception e) {

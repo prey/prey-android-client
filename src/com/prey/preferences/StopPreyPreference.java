@@ -37,7 +37,7 @@ public class StopPreyPreference extends DialogPreference {
 						PreyLogger.e("Couldn't stop Prey", e);
 					}
 				}
-			});
+			}).run();
 
 			// new StopPreyTask().execute();
 

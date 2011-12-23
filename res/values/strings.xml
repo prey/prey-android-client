@@ -21,16 +21,16 @@
     <string name="agreements_message2"><u>Read Agreement</u></string>
     <!-- First dialog - Prey Configuration -->
     <string name="first_dialog_title">Welcome to\nPrey for Android™!</string>
-    <string name="first_dialog_message">Prey helps you find your phone by reporting its
+    <string name="first_dialog_message">Prey helps you find your device by reporting its
     location to a web control panel, activated by a SMS message of your choice.\n\nHave you already registered on preyproject.com?
     </string>
 
     <!-- Add device to an already created account  -->
     <string name="set_old_user_dialog_title">Please enter your\naccount information</string>
-    <string name="add_device_info_text">By clicking below your phone will be added to your Control Panel account.</string>
+    <string name="add_device_info_text">By clicking below your device will be added to your Control Panel account.</string>
     <string name="set_old_user_dialog_email">Email</string>
     <string name="set_old_user_dialog_password">Password</string>
-    <string name="set_old_user_dialog_create"> Track my phone </string>
+    <string name="set_old_user_dialog_create"> Track my device </string>
     <string name="set_old_user_loading">Attaching device to account...\nJust a sec!</string>
     <string name="set_old_user_no_more_devices_title">Hold your horses!</string>
     <string name="set_old_user_no_more_devices_text">It seems you\'ve run out of free slots for devices on your Prey account.\n\nPlease try removing an existing device on the Control Panel or create a new account.</string>
@@ -42,27 +42,27 @@
     <string name="set_new_user_dialog_email">Valid email</string>
     <string name="set_new_user_dialog_password">Password</string>
     <string name="set_new_user_dialog_repassword_title">Please double check\nyour password</string>
-    <string name="set_new_user_dialog_repassword">You\'ll need this password to manage Prey on this phone, and to log into your Control Panel at preyproject.com.\n\nPlease double check it by entering it again.</string>
+    <string name="set_new_user_dialog_repassword">You\'ll need this password to manage Prey on this device, and to log into your Control Panel at preyproject.com.\n\nPlease double check it by entering it again.</string>
     <string name="set_new_user_dialog_repassword_confirm">Confirm</string>
     <string name="set_new_user_dialog_create">Create new account</string>
     <string name="set_new_user_dialog_creating_popup">Creating account. Please wait...</string>
 
 
     <!-- Congratulations Dialog -->
-    <string name="congratulations_title">Phone Added!</string>
-    <string name="new_account_congratulations_text">You\'ve successfully installed Prey on your phone.\nTo finish the setup process you need to verify your email address by following the link we just sent to %s.</string>
-    <string name="device_added_congratulations_text">You have successfully associated this phone with your Prey account. Now take a minute to set it up.</string>
+    <string name="congratulations_title">Device Added!</string>
+    <string name="new_account_congratulations_text">You\'ve successfully installed Prey on your device.\nTo finish the setup process you need to verify your email address by following the link we just sent to %s.</string>
+    <string name="device_added_congratulations_text">You have successfully associated this device with your Prey account. Now take a minute to set it up.</string>
 
 
     <!-- Prey SMS Preferences -->
     <string name="preferences_sms_title">Main configuration</string>
     <string name="preferences_sms_run">SMS activation message</string>
     <string name="preferences_sms_run_summary">Word or phrase that will wake up Prey</string>
-    <string name="preferences_sms_run_edittext">Send this text from another phone to start Prey</string>
+    <string name="preferences_sms_run_edittext">Send this text from another device to start Prey</string>
 
     <string name="preferences_sms_stop">SMS deactivation message</string>
     <string name="preferences_sms_stop_summary">Word or phrase that will stop Prey</string>
-    <string name="preferences_sms_stop_edittext">Send this text from another phone to stop Prey</string>
+    <string name="preferences_sms_stop_edittext">Send this text from another device to stop Prey</string>
 
     <string name="preferences_show_notification_title">Display notifications</string>
     <string name="preferences_show_notification_summary">Shows onscreen message if Prey sent a successful report</string>
@@ -77,16 +77,16 @@
     <string name="preferences_check_sim_change_summary">Activate Prey if SIM card is replaced</string>
 
 	<string name="preferences_destination_sms">Contact to notify</string>
-    <string name="preferences_destination_sms_summary">Will be notified by SMS of new phone number</string>
-    <string name="preferences_destination_sms_edittext">Please choose the contact which will be notified when a new SIM card is detected. He will receive an SMS from your device\'s new phone number.</string>
+    <string name="preferences_destination_sms_summary">Will be notified by SMS of new device number</string>
+    <string name="preferences_destination_sms_edittext">Please choose the contact which will be notified when a new SIM card is detected. He will receive an SMS from your device\'s new device number.</string>
     <string name="preferences_destination_sms_edittext_hint">type name</string>
     <string name="preferences_destination_sms_not_valid">The number you entered doesn\'t seem to be valid</string>
-    <string name="sms_to_send_text">Your friend\'s phone has a new number as its SIM card has been replaced. Please contact him at %s if you think it may have been stolen.</string>
+    <string name="sms_to_send_text">Your friend\'s device has a new number as its SIM card has been replaced. Please contact him at %s if you think it may have been stolen.</string>
 
     <string name="preferences_update_sim_title">Assign to current SIM</string>
     <string name="preferences_update_sim_summary">Assign current SIM as valid</string>
     <string name="preferences_update_sim_dialog_title">Change valid SIM</string>
-    <string name="preferences_update_sim_dialog_message">You\'re about to change the registered SIM on this phone. By clicking \'Yes\' Prey will assume current one as valid.\n\nAre you sure?</string>
+    <string name="preferences_update_sim_dialog_message">You\'re about to change the registered SIM on this device. By clicking \'Yes\' Prey will assume current one as valid.\n\nAre you sure?</string>
 
 
 
@@ -108,12 +108,12 @@
     <string name="preferences_passwords_successfully_changed">Your Prey password was successfully changed</string>
 
  <!-- Prey Detach Device Preferences -->
-    <string name="preferences_detach_title">Detach phone</string>
-    <string name="preferences_detach_summary">Remove this phone from your Control Panel account</string>
-    <string name="preferences_detach_dialog_title">Detaching phone</string>
-    <string name="preferences_detach_dialog_message">Your phone will be detached from the Control Panel. This will also delete all its stored reports.\n\nAre you sure?</string>
-    <string name="preferences_detach_confirmation_message">Your phone was successfully detached from your account.\nNow you can set up Prey again.</string>
-    <string name="preferences_detach_dettaching_message">Detaching phone, please wait...</string>
+    <string name="preferences_detach_title">Detach device</string>
+    <string name="preferences_detach_summary">Remove this device from your Control Panel account</string>
+    <string name="preferences_detach_dialog_title">Detaching device</string>
+    <string name="preferences_detach_dialog_message">Your device will be detached from the Control Panel. This will also delete all its stored reports.\n\nAre you sure?</string>
+    <string name="preferences_detach_confirmation_message">Your device was successfully detached from your account.\nNow you can set up Prey again.</string>
+    <string name="preferences_detach_dettaching_message">Detaching device, please wait...</string>
 
 
     <string name="preferences_go_to_control_panel_title">View generated reports</string>
@@ -124,7 +124,7 @@
 
     <!-- Prey Operation Preferences -->
     <string name="preferences_category_operations_title">Execution control</string>
-	<string name="preferences_category_operations_summary">Start and stop Prey from your phone</string>
+	<string name="preferences_category_operations_summary">Start and stop Prey from your device</string>
 
     <string name="preferences_start_title">Start Prey</string>
     <string name="preferences_start_summary">Mark this device as missing</string>
@@ -146,13 +146,13 @@
     <string name="preferences_admin_disabled_summary">Allows lock and uninstall protection</string>
 
     <string name="preferences_admin_enabled_dialog_title">Please note</string>
-    <string name="preferences_admin_enabled_dialog_message">By clicking \'Yes\' you will revoke Prey administration privileges on this device. Without these privileges, Prey won\'t be able to lock your phone.\nAre you sure?</string>
+    <string name="preferences_admin_enabled_dialog_message">By clicking \'Yes\' you will revoke Prey administration privileges on this device. Without these privileges, Prey won\'t be able to lock your device.\nAre you sure?</string>
 
     <string name="preferences_admin_disabled_dialog_title">Extra permissions</string>
-    <string name="preferences_admin_disabled_dialog_message">You\'re about to grant Prey special security privileges, that will allow you to remotely lock your phone.\nClick Yes to continue.</string>
+    <string name="preferences_admin_disabled_dialog_message">You\'re about to grant Prey special security privileges, that will allow you to remotely lock your device.\nClick Yes to continue.</string>
 
 	<string name="device_admin_label">Prey extra security</string>
-	<string name="device_admin_description">These privileges are needed to remotely lockdown your phone, and will prevent Prey from being uninstalled. You need to revoke these rights later if you wish to uninstall Prey.</string>
+	<string name="device_admin_description">These privileges are needed to remotely lockdown your device, and will prevent Prey from being uninstalled. You need to revoke these rights later if you wish to uninstall Prey.</string>
 
      <!-- Prey Ringtone Preferences (Deprecated) -->
     <string name="preferences_category_title_ringtone">Alarm Module</string>
@@ -203,7 +203,7 @@
 
      <!-- Lock module  -->
      <string name="lock_label">Please type the password to unlock:</string>
-     <string name="lock_label_title">This phone has been locked.</string>
+     <string name="lock_label_title">This device has been locked.</string>
 
      <!-- Device Admin API -->
 
