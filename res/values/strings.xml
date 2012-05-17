@@ -15,6 +15,10 @@
     <string name="updating_info_message">Updating information, please wait...</string>
 
 
+    <!-- First screen -->
+    <string name="already_have_account">I already have an account</string>
+    <string name="im_new_user">I\'m a new user</string>
+    
     <string name="agreements_title">Welcome to\nPrey for Android™!</string>
     <!--<string name="agreements_message1">By clicking below you agree to Prey Terms and Conditions</string>-->
     <string name="agreements_message1">Please be sure to read and agree Prey Terms and Conditions by clicking below</string>

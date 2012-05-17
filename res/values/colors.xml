@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<color name="fb_border_start">#AAAAAA</color>
+<color name="fb_border_center">#888888</color>
+<color name="fb_border_end">#666666</color>
+<!-- 
+<color name="fb_normal_start">#088F8F8F</color>
+<color name="fb_normal_center">#08656565</color>
+<color name="fb_normal_end">#083F3F3F</color>
+ -->
+ <color name="fb_normal_start">#FFFFFF</color>
+<color name="fb_normal_center">#FFFFFF</color>
+<color name="fb_normal_end">#FFFFFF</color>
+
+<color name="fb_focused_start">#8F8F8F</color>
+<color name="fb_focused_center">#656565</color>
+<color name="fb_focused_end">#3F3F3F</color>
+
+<color name="fb_selected_start">#EAEAEA</color>
+<color name="fb_selected_center">#9F9F9F</color>
+<color name="fb_selected_end">#696969</color>
+
+<color name="fb_text">#FF6600</color>
+<color name="fb_text_focused">#F8F8F8</color>
+<color name="fb_text_pressed">#00AAEE</color>
+    
+</resources>
