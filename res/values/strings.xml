@@ -15,9 +15,16 @@
     <string name="updating_info_message">Updating information, please wait...</string>
 
 
-    <!-- First screen -->
-    <string name="already_have_account">I already have an account</string>
-    <string name="im_new_user">I\'m a new user</string>
+    <!-- Welcome screen -->
+    <string name="already_prey_user">Already a Prey user</string>
+    <string name="new_user">New user</string>
+    
+    <!-- Login screen -->
+    <string name="device_ready_h1">Device Ready</string>
+    <string name="device_ready_h2">Your phone is protected and waiting for the activation signal.</string>
+    <string name="login_cp">Log into the Control Panel</string>
+    <string name="goto_settings">Manage Prey settings</string>
+    
     
     <string name="agreements_title">Welcome to\nPrey for Android™!</string>
     <!--<string name="agreements_message1">By clicking below you agree to Prey Terms and Conditions</string>-->

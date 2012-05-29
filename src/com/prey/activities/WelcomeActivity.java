@@ -16,6 +16,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -54,6 +58,9 @@ public class WelcomeActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+	    //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
 		/*
 		 * if (!isPreyAgreementRead()){ Intent intent = new
 		 * Intent(WelcomeActivity.this, AgreementDialogActivity.class);
@@ -67,7 +74,7 @@ public class WelcomeActivity extends Activity {
 	private void startup() {
 		
 		if (!isThisDeviceAlreadyRegisteredWithPrey()) {
-			showDialog(WELCOME_DIALOG);
+			showWelcomeScreen();
 		} else {
 			PreyConfig.getPreyConfig(this).registerC2dm();
 			// First delete notifications (in case Activity was started by one
@@ -84,6 +91,33 @@ public class WelcomeActivity extends Activity {
 		}
 	}
 
+	private void showWelcomeScreen() {
+		
+		setContentView(R.layout.welcome);
+		Button newUser = (Button) findViewById(R.id.btn_welcome_newuser);
+		Button oldUser = (Button) findViewById(R.id.btn_welcome_olduser);
+		
+		newUser.setOnClickListener(new Button.OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent intent = new Intent(WelcomeActivity.this, CreateAccountActivity.class);
+				startActivityForResult(intent, ADD_THIS_DEVICE);
+			}
+			
+		});
+		
+		oldUser.setOnClickListener(new Button.OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent intent = new Intent(WelcomeActivity.this, AddDeviceToAccountActivity.class);
+				startActivityForResult(intent, CREATE_ACCOUNT);
+			}
+			
+		});
+		
+		
+	}
+
 	/**
 	 * This is called after an account creation, or when closing the preferences
 	 * screen. When closing preferences, we are closing the application as well,
@@ -97,10 +131,10 @@ public class WelcomeActivity extends Activity {
 			if (resultCode == RESULT_OK) {
 				showDialog(CONGRATULATIONS_NEW_ACCOUNT);
 			} else
-				showDialog(WELCOME_DIALOG);
+				showWelcomeScreen();
 		} else if (requestCode == START_PREFERENCES) {
 			if (resultCode == RESULT_FIRST_USER)
-				showDialog(WELCOME_DIALOG);
+				showWelcomeScreen();
 			else
 				finish();
 		} else if (requestCode == CHECKING_PASSWORD) {
@@ -114,7 +148,7 @@ public class WelcomeActivity extends Activity {
 				goToPreferences();
 			}
 			else
-				showDialog(WELCOME_DIALOG);
+				showWelcomeScreen();
 		} else if (requestCode == SECURITY_PRIVILEGES) {
 				goToPreferences();
 		} else if (requestCode == AGREEMENTS) {

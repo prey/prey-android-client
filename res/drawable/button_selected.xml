@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<animation-list xmlns:android="http://schemas.android.com/apk/res/android" >
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     
-
-</animation-list>
+    <item android:top="2dp" android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <gradient android:angle="-90"
+                android:startColor="@color/fb_border_start" 
+                android:centerColor="@color/fb_border_center"
+                android:endColor="@color/fb_border_end" />
+            <corners android:bottomRightRadius="10dp"
+                android:bottomLeftRadius="10dp" android:topLeftRadius="10dp"
+                android:topRightRadius="10dp" />
+        </shape>
+    </item>
+    
+    <item android:top="4dp" android:left="2dp" android:right="2dp"
+        android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <gradient android:angle="90"
+                android:startColor="@color/fb_selected_start" 
+                android:centerColor="@color/fb_selected_center"
+                android:endColor="@color/fb_selected_end" />
+            <corners android:bottomRightRadius="8dp"
+                android:bottomLeftRadius="8dp" android:topLeftRadius="8dp"
+                android:topRightRadius="8dp" />
+        </shape>
+    </item>
+</layer-list>
