@@ -7,19 +7,12 @@
 package com.prey.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentUris;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prey.PreyConfig;
@@ -35,8 +28,8 @@ public class CheckPasswordActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.check_password2);
-
+		setContentView(R.layout.password);
+/*
 		TextView forgotPasswordText = (TextView) findViewById(R.id.check_password_forgot_text2);
 		forgotPasswordText.setOnClickListener(new View.OnClickListener() {
 
@@ -49,12 +42,12 @@ public class CheckPasswordActivity extends Activity {
 
 			}
 		});
-
-		Button checkPasswordOkButton = (Button) findViewById(R.id.check_password_ok_button);
+*/
+		Button checkPasswordOkButton = (Button) findViewById(R.id.password_btn_login);
 		checkPasswordOkButton.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
-				EditText pass1 = ((EditText) findViewById(R.id.check_password_edittext));
+				EditText pass1 = ((EditText) findViewById(R.id.password_pass_txt));
 				final String passwordtyped = pass1.getText().toString();
 				if (passwordtyped.equals(""))
 					Toast.makeText(CheckPasswordActivity.this, R.string.preferences_password_length_error, Toast.LENGTH_LONG).show();
@@ -63,7 +56,7 @@ public class CheckPasswordActivity extends Activity {
 
 			}
 		});
-
+/*
 		Button checkPasswordCancelButton = (Button) findViewById(R.id.check_password_cancel_button);
 		checkPasswordCancelButton.setOnClickListener(new View.OnClickListener() {
 
@@ -72,9 +65,11 @@ public class CheckPasswordActivity extends Activity {
 				finish();
 			}
 		});
-
+	*/
 	}
 
+
+	/*
 	@Override
 	protected Dialog onCreateDialog(int id) {
 
@@ -134,7 +129,7 @@ public class CheckPasswordActivity extends Activity {
 		}
 
 	}
-
+*/
 	private class CheckPassword extends AsyncTask<String, Void, Void> {
 
 		ProgressDialog progressDialog = null;
