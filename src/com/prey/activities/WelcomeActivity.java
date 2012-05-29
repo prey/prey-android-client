@@ -98,24 +98,18 @@ public class WelcomeActivity extends Activity {
 		Button oldUser = (Button) findViewById(R.id.btn_welcome_olduser);
 		
 		newUser.setOnClickListener(new Button.OnClickListener() {
-			
 			public void onClick(View v) {
 				Intent intent = new Intent(WelcomeActivity.this, CreateAccountActivity.class);
 				startActivityForResult(intent, ADD_THIS_DEVICE);
 			}
-			
 		});
 		
 		oldUser.setOnClickListener(new Button.OnClickListener() {
-			
 			public void onClick(View v) {
 				Intent intent = new Intent(WelcomeActivity.this, AddDeviceToAccountActivity.class);
 				startActivityForResult(intent, CREATE_ACCOUNT);
 			}
-			
 		});
-		
-		
 	}
 
 	/**

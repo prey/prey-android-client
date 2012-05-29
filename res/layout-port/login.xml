@@ -1,104 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:background="@color/screen_bg">
+    android:layout_height="match_parent"
+    android:background="@color/screen_bg" >
 
-    <RelativeLayout
-        android:id="@+id/login_header"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-         >
+    <include layout="@layout/header_port" />
 
-        <ImageView
-            android:id="@+id/login_img_top_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/top_left_logo"/>
-        
-    </RelativeLayout>
+    <Button
+        android:id="@+id/login_btn_cp"
+        style="@style/PreyButton"
+        android:layout_above="@+id/login_btn_settings"
+        android:text="@string/login_cp" />
 
-
-    <ImageView
-        android:id="@+id/login_img_prey_txt"
-        android:layout_below="@+id/login_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/prey_text"
-        android:layout_centerHorizontal="true" />
-
-    <RelativeLayout
-        android:id="@+id/login_body"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/login_img_prey_txt"
-        android:layout_centerHorizontal="true"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="20dp" >
-        
-        <ImageView
-            android:id="@+id/login_red_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/red_button"
-        />
-        
-       <TextView
-           android:id="@+id/login_h1_text"
-           android:layout_width="fill_parent"
-           android:layout_height="wrap_content"
-           android:layout_toRightOf="@+id/login_red_button"
-           android:paddingLeft="10dp"
-           android:text="@string/device_ready_h1"
-           android:textAppearance="?android:attr/textAppearanceLarge"
-           android:textColor="@color/darker_txt" />
-
-       <TextView
-           android:id="@+id/login_h2_text"
-           android:layout_below="@+id/login_h1_text"
-           android:layout_toRightOf="@+id/login_red_button"
-           android:layout_width="fill_parent"
-           android:layout_height="wrap_content"
-           android:paddingLeft="10dp"
-           android:text="@string/device_ready_h2"
-           android:textColor="@color/lighter_txt" />
-        
-    </RelativeLayout>
-    
-   	<Button
-   	    android:id="@+id/login_btn_cp"
-   	    android:layout_width="300dp"
-   	    android:layout_height="48dp"
-   	    android:layout_above="@+id/login_btn_settings"
-   	    android:layout_marginLeft="10dp"
-   	    android:layout_marginRight="10dp"
-   	    android:layout_centerHorizontal= "true"
-   	    android:background="@drawable/button_bg_selector"
-   	    android:paddingBottom="4dp"
-   	    android:paddingTop="4dp"
-   	    android:text="@string/login_cp"
-   	    android:textColor="#ffffff"
-   	    android:textSize="18dp"
-   	    android:textStyle="bold" />
-
-   	<Button
-   	    android:id="@+id/login_btn_settings"
-   	    android:layout_width="300dp"
-   	    android:layout_height="48dp"
-   	    android:layout_alignParentBottom="true"
-   	    android:layout_marginLeft="10dp"
-   	    android:layout_marginRight="10dp"
-   	    android:layout_marginTop="5dp"
-   	    android:layout_marginBottom="10dp"
-   	    android:layout_centerHorizontal= "true"
-   	    android:background="@drawable/button_bg_selector"
-   	    android:paddingBottom="4dp"
-   	    android:paddingTop="4dp"
-   	    android:text="@string/goto_settings"
-   	    android:textColor="#ffffff"
-   	    android:textSize="18dp"
-   	    android:textStyle="bold" />
-
+    <Button
+        android:id="@+id/login_btn_settings"
+        style="@style/PreyButton"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/goto_settings" />
 
 </RelativeLayout>

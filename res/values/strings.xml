@@ -21,10 +21,15 @@
     
     <!-- Login screen -->
     <string name="device_ready_h1">Device Ready</string>
+    <string name="device_not_ready_h1">Device not ready!</string>
     <string name="device_ready_h2">Your phone is protected and waiting for the activation signal.</string>
+    <string name="device_not_ready_h2">Location services are disabled for Prey. Reports will not be sent..</string>
     <string name="login_cp">Log into the Control Panel</string>
     <string name="goto_settings">Manage Prey settings</string>
     
+    <!-- Password screen -->
+    <string name="type_your_pass">Type your password:</string>
+    <string name="log_in">Log in</string>
     
     <string name="agreements_title">Welcome to\nPrey for Android™!</string>
     <!--<string name="agreements_message1">By clicking below you agree to Prey Terms and Conditions</string>-->
