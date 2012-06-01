@@ -100,14 +100,14 @@ public class WelcomeActivity extends Activity {
 		newUser.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(WelcomeActivity.this, CreateAccountActivity.class);
-				startActivityForResult(intent, ADD_THIS_DEVICE);
+				startActivityForResult(intent, CREATE_ACCOUNT);
 			}
 		});
 		
 		oldUser.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(WelcomeActivity.this, AddDeviceToAccountActivity.class);
-				startActivityForResult(intent, CREATE_ACCOUNT);
+				startActivityForResult(intent, ADD_THIS_DEVICE);
 			}
 		});
 	}
