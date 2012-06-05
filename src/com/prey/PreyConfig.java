@@ -40,6 +40,9 @@ public class PreyConfig {
 	// max "age" in ms of last location (default 120000).
 	public static final float LAST_LOCATION_MAX_AGE = 120000;
 
+	//Amount of millisecond the app can be suspended before ask for the password.
+	public static final long PASSWORD_PROMPT_DELAY = 5000;
+
 
 	public static final String PREFS_NAME = "PREY_PREFS";
 	public static final String PREFS_URL_KEY = "URL";
