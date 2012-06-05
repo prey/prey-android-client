@@ -31,6 +31,13 @@
     <string name="type_your_pass">Type your password:</string>
     <string name="log_in">Log in</string>
     
+    <!-- Add device to account screen -->
+    <string name="log_in_to_prey_h1">Log in to Prey</string>
+    <string name="your_prey_email">Your Prey account email</string>
+    <string name="your_prey_pass">Your Prey account password</string>
+    <string name="add_this_device">Add this device!</string>
+    
+    
     <string name="agreements_title">Welcome to\nPrey for Android™!</string>
     <!--<string name="agreements_message1">By clicking below you agree to Prey Terms and Conditions</string>-->
     <string name="agreements_message1">Please be sure to read and agree Prey Terms and Conditions by clicking below</string>

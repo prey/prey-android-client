@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,15 +38,15 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.add_device_to_account);
+		setContentView(R.layout.add_device);
 
-		Button ok = (Button) findViewById(R.id.ButtonAddAccount);
+		Button ok = (Button) findViewById(R.id.add_device_btn_ok);
 		ok.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
 				error = null;
-				final String email = ((EditText) findViewById(R.id.set_old_user_dialog_email_edit)).getText().toString();
-				final String password = ((EditText) findViewById(R.id.set_old_user_dialog_password_edit)).getText().toString();
+				final String email = ((EditText) findViewById(R.id.add_device_email)).getText().toString();
+				final String password = ((EditText) findViewById(R.id.add_device_pass)).getText().toString();
 
 				if (email.equals("") || password.equals("")) {
 					Toast.makeText(AddDeviceToAccountActivity.this, R.string.error_all_fields_are_required, Toast.LENGTH_LONG).show();
@@ -67,14 +68,6 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 	protected Dialog onCreateDialog(int id) {
 		Dialog pass = null;
 		switch (id) {
-		case CONGRATULATIONS_DEVICE_ADDED:
-			return new AlertDialog.Builder(AddDeviceToAccountActivity.this).setIcon(R.drawable.logo).setTitle(R.string.congratulations_title)
-					.setMessage(R.string.device_added_congratulations_text).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							setResult(RESULT_OK);
-							finish();
-						}
-					}).setCancelable(false).create();
 
 		case ERROR:
 			return new AlertDialog.Builder(AddDeviceToAccountActivity.this).setIcon(R.drawable.error).setTitle(R.string.error_title).setMessage(error)
@@ -92,7 +85,6 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 					}).setCancelable(false).create();
 		}
 		return pass;
-
 	}
 
 	private class AddDeviceToAccount extends AsyncTask<String, Void, Void> {
@@ -112,7 +104,8 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 		protected Void doInBackground(String... data) {
 			try {
 				noMoreDeviceError = false;
-				PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceToAccount(AddDeviceToAccountActivity.this, data[0], data[1], data[2]);
+				PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceToAccount(AddDeviceToAccountActivity.this, data[0], data[1],
+						data[2]);
 				PreyConfig config = PreyConfig.getPreyConfig(AddDeviceToAccountActivity.this);
 				config.saveAccount(accountData);
 
@@ -136,9 +129,10 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 				showDialog(NO_MORE_DEVICES_WARNING);
 
 			else {
-				if (error == null)
-					showDialog(CONGRATULATIONS_DEVICE_ADDED);
-				else
+				if (error == null) {
+					Intent intent = new Intent(AddDeviceToAccountActivity.this, CongratulationsActivity.class);
+					startActivity(intent);
+				} else
 					showDialog(ERROR);
 			}
 		}
