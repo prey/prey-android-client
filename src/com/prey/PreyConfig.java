@@ -26,7 +26,7 @@ import com.prey.net.PreyWebServices;
 public class PreyConfig {
 	
 	//Set false in production
-	public static final boolean LOG_DEBUG_ENABLED = false;
+	public static final boolean LOG_DEBUG_ENABLED = true;
 	
 	// Set to 1000 * 60 in production.
 	public static final long DELAY_MULTIPLIER = 1000 * 60; 
@@ -39,8 +39,8 @@ public class PreyConfig {
 	
 	// max "age" in ms of last location (default 120000).
 	public static final float LAST_LOCATION_MAX_AGE = 120000;
-
-	//Amount of millisecond the app can be suspended before ask for the password.
+	
+	//Amount of millisecond the app can be suspended before ask for the password. 
 	public static final long PASSWORD_PROMPT_DELAY = 5000;
 
 
@@ -73,6 +73,8 @@ public class PreyConfig {
 	/* ------------- */
 
 	public static final String TAG = "PREY";
+
+	
 
 	
 	private static PreyConfig cachedInstance = null;

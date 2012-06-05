@@ -34,19 +34,28 @@
 	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     
          
-   	 <application android:icon="@drawable/logo" android:label="@string/preyForAndroid_name">
+   	 <application
+   	     android:name="com.prey.PreyApp" 
+   	     android:icon="@drawable/logo" 
+   	     android:label="@string/preyForAndroid_name">
 		
 		<!-- Activities -->
         <activity 
         	android:name="com.prey.activities.WelcomeActivity" 
         	android:label="@string/preyForAndroid_name"
         	android:configChanges="keyboardHidden">
-        	<intent-filter>
+        	
+        </activity>
+        
+       <activity 
+           android:name="com.prey.activities.CheckPasswordActivity" 
+           android:configChanges="keyboardHidden"
+           android:noHistory = "true">
+           <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        
+       </activity>
                
        <activity 
        		android:name="com.prey.activities.PreyConfigurationActivity"
@@ -67,9 +76,12 @@
                 <category android:name="android.intent.category.DEFAULT" /> 
             </intent-filter>
         </activity>
+        
+      
         		  
        <activity android:name="com.prey.activities.CreateAccountActivity" android:configChanges="orientation|keyboardHidden"/>
-       <activity android:name="com.prey.activities.CheckPasswordActivity" android:configChanges="orientation|keyboardHidden"/>
+       <activity android:name="com.prey.activities.CongratulationsActivity" android:configChanges="orientation|keyboardHidden"/>
+       
        <activity android:name="com.prey.activities.AddDeviceToAccountActivity" android:configChanges="orientation|keyboardHidden"/>
        <activity android:name="com.prey.activities.AgreementDialogActivity" android:configChanges="orientation|keyboardHidden"/>
 

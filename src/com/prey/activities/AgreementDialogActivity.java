@@ -26,7 +26,7 @@ import com.prey.PreyException;
 import com.prey.R;
 import com.prey.net.PreyWebServices;
 
-public class AgreementDialogActivity extends Activity {
+public class AgreementDialogActivity extends PreyActivity {
 
 	protected static final int INSTRUCTIONS_SENT = 0;
 	int wrongPasswordIntents = 0;

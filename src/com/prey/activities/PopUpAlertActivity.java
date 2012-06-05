@@ -14,7 +14,7 @@ import android.os.Bundle;
 
 import com.prey.R;
 
-public class PopUpAlertActivity extends Activity {
+public class PopUpAlertActivity extends PreyActivity {
 
 	private static final int SHOW_POPUP = 0;
 	private String message = null;

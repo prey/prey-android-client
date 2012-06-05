@@ -9,7 +9,7 @@ package com.prey.activities;
 import android.app.Activity;
 import android.util.DisplayMetrics;
 
-public class SetupActivity extends Activity {
+public class SetupActivity extends PreyActivity {
 	
 	protected String getDeviceType(){
 		
