@@ -10,7 +10,6 @@ import java.util.Random;
 
 import android.content.Context;
 
-import com.prey.PreyConfig;
 import com.prey.PreyException;
 import com.prey.PreyLogger;
 import com.prey.actions.PreyAction;

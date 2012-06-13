@@ -14,4 +14,12 @@
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:background">@drawable/button_bg_selector</item>
     </style>
+    <style name="WideTextInput">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:ems">8</item>
+    </style>
 </resources>

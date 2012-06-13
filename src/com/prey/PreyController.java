@@ -13,8 +13,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
-import com.prey.net.PreyRestHttpClient;
-import com.prey.net.PreyWebServices;
 import com.prey.services.PreyRunnerService;
 
 public class PreyController {

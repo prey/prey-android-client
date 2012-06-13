@@ -35,7 +35,6 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;

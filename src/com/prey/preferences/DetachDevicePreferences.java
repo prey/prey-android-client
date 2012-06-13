@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.preferences;
 
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,7 +19,7 @@ import android.widget.Toast;
 import com.prey.PreyConfig;
 import com.prey.PreyException;
 import com.prey.R;
-import com.prey.activities.WelcomeActivity;
+import com.prey.activities.LoginActivity;
 import com.prey.net.PreyWebServices;
 
 public class DetachDevicePreferences extends DialogPreference {
@@ -80,8 +79,7 @@ public class DetachDevicePreferences extends DialogPreference {
 				Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
 				showDialog(new Bundle());
 			} else {
-				Intent welcome = new Intent(getContext(), WelcomeActivity.class);
-				welcome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				Intent welcome = new Intent(getContext(), LoginActivity.class);
 				getContext().startActivity(welcome);
 			}
 		}

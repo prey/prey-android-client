@@ -42,6 +42,8 @@ public class PreyConfig {
 	
 	//Amount of millisecond the app can be suspended before ask for the password. 
 	public static final long PASSWORD_PROMPT_DELAY = 5000;
+	
+	public static final String CONTROL_PANEL_URL = "http://panel.preyproject.com";
 
 
 	public static final String PREFS_NAME = "PREY_PREFS";
@@ -74,9 +76,6 @@ public class PreyConfig {
 
 	public static final String TAG = "PREY";
 
-	
-
-	
 	private static PreyConfig cachedInstance = null;
 	public static String postUrl = null;
 	private String deviceID = "";
@@ -124,10 +123,7 @@ public class PreyConfig {
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString(PreyConfig.PREFS_DEVICE_ID, accountData.getDeviceId());
 		editor.putString(PreyConfig.PREFS_API_KEY, accountData.getApiKey());
-		editor.putString(PreyConfig.PREFS_LOGIN, accountData.getLogin());
-		//editor.putString(PreyConfig.PREFS_PASSWORD, accountData.getPassword());
 		editor.putString(PreyConfig.PREFS_EMAIL, accountData.getEmail());
-		//editor.putString(PreyConfig.PREFS_PREY_VERSION, accountData.getPreyVersion());
 		editor.putString(PreyConfig.PREFS_IS_MISSING, new Boolean(accountData.isMissing()).toString());
 
 		editor.commit();
@@ -338,9 +334,9 @@ public class PreyConfig {
 		this.saveString(PreyConfig.PREFS_DESTINATION_SMS, destinationSms);
 	}
 
-	public boolean isSecurityPrivilegesAlreadyPrompted() {
+	/*public boolean isSecurityPrivilegesAlreadyPrompted() {
 		return securityPrivilegesAlreadyPrompted;
-	}
+	}*/
 
 	public void setSecurityPrivilegesAlreadyPrompted(boolean securityPrivilegesAlreadyPrompted) {
 		this.securityPrivilegesAlreadyPrompted = securityPrivilegesAlreadyPrompted;

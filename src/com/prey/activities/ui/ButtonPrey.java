@@ -1,13 +1,13 @@
 package com.prey.activities.ui;
 
-import com.prey.PreyLogger;
-import com.prey.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.Button;
+
+import com.prey.PreyLogger;
+import com.prey.R;
 
 
 public class ButtonPrey extends Button {

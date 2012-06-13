@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -16,6 +15,7 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -30,7 +30,6 @@ import com.prey.net.PreyWebServices;
 public class AddDeviceToAccountActivity extends SetupActivity {
 
 	private static final int NO_MORE_DEVICES_WARNING = 0;
-	private static final int CONGRATULATIONS_DEVICE_ADDED = 1;
 	private static final int ERROR = 3;
 	private String error = null;
 	private boolean noMoreDeviceError = false;
@@ -106,8 +105,7 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 				noMoreDeviceError = false;
 				PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceToAccount(AddDeviceToAccountActivity.this, data[0], data[1],
 						data[2]);
-				PreyConfig config = PreyConfig.getPreyConfig(AddDeviceToAccountActivity.this);
-				config.saveAccount(accountData);
+				getPreyConfig().saveAccount(accountData);
 
 			} catch (PreyException e) {
 				error = e.getMessage();
@@ -130,8 +128,13 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 
 			else {
 				if (error == null) {
+					String message = getString(R.string.device_added_congratulations_text);
+					Bundle bundle = new Bundle();
+					bundle.putString("message", message);
 					Intent intent = new Intent(AddDeviceToAccountActivity.this, CongratulationsActivity.class);
+					intent.putExtras(bundle);
 					startActivity(intent);
+					finish();
 				} else
 					showDialog(ERROR);
 			}

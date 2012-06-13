@@ -15,29 +15,23 @@
 
     <EditText
         android:id="@+id/add_device_email"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        style="@style/WideTextInput"
         android:layout_below="@+id/add_device_title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:ems="8"
-        android:hint="@string/your_prey_email" >
+        android:hint="@string/your_prey_email"
+        android:inputType="textEmailAddress"
+        >
 
         <requestFocus />
     </EditText>
 
     <EditText
         android:id="@+id/add_device_pass"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        style="@style/WideTextInput"
         android:layout_below="@+id/add_device_email"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:ems="8"
         android:hint="@string/your_prey_pass"
-        android:inputType="textPassword" >
+        android:inputType="textPassword"
+        >
+
     </EditText>
 
     <Button

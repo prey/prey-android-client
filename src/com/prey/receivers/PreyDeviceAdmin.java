@@ -8,20 +8,15 @@ package com.prey.receivers;
 
 import java.util.ArrayList;
 
-import android.app.ProgressDialog;
 import android.app.admin.DeviceAdminReceiver;
-import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.prey.PreyConfig;
-import com.prey.PreyException;
 import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.actions.LockAction;
-import com.prey.activities.CheckPasswordActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.net.PreyWebServices;
 

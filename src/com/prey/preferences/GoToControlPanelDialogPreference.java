@@ -14,7 +14,6 @@ import android.preference.DialogPreference;
 import android.util.AttributeSet;
 
 import com.prey.PreyConfig;
-import com.prey.net.PreyWebServices;
 
 public class GoToControlPanelDialogPreference extends DialogPreference {
 

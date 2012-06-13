@@ -6,25 +6,15 @@
  ******************************************************************************/
 package com.prey.activities;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.prey.PreyConfig;
-import com.prey.PreyException;
 import com.prey.R;
-import com.prey.net.PreyWebServices;
 
 public class AgreementDialogActivity extends PreyActivity {
 
@@ -40,7 +30,7 @@ public class AgreementDialogActivity extends PreyActivity {
 		linkToTOS.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
-				String url = "http://" + PreyConfig.getPreyConfig(getApplicationContext()).getPreyDomain() + "/terms";
+				String url = "http://" + getPreyConfig().getPreyDomain() + "/terms";
 				Intent internetIntent = new Intent(Intent.ACTION_VIEW);
 				internetIntent.setData(Uri.parse(url));
 				startActivity(internetIntent);

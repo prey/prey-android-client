@@ -6,12 +6,11 @@
  ******************************************************************************/
 package com.prey.receivers;
 
-import com.prey.PreyConfig;
-import com.prey.net.PreyWebServices;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.prey.PreyConfig;
 
 public class PreyShutdownReceiver extends BroadcastReceiver {
 

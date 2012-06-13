@@ -50,7 +50,6 @@ public class WelcomeActivity extends PreyActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.welcome);
 		Button newUser = (Button) findViewById(R.id.btn_welcome_newuser);
 		Button oldUser = (Button) findViewById(R.id.btn_welcome_olduser);
@@ -95,7 +94,7 @@ public class WelcomeActivity extends PreyActivity {
 		switch (id) {
 
 		case CONGRATULATIONS_NEW_ACCOUNT:
-			String mail = PreyConfig.getPreyConfig(WelcomeActivity.this).getEmail();
+			String mail = getPreyConfig().getEmail();
 			String message = getString(R.string.new_account_congratulations_text, mail);
 			return new AlertDialog.Builder(WelcomeActivity.this).setIcon(R.drawable.logo).setTitle(R.string.congratulations_title).setMessage(message)
 					.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

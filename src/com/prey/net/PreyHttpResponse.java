@@ -14,7 +14,6 @@ import java.io.InputStreamReader;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 
 public class PreyHttpResponse {

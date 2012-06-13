@@ -11,7 +11,7 @@ public class PreyAccountData {
 	private String apiKey;
 	private String deviceId;
 	private String name;
-	private String login;
+	//private String login;
 	private String password;
 	private String email;
 	private String refererId;
@@ -34,13 +34,13 @@ public class PreyAccountData {
 		this.deviceId = deviceId;
 	}
 
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
-	}
+//	public String getLogin() {
+//		return login;
+//	}
+//
+//	public void setLogin(String login) {
+//		this.login = login;
+//	}
 
 	public String getPassword() {
 		return password;

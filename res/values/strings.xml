@@ -25,17 +25,32 @@
     <string name="device_ready_h2">Your phone is protected and waiting for the activation signal.</string>
     <string name="device_not_ready_h2">Location services are disabled for Prey. Reports will not be sent..</string>
     <string name="login_cp">Log into the Control Panel</string>
-    <string name="goto_settings">Manage Prey settings</string>
+    <string name="manage_prey_settings">Manage Prey settings</string>
     
     <!-- Password screen -->
     <string name="type_your_pass">Type your password:</string>
     <string name="log_in">Log in</string>
+    
+    <!-- New account screen -->
+    <string name="create_prey_account_h1">Create your new Prey account</string>
+    <string name="your_name">Your name</string>
+    <string name="your_email">Your email</string>
+    <string name="choose_a_6_char_pass">Choose a 6 chars password</string>
+    <string name="repeat_your_pass">Repeat your password</string>
+    <string name="create_my_account">Create my account!</string>
+    <string name="creating_account_please_wait">Creating account. Please wait...</string>
+    <string name="new_account_congratulations_text">You\'ve successfully installed Prey on your device. To finish the setup process you need to verify your email address by following the link we just sent to %s.</string>
     
     <!-- Add device to account screen -->
     <string name="log_in_to_prey_h1">Log in to Prey</string>
     <string name="your_prey_email">Your Prey account email</string>
     <string name="your_prey_pass">Your Prey account password</string>
     <string name="add_this_device">Add this device!</string>
+    <string name="device_added_congratulations_text">You have successfully associated this device with your Prey account. Now take a minute to set it up.</string>
+    
+    <!-- Congratulationst screen -->
+    <string name="device_set_up_h1">Device set up!</string>
+    <string name="go_to_settings">Go to settings</string>
     
     
     <string name="agreements_title">Welcome to\nPrey for Android™!</string>
@@ -73,8 +88,7 @@
 
     <!-- Congratulations Dialog -->
     <string name="congratulations_title">Device Added!</string>
-    <string name="new_account_congratulations_text">You\'ve successfully installed Prey on your device.\nTo finish the setup process you need to verify your email address by following the link we just sent to %s.</string>
-    <string name="device_added_congratulations_text">You have successfully associated this device with your Prey account. Now take a minute to set it up.</string>
+   
 
 
     <!-- Prey SMS Preferences -->

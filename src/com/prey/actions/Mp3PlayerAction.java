@@ -9,9 +9,7 @@ package com.prey.actions;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.util.Log;
 
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.actions.observer.ActionJob;

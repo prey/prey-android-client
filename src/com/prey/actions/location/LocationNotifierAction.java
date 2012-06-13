@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 
-import com.prey.PreyConfig;
 import com.prey.PreyException;
 import com.prey.PreyLogger;
 import com.prey.R;

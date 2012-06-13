@@ -7,12 +7,8 @@
 package com.prey.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Contacts;
 import android.provider.Contacts.People;
@@ -27,7 +23,7 @@ import com.prey.ContactsAutoCompleteCursorAdapter;
 import com.prey.PreyConfig;
 import com.prey.R;
 
-public class SendConfirmationSMSActivity extends Activity {
+public class SendConfirmationSMSActivity extends PreyActivity {
 
 	private static final int SHOW_CCONFIRMATION = 0;
 	protected static final int PICK_CONTACT = 0;
@@ -38,7 +34,7 @@ public class SendConfirmationSMSActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.sms_destination2);
-		((EditText) findViewById(R.id.destination_sms_text)).setText(PreyConfig.getPreyConfig(SendConfirmationSMSActivity.this).getDestinationSms());
+		((EditText) findViewById(R.id.destination_sms_text)).setText(getPreyConfig().getDestinationSms());
 
 		AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.destination_sms_text);
 		Cursor c = getContentResolver().query(People.CONTENT_URI, PEOPLE_PROJECTION,
@@ -56,7 +52,7 @@ public class SendConfirmationSMSActivity extends Activity {
 				final String destSMS = ((EditText) findViewById(R.id.destination_sms_text)).getText().toString();
 
 				if (PhoneNumberUtils.isWellFormedSmsAddress(destSMS)) {
-					PreyConfig.getPreyConfig(SendConfirmationSMSActivity.this).saveDestinationSms(destSMS);
+					getPreyConfig().saveDestinationSms(destSMS);
 					Intent preferecences = new Intent(SendConfirmationSMSActivity.this, PreyConfigurationActivity.class);
 					startActivity(preferecences);
 				} else

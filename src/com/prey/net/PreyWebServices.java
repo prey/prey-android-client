@@ -15,12 +15,9 @@ import java.util.Map;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Looper;
 import android.telephony.TelephonyManager;
 
 import com.prey.NoMoreDevicesAllowedException;
@@ -62,7 +59,7 @@ public class PreyWebServices {
 	 * @throws PreyException
 	 * 
 	 */
-	public PreyAccountData registerNewAccount(Context ctx, String user, String name, String email, String password, String deviceType) throws PreyException {
+	public PreyAccountData registerNewAccount(Context ctx, String name, String email, String password, String deviceType) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 
 		HashMap<String, String> parameters = new HashMap<String, String>();
@@ -108,7 +105,6 @@ public class PreyWebServices {
 		PreyAccountData newAccount = new PreyAccountData();
 		newAccount.setApiKey(apiKey);
 		newAccount.setDeviceId(deviceId);
-		newAccount.setLogin(user);
 		newAccount.setEmail(email);
 		newAccount.setPassword(password);
 		newAccount.setName(name);

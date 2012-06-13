@@ -11,15 +11,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.provider.Contacts;
-import android.provider.Contacts.People;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 
 public class ContactsAutoCompleteCursorAdapter extends CursorAdapter implements Filterable {
 	private TextView mName, mNumber;

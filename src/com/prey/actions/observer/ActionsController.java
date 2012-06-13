@@ -7,11 +7,9 @@
 package com.prey.actions.observer;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import android.content.Context;
 
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.PreyAction;

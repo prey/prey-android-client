@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.activities;
 
-import android.app.Activity;
 import android.util.DisplayMetrics;
 
 public class SetupActivity extends PreyActivity {

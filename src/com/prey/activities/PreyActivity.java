@@ -1,13 +1,25 @@
 package com.prey.activities;
 
-import com.prey.PreyApp;
-import com.prey.PreyConfig;
-
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.Window;
+
+import com.prey.PreyApp;
+import com.prey.PreyConfig;
+import com.prey.PreyLogger;
+import com.prey.backwardcompatibility.FroyoSupport;
 
 public class PreyActivity extends Activity {
 	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+	}
+	
+	/*
 	@Override
 	public void onPause() {
 	    super.onPause();
@@ -24,5 +36,12 @@ public class PreyActivity extends Activity {
 			startActivity(intent);
 	    }
 	}
+	*/
+	
+	protected PreyConfig getPreyConfig(){
+		return PreyConfig.getPreyConfig(PreyActivity.this);
+	}
 
+
+	
 }

@@ -9,9 +9,7 @@ package com.prey.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.services.PreyBootService;
 
