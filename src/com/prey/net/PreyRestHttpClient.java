@@ -17,6 +17,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.RedirectHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
@@ -53,7 +54,8 @@ public class PreyRestHttpClient {
 
 	private PreyRestHttpClient(Context ctx) {
 		this.ctx = ctx;
-		httpclient = new DefaultHttpClient();
+		//httpclient = new DefaultHttpClient();
+		httpclient = (DefaultHttpClient) HttpUtils.getNewHttpClient();
 
 		HttpParams params = new BasicHttpParams();
 		
