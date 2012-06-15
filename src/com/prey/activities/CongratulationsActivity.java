@@ -17,12 +17,16 @@ public class CongratulationsActivity extends PreyActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 		if (getPreyConfig().isFroyoOrAbove() && !FroyoSupport.getInstance(this).isAdminActive()){
 			PreyLogger.i("Is froyo or above!!");
 			Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
-			startActivity(intent);
+			startActivityForResult(intent, SECURITY_PRIVILEGES);
 		} else {
-			PreyLogger.i("Will show the screen");
 			showScreen();
 		}
 	}
@@ -35,7 +39,6 @@ public class CongratulationsActivity extends PreyActivity {
 	
 	private void showScreen(){
 		setContentView(R.layout.congratulations);
-		PreyLogger.i("Congratulations screen showed");
 		
 		Bundle bundle = getIntent().getExtras();
 		((TextView) findViewById(R.id.congrats_h2_text)).setText(bundle.getString("message"));
@@ -48,6 +51,7 @@ public class CongratulationsActivity extends PreyActivity {
 			public void onClick(View v) {
 				Intent intent = new Intent(CongratulationsActivity.this, PreyConfigurationActivity.class);
 				startActivity(intent);
+				finish();
 			}
 		});
 	}
