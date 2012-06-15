@@ -123,7 +123,7 @@
     <string name="preferences_destination_sms_summary">Will be notified by SMS of new device number</string>
     <string name="preferences_destination_sms_edittext">Please choose the contact which will be notified when a new SIM card is detected. He will receive an SMS from your device\'s new device number.</string>
     <string name="preferences_destination_sms_edittext_hint">type name</string>
-    <string name="preferences_destination_sms_not_valid">The number you entered doesn\'t seem to be valid</string>
+    <string name="preferences_destination_sms_not_valid">The contact you entered doesn\'t seem to have a valid mobile phone number</string>
     <string name="sms_to_send_text">Your friend\'s device has a new number as its SIM card has been replaced. Please contact him at %s if you think it may have been stolen.</string>
 
     <string name="preferences_update_sim_title">Assign to current SIM</string>

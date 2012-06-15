@@ -71,7 +71,7 @@ public class PreyBootService extends Service {
 								PreyLogger.d("SIM is ready to be checked now. Checking...");
 								if (preyConfig.isSimChanged()) {
 									PreyLogger.d("Starting prey right now since SIM was replaced!");
-									String destSMS = preyConfig.getDestinationSms();
+									String destSMS = preyConfig.getDestinationSmsNumber();
 									if (PhoneNumberUtils.isWellFormedSmsAddress(destSMS)) {
 										String mail = PreyConfig.getPreyConfig(PreyBootService.this).getEmail();
 										String message = getString(R.string.sms_to_send_text, mail);

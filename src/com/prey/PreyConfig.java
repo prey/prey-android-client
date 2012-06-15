@@ -58,6 +58,7 @@ public class PreyConfig {
 	public static final String PREFS_SMS_RUN = "PREFS_SMS_RUN";
 	public static final String PREFS_SMS_STOP = "PREFS_SMS_STOP";
 	public static final String PREFS_DESTINATION_SMS = "PREFS_DESTINATION_SMS";
+	public static final String PREFS_DESTINATION_SMS_NAME = "PREFS_DESTINATION_SMS_NAME";
 	public static final String PREFS_SHOW_NOTIFICATION = "PREFS_SHOW_NOTIFICATION";
 	public static final String PREFS_CHECK_SIM_CHANGE = "PREFS_CHECK_SIM_CHANGE";
 	public static final String PREFS_RINGTONE = "PREFS_RINGTONE";
@@ -325,13 +326,22 @@ public class PreyConfig {
 		return false;
 	}
 
-	public String getDestinationSms() {
+	public String getDestinationSmsNumber() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
 		return settings.getString(PreyConfig.PREFS_DESTINATION_SMS, "");
 	}
+	
+	public String getDestinationSmsName() {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return settings.getString(PreyConfig.PREFS_DESTINATION_SMS_NAME, "");
+	}
 
-	public void saveDestinationSms(String destinationSms) {
+	public void saveDestinationSmsNumber(String destinationSms) {
 		this.saveString(PreyConfig.PREFS_DESTINATION_SMS, destinationSms);
+	}
+	
+	public void saveDestinationSmsName(String destinationSmsName) {
+		this.saveString(PreyConfig.PREFS_DESTINATION_SMS_NAME, destinationSmsName);
 	}
 
 	/*public boolean isSecurityPrivilegesAlreadyPrompted() {
