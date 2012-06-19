@@ -20,7 +20,7 @@
         android:layout_centerHorizontal="true" />
     
     <ImageView
-            android:id="@+id/login_red_button"
+            android:id="@+id/login_img"
             android:layout_toRightOf="@+id/login_img_top_logo"
             android:layout_below="@+id/login_img_prey_txt"
             android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
            android:id="@+id/login_h1_text"
            android:layout_width="fill_parent"
            android:layout_height="wrap_content"
-           android:layout_toRightOf="@+id/login_red_button"
+           android:layout_toRightOf="@+id/login_img"
            android:layout_below="@+id/login_img_prey_txt"
            android:layout_marginTop="20dp"
            android:paddingLeft="10dp"
@@ -45,7 +45,7 @@
        <TextView
            android:id="@+id/login_h2_text"
            android:layout_below="@+id/login_h1_text"
-           android:layout_toRightOf="@+id/login_red_button"
+           android:layout_toRightOf="@+id/login_img"
            android:layout_width="fill_parent"
            android:layout_height="wrap_content"
            android:paddingLeft="10dp"

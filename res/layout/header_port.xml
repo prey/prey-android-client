@@ -30,7 +30,7 @@
         android:paddingTop="20dp" >
 
         <ImageView
-            android:id="@+id/login_red_button"
+            android:id="@+id/login_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/red_button" />
@@ -39,7 +39,7 @@
             android:id="@+id/login_h1_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/login_red_button"
+            android:layout_toRightOf="@+id/login_img"
             android:paddingLeft="10dp"
             android:text="@string/device_ready_h1"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -50,7 +50,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/login_h1_text"
-            android:layout_toRightOf="@+id/login_red_button"
+            android:layout_toRightOf="@+id/login_img"
             android:paddingLeft="10dp"
             android:text="@string/device_ready_h2"
             android:textColor="@color/lighter_txt" />
