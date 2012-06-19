@@ -133,7 +133,7 @@ public class LocationService extends Service {
 				lastRegisteredLocation = newLocation;
 			}
 		}
-		PreyLocationManager.getInstance().setLastLocation(new PreyLocation(lastRegisteredLocation));
+		PreyLocationManager.getInstance(getApplicationContext()).setLastLocation(new PreyLocation(lastRegisteredLocation));
 		/* ** I'll keep both provider competing for the more accurate fix ****
 		 * 
 		if (newLocation.getProvider().equals(LocationManager.GPS_PROVIDER)) {

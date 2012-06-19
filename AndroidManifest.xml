@@ -44,6 +44,10 @@
     <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.UPDATE_DEVICE_STATS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- This app has permission to register and receive message -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -56,69 +60,68 @@
         <!-- Activities -->
         <activity
             android:name="com.prey.activities.LoginActivity"
+            android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden"
             android:label="@string/preyForAndroid_name"
-            android:launchMode="singleInstance"
-			android:clearTaskOnLaunch="true">
+            android:launchMode="singleInstance" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name="com.prey.activities.WelcomeActivity"
-            android:configChanges="keyboardHidden"
-            />
-        
+            android:configChanges="keyboardHidden" />
         <activity
             android:name="com.prey.activities.CheckPasswordActivity"
             android:configChanges="keyboardHidden"
             android:launchMode="singleInstance"
             android:noHistory="true" />
-        
         <activity
             android:name="com.prey.activities.PreyConfigurationActivity"
             android:configChanges="orientation|keyboardHidden"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.NoTitleBar"
             android:noHistory="true" />
-        
         <activity
             android:name="com.prey.activities.PopUpAlertActivity"
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/preyForAndroid_name"
             android:launchMode="singleTask" />
-        
         <activity
             android:name="com.prey.activities.SendConfirmationSMSActivity"
             android:configChanges="orientation|keyboardHidden"
             android:noHistory="true" >
             <intent-filter>
                 <action android:name="com.prey.activities.SEND_SMS_CONF" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name="com.prey.activities.CreateAccountActivity"
             android:configChanges="orientation|keyboardHidden" />
-        
         <activity
             android:name="com.prey.activities.CongratulationsActivity"
-            android:configChanges="orientation|keyboardHidden"
-         />
-        
+            android:configChanges="orientation|keyboardHidden" />
         <activity
             android:name="com.prey.activities.AddDeviceToAccountActivity"
             android:configChanges="orientation|keyboardHidden" />
-        
         <activity
             android:name="com.prey.activities.SMSContactActivity"
-            android:configChanges="keyboardHidden"
-            />
-        
+            android:configChanges="keyboardHidden" />
+        <activity
+            android:name="com.prey.activities.StatusActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="com.prey.activities.StatusActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.prey.activities.AgreementDialogActivity"
             android:configChanges="orientation|keyboardHidden" />

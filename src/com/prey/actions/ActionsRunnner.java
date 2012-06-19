@@ -70,9 +70,11 @@ public class ActionsRunnner {
 						try {
 							boolean isMissing = getInstructionsAndRun(waitNotify, false);
 							PreyLogger.d( "Now waiting [" + preyControlStatus.getDelay() + "] minutes before next execution");
-							if (isMissing)
+							if (isMissing){
+								PreyRunnerService.interval = preyControlStatus.getDelay();
+								PreyRunnerService.pausedAt = System.currentTimeMillis();
 								Thread.sleep(preyControlStatus.getDelay() * PreyConfig.DELAY_MULTIPLIER);
-		
+							}
 						} catch (InterruptedException e) {
 							Thread.currentThread().interrupt();
 						} catch (PreyException e) {

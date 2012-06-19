@@ -23,7 +23,7 @@
     <string name="device_ready_h1">Device Ready</string>
     <string name="device_not_ready_h1">Device not ready!</string>
     <string name="device_ready_h2">Your phone is protected and waiting for the activation signal.</string>
-    <string name="device_not_ready_h2">Location services are disabled for Prey. Reports will not be sent..</string>
+    <string name="device_not_ready_h2">Location services are disabled for Prey. Reports will not be sent.</string>
     <string name="login_cp">Log into the Control Panel</string>
     <string name="manage_prey_settings">Manage Prey settings</string>
 
@@ -57,6 +57,24 @@
     <string name="choose_contact">Choose…</string>
     <string name="contact_to_notify">Contact to notify</string>
     <string name="please_choose_the_contact">Please choose the contact which will be notified when a new SIM card is detected. He will receive an SMS from your device\'s new device number.</string>
+
+    <!-- Status screen -->
+    <string name="execution_status">Execution status</string>
+    <string name="running">Running</string>
+    <string name="stopped">Stopped</string>
+    <string name="execution_interval">Execution interval</string>
+    <string name="next_execution_in_aprox">Next execution in aprox</string>
+    <string name="running_since">Running since</string>
+    <string name="elapsed_time">Elapsed time</string>
+    <string name="hours">hours</string>
+    <string name="minutes">minutes</string>
+    <string name="network_ls">Network location service</string>
+    <string name="gps_ls">GPS location service</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="sms_activation">SMS activation phrase</string>
+    <string name="sms_deactivation">SMS deactivation phrase</string>
+
 
 
     <string name="agreements_title">Welcome to\nPrey for Android™!</string>
@@ -96,9 +114,15 @@
     <string name="congratulations_title">Device Added!</string>
 
 
+    <!-- Prey About preferences -->
+    <string name="preferences_status">Status</string>
+    <string name="preferences_status_title">Prey current status</string>
+    <string name="preferences_status_summary">Check execution status, time running and more.</string>
+
+
+    <string name="preferences_config_title">Main configuration</string>
 
     <!-- Prey SMS Preferences -->
-    <string name="preferences_sms_title">Main configuration</string>
     <string name="preferences_sms_run">SMS activation message</string>
     <string name="preferences_sms_run_summary">Word or phrase that will wake up Prey</string>
     <string name="preferences_sms_run_edittext">Send this text from another device to start Prey</string>
@@ -134,6 +158,12 @@
 
 
     <!--  Prey Others Preferences -->
+    <!--  Location providers checking -->
+    <string name="gps_network_not_enabled">Location Providers are disabled.\nYou need to activate at least one of them if you wish to track your device.</string>
+    <string name="open_location_settings">Activate now!</string>
+
+
+
     <string name="preferences_category_other_title">Account management</string>
 	<string name="preferences_category_other_summary">Manage your account settings</string>
 

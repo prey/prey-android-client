@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2008 The Android Open Source Project
+<!--
+     Copyright (C) 2008 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,69 +15,69 @@
      limitations under the License.
 -->
 
-<PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-       
-			
+    <PreferenceCategory android:title="@string/preferences_status" >
+        <Preference
+            android:key="PREFS_STATUS"
+            android:summary="@string/preferences_status_summary"
+            android:title="@string/preferences_status_title" >
+            <intent android:action="com.prey.activities.StatusActivity" />
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/preferences_config_title" >
         <com.prey.preferences.ChangeActivationPhrasePreferences
-                android:key="PREFS_SMS_RUN"
-                android:defaultValue="GO PREY"
-                android:title="@string/preferences_sms_run"
-                android:summary="@string/preferences_sms_run_summary"
-                android:dialogTitle="@string/preferences_sms_run_edittext" />
-                
+            android:defaultValue="GO PREY"
+            android:dialogTitle="@string/preferences_sms_run_edittext"
+            android:key="PREFS_SMS_RUN"
+            android:summary="@string/preferences_sms_run_summary"
+            android:title="@string/preferences_sms_run" />
+
         <com.prey.preferences.ChangeDeactivationPhrasePreferences
-                android:key="PREFS_SMS_STOP"
-                android:defaultValue="STOP PREY"
-                android:title="@string/preferences_sms_stop"
-                android:summary="@string/preferences_sms_stop_summary"
-                android:dialogTitle="@string/preferences_sms_stop_edittext" />
-       
-       <com.prey.preferences.DeviceAdminPreference
-			android:key="PREFS_ADMIN_DEVICE"
-       		android:title="@string/preferences_admin_enabled_title"
-               android:summary="@string/preferences_admin_enabled_summary"
-               android:dialogIcon= "@drawable/logo"
-               android:negativeButtonText = "@string/no"
-               android:positiveButtonText = "@string/yes"
-		/>
-       
-       <PreferenceScreen
-                android:key="PREFS_SIM_LOCK_SCREEN"
-                android:title="@string/preferences_lock_sim_screen_title"
-                android:summary="@string/preferences_lock_sim_screen_summary">
+            android:defaultValue="STOP PREY"
+            android:dialogTitle="@string/preferences_sms_stop_edittext"
+            android:key="PREFS_SMS_STOP"
+            android:summary="@string/preferences_sms_stop_summary"
+            android:title="@string/preferences_sms_stop" />
 
-	            	  
-	         <CheckBoxPreference
-	                android:key="PREFS_CHECK_SIM_CHANGE"
-	                android:defaultValue="true"
-	                android:title="@string/preferences_check_sim_change"
-	                android:summary="@string/preferences_check_sim_change_summary"  />
-	 
-	  		<Preference
-	        		android:key="PREFS_DESTINATION_SMS"
-	        		android:dependency="PREFS_CHECK_SIM_CHANGE"
-	        		android:title="@string/preferences_destination_sms"
-	                android:summary="@string/preferences_destination_sms_summary">
-	        	<intent android:action="com.prey.activities.SEND_SMS_CONF"/>
-	        </Preference>
-	        
-	        <com.prey.preferences.UpdateSimPreference
-					android:key="PREFS_UPDATE_SIM"
-	        		android:title="@string/preferences_update_sim_title"
-	                android:summary="@string/preferences_update_sim_summary"
-	                android:dialogIcon= "@drawable/logo"
-	                android:dialogTitle= "@string/preferences_update_sim_dialog_title"
-	                android:dialogMessage= "@string/preferences_update_sim_dialog_message"
-	                android:negativeButtonText = "@string/no"
-	                android:positiveButtonText = "@string/yes"
-				/>
+        <com.prey.preferences.DeviceAdminPreference
+            android:dialogIcon="@drawable/logo"
+            android:key="PREFS_ADMIN_DEVICE"
+            android:negativeButtonText="@string/no"
+            android:positiveButtonText="@string/yes"
+            android:summary="@string/preferences_admin_enabled_summary"
+            android:title="@string/preferences_admin_enabled_title" />
+
+        <PreferenceScreen
+            android:key="PREFS_SIM_LOCK_SCREEN"
+            android:summary="@string/preferences_lock_sim_screen_summary"
+            android:title="@string/preferences_lock_sim_screen_title" >
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="PREFS_CHECK_SIM_CHANGE"
+                android:summary="@string/preferences_check_sim_change_summary"
+                android:title="@string/preferences_check_sim_change" />
+
+            <Preference
+                android:dependency="PREFS_CHECK_SIM_CHANGE"
+                android:key="PREFS_DESTINATION_SMS"
+                android:summary="@string/preferences_destination_sms_summary"
+                android:title="@string/preferences_destination_sms" >
+                <intent android:action="com.prey.activities.SEND_SMS_CONF" />
+            </Preference>
+
+            <com.prey.preferences.UpdateSimPreference
+                android:dialogIcon="@drawable/logo"
+                android:dialogMessage="@string/preferences_update_sim_dialog_message"
+                android:dialogTitle="@string/preferences_update_sim_dialog_title"
+                android:key="PREFS_UPDATE_SIM"
+                android:negativeButtonText="@string/no"
+                android:positiveButtonText="@string/yes"
+                android:summary="@string/preferences_update_sim_summary"
+                android:title="@string/preferences_update_sim_title" />
         </PreferenceScreen>
-       
 
-    
-    <!-- 
+        <!--
     <PreferenceCategory
             	android:title="@string/preferences_category_title_ringtone">
 	    <RingtonePreference
@@ -88,48 +89,42 @@
 				android:summary="@string/preferences_ringtone_summary"
 			/>
     </PreferenceCategory>
-     -->
-    <PreferenceScreen
-                android:key="PREFS_ACCOUNT_MANAGEMENT_SCREEN"
-                android:title="@string/preferences_category_other_title"
-                android:summary="@string/preferences_category_other_summary">
-       
-         <com.prey.preferences.ChangePasswordPreferences 
-        		android:key="PREFS_CHANGE_PASSWORD"
-        		android:title="@string/preferences_password_title"
+        -->
+        <PreferenceScreen
+            android:key="PREFS_ACCOUNT_MANAGEMENT_SCREEN"
+            android:summary="@string/preferences_category_other_summary"
+            android:title="@string/preferences_category_other_title" >
+            <com.prey.preferences.ChangePasswordPreferences
+                android:dialogIcon="@drawable/logo"
+                android:dialogTitle="@string/preferences_password_dialog_title"
+                android:key="PREFS_CHANGE_PASSWORD"
+                android:negativeButtonText="@string/cancel"
+                android:positiveButtonText="@string/ok"
                 android:summary="@string/preferences_password_summary"
-                android:dialogIcon= "@drawable/logo"
-                android:dialogTitle= "@string/preferences_password_dialog_title"
-                android:negativeButtonText = "@string/cancel"
-                android:positiveButtonText = "@string/ok"
-        />
-        
-        <com.prey.preferences.DetachDevicePreferences
-				android:key="PREFS_DETACH"
-        		android:title="@string/preferences_detach_title"
-                android:summary="@string/preferences_detach_summary"
-                android:dialogIcon= "@drawable/logo"
-                android:dialogTitle= "@string/preferences_detach_dialog_title"
-                android:dialogMessage= "@string/preferences_detach_dialog_message"
-                android:negativeButtonText = "@string/no"
-                android:positiveButtonText = "@string/yes"
-			/>
-        
-        <com.prey.preferences.GoToControlPanelDialogPreference 
-        		android:key="PREFS_GOTO_WEB_CONTROL_PANEL"
-        		android:title="@string/preferences_go_to_control_panel_title"
-                android:summary="@string/preferences_go_to_control_panel_summary"
-                android:dialogIcon= "@drawable/info"
-                android:dialogTitle= "@string/preferences_go_to_control_panel_dialog_title"
-                android:dialogMessage= "@string/preferences_go_to_control_panel_dialog_message"
-                android:negativeButtonText = "@string/no"
-                android:positiveButtonText = "@string/yes"
-        />
-      
+                android:title="@string/preferences_password_title" />
 
-    </PreferenceScreen>
-    
-     
+            <com.prey.preferences.DetachDevicePreferences
+                android:dialogIcon="@drawable/logo"
+                android:dialogMessage="@string/preferences_detach_dialog_message"
+                android:dialogTitle="@string/preferences_detach_dialog_title"
+                android:key="PREFS_DETACH"
+                android:negativeButtonText="@string/no"
+                android:positiveButtonText="@string/yes"
+                android:summary="@string/preferences_detach_summary"
+                android:title="@string/preferences_detach_title" />
+
+            <com.prey.preferences.GoToControlPanelDialogPreference
+                android:dialogIcon="@drawable/info"
+                android:dialogMessage="@string/preferences_go_to_control_panel_dialog_message"
+                android:dialogTitle="@string/preferences_go_to_control_panel_dialog_title"
+                android:key="PREFS_GOTO_WEB_CONTROL_PANEL"
+                android:negativeButtonText="@string/no"
+                android:positiveButtonText="@string/yes"
+                android:summary="@string/preferences_go_to_control_panel_summary"
+                android:title="@string/preferences_go_to_control_panel_title" />
+        </PreferenceScreen>
+
+        
 	<PreferenceScreen
             	android:title="@string/preferences_category_operations_title"
             	android:summary="@string/preferences_category_operations_summary">
@@ -164,24 +159,20 @@
                 android:summary="@string/preferences_show_notification_summary"  />
 
     </PreferenceScreen>
-	 
-	 
-	<PreferenceCategory android:title="@string/preferences_about_category_name">
-	   <EditTextPreference
-		android:key="PREFS_ABOUT"
-      		android:title="@string/preferences_about"
-      		android:summary= "@string/preferences_about_summary"
-      		  android:selectable="false"
-              android:dialogIcon= "@drawable/logo"
-              android:dialogTitle= "@string/preferences_about_title"
-              android:dialogMessage= "@string/preferences_about_message"
-              android:positiveButtonText = "@string/ok"
-		/>	
-
+      
+	
+	
     </PreferenceCategory>
-	
-			
-	
-			
-  
+    <PreferenceCategory android:title="@string/preferences_about_category_name" >
+        <EditTextPreference
+            android:dialogIcon="@drawable/logo"
+            android:dialogMessage="@string/preferences_about_message"
+            android:dialogTitle="@string/preferences_about_title"
+            android:key="PREFS_ABOUT"
+            android:positiveButtonText="@string/ok"
+            android:selectable="false"
+            android:summary="@string/preferences_about_summary"
+            android:title="@string/preferences_about" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

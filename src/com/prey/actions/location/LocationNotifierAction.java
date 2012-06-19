@@ -75,7 +75,7 @@ public class LocationNotifierAction extends PreyAction {
 		HashMap<String, String> parameters = new HashMap<String, String>(); // HashMap<String,
 		// String>();
 		while (!validLocation) {
-			lastLocation = PreyLocationManager.getInstance().getLastLocation();
+			lastLocation = PreyLocationManager.getInstance(ctx).getLastLocation();
 			if (lastLocation.isValid()) {
 				validLocation = true;
 				parameters.put("lat", Double.toString(lastLocation.getLat()));
