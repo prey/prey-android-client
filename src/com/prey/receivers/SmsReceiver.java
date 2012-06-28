@@ -55,9 +55,11 @@ public class SmsReceiver extends BroadcastReceiver {
 		boolean shouldStop = SMSMessage.indexOf(preyConfig.getSmsToStop()) >= 0;
 		if (shouldPerform) {
 			PreyLogger.i("SMS Match!, waking up Prey right now!");
+			abortBroadcast(); //To remove the SMS from the inbox
 			PreyController.startPrey(ctx);
 		} else if (shouldStop) {
 			PreyLogger.i("SMS Match!, stopping Prey!");
+			abortBroadcast(); //To remove the SMS from the inbox
 			PreyController.stopPrey(ctx);
 		}
 	}
