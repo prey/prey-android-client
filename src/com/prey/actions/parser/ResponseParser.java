@@ -40,9 +40,11 @@ public class ResponseParser {
 
 			xr.setContentHandler(responsesHandler);
 
-			ByteArrayInputStream tobeparsed = new ByteArrayInputStream(responseAsXML.getBytes());
+			ByteArrayInputStream tobeparsed = new ByteArrayInputStream(responseAsXML.getBytes("UTF-8"));
 
-			xr.parse(new InputSource(tobeparsed));
+			InputSource is = new InputSource(tobeparsed);
+			is.setEncoding("UTF-8");
+			xr.parse(is);
 
 			/* Parsing has finished. */
 

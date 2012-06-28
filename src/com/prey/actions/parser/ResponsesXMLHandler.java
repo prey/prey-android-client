@@ -6,6 +6,8 @@
  ******************************************************************************/
 package com.prey.actions.parser;
 
+import java.net.URLDecoder;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -22,6 +24,7 @@ public class ResponsesXMLHandler extends DefaultHandler {
 	private boolean inModule;
 	private boolean inAlertMessage;
 	private boolean inUnlockPass;
+	private String alertMessage = "";
 
 	private ReportActionResponse actionResponse = new ReportActionResponse();
 
@@ -98,6 +101,7 @@ public class ResponsesXMLHandler extends DefaultHandler {
 			this.inModule = false;
 		} else if (localName.equals("alert_message")) {
 			this.inAlertMessage = false;
+			this.alertMessage = "";
 		} else if (localName.equals("unlock_pass")) {
 			this.inUnlockPass = false;
 		}
@@ -108,7 +112,7 @@ public class ResponsesXMLHandler extends DefaultHandler {
 	 */
 	@Override
 	public void characters(char ch[], int start, int length) {
-
+		
 		if (this.inMissing) {
 			String isMissing = new String(ch, start, length);
 			actionResponse.setMissing(new Boolean(isMissing));
@@ -121,7 +125,7 @@ public class ResponsesXMLHandler extends DefaultHandler {
 		} else if (this.inAlertMessage) {
 			// alert_message
 			// change_wallpaper
-			String alertMessage = new String(ch, start, length);
+			alertMessage = alertMessage.concat(new String(ch, start, length));
 			actionResponse.addActionConfigParameter("alert", "alert_message", alertMessage);
 		} else if (this.inUnlockPass) {
 			String unlockPass = new String(ch, start, length);
