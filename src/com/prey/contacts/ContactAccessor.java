@@ -1,11 +1,19 @@
 package com.prey.contacts;
 
+import java.io.InputStream;
+
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
+
+import com.prey.PreyLogger;
 
 
 /**
@@ -37,11 +45,12 @@ public class ContactAccessor {
 
         // Load the display name for the specified person
         Cursor cursor = contentResolver.query(contactUri,
-                new String[]{Contacts._ID, Contacts.DISPLAY_NAME}, null, null, null);
+                new String[]{Contacts._ID, Contacts.DISPLAY_NAME, Contacts.PHOTO_ID}, null, null, null);
         try {
             if (cursor.moveToFirst()) {
                 contactId = cursor.getLong(0);
                 contactInfo.setDisplayName(cursor.getString(1));
+                contactInfo.setPhotoId(cursor.getInt(2));
             }
         } finally {
             cursor.close();
@@ -58,7 +67,48 @@ public class ContactAccessor {
         } finally {
             cursor.close();
         }
-
+        contactInfo.setPicture(this.loadContactPhoto(contentResolver, contactId, contactInfo.getPhotoId()));
         return contactInfo;
+    }
+    
+    public Bitmap loadContactPhoto(ContentResolver cr, long  id, long photo_id) 
+    {
+        Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, id);
+        InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(cr, uri);
+        if (input != null) 
+        {
+            return BitmapFactory.decodeStream(input);
+        }
+        else
+        {
+            PreyLogger.d("first try failed to load photo");
+
+        }
+
+        byte[] photoBytes = null;
+
+        Uri photoUri = ContentUris.withAppendedId(ContactsContract.Data.CONTENT_URI, photo_id);
+
+        Cursor c = cr.query(photoUri, new String[] {ContactsContract.CommonDataKinds.Photo.PHOTO}, null, null, null);
+
+        try 
+        {
+            if (c.moveToFirst()) 
+                photoBytes = c.getBlob(0);
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+
+        } finally {
+
+            c.close();
+        }           
+
+        if (photoBytes != null)
+            return BitmapFactory.decodeByteArray(photoBytes,0,photoBytes.length);
+        else
+        	PreyLogger.d("second try also failed");
+        return null;
     }
 }

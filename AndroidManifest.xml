@@ -44,9 +44,11 @@
     <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.UPDATE_DEVICE_STATS" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- This app has permission to register and receive message -->
@@ -66,7 +68,6 @@
             android:launchMode="singleInstance" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -92,12 +93,10 @@
             android:label="@string/preyForAndroid_name"
             android:launchMode="singleTask" />
         <activity
-            android:name="com.prey.activities.SendConfirmationSMSActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:noHistory="true" >
+            android:name="com.prey.activities.SMSContactActivity"
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="com.prey.activities.SEND_SMS_CONF" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -110,9 +109,11 @@
         <activity
             android:name="com.prey.activities.AddDeviceToAccountActivity"
             android:configChanges="orientation|keyboardHidden" />
+        <!-- 
         <activity
             android:name="com.prey.activities.SMSContactActivity"
             android:configChanges="keyboardHidden" />
+             -->
         <activity
             android:name="com.prey.activities.StatusActivity"
             android:configChanges="orientation|keyboardHidden"

@@ -1,12 +1,14 @@
 package com.prey.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,8 +26,8 @@ public class SMSContactActivity extends PreyActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sms);
-		fillScreenInfo(getPreyConfig().getDestinationSmsName(), getPreyConfig().getDestinationSmsNumber());
-		Button ok = (Button) findViewById(R.id.sms_btn_choose);
+		fillScreenInfo(getPreyConfig().getDestinationSmsName(), getPreyConfig().getDestinationSmsNumber(),null);
+		Button ok = (Button) findViewById(R.id.sms_btn_change);
 		ok.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
@@ -33,12 +35,19 @@ public class SMSContactActivity extends PreyActivity {
 			}
 		});
 	}
+	
+	@Override
+	public void onBackPressed(){
+		Intent intent = new Intent(SMSContactActivity.this, PreyConfigurationActivity.class);
+		startActivity(intent);
+	}
 
 	public void doLaunchContactPicker(View view) {
 		startActivityForResult(contactAccesor.getPickContactIntent(), PICK_CONTACT_REQUEST);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		PreyLogger.d("Activity returned");
 		if (requestCode == PICK_CONTACT_REQUEST && resultCode == RESULT_OK)
 			loadContactInfo(data.getData());
 	}
@@ -69,11 +78,13 @@ public class SMSContactActivity extends PreyActivity {
 	protected void bindView(ContactInfo contactInfo) {
 		String contactNumber = contactInfo.getPhoneNumber();
 		String contactName = contactInfo.getDisplayName();
+		Bitmap contactPhoto = contactInfo.getPicture();
 
 		if (contactNumber != null && PhoneNumberUtils.isWellFormedSmsAddress(contactNumber)) {
 			getPreyConfig().saveDestinationSmsNumber(contactNumber);
 			getPreyConfig().saveDestinationSmsName(contactName);
-			fillScreenInfo(contactName, contactNumber);
+			getPreyConfig().saveDestinationSmsPicture(contactPhoto);
+			fillScreenInfo(contactName, contactNumber,contactPhoto);
 			PreyLogger.d("SMS contact stored: " + contactInfo.getDisplayName() + " - " + contactInfo.getPhoneNumber());
 		} 
 		else {
@@ -81,9 +92,14 @@ public class SMSContactActivity extends PreyActivity {
 		}	
 	}
 	
-	private void fillScreenInfo(String name, String number){
+	private void fillScreenInfo(String name, String number, Bitmap photo){
 		((TextView) findViewById(R.id.sms_contact_text)).setText(name);
-		((TextView) findViewById(R.id.sms_contact_number)).setText(number);		
+		((TextView) findViewById(R.id.sms_contact_number)).setText(number);
+		Bitmap b = getPreyConfig().getDestinationSmsPicture();
+		if (b!= null)
+			((ImageView) findViewById(R.id.sms_sheriff)).setImageBitmap(b);
+		else
+			((ImageView) findViewById(R.id.sms_sheriff)).setImageResource(R.drawable.sheriff);
 	}
 
 }
