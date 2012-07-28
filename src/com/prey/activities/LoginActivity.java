@@ -12,14 +12,17 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.prey.PreyConfig;
 import com.prey.R;
+import com.prey.actions.location.PreyLocationManager;
 
-public class LoginActivity extends PreyActivity {
+public class LoginActivity extends PasswordActivity {
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -35,7 +38,7 @@ public class LoginActivity extends PreyActivity {
 		nm.cancel(R.string.preyForAndroid_name);
 		startup();
 	}
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -43,42 +46,53 @@ public class LoginActivity extends PreyActivity {
 	}
 
 	private void startup() {
-
 		if (!isThisDeviceAlreadyRegisteredWithPrey()) {
 			Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
 			startActivity(intent);
 			finish();
-		} else {
-			setContentView(R.layout.login);
-			Button gotoCP = (Button) findViewById(R.id.login_btn_cp);
-			Button gotoSettings = (Button) findViewById(R.id.login_btn_settings);
+		} else if (!getPreyConfig().isCamouflageSet())
+			showLogin();
+		else
+			showCamouflage();
+	}
 
-			gotoCP.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(PreyConfig.CONTROL_PANEL_URL));
-					startActivity(browserIntent);
-				}
-			});
+	private void showLogin() {
+		setContentView(R.layout.login);
+		updateLoginScreen();
+		Button gotoCP = (Button) findViewById(R.id.login_btn_cp);
+		Button gotoSettings = (Button) findViewById(R.id.login_btn_settings);
 
-			gotoSettings.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					Intent intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
-					startActivity(intent);
-				}
-			});
-		}
+		gotoCP.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(PreyConfig.CONTROL_PANEL_URL));
+				startActivity(browserIntent);
+			}
+		});
+
+		gotoSettings.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
+				startActivity(intent);
+			}
+		});
+	}
+
+	private void showCamouflage() {
+
+		setContentView(R.layout.camouflage);
+		bindPasswordControls();
 	}
 
 	private boolean isThisDeviceAlreadyRegisteredWithPrey() {
 		return getPreyConfig().isThisDeviceAlreadyRegisteredWithPrey(false);
 	}
 
-	private void updateLoginScreen(){
+	private void updateLoginScreen() {
 		ImageView loginIcon = (ImageView) findViewById(R.id.login_img);
 		String drawableIconName = "red_button";
 		String h1 = getString(R.string.device_ready_h1);
 		String h2 = getString(R.string.device_ready_h2);
-		if (!PreyLocationManager.getInstance(getApplicationContext()).locationServicesEnabled()){
+		if (!PreyLocationManager.getInstance(getApplicationContext()).locationServicesEnabled()) {
 			drawableIconName = "grey_button";
 			h1 = getString(R.string.device_not_ready_h1);
 			h2 = getString(R.string.device_not_ready_h2);
@@ -86,8 +100,10 @@ public class LoginActivity extends PreyActivity {
 				public void onClick(View v) {
 					Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 					startActivity(myIntent);
-					//Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(PreyConfig.CONTROL_PANEL_URL));
-					//startActivity(browserIntent);
+					// Intent browserIntent = new
+					// Intent("android.intent.action.VIEW",
+					// Uri.parse(PreyConfig.CONTROL_PANEL_URL));
+					// startActivity(browserIntent);
 				}
 			});
 		}
@@ -97,6 +113,4 @@ public class LoginActivity extends PreyActivity {
 		((TextView) findViewById(R.id.login_h2_text)).setText(h2);
 	}
 
-
-	
 }

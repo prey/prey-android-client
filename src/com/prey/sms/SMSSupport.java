@@ -20,7 +20,7 @@ public class SMSSupport {
 		for (int i = 0; i < msgs.length; i++) {
 			msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
 			// str += "SMS from " + msgs[i].getOriginatingAddress();
-			// str += " :";
+			// str += " :"; 
 			// str += msgs[i].getMessageBody().toString();
 			// str += "\n";
 			try {

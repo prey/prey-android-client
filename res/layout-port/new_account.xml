@@ -17,7 +17,7 @@
         android:id="@+id/new_account_name"
         style="@style/WideTextInput"
         android:layout_below="@+id/new_account_title"
-        android:hint="@string/your_prey_email"
+        android:hint="@string/your_name"
         android:inputType="textPersonName">
         <requestFocus />
     </EditText>

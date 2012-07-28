@@ -4,82 +4,82 @@
     android:layout_height="match_parent"
     android:background="@color/screen_bg" >
 
-     <ImageView
-        android:id="@+id/top_right_success"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/top_right_success" />
-
     <TextView
-        android:id="@+id/sms_title_h1"
+        android:id="@+id/sms_h1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="false"
-        android:layout_centerHorizontal="true"
-        android:layout_centerInParent="false"
-        android:layout_marginTop="20dp"
-        android:layout_toLeftOf="@+id/top_right_success"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="@string/your_hero"
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:text="@string/choose_your_hero"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/darker_txt"
-        android:textSize="40dp"
-        android:textStyle="bold" />
-    
+        android:textSize="30dp" />
+
+    <TextView
+        android:id="@+id/sms_h2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sms_h1"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="20dp"
+        android:text="@string/your_hero_text"
+        android:textColor="@color/lighter_txt" />
+
     <RelativeLayout
         android:id="@+id/sms_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/top_right_success"
-        android:layout_centerHorizontal="true"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="20dp" >
+        android:layout_below="@id/sms_h2"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/lighter_bg"
+        android:padding="15dp" >
 
         <ImageView
             android:id="@+id/sms_sheriff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:src="@drawable/sheriff" />
 
-        <TextView
-            android:id="@+id/sms_contact_number"
-            android:layout_width="fill_parent"
+        <RelativeLayout
+            android:id="@+id/sms_contact_info"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/sms_contact_text"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/sms_sheriff"
-            android:gravity="center_horizontal"
-            android:paddingLeft="10dp"
-            android:text="NUMBER"
-            android:textColor="@color/lighter_txt" />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/sms_sheriff" >
 
-        <TextView
-            android:id="@+id/sms_contact_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_toRightOf="@id/sms_sheriff"
-            android:gravity="center_horizontal"
-            android:paddingLeft="10dp"
-            android:text="NAME"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/darker_txt" />
+            <TextView
+                android:id="@+id/sms_contact_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="NAME"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/darker_txt" />
 
-        <TextView
-            android:id="@+id/sms_h2_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sms_sheriff"
-            android:layout_marginTop="20dp"
-            android:paddingLeft="10dp"
-            android:text="@string/please_choose_the_contact"
-            android:textColor="@color/lighter_txt" />
-
+            <TextView
+                android:id="@+id/sms_contact_number"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sms_contact_text"
+                android:text="NUMBER"
+                android:textColor="@color/lighter_txt" />
+        </RelativeLayout>
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/hero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/sms_h1"
+        android:layout_marginTop="30dp"
+        android:contentDescription="Sheriff hero image"
+        android:src="@drawable/hero" />
 
     <Button
         android:id="@+id/sms_btn_change"
@@ -88,13 +88,12 @@
         android:layout_alignParentBottom="false"
         android:layout_marginBottom="10dp"
         android:text="@string/change" />
-    
-     <Button
-            android:id="@+id/sms_btn_accept"
-            style="@style/PreyButton"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:text="@string/accept" />
 
+    <Button
+        android:id="@+id/sms_btn_accept"
+        style="@style/PreyButton"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:text="@string/accept" />
 
 </RelativeLayout>

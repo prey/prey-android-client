@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_bg"
+    android:paddingBottom="10dp" >
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/new_account_scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent" >
+
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/screen_bg" >
+
+            <TextView
+                android:id="@+id/new_account_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/create_prey_account_h1"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/darker_txt" />
+
+            <EditText
+                android:id="@+id/new_account_name"
+                style="@style/WideTextInput"
+                android:layout_below="@+id/new_account_title"
+                android:hint="@string/your_name"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/new_account_email"
+                style="@style/WideTextInput"
+                android:layout_below="@+id/new_account_name"
+                android:hint="@string/your_email"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/new_account_pass"
+                style="@style/WideTextInput"
+                android:layout_below="@+id/new_account_email"
+                android:hint="@string/choose_a_6_char_pass"
+                android:inputType="textPassword" />
+
+            <EditText
+                android:id="@+id/new_account_repass"
+                style="@style/WideTextInput"
+                android:layout_below="@+id/new_account_pass"
+                android:hint="@string/repeat_your_pass"
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/new_account_btn_ok"
+                style="@style/PreyButton"
+                android:layout_below="@+id/new_account_repass"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/create_my_account" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/half_logo" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

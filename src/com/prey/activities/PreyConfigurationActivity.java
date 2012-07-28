@@ -6,13 +6,11 @@
  ******************************************************************************/
 package com.prey.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 import com.prey.PreyConfig;
-import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.backwardcompatibility.FroyoSupport;
 
@@ -32,9 +30,9 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 		super.onResume();
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
 		Preference p = findPreference("PREFS_ADMIN_DEVICE");
-		if (preyConfig.isFroyoOrAbove()){
-			
-			if (FroyoSupport.getInstance(getApplicationContext()).isAdminActive()){
+		if (preyConfig.isFroyoOrAbove()) {
+
+			if (FroyoSupport.getInstance(getApplicationContext()).isAdminActive()) {
 				p.setTitle(R.string.preferences_admin_enabled_title);
 				p.setSummary(R.string.preferences_admin_enabled_summary);
 			} else {
@@ -44,13 +42,5 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 		} else
 			p.setEnabled(false);
 	}
-
-	@Override
-	protected void onNewIntent(Intent intent) {
-		// TODO Auto-generated method stub
-		super.onNewIntent(intent);
-		PreyLogger.d("PreyConfiguration: New intent received!!");
-	}
-	
 
 }

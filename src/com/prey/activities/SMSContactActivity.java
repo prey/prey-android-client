@@ -9,6 +9,7 @@ import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,19 +28,37 @@ public class SMSContactActivity extends PreyActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sms);
 		fillScreenInfo(getPreyConfig().getDestinationSmsName(), getPreyConfig().getDestinationSmsNumber(),null);
-		Button ok = (Button) findViewById(R.id.sms_btn_change);
-		ok.setOnClickListener(new View.OnClickListener() {
-
+		
+		View.OnClickListener launchContactPicker = new View.OnClickListener() {
 			public void onClick(View v) {
 				doLaunchContactPicker(getCurrentFocus());
 			}
+		};
+		
+		Button change = (Button) findViewById(R.id.sms_btn_change);
+		change.setOnClickListener(launchContactPicker);
+		
+		RelativeLayout contactInfo = (RelativeLayout) findViewById(R.id.sms_body);
+		contactInfo.setOnClickListener(launchContactPicker);
+		
+		Button ok = (Button) findViewById(R.id.sms_btn_accept);
+		ok.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				close();
+			}
 		});
+		
 	}
 	
 	@Override
 	public void onBackPressed(){
+		this.close();
+	}
+	
+	private void close(){
 		Intent intent = new Intent(SMSContactActivity.this, PreyConfigurationActivity.class);
 		startActivity(intent);
+		finish();
 	}
 
 	public void doLaunchContactPicker(View view) {
@@ -94,7 +113,7 @@ public class SMSContactActivity extends PreyActivity {
 	
 	private void fillScreenInfo(String name, String number, Bitmap photo){
 		((TextView) findViewById(R.id.sms_contact_text)).setText(name);
-		((TextView) findViewById(R.id.sms_contact_number)).setText(number);
+		((TextView) findViewById(R.id.sms_contact_number)).setText(PhoneNumberUtils.formatNumber(number));
 		Bitmap b = getPreyConfig().getDestinationSmsPicture();
 		if (b!= null)
 			((ImageView) findViewById(R.id.sms_sheriff)).setImageBitmap(b);

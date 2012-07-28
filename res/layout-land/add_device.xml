@@ -31,8 +31,15 @@
         android:hint="@string/your_prey_pass"
         android:inputType="textPassword"
         android:text="qweqwe" >
-
     </EditText>
+
+    <ImageView
+        android:id="@+id/img_bg_mountains"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/mountains_wide" />
 
     <Button
         android:id="@+id/add_device_btn_ok"
@@ -40,12 +47,5 @@
         android:layout_below="@+id/add_device_pass"
         android:layout_marginTop="20dp"
         android:text="@string/add_this_device" />
-
-    <ImageView
-        android:id="@+id/img_bg_mountains"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/mountains" />
 
 </RelativeLayout>

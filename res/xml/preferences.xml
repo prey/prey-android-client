@@ -26,6 +26,11 @@
         </Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_config_title" >
+        <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="PREFS_CAMOUFLAGE"
+                android:title="@string/preferences_camouflage_title" 
+                android:summary="@string/preferences_camouflage_summary"/>
         <com.prey.preferences.ChangeActivationPhrasePreferences
             android:defaultValue="GO PREY"
             android:dialogTitle="@string/preferences_sms_run_edittext"
@@ -159,6 +164,23 @@
                 android:summary="@string/preferences_show_notification_summary"  />
 
     </PreferenceScreen>
+    <PreferenceScreen
+            android:key="PREFS_ADVANCED"
+            android:summary="@string/preferences_advanced_screen_summary"
+            android:title="@string/preferences_advanced_screen_title" >
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="PREFS_ACTIVATE_WIFI"
+                android:title="@string/preferences_activate_wifi_title" 
+                android:summary="@string/preferences_activate_wifi_summary"/>
+            
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="PREFS_ACTIVATE_MOBILE_DATA"
+                android:title="@string/preferences_activate_mobile_data_title" 
+                android:summary="@string/preferences_activate_mobile_data_summary"/>
+
+        </PreferenceScreen>
       
 	
 	

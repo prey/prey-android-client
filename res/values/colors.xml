@@ -2,6 +2,7 @@
 <resources>
 
 <color name="screen_bg">#e1e5e4</color>
+<color name="lighter_bg">#E8EBEA</color>
 <color name="darker_txt">#4d4d4d</color>
 <color name="lighter_txt">#808080</color>
     

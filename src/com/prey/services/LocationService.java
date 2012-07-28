@@ -21,7 +21,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.location.PreyLocation;
 import com.prey.actions.location.PreyLocationManager;
-import com.prey.actions.location.WifiUtils;
+import com.prey.net.NetworkUtils;
 
 /**
  * This service is intented to be running while Prey is active. While
@@ -60,9 +60,9 @@ public class LocationService extends Service {
 		// If not missing, this service running will only drain battery
 		PreyLogger.d("Checking if this device is missing");
 		if (preyConfig.isMissing()) {
-			//Turning wifi on to have at least network provider available.
-			if (!WifiUtils.getWifiUtils(getApplicationContext()).isWifiEnabled())
-				WifiUtils.getWifiUtils(getApplicationContext()).turnOnWifi(true);
+			
+			if (!NetworkUtils.getNetworkUtils(getApplicationContext()).isWifiEnabled() && preyConfig.isShouldActivateWifi())
+				NetworkUtils.getNetworkUtils(getApplicationContext()).turnOnWifi(true);
 			
 			androidLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 			LocationProvider gpsLocationProvider = androidLocationManager.getProvider(LocationManager.GPS_PROVIDER);
