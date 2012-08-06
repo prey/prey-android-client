@@ -1,5 +1,7 @@
 package com.prey.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -14,9 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prey.PreyLogger;
+import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.contacts.ContactAccessor;
 import com.prey.contacts.ContactInfo;
+import com.prey.sms.SMSSupport;
 
 public class SMSContactActivity extends PreyActivity {
 
@@ -67,8 +71,31 @@ public class SMSContactActivity extends PreyActivity {
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		PreyLogger.d("Activity returned");
-		if (requestCode == PICK_CONTACT_REQUEST && resultCode == RESULT_OK)
+		if (requestCode == PICK_CONTACT_REQUEST && resultCode == RESULT_OK){
 			loadContactInfo(data.getData());
+			showContactNowAlert();
+		}
+	}
+
+	private void showContactNowAlert() {
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(SMSContactActivity.this);
+        alertDialog.setTitle(getText(R.string.hero_chosen));
+        alertDialog.setMessage(getString(R.string.notify_your_hero_now,getPreyConfig().getDestinationSmsName()));
+        //alertDialog.setIcon(getPreyConfig().getDestinationSmsPicture().);
+ 
+        alertDialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+            	String deviceType = PreyUtils.getDeviceType(SMSContactActivity.this).toLowerCase();
+            	SMSSupport.sendSMS(getPreyConfig().getDestinationSmsNumber(), getString(R.string.hero_notification_message,deviceType));
+            }
+        });
+ 
+        alertDialog.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            dialog.cancel();
+            }
+        });
+        alertDialog.show();
 	}
 
 	private void loadContactInfo(Uri contactUri) {

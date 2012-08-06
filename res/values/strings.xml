@@ -149,6 +149,10 @@
 
     <string name="choose_your_hero">Choose your hero!</string>
     <string name="your_hero_text">Your hero will be the chosen one who will receive an SMS message in the event Prey detects a new SIM card on your phone.</string>
+    <string name="hero_chosen">Hero chosen!</string>
+    <string name="notify_your_hero_now">Good choice! Would you like to let %s know you\'ve selected him as your hero? We\'ll send a quick SMS message.</string>
+    <string name="hero_notification_message">I just chose you as my Prey Hero for my Android %s! So if someone else replaces my SIM card you\'ll be notified by SMS. Check out preyproject.com/hero!</string>
+
 
 	<string name="preferences_destination_sms">Contact to notify</string>
     <string name="preferences_destination_sms_summary">Will be notified by SMS of new device number</string>

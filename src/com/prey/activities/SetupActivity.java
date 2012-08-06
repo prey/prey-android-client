@@ -6,20 +6,12 @@
  ******************************************************************************/
 package com.prey.activities;
 
-import android.util.DisplayMetrics;
+import com.prey.PreyUtils;
 
 public class SetupActivity extends PreyActivity {
 	
 	protected String getDeviceType(){
-		
-		DisplayMetrics dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int width = dm.widthPixels; //320
-		int height = dm.heightPixels; //480
-		if (width >= 800 && height >= 480)
-			return "Tablet";
-		else
-			return "Phone";
+		return PreyUtils.getDeviceType(this);
 	}
 
 }
