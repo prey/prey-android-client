@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_bg"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:weightSum="3" >
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2" >
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/screen_bg"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/new_account_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center_horizontal"
+                android:text="@string/create_prey_account_h1"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/darker_txt"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/new_account_name"
+                style="@style/PreyEditText"
+                android:hint="@string/your_name"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/new_account_email"
+                style="@style/PreyEditText"
+                android:hint="@string/your_email"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/new_account_pass"
+                style="@style/PreyEditText"
+                android:hint="@string/choose_a_6_char_pass"
+                android:inputType="textPassword" />
+
+            <EditText
+                android:id="@+id/new_account_repass"
+                style="@style/PreyEditText"
+                android:hint="@string/repeat_your_pass"
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/new_account_btn_ok"
+                style="@style/PreyButton"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/create_my_account" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

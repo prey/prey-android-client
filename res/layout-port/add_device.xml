@@ -15,8 +15,10 @@
 
     <EditText
         android:id="@+id/add_device_email"
-        style="@style/WideTextInput"
+        style="@style/PreyEditText"
         android:layout_below="@+id/add_device_title"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:hint="@string/your_prey_email"
         android:inputType="textEmailAddress"
         android:text="cyaconi@gmail.com" >
@@ -26,11 +28,13 @@
 
     <EditText
         android:id="@+id/add_device_pass"
-        style="@style/WideTextInput"
+        style="@style/PreyEditText"
         android:layout_below="@+id/add_device_email"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:hint="@string/your_prey_pass"
         android:inputType="textPassword"
-        android:text="qweqwe" >
+        android:text="123123" >
 
     </EditText>
 
@@ -38,14 +42,9 @@
         android:id="@+id/add_device_btn_ok"
         style="@style/PreyButton"
         android:layout_below="@+id/add_device_pass"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
         android:text="@string/add_this_device" />
-
-    <ImageView
-        android:id="@+id/img_bg_mountains"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/mountains" />
 
 </RelativeLayout>

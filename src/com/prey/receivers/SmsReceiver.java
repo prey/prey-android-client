@@ -43,7 +43,6 @@ public class SmsReceiver extends BroadcastReceiver {
 				for (String sms : smsMessages) {
 					executeActionsBasedOnSMSMessage(context, sms);
 				}
-				
 			}
 		}
 	}

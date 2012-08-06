@@ -22,7 +22,7 @@
     <string name="new_user">New user</string>
 
     <!-- Login screen -->
-    <string name="device_ready_h1">Device Ready</string>
+    <string name="device_ready_h1">Device ready</string>
     <string name="device_not_ready_h1">Device not ready!</string>
     <string name="device_ready_h2">Your phone is protected and waiting for the activation signal.</string>
     <string name="device_not_ready_h2">Location services are disabled for Prey. Reports will not be sent.</string>
@@ -34,10 +34,10 @@
     <string name="log_in">Log in</string>
 
     <!-- New account screen -->
-    <string name="create_prey_account_h1">Create your new Prey account</string>
+    <string name="create_prey_account_h1">Create new account</string>
     <string name="your_name">Your name</string>
     <string name="your_email">Your email</string>
-    <string name="choose_a_6_char_pass">Choose a 6 chars password</string>
+    <string name="choose_a_6_char_pass">Choose a password</string>
     <string name="repeat_your_pass">Repeat your password</string>
     <string name="create_my_account">Create my account!</string>
     <string name="creating_account_please_wait">Creating account. Please wait…</string>
@@ -152,7 +152,7 @@
     <string name="hero_chosen">Hero chosen!</string>
     <string name="notify_your_hero_now">Good choice! Would you like to let %s know you\'ve selected him as your hero? We\'ll send a quick SMS message.</string>
     <string name="hero_notification_message">I just chose you as my Prey Hero for my Android %s! So if someone else replaces my SIM card you\'ll be notified by SMS. Check out preyproject.com/hero!</string>
-
+    
 
 	<string name="preferences_destination_sms">Contact to notify</string>
     <string name="preferences_destination_sms_summary">Will be notified by SMS of new device number</string>

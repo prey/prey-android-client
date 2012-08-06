@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="PreyTextAppearance" parent="@android:style/TextAppearance">
         <item name="android:textSize">14dip</item>
@@ -11,29 +11,111 @@
         <item name="android:textColor">#ffffff</item>
         <item name="android:textSize">18dp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:layout_width">300dp</item>
+        <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:background">@drawable/button_bg_selector</item>
     </style>
 
-    <style name="WideTextInput">
+    <style name="PreyLButton">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">30dp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:background">@drawable/button_bg_selector</item>
+    </style>
+
+    <style name="PreyXLButton">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">45dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">96dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:background">@drawable/button_bg_selector</item>
+    </style>
+
+    <style name="PreyCamouflageButton">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:background">@drawable/button_camouflage_selector</item>
+    </style>
+
+    <style name="PreyCamouflageLButton">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">30dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:background">@drawable/button_camouflage_selector</item>
+    </style>
+
+    <style name="PreyCamouflageXLButton">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">36dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">96dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:background">@drawable/button_camouflage_selector</item>
+    </style>
+
+    <style name="PreyEditText">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:background">@drawable/input_text</item>
+        <item name="android:ems">8</item>
+    </style>
+    
+    <style name="PreyLEditText">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:background">@drawable/input_text</item>
+        <item name="android:ems">8</item>
+    </style>
+    
+    <style name="PreyXLEditText">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_height">96dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:textSize">33dp</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:background">@drawable/input_text</item>
         <item name="android:ems">8</item>
     </style>
 
-    <style name="WideLandscapeTextInput">
-        <item name="android:layout_width">300dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
-        <item name="android:ems">8</item>
-    </style>
 
     <style name="Theme" parent="android:Theme.NoTitleBar">
         <item name="android:windowContentOverlay">@null</item>

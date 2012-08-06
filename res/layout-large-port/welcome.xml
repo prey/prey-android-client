@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_alignParentTop="true"
+    android:background="@color/screen_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:weightSum="8" >
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_weight="4"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sonar" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-40dp"
+        android:layout_weight="2"
+        android:adjustViewBounds="true"
+        android:paddingLeft="60dp"
+        android:paddingRight="60dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/prey_text_full" />
+
+    <Button
+        android:id="@+id/btn_welcome_olduser"
+        style="@style/PreyButton"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:text="@string/already_prey_user"
+        android:textSize="30dp" />
+
+    <Button
+        android:id="@+id/btn_welcome_newuser"
+        style="@style/PreyButton"
+        android:layout_width="fill_parent"
+        android:layout_margin="20dp"
+        android:layout_weight="1"
+        android:text="@string/new_user"
+        android:textSize="30dp" />
+
+</LinearLayout>

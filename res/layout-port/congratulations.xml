@@ -9,9 +9,14 @@
         android:id="@+id/top_right_success"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/top_right_success" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="15dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/check_icon_small" />
 
     <TextView
         android:id="@+id/congrats_h1_text"
@@ -21,8 +26,8 @@
         android:layout_centerInParent="true"
         android:layout_marginTop="20dp"
         android:text="@string/device_set_up_h1"
-        android:textSize="25dp"
         android:textColor="@color/darker_txt"
+        android:textSize="30dp"
         android:textStyle="bold" />
 
     <TextView
@@ -39,10 +44,10 @@
         android:textSize="15dp" />
     
      <Button
-        android:id="@+id/congrats_btn_ok"
-        style="@style/PreyButton"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
-        android:text="@string/go_to_settings" />
+         android:id="@+id/congrats_btn_ok"
+         style="@style/PreyButton"
+         android:layout_alignParentBottom="true"
+         android:layout_marginBottom="15dp"
+         android:text="@string/go_to_settings" />
 
 </RelativeLayout>

@@ -23,14 +23,11 @@ import com.prey.R;
 public class WelcomeActivity extends PreyActivity {
 
 	private static final int CREATE_ACCOUNT = 0;
-	private static final int WELCOME_DIALOG = 1;
 	private static final int ADD_THIS_DEVICE = 2;
-	private static final int AGREEMENTS = 3;
 	private static final int LOADING = 4;
 	private static final int LOADING_ADD_DEVICE = 5;
 	private static final int ERROR = 6;
 	// private static final int CONFIRM_PASSWORD = 7;
-	private static final int CHECKING_PASSWORD = 8;
 	private static final int CONGRATULATIONS_NEW_ACCOUNT = 9;
 
 
@@ -51,6 +48,7 @@ public class WelcomeActivity extends PreyActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.welcome);
+
 		Button newUser = (Button) findViewById(R.id.btn_welcome_newuser);
 		Button oldUser = (Button) findViewById(R.id.btn_welcome_olduser);
 		
@@ -67,16 +65,7 @@ public class WelcomeActivity extends PreyActivity {
 				startActivityForResult(intent, ADD_THIS_DEVICE);
 			}
 		});
-	    //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		
-		/*
-		 * if (!isPreyAgreementRead()){ Intent intent = new
-		 * Intent(WelcomeActivity.this, AgreementDialogActivity.class);
-		 * startActivityForResult(intent, AGREEMENTS); } else
-		 */
 	}
-
-
 
 
 	@Override

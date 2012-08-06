@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/welcome_upper_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/screen_bg"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/login_img_top_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/top_left_logo" />
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/screen_bg" >
+
+        <ImageView
+            android:id="@+id/login_img_prey_txt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:layout_toRightOf="@+id/login_img_top_logo"
+            android:src="@drawable/prey_text" />
+
+        <ImageView
+            android:id="@+id/login_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_img_prey_txt"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/login_img_top_logo"
+            android:src="@drawable/red_button" />
+
+        <TextView
+            android:id="@+id/login_h1_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_img_prey_txt"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/login_img"
+            android:paddingLeft="10dp"
+            android:text="@string/device_ready_h1"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/darker_txt" />
+
+        <TextView
+            android:id="@+id/login_h2_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_h1_text"
+            android:layout_toRightOf="@+id/login_img"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/device_ready_h2"
+            android:textColor="@color/lighter_txt" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp" >
+
+            <Button
+                android:id="@+id/login_btn_cp"
+                style="@style/PreyButton"
+                android:layout_above="@+id/login_btn_settings"
+                android:text="@string/login_cp" />
+
+            <Button
+                android:id="@+id/login_btn_settings"
+                style="@style/PreyButton"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="5dp"
+                android:text="@string/manage_prey_settings" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

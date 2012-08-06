@@ -3,12 +3,21 @@
 
 <color name="screen_bg">#e1e5e4</color>
 <color name="lighter_bg">#E8EBEA</color>
+<color name="white_bg">#FFFFFF</color>
 <color name="darker_txt">#4d4d4d</color>
 <color name="lighter_txt">#808080</color>
     
 <color name="fb_border_start">#AAAAAA</color>
 <color name="fb_border_center">#888888</color>
 <color name="fb_border_end">#666666</color>
+
+<color name="fb_camou_border_start">#700404</color>
+<color name="fb_camou_border_center">#700404</color>
+<color name="fb_camou_border_end">#700404</color>
+
+<color name="fb_camou_normal_start">#971C1C</color>
+<color name="fb_camou_normal_center">#D61E1E</color>
+<color name="fb_camou_normal_end">#E83535</color>
 <!-- 
 <color name="fb_normal_start">#088F8F8F</color>
 <color name="fb_normal_center">#08656565</color>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_bg"
+    android:paddingLeft="60dp"
+    android:paddingRight="60dp" >
+
+    <TextView
+        android:id="@+id/add_device_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/log_in_to_prey_h1"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/darker_txt"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/add_device_email"
+        style="@style/PreyLEditText"
+        android:layout_width="fill_parent"
+        android:layout_below="@+id/add_device_title"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:hint="@string/your_prey_email"
+        android:inputType="textEmailAddress"
+        android:text="cyaconi@gmail.com" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/add_device_pass"
+        style="@style/PreyLEditText"
+        android:layout_width="fill_parent"
+        android:layout_below="@+id/add_device_email"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:hint="@string/your_prey_pass"
+        android:inputType="textPassword"
+        android:text="123123">
+
+    </EditText>
+
+    <Button
+        android:id="@+id/add_device_btn_ok"
+        style="@style/PreyLButton"
+        android:layout_below="@+id/add_device_pass"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/add_this_device" />
+
+</RelativeLayout>
