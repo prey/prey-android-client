@@ -142,7 +142,7 @@ public class PreyWebServices {
 		parameters.put("device[os]", "Android");
 		parameters.put("device[os_version]", Build.VERSION.RELEASE);
 		parameters.put("device[referer_device_id]", "");
-		parameters.put("device[state]", "ok");
+		//parameters.put("device[state]", "ok");
 		parameters.put("device[plan]", "free");
 		parameters.put("device[activation_phrase]", preyConfig.getSmsToRun());
 		parameters.put("device[deactivation_phrase]", preyConfig.getSmsToStop());
@@ -175,6 +175,7 @@ public class PreyWebServices {
 			xml = PreyRestHttpClient.getInstance(ctx).get(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("profile.xml"), parameters, preyConfig, email, password)
 					.getResponseAsString();
 		} catch (IOException e) {
+			PreyLogger.e("Error!",e);
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
 		}
 
