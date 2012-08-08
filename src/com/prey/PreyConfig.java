@@ -86,6 +86,8 @@ public class PreyConfig {
 	public static final String LAST_ACC = "LAST_ACC";
 	public static final String LAST_ALT = "LAST_ALT";
 	public static final String LAST_LOC_PROVIDER = "LAST_ALT";
+	
+	
 	/* ------------- */
 
 	public static final String TAG = "PREY";
@@ -97,7 +99,6 @@ public class PreyConfig {
 	private String apiKey = "";
 	private boolean missing;
 	private String email;
-	private String password;
 	private String destinationSms;
 	private boolean shouldNotify;
 	private boolean shouldCheckSimChange;
@@ -135,6 +136,7 @@ public class PreyConfig {
 		this.isTheAccountAlreadyVerified = settings.getBoolean(PreyConfig.PREFS_ACCOUNT_VERIFIED, false);
 		this.securityPrivilegesAlreadyPrompted = settings.getBoolean(PreyConfig.PREFS_SECURITY_PROMPT_SHOWN, false);
 		this.locked = settings.getBoolean(PreyConfig.IS_LOCK_SET, false);
+		
 	}
 	
 	public void saveAccount(PreyAccountData accountData) {
@@ -162,6 +164,9 @@ public class PreyConfig {
 	}
 	
 	private static void deleteCacheInstance() {
+		if (cachedInstance != null)
+			
+			cachedInstance.deleteSmsPicture();
 		cachedInstance = null;
 	}
 	
@@ -377,10 +382,9 @@ public class PreyConfig {
 		} catch (FileNotFoundException e) {
 			return null;
 		}
-		
 	}
+	
 	public void saveDestinationSmsPicture(Bitmap detinationSmsPicture){
-		
 		File sd = Environment.getExternalStorageDirectory();
 		File dest = new File(sd, PICTURE_FILENAME);
 
@@ -394,13 +398,12 @@ public class PreyConfig {
 		}
 	}
 	
-	public boolean supportSMS(){
-		//Froyo or above!!
-		TelephonyManager telephonyManager1 = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        boolean isPhone = !(telephonyManager1.getPhoneType()==TelephonyManager.PHONE_TYPE_NONE);
-        boolean featureTelephony = ctx.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
-		return isPhone && featureTelephony;
+	private void deleteSmsPicture(){
+		File sd = Environment.getExternalStorageDirectory();
+		File dest = new File(sd, PICTURE_FILENAME);
+		dest.delete();
 	}
+	
 
 	public void setSecurityPrivilegesAlreadyPrompted(boolean securityPrivilegesAlreadyPrompted) {
 		this.securityPrivilegesAlreadyPrompted = securityPrivilegesAlreadyPrompted;
