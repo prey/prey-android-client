@@ -237,4 +237,5 @@
     <string name="error_cant_change_password_unknown_error">Password couldn\'t be changed. Please try again later.</string>
     <string name="error_cant_report_forgotten_password">Can\'t report forgotten password. Please try again later.</string>
     <string name="error_all_fields_are_required">All fields are required</string>
+    <string name="sms_not_sent">There was an error sending the message. Does your device have SMS support?</string>
 </resources>

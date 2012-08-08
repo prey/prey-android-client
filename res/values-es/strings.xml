@@ -171,7 +171,7 @@
     <string name="preferences_camouflage_title">Modo camuflado</string>
     <string name="lock_label_title">Este dispositivo ha sido bloqueado.</string>
     <string name="sms_activation">Frase de activación SMS</string>
-    <string name="device_set_up_h1">Equipo configurado!</string>
+    <string name="device_set_up_h1">Equipo agregado!</string>
     <string name="gps_network_not_enabled">Servicios de localización desactivados.\nDebes activar al menos uno de ellos si quieres localizar tu equipo.</string>
     <string name="network_ls">Servicio de ubicación por redes</string>
     <string name="preferences_status">Estado</string>
@@ -226,4 +226,5 @@
     <string name="already_prey_user">Tengo cuenta en Prey</string>
     <string name="choose_a_6_char_pass">Elige una contraseña</string>
     <string name="choose_contact">Elegir…</string>
+    <string name="sms_not_sent">Hubo un problema enviando el mensaje. ¿Estás seguro que tu equipo puede enviar SMS?</string>
 </resources>
