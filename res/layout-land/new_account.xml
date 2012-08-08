@@ -34,7 +34,8 @@
             android:layout_width="0dip"
             android:layout_weight="1"
             android:hint="@string/your_name"
-            android:inputType="textPersonName" />
+            android:inputType="textCapWords|textPersonName"
+            android:nextFocusDown="@+id/new_account_email" />
 
         <EditText
             android:id="@+id/new_account_email"
@@ -42,7 +43,8 @@
             android:layout_width="0dip"
             android:layout_weight="1"
             android:hint="@string/your_email"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:nextFocusDown="@+id/new_account_pass" />
 
     </LinearLayout>
 
@@ -61,7 +63,8 @@
             android:layout_width="0dip"
             android:layout_weight="1"
             android:hint="@string/choose_a_6_char_pass"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:nextFocusDown="@+id/new_account_repass" />
 
         <EditText
             android:id="@+id/new_account_repass"
@@ -69,7 +72,8 @@
             android:layout_width="0dip"
             android:layout_weight="1"
             android:hint="@string/repeat_your_pass"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:nextFocusDown="@+id/new_account_btn_ok" />
 
     </LinearLayout>
 
