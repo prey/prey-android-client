@@ -4,46 +4,7 @@
     android:layout_height="fill_parent"
     android:background="@color/screen_bg" >
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/welcome_upper_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="48dp"
-        android:background="@color/screen_bg"
-        android:orientation="horizontal"
-        android:weightSum="3" >
-
-        <ImageView
-            android:id="@+id/main_logo"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:paddingLeft="40dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/sonar" />
-
-        <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="2" >
-
-            <ImageView
-                android:id="@+id/prey_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="20dp"
-                android:layout_toRightOf="@+id/main_logo"
-                android:padding="40dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/prey_text_full" />
-
-        </RelativeLayout>
-    </LinearLayout>
+    <include layout="@layout/welcome_land_header" />
 
     <LinearLayout
         android:id="@+id/sms_land_buttons"

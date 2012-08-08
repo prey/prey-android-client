@@ -24,17 +24,17 @@
         android:layout_below="@+id/sms_h1"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
         android:text="@string/your_hero_text"
-        android:textColor="@color/lighter_txt" />
+        android:textColor="@color/lighter_txt"
+        android:textSize="14dp" />
 
     <RelativeLayout
         android:id="@+id/sms_body"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
@@ -45,7 +45,8 @@
             android:id="@+id/sms_sheriff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/sheriff_sm" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/sq_sheriff" />
 
         <RelativeLayout
             android:id="@+id/sms_contact_info"
@@ -59,17 +60,19 @@
                 android:id="@+id/sms_contact_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Luke Skywalker"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/darker_txt" />
+                android:textColor="@color/darker_txt"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/sms_contact_number"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/sms_contact_text"
-                android:text="+1-380-1234567"
-                android:textColor="@color/lighter_txt" />
+                android:textColor="@color/lighter_txt"
+                android:textSize="14dp" />
+
         </RelativeLayout>
     </RelativeLayout>
 

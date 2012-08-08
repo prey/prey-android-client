@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_bg" >
+
+    <ImageView
+        android:id="@+id/top_cut_logo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="-100dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/logo_sonar_cut_land" />
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/top_cut_logo"
+            android:orientation="horizontal"
+            android:weightSum="6" >
+
+            <View
+                android:id="@+id/imageView1"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:id="@+id/login_img"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/red_button" />
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:orientation="vertical"
+                android:weightSum="2" >
+
+                <TextView
+                    android:id="@+id/login_h1_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:paddingLeft="10dp"
+                    android:text="@string/device_ready_h1"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/darker_txt"
+                    android:textSize="30dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/login_h2_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/device_ready_h2"
+                    android:textColor="@color/lighter_txt"
+                    android:textSize="15dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <Button
+            android:id="@+id/login_btn_cp"
+            style="@style/PreyButton"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0.5dp"
+            android:layout_weight="1"
+            android:text="@string/login_cp" />
+
+        <Button
+            android:id="@+id/login_btn_settings"
+            style="@style/PreyButton"
+            android:layout_marginLeft="0.5dp"
+            android:layout_marginRight="0dp"
+            android:layout_weight="1"
+            android:text="@string/manage_prey_settings" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -15,18 +15,7 @@
         android:layout_weight="4"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/sonar" />
-
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-40dp"
-        android:layout_weight="2"
-        android:adjustViewBounds="true"
-        android:paddingLeft="60dp"
-        android:paddingRight="60dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/prey_text_full" />
+        android:src="@drawable/logo_sonar" />
 
     <Button
         android:id="@+id/btn_welcome_olduser"

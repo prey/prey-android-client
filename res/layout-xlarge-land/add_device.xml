@@ -11,10 +11,9 @@
         android:id="@+id/main_logo"
         android:layout_width="0dip"
         android:layout_height="fill_parent"
-        android:layout_marginTop="60dp"
         android:layout_weight="1"
         android:scaleType="centerInside"
-        android:src="@drawable/sonar" />
+        android:src="@drawable/logo_sonar" />
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

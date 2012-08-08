@@ -30,9 +30,10 @@
         android:layout_marginRight="10dp"
         android:gravity="center_horizontal"
         android:text="@string/your_hero_text"
-        android:textColor="@color/lighter_txt" />
+        android:textColor="@color/lighter_txt"
+        android:textSize="14dp" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/sms_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,40 +41,46 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@color/lighter_bg"
-        android:padding="15dp" >
+        android:orientation="horizontal"
+        android:padding="15dp"
+        android:weightSum="4" >
 
         <ImageView
             android:id="@+id/sms_sheriff"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/sheriff_sm" />
+            android:src="@drawable/sq_sheriff" />
 
         <RelativeLayout
             android:id="@+id/sms_contact_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@id/sms_sheriff" >
+            android:layout_weight="3"
+            android:gravity="center_vertical" >
 
             <TextView
                 android:id="@+id/sms_contact_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Luke Skywalker"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/darker_txt" />
+                android:textColor="@color/darker_txt"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/sms_contact_number"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/sms_contact_text"
-                android:text="+1-380-1234567"
-                android:textColor="@color/lighter_txt" />
+                android:textColor="@color/lighter_txt"
+                android:textSize="14dp" />
+
         </RelativeLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/sms_btn_change"

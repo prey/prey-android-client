@@ -14,7 +14,7 @@
         android:text="@string/choose_your_hero"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/darker_txt"
-        android:textSize="40dp"
+        android:textSize="46dp"
         android:textStyle="bold" />
 
     <TextView
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:src="@drawable/sheriff" />
+            android:src="@drawable/sq_sheriff" />
 
         <RelativeLayout
             android:id="@+id/sms_contact_info"
@@ -61,19 +61,18 @@
                 android:id="@+id/sms_contact_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Luke Skywalker"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/darker_txt"
-                android:textSize="30dp" />
+                android:textSize="36dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/sms_contact_number"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/sms_contact_text"
-                android:text="+1-380-1234567"
                 android:textColor="@color/lighter_txt"
-                android:textSize="25dp" />
+                android:textSize="30dp" />
 
         </RelativeLayout>
     </RelativeLayout>

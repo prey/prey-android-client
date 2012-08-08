@@ -41,8 +41,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
+                android:paddingTop="30dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/prey_text" />
+                android:src="@drawable/prey_text_full" />
 
             <LinearLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -80,7 +81,7 @@
                         android:text="@string/device_ready_h1"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="@color/darker_txt"
-                        android:textSize="40dp"
+                        android:textSize="46dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -92,7 +93,7 @@
                         android:paddingRight="10dp"
                         android:text="@string/device_ready_h2"
                         android:textColor="@color/lighter_txt"
-                        android:textSize="25dp" />
+                        android:textSize="30dp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
