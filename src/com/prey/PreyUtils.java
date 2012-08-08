@@ -1,6 +1,9 @@
 package com.prey;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 
 public class PreyUtils {
@@ -15,6 +18,14 @@ public class PreyUtils {
 			return "Tablet";
 		else
 			return "Phone";
+	}
+	
+	public static boolean supportSMS(Context ctx){
+		//Froyo or above!!
+		TelephonyManager telephonyManager1 = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
+        boolean isPhone = !(telephonyManager1.getPhoneType()==TelephonyManager.PHONE_TYPE_NONE);
+        boolean featureTelephony = ctx.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+		return isPhone && featureTelephony;
 	}
 
 }
