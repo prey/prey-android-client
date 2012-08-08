@@ -11,7 +11,7 @@ import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +42,8 @@ public class SMSContactActivity extends PreyActivity {
 		Button change = (Button) findViewById(R.id.sms_btn_change);
 		change.setOnClickListener(launchContactPicker);
 		
-		RelativeLayout contactInfo = (RelativeLayout) findViewById(R.id.sms_body);
-		contactInfo.setOnClickListener(launchContactPicker);
+		ImageView picture = (ImageView) findViewById(R.id.sms_sheriff);
+		picture.setOnClickListener(launchContactPicker);
 		
 		Button ok = (Button) findViewById(R.id.sms_btn_accept);
 		ok.setOnClickListener(new View.OnClickListener() {
@@ -71,10 +71,8 @@ public class SMSContactActivity extends PreyActivity {
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		PreyLogger.d("Activity returned");
-		if (requestCode == PICK_CONTACT_REQUEST && resultCode == RESULT_OK){
+		if (requestCode == PICK_CONTACT_REQUEST && resultCode == RESULT_OK)
 			loadContactInfo(data.getData());
-			showContactNowAlert();
-		}
 	}
 
 	private void showContactNowAlert() {
@@ -116,6 +114,7 @@ public class SMSContactActivity extends PreyActivity {
 			@Override
 			protected void onPostExecute(ContactInfo result) {
 				bindView(result);
+				showContactNowAlert();
 			}
 		};
 		task.execute(contactUri);
@@ -139,6 +138,8 @@ public class SMSContactActivity extends PreyActivity {
 	}
 	
 	private void fillScreenInfo(String name, String number, Bitmap photo){
+		if (name == null || name.equals(""))
+			name = getString(R.string.no_hero_selected);
 		((TextView) findViewById(R.id.sms_contact_text)).setText(name);
 		((TextView) findViewById(R.id.sms_contact_number)).setText(PhoneNumberUtils.formatNumber(number));
 		Bitmap b = getPreyConfig().getDestinationSmsPicture();
