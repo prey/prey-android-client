@@ -4,7 +4,7 @@
  * License: GPLv3
  * Full license at "/LICENSE"
  ******************************************************************************/
-package com.prey;
+package com.prey.exceptions;
 
 public class PreyException extends Exception {
 
