@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
     <string name="preyForAndroid_name">Prey</string>
     <string name="app_name">Prey For Android™</string>
-    
-        <!-- commons -->
+    <!-- commons -->
     <string name="yes">是</string>
     <string name="no">否</string>
     <string name="ok">确定</string>
@@ -11,8 +10,6 @@
     <string name="back">返回</string>
     <string name="agree">同意</string>
     <string name="dontagree">不同意</string>
-    
-    
     <string name="agreements_title">欢迎来到\nPrey for Android™!</string>
     <!--<string name="agreements_message1">By clicking below you agree to Prey Terms and Conditions</string>-->
     <string name="agreements_message1">请务必阅读并同意Prey的条款和协议然后在下面点击</string>
@@ -21,7 +18,6 @@
     <string name="first_dialog_title">欢迎来到\nPrey for Android™!</string>
     <string name="first_dialog_message">Prey 通过您选择的短信激活并报告您手机的位置到一个网络控制面板来帮您找到它。\n\n您已经在 preyproject.com 上注册了么?
     </string>
-    
     <!-- Add device to an already created account  -->
     <string name="set_old_user_dialog_title">请输入您的\n账户信息</string>
     <string name="set_old_user_dialog_email">Email</string>
@@ -30,8 +26,6 @@
     <string name="set_old_user_loading">正在添加设备到帐户...\n只需几秒钟!</string>
     <string name="set_old_user_no_more_devices_title">稍安毋躁!</string>
     <string name="set_old_user_no_more_devices_text">看起来您的 Prey 没有空位来添加设备了。\n\n请尝试在控制面板删除一个现有的设备或创建一个新账户。</string>
-    
-    
     <!-- Create new Prey account -->
     <string name="set_new_user_dialog_title">注册\n新账户</string>
     <string name="set_new_user_dialog_name">您的姓名</string>
@@ -42,43 +36,29 @@
     <string name="set_new_user_dialog_repassword_confirm">确认</string>
     <string name="set_new_user_dialog_create">创建新账户</string>
     <string name="set_new_user_dialog_creating_popup">正在创建帐户。请稍候...</string>
-    
-    
     <!-- Congratulations Dialog -->
     <string name="congratulations_title">手机已添加!</string>
     <string name="new_account_congratulations_text">您成功的在手机上安装了 Prey。\n要完成安装您需要通过打开刚刚发送到 %s 的连接来验证您的邮件地址。</string>
     <string name="device_added_congratulations_text">您成功的将本手机与您的 Prey 帐户进行了关联。现在花一分钟时间进行设置。</string>
-
-   
     <!-- Prey SMS Preferences -->
     <string name="preferences_sms_title">主要配置</string>
     <string name="preferences_sms_run">短信激活信息</string>
     <string name="preferences_sms_run_summary">唤醒 Prey 的单词或短语</string>
     <string name="preferences_sms_run_edittext">当收到此文字时会激活 Prey</string>
-
     <string name="preferences_sms_stop">短信失效信息</string>
     <string name="preferences_sms_stop_summary">使 Prey 失效的单词或短语</string>
     <string name="preferences_sms_stop_edittext">当收到此文字时会使 Prey 失效</string>
-    
     <string name="preferences_destination_sms">SIM卡更换通知</string>
     <string name="preferences_destination_sms_summary">手机将会通知的新号码</string>
     <string name="preferences_destination_sms_edittext">对于您选中的联系人，Prey会在检测到一张新SIM卡未后给他发送短消息</string>
     <string name="preferences_destination_sms_edittext_hint">类型名</string>
     <string name="preferences_destination_sms_not_valid">您输入的号码似乎不是有效的</string>
     <string name="sms_to_send_text">您朋友的号码已经作为一个SIM卡被更换后会联系的新号码。如果您觉得您的手机被偷了，请联系他 %s。</string>
-    
     <string name="preferences_check_sim_change">锁定到当前 SIM 卡</string>
     <string name="preferences_check_sim_change_summary">当 SIM 卡被替换时激活 Prey</string>
-    
     <string name="preferences_show_notification_title">显示通知</string>
     <string name="preferences_show_notification_summary">如果 Prey 成功的发送了一条报告则会在屏幕上显示信息</string>
-    
-   
-    
-    
     <!--  Prey Others Preferences -->
-    <string name="preferences_category_title_other">账户管理</string>
-    
     <!-- Prey Password Preferences -->
     <string name="preferences_password_title">更改密码</string>
     <string name="preferences_password_summary">甚至您的新的 Prey 管理密码</string>
@@ -90,92 +70,69 @@
     <string name="preferences_passwords_do_not_match">密码不匹配</string>
     <string name="preferences_passwords_updating_dialog">正在更新您的 Prey 密码。\n请稍后...</string>
     <string name="preferences_passwords_successfully_changed">您的 Prey 密码已经成功更改</string>
- 
- <!-- Prey Detach Device Preferences -->
+    <!-- Prey Detach Device Preferences -->
     <string name="preferences_detach_title">分离手机</string>
     <string name="preferences_detach_summary">从您的控制面板帐户移除手机</string>
     <string name="preferences_detach_dialog_title">分离手机</string>
     <string name="preferences_detach_dialog_message">您的手机将会从控制面板中分离。这也会删除它保存的报告。\n\nAre you sure?</string>
     <string name="preferences_detach_confirmation_message">您的手机已经成功的从您的账户中分离。\n现在您可以再次设置 Prey。</string>
     <string name="preferences_detach_dettaching_message">正在分离手机, 请稍后...</string>
-    
-    
     <string name="preferences_go_to_control_panel_title">查看生成的报告</string>
     <string name="preferences_go_to_control_panel_summary">用浏览器打开您的 Prey 面板</string>
     <string name="preferences_go_to_control_panel_dialog_title">确认您的请求</string>
     <string name="preferences_go_to_control_panel_dialog_message">您的手机将会从控制面板中分离。这也会删除它保存的报告。\n\n您确定吗？</string>
-
-
-     
     <!-- Prey Operation Preferences -->
-    <string name="preferences_category_operations">测试功能</string>
-    
     <string name="preferences_start_title">启动 Prey</string>
     <string name="preferences_start_summary">标记此设备为遗失</string>
     <string name="preferences_start_dialog_title">启动 Prey</string>
     <string name="preferences_start_dialog_message">您正在试图标记设备为遗失, 并开始发送报告到控制面板。\n\n您确定么?</string>
     <string name="preferences_start_confirmation_message">现在您的设备已经在控制面板中发报告为遗失。请注意此进程会在一段时间后耗干您的电量!</string>
-    
     <string name="preferences_stop_title">停止 Prey</string>
     <string name="preferences_stop_summary">停止 prey 进程和相关模块</string>
     <string name="preferences_stop_dialog_title">停止 Prey</string>
     <string name="preferences_stop_dialog_message">Prey 将会停止发送报告到控制面板并且您的设备会被标记为已发现,\n您确认么?</string>
     <string name="preferences_stop_confirmation_message">一切恢复正常了。很高兴您找到了您的手机!!</string>
-    
-     <!-- Prey Ringtone Preferences (Deprecated) -->
-    <string name="preferences_category_title_ringtone">警报模块</string>
+    <!-- Prey Ringtone Preferences (Deprecated) -->
     <string name="preferences_ringtone_title">要播放的声音</string>
     <string name="preferences_ringtone_summary">选择激活后要播放的声音</string>
-    
     <!--  Prey About -->
     <string name="preferences_about_category_name">关于</string>
     <string name="preferences_about">Prey for Android™</string>
     <string name="preferences_about_summary">版本 0.4 - © Fork Ltd.</string>
     <string name="preferences_about_title">Prey for Android™</string>
     <string name="preferences_about_message">Prey for Android™</string>
-    
-    
-    
     <!--  Password Validation -->
-     <string name="password_dialog_title">欢迎回来!</string>
-     <string name="password_dialog_label">输入您的密码:</string>
-     <string name="password_dialog_forgot_text1">忘记密码?</string>
-     <string name="password_dialog_forgot_text2"> <u>点击这里!</u></string>
-     <string name="password_dialog_forgot_sent_title">指令已发送</string>
-     <string name="password_dialog_forgot_sent_label">一封带有恢复密码指令的邮件已经发送到 %s</string>
-     <string name="password_dialog_forgot_requesting">正在报告忘记密码...\n只需几秒钟!</string>
-     <string name="verify_your_account_first">您必须首先验证您的帐户</string>
-     <string name="password_wrong">密码错误。请重试。</string>
-     <string name="password_intents_exceed">您已经错误 3 次了。抱歉!</string>
-     <string name="password_checking_dialog">正在检查您的密码...\n只需要几秒钟!</string>
-     
-     
-     
-     <!-- Notifications -->
-     <string name="notification_title">Prey 正在施展它的魔法!</string>
-     <string name="notification_msg">新的报告发送到您的网页控制面板</string>
-     
-     <!-- Actions/Modules 
+    <string name="password_dialog_title">欢迎回来!</string>
+    <string name="password_dialog_label">输入您的密码:</string>
+    <string name="password_dialog_forgot_text1">忘记密码?</string>
+    <string name="password_dialog_forgot_text2"> <u>点击这里!</u></string>
+    <string name="password_dialog_forgot_sent_title">指令已发送</string>
+    <string name="password_dialog_forgot_sent_label">一封带有恢复密码指令的邮件已经发送到 %s</string>
+    <string name="password_dialog_forgot_requesting">正在报告忘记密码...\n只需几秒钟!</string>
+    <string name="verify_your_account_first">您必须首先验证您的帐户</string>
+    <string name="password_wrong">密码错误。请重试。</string>
+    <string name="password_intents_exceed">您已经错误 3 次了。抱歉!</string>
+    <string name="password_checking_dialog">正在检查您的密码...\n只需要几秒钟!</string>
+    <!-- Notifications -->
+    <string name="notification_title">Prey 正在施展它的魔法!</string>
+    <string name="notification_msg">新的报告发送到您的网页控制面板</string>
+    <!-- Actions/Modules 
      # These messages are shown as notification, on each report sent to Prey.
      -->
-     <!-- Location action -->
-     <string name="location_notification_prefix">Geofix 发送: </string>
-     
-     <!--  Call Logs Action -->
-     <string name="call_logs_notification_prefix">通话列表: 拨号, 来电, 和未接的号码</string>
-     
-     <!-- Popup Alert Action -->
-     <string name="popup_alert_title">重要信息</string>
-     <string name="popup_alert_message">弹出信息</string>
-     
-     <!-- Exceptions -->
-     <string name="error_title">我们遇到了问题!</string>
-     <string name="error_cant_create_acount">无法注册账户。请再次检查提供的信息。</string>
-     <string name="error_communication_exception">无法连接到网络控制面板。\n\n请检查您的设置并重试。</string>
-     <string name="error_cant_add_this_device">无法添加此设备到您的 prey 帐户。请在此检查您提供的邮件和密码。</string>
-     <string name="error_registered_password_has_changed">无法更改密码。控制面板密码自从您上次在这里登陆后已经更改。</string>
-     <string name="error_cant_change_password_unknown_error">密码无法更改。请稍后再试。</string>
-     <string name="error_cant_report_forgotten_password">无法报告忘记的密码。请稍后再试。</string>
- 	 <string name="error_all_fields_are_required">需要全部字段</string>
-    
+    <!-- Location action -->
+    <string name="location_notification_prefix">Geofix 发送: </string>
+    <!--  Call Logs Action -->
+    <string name="call_logs_notification_prefix">通话列表: 拨号, 来电, 和未接的号码</string>
+    <!-- Popup Alert Action -->
+    <string name="popup_alert_title">重要信息</string>
+    <string name="popup_alert_message">弹出信息</string>
+    <!-- Exceptions -->
+    <string name="error_title">我们遇到了问题!</string>
+    <string name="error_cant_create_acount">无法注册账户。请再次检查提供的信息。</string>
+    <string name="error_communication_exception">无法连接到网络控制面板。\n\n请检查您的设置并重试。</string>
+    <string name="error_cant_add_this_device">无法添加此设备到您的 prey 帐户。请在此检查您提供的邮件和密码。</string>
+    <string name="error_registered_password_has_changed">无法更改密码。控制面板密码自从您上次在这里登陆后已经更改。</string>
+    <string name="error_cant_change_password_unknown_error">密码无法更改。请稍后再试。</string>
+    <string name="error_cant_report_forgotten_password">无法报告忘记的密码。请稍后再试。</string>
+    <string name="error_all_fields_are_required">需要全部字段</string>
 </resources>

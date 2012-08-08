@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
     <string name="preyForAndroid_name">Prey</string>
     <string name="app_name">Prey For Android™</string>
-    
-        <!-- commons -->
+    <!-- commons -->
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="ok">OK</string>
@@ -11,8 +10,6 @@
     <string name="back">Indietro</string>
     <string name="agree">Sono d\' accordo</string>
     <string name="dontagree">Non sono d\' accordo</string>
-    
-    
     <string name="agreements_title">Benvenuto in\nPrey per Android™!</string>
     <!--<string name="agreements_message1">By clicking below you agree to Prey Terms and Conditions</string>-->
     <string name="agreements_message1">Ti preghiamo di leggere e accettare i Termini e Condizioni di Prey cliccando qui sotto</string>
@@ -22,7 +19,6 @@
     <string name="first_dialog_message">Prey ti aiuta a ritrovare il tuo telefono segnalando la sua  
     posizione nel pannello di controllo sul web, attivato da un messaggio SMS a vostra scelta.\n\nTi sei già registrato su preyproject.com?
     </string>
-    
     <!-- Add device to an already created account  -->
     <string name="set_old_user_dialog_title">Si prega di inserire le\ninformazioni sull\'account</string>
     <string name="set_old_user_dialog_email">Email</string>
@@ -31,8 +27,6 @@
     <string name="set_old_user_loading">Stiamo associando il telefono al tuo account...\nAttendi un secondo!</string>
     <string name="set_old_user_no_more_devices_title">Calma non avere fretta!</string>
     <string name="set_old_user_no_more_devices_text">Sembra siano esauriti gli slot liberi per i dispositivi sul tuo account Prey.\n\nSi prega di provare a rimuovere un dispositivo esistente sul Pannello di Controllo o creare un nuovo account.</string>
-    
-    
     <!-- Create new Prey account -->
     <string name="set_new_user_dialog_title">Registrati per\nun nuovo account</string>
     <string name="set_new_user_dialog_name">Tuo nome</string>
@@ -43,43 +37,29 @@
     <string name="set_new_user_dialog_repassword_confirm">Conferma</string>
     <string name="set_new_user_dialog_create">Crea nuovo account</string>
     <string name="set_new_user_dialog_creating_popup">Creazione account. Attendi...</string>
-    
-    
     <!-- Congratulations Dialog -->
     <string name="congratulations_title">Telefono Aggiunto!</string>
     <string name="new_account_congratulations_text">Hai installato con successo Prey sul tuo telefono.\nPer completare il processo di installazione è necessario verificare il tuo indirizzo email seguendo il link che ti abbiamo inviato a %s.</string>
     <string name="device_added_congratulations_text">E\' stato associato con successo questo telefono con l\' account Prey. Ora serve un minuto per configurarlo.</string>
-
-   
     <!-- Prey SMS Preferences -->
     <string name="preferences_sms_title">Configurazione principale</string>
     <string name="preferences_sms_run">Messaggio SMS di attivazione</string>
     <string name="preferences_sms_run_summary">Parola o frase che risveglia Prey</string>
     <string name="preferences_sms_run_edittext">Questo testo attiva Prey quando viene ricevuto</string>
-
     <string name="preferences_sms_stop">Messaggio SMS di disattivazione</string>
     <string name="preferences_sms_stop_summary">Parola o frase che ferma Prey</string>
     <string name="preferences_sms_stop_edittext">Questo testo spegne Prey quando viene ricevuto</string>
-    
     <string name="preferences_destination_sms">Allarme sostituzione SIM</string>
     <string name="preferences_destination_sms_summary">Telefono al quale notificare un nuovo numero di telefono</string>
     <string name="preferences_destination_sms_edittext">Scegliere il contatto che sarà avvisato quando viene rilevata una nuova carta SIM. Riceverà un SMS dal nuovo numero di telefono del tuo dispositivo.</string>
     <string name="preferences_destination_sms_edittext_hint">digita il nome</string>
     <string name="preferences_destination_sms_not_valid">Il numero che hai inserito non sembra essere valido</string>
     <string name="sms_to_send_text">Il telefono del tuo amico ha un nuovo numero, la sua scheda SIM è stata sostituita. Per favore contattalo al %s se pensi che possa essere stato rubato.</string>
-    
     <string name="preferences_check_sim_change">Blocca SIM attuale</string>
     <string name="preferences_check_sim_change_summary">Attiva Prey se la scheda SIM viene sostituita</string>
-    
     <string name="preferences_show_notification_title">Mostra notifiche</string>
     <string name="preferences_show_notification_summary">Mostra un messaggio sullo schermo se Prey ha inviato un resoconto con successo</string>
-    
-   
-    
-    
     <!--  Prey Others Preferences -->
-    <string name="preferences_category_title_other">Gestione Account</string>
-    
     <!-- Prey Password Preferences -->
     <string name="preferences_password_title">Cambia password</string>
     <string name="preferences_password_summary">Imposta una nuova password di ammistrazione Prey</string>
@@ -91,92 +71,69 @@
     <string name="preferences_passwords_do_not_match">Le password non corrisposndono</string>
     <string name="preferences_passwords_updating_dialog">Aggiornamento password Prey.\nAttendere...</string>
     <string name="preferences_passwords_successfully_changed">La tua password Prey è stata cambiata con successo</string>
- 
- <!-- Prey Detach Device Preferences -->
+    <!-- Prey Detach Device Preferences -->
     <string name="preferences_detach_title">Rimuovi telefono</string>
     <string name="preferences_detach_summary">Rimuovi questo telefono dal Pannello di Controllo del tuo account</string>
     <string name="preferences_detach_dialog_title">Rimozione telefono</string>
     <string name="preferences_detach_dialog_message">Il telefono sarà rimosso dal Pannello di Controllo. Saranno anche cancellati tutti i rapporti salvati.\n\nSei sicuro?</string>
     <string name="preferences_detach_confirmation_message">Il telefono è stato rimosso con successo dal tuo account.\nOra puoi impostare nuovamente Prey.</string>
     <string name="preferences_detach_dettaching_message">Rimozione telefono, attendere...</string>
-    
-    
     <string name="preferences_go_to_control_panel_title">Mostra rapporti generati</string>
     <string name="preferences_go_to_control_panel_summary">Apri il browser con il Pannello di Controllo Prey</string>
     <string name="preferences_go_to_control_panel_dialog_title">Confermare la richiesta</string>
     <string name="preferences_go_to_control_panel_dialog_message">Verrai reindirizzato al Panello d Controllo del tuo account.\n\n Sei sicuro?</string>
-
-
-     
     <!-- Prey Operation Preferences -->
-    <string name="preferences_category_operations">Testing features</string>
-    
     <string name="preferences_start_title">Avvia Prey</string>
     <string name="preferences_start_summary">Segnala questo dispositivo come disperso</string>
     <string name="preferences_start_dialog_title">Avvio Prey</string>
     <string name="preferences_start_dialog_message">Stai cercando di segnale questo dispositivo come disperso, e inizierà l\' invio di rapporti al Pannello di Controllo.\n\nASei sicuro?</string>
     <string name="preferences_start_confirmation_message">Ora il dispositivo è segnalato come disperso nel Pannello di Controllo. Prestate attenzione perchè questo processo potrebbe scaricare la batteria dopo un po\'!</string>
-    
     <string name="preferences_stop_title">Ferma Prey</string>
     <string name="preferences_stop_summary">Interrompi i processi Prey e i relativi moduli</string>
     <string name="preferences_stop_dialog_title">Interruzione Prey</string>
     <string name="preferences_stop_dialog_message">Prey interromperà l\' invio di rapporti al Pannello di Controllo e il tuo dispositivo sarà contrassegnato come recuperato,\nSei sicuro?</string>
     <string name="preferences_stop_confirmation_message">Tutto è di nuovo normale. Siamo felici che tu abbia recuperato il telefono!!</string>
-    
-     <!-- Prey Ringtone Preferences (Deprecated) -->
-    <string name="preferences_category_title_ringtone">Modulo Allarme</string>
+    <!-- Prey Ringtone Preferences (Deprecated) -->
     <string name="preferences_ringtone_title">Suono da riprodurre</string>
     <string name="preferences_ringtone_summary">Seleziona il suono da riprodurre all\' attivazione</string>
-    
     <!--  Prey About -->
     <string name="preferences_about_category_name">About</string>
     <string name="preferences_about">Prey per Android™</string>
     <string name="preferences_about_summary">Version 0.3.73 - © Fork Ltd.</string>
     <string name="preferences_about_title">Prey per Android™</string>
     <string name="preferences_about_message">Prey per Android™</string>
-    
-    
-    
     <!--  Password Validation -->
-     <string name="password_dialog_title">Bentornato!</string>
-     <string name="password_dialog_label">Inserisci la password:</string>
-     <string name="password_dialog_forgot_text1">Hai dimenticato la password?</string>
-     <string name="password_dialog_forgot_text2"> <u>Clicca qui!</u></string>
-     <string name="password_dialog_forgot_sent_title">Istruzioni inviate</string>
-     <string name="password_dialog_forgot_sent_label">Una email a %s è stata inviata con le istruzioni per resettare la tua password</string>
-     <string name="password_dialog_forgot_requesting">Presentazione password dimenticata...\nAttendi un secondo!</string>
-     <string name="verify_your_account_first">E\' necesarrio verificare prima il tuo account</string>
-     <string name="password_wrong">Password non corretta. Riprova.</string>
-     <string name="password_intents_exceed">Hai sbagliato 3 volte. Ci spiace!</string>
-     <string name="password_checking_dialog">Sto controllando la tua password...\nAttendi un secondo!</string>
-     
-     
-     
-     <!-- Notifications -->
-     <string name="notification_title">Prey sta lavorando alla sua magia!</string>
-     <string name="notification_msg">Un nuovo rapporto è stato inviato al Pannello di Controllo web</string>
-     
-     <!-- Actions/Modules 
+    <string name="password_dialog_title">Bentornato!</string>
+    <string name="password_dialog_label">Inserisci la password:</string>
+    <string name="password_dialog_forgot_text1">Hai dimenticato la password?</string>
+    <string name="password_dialog_forgot_text2"> <u>Clicca qui!</u></string>
+    <string name="password_dialog_forgot_sent_title">Istruzioni inviate</string>
+    <string name="password_dialog_forgot_sent_label">Una email a %s è stata inviata con le istruzioni per resettare la tua password</string>
+    <string name="password_dialog_forgot_requesting">Presentazione password dimenticata...\nAttendi un secondo!</string>
+    <string name="verify_your_account_first">E\' necesarrio verificare prima il tuo account</string>
+    <string name="password_wrong">Password non corretta. Riprova.</string>
+    <string name="password_intents_exceed">Hai sbagliato 3 volte. Ci spiace!</string>
+    <string name="password_checking_dialog">Sto controllando la tua password...\nAttendi un secondo!</string>
+    <!-- Notifications -->
+    <string name="notification_title">Prey sta lavorando alla sua magia!</string>
+    <string name="notification_msg">Un nuovo rapporto è stato inviato al Pannello di Controllo web</string>
+    <!-- Actions/Modules 
      # These messages are shown as notification, on each report sent to Prey.
      -->
-     <!-- Location action -->
-     <string name="location_notification_prefix">Geofix inviato: </string>
-     
-     <!--  Call Logs Action -->
-     <string name="call_logs_notification_prefix">elenco chiamate: effettuate, ricevute, e perse</string>
-     
-     <!-- Popup Alert Action -->
-     <string name="popup_alert_title">Messaggio Importante</string>
-     <string name="popup_alert_message">MESSAGGIO POP UP</string>
-     
-     <!-- Exceptions -->
-     <string name="error_title">Abbiamo una situazione!</string>
-     <string name="error_cant_create_acount">Account non registrato. Si prega di ricontrollare le informazioni fornite.</string>
-     <string name="error_communication_exception">Prey non riesce a connettersi al Pannello di Controllo web.\n\nControlla le impostazioni e riprova.</string>
-     <string name="error_cant_add_this_device">Non è possibile aggiungere questo diaposito all\' account Prey. Si prega di ricontrollare la email e la password fornite.</string>
-     <string name="error_registered_password_has_changed">Non è possibile modificare la password. La password del Pannello di Controllo è cambiata dal tuo ultimo login qui.</string>
-     <string name="error_cant_change_password_unknown_error">La password non può essere modificata. Si prega di riprovare più tardi.</string>
-     <string name="error_cant_report_forgotten_password">Non è possibile segnalare la password dimenticata. Si prega di riprovare più tardi.</string>
- 	 <string name="error_all_fields_are_required">Tutti i campi sono obbligatori</string>
-    
+    <!-- Location action -->
+    <string name="location_notification_prefix">Geofix inviato: </string>
+    <!--  Call Logs Action -->
+    <string name="call_logs_notification_prefix">elenco chiamate: effettuate, ricevute, e perse</string>
+    <!-- Popup Alert Action -->
+    <string name="popup_alert_title">Messaggio Importante</string>
+    <string name="popup_alert_message">MESSAGGIO POP UP</string>
+    <!-- Exceptions -->
+    <string name="error_title">Abbiamo una situazione!</string>
+    <string name="error_cant_create_acount">Account non registrato. Si prega di ricontrollare le informazioni fornite.</string>
+    <string name="error_communication_exception">Prey non riesce a connettersi al Pannello di Controllo web.\n\nControlla le impostazioni e riprova.</string>
+    <string name="error_cant_add_this_device">Non è possibile aggiungere questo diaposito all\' account Prey. Si prega di ricontrollare la email e la password fornite.</string>
+    <string name="error_registered_password_has_changed">Non è possibile modificare la password. La password del Pannello di Controllo è cambiata dal tuo ultimo login qui.</string>
+    <string name="error_cant_change_password_unknown_error">La password non può essere modificata. Si prega di riprovare più tardi.</string>
+    <string name="error_cant_report_forgotten_password">Non è possibile segnalare la password dimenticata. Si prega di riprovare più tardi.</string>
+    <string name="error_all_fields_are_required">Tutti i campi sono obbligatori</string>
 </resources>
