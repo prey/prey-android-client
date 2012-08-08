@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="ButtonCase" severity="error" />
+    <issue id="ButtonOrder" severity="error" />
+    <issue id="ContentDescription" severity="ignore" />
+    <issue id="NewApi">
+        <ignore path="src/com/prey/backwardcompatibility/FroyoSupport.java" />
+        <ignore path="src/com/prey/receivers/PreyDeviceAdmin.java" />
+    </issue>
+    <issue id="UnusedResources" severity="error" />
+</lint>
