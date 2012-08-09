@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="PreyTheme" parent="@android:style/Theme.Light">
-        <item name="android:background">@color/screen_bg</item>
+    <style name="PreyTheme" parent="@android:style/Theme.Black">
+        <item name="android:background">@null</item>
     </style>
     
     <style name="PreyTextAppearance" parent="@android:style/TextAppearance">
