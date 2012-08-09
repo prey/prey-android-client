@@ -84,7 +84,7 @@
 
     <Button
         android:id="@+id/sms_btn_change"
-        style="@style/PreyXLButton"
+        style="@style/PreyButton.XLarge"
         android:layout_above="@+id/sms_btn_accept"
         android:layout_alignParentBottom="false"
         android:layout_marginBottom="5dp"
@@ -92,7 +92,7 @@
 
     <Button
         android:id="@+id/sms_btn_accept"
-        style="@style/PreyXLButton"
+        style="@style/PreyButton.XLarge"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="15dp"
         android:text="@string/accept" />

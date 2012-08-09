@@ -62,7 +62,7 @@
 
     <Button
         android:id="@+id/new_account_btn_ok"
-        style="@style/PreyLButton"
+        style="@style/PreyButton.Large"
         android:layout_below="@+id/new_account_repass"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"

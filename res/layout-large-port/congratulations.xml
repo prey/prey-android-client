@@ -45,7 +45,7 @@
     
      <Button
          android:id="@+id/congrats_btn_ok"
-         style="@style/PreyLButton"
+         style="@style/PreyButton.Large"
          android:layout_alignParentBottom="true"
          android:layout_marginBottom="15dp"
          android:text="@string/go_to_settings" />

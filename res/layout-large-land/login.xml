@@ -15,7 +15,7 @@
 
         <Button
             android:id="@+id/login_btn_cp"
-            style="@style/PreyLButton"
+            style="@style/PreyButton.Large"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0.5dp"
             android:layout_weight="1"
@@ -24,7 +24,7 @@
 
         <Button
             android:id="@+id/login_btn_settings"
-            style="@style/PreyLButton"
+            style="@style/PreyButton.Large"
             android:layout_marginLeft="0.5dp"
             android:layout_marginRight="0dp"
             android:layout_weight="1"

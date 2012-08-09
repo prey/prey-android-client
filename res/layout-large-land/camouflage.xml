@@ -27,7 +27,7 @@
 
         <EditText
             android:id="@+id/password_pass_txt"
-            style="@style/PreyLEditText"
+            style="@style/PreyEditText.Large"
             android:layout_width="0dp"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
@@ -40,7 +40,7 @@
 
         <Button
             android:id="@+id/password_btn_login"
-            style="@style/PreyCamouflageLButton"
+            style="@style/PreyButton.Large.Camouflage"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_marginLeft="0.5dp"

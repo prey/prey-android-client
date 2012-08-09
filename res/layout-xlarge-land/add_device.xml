@@ -39,7 +39,7 @@
 
         <EditText
             android:id="@+id/add_device_email"
-            style="@style/PreyLEditText"
+            style="@style/PreyEditText.Large"
             android:layout_width="fill_parent"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
@@ -51,7 +51,7 @@
 
         <EditText
             android:id="@+id/add_device_pass"
-            style="@style/PreyLEditText"
+            style="@style/PreyEditText.XLarge"
             android:layout_width="fill_parent"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
@@ -63,7 +63,7 @@
 
         <Button
             android:id="@+id/add_device_btn_ok"
-            style="@style/PreyLButton"
+            style="@style/PreyButton.Large"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:layout_marginTop="40dp"

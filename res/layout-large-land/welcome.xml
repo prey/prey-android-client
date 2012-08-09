@@ -15,7 +15,7 @@
 
         <Button
             android:id="@+id/btn_welcome_olduser"
-            style="@style/PreyXLButton"
+            style="@style/PreyButton.Large"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0.5dp"
             android:layout_weight="1"
@@ -24,7 +24,7 @@
 
         <Button
             android:id="@+id/btn_welcome_newuser"
-            style="@style/PreyXLButton"
+            style="@style/PreyButton.Large"
             android:layout_marginLeft="0.5dp"
             android:layout_marginRight="0dp"
             android:layout_weight="1"

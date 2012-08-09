@@ -84,7 +84,7 @@
 
         <Button
             android:id="@+id/new_account_btn_ok"
-            style="@style/PreyLButton"
+            style="@style/PreyButton.Large"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="80dp"

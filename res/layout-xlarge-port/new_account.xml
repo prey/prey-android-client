@@ -11,6 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:gravity="center_horizontal"
         android:text="@string/create_prey_account_h1"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/darker_txt"
@@ -19,20 +20,19 @@
 
     <EditText
         android:id="@+id/new_account_name"
-        style="@style/PreyEditText"
+        style="@style/PreyEditText.XLarge"
         android:layout_below="@+id/new_account_title"
-        android:layout_marginTop="40dp"
         android:hint="@string/your_name"
         android:inputType="textPersonName"
-        android:textAppearance="?android:attr/textAppearanceLargeInverse" 
-        android:textSize="30dp">
+        android:textAppearance="?android:attr/textAppearanceLargeInverse"
+        android:textSize="30dp" >
 
         <requestFocus />
     </EditText>
     
     <EditText
         android:id="@+id/new_account_email"
-        style="@style/PreyEditText"
+        style="@style/PreyEditText.XLarge"
         android:layout_below="@+id/new_account_name"
         android:layout_marginTop="20dp"
         android:hint="@string/your_email"
@@ -42,7 +42,7 @@
     
     <EditText
         android:id="@+id/new_account_pass"
-        style="@style/PreyEditText"
+        style="@style/PreyEditText.XLarge"
         android:layout_below="@+id/new_account_email"
         android:layout_marginTop="20dp"
         android:hint="@string/choose_a_6_char_pass"
@@ -54,7 +54,7 @@
     
     <EditText
         android:id="@+id/new_account_repass"
-        style="@style/PreyEditText"
+        style="@style/PreyEditText.XLarge"
         android:layout_below="@+id/new_account_pass"
         android:layout_marginTop="20dp"
         android:hint="@string/repeat_your_pass"
@@ -66,10 +66,10 @@
 
     <Button
         android:id="@+id/new_account_btn_ok"
-        style="@style/PreyLButton"
+        style="@style/PreyButton.XLarge"
         android:layout_below="@+id/new_account_repass"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="80dp"
         android:text="@string/create_my_account"
         android:textAppearance="?android:attr/textAppearanceLargeInverse" />

@@ -30,7 +30,7 @@
 
         <EditText
             android:id="@+id/password_pass_txt"
-            style="@style/PreyXLEditText"
+            style="@style/PreyEditText.XLarge"
             android:layout_width="fill_parent"
             android:hint="@string/type_your_pass"
             android:inputType="textPassword">
@@ -40,7 +40,7 @@
 
         <Button
             android:id="@+id/password_btn_login"
-            style="@style/PreyCamouflageXLButton"
+            style="@style/PreyButton.XLarge.Camouflage"
             android:layout_width="match_parent"
             android:text="@string/log_in" />
 

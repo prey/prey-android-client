@@ -8,7 +8,7 @@
 
     <Button
         android:id="@+id/login_btn_cp"
-        style="@style/PreyXLButton"
+        style="@style/PreyButton.XLarge"
         android:layout_above="@+id/login_btn_settings"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
@@ -16,7 +16,7 @@
 
     <Button
         android:id="@+id/login_btn_settings"
-        style="@style/PreyXLButton"
+        style="@style/PreyButton.XLarge"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="20dp"

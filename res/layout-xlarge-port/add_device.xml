@@ -11,6 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:gravity="center_horizontal"
         android:text="@string/log_in_to_prey_h1"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/darker_txt"
@@ -19,7 +20,7 @@
 
     <EditText
         android:id="@+id/add_device_email"
-        style="@style/PreyXLEditText"
+        style="@style/PreyEditText.XLarge"
         android:layout_width="fill_parent"
         android:layout_below="@+id/add_device_title"
         android:layout_marginLeft="0dp"
@@ -33,7 +34,7 @@
 
     <EditText
         android:id="@+id/add_device_pass"
-        style="@style/PreyXLEditText"
+        style="@style/PreyEditText.XLarge"
         android:layout_width="fill_parent"
         android:layout_below="@+id/add_device_email"
         android:layout_marginLeft="0dp"
@@ -46,7 +47,7 @@
 
     <Button
         android:id="@+id/add_device_btn_ok"
-        style="@style/PreyLButton"
+        style="@style/PreyButton.Large"
         android:layout_below="@+id/add_device_pass"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
