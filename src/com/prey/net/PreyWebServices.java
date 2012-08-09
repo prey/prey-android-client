@@ -245,10 +245,10 @@ public class PreyWebServices {
 		NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 		Notification notification = new Notification(R.drawable.prey_status_bar_icon, notificationTitle, System.currentTimeMillis());
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
-
-		Intent preyMainActivity = new Intent(ctx, WelcomeActivity.class);
+		
+		Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(PreyConfig.CONTROL_PANEL_URL));
 		String notificationToShow = ctx.getText(R.string.notification_msg).toString();
-		PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, preyMainActivity, 0);
+		PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, browserIntent, 0);
 		notification.contentIntent = contentIntent;
 		notification.setLatestEventInfo(ctx, ctx.getText(R.string.notification_title), notificationToShow, contentIntent);
 
