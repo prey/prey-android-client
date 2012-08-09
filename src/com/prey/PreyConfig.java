@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.app.Notification;
@@ -20,7 +19,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -36,7 +34,7 @@ import com.prey.net.PreyWebServices;
 public class PreyConfig {
 	
 	//Set false in production
-	public static final boolean LOG_DEBUG_ENABLED = true;
+	public static final boolean LOG_DEBUG_ENABLED = false;
 	
 	// Set to 1000 * 60 in production.
 	public static final long DELAY_MULTIPLIER = 1000 * 60; 

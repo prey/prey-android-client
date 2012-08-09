@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
-    android:versionCode="34"
-    android:versionName="0.5" android:installLocation="internalOnly">
+    android:installLocation="internalOnly"
+    android:versionCode="35"
+    android:versionName="0.5" >
 
     <uses-sdk
         android:minSdkVersion="5"
@@ -44,7 +45,7 @@
     <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.UPDATE_DEVICE_STATS" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -56,10 +57,10 @@
 
     <application
         android:name="com.prey.PreyApp"
+        android:allowClearUserData="false"
         android:icon="@drawable/logo"
         android:label="@string/preyForAndroid_name"
-        android:theme="@style/PreyTheme" 
-        android:allowClearUserData="false">
+        android:theme="@style/PreyTheme" >
 
         <!-- Activities -->
         <activity
@@ -70,6 +71,7 @@
             android:launchMode="singleInstance" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -86,8 +88,8 @@
             android:configChanges="orientation|keyboardHidden"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:noHistory="true" />
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name="com.prey.activities.PopUpAlertActivity"
             android:clearTaskOnLaunch="true"
@@ -96,9 +98,10 @@
             android:launchMode="singleTask" />
         <activity
             android:name="com.prey.activities.SMSContactActivity"
-            android:configChanges="keyboardHidden">
+            android:configChanges="keyboardHidden" >
             <intent-filter>
                 <action android:name="com.prey.activities.SEND_SMS_CONF" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -111,17 +114,18 @@
         <activity
             android:name="com.prey.activities.AddDeviceToAccountActivity"
             android:configChanges="keyboardHidden" />
-        <!-- 
+        <!--
         <activity
             android:name="com.prey.activities.SMSContactActivity"
             android:configChanges="keyboardHidden" />
-             -->
+        -->
         <activity
             android:name="com.prey.activities.StatusActivity"
             android:configChanges="orientation|keyboardHidden"
             android:noHistory="true" >
             <intent-filter>
                 <action android:name="com.prey.activities.StatusActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -136,7 +140,7 @@
 
         <!-- Receivers -->
         <receiver android:name="com.prey.receivers.SmsReceiver" >
-            <intent-filter android:priority="1000">
+            <intent-filter android:priority="1000" >
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
