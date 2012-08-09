@@ -41,6 +41,10 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 			}
 		} else
 			p.setEnabled(false);
+		
+		p = findPreference("PREFS_ABOUT");
+		p.setSummary("Version " + preyConfig.getPreyVersion() + "-" + preyConfig.getPreyMinorVersion() + " © Fork Ltd.");
+		
 	}
 
 }
