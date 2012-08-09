@@ -115,10 +115,10 @@ public class ResponsesXMLHandler extends DefaultHandler {
 		
 		if (this.inMissing) {
 			String isMissing = new String(ch, start, length);
-			actionResponse.setMissing(new Boolean(isMissing));
+			actionResponse.setMissing(Boolean.valueOf(isMissing));
 		} else if (this.inDelay) {
 			String delay = new String(ch, start, length);
-			actionResponse.setDelay(new Long(delay));
+			actionResponse.setDelay(Long.valueOf(delay));
 		} else if (this.inPostUrl) {
 			String postUrl = new String(ch, start, length);
 			PreyConfig.postUrl = postUrl;

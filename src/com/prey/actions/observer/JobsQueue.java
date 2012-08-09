@@ -36,7 +36,7 @@ public class JobsQueue {
 	 */
 	public void addAndRunJobGroup(JobsGroup jobsGroup, Context ctx, boolean isMissing) {
 		this.finishRunningJobs(ctx);
-		this.jobs.put(new Long(jobsGroup.getId()), jobsGroup);
+		this.jobs.put(Long.valueOf(jobsGroup.getId()), jobsGroup);
 		jobsGroup.run(this, isMissing);
 	}
 
@@ -69,7 +69,7 @@ public class JobsQueue {
 	 *            Application context
 	 */
 	public void groupFinished(JobsGroup jobsGroup, Context ctx) {
-		this.jobs.remove(new Long(jobsGroup.getId()));
+		this.jobs.remove(Long.valueOf(jobsGroup.getId()));
 		this.controller.jobGroupFinished(jobsGroup.getResults(), ctx);
 	}
 

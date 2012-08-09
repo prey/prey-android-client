@@ -16,7 +16,7 @@ public class ReportActionResponse {
 	private String postUrl;
 
 	public void addAction(String actionName, String active) {
-		boolean isActive = new Boolean(active);
+		boolean isActive = Boolean.valueOf(active);
 		PreyAction action = PreyAction.getActionFromName(actionName);
 		// if (isActive && action != null)
 		if (action != null)

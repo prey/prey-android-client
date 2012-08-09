@@ -61,9 +61,9 @@ public class JobsGroup {
 
 	public void addJobToGroup(ActionJob job) {
 		if (job.isReportModuleJob())
-			this.reportModules.put(new Long(job.getId()), job);
+			this.reportModules.put(Long.valueOf(job.getId()), job);
 		else
-			this.actionModules.put(new Long(job.getId()), job);
+			this.actionModules.put(Long.valueOf(job.getId()), job);
 	}
 
 	public void run(JobsQueue queue, boolean isMissing) {
@@ -89,7 +89,7 @@ public class JobsGroup {
 
 	public void jobFinished(ActionJob job) {
 		this.syncResults.add(job.getResult());
-		this.runningJobs.remove(new Long(job.getId()));
+		this.runningJobs.remove(Long.valueOf(job.getId()));
 		if (this.runningJobs.isEmpty())
 			this.queue.groupFinished(this, this.ctx);
 	}

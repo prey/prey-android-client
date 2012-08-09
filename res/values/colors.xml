@@ -3,7 +3,6 @@
 
 <color name="screen_bg">#e1e5e4</color>
 <color name="lighter_bg">#E8EBEA</color>
-<color name="white_bg">#FFFFFF</color>
 <color name="darker_txt">#4d4d4d</color>
 <color name="lighter_txt">#808080</color>
     
@@ -35,8 +34,4 @@
 <color name="fb_selected_center">#212121</color>
 <color name="fb_selected_end">#212121</color>
 
-<color name="fb_text">#ffffff</color>
-<color name="fb_text_focused">#ffffff</color>
-<color name="fb_text_pressed">#ffffff</color>
-    
 </resources>

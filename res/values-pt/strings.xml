@@ -1,14 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-
     <string name="preyForAndroid_name">Prey</string>
-    <string name="app_name">Prey para Android™</string>
     <string name="preferences_about_summary">Versão 0.5.3 - © Fork Ltd.</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
-    <string name="back">Voltar</string>
     <string name="agree">Eu concordo </string>
     <string name="dontagree">Eu não concordo</string>
     <string name="change">Mude</string>
@@ -39,10 +36,6 @@
     <string name="device_added_congratulations_text">Você associou com sucesso este dispositivo com a sua conta Prey. Agora efetue os ajustes.</string>
     <string name="device_set_up_h1">Dispositivo ajustado!</string>
     <string name="go_to_settings">Vá para as configuraçoes</string>
-    <string name="contact_name">Nome de contato</string>
-    <string name="choose_contact">Escolha…</string>
-    <string name="contact_to_notify">Contato para notificações </string>
-    <string name="please_choose_the_contact">Por favor, escolha o contato que será notificado quando um novo cartão SIM for detectado. Ele receberá um SMS a partir do seu dispositivo \s número do dispositivo novo.</string>
     <string name="execution_status">Status de execução</string>
     <string name="running">Em andamento</string>
     <string name="stopped">Parado</string>
@@ -60,25 +53,10 @@
     <string name="sms_deactivation">Frase desativação SMS</string>
     <string name="agreements_title">Bem vindo ao Prey para Android™!</string>
     <string name="agreements_message1">Por favor, certifique-se de ler e concordar com os Termos e Condições clicando abaixo</string>
-    <string name="agreements_message2"></string>
-    <string name="first_dialog_title">Bem vindo ao Prey para Android™!</string>
-    <string name="first_dialog_message">Prey ajuda você a encontrar o seu dispositivo informando sua localização para um painel de controle web, ativado por uma mensagem SMS de sua escolha.\n\nVocê já esta registrado no preyproject.com?</string>
-    <string name="set_old_user_dialog_title">Por favor entre com as informaçoes da sua conta</string>
-    <string name="add_device_info_text">Clicando abaixo seu dispositivo será adicionado ao painel de conrole da sua conta. </string>
-    <string name="set_old_user_dialog_email">Email</string>
-    <string name="set_old_user_dialog_password">Senha</string>
-    <string name="set_old_user_dialog_create">Acompanhar o meu dispositivo</string>
+    <string name="agreements_message2"/>
     <string name="set_old_user_loading">Anexando dispositivo a conta…\nSó um segundo!</string>
     <string name="set_old_user_no_more_devices_title">Segure seus cavalos!</string>
     <string name="set_old_user_no_more_devices_text">Parece que você ficou sem slots livres para dispositivos em sua conta Prey.\n\nPor favor, tente remover um dispositivo existente no Painel de Controle ou criar uma nova conta.</string>
-    <string name="set_new_user_dialog_title">Cadastre uma nova conta </string>
-    <string name="set_new_user_dialog_name">Seu nome</string>
-    <string name="set_new_user_dialog_email">Email válido</string>
-    <string name="set_new_user_dialog_password">Senha</string>
-    <string name="set_new_user_dialog_repassword_title">Por favor, verifique sua senha</string>
-    <string name="set_new_user_dialog_repassword">Você  precisará desta senha para gerenciar o Prey neste dispositivo e para entrar em seu Painel de Controle no preyproject.com.\n\nPor favor, verifique-a digitando novamente.</string>
-    <string name="set_new_user_dialog_repassword_confirm">Confirmar</string>
-    <string name="set_new_user_dialog_create">Criar nova conta</string>
     <string name="set_new_user_dialog_creating_popup">Criando nova conta. Por favor espere…</string>
     <string name="congratulations_title">Dispositivo adicionado!</string>
     <string name="preferences_status">Status</string>
@@ -103,25 +81,18 @@
     <string name="your_hero_text">Seu herói será o escolhido que irá receber uma mensagem SMS se por acaso o Prey detectar um  novo cartão SIM no seu telefone.</string>
     <string name="preferences_destination_sms">Contato não notificado</string>
     <string name="preferences_destination_sms_summary">Será notificado por SMS número de dispositivo novo</string>
-    <string name="preferences_destination_sms_edittext">Por favor, escolha o contato que vai ser notificado quando um novo cartão SIM for detectado. Ele receberá um SMS a partir do seu dispositivo \'s número novo dispositivo.</string>
-    <string name="preferences_destination_sms_edittext_hint">Digite o nome</string>
     <string name="preferences_destination_sms_not_valid">O contato que você inseriu não parece ser um número válido de telefone celular</string>
-    <string name="sms_to_send_text">O dispositivo de seu amigo tem um novo número devido a substituição do cartão SIM.Entre em contato com ele em % se você acha que pode ter sido roubado.</string>
+    <string name="sms_to_send_text">O dispositivo de seu amigo tem um novo número devido a substituição do cartão SIM.Entre em contato com ele em %s se você acha que pode ter sido roubado.</string>
     <string name="preferences_update_sim_title">Atribuir a SIM atual</string>
     <string name="preferences_update_sim_summary">Atribuir SIM atual como válido</string>
     <string name="preferences_update_sim_dialog_title">Alterar SIM válido</string>
     <string name="preferences_update_sim_dialog_message">Você esta prestes a mudar o SIM registrado neste dispositivo. Ao clicar \'Sim\' Prey assumirá atual como válido.\n\nVocê tem certeza?</string>
     <string name="gps_network_not_enabled">Provedores de Localização estão desativados.\nVocê precisa ativar pelo menos um deles se quiser acompanhar o seu dispositivo.</string>
-    <string name="open_location_settings">Ativar agora!</string>
     <string name="preferences_category_other_title">Gerenciamento de contas</string>
     <string name="preferences_category_other_summary">Gerencie suas configurações de conta</string>
     <string name="preferences_password_title">Mude a senha</string>
     <string name="preferences_password_summary">Defina a sua nova senha de administrador Prey</string>
     <string name="preferences_password_dialog_title">Por favor digite sua nova senha</string>
-    <string name="preferences_password_old">Senha atual</string>
-    <string name="preferences_password_new">Nova senha</string>
-    <string name="preferences_password_confirm">Confirmar senha</string>
-    <string name="preferences_password_updated">Senha atualizada</string>
     <string name="preferences_password_length_error">As senhas devem ter pelo menos 6 caracteres</string>
     <string name="preferences_passwords_do_not_match">As senhas não combinam</string>
     <string name="preferences_passwords_updating_dialog">Atualizando sua senha Prey.\nPor favor, aguarde …</string>
@@ -130,7 +101,6 @@
     <string name="preferences_detach_summary">Remova este dispositivo do seu Painel de Controle</string>
     <string name="preferences_detach_dialog_title">Removendo dispositivo</string>
     <string name="preferences_detach_dialog_message">O dispositivo será removido a partir do Painel de Controle. Isso também irá apagar todos os seus relatórios armazenados.\n\nVocê tem certeza?</string>
-    <string name="preferences_detach_confirmation_message">O dispositivo foi removido da sua conta.\nAgora você pode configurar o Prey novamente.</string>
     <string name="preferences_detach_dettaching_message">Removendo dispositivo, por favor aguarde…</string>
     <string name="preferences_go_to_control_panel_title">Ver relatórios gerados</string>
     <string name="preferences_go_to_control_panel_summary">Abra browser com o seu painel de controle Prey</string>
@@ -142,12 +112,10 @@
     <string name="preferences_start_summary">Marcar este dispositivo como desaparecido</string>
     <string name="preferences_start_dialog_title">Iniciando Prey</string>
     <string name="preferences_start_dialog_message">Você irá marcar este dispositivo como desaparecido e iniciar o envio de relatórios para o Painel de controle.\n\nVocê tem certeza?</string>
-    <string name="preferences_start_confirmation_message">Agora o dispositivo está sendo relatado como desaparecido para o Painel de Controle. Note que manter o Prey em execução pode diminuir a carga da bateria mais rápido que o normal!</string>
     <string name="preferences_stop_title">Pare o Prey</string>
     <string name="preferences_stop_summary">Pare o precesso Prey e relate os módulos </string>
     <string name="preferences_stop_dialog_title">Parando Prey</string>
     <string name="preferences_stop_dialog_message">Prey irá parar de enviar relatórios para o Painel de Controle e o seu dispositivo será marcado como recuperado.\n\nVocê tem certeza?</string>
-    <string name="preferences_stop_confirmation_message">Tudo está normal novamente. Ficamos felizes de ter recuperado seu dispositivo de volta!</string>
     <string name="preferences_admin_enabled_title">Revogar permissões extras</string>
     <string name="preferences_admin_enabled_summary">Remover proteção de desinstalação</string>
     <string name="preferences_admin_disabled_title">Conceder permissões adicionais</string>
@@ -168,13 +136,6 @@
     <string name="preferences_about">Prey para Android™</string>
     <string name="preferences_about_title">Prey para Android™</string>
     <string name="preferences_about_message">Prey para Android™</string>
-    <string name="password_dialog_title">Bem-vindo de volta!</string>
-    <string name="password_dialog_label">Digite sua senha:</string>
-    <string name="password_dialog_forgot_text1">Esqueceu sua senha?</string>
-    <string name="password_dialog_forgot_text2"></string>
-    <string name="password_dialog_forgot_sent_title">Instruções enviadas</string>
-    <string name="password_dialog_forgot_sent_label">Um e-mail foi enviado para %s com as instruções para redefinir sua senha</string>
-    <string name="password_dialog_forgot_requesting">Reportando senha esquecida …\nSó um segundo!</string>
     <string name="verify_your_account_first">Você tem que verificar a sua conta primeiro</string>
     <string name="password_wrong">Senha errada. Tente novamente.</string>
     <string name="password_intents_exceed">Você errou 3 vezes. Desculpe!</string>
@@ -186,16 +147,10 @@
     <string name="location_notification_prefix">Geofix enviado:</string>
     <string name="call_logs_notification_prefix">Lista de chamadas: chamada efetuada, recebidas e não números não atendidos</string>
     <string name="popup_alert_title">Mensagem importante</string>
-    <string name="popup_alert_message">Pop-up mensagem</string>
-    <string name="lock_label">Por favor, digite a senha para desbloquear:</string>
-    <string name="lock_label_title">Este dispositivo foi bloqueado.</string>
     <string name="error_title">Temos um problema!</string>
-    <string name="error_cant_create_acount">Não é possível registrar conta. Por favor, verifique novamente as informações fornecidas.</string>
     <string name="error_communication_exception">Prey não pôde se conectar ao Painel de controle web.\nVerifique as configurações e tente novamente.</string>
     <string name="error_cant_add_this_device">Não é possível adicionar este dispositivo para sua conta Prey. Por favor, verifique novamente o e-mail e senha fornecidos.</string>
     <string name="error_registered_password_has_changed">Não é possível alterar a senha. A senha atual digitada é inválida.</string>
-    <string name="error_cant_change_password_unknown_error">A senha não pode ser alterada. Por favor, tente novamente mais tarde.</string>
     <string name="error_cant_report_forgotten_password">Não é possível relatar senha esquecida. Por favor, tente novamente mais tarde.</string>
     <string name="error_all_fields_are_required">Todos os campos são obrigatório</string>
-
 </resources>

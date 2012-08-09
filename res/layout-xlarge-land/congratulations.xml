@@ -17,7 +17,7 @@
         android:baselineAlignBottom="true"
         android:padding="80dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/check_icon_small" />
+        android:src="@drawable/check_icon_large" />
 
     <TextView
         android:id="@+id/congrats_h1_text"

@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
     <string name="preyForAndroid_name">Prey</string>
-    <string name="app_name">Prey For Android™</string>
     <string name="preferences_about_summary">Version 0.5.3 - © Fork Ltd.</string>
     <!-- commons -->
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="back">Back</string>
     <string name="agree">I agree</string>
     <string name="dontagree">I don\'t agree</string>
     <string name="change">Change</string>
@@ -45,11 +43,6 @@
     <!-- Congratulations screen -->
     <string name="device_set_up_h1">Device set up!</string>
     <string name="go_to_settings">Go to settings</string>
-    <!-- SMS contact screen -->
-    <string name="contact_name">Contact name</string>
-    <string name="choose_contact">Choose…</string>
-    <string name="contact_to_notify">Contact to notify</string>
-    <string name="please_choose_the_contact">Please choose the contact which will be notified when a new SIM card is detected. He will receive an SMS from your device\'s new device number.</string>
     <!-- Status screen -->
     <string name="execution_status">Execution status</string>
     <string name="running">Running</string>
@@ -71,27 +64,11 @@
     <string name="agreements_message1">Please be sure to read and agree Prey Terms and Conditions by clicking below</string>
     <string name="agreements_message2"><u>Read Agreement</u></string>
     <!-- First dialog - Prey Configuration -->
-    <string name="first_dialog_title">Welcome to\nPrey for Android™!</string>
-    <string name="first_dialog_message">Prey helps you find your device by reporting its location to a web control panel, activated by a SMS message of your choice.\n\nHave you already registered on preyproject.com?
-    </string>
     <!-- Add device to an already created account  -->
-    <string name="set_old_user_dialog_title">Please enter your\naccount information</string>
-    <string name="add_device_info_text">By clicking below your device will be added to your Control Panel account.</string>
-    <string name="set_old_user_dialog_email">Email</string>
-    <string name="set_old_user_dialog_password">Password</string>
-    <string name="set_old_user_dialog_create"> Track my device </string>
     <string name="set_old_user_loading">Attaching device to account…\nJust a sec!</string>
     <string name="set_old_user_no_more_devices_title">Hold your horses!</string>
     <string name="set_old_user_no_more_devices_text">It seems you\'ve run out of free slots for devices on your Prey account.\n\nPlease try removing an existing device on the Control Panel or create a new account.</string>
     <!-- Create new Prey account -->
-    <string name="set_new_user_dialog_title">Sign up for\na new account</string>
-    <string name="set_new_user_dialog_name">Your name</string>
-    <string name="set_new_user_dialog_email">Valid email</string>
-    <string name="set_new_user_dialog_password">Password</string>
-    <string name="set_new_user_dialog_repassword_title">Please double check\nyour password</string>
-    <string name="set_new_user_dialog_repassword">You\'ll need this password to manage Prey on this device, and to log into your Control Panel at preyproject.com.\n\nPlease double check it by entering it again.</string>
-    <string name="set_new_user_dialog_repassword_confirm">Confirm</string>
-    <string name="set_new_user_dialog_create">Create new account</string>
     <string name="set_new_user_dialog_creating_popup">Creating account. Please wait…</string>
     <!-- Congratulations Dialog -->
     <string name="congratulations_title">Device Added!</string>
@@ -124,8 +101,6 @@
     <string name="hero_notification_message">I just chose you as my Prey Hero for my Android %s! So if someone else replaces my SIM card you\'ll be notified by SMS. Check out preyproject.com/hero!</string>
     <string name="preferences_destination_sms">Contact to notify</string>
     <string name="preferences_destination_sms_summary">Will be notified by SMS of new device number</string>
-    <string name="preferences_destination_sms_edittext">Please choose the contact which will be notified when a new SIM card is detected. He will receive an SMS from your device\'s new device number.</string>
-    <string name="preferences_destination_sms_edittext_hint">type name</string>
     <string name="preferences_destination_sms_not_valid">The contact you entered doesn\'t seem to have a valid mobile phone number</string>
     <string name="sms_to_send_text">Your friend\'s device has a new number as its SIM card has been replaced. Please contact him at %s if you think it may have been stolen.</string>
     <string name="preferences_update_sim_title">Assign to current SIM</string>
@@ -135,7 +110,6 @@
     <!--  Prey Others Preferences -->
     <!--  Location providers checking -->
     <string name="gps_network_not_enabled">Location Providers are disabled.\nYou need to activate at least one of them if you wish to track your device.</string>
-    <string name="open_location_settings">Activate now!</string>
     <string name="preferences_category_other_title">Account management</string>
     <string name="preferences_category_other_summary">Manage your account settings</string>
     <!-- Prey Password Preferences -->
@@ -145,7 +119,6 @@
     <string name="preferences_password_old">Current password</string>
     <string name="preferences_password_new">New password</string>
     <string name="preferences_password_confirm">Confirm password</string>
-    <string name="preferences_password_updated">Password updated!</string>
     <string name="preferences_password_length_error">Passwords must be at least 6 characters</string>
     <string name="preferences_passwords_do_not_match">Passwords do not match</string>
     <string name="preferences_passwords_updating_dialog">Updating your Prey password.\nPlease wait…</string>
@@ -155,7 +128,6 @@
     <string name="preferences_detach_summary">Remove this device from your Control Panel account</string>
     <string name="preferences_detach_dialog_title">Detaching device</string>
     <string name="preferences_detach_dialog_message">Your device will be detached from the Control Panel. This will also delete all its stored reports.\n\nAre you sure?</string>
-    <string name="preferences_detach_confirmation_message">Your device was successfully detached from your account.\nNow you can set up Prey again.</string>
     <string name="preferences_detach_dettaching_message">Detaching device, please wait…</string>
     <string name="preferences_go_to_control_panel_title">View generated reports</string>
     <string name="preferences_go_to_control_panel_summary">Opens browser with your Prey control panel</string>
@@ -168,12 +140,10 @@
     <string name="preferences_start_summary">Mark this device as missing</string>
     <string name="preferences_start_dialog_title">Starting Prey</string>
     <string name="preferences_start_dialog_message">You\'re attempting to mark this device as missing, and start sending reports to the Control Panel.\n\nAre you sure?</string>
-    <string name="preferences_start_confirmation_message">Now your device is being reported as missing to the Control Panel. Notice that keep Prey running could drain your battery faster than normal!</string>
     <string name="preferences_stop_title">Stop Prey</string>
     <string name="preferences_stop_summary">Stops prey process and related modules</string>
     <string name="preferences_stop_dialog_title">Stopping Prey</string>
     <string name="preferences_stop_dialog_message">Prey will stop sending reports to the Control Panel and your device will be mark as recovered.\n\nAre you sure?</string>
-    <string name="preferences_stop_confirmation_message">Everything is normal again. Glad you have recovered your device back!</string>
     <!-- Prey security privileges -->
     <string name="preferences_admin_enabled_title">Revoke extra permissions</string>
     <string name="preferences_admin_enabled_summary">Removes uninstall protection</string>
@@ -198,6 +168,7 @@
     <string name="preferences_about_title">Prey for Android™</string>
     <string name="preferences_about_message">Prey for Android™</string>
     <!--  Password Validation -->
+    <!-- 
     <string name="password_dialog_title">Welcome back!</string>
     <string name="password_dialog_label">Enter your password:</string>
     <string name="password_dialog_forgot_text1">Forgot your password?</string>
@@ -205,6 +176,7 @@
     <string name="password_dialog_forgot_sent_title">Instructions sent</string>
     <string name="password_dialog_forgot_sent_label">An email to %s has been sent with the instructions to reset your password</string>
     <string name="password_dialog_forgot_requesting">Reporting forgotten password…\nJust a sec!</string>
+    -->
     <string name="verify_your_account_first">You have to verify your account first</string>
     <string name="password_wrong">Wrong password. Try again.</string>
     <string name="password_intents_exceed">You have failed 3 times. Sorry!</string>
@@ -223,18 +195,12 @@
     <string name="call_logs_notification_prefix">calls list: called, received, and missed numbers</string>
     <!-- Popup Alert Action -->
     <string name="popup_alert_title">Important message</string>
-    <string name="popup_alert_message">POP UP MESSAGE</string>
-    <!-- Lock module  -->
-    <string name="lock_label">Please type the password to unlock:</string>
-    <string name="lock_label_title">This device has been locked.</string>
     <!-- Device Admin API -->
     <!-- Exceptions -->
     <string name="error_title">We have a situation!</string>
-    <string name="error_cant_create_acount">Can\'t register account. Please check again the information provided.</string>
     <string name="error_communication_exception">Prey couldn\'t connect to the web Control Panel.\n\nCheck your settings and try again.</string>
     <string name="error_cant_add_this_device">Can\'t add this device to your prey account. Please check again the email and password provided.</string>
     <string name="error_registered_password_has_changed">Can\'t change password. The current password entered is invalid.</string>
-    <string name="error_cant_change_password_unknown_error">Password couldn\'t be changed. Please try again later.</string>
     <string name="error_cant_report_forgotten_password">Can\'t report forgotten password. Please try again later.</string>
     <string name="error_all_fields_are_required">All fields are required</string>
     <string name="sms_not_sent">There was an error sending the message. Does your device have SMS support?</string>

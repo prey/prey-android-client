@@ -44,8 +44,7 @@
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:hint="@string/your_prey_email"
-            android:inputType="textEmailAddress"
-            android:text="cyaconi@gmail.com" >
+            android:inputType="textEmailAddress" >
 
             <requestFocus />
         </EditText>
@@ -58,8 +57,7 @@
             android:layout_marginRight="0dp"
             android:layout_marginTop="20dp"
             android:hint="@string/your_prey_pass"
-            android:inputType="textPassword"
-            android:text="123123" >
+            android:inputType="textPassword">
 
         </EditText>
 
