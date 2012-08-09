@@ -11,8 +11,10 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -57,6 +59,15 @@ public class CreateAccountActivity extends SetupActivity {
 				}
 			}
 		});
+		
+		//Hack to fix password hint's typeface: http://stackoverflow.com/questions/3406534/password-hint-font-in-android
+		EditText password = (EditText) findViewById(R.id.new_account_pass);
+		password.setTypeface(Typeface.DEFAULT);
+		password.setTransformationMethod(new PasswordTransformationMethod());
+		
+		password = (EditText) findViewById(R.id.new_account_repass);
+		password.setTypeface(Typeface.DEFAULT);
+		password.setTransformationMethod(new PasswordTransformationMethod());
 	}
 
 	private class CreateAccount extends AsyncTask<String, Void, Void> {

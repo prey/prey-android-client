@@ -2,8 +2,10 @@ package com.prey.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.provider.Settings;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,6 +36,12 @@ public class PasswordActivity extends PreyActivity {
 
 			}
 		});
+		
+		//Hack to fix hint's typeface: http://stackoverflow.com/questions/3406534/password-hint-font-in-android
+		EditText password = (EditText) findViewById(R.id.password_pass_txt);
+		password.setTypeface(Typeface.DEFAULT);
+		password.setTransformationMethod(new PasswordTransformationMethod());
+		
 		getPreyConfig().registerC2dm();
 		
 	}

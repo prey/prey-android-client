@@ -12,8 +12,10 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -54,6 +56,10 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 				}
 			}
 		});
+		
+		EditText password = (EditText) findViewById(R.id.add_device_pass);
+		password.setTypeface(Typeface.DEFAULT);
+		password.setTransformationMethod(new PasswordTransformationMethod());
 
 	}
 
