@@ -8,6 +8,8 @@ package com.prey.sms;
 
 import java.util.ArrayList;
 
+import com.prey.exceptions.SMSNotSendException;
+
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 

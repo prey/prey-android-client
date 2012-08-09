@@ -19,8 +19,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.prey.PreyConfig;
-import com.prey.PreyException;
 import com.prey.R;
+import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 
 public class ChangePasswordPreferences extends DialogPreference {

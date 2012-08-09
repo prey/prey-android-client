@@ -9,6 +9,8 @@ package com.prey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.prey.exceptions.PreyException;
+
 public class PushMessage {
 	
 	private String event;

@@ -10,9 +10,9 @@ import java.util.Random;
 
 import android.content.Context;
 
-import com.prey.PreyException;
 import com.prey.PreyLogger;
 import com.prey.actions.PreyAction;
+import com.prey.exceptions.PreyException;
 
 /**
  * Class that represent the abstraction of a PreyAction execution. This class

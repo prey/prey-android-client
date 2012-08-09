@@ -13,9 +13,9 @@ import java.util.Map;
 
 import android.content.Context;
 
-import com.prey.PreyException;
 import com.prey.actions.location.LocationNotifierAction;
 import com.prey.actions.observer.ActionJob;
+import com.prey.exceptions.PreyException;
 
 public abstract class PreyAction {
 	

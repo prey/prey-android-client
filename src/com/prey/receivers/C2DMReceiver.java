@@ -13,9 +13,9 @@ import android.os.AsyncTask;
 
 import com.prey.PreyConfig;
 import com.prey.PreyController;
-import com.prey.PreyException;
 import com.prey.PreyLogger;
 import com.prey.PushMessage;
+import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 
 

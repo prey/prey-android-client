@@ -3,13 +3,17 @@ package com.prey.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.prey.PreyException;
 import com.prey.R;
+import com.prey.actions.location.PreyLocationManager;
+import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 
 public class PasswordActivity extends PreyActivity {

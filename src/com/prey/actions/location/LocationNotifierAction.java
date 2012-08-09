@@ -12,13 +12,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 
-import com.prey.PreyException;
 import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.PreyAction;
 import com.prey.actions.observer.ActionJob;
 import com.prey.actions.observer.ActionResult;
+import com.prey.exceptions.PreyException;
 import com.prey.services.LocationService;
 
 public class LocationNotifierAction extends PreyAction {

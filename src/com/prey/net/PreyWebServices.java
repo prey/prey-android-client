@@ -17,18 +17,19 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 
-import com.prey.NoMoreDevicesAllowedException;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
-import com.prey.PreyException;
 import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.actions.HttpDataService;
 import com.prey.activities.WelcomeActivity;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
+import com.prey.exceptions.NoMoreDevicesAllowedException;
+import com.prey.exceptions.PreyException;
 
 /**
  * This class has the web services implementation needed to connect with prey

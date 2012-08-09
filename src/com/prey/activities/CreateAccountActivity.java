@@ -21,9 +21,9 @@ import android.widget.Toast;
 
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
-import com.prey.PreyException;
 import com.prey.PreyLogger;
 import com.prey.R;
+import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 
 public class CreateAccountActivity extends SetupActivity {

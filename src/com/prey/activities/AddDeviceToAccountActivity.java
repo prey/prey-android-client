@@ -20,11 +20,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.prey.NoMoreDevicesAllowedException;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
-import com.prey.PreyException;
 import com.prey.R;
+import com.prey.exceptions.NoMoreDevicesAllowedException;
+import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 
 public class AddDeviceToAccountActivity extends SetupActivity {

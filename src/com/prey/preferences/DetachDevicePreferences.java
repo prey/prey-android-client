@@ -17,9 +17,9 @@ import android.util.AttributeSet;
 import android.widget.Toast;
 
 import com.prey.PreyConfig;
-import com.prey.PreyException;
 import com.prey.R;
 import com.prey.activities.LoginActivity;
+import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 
 public class DetachDevicePreferences extends DialogPreference {

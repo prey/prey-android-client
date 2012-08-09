@@ -20,6 +20,7 @@ import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.contacts.ContactAccessor;
 import com.prey.contacts.ContactInfo;
+import com.prey.exceptions.SMSNotSendException;
 import com.prey.sms.SMSSupport;
 
 public class SMSContactActivity extends PreyActivity {

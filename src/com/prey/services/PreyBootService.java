@@ -19,6 +19,7 @@ import com.prey.PreyController;
 import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.backwardcompatibility.CupcakeSupport;
+import com.prey.exceptions.SMSNotSendException;
 import com.prey.sms.SMSSupport;
 
 public class PreyBootService extends Service {
