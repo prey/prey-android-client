@@ -70,7 +70,7 @@ public class PreyWebServices {
 		parameters.put("user[password_confirmation]", password);
 		parameters.put("user[referer_user_id]", "");
 		parameters.put("user[country_name]", Locale.getDefault().getDisplayCountry());
-		parameters.put("agreement", PreyConfig.getPreyConfig(ctx).getAgreementId());
+		parameters.put("agreement[key]", PreyConfig.getPreyConfig(ctx).getAgreementId());
 		
 		String xml;
 		try {
