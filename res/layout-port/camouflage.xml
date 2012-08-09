@@ -37,7 +37,7 @@
 
         <Button
             android:id="@+id/password_btn_login"
-            style="@style/PreyButton.Large.Camouflage"
+            style="@style/PreyButton.Camouflage"
             android:layout_width="match_parent"
             android:text="@string/log_in" />
 
