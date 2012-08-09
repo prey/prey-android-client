@@ -79,7 +79,11 @@ public class PreyBootService extends Service {
 										if (PreyConfig.getPreyConfig(PreyBootService.this).isCupcake())
 											CupcakeSupport.sendSMS(destSMS,message);
 										else
-											SMSSupport.sendSMS(destSMS,message);
+											try {
+												SMSSupport.sendSMS(destSMS,message);
+											} catch (SMSNotSendException e) {
+												PreyLogger.i("There was an error sending the SIM replaced SMS alert");
+											}
 										
 									}
 									PreyController.startPrey(getApplicationContext());

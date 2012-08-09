@@ -85,7 +85,11 @@ public class SMSContactActivity extends PreyActivity {
         alertDialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
             	String deviceType = PreyUtils.getDeviceType(SMSContactActivity.this).toLowerCase();
-            	SMSSupport.sendSMS(getPreyConfig().getDestinationSmsNumber(), getString(R.string.hero_notification_message,deviceType));
+            	try {
+					SMSSupport.sendSMS(getPreyConfig().getDestinationSmsNumber(), getString(R.string.hero_notification_message,deviceType));
+				} catch (SMSNotSendException e) {
+					Toast.makeText(SMSContactActivity.this, R.string.sms_not_sent, Toast.LENGTH_LONG).show();
+				}
             }
         });
  

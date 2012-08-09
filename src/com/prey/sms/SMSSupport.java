@@ -34,9 +34,13 @@ public class SMSSupport {
 		return smsMessages;
 	}
 
-	public static void sendSMS(String destSMS, String message) {
+	public static void sendSMS(String destSMS, String message) throws SMSNotSendException {
 		SmsManager sm = SmsManager.getDefault();
+		try {
 		sm.sendTextMessage(destSMS, null, message, null, null);
+		} catch (Exception e){
+			throw new SMSNotSendException();			
+		}
 	}
 
 }
