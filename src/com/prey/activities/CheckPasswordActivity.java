@@ -18,6 +18,7 @@ public class CheckPasswordActivity extends PasswordActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.password);
+		updateLoginScreen();
 		bindPasswordControls();
 		
 

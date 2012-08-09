@@ -12,15 +12,11 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.prey.PreyConfig;
 import com.prey.R;
-import com.prey.actions.location.PreyLocationManager;
 
 public class LoginActivity extends PasswordActivity {
 
@@ -87,30 +83,6 @@ public class LoginActivity extends PasswordActivity {
 		return getPreyConfig().isThisDeviceAlreadyRegisteredWithPrey(false);
 	}
 
-	private void updateLoginScreen() {
-		ImageView loginIcon = (ImageView) findViewById(R.id.login_img);
-		String drawableIconName = "red_button";
-		String h1 = getString(R.string.device_ready_h1);
-		String h2 = getString(R.string.device_ready_h2);
-		if (!PreyLocationManager.getInstance(getApplicationContext()).locationServicesEnabled()) {
-			drawableIconName = "grey_button";
-			h1 = getString(R.string.device_not_ready_h1);
-			h2 = getString(R.string.device_not_ready_h2);
-			loginIcon.setOnClickListener(new Button.OnClickListener() {
-				public void onClick(View v) {
-					Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-					startActivity(myIntent);
-					// Intent browserIntent = new
-					// Intent("android.intent.action.VIEW",
-					// Uri.parse(PreyConfig.CONTROL_PANEL_URL));
-					// startActivity(browserIntent);
-				}
-			});
-		}
-		int id = getResources().getIdentifier(drawableIconName, "drawable", getPackageName());
-		loginIcon.setImageResource(id);
-		((TextView) findViewById(R.id.login_h1_text)).setText(h1);
-		((TextView) findViewById(R.id.login_h2_text)).setText(h2);
-	}
+	
 
 }
