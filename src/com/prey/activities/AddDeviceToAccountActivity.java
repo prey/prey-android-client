@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -60,6 +61,9 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 		EditText password = (EditText) findViewById(R.id.add_device_pass);
 		password.setTypeface(Typeface.DEFAULT);
 		password.setTransformationMethod(new PasswordTransformationMethod());
+		
+		EditText email = (EditText) findViewById(R.id.add_device_email);
+		email.setImeOptions(EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
 	}
 
@@ -91,7 +95,7 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 		}
 		return pass;
 	}
-
+	
 	private class AddDeviceToAccount extends AsyncTask<String, Void, Void> {
 
 		ProgressDialog progressDialog = null;

@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -68,7 +69,16 @@ public class CreateAccountActivity extends SetupActivity {
 		password = (EditText) findViewById(R.id.new_account_repass);
 		password.setTypeface(Typeface.DEFAULT);
 		password.setTransformationMethod(new PasswordTransformationMethod());
+		
+		//To avoid setting these Imeoptions on each layout :)
+		EditText name = (EditText) findViewById(R.id.new_account_name);
+		name.setImeOptions(EditorInfo.TYPE_TEXT_FLAG_CAP_WORDS | EditorInfo.TYPE_TEXT_VARIATION_PERSON_NAME);
+		
+		EditText email = (EditText) findViewById(R.id.new_account_email);
+		email.setImeOptions(EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+		
 	}
+
 
 	private class CreateAccount extends AsyncTask<String, Void, Void> {
 
@@ -106,6 +116,7 @@ public class CreateAccountActivity extends SetupActivity {
 				Intent intent = new Intent(CreateAccountActivity.this, CongratulationsActivity.class);
 				intent.putExtras(bundle);
 				startActivity(intent);
+				finish();
 			} else
 				showDialog(ERROR);
 		}
