@@ -57,7 +57,9 @@
     <application
         android:name="com.prey.PreyApp"
         android:icon="@drawable/logo"
-        android:label="@string/preyForAndroid_name" android:allowClearUserData="false">
+        android:label="@string/preyForAndroid_name"
+        android:theme="@style/PreyTheme" 
+        android:allowClearUserData="false">
 
         <!-- Activities -->
         <activity
