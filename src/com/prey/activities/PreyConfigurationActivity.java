@@ -11,9 +11,8 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 import com.prey.PreyConfig;
-import com.prey.R;
 import com.prey.backwardcompatibility.FroyoSupport;
-
+import com.prey.R;
 public class PreyConfigurationActivity extends PreferenceActivity {
 
 	@Override

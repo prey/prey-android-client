@@ -11,18 +11,16 @@ import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
-import com.prey.R;
 import com.prey.contacts.ContactAccessor;
 import com.prey.contacts.ContactInfo;
 import com.prey.exceptions.SMSNotSendException;
 import com.prey.sms.SMSSupport;
-
+import com.prey.R;
 public class SMSContactActivity extends PreyActivity {
 
 	private static final int PICK_CONTACT_REQUEST = 0;

@@ -24,13 +24,11 @@ import android.telephony.TelephonyManager;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.R;
 import com.prey.actions.HttpDataService;
-import com.prey.activities.WelcomeActivity;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 import com.prey.exceptions.NoMoreDevicesAllowedException;
 import com.prey.exceptions.PreyException;
-
+import com.prey.R;
 /**
  * This class has the web services implementation needed to connect with prey
  * web services

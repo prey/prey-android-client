@@ -6,8 +6,6 @@
  ******************************************************************************/
 package com.prey.actions.parser;
 
-import java.net.URLDecoder;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

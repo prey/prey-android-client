@@ -17,11 +17,10 @@ import android.telephony.TelephonyManager;
 import com.prey.PreyConfig;
 import com.prey.PreyController;
 import com.prey.PreyLogger;
-import com.prey.R;
 import com.prey.backwardcompatibility.CupcakeSupport;
 import com.prey.exceptions.SMSNotSendException;
 import com.prey.sms.SMSSupport;
-
+import com.prey.R;
 public class PreyBootService extends Service {
 
 	// This is the object that receives interactions from clients

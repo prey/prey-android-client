@@ -7,6 +7,7 @@
 package com.prey.activities;
 
 import android.app.AlertDialog;
+import com.prey.R;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -16,16 +17,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.prey.PreyAccountData;
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.R;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 

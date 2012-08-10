@@ -1,14 +1,10 @@
 package com.prey.activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 
-import com.prey.PreyApp;
 import com.prey.PreyConfig;
-import com.prey.PreyLogger;
-import com.prey.backwardcompatibility.FroyoSupport;
 
 public class PreyActivity extends Activity {
 	

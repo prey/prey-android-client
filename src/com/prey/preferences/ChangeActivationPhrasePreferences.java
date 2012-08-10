@@ -13,9 +13,8 @@ import android.preference.EditTextPreference;
 import android.util.AttributeSet;
 
 import com.prey.PreyLogger;
-import com.prey.R;
 import com.prey.net.PreyWebServices;
-
+import com.prey.R;
 public class ChangeActivationPhrasePreferences extends EditTextPreference {
 	
 	

@@ -15,11 +15,10 @@ import android.os.AsyncTask;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.R;
 import com.prey.actions.LockAction;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.net.PreyWebServices;
-
+import com.prey.R;
 public class PreyDeviceAdmin extends DeviceAdminReceiver {
 	
     @Override

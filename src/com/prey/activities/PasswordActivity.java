@@ -13,11 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.prey.R;
 import com.prey.actions.location.PreyLocationManager;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
-
+import com.prey.R;
 public class PasswordActivity extends PreyActivity {
 	
 	int wrongPasswordIntents = 0;

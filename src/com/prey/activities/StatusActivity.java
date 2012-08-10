@@ -6,15 +6,13 @@ import java.util.Date;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Window;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.prey.PreyConfig;
-import com.prey.R;
 import com.prey.actions.location.PreyLocationManager;
 import com.prey.services.PreyRunnerService;
-
+import com.prey.R;
 public class StatusActivity extends Activity {
 
 	@Override

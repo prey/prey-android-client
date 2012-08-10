@@ -17,11 +17,10 @@ import android.util.AttributeSet;
 import android.widget.Toast;
 
 import com.prey.PreyConfig;
-import com.prey.R;
 import com.prey.activities.LoginActivity;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
-
+import com.prey.R;
 public class DetachDevicePreferences extends DialogPreference {
 	Context ctx = null;
 

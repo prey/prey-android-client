@@ -1,13 +1,13 @@
 package com.prey.activities;
 
 import android.content.Intent;
+import com.prey.R;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.prey.PreyLogger;
-import com.prey.R;
 import com.prey.backwardcompatibility.FroyoSupport;
 
 public class CongratulationsActivity extends PreyActivity {

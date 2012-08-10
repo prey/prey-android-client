@@ -10,9 +10,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
 import com.prey.R;
-
 public class PopUpAlertActivity extends PreyActivity {
 
 	private static final int SHOW_POPUP = 0;
