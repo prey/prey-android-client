@@ -41,9 +41,6 @@ public class PasswordActivity extends PreyActivity {
 		EditText password = (EditText) findViewById(R.id.password_pass_txt);
 		password.setTypeface(Typeface.DEFAULT);
 		password.setTransformationMethod(new PasswordTransformationMethod());
-		
-		getPreyConfig().registerC2dm();
-		
 	}
 	
 	protected void updateLoginScreen() {

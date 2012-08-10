@@ -31,6 +31,7 @@ import com.prey.actions.PreyAction;
 import com.prey.activities.WelcomeActivity;
 import com.prey.net.PreyWebServices;
 
+
 public class PreyConfig {
 	
 	//Set false in production
@@ -414,7 +415,7 @@ public class PreyConfig {
 	public void registerC2dm(){
 		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0)); // boilerplate
-		registrationIntent.putExtra("sender", FileConfigReader.getInstance(this.ctx).getc2dmMail());
+		registrationIntent.putExtra("sender", FileConfigReader.getInstance(this.ctx).getGcmId());
 		this.ctx.startService(registrationIntent);
 	}
 	

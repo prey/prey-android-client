@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 
+import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
 import com.prey.PreyController;
 import com.prey.PreyLogger;
@@ -77,7 +78,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		@Override
 		protected Void doInBackground(Object... data) {
 			try {
-				String registration = (String)data[0];
+				String registration = FileConfigReader.getInstance((Context)data[1]).getGcmIdPrefix()+(String)data[0];
 				PreyLogger.d("Registration id: " + registration);
 		    	PreyWebServices.getInstance().setPushRegistrationId((Context)data[1], registration);
 		    	

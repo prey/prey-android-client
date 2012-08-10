@@ -11,6 +11,7 @@ public class PreyApp extends Application {
         super.onCreate();
         mLastPause = 0;
         PreyLogger.i("Application launched!");
+        PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
 
     }
     

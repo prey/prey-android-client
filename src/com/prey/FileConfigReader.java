@@ -44,9 +44,13 @@ public class FileConfigReader {
 	public String getAgreementId(){
 		return properties.getProperty("agreement-id");
 	}
-	public String getc2dmMail(){
-		return properties.getProperty("c2dm-mail");
+	public String getGcmId(){
+		return properties.getProperty("gcm-id");
 	}
+	public String getGcmIdPrefix(){
+		return properties.getProperty("gcm-id-prefix");
+	}
+	
 	public String getc2dmAction(){
 		return properties.getProperty("c2dm-action");
 	}
