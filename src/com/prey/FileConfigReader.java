@@ -77,5 +77,9 @@ public class FileConfigReader {
 	public boolean isLogEnabled() {
 		return Boolean.parseBoolean(properties.getProperty("log-enabled"));
 	}
+
+	public String getAnalyticsUA() {
+		return properties.getProperty("analytics-ua");
+	}
 	
 }

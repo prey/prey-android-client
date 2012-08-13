@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.prey.PreyAccountData;
 import com.prey.R;
 import com.prey.exceptions.NoMoreDevicesAllowedException;
@@ -139,6 +140,11 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 					String message = getString(R.string.device_added_congratulations_text);
 					Bundle bundle = new Bundle();
 					bundle.putString("message", message);
+					GoogleAnalyticsTracker.getInstance().trackEvent(
+							"Device",  // Category
+				            "Added",  // Action
+				            "", // Label
+				            1);
 					Intent intent = new Intent(AddDeviceToAccountActivity.this, CongratulationsActivity.class);
 					intent.putExtras(bundle);
 					startActivity(intent);
