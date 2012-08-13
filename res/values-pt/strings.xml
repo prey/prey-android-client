@@ -154,11 +154,11 @@
     <string name="error_cant_report_forgotten_password">Não é possível relatar senha esquecida. Por favor, tente novamente mais tarde.</string>
     <string name="error_all_fields_are_required">Todos os campos são obrigatório</string>
     <string name="notify_your_hero_now">Boa escolha! Você gostaria de avisar %s que você o escolheu como seu herói? Nós iremos enviar uma mensagem SMS.</string>
-	<string name="no_hero_selected">Nenhum herói selecionado</string>
-	<string name="hero_notification_message">Eu escolhi você como meu herói Prey para o meu Android! Então, se alguém trocar o meu cartão SIM você será notificado por SMS. Confira preyproject.com/herói!</string>
-	<string name="preferences_password_new">Nova senha</string>
-	<string name="preferences_password_old">Senha atual</string>
-	<string name="sms_not_sent">Houve um erro ao enviar a mensagem. O seu dispositivo tem suporte a envio de mensagens SMS?</string>
-	<string name="preferences_password_confirm">Confirmar senha</string>
-	<string name="hero_chosen">Herói escolhido!</string>
+    <string name="no_hero_selected">Nenhum herói selecionado</string>
+    <string name="hero_notification_message">Eu escolhi você como meu herói Prey para o meu Android! Então, se alguém trocar o meu cartão SIM você será notificado por SMS. Confira preyproject.com/herói!</string>
+    <string name="preferences_password_new">Nova senha</string>
+    <string name="preferences_password_old">Senha atual</string>
+    <string name="sms_not_sent">Houve um erro ao enviar a mensagem. O seu dispositivo tem suporte a envio de mensagens SMS?</string>
+    <string name="preferences_password_confirm">Confirmar senha</string>
+    <string name="hero_chosen">Herói escolhido!</string>
 </resources>

@@ -1,3 +1,9 @@
+<!--
+  Created by Carlos Yaconi
+  Copyright 2012 Fork Ltd. All rights reserved.
+  License: GPLv3
+  Full license at "/LICENSE"
+-->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"> 
     <stroke android:width="2dp" android:color="#FFFFFF" />
     <solid android:color="#444646"/> 
