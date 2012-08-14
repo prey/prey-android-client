@@ -7,7 +7,7 @@
 -->
 <resources>
     <string name="preyForAndroid_name">Prey</string>
-    <string name="preferences_about_summary">Version 0.5.3 - © Fork Ltd.</string>
+    <string name="prey_version">0.5.5</string>
     <!-- commons -->
     <string name="yes">Yes</string>
     <string name="no">No</string>

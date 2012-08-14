@@ -452,7 +452,7 @@ public class PreyConfig {
 	}
 
 	public String getPreyVersion() {
-		return FileConfigReader.getInstance(this.ctx).getPreyVersion();
+		return this.ctx.getString(R.string.prey_version);
 	}
 	
 	public String getPreyMinorVersion() {

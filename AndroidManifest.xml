@@ -9,11 +9,11 @@
     package="com.prey"
     android:installLocation="internalOnly"
     android:versionCode="35"
-    android:versionName="0.5" >
+    android:versionName="@string/prey_version" >
 
     <uses-sdk
-        android:minSdkVersion="5"
-        android:targetSdkVersion="13" />
+        android:minSdkVersion="4"
+        android:targetSdkVersion="16" />
 
     <!-- Only this application can receive the messages and registration result -->
     <permission
@@ -65,7 +65,6 @@
 
     <application
         android:name="com.prey.PreyApp"
-        android:allowClearUserData="false"
         android:icon="@drawable/logo"
         android:label="@string/preyForAndroid_name"
         android:theme="@style/PreyTheme" >

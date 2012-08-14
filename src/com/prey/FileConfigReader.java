@@ -64,9 +64,7 @@ public class FileConfigReader {
 	public String getPreySubdomain(){
 		return properties.getProperty("prey-subdomain");
 	}
-	public String getPreyVersion(){
-		return properties.getProperty("prey-version");
-	}
+
 	public String getPreyMinorVersion(){
 		return properties.getProperty("prey-minor-version");
 	}
