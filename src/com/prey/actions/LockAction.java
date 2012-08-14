@@ -52,7 +52,7 @@ public class LockAction extends PreyAction {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		if (preyConfig.isFroyoOrAbove()) {
 			PreyLogger.d("-- Unlock instruction received");
-			FroyoSupport.getInstance(ctx).changePasswordAndLock("",false);
+			FroyoSupport.getInstance(ctx).changePasswordAndLock("",true);
 		}
 //		if (PreyConfig.getPreyConfig(ctx).showLockScreen()){
 //			PreyLogger.d("Instruction to kill Lock module received");
