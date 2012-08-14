@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<!--
-  Created by Carlos Yaconi
-  Copyright 2012 Fork Ltd. All rights reserved.
-  License: GPLv3
-  Full license at "/LICENSE"
--->
 <resources>
     <string name="preyForAndroid_name">Prey</string>
     <!-- commons -->
