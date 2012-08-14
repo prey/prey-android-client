@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Created by Carlos Yaconi
-  Copyright 2012 Fork Ltd. All rights reserved.
-  License: GPLv3
-  Full license at "/LICENSE"
--->
 <lint>
     <issue id="ButtonCase" severity="error" />
     <issue id="ButtonOrder" severity="error" />
