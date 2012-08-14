@@ -184,7 +184,7 @@
             android:key="PREFS_ABOUT"
             android:positiveButtonText="@string/ok"
             android:selectable="false"
-            android:summary="@string/preferences_about_summary"
+            android:summary=""
             android:title="@string/preferences_about" />
     </PreferenceCategory>
 

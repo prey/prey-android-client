@@ -96,7 +96,6 @@
     <!--  Prey About -->
     <string name="preferences_about_category_name">Acerca de</string>
     <string name="preferences_about">Prey para Android™</string>
-    <string name="preferences_about_summary">Version 0.5 - © Fork Ltd.</string>
     <string name="preferences_about_title">Prey para Android™</string>
     <string name="preferences_about_message">Prey para Android™</string>
     <!--  Password Validation -->

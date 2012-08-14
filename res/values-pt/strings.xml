@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
     <string name="preyForAndroid_name">Prey</string>
-    <string name="preferences_about_summary">Versão 0.5.3 - © Fork Ltd.</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
     <string name="ok">OK</string>

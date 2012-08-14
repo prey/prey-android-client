@@ -73,7 +73,6 @@
     <!--  Prey About -->
     <string name="preferences_about_category_name">關於</string>
     <string name="preferences_about">Prey for Android™</string>
-    <string name="preferences_about_summary">版本 0.4 - c Fork Ltd.</string>
     <string name="preferences_about_title">Prey for Android™</string>
     <string name="preferences_about_message">Prey for Android™</string>
     <!--  Password Validation -->

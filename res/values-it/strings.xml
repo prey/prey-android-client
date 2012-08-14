@@ -73,7 +73,6 @@
     <!--  Prey About -->
     <string name="preferences_about_category_name">About</string>
     <string name="preferences_about">Prey per Android™</string>
-    <string name="preferences_about_summary">Version 0.3.73 - © Fork Ltd.</string>
     <string name="preferences_about_title">Prey per Android™</string>
     <string name="preferences_about_message">Prey per Android™</string>
     <!--  Password Validation -->
