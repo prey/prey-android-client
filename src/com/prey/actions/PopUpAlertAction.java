@@ -55,4 +55,7 @@ public class PopUpAlertAction extends PreyAction {
 		return false;
 	}
 
+	public int getPriority(){
+		return POPUPALERT_PRIORITY;
+	}
 }

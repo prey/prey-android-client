@@ -103,5 +103,9 @@ public class LocationNotifierAction extends PreyAction {
 	public boolean isSyncAction() {
 		return true;
 	}
+	
+	public int getPriority(){
+		return GEO_PRIORITY;
+	}
 
 }

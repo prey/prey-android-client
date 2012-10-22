@@ -82,5 +82,9 @@ public class CallLogsNotifierAction extends PreyAction {
 	public boolean shouldNotify() {
 		return false;
 	}
+	
+	public int getPriority(){
+		return CALLLOG_PRIORITY;
+	}
 
 }

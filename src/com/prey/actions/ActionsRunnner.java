@@ -8,8 +8,10 @@ package com.prey.actions;
 
 import java.util.ArrayList;
 
+
 import android.content.Context;
 import android.content.Intent;
+
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -43,9 +45,11 @@ public class ActionsRunnner {
 
 		public ActionsRunner(Context context) {
 			this.ctx = context;
+			
 		}
 
 		public void run() {
+			
 			preyConfig = PreyConfig.getPreyConfig(ctx);
 			if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey(true)){
 				PreyExecutionWaitNotify waitNotify = new PreyExecutionWaitNotify();
@@ -105,6 +109,7 @@ public class ActionsRunnner {
 				preyControlStatus = ResponseParser.parseResponse(actionsToExecute);
 				boolean isMissing = preyControlStatus.isMissing();
 				PreyConfig.getPreyConfig(ctx).setMissing(isMissing);
+				//Aqui tocar oso
 				if (runIfNotMissing || (!runIfNotMissing && isMissing)){
 					actions = PreyAction.getActionsFromPreyControlStatus(preyControlStatus);
 					preyConfig.unlockIfLockActionIsntEnabled(actions);

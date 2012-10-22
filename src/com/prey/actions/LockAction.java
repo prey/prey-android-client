@@ -66,5 +66,9 @@ public class LockAction extends PreyAction {
 		
 		
 	}
+	
+	public int getPriority(){
+		return LOCK_PRIORITY;
+	}
 
 }
