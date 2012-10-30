@@ -6,7 +6,13 @@
  ******************************************************************************/
 package com.prey.actions;
 
+ 
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+ 
 
 public class HttpDataService {
 
@@ -16,10 +22,13 @@ public class HttpDataService {
 	private boolean isList;
 	private String httpMethod;
 	private String url;
+	private List<InputStream> files;
+ 
 
 	public HttpDataService(String key) {
 		this.key = key;
 		dataList = new HashMap<String, String>();
+		files= new ArrayList<InputStream>();
 	}
 
 	public HashMap<String, String> getDataAsParameters() {
@@ -108,5 +117,21 @@ public class HttpDataService {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
+	public List<InputStream> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<InputStream> files) {
+		this.files = files;
+	}
+
+	public void addFile(InputStream file) {
+		files.add(file);
+	}
+
+
+ 
+ 
 
 }
