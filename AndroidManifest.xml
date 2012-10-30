@@ -12,8 +12,8 @@
     android:versionName="@string/prey_version" >
 
     <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="15" />
+        android:minSdkVersion="4"
+        android:targetSdkVersion="16" />
 
     <!-- Only this application can receive the messages and registration result -->
     <permission
@@ -67,10 +67,9 @@
 
     <!-- This app has permission to register and receive message -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
- 
+
  	<!-- This app has permission to camera -->
     <uses-permission android:name="android.permission.CAMERA" />
-    
     <application
         android:name="com.prey.PreyApp"
         android:icon="@drawable/logo"

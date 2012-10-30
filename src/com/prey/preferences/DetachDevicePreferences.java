@@ -38,7 +38,7 @@ public class DetachDevicePreferences extends DialogPreference {
 	public void onClick(DialogInterface dialog, int which) {
 		super.onClick(dialog, which);
 		if (which == DialogInterface.BUTTON_POSITIVE) {
-			new DetachDevice().execute();
+			new DetachDevice().execute(null);
 		}
 	}
 

@@ -6,12 +6,9 @@
  ******************************************************************************/
 package com.prey.actions;
 
-
 import android.content.Context;
-
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-
 
 import com.prey.PreyLogger;
 import com.prey.R;
@@ -21,8 +18,7 @@ public class Mp3PlayerAction extends PreyAction {
 
 	public static final String DATA_ID = "alarm";
 	public final String ID = "alarm";
-	private boolean changeVolume=false;
-	
+
 	@Override
 	public String textToNotifyUserOnEachReport(Context ctx) {
 		return "";
@@ -31,47 +27,35 @@ public class Mp3PlayerAction extends PreyAction {
 	@Override
 	public void execute(ActionJob actionJob, Context ctx) {
 		PreyLogger.d("Ejecuting Mp3PlayerAction Action");
-		MediaPlayer mp =null;
+
 		try {
-			changeVolume=false;
 			// AudioManager.setVolume(AudioManager.STREAM_MUSIC,
 			// AudioManager.MAX_VOLUME - step);
 			final AudioManager audio = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
 			int max = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 			final int setVolFlags = AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE | AudioManager.FLAG_VIBRATE;
-			PreyLogger.d("volumenInicial:"+max);
+
 			audio.setStreamVolume(AudioManager.STREAM_MUSIC, max, setVolFlags);
- 
-			mp = MediaPlayer.create(ctx, R.raw.siren);
-			// mp.prepare();	   
-			
+
+			MediaPlayer mp = MediaPlayer.create(ctx, R.raw.siren);
+			// mp.prepare();
+
 			mp.start();
-			
-			Mp3OnCompletionListener mp3Listener=new Mp3OnCompletionListener();
 			// i.e. react on the end of the music-file:
-			mp.setOnCompletionListener(mp3Listener);
-		
-			while(!changeVolume){
-				Thread.sleep(1000);
-				int volume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-				PreyLogger.d("volumenFinal:"+volume+" volumenInicial:"+max);
-				if(volume!=max){
-					changeVolume=true;
-					mp.stop();					
+			mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+				public void onCompletion(MediaPlayer mp) {
+					PreyLogger.d("Stop Playing MP3. Mp3PlayerAction Action. DONE!");
+					mp.release();
 				}
-			}
-			
-		} catch (Exception e) {
+			});
+		} catch (IllegalStateException e) {
 			PreyLogger.e("Error executing Mp3PlayerAction " + e.getMessage(),e);
 
 			// } catch (IOException e) {
 			// Log.e("Error executing Mp3PlayerAction" +
 			// e.getLocalizedMessage());
-		}finally{
-			if(mp!=null)
-				mp.release();
 		}
-		PreyLogger.d("Ejecuting Mp3PlayerAction Action[Finish]");
 	}
 
 	@Override
@@ -82,18 +66,6 @@ public class Mp3PlayerAction extends PreyAction {
 	@Override
 	public boolean shouldNotify() {
 		return false;
-	}
-	
-	public int getPriority(){
-		return ALARM_PRIORITY;
-	}
-	
-	class Mp3OnCompletionListener implements MediaPlayer.OnCompletionListener{
-		public void onCompletion(MediaPlayer mp) {
-			PreyLogger.d("Stop Playing MP3. Mp3PlayerAction Action. DONE!");
-			//mp.release();
-			changeVolume=true;
-		}
 	}
 
 }
