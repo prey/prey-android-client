@@ -19,7 +19,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 
 import com.prey.actions.HttpDataService; 
-import com.prey.actions.PreyExecutionWaitNotify;
+import com.prey.net.http.EntityFile;
 
 public class TakePictureCamera {
 
@@ -79,10 +79,15 @@ public class TakePictureCamera {
 		}  
 		if (dataImagen != null) {
 			PreyLogger.d("dataImagen data length=" + dataImagen.length);			
-			InputStream input = new ByteArrayInputStream(dataImagen);			
+			InputStream file = new ByteArrayInputStream(dataImagen);	
+			EntityFile entityFile =new EntityFile();
+			entityFile.setFile(file);
+			entityFile.setMimeType("image/png");
+			entityFile.setName("picture.jpg");
+			entityFile.setType("picture");   
 			data = new HttpDataService(CameraAction.DATA_ID);
 			data.setList(true);
-			data.addFile(input);
+			data.addEntityFile(entityFile);
 		} else {
 			PreyLogger.d("dataImagen nulo");
 		}

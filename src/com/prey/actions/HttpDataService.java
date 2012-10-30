@@ -7,10 +7,11 @@
 package com.prey.actions;
 
  
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.prey.net.http.EntityFile;
 
  
 
@@ -22,13 +23,13 @@ public class HttpDataService {
 	private boolean isList;
 	private String httpMethod;
 	private String url;
-	private List<InputStream> files;
+	private List<EntityFile> entityFiles;
  
 
 	public HttpDataService(String key) {
 		this.key = key;
 		dataList = new HashMap<String, String>();
-		files= new ArrayList<InputStream>();
+		entityFiles= new ArrayList<EntityFile>();
 	}
 
 	public HashMap<String, String> getDataAsParameters() {
@@ -118,16 +119,17 @@ public class HttpDataService {
 		this.url = url;
 	}
 
-	public List<InputStream> getFiles() {
-		return files;
+
+	public void addEntityFile(EntityFile entityFile) {
+		entityFiles.add(entityFile);
 	}
 
-	public void setFiles(List<InputStream> files) {
-		this.files = files;
+	public List<EntityFile> getEntityFiles() {
+		return entityFiles;
 	}
 
-	public void addFile(InputStream file) {
-		files.add(file);
+	public void setEntityFiles(List<EntityFile> entityFiles) {
+		this.entityFiles = entityFiles;
 	}
 
 

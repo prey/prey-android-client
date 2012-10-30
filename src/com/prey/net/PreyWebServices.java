@@ -34,6 +34,7 @@ import com.prey.actions.HttpDataService;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 import com.prey.exceptions.NoMoreDevicesAllowedException;
 import com.prey.exceptions.PreyException;
+import com.prey.net.http.EntityFile;
 import com.prey.R;
 /**
  * This class has the web services implementation needed to connect with prey
@@ -221,11 +222,11 @@ public class PreyWebServices {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		
 		Map<String, String> parameters = new HashMap<String, String>();
-		List<InputStream> files=new ArrayList<InputStream>();
+		List<EntityFile> entityFiles=new ArrayList<EntityFile>();
 		for (HttpDataService httpDataService : dataToSend) {
 			parameters.putAll(httpDataService.getDataAsParameters());
-			if (httpDataService.getFiles()!=null&&httpDataService.getFiles().size()>0){
-				files.addAll(httpDataService.getFiles());
+			if (httpDataService.getEntityFiles()!=null&&httpDataService.getEntityFiles().size()>0){
+				entityFiles.addAll(httpDataService.getEntityFiles());
 			}
 		}
 
@@ -235,10 +236,10 @@ public class PreyWebServices {
 		try {
 			String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
 			PreyConfig.postUrl = null;
-			if (files.size()==0)
+			if (entityFiles.size()==0)
 				response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig).getResponseAsString();
 			else
-				response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig,files).getResponseAsString();
+				response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig,entityFiles).getResponseAsString();
 			PreyLogger.d("Report sent: " + response);
 			GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
 			if (preyConfig.isShouldNotify()) {
