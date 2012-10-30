@@ -62,6 +62,7 @@
             </Preference>
 
             <com.prey.preferences.UpdateSimPreference
+                android:dependency="PREFS_CHECK_SIM_CHANGE"
                 android:dialogIcon="@drawable/logo"
                 android:dialogMessage="@string/preferences_update_sim_dialog_message"
                 android:dialogTitle="@string/preferences_update_sim_dialog_title"
