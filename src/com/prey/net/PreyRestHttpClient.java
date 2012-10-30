@@ -6,7 +6,9 @@
  ******************************************************************************/
 package com.prey.net;
 
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,7 +26,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.client.utils.URLEncodedUtils; 
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
@@ -39,6 +41,7 @@ import android.content.Context;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 
+import com.prey.net.http.SimpleMultipartEntity;
 /**
  * Implements a Rest API using android http client.
  * 
@@ -145,6 +148,29 @@ public class PreyRestHttpClient {
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
 
 		// method.setParams(getHttpParamsFromMap(params));
+		PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+		httpclient.setRedirectHandler(new NotRedirectHandler());
+		HttpResponse httpResponse = httpclient.execute(method);
+		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
+		PreyLogger.d("Response from server: " + response.toString());
+		return response;
+	}
+	
+	public PreyHttpResponse post(String url, Map<String, String> params, PreyConfig preyConfig, List<InputStream>  files) throws IOException {
+		HttpPost method = new HttpPost(url);
+		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		SimpleMultipartEntity entity =new SimpleMultipartEntity();		
+		for (Iterator<Map.Entry<String, String>> it = params.entrySet().iterator(); it.hasNext();) {
+			Map.Entry<String, String> entry = it.next();
+			String key = entry.getKey();
+			String value = entry.getValue();
+			entity.addPart( key,   value );
+		}
+		for(InputStream file:files){
+			entity.addPart( "picture", "picture.jpg",file,"image/png",true);
+		}
+		
+		method.setEntity( entity ); 
 		PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);

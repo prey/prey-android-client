@@ -35,7 +35,7 @@ import com.prey.net.PreyWebServices;
 public class PreyConfig {
 	
 	//Set false in production
-	public static final boolean LOG_DEBUG_ENABLED = false;
+	public static final boolean LOG_DEBUG_ENABLED = true;
 	
 	// Set to 1000 * 60 in production.
 	public static final long DELAY_MULTIPLIER = 1000 * 60; 
@@ -110,11 +110,13 @@ public class PreyConfig {
 	private boolean runOnce;
 	private boolean isFroyoOrAbove;
 	private boolean isCupcake;
+	private boolean isGingerbreadOrAbove;
 	
 	private Context ctx;
 
 	private PreyConfig(Context ctx) {
 		this.ctx = ctx;
+		this.isGingerbreadOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 9;
 		this.isFroyoOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 8;
 		this.isCupcake = Integer.parseInt(Build.VERSION.SDK) == 3;
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -451,6 +453,10 @@ public class PreyConfig {
 		return isCupcake;
 	}
 
+	public boolean isGingerbreadOrAbove() {
+		return isGingerbreadOrAbove;
+	}
+	
 	public String getPreyVersion() {
 		return this.ctx.getString(R.string.prey_version);
 	}
