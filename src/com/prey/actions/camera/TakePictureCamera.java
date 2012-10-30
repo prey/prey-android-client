@@ -5,9 +5,9 @@ package com.prey.actions.camera;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.hardware.Camera;
-import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
@@ -15,7 +15,6 @@ import android.media.AudioManager;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 
 import com.prey.actions.HttpDataService; 
@@ -51,7 +50,7 @@ public class TakePictureCamera {
 		    
 		    
 			TakePictureCallback callback=new TakePictureCallback();
-			mCamera.reconnect();
+			//mCamera.reconnect();
 			mCamera.setPreviewDisplay(null);
 			mCamera.startPreview();
 			mCamera.takePicture(shutter, null, callback);
@@ -96,14 +95,15 @@ public class TakePictureCamera {
 	
 	
 
-	
  
 	private Camera getCamera(Context ctx){
 		Camera mCamera =null;
+		
+		/* 
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		if (preyConfig.isGingerbreadOrAbove()) {
 			int numberOfCameras = Camera.getNumberOfCameras();
-			CameraInfo cameraInfo = new CameraInfo();
+			android.hardware.Camera.CameraInfo cameraInfo = new android.hardware.Camera.CameraInfo();
 			for (int camIdx = 0; camIdx < numberOfCameras; camIdx++) {
 				Camera.getCameraInfo(camIdx, cameraInfo);
 				if (cameraInfo.facing == CameraInfo.CAMERA_FACING_FRONT) {
@@ -114,13 +114,15 @@ public class TakePictureCamera {
 					}
 				}
 			}
-		}
+		} 
+		*/
 		if (mCamera == null) {
 			mCamera = Camera.open();
 		}
 		return mCamera;
 	}
 	
+	@TargetApi(8) 
 	private Parameters setParameter(Context ctx,Parameters params){
 		WindowManager windowManager = (WindowManager)  ctx.getSystemService(Context.WINDOW_SERVICE);
 		int rotacion=windowManager.getDefaultDisplay().getRotation();

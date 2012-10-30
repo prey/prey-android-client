@@ -67,9 +67,10 @@
 
     <!-- This app has permission to register and receive message -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-
+ 
  	<!-- This app has permission to camera -->
     <uses-permission android:name="android.permission.CAMERA" />
+    
     <application
         android:name="com.prey.PreyApp"
         android:icon="@drawable/logo"
