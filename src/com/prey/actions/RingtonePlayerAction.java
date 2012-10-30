@@ -50,4 +50,7 @@ public class RingtonePlayerAction extends PreyAction {
 		return false;
 	}
 
+	public int getPriority(){
+		return RINGTONE_PRIORITY;
+	}
 }
