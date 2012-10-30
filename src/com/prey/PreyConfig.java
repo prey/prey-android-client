@@ -110,11 +110,13 @@ public class PreyConfig {
 	private boolean runOnce;
 	private boolean isFroyoOrAbove;
 	private boolean isCupcake;
+	private boolean isGingerbreadOrAbove;
 	
 	private Context ctx;
 
 	private PreyConfig(Context ctx) {
 		this.ctx = ctx;
+		this.isGingerbreadOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 9;
 		this.isFroyoOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 8;
 		this.isCupcake = Integer.parseInt(Build.VERSION.SDK) == 3;
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -451,6 +453,10 @@ public class PreyConfig {
 		return isCupcake;
 	}
 
+	public boolean isGingerbreadOrAbove() {
+		return isGingerbreadOrAbove;
+	}
+	
 	public String getPreyVersion() {
 		return this.ctx.getString(R.string.prey_version);
 	}
