@@ -7,10 +7,15 @@
 package com.prey.net;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+ 
+
+ 
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -40,7 +45,7 @@ import com.prey.R;
 public class PreyWebServices {
 
 	private static PreyWebServices _instance = null;
-	private static String preyURL = null;
+	//private static String preyURL = null;
 
 	private PreyWebServices() {
 
@@ -149,7 +154,7 @@ public class PreyWebServices {
 		parameters.put("device[model_name]", model);
 		parameters.put("device[vendor_name]", vendor);
 		TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-		String imsi = mTelephonyMgr.getSubscriberId();
+		//String imsi = mTelephonyMgr.getSubscriberId();
 		String imei = mTelephonyMgr.getDeviceId();
 		parameters.put("device[physical_address]", imei);
 
@@ -215,9 +220,13 @@ public class PreyWebServices {
 	public String sendPreyHttpReport(Context ctx, ArrayList<HttpDataService> dataToSend) {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		
-		HashMap<String, String> parameters = new HashMap<String, String>();
+		Map<String, String> parameters = new HashMap<String, String>();
+		List<InputStream> files=new ArrayList<InputStream>();
 		for (HttpDataService httpDataService : dataToSend) {
 			parameters.putAll(httpDataService.getDataAsParameters());
+			if (httpDataService.getFiles()!=null&&httpDataService.getFiles().size()>0){
+				files.addAll(httpDataService.getFiles());
+			}
 		}
 
 		parameters.put("api_key", preyConfig.getApiKey());
@@ -226,14 +235,17 @@ public class PreyWebServices {
 		try {
 			String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
 			PreyConfig.postUrl = null;
-			response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig).getResponseAsString();
+			if (files.size()==0)
+				response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig).getResponseAsString();
+			else
+				response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig,files).getResponseAsString();
 			PreyLogger.d("Report sent: " + response);
 			GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
 			if (preyConfig.isShouldNotify()) {
 				this.notifyUser(ctx);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			PreyLogger.e("Report wasn't send",e);
 		} catch (PreyException e) {
 			PreyLogger.e("Report wasn't send",e);
 		}
