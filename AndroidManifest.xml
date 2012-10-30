@@ -37,6 +37,11 @@
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
+    
+    <uses-feature android:name="android.hardware.camera" android:required="true"  />
+ 	<uses-feature android:name="android.hardware.camera.autofocus"  android:required="true"  />
+ 	<uses-feature android:name="android.hardware.camera.front"   android:required="true" />
+ 
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -63,6 +68,8 @@
     <!-- This app has permission to register and receive message -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
+ 	<!-- This app has permission to camera -->
+    <uses-permission android:name="android.permission.CAMERA" />
     <application
         android:name="com.prey.PreyApp"
         android:icon="@drawable/logo"
@@ -184,6 +191,11 @@
                 <action android:name="android.app.action.ACTION_PASSWORD_CHANGED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".buttonreceiver.MediaButtonIntentReceiver" >
+        	<intent-filter android:priority="10000" >
+            	<action android:name="android.intent.action.MEDIA_BUTTON" />
+        	</intent-filter>
+    	</receiver>
         
 
         <!-- Only C2DM servers can send messages for the app. If permission is not set - any other app can generate it -->
