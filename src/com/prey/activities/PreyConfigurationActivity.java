@@ -6,6 +6,7 @@
  ******************************************************************************/
 package com.prey.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -44,6 +45,15 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 		p = findPreference("PREFS_ABOUT");
 		p.setSummary("Version " + preyConfig.getPreyVersion() + "-" + preyConfig.getPreyMinorVersion() + " © Fork Ltd.");
 		
+	} 
+	
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtra("EXIT", true);
+		startActivity(intent);
+		finish();
 	}
-
+	
 }
