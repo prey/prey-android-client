@@ -22,6 +22,7 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -228,7 +229,12 @@ public class PreyWebServices {
 			PreyConfig.postUrl = null;
 			response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig).getResponseAsString();
 			PreyLogger.d("Report sent: " + response);
-			GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
+			try{
+				GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
+			}catch(NullPointerException ex){
+				GoogleAnalyticsTracker.getInstance().startNewSession(FileConfigReader.getInstance(ctx).getAnalyticsUA(),ctx);
+				GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
+			}
 			if (preyConfig.isShouldNotify()) {
 				this.notifyUser(ctx);
 			}
