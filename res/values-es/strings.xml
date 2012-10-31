@@ -12,7 +12,7 @@
     <string name="agreements_message1">Por favor asegurate de leer y luego aceptar los términos y condiciones que se encuentran en el link de más abajo</string>
     <string name="agreements_message2">&lt;u&gt;Términos y Condiciones&lt;/u&gt;</string>
     <string name="set_old_user_loading">Agregando equipo a la cuenta…</string>
-    <string name="set_old_user_no_more_devices_title">¡Ups!</string>
+    <string name="set_old_user_no_more_devices_title">¡Momento!</string>
     <string name="set_old_user_no_more_devices_text">Al parecer en tu cuenta Prey no quedan slots disponibles para tu equipo.\n\nIntenta eliminando algún disposito en tu Panel de Control, o bien crea una nueva cuenta.</string>
     <string name="set_new_user_dialog_creating_popup">Creando la cuenta.\nUn segundo…</string>
     <string name="congratulations_title">¡Equipo agregado!</string>
@@ -106,8 +106,8 @@
     <string name="already_prey_user">Tengo cuenta en Prey</string>
     <string name="new_user">Nuevo usuario</string>
     <string name="device_ready_h1">Equipo preparado</string>
-    <string name="device_not_ready_h1">¡Equipo no preparado!</string>
-    <string name="device_ready_h2">Tu equipo está protegido y esperando la señal de activación.</string>
+    <string name="device_not_ready_h1">¡Equipo aún no listo!</string>
+    <string name="device_ready_h2">Tu equipo está protegido y a la espera de la señal de activación.</string>
     <string name="device_not_ready_h2">Servicios de localización desactivados. Los reportes no serán enviados.</string>
     <string name="login_cp">Ingresa al Panel de Control</string>
     <string name="manage_prey_settings">Configuración de Prey</string>
@@ -148,17 +148,17 @@
     <string name="preferences_camouflage_title">Modo camuflado</string>
     <string name="preferences_camouflage_summary">Despliega una pantalla false de inicio</string>
     <string name="choose_your_hero">¡Elige a tu héroe!</string>
-    <string name="no_hero_selected">Héroe no seleccionado</string>
+    <string name="no_hero_selected">No hay héroe seleccionado</string>
     <string name="your_hero_text">Tu héroe será el elegido que recibirá un SMS de alerta cuando Prey detecte una nueva tarjeta SIM en tu teléfono.</string>
     <string name="hero_chosen">¡Héroe seleccionado!</string>
     <string name="notify_your_hero_now">¡Muy bien! ¿Te gustaría informarle a %s que lo has seleccionado como tu héroe? Le enviaremos un mensaje SMS.</string>
-    <string name="hero_notification_message">Te acabo de elegir como el héroe de mi equipo Android. Si alguien remplaza mi SIM tú serás notificado via SMS. ¡Entra a preyproject.com/hero!</string>
+    <string name="hero_notification_message">Te acabo de elegir como el héroe de mi equipo Android. Si alguien remplaza mi SIM tú serás notificado via SMS. ¡Más info en preyproject.com!</string>
     <string name="gps_network_not_enabled">Servicios de localización desactivados.\nDebes activar al menos uno de ellos si quieres localizar tu equipo.</string>
     <string name="preferences_advanced_screen_title">Configuración avanzada</string>
     <string name="preferences_advanced_screen_summary">Modifica configuración avanzada de Prey</string>
-    <string name="preferences_activate_wifi_title">Activa wifi</string>
+    <string name="preferences_activate_wifi_title">Activar wifi</string>
     <string name="preferences_activate_wifi_summary">Activa wifi cuando Prey se ejecute</string>
-    <string name="preferences_activate_mobile_data_title">Activa datos móviles</string>
+    <string name="preferences_activate_mobile_data_title">Activar datos móviles</string>
     <string name="preferences_activate_mobile_data_summary">Atención: Podría no funcionar en algunos dispositivos</string>
     <string name="sms_not_sent">Hubo un problema enviando el mensaje. ¿Estás seguro que tu equipo puede enviar SMS?</string>
 </resources>
