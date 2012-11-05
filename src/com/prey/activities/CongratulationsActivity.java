@@ -7,6 +7,8 @@
 package com.prey.activities;
 
 import android.content.Intent;
+
+import com.prey.PreyStatus;
 import com.prey.R;
 import android.os.Bundle;
 import android.view.View;
@@ -56,6 +58,7 @@ public class CongratulationsActivity extends PreyActivity {
 
 			public void onClick(View v) {
 				Intent intent = new Intent(CongratulationsActivity.this, PreyConfigurationActivity.class);
+				PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
 				startActivity(intent);
 				finish();
 			}

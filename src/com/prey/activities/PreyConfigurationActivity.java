@@ -12,13 +12,17 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 import com.prey.PreyConfig;
+import com.prey.PreyLogger;
+import com.prey.PreyStatus;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.R;
 public class PreyConfigurationActivity extends PreferenceActivity {
 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		PreyLogger.i("onCreate");
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
 		preyConfig.setAccountVerified();
 		addPreferencesFromResource(R.xml.preferences);
@@ -26,8 +30,18 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
+		// TODO Auto-generated method stub
+		if (!PreyStatus.getInstance().isPreyConfigurationActivityResume()){
+			Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.putExtra("EXIT", true);
+			startActivity(intent);
+			finish();
+			
+		}
+		
+		PreyLogger.i("onResume");
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
 		Preference p = findPreference("PREFS_ADMIN_DEVICE");
 		if (preyConfig.isFroyoOrAbove()) {
@@ -47,13 +61,38 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 		
 	} 
 	
+ 
+	
 	@Override
-	public void onBackPressed() {
-		Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.putExtra("EXIT", true);
-		startActivity(intent);
-		finish();
+	protected void onPause() {
+		
+		super.onPause();
+		PreyStatus.getInstance().setPreyConfigurationActivityResume(false);
+		PreyLogger.i("onPause");
+	}
+	
+	
+	@Override
+    protected void onStart(){
+		super.onStart();
+		PreyLogger.i("onStart");
+	}
+    
+    protected void onRestart(){
+    	super.onRestart();
+		PreyLogger.i("onRestart");
+	}
+
+ 
+ 
+    protected void onStop(){
+    	super.onStop();
+		PreyLogger.i("onStop");
+	}
+
+    protected void onDestroy(){
+    	super.onDestroy();
+		PreyLogger.i("onDestroy");
 	}
 	
 }
