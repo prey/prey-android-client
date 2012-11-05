@@ -205,7 +205,7 @@
     <!-- Exceptions -->
     <string name="error_title">We have a situation!</string>
     <string name="error_communication_exception">Prey couldn\'t connect to the web Control Panel.\n\nCheck your settings and try again.</string>
-    <string name="error_cant_add_this_device">Can\'t add this device to your prey account. Please check again the email and password provided.</string>
+    <string name="error_cant_add_this_device">Can\'t add this device to your prey account. Please check again the email and password provided. %s</string>
     <string name="error_registered_password_has_changed">Can\'t change password. The current password entered is invalid.</string>
     <string name="error_cant_report_forgotten_password">Can\'t report forgotten password. Please try again later.</string>
     <string name="error_all_fields_are_required">All fields are required</string>

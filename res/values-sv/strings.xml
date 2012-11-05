@@ -10,7 +10,7 @@
     <string name="device_added_congratulations_text">Du har associerat denna telefon med ditt Prey-konto. Ägna en minut åt att ange några inställningar.</string>
     <string name="dontagree">Jag godkänner inte</string>
     <string name="error_all_fields_are_required">Alla fält är obligatoriska</string>
-    <string name="error_cant_add_this_device">Det går inte att lägga till denna enhet på ditt Prey-konto. Kontrollera e-postadressen och lösenordet som angavs.</string>
+    <string name="error_cant_add_this_device">Det går inte att lägga till denna enhet på ditt Prey-konto. Kontrollera e-postadressen och lösenordet som angavs. %s</string>
     <string name="error_cant_report_forgotten_password">Det gick inte att rapportera bortglömt lösenord. Försök igen senare.</string>
     <string name="error_communication_exception">Prey kunde inte ansluta till webbkontrollpanelen.\n\nKontrollera dina inställningar och försök igen.</string>
     <string name="error_registered_password_has_changed">Det gick inte att ändra lösenordet. Kontrollpanelens lösenord har bytts ut sedan din senaste inloggning.</string>

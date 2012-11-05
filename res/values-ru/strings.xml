@@ -10,7 +10,7 @@
     <string name="device_added_congratulations_text">Вы успешно привязали этот телефон к учетной записи Prey. Теперь потратьте минуту, чтобы настроить его.</string>
     <string name="dontagree">Я не принимаю условия</string>
     <string name="error_all_fields_are_required">Необходимо заполнить все поля</string>
-    <string name="error_cant_add_this_device">Не могу добавить устройство к вашей учетной записи. Пожалуйста, проверьте указанные email и пароль</string>
+    <string name="error_cant_add_this_device">Не могу добавить устройство к вашей учетной записи. Пожалуйста, проверьте указанные email и пароль %s</string>
     <string name="error_cant_report_forgotten_password">Не могу сообщить о забытом пароле. Пожалуйста, попробуйте позже.</string>
     <string name="error_communication_exception">Prey не смог подключится к панели управления.\n\nПроверьте настройки и повторите попытку</string>
     <string name="error_registered_password_has_changed">Не могу изменить пароль. Пароль учетной записи был изменен с момента последнего входа.</string>

@@ -10,7 +10,7 @@
     <string name="device_added_congratulations_text">חיברת את הטלפון לחשבון בהצלחה. עכשיו תקדיש דקה להגדיר אותו.</string>
     <string name="dontagree">אני לא מסכים</string>
     <string name="error_all_fields_are_required">נדרש למלא את כל השדות</string>
-    <string name="error_cant_add_this_device">הוספת המכשיר לחשבון נכשלה. אנא בדוק שנית את הדואר והסיסמה שהקלדת.</string>
+    <string name="error_cant_add_this_device">הוספת המכשיר לחשבון נכשלה. אנא בדוק שנית את הדואר והסיסמה שהקלדת. %s</string>
     <string name="error_cant_report_forgotten_password">דיווח סיסמה ששנשכחה נכשל. אנא נסה שוב מאוחר יותר.</string>
     <string name="error_communication_exception">Prey לא מצליח להתחבר ללוח-הבקרה.\n\nבדוק את ההגדרות ונסה שנית.</string>
     <string name="error_registered_password_has_changed">שינוי סיסמה נכשל. סיסמת לוח-הבקרה שונתה מאז הכניסה האחרונה שלך.</string>

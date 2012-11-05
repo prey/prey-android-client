@@ -72,6 +72,7 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 		super.onConfigurationChanged(newConfig);
 	}
 
+ 
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog pass = null;
@@ -94,6 +95,45 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 		}
 		return pass;
 	}
+ 
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog) {
+		 AlertDialog ad=null;
+		switch (id) {
+
+		case ERROR:
+			 ad = (AlertDialog) dialog;
+			 ad.setIcon(R.drawable.error);
+			 ad.setTitle(R.string.error_title);
+			 ad.setMessage(error);
+			 ad.setButton(DialogInterface.BUTTON_POSITIVE, this.getString(R.string.ok), new DialogInterface.OnClickListener() {
+				    public void onClick(DialogInterface dialog, int id) {
+				          //Handler code
+				    }
+				});
+			 
+			 ad.setCancelable(false);
+			 
+			 break;
+
+		case NO_MORE_DEVICES_WARNING:
+			 ad = (AlertDialog) dialog;
+			ad.setIcon(R.drawable.info);
+			ad.setTitle(R.string.set_old_user_no_more_devices_title);
+			ad.setMessage(error);
+			ad.setButton(DialogInterface.BUTTON_POSITIVE, this.getString(R.string.ok), new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int id) {
+			          //Handler code
+			    }
+			});
+			ad.setCancelable(false) ;
+			
+			 break;
+        default:
+            super.onPrepareDialog(id, dialog);
+		}
+	}
+	
 	
 	private class AddDeviceToAccount extends AsyncTask<String, Void, Void> {
 
@@ -112,6 +152,7 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 		protected Void doInBackground(String... data) {
 			try {
 				noMoreDeviceError = false;
+				error = null;
 				PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceToAccount(AddDeviceToAccountActivity.this, data[0], data[1],
 						data[2]);
 				getPreyConfig().saveAccount(accountData);

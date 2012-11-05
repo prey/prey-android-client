@@ -96,7 +96,7 @@
     <string name="popup_alert_title">Mensaje importante</string>
     <string name="error_title">Tenemos un problema!</string>
     <string name="error_communication_exception">Prey no se pudo conectar con el Panel de Control web.\n\nRevisa tu conexión y vuelve a intentarlo.</string>
-    <string name="error_cant_add_this_device">El equiop no se pudo agregar a tu cuenta Prey.\n\nPor favor revisa nuevamente el email y contraseña que ingresaste.</string>
+    <string name="error_cant_add_this_device">El equiop no se pudo agregar a tu cuenta Prey.\n\nPor favor revisa nuevamente el email y contraseña que ingresaste. %s</string>
     <string name="error_registered_password_has_changed">La contraseña actual ingresada no es válida.</string>
     <string name="error_cant_report_forgotten_password">La contraseña no se pudo reportar como olvidada. Por favor inténtalo nuevamente.</string>
     <string name="error_all_fields_are_required">Todos los campos son requeridos</string>

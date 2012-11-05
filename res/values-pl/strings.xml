@@ -10,7 +10,7 @@
     <string name="device_added_congratulations_text">Poprawnie powiązałeś ten telefon z kontem Prey. Poświęć teraz chwilę na konfigurację</string>
     <string name="dontagree">Nie zgadzam się</string>
     <string name="error_all_fields_are_required">Wszystkie pola są wymagane</string>
-    <string name="error_cant_add_this_device">Nie można dodać urządzenia do konta Prey. Sprawdź czy wprowadzone email i hasło są poprawne.</string>
+    <string name="error_cant_add_this_device">Nie można dodać urządzenia do konta Prey. Sprawdź czy wprowadzone email i hasło są poprawne. %s</string>
     <string name="error_cant_report_forgotten_password">Nie można zgłosić zapomnianego hasła. Spróbuj później.</string>
     <string name="error_communication_exception">Prey nie mógł się połączyć z Panelem Sterowania. Sprawdź ustawienia i spróbuj ponownie.</string>
     <string name="error_registered_password_has_changed">Nie można zmienić hasła. Hasło do Panelu Sterowania Prey uległo zmianie od czasu ostatniej wizyty.</string>

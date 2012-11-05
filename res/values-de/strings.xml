@@ -10,7 +10,7 @@
     <string name="device_added_congratulations_text">Sie haben ihr Telefon erfolgreich mit deinem Prey-Konto verknüpft. Nehmen Sie sich eine Minute Zeit um Prey zu konfigurieren.</string>
     <string name="dontagree">Ablehnen</string>
     <string name="error_all_fields_are_required">Alle Felder müssen ausgefüllt werden.</string>
-    <string name="error_cant_add_this_device">Dieses Gerät konnte nicht zu ihrem Prey-Konto hinzugefügt werden. Bitte  E-Mail und Passwort überprüfen.</string>
+    <string name="error_cant_add_this_device">Dieses Gerät konnte nicht zu ihrem Prey-Konto hinzugefügt werden. Bitte  E-Mail und Passwort überprüfen. %s</string>
     <string name="error_cant_report_forgotten_password">Fehler beim Zurücksetzen des Passworts. Bitte versuchen sie es später nochmal.</string>
     <string name="error_communication_exception">Prey konnte keine Verbindung zum Kontroll-Zentrum herstellen.\n\nÜberprüfen sie die Einstellungen und versuchen sie es dann bitte erneut.</string>
     <string name="error_registered_password_has_changed">Konnte das Passwort nicht ändern. Das Passwort des Kontroll-Zentrums wurde seit der letzten Anmeldung geändert.</string>

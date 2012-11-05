@@ -10,7 +10,7 @@
     <string name="device_added_congratulations_text">Vous avez parfaitement associé ce téléphone avec votre compte Prey.\nPrenez une minute pour le paramétrer.</string>
     <string name="dontagree">Refuser</string>
     <string name="error_all_fields_are_required">Tous les champs sont obligatoires.</string>
-    <string name="error_cant_add_this_device">Impossible d\'ajouter l\'appareil à votre compte Prey.Veuillez vérifier à nouveau l\'email et le mot de passe fournis.</string>
+    <string name="error_cant_add_this_device">Impossible d\'ajouter l\'appareil à votre compte Prey.Veuillez vérifier à nouveau l\'email et le mot de passe fournis. %s</string>
     <string name="error_cant_report_forgotten_password">Impossible de signaler le mot de passe oublié. Veuillez réessayer plus tard.</string>
     <string name="error_communication_exception">Prey n\'a pas pu se connecter au Panneau de Contrôle.\n\nVérifiez vos réglages et réessayez.</string>
     <string name="error_registered_password_has_changed">Impossible de changer le mot de passe. Le mot de passe du Panneau de contrôle a changé depuis votre dernière connexion.</string>

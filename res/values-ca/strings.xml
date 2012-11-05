@@ -10,7 +10,7 @@
     <string name="device_added_congratulations_text">Heu associat correctament aquest dispositiu amb el vostre compte. A continuació si us mostraran les opcions de configuració.</string>
     <string name="dontagree">No estic d\'acord </string>
     <string name="error_all_fields_are_required">Tots els camps són necessaris</string>
-    <string name="error_cant_add_this_device">No es pot afegir aquest dispositiu al vostre compte. Verifiqueu que heu validat l\'adreça de correu electrònic i que la contrasenya es vàlida.</string>
+    <string name="error_cant_add_this_device">No es pot afegir aquest dispositiu al vostre compte. Verifiqueu que heu validat l\'adreça de correu electrònic i que la contrasenya es vàlida. %s</string>
     <string name="error_cant_report_forgotten_password">No es pot reportar la contrasenya oblidada. Torneu a provar més tard.</string>
     <string name="error_communication_exception">Prey no pot connectar amb el panell de control web\n\nVerifiqueu la configuració i torneu a provar.</string>
     <string name="error_registered_password_has_changed">No es pot canviar la contrasenya, atès que ha estat modificada prèviament al panell de control web.</string>

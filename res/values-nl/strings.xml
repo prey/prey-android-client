@@ -10,7 +10,7 @@
     <string name="device_added_congratulations_text">Je hebt deze telefoon succesvol aan je Prey-account gekoppeld. Neem even de tijd om deze in te stellen.</string>
     <string name="dontagree">Ik ga niet akkoord</string>
     <string name="error_all_fields_are_required">Alle velden zijn verplicht</string>
-    <string name="error_cant_add_this_device">Kan dit apparaat niet aan je Prey-account toevoegen. Controleer het opgegeven e-mailadres en wachtwoord nogmaals.</string>
+    <string name="error_cant_add_this_device">Kan dit apparaat niet aan je Prey-account toevoegen. Controleer het opgegeven e-mailadres en wachtwoord nogmaals. %s</string>
     <string name="error_cant_report_forgotten_password">Kan het wachtwoord niet versturen. Probeer het later opnieuw.</string>
     <string name="error_communication_exception">Prey kan geen verbinding maken met het controlepaneel.\n\nControleer je instellingen en probeer het opnieuw.</string>
     <string name="error_registered_password_has_changed">Kan het wachtwoord niet wijzigen. Het wachtwoord van je controlepaneel is gewijzigd sinds je hier voor het laatst hebt ingelogd.</string>
