@@ -146,7 +146,7 @@
     <string name="preferences_status_summary">Revisa el estado de ejecución, tiempo ejecutándose y más.</string>
     <string name="preferences_config_title">Configuración principal</string>
     <string name="preferences_camouflage_title">Modo camuflado</string>
-    <string name="preferences_camouflage_summary">Despliega una pantalla false de inicio</string>
+    <string name="preferences_camouflage_summary">Despliega una pantalla falsa de bienvenida</string>
     <string name="choose_your_hero">¡Elige a tu héroe!</string>
     <string name="no_hero_selected">No hay héroe seleccionado</string>
     <string name="your_hero_text">Tu héroe será el elegido que recibirá un SMS de alerta cuando Prey detecte una nueva tarjeta SIM en tu teléfono.</string>
