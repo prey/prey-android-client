@@ -7,7 +7,6 @@
 package com.prey.net;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -224,9 +223,11 @@ public class PreyWebServices {
 		Map<String, String> parameters = new HashMap<String, String>();
 		List<EntityFile> entityFiles=new ArrayList<EntityFile>();
 		for (HttpDataService httpDataService : dataToSend) {
-			parameters.putAll(httpDataService.getDataAsParameters());
-			if (httpDataService.getEntityFiles()!=null&&httpDataService.getEntityFiles().size()>0){
-				entityFiles.addAll(httpDataService.getEntityFiles());
+			if (httpDataService!=null){
+				parameters.putAll(httpDataService.getDataAsParameters());
+				if (httpDataService.getEntityFiles()!=null&&httpDataService.getEntityFiles().size()>0){
+					entityFiles.addAll(httpDataService.getEntityFiles());
+				}
 			}
 		}
 

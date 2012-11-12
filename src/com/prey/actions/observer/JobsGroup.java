@@ -182,8 +182,9 @@ public class JobsGroup {
 					waitNotifyPriority.doWait();		
 					PreyLogger.i(action.getClass().getName()+" Ejecutando el action:");
 					action.execute(actionJob, this.ctx);	 
+					PreyLogger.i(action.getClass().getName()+" termino el execute el action:");
 					waitNotifyPriority.doNotify();
-					PreyLogger.i(action.getClass().getName()+" Siguiente action");
+					//PreyLogger.i(action.getClass().getName()+" Siguiente action");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

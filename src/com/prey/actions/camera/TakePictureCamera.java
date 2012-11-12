@@ -4,6 +4,7 @@ package com.prey.actions.camera;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -15,6 +16,7 @@ import android.media.AudioManager;
 import android.view.Surface;
 import android.view.WindowManager;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 
 import com.prey.actions.HttpDataService; 
@@ -28,11 +30,18 @@ public class TakePictureCamera {
 		PreyLogger.d("welcome TakePictureCamera");
 		HttpDataService data =null;
 		Camera mCamera = null;
+		 AudioManager mgr =null;
+		 int streamType = AudioManager.STREAM_SYSTEM;
 		//PreyExecutionWaitNotify waitNotifyCamera=null;
 		try {
 			
-
-			mCamera=getCamera(ctx);
+			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+			if (preyConfig.isGingerbreadOrAbove()) {
+				mCamera=getCameraGingerbreadOrAbove(ctx);
+			}else{
+				mCamera=getCamera(ctx);
+			}
+			
 			Parameters params = mCamera.getParameters();
 			params=setParameter(ctx, params);
 			mCamera.setParameters(params);
@@ -42,10 +51,12 @@ public class TakePictureCamera {
  
 			 TakePictureShutterCallback shutter=new TakePictureShutterCallback(ctx);
 			
-			//AudioManager mgr = (AudioManager)ctx.getSystemService(Context.AUDIO_SERVICE);
-			// int streamType = AudioManager.STREAM_SYSTEM;
-			//mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
+			 mgr = (AudioManager)ctx.getSystemService(Context.AUDIO_SERVICE);
  
+			   
+			    mgr.setStreamSolo(streamType, true);
+			    mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+			    mgr.setStreamMute(streamType, true);
 
 		    
 		    
@@ -56,7 +67,7 @@ public class TakePictureCamera {
 			mCamera.takePicture(shutter, null, callback);
 			Thread.sleep(2000);			
 			mCamera.stopPreview();
-			//mgr.setStreamMute(AudioManager.STREAM_SYSTEM, false);
+			
 		} catch (Exception e) {
 			PreyLogger.d("Error, causa:" + e.getMessage());
 		} finally {
@@ -76,6 +87,11 @@ public class TakePictureCamera {
 		} catch (InterruptedException e) {
 			PreyLogger.d("Error, causa:" + e.getMessage());
 		}  
+		
+		mgr.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+		mgr.setStreamSolo(streamType, false);
+		mgr.setStreamMute(AudioManager.STREAM_SYSTEM, false);
+		
 		if (dataImagen != null) {
 			PreyLogger.d("dataImagen data length=" + dataImagen.length);			
 			InputStream file = new ByteArrayInputStream(dataImagen);	
@@ -97,25 +113,50 @@ public class TakePictureCamera {
 
  
 	private Camera getCamera(Context ctx){
+		return  Camera.open();
+	}
+	
+	public static int CAMERA_FACING_FRONT=1; 
+	
+	@SuppressWarnings("rawtypes")
+	private Camera getCameraGingerbreadOrAbove(Context ctx){
+		PreyLogger.d("getCameraGingerbreadOrAbove");
 		Camera mCamera =null;
-		
-		/* 
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		if (preyConfig.isGingerbreadOrAbove()) {
-			int numberOfCameras = Camera.getNumberOfCameras();
-			android.hardware.Camera.CameraInfo cameraInfo = new android.hardware.Camera.CameraInfo();
-			for (int camIdx = 0; camIdx < numberOfCameras; camIdx++) {
-				Camera.getCameraInfo(camIdx, cameraInfo);
-				if (cameraInfo.facing == CameraInfo.CAMERA_FACING_FRONT) {
+		 try{
+			
+			Class noparams[] = {};
+			Class clsCamera;
+			 
+			clsCamera = Class.forName("android.hardware.Camera");			 
+			
+			Method methodGetNumberOfCameras = clsCamera.getMethod("getNumberOfCameras", noparams);
+			Integer numberOfCamerasInt=(Integer)methodGetNumberOfCameras.invoke(null, null);
+			//int numberOfCameras = Camera.getNumberOfCameras();
+			
+			//android.hardware.Camera.CameraInfo cameraInfo = new android.hardware.Camera.CameraInfo();
+			for (int camIdx = 0;numberOfCamerasInt!=null&& camIdx < numberOfCamerasInt.intValue(); camIdx++) {
+				//Camera.getCameraInfo(camIdx, cameraInfo);
+			//	if (cameraInfo.facing == CameraInfo.CAMERA_FACING_FRONT) {
+				if (camIdx == CAMERA_FACING_FRONT){
 					try {
-						mCamera = Camera.open(camIdx);
+						Class[] param=new Class[1];
+						param[0]=Integer.TYPE;
+					    Method methodOpen = clsCamera.getMethod("open", param);
+					    Integer[] input={Integer.valueOf(camIdx)};					    
+					    mCamera=(Camera) methodOpen.invoke(null, input) ;	
+					    PreyLogger.d("Camera.open(camIdx)");
+						//mCamera = Camera.open(camIdx);
 					} catch (RuntimeException e) {
-						PreyLogger.d("Camera failed to open facing front: "+ e.getLocalizedMessage());
+						PreyLogger.d("Camera failed to open facing front: "+ e.getMessage());
 					}
 				}
 			}
-		} 
-		*/
+			} catch ( Exception e1) {
+				PreyLogger.d("Camera failed to open facing front: "+ e1.getMessage());
+				mCamera = null;
+			}  
+		 
+		 
 		if (mCamera == null) {
 			mCamera = Camera.open();
 		}
@@ -141,6 +182,8 @@ public class TakePictureCamera {
 			params.setRotation(90);
 			break;
 		}
+		
+		
 		return params;
 	}
 	public class TakePictureCallback implements PictureCallback {
@@ -166,8 +209,8 @@ public class TakePictureCamera {
 		
 		public void onShutter() {
 			 
-			 AudioManager mgr = (AudioManager)ctx.getSystemService(Context.AUDIO_SERVICE);
-			 	mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
+			// AudioManager mgr = (AudioManager)ctx.getSystemService(Context.AUDIO_SERVICE);
+			// 	mgr.setStreamMute(AudioManager.STREAM_SYSTEM, true);
 			//	waitNotifyCamera.doNotify();
 			 
 		}		
