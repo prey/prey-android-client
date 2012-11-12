@@ -29,13 +29,14 @@ import android.telephony.TelephonyManager;
 import com.prey.actions.LockAction;
 import com.prey.actions.PreyAction;
 import com.prey.activities.WelcomeActivity;
+import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.net.PreyWebServices;
 
 
 public class PreyConfig {
 	
 	//Set false in production
-	public static final boolean LOG_DEBUG_ENABLED = false;
+	public static final boolean LOG_DEBUG_ENABLED = true;
 	
 	// Set to 1000 * 60 in production.
 	public static final long DELAY_MULTIPLIER = 1000 * 60; 
@@ -87,6 +88,13 @@ public class PreyConfig {
 	public static final String LAST_LOC_PROVIDER = "LAST_ALT";
 	
 	
+	public static final String IS_REVOKED_PASSWORD = "IS_REVOKED_PASSWORD";
+	public static final String REVOKED_PASSWORD = "REVOKED_PASSWORD";
+	
+ 
+	
+	
+	
 	/* ------------- */
 
 	public static final String TAG = "PREY";
@@ -112,6 +120,9 @@ public class PreyConfig {
 	private boolean isCupcake;
 	private boolean isGingerbreadOrAbove;
 	
+	private boolean isRevokedPassword;
+	private String revokedPassword;
+	 
 	private Context ctx;
 
 	private PreyConfig(Context ctx) {
@@ -138,6 +149,10 @@ public class PreyConfig {
 		this.securityPrivilegesAlreadyPrompted = settings.getBoolean(PreyConfig.PREFS_SECURITY_PROMPT_SHOWN, false);
 		this.locked = settings.getBoolean(PreyConfig.IS_LOCK_SET, false);
 		
+		this.isRevokedPassword=settings.getBoolean(PreyConfig.IS_REVOKED_PASSWORD, false);
+		this.revokedPassword=settings.getString(PreyConfig.REVOKED_PASSWORD, "");
+		
+	//	FroyoSupport.getInstance(ctx).changePasswordAndLock("osito", true);
 	}
 	
 	public void saveAccount(PreyAccountData accountData) {
@@ -183,6 +198,7 @@ public class PreyConfig {
 
 	public String getDeviceID() {
 		return deviceID;
+		//return "u3zqay"; 
 	}
 
 	public void setDeviceID(String deviceID) {
@@ -224,6 +240,20 @@ public class PreyConfig {
 		editor.putBoolean(PreyConfig.IS_LOCK_SET, locked);
 		editor.commit();
 	}
+	
+	
+	public void setRevokedPassword(boolean isRevokedPassword,String revokedPassword) {
+		this.isRevokedPassword = isRevokedPassword;
+		this.revokedPassword = revokedPassword;
+		
+		
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(PreyConfig.IS_REVOKED_PASSWORD, isRevokedPassword);
+		editor.putString(PreyConfig.REVOKED_PASSWORD, revokedPassword);
+		editor.commit();
+	}
+	
 	
 	public void unlockIfLockActionIsntEnabled(ArrayList<PreyAction> actions){
 		
@@ -493,6 +523,18 @@ public class PreyConfig {
 	public boolean isLogEnabled() {
 		return FileConfigReader.getInstance(this.ctx).isLogEnabled();
 	}
+
+	public boolean isRevokedPassword() {
+		return isRevokedPassword;
+	}
+
+ 
+
+	public String getRevokedPassword() {
+		return revokedPassword;
+	}
+
+ 
 
 	
 

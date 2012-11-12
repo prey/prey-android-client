@@ -112,6 +112,12 @@
             android:label="@string/preyForAndroid_name"
             android:launchMode="singleTask" />
         <activity
+            android:name="com.prey.activities.CameraActivity"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/preyForAndroid_name"
+            android:launchMode="singleTask" />        
+        <activity
             android:name="com.prey.activities.SMSContactActivity"
             android:configChanges="keyboardHidden" >
             <intent-filter>

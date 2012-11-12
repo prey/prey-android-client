@@ -161,6 +161,10 @@
     <string name="preferences_admin_disabled_dialog_message">You\'re about to grant Prey special security privileges, that will allow you to remotely lock your device.\nClick Yes to continue.</string>
     <string name="device_admin_label">Prey extra security</string>
     <string name="device_admin_description">These privileges are needed to remotely lockdown your device, and will prevent Prey from being uninstalled. You need to revoke these rights later if you wish to uninstall Prey.</string>
+    
+    <string name="preferences_admin_enabled_device_title">admin enabled device title</string>
+    <string name="preferences_admin_enabled_device_summary">admin enabled device summary</string>
+    
     <!-- Prey security privileges -->
     <string name="preferences_advanced_screen_title">Advanced configuration</string>
     <string name="preferences_advanced_screen_summary">Configure advanced settings</string>
