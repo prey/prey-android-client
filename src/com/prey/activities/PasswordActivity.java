@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.prey.actions.location.PreyLocationManager;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
+import com.prey.PreyStatus;
 import com.prey.R;
 public class PasswordActivity extends PreyActivity {
 	
@@ -128,6 +129,7 @@ public class PasswordActivity extends PreyActivity {
 				}
 			} else {
 				Intent intent = new Intent(PasswordActivity.this, PreyConfigurationActivity.class);
+				PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
 				startActivity(intent);
 			}
 		}

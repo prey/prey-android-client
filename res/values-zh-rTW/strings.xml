@@ -95,7 +95,7 @@
     <!-- Exceptions -->
     <string name="error_title">我們遇到了問題!</string>
     <string name="error_communication_exception">無法連接到網路控制台。\n\n請檢查您的設定並重試。</string>
-    <string name="error_cant_add_this_device">無法新增此設備到您的 prey 帳戶。請在此檢查您提供的郵件和密碼。</string>
+    <string name="error_cant_add_this_device">無法新增此設備到您的 prey 帳戶。請在此檢查您提供的郵件和密碼。%s</string>
     <string name="error_registered_password_has_changed">無法變更密碼。控制台密碼自從您上次在這裡登陸後已經變更。</string>
     <string name="error_cant_report_forgotten_password">無法報告忘記的密碼。請稍後再試。</string>
     <string name="error_all_fields_are_required">需要全部欄位</string>

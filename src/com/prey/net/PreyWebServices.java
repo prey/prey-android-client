@@ -26,6 +26,7 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -76,9 +77,11 @@ public class PreyWebServices {
 		parameters.put("user[country_name]", Locale.getDefault().getDisplayCountry());
 		parameters.put("agreement[key]", PreyConfig.getPreyConfig(ctx).getAgreementId());
 		
+		PreyHttpResponse response=null;
 		String xml;
 		try {
-			xml = PreyRestHttpClient.getInstance(ctx).post(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("users.xml"), parameters, preyConfig).getResponseAsString();
+			response=PreyRestHttpClient.getInstance(ctx).post(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("users.xml"), parameters, preyConfig);
+			xml = response.getResponseAsString();
 		} catch (IOException e) {
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
 		}
@@ -91,8 +94,8 @@ public class PreyWebServices {
 			from = xml.indexOf("<key>") + 5;
 			to = xml.indexOf("</key>");
 			apiKey = xml.substring(from, to);
-		} catch (Exception e) {
-			throw new PreyException(ctx.getText(R.string.error_cant_add_this_device).toString());
+		} catch (Exception e) { 
+			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
 		}
 
 		String xmlDeviceId = this.registerNewDevice(ctx, apiKey, deviceType);
@@ -104,7 +107,7 @@ public class PreyWebServices {
 		try {
 			deviceId = xmlDeviceId.substring(from, to);
 		} catch (Exception e) {
-			throw new PreyException(ctx.getText(R.string.error_cant_add_this_device).toString());
+			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
 		}
 
 		PreyAccountData newAccount = new PreyAccountData();
@@ -175,17 +178,18 @@ public class PreyWebServices {
 	public PreyAccountData registerNewDeviceToAccount(Context ctx, String email, String password, String deviceType) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		HashMap<String, String> parameters = new HashMap<String, String>();
+		PreyHttpResponse response=null;
 		String xml;
 		try {
-			xml = PreyRestHttpClient.getInstance(ctx).get(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("profile.xml"), parameters, preyConfig, email, password)
-					.getResponseAsString();
+			response=PreyRestHttpClient.getInstance(ctx).get(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("profile.xml"), parameters, preyConfig, email, password);
+			xml = response.getResponseAsString(); 
 		} catch (IOException e) {
 			PreyLogger.e("Error!",e);
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
 		}
 
 		if (!xml.contains("<key"))
-			throw new PreyException(ctx.getText(R.string.error_cant_add_this_device).toString());
+			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
 		//
 
 		int from;
@@ -196,13 +200,13 @@ public class PreyWebServices {
 			to = xml.indexOf("</key>");
 			apiKey = xml.substring(from, to);
 		} catch (Exception e) {
-			throw new PreyException(ctx.getText(R.string.error_cant_add_this_device).toString());
+			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
 		}
 
 		String xmlDeviceId = this.registerNewDevice(ctx, apiKey, deviceType);
 
 		if (!xmlDeviceId.contains("<key"))
-			throw new PreyException(ctx.getText(R.string.error_cant_add_this_device).toString());
+			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
 
 		from = xmlDeviceId.indexOf("<key>") + 5;
 		to = xmlDeviceId.indexOf("</key>");
@@ -242,7 +246,12 @@ public class PreyWebServices {
 			else
 				response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig,entityFiles).getResponseAsString();
 			PreyLogger.d("Report sent: " + response);
-			GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
+			try{
+				GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
+			}catch(NullPointerException ex){
+				GoogleAnalyticsTracker.getInstance().startNewSession(FileConfigReader.getInstance(ctx).getAnalyticsUA(),ctx);
+				GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
+			}
 			if (preyConfig.isShouldNotify()) {
 				this.notifyUser(ctx);
 			}

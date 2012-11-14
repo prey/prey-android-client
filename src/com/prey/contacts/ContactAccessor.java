@@ -62,17 +62,36 @@ public class ContactAccessor {
             cursor.close();
         }
 
-        // Load the phone number (if any).
+        boolean modified=false;
         cursor = contentResolver.query(Phone.CONTENT_URI,
-                new String[]{Phone.NUMBER},
-                Phone.CONTACT_ID + "=" + contactId, null, Phone.IS_SUPER_PRIMARY + " DESC");
+        		new String[]{Phone.NUMBER},
+                Phone.TYPE + "=" + Phone.TYPE_MOBILE+" and "+Phone.CONTACT_ID + "=" + contactId, null, null);
         try {
-            if (cursor.moveToFirst()) {
-                contactInfo.setPhoneNumber(cursor.getString(0));
-            }
+        	 if (cursor.moveToNext()){
+        		   contactInfo.setPhoneNumber(cursor.getString(0));
+        		   modified=true;
+        	 }
+
         } finally {
             cursor.close();
         }
+        if(!modified){
+        	// Load the phone number (if any).
+        	cursor = contentResolver.query(Phone.CONTENT_URI,
+                new String[]{Phone.NUMBER},
+                Phone.CONTACT_ID + "=" + contactId, null, Phone.IS_SUPER_PRIMARY + " DESC");
+        	try {
+            	if (cursor.moveToFirst()) {
+                	contactInfo.setPhoneNumber(cursor.getString(0));
+            	}
+        	} finally {
+        		cursor.close();
+        	}
+        }
+        
+        
+        
+        
         contactInfo.setPicture(this.loadContactPhoto(contentResolver, contactId, contactInfo.getPhotoId()));
         return contactInfo;
     }

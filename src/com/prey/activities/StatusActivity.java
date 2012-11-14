@@ -16,6 +16,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.prey.PreyConfig;
+import com.prey.PreyStatus;
 import com.prey.actions.location.PreyLocationManager;
 import com.prey.services.PreyRunnerService;
 import com.prey.R;
@@ -32,6 +33,7 @@ public class StatusActivity extends Activity {
 	@Override
 	public void onBackPressed(){
 		Intent intent = new Intent(StatusActivity.this, PreyConfigurationActivity.class);
+		PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
 		startActivity(intent);
 	}
 	

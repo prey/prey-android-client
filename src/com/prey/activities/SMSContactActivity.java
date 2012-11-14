@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prey.PreyLogger;
+import com.prey.PreyStatus;
 import com.prey.PreyUtils;
 import com.prey.contacts.ContactAccessor;
 import com.prey.contacts.ContactInfo;
@@ -66,6 +67,7 @@ public class SMSContactActivity extends PreyActivity {
 	
 	private void close(){
 		Intent intent = new Intent(SMSContactActivity.this, PreyConfigurationActivity.class);
+		PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
 		startActivity(intent);
 		finish();
 	}

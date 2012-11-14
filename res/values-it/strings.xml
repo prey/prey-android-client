@@ -95,7 +95,7 @@
     <!-- Exceptions -->
     <string name="error_title">Abbiamo una situazione!</string>
     <string name="error_communication_exception">Prey non riesce a connettersi al Pannello di Controllo web.\n\nControlla le impostazioni e riprova.</string>
-    <string name="error_cant_add_this_device">Non è possibile aggiungere questo diaposito all\' account Prey. Si prega di ricontrollare la email e la password fornite.</string>
+    <string name="error_cant_add_this_device">Non è possibile aggiungere questo diaposito all\' account Prey. Si prega di ricontrollare la email e la password fornite. %s</string>
     <string name="error_registered_password_has_changed">Non è possibile modificare la password. La password del Pannello di Controllo è cambiata dal tuo ultimo login qui.</string>
     <string name="error_cant_report_forgotten_password">Non è possibile segnalare la password dimenticata. Si prega di riprovare più tardi.</string>
     <string name="error_all_fields_are_required">Tutti i campi sono obbligatori</string>
