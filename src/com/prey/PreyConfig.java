@@ -29,7 +29,6 @@ import android.telephony.TelephonyManager;
 import com.prey.actions.LockAction;
 import com.prey.actions.PreyAction;
 import com.prey.activities.WelcomeActivity;
-import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.net.PreyWebServices;
 
 
@@ -198,7 +197,6 @@ public class PreyConfig {
 
 	public String getDeviceID() {
 		return deviceID;
-		//return "u3zqay"; 
 	}
 
 	public void setDeviceID(String deviceID) {

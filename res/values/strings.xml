@@ -162,8 +162,17 @@
     <string name="device_admin_label">Prey extra security</string>
     <string name="device_admin_description">These privileges are needed to remotely lockdown your device, and will prevent Prey from being uninstalled. You need to revoke these rights later if you wish to uninstall Prey.</string>
     
-    <string name="preferences_admin_enabled_device_title">admin enabled device title</string>
-    <string name="preferences_admin_enabled_device_summary">admin enabled device summary</string>
+    <string name="preferences_admin_enabled_device_title">Seguridad extra</string>
+    <string name="preferences_admin_enabled_device_summary">Administrar Seguridad extra</string>
+    <string name="preferences_admin_device_revoked_check_title">Password Seguridad</string>
+    <string name="preferences_admin_device_revoked_check_summary">Seleccionar si necesita Password Seguridad</string>
+
+    <string name="preferences_admin_device_revoked_password_summary">Ingresar Password</string>
+    <string name="preferences_admin_device_revoked_password_title">Password</string>
+    
+    <string name="preferences_admin_device_revoked_password_dialog_title">Ingrese Password</string>
+    <string name="preferences_admin_device_revoked_password_phrase">Actualizando Password</string>
+
     
     <!-- Prey security privileges -->
     <string name="preferences_advanced_screen_title">Advanced configuration</string>

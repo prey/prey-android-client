@@ -6,6 +6,7 @@
  ******************************************************************************/
 package com.prey.preferences;
 
+ 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -14,8 +15,8 @@ import android.util.AttributeSet;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.net.PreyWebServices;
 import com.prey.R;
+
 public class RevokedPasswordPreferences extends EditTextPreference {
 	
 	
@@ -72,7 +73,7 @@ public class RevokedPasswordPreferences extends EditTextPreference {
 		protected void onPreExecute() {
 			
 			progressDialog = new ProgressDialog(getContext());
-			progressDialog.setMessage("oso14");//getContext().getText(R.string.updating_info_message).toString());
+			progressDialog.setMessage(getContext().getText(R.string.preferences_admin_device_revoked_password_dialog_title).toString());
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(false);
 			progressDialog.show();
