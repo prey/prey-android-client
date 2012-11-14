@@ -43,6 +43,11 @@ public class PopUpAlertAction extends PreyAction {
 		popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		popup.putExtras(bundle);
 		ctx.startActivity(popup);
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+		}
 	}
 
 	@Override
