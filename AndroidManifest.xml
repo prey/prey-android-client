@@ -219,6 +219,16 @@
                 <category android:name="com.prey" />
             </intent-filter>
         </receiver>
+        
+        <!-- Battery
+        <receiver android:name="com.prey.receivers.BatteryLevelReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_BATTERY_LOW"/>
+                <action android:name="android.intent.action.ACTION_BATTERY_OKAY"/>
+                <action android:name="android.intent.action.ACTION_BATTERY_CHANGED"/>
+            </intent-filter>
+        </receiver>
+         -->
     </application>
 
 </manifest>

@@ -40,8 +40,7 @@
             android:summary="@string/preferences_admin_enabled_device_summary"
             android:title="@string/preferences_admin_enabled_device_title" >
             
-            
-        <!-- aqui -->
+           
         
           	<CheckBoxPreference
                 android:defaultValue="false"
@@ -144,7 +143,7 @@
                 android:title="@string/preferences_go_to_control_panel_title" />
         </PreferenceScreen>
 
-     
+     <!--  
 	<PreferenceScreen
             	android:title="@string/preferences_category_operations_title"
             	android:summary="@string/preferences_category_operations_summary">
@@ -178,7 +177,7 @@
                 android:title="@string/preferences_show_notification_title"
                 android:summary="@string/preferences_show_notification_summary"  />
 
-    </PreferenceScreen> <!--   
+    </PreferenceScreen>  
      -->
     <PreferenceScreen
             android:key="PREFS_ADVANCED"
