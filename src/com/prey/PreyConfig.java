@@ -196,7 +196,7 @@ public class PreyConfig {
 
 
 	public String getDeviceID() {
-		return deviceID;
+		return deviceID; 
 	}
 
 	public void setDeviceID(String deviceID) {
@@ -510,6 +510,11 @@ public class PreyConfig {
 	public String getPreyUrl() {
 		String subdomain = FileConfigReader.getInstance(this.ctx).getPreySubdomain();
 		return "https://".concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
+	}
+	
+	public String getPreyUiUrl() {
+		String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain();
+		return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
 	}
 
 	public boolean askForPassword() {

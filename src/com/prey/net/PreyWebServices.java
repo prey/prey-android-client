@@ -80,7 +80,7 @@ public class PreyWebServices {
 		PreyHttpResponse response=null;
 		String xml;
 		try {
-			response=PreyRestHttpClient.getInstance(ctx).post(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("users.xml"), parameters, preyConfig);
+			response=PreyRestHttpClient.getInstance(ctx).post(PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("users.xml"), parameters, preyConfig);
 			xml = response.getResponseAsString();
 		} catch (IOException e) {
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
@@ -163,7 +163,7 @@ public class PreyWebServices {
 
 		PreyHttpResponse response = null;
 		try {
-			response = PreyRestHttpClient.getInstance(ctx).post(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("devices.xml"), parameters, preyConfig);
+			response = PreyRestHttpClient.getInstance(ctx).post(PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("devices.xml"), parameters, preyConfig);
 			// No more devices allowed
 			if ((response.getStatusLine().getStatusCode() == 302) || (response.getStatusLine().getStatusCode() == 422)) {
 				throw new NoMoreDevicesAllowedException(ctx.getText(R.string.set_old_user_no_more_devices_text).toString());
@@ -181,7 +181,7 @@ public class PreyWebServices {
 		PreyHttpResponse response=null;
 		String xml;
 		try {
-			response=PreyRestHttpClient.getInstance(ctx).get(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("profile.xml"), parameters, preyConfig, email, password);
+			response=PreyRestHttpClient.getInstance(ctx).get(PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("profile.xml"), parameters, preyConfig, email, password);
 			xml = response.getResponseAsString(); 
 		} catch (IOException e) {
 			PreyLogger.e("Error!",e);
@@ -306,11 +306,11 @@ public class PreyWebServices {
 	}
 	
 	public void updateActivationPhrase(Context ctx, String activationPhrase) {
-		this.updateDeviceAttribute(ctx, "activation_phrase", activationPhrase);
+		this.updateDeviceAttributeUi(ctx, "activation_phrase", activationPhrase);
 	}
 	
 	public void updateDeactivationPhrase(Context ctx, String deactivationPhrase) {
-		this.updateDeviceAttribute(ctx, "deactivation_phrase", deactivationPhrase);
+		this.updateDeviceAttributeUi(ctx, "deactivation_phrase", deactivationPhrase);
 	}
 	
 	private void updateDeviceAttribute(Context ctx, String key, String value){
@@ -330,6 +330,24 @@ public class PreyWebServices {
 		}
 		
 	}
+	
+	private void updateDeviceAttributeUi(Context ctx, String key, String value){
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		HashMap<String, String> parameters = new HashMap<String, String>();
+
+		parameters.put("api_key", preyConfig.getApiKey());
+		parameters.put("device["+key+"]", value);
+
+		try {
+			PreyRestHttpClient.getInstance(ctx).methodAsParameter(this.getDeviceUiUrl(ctx),"PUT", parameters, preyConfig);
+			PreyLogger.d("Update device attribute ["+ key + "] with value: " + value);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (PreyException e) {
+			PreyLogger.e("Attribute ["+key+"] wasn't updated to ["+value+"]", e);
+		}
+		
+	}
 
 	public boolean checkPassword(Context ctx, String email, String password) throws PreyException {
 		String xml = this.checkPassword(email, password, ctx);
@@ -341,7 +359,7 @@ public class PreyWebServices {
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		String xml;
 		try {
-			xml = PreyRestHttpClient.getInstance(ctx).get(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("profile.xml"), parameters, preyConfig, email, password)
+			xml = PreyRestHttpClient.getInstance(ctx).get(PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("profile.xml"), parameters, preyConfig, email, password)
 					.getResponseAsString();
 		} catch (IOException e) {
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
@@ -356,7 +374,7 @@ public class PreyWebServices {
 		String xml;
 		try {
 			xml = PreyRestHttpClient.getInstance(ctx)
-					.delete(this.getDeviceUrl(ctx), parameters, preyConfig)
+					.delete(this.getDeviceUiUrl(ctx), parameters, preyConfig)
 					.getResponseAsString();
 
 		} catch (IOException e) {
@@ -382,7 +400,7 @@ public class PreyWebServices {
 		try {
 			xml = PreyRestHttpClient
 					.getInstance(ctx)
-					.methodAsParameter(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("users/").concat(userId).concat(".xml"), "PUT", parameters, preyConfig,
+					.methodAsParameter(PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("users/").concat(userId).concat(".xml"), "PUT", parameters, preyConfig,
 							preyConfig.getApiKey(), "X").getResponseAsString();
 		} catch (IOException e) {
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
@@ -403,7 +421,7 @@ public class PreyWebServices {
 
 	public boolean forgotPassword(Context ctx) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		String URL = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("forgot");
+		String URL = PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("forgot");
 		HashMap<String, String> parameters = new HashMap<String, String>();
 
 		parameters.put("user[email]", preyConfig.getEmail());
@@ -446,10 +464,21 @@ public class PreyWebServices {
 		return PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("devices/").concat(deviceKey);
 	}
 	
+	public String getDeviceWebControlPanelUiUrl(Context ctx) throws PreyException {
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		String deviceKey = preyConfig.getDeviceID();
+		if (deviceKey == null || deviceKey == "")
+			throw new PreyException("Device key not found on the configuration");
+		return PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("devices/").concat(deviceKey);
+	}
+	
 	private String getDeviceUrl(Context ctx) throws PreyException{
 		return this.getDeviceWebControlPanelUrl(ctx).concat(".xml");
 	}
 	
+	private String getDeviceUiUrl(Context ctx) throws PreyException{
+		return this.getDeviceWebControlPanelUiUrl(ctx).concat(".xml");
+	}
 	
 
 }
