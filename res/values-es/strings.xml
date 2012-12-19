@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
     <string name="preyForAndroid_name">Prey</string>
     <string name="yes">Sí</string>
@@ -10,7 +10,7 @@
     <string name="updating_info_message">Actualizando información, un segundo…</string>
     <string name="agreements_title">Bienvenido a\nPrey para Android™!</string>
     <string name="agreements_message1">Por favor asegurate de leer y luego aceptar los términos y condiciones que se encuentran en el link de más abajo</string>
-    <string name="agreements_message2">&lt;u&gt;Términos y Condiciones&lt;/u&gt;</string>
+    <string name="agreements_message2">&amp;lt;u&amp;gt;Términos y Condiciones&amp;lt;/u&amp;gt;</string>
     <string name="set_old_user_loading">Agregando equipo a la cuenta…</string>
     <string name="set_old_user_no_more_devices_title">Ups!</string>
     <string name="set_old_user_no_more_devices_text">Al parecer en tu cuenta Prey no quedan slots disponibles para tu equipo.\n\nIntenta eliminando algún disposito en tu Panel de Control, o bien crea una nueva cuenta.</string>
@@ -100,7 +100,6 @@
     <string name="error_registered_password_has_changed">La contraseña actual ingresada no es válida.</string>
     <string name="error_cant_report_forgotten_password">La contraseña no se pudo reportar como olvidada. Por favor inténtalo nuevamente.</string>
     <string name="error_all_fields_are_required">Todos los campos son requeridos</string>
-    <string name="prey_version">0.5.5</string>
     <string name="change">Cambiar</string>
     <string name="accept">Aceptar</string>
     <string name="already_prey_user">Tengo cuenta en Prey</string>
