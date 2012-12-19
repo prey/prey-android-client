@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Created by Carlos Yaconi
+  Copyright 2012 Fork Ltd. All rights reserved.
+  License: GPLv3
+  Full license at "/LICENSE"
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+
+
+                
+          <com.prey.preferences.TextPreference
+   		    android:key="PREFS_CONFIG_TITLE"
+            android:title="@string/preferences_config_title" 
+            
+            />
+  
+  
+ 
+ 
+
+  		<com.prey.preferences.ChangeActivationPhrasePreferences
+            android:defaultValue="GO PREY"
+            android:dialogTitle="@string/preferences_sms_run_edittext"
+            android:key="PREFS_SMS_RUN"
+            android:summary="@string/preferences_sms_run_summary"
+            android:title="@string/preferences_sms_run" />
+
+        <com.prey.preferences.ChangeDeactivationPhrasePreferences
+            android:defaultValue="STOP PREY"
+            android:dialogTitle="@string/preferences_sms_stop_edittext"
+            android:key="PREFS_SMS_STOP"
+            android:summary="@string/preferences_sms_stop_summary"
+            android:title="@string/preferences_sms_stop" />
+
+ 
+         <PreferenceScreen
+            android:key="PREFS_SIM_LOCK_SCREEN"
+            android:summary="@string/preferences_lock_sim_screen_summary"
+            android:title="@string/preferences_lock_sim_screen_title" >
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="PREFS_CHECK_SIM_CHANGE"
+                android:summary="@string/preferences_check_sim_change_summary"
+                android:title="@string/preferences_check_sim_change" />
+
+            <Preference
+                android:dependency="PREFS_CHECK_SIM_CHANGE"
+                android:key="PREFS_DESTINATION_SMS"
+                android:summary="@string/preferences_destination_sms_summary"
+                android:title="@string/preferences_destination_sms" >
+                <intent android:action="com.prey.activities.SEND_SMS_CONF" />
+            </Preference>
+
+            <com.prey.preferences.UpdateSimPreference
+                android:dependency="PREFS_CHECK_SIM_CHANGE"
+                android:dialogIcon="@drawable/logo"
+                android:dialogMessage="@string/preferences_update_sim_dialog_message"
+                android:dialogTitle="@string/preferences_update_sim_dialog_title"
+                android:key="PREFS_UPDATE_SIM"
+                android:negativeButtonText="@string/no"
+                android:positiveButtonText="@string/yes"
+                android:summary="@string/preferences_update_sim_summary"
+                android:title="@string/preferences_update_sim_title" />
+        </PreferenceScreen>
+        
+        
+         <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="PREFS_ACTIVATE_WIFI"
+                android:title="@string/preferences_activate_wifi_title" 
+                android:summary="@string/preferences_activate_wifi_summary"/>       
+	
+   
+      
+
+</PreferenceScreen>

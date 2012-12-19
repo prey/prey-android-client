@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Created by Carlos Yaconi
+  Copyright 2012 Fork Ltd. All rights reserved.
+  License: GPLv3
+  Full license at "/LICENSE"
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    
+   		  <com.prey.preferences.TextPreference
+   		    android:key="PREFS_STATUS_TITLE"
+            android:title="@string/preferences_status_title" 
+            
+            />
+   		  
+          <Preference
+            android:key="PREFS_STATUS_EXECUTION"
+            android:summary="@string/preferences_status_default"
+            android:title="@string/preferences_status_default" />
+          
+          <Preference
+            android:key="PREFS_STATUS_NETWORK"
+            android:summary="@string/preferences_status_default"
+            android:title="@string/preferences_status_default" />
+		  <Preference
+            android:key="PREFS_STATUS_GPS"
+            android:summary="@string/preferences_status_default"
+            android:title="@string/preferences_status_default" />          
+ 		  <Preference
+            android:key="PREFS_STATUS_SMS_ACTIVATION"
+            android:summary="@string/preferences_status_default"
+            android:title="@string/preferences_status_default" />          
+ 		  <Preference
+            android:key="PREFS_STATUS_SMS_DEACTIVATION"
+            android:summary="@string/preferences_status_default"
+            android:title="@string/preferences_status_default" />     
+                      
+</PreferenceScreen>

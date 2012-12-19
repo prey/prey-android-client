@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Created by Carlos Yaconi
+  Copyright 2012 Fork Ltd. All rights reserved.
+  License: GPLv3
+  Full license at "/LICENSE"
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+ 
+    
+       		<com.prey.preferences.TextPreference
+   		    android:key="PREFS_SECURITY_TITLE"
+            android:title="@string/preferences_security_title" 
+            
+            />
+       		  
+    
+            <com.prey.preferences.DeviceAdminPreference
+            	android:dialogIcon="@drawable/logo"
+            	android:key="PREFS_ADMIN_DEVICE"
+          		android:negativeButtonText="@string/no"
+          	 	android:positiveButtonText="@string/yes"
+           	 	android:summary="@string/preferences_admin_enabled_summary"
+           	 	android:title="@string/preferences_admin_enabled_title" />
+               	
+            <CheckBoxPreference
+                android:dependency="PREFS_ADMIN_DEVICE"
+                android:defaultValue="false"
+                android:key="PREFS_ADMIN_DEVICE_REVOKED_CHECK"
+                android:title="@string/preferences_admin_device_revoked_check_title" 
+                android:summary="@string/preferences_admin_device_revoked_check_summary"/>
+
+            <!-- 
+            <com.prey.preferences.RevokedPasswordPreferences
+             
+            	android:defaultValue=""
+            	android:dialogTitle="@string/preferences_admin_device_revoked_password_dialog_title"
+            	android:key="PREFS_ADMIN_DEVICE_REVOKED_PASSWORD"
+            	android:summary="@string/preferences_admin_device_revoked_password_summary"
+            	android:title="@string/preferences_admin_device_revoked_password_title" />
+               -->
+
+          	
+        	
+        	 <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="PREFS_CAMOUFLAGE"
+                android:title="@string/preferences_camouflage_title" 
+                android:summary="@string/preferences_camouflage_summary"/>
+        	 
+        	 
+        	 
+        	 		
+			<com.prey.preferences.StartPreyPreference
+				android:key="PREFS_START_PREY"
+        		android:title="@string/preferences_start_title"
+                android:summary="@string/preferences_start_summary"
+                android:dialogIcon= "@drawable/logo"
+                android:dialogTitle= "@string/preferences_start_dialog_title"
+                android:dialogMessage= "@string/preferences_start_dialog_message"
+                android:negativeButtonText = "@string/no"
+                android:positiveButtonText = "@string/yes"
+			/>
+			 
+			<com.prey.preferences.StopPreyPreference
+				android:key="PREFS_STOP_PREY"
+        		android:title="@string/preferences_stop_title"
+                android:summary="@string/preferences_stop_summary"
+                android:dialogIcon= "@drawable/logo"
+                android:dialogTitle= "@string/preferences_stop_dialog_title"
+                android:dialogMessage= "@string/preferences_stop_dialog_message"
+                android:negativeButtonText = "@string/no"
+                android:positiveButtonText = "@string/yes"
+			/>
+		 <!-- 	 -->
+    
+</PreferenceScreen>
+    
