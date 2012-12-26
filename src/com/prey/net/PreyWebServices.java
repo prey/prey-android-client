@@ -30,6 +30,9 @@ import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPhone;
+import com.prey.PreyPhone.Hardware;
+import com.prey.PreyPhone.Wifi;
 import com.prey.actions.HttpDataService;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 import com.prey.exceptions.NoMoreDevicesAllowedException;
@@ -156,6 +159,8 @@ public class PreyWebServices {
 		parameters.put("device[deactivation_phrase]", preyConfig.getSmsToStop());
 		parameters.put("device[model_name]", model);
 		parameters.put("device[vendor_name]", vendor);
+		
+		parameters=increaseData(ctx,parameters);
 		TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
 		//String imsi = mTelephonyMgr.getSubscriberId();
 		String imei = mTelephonyMgr.getDeviceId();
@@ -478,6 +483,36 @@ public class PreyWebServices {
 	
 	private String getDeviceUiUrl(Context ctx) throws PreyException{
 		return this.getDeviceWebControlPanelUiUrl(ctx).concat(".xml");
+	}
+	
+	public HashMap<String, String> increaseData(Context ctx, HashMap<String, String> parameters) {
+		PreyPhone phone = new PreyPhone(ctx);
+		Hardware hardware = phone.getHardware();
+		String prefix = "device[hardware_attributes]";
+		parameters.put(prefix + "[uuid]", hardware.getUuid());
+		parameters.put(prefix + "[bios_vendor]", hardware.getBiosVendor());
+		parameters.put(prefix + "[bios_version]", hardware.getBiosVersion());
+		parameters.put(prefix + "[mb_vendor]", hardware.getMbVendor());
+		parameters.put(prefix + "[mb_serial]", hardware.getMbSerial());
+		parameters.put(prefix + "[mb_model]", hardware.getMbModel());
+		// parameters.put(prefix + "[mb_version]", hardware.getMbVersion());
+		parameters.put(prefix + "[cpu_model]", hardware.getCpuModel());
+		parameters.put(prefix + "[cpu_speed]", hardware.getCpuSpeed());
+		parameters.put(prefix + "[cpu_cores]", hardware.getCpuCores());
+		parameters.put(prefix + "[ram_size]", hardware.getRamModules());
+		// parameters.put(prefix + "[ram_modules]", hardware.getRamModules());
+		int nic = 0;
+		Wifi wifi = phone.getWifi();
+		prefix = "device[hardware_attributes][network]";
+		parameters.put(prefix + "[nic_" + nic + "][name]", wifi.getName());
+		parameters.put(prefix + "[nic_" + nic + "][interface_type]", wifi.getInterfaceType());
+		// parameters.put(prefix + "[nic_" + nic + "][model]", wifi.getModel());
+		// parameters.put(prefix + "[nic_" + nic + "][vendor]", wifi.getVendor());
+		parameters.put(prefix + "[nic_" + nic + "][ip_address]", wifi.getIpAddress());
+		parameters.put(prefix + "[nic_" + nic + "][gateway_ip]", wifi.getGatewayIp());
+		parameters.put(prefix + "[nic_" + nic + "][netmask]", wifi.getNetmask());
+		parameters.put(prefix + "[nic_" + nic + "][mac_address]", wifi.getMacAddress());
+		return parameters;
 	}
 	
 
