@@ -8,6 +8,8 @@ package com.prey.actions;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
 
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +54,8 @@ public class ActionsRunnner {
 			
 			preyConfig = PreyConfig.getPreyConfig(ctx);
 			if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey(true)){
+				
+				/*
 				PreyExecutionWaitNotify waitNotify = new PreyExecutionWaitNotify();
 				
 				if (preyConfig.isRunOnce()){
@@ -92,6 +96,13 @@ public class ActionsRunnner {
 						}
 					}
 					
+				}*/
+				
+				try {
+					getInstructionsJsonAndRun(ctx);
+				} catch (PreyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			
 				ctx.stopService(new Intent(ctx, LocationService.class));
@@ -101,6 +112,22 @@ public class ActionsRunnner {
 			}
 		}
 		
+		private boolean getInstructionsJsonAndRun(Context ctx) throws PreyException {
+			// ArrayList<PreyAction> actions = null;
+			JSONObject jsonObject = null;
+			try {
+				jsonObject = PreyWebServices.getInstance().getActionsJsonToPerform(ctx);
+				
+				ActionsController.getInstance(ctx).runActionJson(ctx,jsonObject);
+				
+				 
+			} catch (PreyException e) {
+				PreyLogger.e("Exception getting device's xml instruction set", e);
+				throw e;
+			}
+			return false;
+		}
+	 
 		private boolean getInstructionsAndRun(PreyExecutionWaitNotify waitNotify, boolean runIfNotMissing) throws PreyException{
 			ArrayList<PreyAction> actions = null;
 			String actionsToExecute = null;

@@ -9,4 +9,7 @@
     <declare-styleable name="ButtonPrey">
         <attr name="customFont" format="string"/>
     </declare-styleable>
+    <declare-styleable name="IconPreference">
+         <attr name="icon" format="reference" />
+    </declare-styleable>
 </resources>

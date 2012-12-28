@@ -26,7 +26,7 @@ public class PreyDeviceAdmin extends DeviceAdminReceiver {
         PreyLogger.d("Device Admin enabled");
     }
 
-    @Override
+    @Override 
     public CharSequence onDisableRequested(Context context, Intent intent) {
     	PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
     	if(preyConfig.isRevokedPassword()){

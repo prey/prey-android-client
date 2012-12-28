@@ -7,15 +7,15 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.ScanResult;
+ 
  
 import com.prey.PreyLogger;
  
 import com.prey.actions.HttpDataService;
-import com.prey.actions.location.LocationNotifierAction;
+ 
 import com.prey.actions.location.PreyLocation;
 import com.prey.actions.location.PreyLocationManager;
-import com.prey.actions.location.PreyWifiManager;
+
 import com.prey.actions.observer.ActionResult;
 import com.prey.exceptions.PreyException;
 import com.prey.services.LocationService;

@@ -4,8 +4,14 @@
   Copyright 2012 Fork Ltd. All rights reserved.
   License: GPLv3
   Full license at "/LICENSE"
+
+
+
+
+
 -->
 <resources>
+
     <string name="preyForAndroid_name">Prey</string>
     <string name="prey_version">0.5.5</string>
     <!-- commons -->
@@ -66,11 +72,11 @@
     <string name="sms_activation">SMS activation phrase</string>
     <string name="sms_deactivation">SMS deactivation phrase</string>
     <string name="agreements_title">Welcome to\nPrey for Android™!</string>
-    <!--<string name="agreements_message1">By clicking below you agree to Prey Terms and Conditions</string>-->
+    <!-- <string name="agreements_message1">By clicking below you agree to Prey Terms and Conditions</string> -->
     <string name="agreements_message1">Please be sure to read and agree Prey Terms and Conditions by clicking below</string>
     <string name="agreements_message2"><u>Read Agreement</u></string>
     <!-- First dialog - Prey Configuration -->
-    <!-- Add device to an already created account  -->
+    <!-- Add device to an already created account -->
     <string name="set_old_user_loading">Attaching device to account…\nJust a sec!</string>
     <string name="set_old_user_no_more_devices_title">Hold your horses!</string>
     <string name="set_old_user_no_more_devices_text">It seems you\'ve run out of free slots for devices on your Prey account.\n\nPlease try removing an existing device on the Control Panel or create a new account.</string>
@@ -80,24 +86,25 @@
     <string name="congratulations_title">Device Added!</string>
     <!-- Prey About preferences -->
     <string name="preferences_status">Status</string>
-    <string name="preferences_status_title">Prey current status</string>
-    <string name="preferences_status_summary">Check execution status, time running and more.</string>
-    <string name="preferences_config_title">Main configuration</string>
+    <string name="preferences_status_title">Status</string>
+    <string name="preferences_status_summary"></string>
+    <string name="preferences_config_title">Activation</string>
+    <string name="preferences_config_summary"></string>
     <string name="preferences_camouflage_title">Camouflage mode</string>
     <string name="preferences_camouflage_summary">Display a fake log in screen</string>
     <!-- Prey SMS Preferences -->
-    <string name="preferences_sms_run">SMS activation message</string>
+    <string name="preferences_sms_run">Activation SMS</string>
     <string name="preferences_sms_run_summary">Word or phrase that will wake up Prey</string>
     <string name="preferences_sms_run_edittext">Send this text from another device to start Prey</string>
-    <string name="preferences_sms_stop">SMS deactivation message</string>
+    <string name="preferences_sms_stop">Deactivation SMS</string>
     <string name="preferences_sms_stop_summary">Word or phrase that will stop Prey</string>
     <string name="preferences_sms_stop_edittext">Send this text from another device to stop Prey</string>
     <string name="preferences_show_notification_title">Display notifications</string>
     <string name="preferences_show_notification_summary">Shows onscreen message if Prey sent a successful report</string>
     <!-- Prey Lock to SIM Preferences -->
-    <string name="preferences_lock_sim_screen_title">Active SIM detection</string>
+    <string name="preferences_lock_sim_screen_title">SIM detection</string>
     <string name="preferences_lock_sim_screen_summary">Configure SIM change events</string>
-    <string name="preferences_check_sim_change">Warn on SIM change</string>
+    <string name="preferences_check_sim_change">Enable</string>
     <string name="preferences_check_sim_change_summary">Activate Prey if SIM card is replaced</string>
     <string name="choose_your_hero">Choose your hero!</string>
     <string name="no_hero_selected">No hero selected</string>
@@ -105,7 +112,7 @@
     <string name="hero_chosen">Hero chosen!</string>
     <string name="notify_your_hero_now">Good choice! Would you like to let %s know you\'ve selected him as your hero? We\'ll send a quick SMS message.</string>
     <string name="hero_notification_message">I just chose you as my Prey Hero for my Android %s! So if someone else replaces my SIM card you\'ll be notified by SMS. Check out preyproject.com/hero!</string>
-    <string name="preferences_destination_sms">Contact to notify</string>
+    <string name="preferences_destination_sms">Choose your hero</string>
     <string name="preferences_destination_sms_summary">Will be notified by SMS of new device number</string>
     <string name="preferences_destination_sms_not_valid">The contact you entered doesn\'t seem to have a valid mobile phone number</string>
     <string name="sms_to_send_text">Your friend\'s device has a new number as its SIM card has been replaced. Please contact him at %s if you think it may have been stolen.</string>
@@ -113,8 +120,10 @@
     <string name="preferences_update_sim_summary">Assign current SIM as valid</string>
     <string name="preferences_update_sim_dialog_title">Change valid SIM</string>
     <string name="preferences_update_sim_dialog_message">You\'re about to change the registered SIM on this device. By clicking \'Yes\' Prey will assume current one as valid.\n\nAre you sure?</string>
-    <!--  Prey Others Preferences -->
-    <!--  Location providers checking -->
+    <string name="preferences_help_summary"></string>
+    <string name="preferences_help_title">Help</string>
+    <!-- Prey Others Preferences -->
+    <!-- Location providers checking -->
     <string name="gps_network_not_enabled">Location Providers are disabled.\nYou need to activate at least one of them if you wish to track your device.</string>
     <string name="preferences_category_other_title">Account management</string>
     <string name="preferences_category_other_summary">Manage your account settings</string>
@@ -135,7 +144,7 @@
     <string name="preferences_detach_dialog_title">Detaching device</string>
     <string name="preferences_detach_dialog_message">Your device will be detached from the Control Panel. This will also delete all its stored reports.\n\nAre you sure?</string>
     <string name="preferences_detach_dettaching_message">Detaching device, please wait…</string>
-    <string name="preferences_go_to_control_panel_title">View generated reports</string>
+    <string name="preferences_go_to_control_panel_title">Visit Control Panel</string>
     <string name="preferences_go_to_control_panel_summary">Opens browser with your Prey control panel</string>
     <string name="preferences_go_to_control_panel_dialog_title">Acknowledge your request</string>
     <string name="preferences_go_to_control_panel_dialog_message">You\'ll be redirected to your Control Panel account.\n\n Are you sure?</string>
@@ -161,33 +170,29 @@
     <string name="preferences_admin_disabled_dialog_message">You\'re about to grant Prey special security privileges, that will allow you to remotely lock your device.\nClick Yes to continue.</string>
     <string name="device_admin_label">Prey extra security</string>
     <string name="device_admin_description">These privileges are needed to remotely lockdown your device, and will prevent Prey from being uninstalled. You need to revoke these rights later if you wish to uninstall Prey.</string>
-    
     <string name="preferences_admin_enabled_device_title">Seguridad extra</string>
     <string name="preferences_admin_enabled_device_summary">Administrar Seguridad extra</string>
-    <string name="preferences_admin_device_revoked_check_title">Password Seguridad</string>
-    <string name="preferences_admin_device_revoked_check_summary">Seleccionar si necesita Password Seguridad</string>
-
+    <string name="preferences_admin_device_revoked_check_title">Uninstall PIN</string>
+    <string name="preferences_admin_device_revoked_check_summary">Seleccionar si necesita PIN Seguridad</string>
     <string name="preferences_admin_device_revoked_password_summary">Ingresar Password</string>
     <string name="preferences_admin_device_revoked_password_title">Password</string>
-    
-    <string name="preferences_admin_device_revoked_password_dialog_title">Ingrese Password</string>
+    <string name="preferences_admin_device_revoked_password_dialog_title">Uninstall PIN</string>
     <string name="preferences_admin_device_revoked_password_phrase">Actualizando Password</string>
 
-    
     <!-- Prey security privileges -->
     <string name="preferences_advanced_screen_title">Advanced configuration</string>
     <string name="preferences_advanced_screen_summary">Configure advanced settings</string>
-    <string name="preferences_activate_wifi_title">Activate wifi</string>
+    <string name="preferences_activate_wifi_title">Enable Wifi</string>
     <string name="preferences_activate_wifi_summary">Turn on wifi when Prey starts running</string>
     <string name="preferences_activate_mobile_data_title">Activate mobile data</string>
     <string name="preferences_activate_mobile_data_summary">Warning: Could not work on some devices</string>
-    <!--  Prey About -->
-    <string name="preferences_about_category_name">About</string>
+    <!-- Prey About -->
+    <string name="preferences_about_category_name">Help</string>
     <string name="preferences_about">Prey for Android™</string>
     <string name="preferences_about_title">Prey for Android™</string>
     <string name="preferences_about_message">Prey for Android™</string>
-    <!--  Password Validation -->
-    <!-- 
+    <!-- Password Validation -->
+    <!--
     <string name="password_dialog_title">Welcome back!</string>
     <string name="password_dialog_label">Enter your password:</string>
     <string name="password_dialog_forgot_text1">Forgot your password?</string>
@@ -195,6 +200,11 @@
     <string name="password_dialog_forgot_sent_title">Instructions sent</string>
     <string name="password_dialog_forgot_sent_label">An email to %s has been sent with the instructions to reset your password</string>
     <string name="password_dialog_forgot_requesting">Reporting forgotten password…\nJust a sec!</string>
+
+
+
+
+
     -->
     <string name="verify_your_account_first">You have to verify your account first</string>
     <string name="password_wrong">Wrong password. Try again.</string>
@@ -205,12 +215,18 @@
     <string name="notification_msg">New report sent to your web Control Panel</string>
     <string name="not_verified_device_title">Prey: Device not configured</string>
     <string name="not_verified_device_msg">Tap to link it to the Control Panel</string>
-    <!-- Actions/Modules
+    <!--
+     Actions/Modules
      # These messages are shown as notification, on each report sent to Prey.
-     -->
+
+
+
+
+
+    -->
     <!-- Location action -->
     <string name="location_notification_prefix">Geofix sent: </string>
-    <!--  Call Logs Action -->
+    <!-- Call Logs Action -->
     <string name="call_logs_notification_prefix">calls list: called, received, and missed numbers</string>
     <!-- Popup Alert Action -->
     <string name="popup_alert_title">Important message</string>
@@ -223,4 +239,28 @@
     <string name="error_cant_report_forgotten_password">Can\'t report forgotten password. Please try again later.</string>
     <string name="error_all_fields_are_required">All fields are required</string>
     <string name="sms_not_sent">There was an error sending the message. Does your device have SMS support?</string>
+    <string name="preferences_security_title">Security</string>
+    <string name="preferences_security_summary"></string>
+    <string name="preferences_account_title">Account</string>
+    <string name="preferences_account_summary"></string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_config">ConfigActivity</string>
+    <string name="title_activity_security">SecurityActivity</string>
+    <string name="title_activity_account">AccountActivity</string>
+    <string name="title_activity_help">HelpActivity</string>
+    <string name="title_activity_preference_status">PreferenceStatusActivity</string>
+    <string name="preferences_status_default">default</string>
+    <string name="preferences_go_to_community_title">Visit Community</string>
+    <string name="preferences_go_to_community_summary">Opens browser with your Prey Community</string>
+    <string name="preferences_go_to_community_dialog_title">Visit Community</string>
+    <string name="preferences_go_to_community_dialog_message">You\'ll be redirected to Prey Community.\n\n Are you sure?</string>
+    <string name="preferences_go_to_knowledge_title">Visit Knowledge</string>
+    <string name="preferences_go_to_knowledge_summary">Opens browser with your Prey Knowledge</string>
+    <string name="preferences_go_to_knowledge_dialog_title">Visit Knowledge</string>
+    <string name="preferences_go_to_knowledge_dialog_message">You\'ll be redirected to Prey Knowledge.\n\n Are you sure?</string>
+    <string name="preferences_logo_summary"></string>
+    <string name="preferences_logo_title"></string>
+    <string name="title_activity_screen_shot">ScreenShotActivity</string>
+
 </resources>

@@ -7,6 +7,10 @@
 package com.prey.actions.observer;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 
@@ -14,7 +18,9 @@ import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.PreyAction;
 import com.prey.actions.PreyExecutionWaitNotify;
+
 import com.prey.net.PreyWebServices;
+import com.prey.util.ClassUtil;
 
 public class ActionsController {
 
@@ -34,37 +40,41 @@ public class ActionsController {
 			_instance = new ActionsController(ctx);
 		return _instance;
 	}
-	
+
 	/**
 	 * This method checks current running modules against to a list of modules.
-	 * If there are some modules running that don't appear on the list, then them should be killed.
-	 * Use case: Lock module. Should be killed if user unselect it in the control panel.
-	 * @param actions List of active modules received from the Control Panel.
+	 * If there are some modules running that don't appear on the list, then
+	 * them should be killed. Use case: Lock module. Should be killed if user
+	 * unselect it in the control panel.
+	 * 
+	 * @param actions
+	 *            List of active modules received from the Control Panel.
 	 */
-	public void stopUnselectedModules(ArrayList<PreyAction> actions){
+	public void stopUnselectedModules(ArrayList<PreyAction> actions) {
 		PreyLogger.d("Checking if there are modules to stop.");
-		if (lastReceivedActions != null){ //If first running
+		if (lastReceivedActions != null) { // If first running
 			for (PreyAction probablyRunningAction : lastReceivedActions) {
 				boolean killAction = true;
 				for (PreyAction controlPanelAction : actions) {
 					PreyLogger.d("Checking control panel action: " + controlPanelAction.ID + " against probably running action: " + probablyRunningAction.ID);
-					 if (probablyRunningAction.equals(controlPanelAction)){
+					if (probablyRunningAction.equals(controlPanelAction)) {
 						killAction = false;
 						PreyLogger.d("Matched!, no need to kill it.");
 						break;
-					 }
+					}
 				}
 				if (killAction)
 					probablyRunningAction.killAnyInstanceRunning(ctx);
 			}
 		} else
 			this.lastReceivedActions = actions;
-		
+
 	}
 
 	/**
-	 * Run a group of actions (modules). Usually this group contains the actions 
+	 * Run a group of actions (modules). Usually this group contains the actions
 	 * provided by the XML coming from control panel.
+	 * 
 	 * @param actions
 	 */
 	public void runActionGroup(ArrayList<PreyAction> actions, PreyExecutionWaitNotify waitNotify, boolean isMissing) {
@@ -90,4 +100,25 @@ public class ActionsController {
 		waitNotify.doNotify();
 	}
 
+	public void runActionJson(Context ctx, JSONObject jsonObject) {
+		try {
+			if (jsonObject != null) {
+				String nameAction = jsonObject.getString("target");
+				String methodAction = jsonObject.getString("command");
+				JSONObject parametersAction = jsonObject.getJSONObject("options");
+				List<ActionResult> lista = new ArrayList<ActionResult>();
+				ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction);
+				if (lista.size() > 0) {
+					ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
+					for (ActionResult result : lista) {
+						dataToBeSent.add(result.getDataToSend());
+					}
+					PreyWebServices.getInstance().sendPreyHttpReport(ctx, dataToBeSent);
+				}
+			}
+		} catch (JSONException e) {
+			PreyLogger.e("Error, causa:" + e.getMessage(), e);
+		}
+
+	}
 }

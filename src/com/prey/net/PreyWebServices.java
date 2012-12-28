@@ -12,6 +12,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
  
 
  
@@ -30,10 +44,14 @@ import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPhone;
+import com.prey.PreyPhone.Hardware;
+import com.prey.PreyPhone.Wifi;
 import com.prey.actions.HttpDataService;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 import com.prey.exceptions.NoMoreDevicesAllowedException;
 import com.prey.exceptions.PreyException;
+import com.prey.json.parser.JSONParser;
 import com.prey.net.http.EntityFile;
 import com.prey.R;
 /**
@@ -160,7 +178,7 @@ public class PreyWebServices {
 		//String imsi = mTelephonyMgr.getSubscriberId();
 		String imei = mTelephonyMgr.getDeviceId();
 		parameters.put("device[physical_address]", imei);
-
+		parameters=increaseData(ctx, parameters);
 		PreyHttpResponse response = null;
 		try {
 			response = PreyRestHttpClient.getInstance(ctx).post(PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("devices.xml"), parameters, preyConfig);
@@ -235,16 +253,17 @@ public class PreyWebServices {
 			}
 		}
 
-		parameters.put("api_key", preyConfig.getApiKey());
+		//parameters.put("api_key", preyConfig.getApiKey());
 
 		String response = null;
 		try {
-			String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
+			String URL ="http://newpanel.share.cl:3000/devices/abcdef/reports";
+			//String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
 			PreyConfig.postUrl = null;
 			if (entityFiles.size()==0)
 				response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig).getResponseAsString();
 			else
-				response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig,entityFiles).getResponseAsString();
+				response = PreyRestHttpClient.getInstance(ctx).postAutentication(URL, parameters, preyConfig,entityFiles).getResponseAsString();
 			PreyLogger.d("Report sent: " + response);
 			try{
 				GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
@@ -255,13 +274,43 @@ public class PreyWebServices {
 			if (preyConfig.isShouldNotify()) {
 				this.notifyUser(ctx);
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			PreyLogger.e("Report wasn't send",e);
-		} catch (PreyException e) {
-			PreyLogger.e("Report wasn't send",e);
-		}
+		} 
 		return response;
 	}
+	
+	public void postData(String url,JSONObject obj) {
+
+
+	    HttpParams myParams = new BasicHttpParams();
+	    HttpConnectionParams.setConnectionTimeout(myParams, 10000);
+	    HttpConnectionParams.setSoTimeout(myParams, 10000);
+	    HttpClient httpclient = new DefaultHttpClient(myParams);
+	    String json=obj.toString();
+
+	    try {
+
+	        HttpPost httppost = new HttpPost(url.toString());
+	        httppost.setHeader("Content-type", "application/json");
+
+	        StringEntity se = new StringEntity(json); 
+	        se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+	        httppost.setEntity(se); 
+
+	        HttpResponse response = httpclient.execute(httppost);
+	        String temp = EntityUtils.toString(response.getEntity());
+	        PreyLogger.i("tag"+ temp);
+
+
+	    } catch (ClientProtocolException e) {
+
+	    } catch (IOException e) {
+	    }
+	}
+
+
+	
 
 	private void notifyUser(Context ctx) {
 		String notificationTitle = ctx.getText(R.string.notification_title).toString();
@@ -475,10 +524,87 @@ public class PreyWebServices {
 	private String getDeviceUrl(Context ctx) throws PreyException{
 		return this.getDeviceWebControlPanelUrl(ctx).concat(".xml");
 	}
+	private String getDeviceUrlJson(Context ctx) throws PreyException{
+		//return this.getDeviceWebControlPanelUrl(ctx).concat(".json");
+		return "http://newpanel.share.cl:3000/devices/abcdef.json";
+		
+	 
+	}
 	
 	private String getDeviceUiUrl(Context ctx) throws PreyException{
 		return this.getDeviceWebControlPanelUiUrl(ctx).concat(".xml");
 	}
+
 	
+	public JSONObject getActionsJsonToPerform(Context ctx) throws PreyException {
+		JSONObject jsonObject=null;
+		
+		jsonObject=new JSONParser().getJSONFromUrl(getDeviceUrlJson(ctx)); 
+	 
+		return jsonObject;
+	}
+ 
+	
+	public String sendEventsPreyHttpReport(Context ctx,  String action,String result) {
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		
+		Map<String, String> parameters = new HashMap<String, String>();
+ 
+		 
+ 
+
+		//event[name]=lock_started&event[info]=true
+				
+ 
+		parameters.put("event[name]", action);
+		parameters.put("event[info]", result);
+
+		String response = null;
+		try {
+			//String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/events");
+			String URL = "http://newpanel.share.cl:3000/devices/abcdef/events";
+			
+			PreyConfig.postUrl = null;
+			response = PreyRestHttpClient.getInstance(ctx).postAutentication(URL, parameters, preyConfig).getResponseAsString();
+			//response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig).getResponseAsString();
+			 
+			PreyLogger.d("Event sent: " + response);
+
+		} catch (IOException e) {
+			PreyLogger.e("Event wasn't send",e);
+		}  
+		return response;
+	}
+	
+	public static HashMap<String, String> increaseData(Context ctx, HashMap<String, String> parameters) {
+		PreyPhone phone = new PreyPhone(ctx);
+		Hardware hardware = phone.getHardware();
+		String prefix = "device[hardware_attributes]";
+		parameters.put(prefix + "[uuid]", hardware.getUuid());
+		parameters.put(prefix + "[bios_vendor]", hardware.getBiosVendor());
+		parameters.put(prefix + "[bios_version]", hardware.getBiosVersion());
+		parameters.put(prefix + "[mb_vendor]", hardware.getMbVendor());
+		parameters.put(prefix + "[mb_serial]", hardware.getMbSerial());
+		parameters.put(prefix + "[mb_model]", hardware.getMbModel());
+		// parameters.put(prefix + "[mb_version]", hardware.getMbVersion());
+		parameters.put(prefix + "[cpu_model]", hardware.getCpuModel());
+		parameters.put(prefix + "[cpu_speed]", hardware.getCpuSpeed());
+		parameters.put(prefix + "[cpu_cores]", hardware.getCpuCores());
+		parameters.put(prefix + "[ram_size]", hardware.getRamModules());
+		// parameters.put(prefix + "[ram_modules]", hardware.getRamModules());
+		int nic = 0;
+		Wifi wifi = phone.getWifi();
+		prefix = "device[hardware_attributes][network]";
+		parameters.put(prefix + "[nic_" + nic + "][name]", wifi.getName());
+		parameters.put(prefix + "[nic_" + nic + "][interface_type]", wifi.getInterfaceType());
+		// parameters.put(prefix + "[nic_" + nic + "][model]", wifi.getModel());
+		// parameters.put(prefix + "[nic_" + nic + "][vendor]",
+		// wifi.getVendor());
+		parameters.put(prefix + "[nic_" + nic + "][ip_address]", wifi.getIpAddress());
+		parameters.put(prefix + "[nic_" + nic + "][gateway_ip]", wifi.getGatewayIp());
+		parameters.put(prefix + "[nic_" + nic + "][netmask]", wifi.getNetmask());
+		parameters.put(prefix + "[nic_" + nic + "][mac_address]", wifi.getMacAddress());
+		return parameters;
+	}
 
 }

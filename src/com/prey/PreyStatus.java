@@ -17,6 +17,34 @@ public class PreyStatus {
 	}
 	
 	private boolean preyConfigurationActivityResume=false;
+	
+	private boolean preyPopUpOnclick=false;
+	
+	private boolean isTakenPicture=false;
+	
+	private boolean isAlarmStart=false;
+
+	
+	public boolean isAlarmStart() {
+		return isAlarmStart;
+	}
+
+	public void setAlarmStart() {
+		this.isAlarmStart = true;
+	}
+	
+	public void setAlarmStop() {
+		this.isAlarmStart = false;
+	}
+
+	public boolean isTakenPicture() {
+		return isTakenPicture;
+	}
+
+	public void setTakenPicture(boolean isTakenPicture) {
+		this.isTakenPicture = isTakenPicture;
+	}
+	
 
 	public boolean isPreyConfigurationActivityResume() {
 		return preyConfigurationActivityResume;
@@ -25,6 +53,14 @@ public class PreyStatus {
 	public void setPreyConfigurationActivityResume(
 			boolean preyConfigurationActivityResume) {
 		this.preyConfigurationActivityResume = preyConfigurationActivityResume;
+	}
+
+	public boolean isPreyPopUpOnclick() {
+		return preyPopUpOnclick;
+	}
+
+	public void setPreyPopUpOnclick(boolean preyPopUpOnclick) {
+		this.preyPopUpOnclick = preyPopUpOnclick;
 	}
 	
 	

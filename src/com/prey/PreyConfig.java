@@ -86,11 +86,13 @@ public class PreyConfig {
 	public static final String LAST_ALT = "LAST_ALT";
 	public static final String LAST_LOC_PROVIDER = "LAST_ALT";
 	
-	
 	public static final String IS_REVOKED_PASSWORD = "IS_REVOKED_PASSWORD";
 	public static final String REVOKED_PASSWORD = "REVOKED_PASSWORD";
+
+	public static final String IS_UNINSTALL_PIN = "IS_UNINSTALL_PIN";
+	public static final String DIGIT_UNINSTALL_PIN = "DIGIT_UNINSTALL_PIN";
 	
- 
+	public static final String PREFS_GEOFENCING_RUN = "PREFS_GEOFENCING_RUN";
 	
 	
 	
@@ -121,6 +123,11 @@ public class PreyConfig {
 	
 	private boolean isRevokedPassword;
 	private String revokedPassword;
+
+	
+	private boolean runGeofencing;
+	private boolean isUninstallPin;
+	private String digitUninstallPin;
 	 
 	private Context ctx;
 
@@ -150,7 +157,11 @@ public class PreyConfig {
 		
 		this.isRevokedPassword=settings.getBoolean(PreyConfig.IS_REVOKED_PASSWORD, false);
 		this.revokedPassword=settings.getString(PreyConfig.REVOKED_PASSWORD, "");
+
 		
+		this.isUninstallPin =settings.getBoolean(PreyConfig.IS_UNINSTALL_PIN, false);
+		this.digitUninstallPin=settings.getString(PreyConfig.DIGIT_UNINSTALL_PIN, "");
+		this.runGeofencing=settings.getBoolean(PreyConfig.PREFS_GEOFENCING_RUN, false);
 	//	FroyoSupport.getInstance(ctx).changePasswordAndLock("osito", true);
 	}
 	
@@ -196,7 +207,9 @@ public class PreyConfig {
 
 
 	public String getDeviceID() {
-		return deviceID; 
+		//return deviceID; 
+		//return "u3zqay"; 
+		return "abcdef";
 	}
 
 	public void setDeviceID(String deviceID) {
@@ -205,7 +218,8 @@ public class PreyConfig {
 	}
 
 	public String getApiKey() {
-		return apiKey;
+		//return apiKey;
+		return "0lnpal2yga0h";
 	}
 
 	public void setApiKey(String apiKey) {
@@ -239,16 +253,29 @@ public class PreyConfig {
 		editor.commit();
 	}
 	
-	
 	public void setRevokedPassword(boolean isRevokedPassword,String revokedPassword) {
 		this.isRevokedPassword = isRevokedPassword;
 		this.revokedPassword = revokedPassword;
-		
-		
+	}
+	
+	
+	public void setUnInstallPinDigit(boolean isUninstallPin,String digitUninstallPin) {
+		this.isUninstallPin = isUninstallPin;
+		this.digitUninstallPin = digitUninstallPin;
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean(PreyConfig.IS_REVOKED_PASSWORD, isRevokedPassword);
 		editor.putString(PreyConfig.REVOKED_PASSWORD, revokedPassword);
+		editor.putBoolean(PreyConfig.IS_UNINSTALL_PIN, isUninstallPin);
+		editor.putString(PreyConfig.DIGIT_UNINSTALL_PIN, digitUninstallPin);
+		editor.commit();
+	}
+	
+	public void setUnInstallPin(boolean isUninstallPin ) {
+		this.isUninstallPin = isUninstallPin;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(PreyConfig.IS_UNINSTALL_PIN, isUninstallPin);
 		editor.commit();
 	}
 	
@@ -516,6 +543,18 @@ public class PreyConfig {
 		String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain();
 		return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
 	}
+	
+	public String getPreySupportUrl() {
+		String supportSubdomain = FileConfigReader.getInstance(this.ctx).getPreySupportSubdomain();
+		return "http://".concat(supportSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+	}
+
+	
+	public String getPreyAnswersUrl() {
+		String answersSubdomain = FileConfigReader.getInstance(this.ctx).getPreyAnswersSubdomain();
+		return "http://".concat(answersSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+	}
+
 
 	public boolean askForPassword() {
 		boolean ask =  FileConfigReader.getInstance(this.ctx).isAskForPassword();
@@ -530,11 +569,29 @@ public class PreyConfig {
 	public boolean isRevokedPassword() {
 		return isRevokedPassword;
 	}
-
- 
+		
+	public boolean isUninstallPin() {
+		return isUninstallPin;
+	}
 
 	public String getRevokedPassword() {
 		return revokedPassword;
+	}
+
+	public String getDigitUninstallPin() {
+		return digitUninstallPin;
+	}
+
+	public boolean isRunGeofencing() {
+		return runGeofencing;
+	}
+
+	public void setRunGeofencing(boolean runGeofencing) {
+		this.runGeofencing = runGeofencing;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(PreyConfig.PREFS_GEOFENCING_RUN, runGeofencing);
+		editor.commit();
 	}
 
  

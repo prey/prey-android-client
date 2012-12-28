@@ -62,7 +62,7 @@ public class StatusActivity extends Activity {
 			table.removeView(findViewById(R.id.status_execution_interval_row));
 			table.removeView(findViewById(R.id.status_next_execution_in_row));
 			table.removeView(findViewById(R.id.status_running_since_row));
-			table.removeView(findViewById(R.id.status_elapsed_time_row));
+			table.removeView(findViewById(R.id.status_elapsed_time_row)); 
 		}
 			
 		boolean gps = PreyLocationManager.getInstance(getApplicationContext()).isGpsLocationServiceActive();
