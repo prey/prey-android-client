@@ -73,9 +73,13 @@ public class PreyPhone {
 		wifi=new Wifi();
 		WifiManager wifiMgr = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
 		WifiInfo wifiInfo= wifiMgr.getConnectionInfo();
+		String macAddress=wifiInfo.getMacAddress();
+		if (macAddress==null){
+			wifi=null;
+		}else{
 		int ipAddress=wifiInfo.getIpAddress();
 		wifi.setIpAddress(formatterIp(ipAddress));
-		wifi.setMacAddress(wifiInfo.getMacAddress());
+		wifi.setMacAddress(macAddress);
 		DhcpInfo dhcpInfo= wifiMgr.getDhcpInfo();
 		wifi.setNetmask(formatterIp(dhcpInfo.netmask));
 		wifi.setGatewayIp(formatterIp(dhcpInfo.serverAddress));
@@ -84,7 +88,7 @@ public class PreyPhone {
 		else
 			wifi.setInterfaceType("3G");
 		wifi.setName("eth0");
-		    	
+		}  	
 	}
 	
  

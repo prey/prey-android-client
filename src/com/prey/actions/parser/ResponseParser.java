@@ -25,7 +25,7 @@ public class ResponseParser {
 	public static ReportActionResponse parseResponse(String responseAsXML) {
 		// URL url = new
 		// URL("http://www.anddev.org/images/tut/basic/parsingxml/example.xml");
-
+ 
 		/* 
 	 	StringBuffer sb = new StringBuffer();
 		sb.append("<device>");
@@ -34,8 +34,8 @@ public class ResponseParser {
 		sb.append("</status>");
 		sb.append("<configuration>");
 		sb.append("<current_release>0.5.9</current_release>");
-		sb.append("<delay>20</delay>");
-		sb.append("<post_url>http://control.preyproject.com/devices/hm8f1r/reports.xml</post_url>");
+		sb.append("<delay>2</delay>");
+		sb.append("<post_url>http://control.preyproject.com/devices/zmewgu/reports.xml</post_url>");
 		sb.append("</configuration>");
 		sb.append("<modules>");
 		//sb.append("<module type=\"action\" active=\"true\" name=\"system\" version=\"1.5\"/>");

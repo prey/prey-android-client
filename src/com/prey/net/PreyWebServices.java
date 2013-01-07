@@ -504,15 +504,17 @@ public class PreyWebServices {
 		// parameters.put(prefix + "[ram_modules]", hardware.getRamModules());
 		int nic = 0;
 		Wifi wifi = phone.getWifi();
-		prefix = "device[hardware_attributes][network]";
-		parameters.put(prefix + "[nic_" + nic + "][name]", wifi.getName());
-		parameters.put(prefix + "[nic_" + nic + "][interface_type]", wifi.getInterfaceType());
-		// parameters.put(prefix + "[nic_" + nic + "][model]", wifi.getModel());
-		// parameters.put(prefix + "[nic_" + nic + "][vendor]", wifi.getVendor());
-		parameters.put(prefix + "[nic_" + nic + "][ip_address]", wifi.getIpAddress());
-		parameters.put(prefix + "[nic_" + nic + "][gateway_ip]", wifi.getGatewayIp());
-		parameters.put(prefix + "[nic_" + nic + "][netmask]", wifi.getNetmask());
-		parameters.put(prefix + "[nic_" + nic + "][mac_address]", wifi.getMacAddress());
+		if (wifi!=null){
+			prefix = "device[hardware_attributes][network]";
+			parameters.put(prefix + "[nic_" + nic + "][name]", wifi.getName());
+			parameters.put(prefix + "[nic_" + nic + "][interface_type]", wifi.getInterfaceType());
+			// parameters.put(prefix + "[nic_" + nic + "][model]", wifi.getModel());
+			// parameters.put(prefix + "[nic_" + nic + "][vendor]", wifi.getVendor());
+			parameters.put(prefix + "[nic_" + nic + "][ip_address]", wifi.getIpAddress());
+			parameters.put(prefix + "[nic_" + nic + "][gateway_ip]", wifi.getGatewayIp());
+			parameters.put(prefix + "[nic_" + nic + "][netmask]", wifi.getNetmask());
+			parameters.put(prefix + "[nic_" + nic + "][mac_address]", wifi.getMacAddress());
+		}
 		return parameters;
 	}
 	
