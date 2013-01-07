@@ -63,7 +63,7 @@ public class CameraAction extends PreyAction {
 				PreyLogger.d("Error, causa:" + e.getMessage());
 			}  
 		}  
-
+		
 		TakePictureCamera takePictureCamera = new TakePictureCamera();
 		HttpDataService data = takePictureCamera.takePicture(ctx);
 		PreyLogger.d("Ejecuting CameraAction Action. DONE!");

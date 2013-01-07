@@ -12,6 +12,7 @@ import java.util.Map;
 
 import java.util.List;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.net.DhcpInfo;
@@ -19,7 +20,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.telephony.TelephonyManager;
+
 
 public class PreyPhone {
 
@@ -39,31 +40,34 @@ public class PreyPhone {
 		updateHardware();
 		updateWifi();
 		updateListWifi();
-		update3g();
 	}
 
-	private void update3g() {
-		
-		
-	}
+ 
 	private void updateHardware() {
 		Map<String,String> mapData=getProcessorData();
+		Map<String,String> mapMemoryData=getMemoryData();
 		hardware = new Hardware();
 		hardware.setUuid(Build.ID );
 		hardware.setBiosVendor(Build.MANUFACTURER );
 		hardware.setBiosVersion(mapData.get("Revision"));
 		hardware.setMbVendor(Build.MANUFACTURER );
-		//hardware.setMbVersion(Build.BOOTLOADER );
 		hardware.setMbModel( Build.BOARD);
-		//hardware.setMbVersion(mbVersion);
 		hardware.setCpuModel(mapData.get("Processor"));
 		hardware.setCpuSpeed(String.valueOf(maxCPUFreqMHz()));
 		hardware.setCpuCores(String.valueOf(getCpuCores()));
-		hardware.setRamSize(String.valueOf(getMemoryRamSize()));
-		// hardware.setRamModules(ramModules);
-		hardware.setSerialNumber(getSerialNumber());
-
+		hardware.setRamSize(String.valueOf(getMemoryRamSize(mapMemoryData)));
+		hardware.setSerialNumber(getSerialNumber());		
 	}
+	
+	@TargetApi(8) 
+	public String getSerialNumber(){
+		PreyConfig config=PreyConfig.getPreyConfig(ctx);
+		if (config.isFroyoOrAbove()){
+			return Build.BOOTLOADER;
+		} else {
+			return "";
+		}
+	} 
 	
 	private void updateWifi(){
 		wifi=new Wifi();
@@ -404,12 +408,15 @@ public class PreyPhone {
 	    return maxFreq;
 	}
 	
-	private long getMemoryRamSize(){
-		ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
-		ActivityManager.MemoryInfo mInfo = new ActivityManager.MemoryInfo();
-		activityManager.getMemoryInfo(mInfo);
-		return (mInfo.threshold >> 20);
-	}
+	private long getMemoryRamSize(Map<String,String> mapMemoryData){
+		try{
+			String memTotal=mapMemoryData.get("MemTotal");
+			String[] arrayMemTotal=memTotal.split(" ");
+			return (int)(Long.parseLong(arrayMemTotal[0])/1024);
+		}catch(Exception e){
+			return 0;
+		}
+	} 
 	
 	private Map<String,String> getProcessorData(){
 		ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
@@ -441,12 +448,42 @@ public class PreyPhone {
 		return mapData;
 	}
 	
+	private Map<String,String> getMemoryData(){
+		ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+		ActivityManager.MemoryInfo mInfo = new ActivityManager.MemoryInfo();
+		activityManager.getMemoryInfo(mInfo);
+
+		String[] args = { "/system/bin/cat", "/proc/meminfo" };
+		ProcessBuilder pb = new ProcessBuilder(args);
+
+		Process process;
+		Map<String, String> mapData = new HashMap<String, String>();
+		try {
+			process = pb.start();
+			InputStream in = process.getInputStream();
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String aLine;
+			while ((aLine = br.readLine()) != null) {
+				String[] data = aLine.split(":");
+				try {
+					mapData.put(data[0].trim(), data[1].trim());
+				} catch (Exception e) {
+				}
+			}
+			if (br != null) {
+				br.close();
+			}
+		} catch (IOException e) {
+		}
+		return mapData;
+	}
+	
+	
+	 
+	
 	private int getCpuCores(){
 		Runtime runtime = Runtime.getRuntime();
 		return runtime.availableProcessors();
 	}
-	private String getSerialNumber(){
-		TelephonyManager telephonyManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
-		return telephonyManager.getDeviceId();
-	}
+ 
 }

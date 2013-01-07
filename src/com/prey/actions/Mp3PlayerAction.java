@@ -21,7 +21,6 @@ public class Mp3PlayerAction extends PreyAction {
 
 	public static final String DATA_ID = "alarm";
 	public final String ID = "alarm";
-	private boolean changeVolume=false;
 	
 	@Override
 	public String textToNotifyUserOnEachReport(Context ctx) {
@@ -33,9 +32,6 @@ public class Mp3PlayerAction extends PreyAction {
 		PreyLogger.d("Ejecuting Mp3PlayerAction Action");
 		MediaPlayer mp =null;
 		try {
-			changeVolume=false;
-			// AudioManager.setVolume(AudioManager.STREAM_MUSIC,
-			// AudioManager.MAX_VOLUME - step);
 			final AudioManager audio = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
 			int max = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 			final int setVolFlags = AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE | AudioManager.FLAG_VIBRATE;
@@ -50,26 +46,15 @@ public class Mp3PlayerAction extends PreyAction {
 			Mp3OnCompletionListener mp3Listener=new Mp3OnCompletionListener();
 			// i.e. react on the end of the music-file:
 			mp.setOnCompletionListener(mp3Listener);
-		
-			while(!changeVolume){
-				Thread.sleep(1000);
-				int volume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-				PreyLogger.d("volumenFinal:"+volume+" volumenInicial:"+max);
-				if(volume!=max){
-					changeVolume=true;
-					mp.stop();					
-				}
-			}
+			 
+			Thread.sleep(30000);
+			
 			
 		} catch (Exception e) {
 			PreyLogger.e("Error executing Mp3PlayerAction " + e.getMessage(),e);
-
-			// } catch (IOException e) {
-			// Log.e("Error executing Mp3PlayerAction" +
-			// e.getLocalizedMessage());
 		}finally{
 			if(mp!=null)
-				mp.release();
+				mp.stop();
 		}
 		PreyLogger.d("Ejecuting Mp3PlayerAction Action[Finish]");
 	}
@@ -91,8 +76,7 @@ public class Mp3PlayerAction extends PreyAction {
 	class Mp3OnCompletionListener implements MediaPlayer.OnCompletionListener{
 		public void onCompletion(MediaPlayer mp) {
 			PreyLogger.d("Stop Playing MP3. Mp3PlayerAction Action. DONE!");
-			//mp.release();
-			changeVolume=true;
+			mp.release();
 		}
 	}
 

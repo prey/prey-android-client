@@ -26,40 +26,40 @@ public class ResponseParser {
 		// URL url = new
 		// URL("http://www.anddev.org/images/tut/basic/parsingxml/example.xml");
 
-		/*
+		/* 
 	 	StringBuffer sb = new StringBuffer();
 		sb.append("<device>");
 		sb.append("<status>");
 		sb.append("<missing>true</missing>");
 		sb.append("</status>");
 		sb.append("<configuration>");
-		sb.append("<current_release>0.5.3</current_release>");
+		sb.append("<current_release>0.5.9</current_release>");
 		sb.append("<delay>20</delay>");
-		sb.append("<post_url>http://control.preyproject.com/devices/u3zqay/reports.xml</post_url>");
+		sb.append("<post_url>http://control.preyproject.com/devices/hm8f1r/reports.xml</post_url>");
 		sb.append("</configuration>");
 		sb.append("<modules>");
-		sb.append("<module type=\"action\" active=\"true\" name=\"system\" version=\"1.5\"/>");
-		sb.append("<module type=\"report\" active=\"true\" name=\"geo\" version=\"1.6\">");
-		sb.append("<accuracy>max</accuracy>");
-		sb.append(" </module>");
+		//sb.append("<module type=\"action\" active=\"true\" name=\"system\" version=\"1.5\"/>");
+		sb.append("<module type=\"report\" active=\"true\" name=\"geo\" version=\"1.6\"/>");
+	//	sb.append("<accuracy>max</accuracy>");
+	//	sb.append(" </module>");
 		sb.append("<module type=\"report\" active=\"true\" name=\"network\" version=\"1.5\"/>");
 		sb.append("<module type=\"report\" active=\"true\" name=\"webcam\" version=\"1.6\">");
-		sb.append("<webcam_message>greets the camera</webcam_message>");
+	//	sb.append("<webcam_message>greets the camera</webcam_message>");
 		sb.append("</module>");
-		sb.append("<module type=\"action\" active=\"true\" name=\"alarm\" version=\"1.5\"/>");
-		sb.append("<module type=\"action\" active=\"true\" name=\"alert\" version=\"1.6\">");
-		sb.append(" <alert_message>This device is stolen property, and your movements are currently being tracked. Please contact the owner at user@forkhq.com to resolve the situation. He's willing to give you 100 USD for its safe return.</alert_message>");
-		sb.append(" </module>");
+	//	sb.append("<module type=\"action\" active=\"true\" name=\"alarm\" version=\"1.5\"/>");
+	//	sb.append("<module type=\"action\" active=\"true\" name=\"alert\" version=\"1.6\">");
+	//	sb.append(" <alert_message>This device is stolen property, and your movements are currently being tracked. Please contact the owner at user@forkhq.com to resolve the situation. He's willing to give you 100 USD for its safe return.</alert_message>");
+	//	sb.append(" </module>");
 		
-		sb.append("<module type=\"action\" active=\"true\" name=\"lock\" version=\"2.6\">");
-		sb.append("<unlock_pass>password</unlock_pass>");
-		sb.append("</module>");
+	//	sb.append("<module type=\"action\" active=\"true\" name=\"lock\" version=\"2.6\">");
+	//	sb.append("<unlock_pass>password</unlock_pass>");
+	//	sb.append("</module>");
 	    
 	    
 		sb.append("  </modules>");
 		sb.append("</device>");
 		responseAsXML=sb.toString();
-		*/
+	  */
 		 
 		/*
 		 * Get a SAXParser from the SAXPArserFactory.
