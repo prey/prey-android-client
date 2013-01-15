@@ -36,4 +36,16 @@ public class StringUtil {
 		}
 		return out;		 
 	}
+	
+	public static String classFormat(String myString){
+		StringBuffer out=new StringBuffer();
+		String[] array=myString.split("_");
+		for(int i=0;array!=null&&i<array.length;i++){
+			out.append(firstCharUpper(array[i]));
+		}
+		return out.toString();
+	}
+	
+	
+	
 }

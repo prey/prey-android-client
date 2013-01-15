@@ -15,7 +15,7 @@ import com.prey.actions.HttpDataService;
 import com.prey.actions.location.PreyWifiManager;
 import com.prey.actions.observer.ActionResult;
 
-public class Access_points_list {
+public class AccessPointsList {
 
 	public void get(Context ctx, List<ActionResult> lista, JSONObject parameters) {
 		PreyLogger.i(this.getClass().getName());

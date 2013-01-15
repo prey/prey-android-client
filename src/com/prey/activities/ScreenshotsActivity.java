@@ -41,7 +41,7 @@ public class ScreenshotsActivity extends PreyActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// requestWindowFeature(Window.FEATURE_NO_TITLE);
-		 
+		 /*
 		try {
 			
 			// setContentView(R.layout.screenshot);
@@ -61,7 +61,7 @@ public class ScreenshotsActivity extends PreyActivity {
 			// View view =new ColorPanelView(getApplicationContext());
  
 		        
-		        view.setDrawingCacheEnabled(true);
+		   /*     view.setDrawingCacheEnabled(true);
 		        
 
 		     // this is the important code :)  
@@ -72,7 +72,7 @@ public class ScreenshotsActivity extends PreyActivity {
 		        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight()); 
  
 		        view.buildDrawingCache(true);
-		     
+		      
 		        
 		        Bitmap b1 = view.getDrawingCache();
 		       /* Rect frame = new Rect();
@@ -80,7 +80,7 @@ public class ScreenshotsActivity extends PreyActivity {
 		        int statusBarHeight = frame.top;
 		        int width = activity.getWindowManager().getDefaultDisplay().getWidth();
 		        int height = activity.getWindowManager().getDefaultDisplay().getHeight();
-*/
+ 
 		        //Bitmap bitmap2 = Bitmap.createBitmap(b1);
 		        
 		        Bitmap bitmap2 = Bitmap.createBitmap(480, 800, Config.ARGB_8888);
@@ -135,6 +135,6 @@ public class ScreenshotsActivity extends PreyActivity {
 		} catch (Exception e) {
 			PreyLogger.e("Error, causa:" + e.getMessage(), e);
 		}
-		 
+		 */
 	}
 }

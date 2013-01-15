@@ -8,16 +8,15 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.Intent;
+ 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
-import com.prey.actions.observer.ActionResult;
-import com.prey.activities.PopUpAlertActivity;
-import com.prey.activities.ScreenshotsActivity;
+import com.prey.actions.observer.ActionResult; 
 import com.prey.net.http.EntityFile;
+ 
 
 public class Screenshot {
 
@@ -30,16 +29,12 @@ public class Screenshot {
 
 			
  
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			Bitmap bitmap = com.prey.actions.screenshot.ScreenShot.getScreenBitmap(ctx);
 
-			Intent popup = new Intent(ctx, ScreenshotsActivity.class);
-			popup.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-			popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			 
-			ctx.startActivity(popup);
-/*
-			bitmap.compress(CompressFormat.JPEG, 100, outStream);
+			bitmap.compress(CompressFormat.JPEG, 100, baos);
 
-			InputStream file = new ByteArrayInputStream(((ByteArrayOutputStream) outStream).toByteArray());
+			InputStream file = new ByteArrayInputStream(((ByteArrayOutputStream) baos).toByteArray());
 			
 			EntityFile entityFile = new EntityFile();
 			entityFile.setFile(file);
@@ -54,7 +49,7 @@ public class Screenshot {
 			result.setDataToSend(data);
 
 			lista.add(result);
-			*/
+			
 		} catch (Exception e) {
 			PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
 		}

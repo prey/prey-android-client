@@ -20,7 +20,9 @@ public class ClassUtil {
 		PreyLogger.i("name:" + nameAction);
 		PreyLogger.i("target:" + methodAction);
 		PreyLogger.i("options:" + parametersAction);
-		nameAction = StringUtil.firstCharUpper(nameAction);
+		nameAction = StringUtil.classFormat(nameAction);
+		
+		
 		try {
 			Class actionClass = Class.forName("com.prey.json.actions." + nameAction);
 			Object actionObject = actionClass.newInstance();
