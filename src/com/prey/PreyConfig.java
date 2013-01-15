@@ -35,7 +35,7 @@ import com.prey.net.PreyWebServices;
 public class PreyConfig {
 	
 	//Set false in production
-	public static final boolean LOG_DEBUG_ENABLED = true;
+	public static final boolean LOG_DEBUG_ENABLED = false;
 	
 	// Set to 1000 * 60 in production.
 	public static final long DELAY_MULTIPLIER = 1000 * 60; 
