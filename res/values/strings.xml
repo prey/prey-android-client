@@ -161,14 +161,14 @@
     <string name="preferences_admin_disabled_dialog_message">You\'re about to grant Prey special security privileges, that will allow you to remotely lock your device.\nClick Yes to continue.</string>
     <string name="device_admin_label">Prey extra security</string>
     <string name="device_admin_description">These privileges are needed to remotely lockdown your device, and will prevent Prey from being uninstalled. You need to revoke these rights later if you wish to uninstall Prey.</string>
-    <string name="preferences_admin_enabled_device_title">Seguridad extra</string>
-    <string name="preferences_admin_enabled_device_summary">Administrar Seguridad extra</string>
-    <string name="preferences_admin_device_revoked_check_title">Password Seguridad</string>
-    <string name="preferences_admin_device_revoked_check_summary">Seleccionar si necesita Password Seguridad</string>
-    <string name="preferences_admin_device_revoked_password_summary">Ingresar Password</string>
-    <string name="preferences_admin_device_revoked_password_title">Password</string>
-    <string name="preferences_admin_device_revoked_password_dialog_title">Ingrese Password</string>
-    <string name="preferences_admin_device_revoked_password_phrase">Actualizando Password</string>
+    <string name="preferences_admin_enabled_device_title">Extra security</string>
+    <string name="preferences_admin_enabled_device_summary">Manage advanced security settings</string>
+    <string name="preferences_admin_device_password_check_title">Uninstallation Lock</string>
+    <string name="preferences_admin_device_password_check_summary">By selecting this option you\'ll be required an unlock password when uninstalling Prey</string>
+    <string name="preferences_admin_device_uninstallation_password_title">Uninstallation password</string>
+    <string name="preferences_admin_device_uninstallation_password_summary">Set the Uninstallation Lock password</string>
+    <string name="preferences_admin_device_uninstallation_password_dialog_title">New uninstallation password</string>
+    <string name="preferences_admin_device_setting_uninstallation_password">Setting uninstaller password</string>
     <!-- Prey security privileges -->
     <string name="preferences_advanced_screen_title">Advanced configuration</string>
     <string name="preferences_advanced_screen_summary">Configure advanced settings</string>

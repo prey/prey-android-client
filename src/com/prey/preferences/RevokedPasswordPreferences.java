@@ -45,16 +45,9 @@ public class RevokedPasswordPreferences extends EditTextPreference {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		if (positiveResult){
 			PreyLogger.d("Activation phrase changed to:" + getText());
-			
-			
-			
 			new RevokedPasswordPhraseTask(ctx).execute(getText());
-			
-			
-			
-			
-		}else{
-			
+		}
+		else{
 			preyConfig.setRevokedPassword(false, "");
 		}
 	}
@@ -73,7 +66,7 @@ public class RevokedPasswordPreferences extends EditTextPreference {
 		protected void onPreExecute() {
 			
 			progressDialog = new ProgressDialog(getContext());
-			progressDialog.setMessage(getContext().getText(R.string.preferences_admin_device_revoked_password_dialog_title).toString());
+			progressDialog.setMessage(getContext().getText(R.string.preferences_admin_device_setting_uninstallation_password).toString());
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(false);
 			progressDialog.show();

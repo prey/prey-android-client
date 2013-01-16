@@ -45,16 +45,16 @@
           	<CheckBoxPreference
                 android:defaultValue="false"
                 android:key="PREFS_ADMIN_DEVICE_REVOKED_CHECK"
-                android:title="@string/preferences_admin_device_revoked_check_title" 
-                android:summary="@string/preferences_admin_device_revoked_check_summary"/>
+                android:title="@string/preferences_admin_device_password_check_title" 
+                android:summary="@string/preferences_admin_device_password_check_summary"/>
 
             <com.prey.preferences.RevokedPasswordPreferences
                 android:dependency="PREFS_ADMIN_DEVICE_REVOKED_CHECK"
-            android:defaultValue=""
-            android:dialogTitle="@string/preferences_admin_device_revoked_password_dialog_title"
-            android:key="PREFS_ADMIN_DEVICE_REVOKED_PASSWORD"
-            android:summary="@string/preferences_admin_device_revoked_password_summary"
-            android:title="@string/preferences_admin_device_revoked_password_title" />
+	            android:defaultValue=""
+	            android:dialogTitle="@string/preferences_admin_device_uninstallation_password_dialog_title"
+	            android:key="PREFS_ADMIN_DEVICE_REVOKED_PASSWORD"
+	            android:summary="@string/preferences_admin_device_uninstallation_password_summary"
+	            android:title="@string/preferences_admin_device_uninstallation_password_title" />
           	
           	
         	<com.prey.preferences.DeviceAdminPreference

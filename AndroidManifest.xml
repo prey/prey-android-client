@@ -8,12 +8,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
     android:installLocation="internalOnly"
-    android:versionCode="36"
+    android:versionCode="37"
     android:versionName="@string/prey_version" >
 
     <uses-sdk
         android:minSdkVersion="4"
-        android:targetSdkVersion="16" />
+        android:targetSdkVersion="17" />
 
     <!-- Only this application can receive the messages and registration result -->
     <permission
