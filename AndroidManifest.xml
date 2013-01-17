@@ -8,7 +8,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
     android:installLocation="internalOnly"
-    android:versionCode="37"
+    android:versionCode="38"
     android:versionName="@string/prey_version" >
 
     <uses-sdk
@@ -38,9 +38,9 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
     
-    <uses-feature android:name="android.hardware.camera" android:required="true"  />
- 	<uses-feature android:name="android.hardware.camera.autofocus"  android:required="true"  />
- 	<uses-feature android:name="android.hardware.camera.front"   android:required="true" />
+    <uses-feature android:name="android.hardware.camera" android:required="false"  />
+ 	<uses-feature android:name="android.hardware.camera.autofocus"  android:required="false"  />
+ 	<uses-feature android:name="android.hardware.camera.front"   android:required="false" />
  
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
