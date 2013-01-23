@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="preyForAndroid_name">Prey</string>
     <string name="yes">Sí</string>
@@ -10,7 +10,7 @@
     <string name="updating_info_message">Actualizando información, un segundo…</string>
     <string name="agreements_title">Bienvenido a\nPrey para Android™!</string>
     <string name="agreements_message1">Por favor asegurate de leer y luego aceptar los términos y condiciones que se encuentran en el link de más abajo</string>
-    <string name="agreements_message2">&amp;lt;u&amp;gt;Términos y Condiciones&amp;lt;/u&amp;gt;</string>
+    <string name="agreements_message2">&lt;u&gt;Términos y Condiciones&lt;/u&gt;</string>
     <string name="set_old_user_loading">Agregando equipo a la cuenta…</string>
     <string name="set_old_user_no_more_devices_title">¡Momento!</string>
     <string name="set_old_user_no_more_devices_text">Al parecer en tu cuenta Prey no quedan slots disponibles para tu equipo.\n\nIntenta eliminando algún disposito en tu Panel de Control, o bien crea una nueva cuenta.</string>
@@ -96,10 +96,11 @@
     <string name="popup_alert_title">Mensaje importante</string>
     <string name="error_title">¡Tenemos un problema!</string>
     <string name="error_communication_exception">Prey no se pudo conectar con el Panel de Control web.\n\nRevisa tu conexión y vuelve a intentarlo.</string>
-    <string name="error_cant_add_this_device">El equipo no se pudo agregar a tu cuenta Prey.\n\nPor favor, revisa nuevamente el email y contraseña que ingresaste.</string>
+    <string name="error_cant_add_this_device">El equipo no se pudo agregar a tu cuenta Prey. Revisa el email y contraseña que ingresaste. %s</string>
     <string name="error_registered_password_has_changed">La contraseña actual ingresada no es válida.</string>
     <string name="error_cant_report_forgotten_password">La contraseña no se pudo reportar como olvidada. Por favor inténtalo nuevamente.</string>
     <string name="error_all_fields_are_required">Todos los campos son requeridos</string>
+    <string name="prey_version">0.5.6</string>
     <string name="change">Cambiar</string>
     <string name="accept">Aceptar</string>
     <string name="already_prey_user">Tengo cuenta en Prey</string>
@@ -160,4 +161,12 @@
     <string name="preferences_activate_mobile_data_title">Activar datos móviles</string>
     <string name="preferences_activate_mobile_data_summary">Atención: Podría no funcionar en algunos dispositivos</string>
     <string name="sms_not_sent">Hubo un problema enviando el mensaje. ¿Estás seguro que tu equipo puede enviar SMS?</string>
+    <string name="preferences_admin_enabled_device_title">Seguridad avanzada</string>
+    <string name="preferences_admin_enabled_device_summary">Configurar preferencias de seguridad avanzada</string>
+    <string name="preferences_admin_device_password_check_title">Contraseña de desinstalación</string>
+    <string name="preferences_admin_device_password_check_summary">Al habilitar esta opción, una contraseña será requerida para poder desinstalar Prey</string>
+    <string name="preferences_admin_device_uninstallation_password_title">Contraseña de desinstalación</string>
+    <string name="preferences_admin_device_uninstallation_password_summary">Asignar contraseña de desinstalación</string>
+    <string name="preferences_admin_device_uninstallation_password_dialog_title">Nueva contraseña de desinstalación</string>
+    <string name="preferences_admin_device_setting_uninstallation_password">Asignando contraseña de desinstalación</string>
 </resources>
