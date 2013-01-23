@@ -195,11 +195,6 @@
                 <action android:name="android.app.action.ACTION_PASSWORD_CHANGED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".buttonreceiver.MediaButtonIntentReceiver" >
-        	<intent-filter android:priority="10000" >
-            	<action android:name="android.intent.action.MEDIA_BUTTON" />
-        	</intent-filter>
-    	</receiver>
         
 
         <!-- Only C2DM servers can send messages for the app. If permission is not set - any other app can generate it -->
