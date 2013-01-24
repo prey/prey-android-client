@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="agree">Katılıyorum</string>
-  <string name="agreements_message1">Lütfen Prey'in Kullanım Şartlarını okuyup anladığınızdan emin olarak kutucuğu işaretleyin.</string>
+  <string name="agreements_message1">Lütfen Prey\'in Kullanım Şartlarını okuyup anladığınızdan emin olarak kutucuğu işaretleyin.</string>
   <string name="agreements_message2">&lt;u&gt;Anlaşma Metni&lt;/u&gt;</string>
-  <string name="agreements_title">Prey'in Android™ Uygulamasına\n Hoşgeldiniz!</string>
+  <string name="agreements_title">Prey\'in Android™ Uygulamasına\n Hoşgeldiniz!</string>
   <string name="app_name">Prey Android™ Uygulaması</string>
   <string name="back">Geri</string>
   <string name="call_logs_notification_prefix">Arama listesi: arayan,aranan, ve cevapsız çağrılar</string>
@@ -22,7 +22,7 @@
   <string name="first_dialog_message">Prey, web kontrol panelinden telefonunuzun uydudan  
     yerini tesbit ederek sizin yazdığınız bir SMS mesajı göndermenizi sağlar.\n\npreyproject.com adresinden üyeliğinizi yaptırdınız mı? 
     </string>
-  <string name="first_dialog_title">Prey'in Android™ Uygulamasına\n Hoşgeldiniz!</string>
+  <string name="first_dialog_title">Prey\'in Android™ Uygulamasına\n Hoşgeldiniz!</string>
   <string name="location_notification_prefix">Uydu Gönderimi:</string>
   <string name="new_account_congratulations_text">Telefonunuzu Prey hesabına başarıyla aktardınız.\nYapılandırmayı bitirmek için e-mail hesabınıza gelen maildeki linki tıklayarak aktivasyonunuzu gerçekleştiriniz.%s.</string>
   <string name="no">Hayır</string>
@@ -50,13 +50,13 @@
   <string name="preferences_category_title_other">Hesap yönetimi</string>
   <string name="preferences_category_title_ringtone">Alarm Modulü</string>
   <string name="preferences_check_sim_change">Mevcut SIM kitle</string>
-  <string name="preferences_check_sim_change_summary">SIM kart çıkarıldığında Prey'i aktif et</string>
+  <string name="preferences_check_sim_change_summary">SIM kart çıkarıldığında Prey\'i aktif et</string>
   <string name="preferences_destination_sms">SIM kart çıkarıldı uyarısı</string>
   <string name="preferences_destination_sms_edittext">Lütfen telefonda yeni bir SIM kart tesbit edildiğinde sizi uyarmamızı istediğiniz bir iletişim kanalı seçiniz. Cihazınıza takılan numarasından kısa mesaj alacaksınız.</string>
   <string name="preferences_destination_sms_edittext_hint">İsminizi yazınız.</string>
   <string name="preferences_destination_sms_not_valid">Girdiğiniz numara geçerli değil</string>
   <string name="preferences_destination_sms_summary">Telefonda yeni bir telefon numarası uyarısı</string>
-  <string name="preferences_detach_confirmation_message">Telefon hesaptan başarıyla silindi.\nŞimdi Prey'i yeniden yapılandıra bilirsiniz.</string>
+  <string name="preferences_detach_confirmation_message">Telefon hesaptan başarıyla silindi.\nŞimdi Prey\'i yeniden yapılandıra bilirsiniz.</string>
   <string name="preferences_detach_dettaching_message">Telefon siliniyor, lütfen bekleyiniz...</string>
   <string name="preferences_detach_dialog_message">Telefonunuz kontrol panelinden silinecek. Silinme işlemiyle birlikte telefona ait tüm raporlarda silinecektir.\n\n İşleme devam etmek için emin misiniz?</string>
   <string name="preferences_detach_dialog_title">Telefon kaydı siliniyor</string>
@@ -82,21 +82,21 @@
   <string name="preferences_show_notification_title">Ekran bildirimleri</string>
   <string name="preferences_sms_run">SMS aktivasyon mesajı</string>
   <string name="preferences_sms_run_edittext">Prey bu mesajı aldığında aktif görevine başlayacak.</string>
-  <string name="preferences_sms_run_summary">Prey'in harekete geçeceği kelime veya kelime grubu</string>
+  <string name="preferences_sms_run_summary">Prey\'in harekete geçeceği kelime veya kelime grubu</string>
   <string name="preferences_sms_stop">SMS aktivasyon iptal mesajı</string>
   <string name="preferences_sms_stop_edittext">Prey bu mesajı aldığında aktif görevinden istifa edecek.</string>
-  <string name="preferences_sms_stop_summary">Prey'i durduracak kelime veya kelime grubu</string>
+  <string name="preferences_sms_stop_summary">Prey\'i durduracak kelime veya kelime grubu</string>
   <string name="preferences_sms_title">Ana yapılandırma</string>
   <string name="preferences_start_confirmation_message">Kontrol Panelinize cihaz kayıp olarak raporlandı. Bu işlem bir süre sonra cihazdaki pil tüketimine neden olabilir!</string>
   <string name="preferences_start_dialog_message">Cihazı kayıp olarak belirleyip kontrol panelinden rapor almaya başlayacaksınız.\n\nEmin misiniz?</string>
   <string name="preferences_start_dialog_title">Prey başlatılıyor</string>
   <string name="preferences_start_summary">Bu cihazı kayıp olarak belirt</string>
-  <string name="preferences_start_title">Prey'i başlat</string>
+  <string name="preferences_start_title">Prey\'i başlat</string>
   <string name="preferences_stop_confirmation_message">Herşey eskisi gibi normal. Cihazınızı buldunuz gözünüz aydın !</string>
   <string name="preferences_stop_dialog_message">Prey Kontrol Paneli cihazınıza ait raporlamayı cihazınızı bulduğunuzdan dolayı durduracak.\n\nBu işlemi yapmak için emin misiniz?</string>
   <string name="preferences_stop_dialog_title">Prey durduruluyor</string>
   <string name="preferences_stop_summary">Tüm modülleri ve izlemeleri durdur</string>
-  <string name="preferences_stop_title">Prey'i durdur.</string>
+  <string name="preferences_stop_title">Prey\'i durdur.</string>
   <string name="preyForAndroid_name">Prey</string>
   <string name="set_new_user_dialog_create">Yeni hesap oluştur</string>
   <string name="set_new_user_dialog_creating_popup">Hesap oluşturuluyor. Lütfen bekleyiniz...</string>
