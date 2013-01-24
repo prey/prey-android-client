@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="agree">Hyväksyn</string>
+  <string name="agreements_message1">Luethan sekä hyväksyt Preyn käyttöehdot klikkaamalla alta</string>
+  <string name="agreements_message2"><u>Lue käyttöehdot</u></string>
+  <string name="agreements_title">Tervetuloa tuotteeseen\nPrey Androidille™!</string>
+  <string name="app_name">Prey Androidille™</string>
+  <string name="back">Takaisin</string>
+  <string name="cancel">Peru</string>
+  <string name="dontagree">En hyväksy</string>
+  <string name="first_dialog_title">Tervetuloa tuotteeseen\nPrey Androidille™!</string>
+  <string name="no">Ei</string>
+  <string name="ok">OK</string>
+  <string name="preyForAndroid_name">Prey</string>
+  <string name="yes">Kyllä</string>
+</resources>
