@@ -33,7 +33,7 @@
     <string name="preferences_destination_sms">Contacto a notificar</string>
     <string name="preferences_destination_sms_summary">Será notificado por SMS con el nuevo número de teléfono</string>
     <string name="preferences_destination_sms_not_valid">El contacto que elegiste no parece tener un número de teléfono válido.</string>
-    <string name="sms_to_send_text">El teléfono de tu amigo tiene un nuevo número ya que su SIM fue reemplazado. Por favor, contáctalo a %s si crees que su teléfono ha sido robado.</string>
+    <string name="sms_to_send_text">El telefono de tu amigo tiene un nuevo numero ya que su SIM fue reemplazado. Por favor, contactalo a %s si crees que su telefono ha sido robado.</string>
     <string name="preferences_update_sim_title">Asignar nuevo SIM</string>
     <string name="preferences_update_sim_summary">Asignar SIM actual como válido</string>
     <string name="preferences_update_sim_dialog_title">Cambiar SIM válido</string>
@@ -152,7 +152,7 @@
     <string name="your_hero_text">Tu héroe será el elegido que recibirá un SMS de alerta cuando Prey detecte una nueva tarjeta SIM en tu teléfono.</string>
     <string name="hero_chosen">¡Héroe seleccionado!</string>
     <string name="notify_your_hero_now">¡Muy bien! ¿Te gustaría informarle a %s que lo has seleccionado como tu héroe? Le enviaremos un mensaje SMS.</string>
-    <string name="hero_notification_message">Te acabo de elegir como el héroe de mi equipo Android. Si alguien remplaza mi SIM tú serás notificado via SMS. ¡Más info en preyproject.com!</string>
+    <string name="hero_notification_message">Te acabo de elegir como el heroe de mi equipo Android. Si alguien remplaza mi SIM tu seras notificado via SMS. ¡Mas info en preyproject.com!</string>
     <string name="gps_network_not_enabled">Servicios de localización desactivados.\nDebes activar al menos uno de ellos si quieres localizar tu equipo.</string>
     <string name="preferences_advanced_screen_title">Configuración avanzada</string>
     <string name="preferences_advanced_screen_summary">Modifica configuración avanzada de Prey</string>

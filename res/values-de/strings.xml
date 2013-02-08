@@ -112,7 +112,8 @@
   <string name="set_old_user_loading">Verknüpfe Gerät mit Benutzerkonto...\nEinen Moment, bitte!</string>
   <string name="set_old_user_no_more_devices_text">Die maximale Anzahl von Geräten, die mit diesem Prey-Benutzerkonto verknüpft werden können, ist erreicht.\n Entfernen sie ein anderes Gerät von der Liste oder erstellen Sie ein neues Benutzerkonto.</string>
   <string name="set_old_user_no_more_devices_title">Einen Moment, bitte!</string>
-  <string name="sms_to_send_text">Das Telefon ihres Freundes hat eine neue Nummer, da die SIM-Karte ersetzt wurde. Bitte kontaktieren sie ihn unter %s, wenn Sie vermuten, dass das Gerät gestohlen wurde.</string>
+  <string name="sms_to_send_text">Das Telefon ihres Freundes hat eine neue SIM Karte und Nummer. Kontaktieren Sie ihn, wenn das Handy eventuell gestohlen wurde.</string>
+  <string name="hero_notification_message">Ich habe dich als meinen Prey Helden ausgesucht. Wenn jemand die SIM Karte wechselt wirst du per SMS informiert. Siehe preyproject.com/hero!</string>
   <string name="verify_your_account_first">Das Konto muss zuerst verifiziert werden</string>
   <string name="yes">Ja</string>
 </resources>
