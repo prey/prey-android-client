@@ -20,7 +20,7 @@
         android:name="com.prey.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.prey.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.prey.permission.C2D_MESSAGE"/>
 
     <uses-feature
         android:name="android.hardware.location.network"
@@ -98,13 +98,9 @@
             android:configChanges="keyboardHidden"
             android:launchMode="singleInstance"
             android:noHistory="true" />
-        <activity
-            android:name="com.prey.activities.PreyConfigurationActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:finishOnTaskLaunch="true"
-            android:launchMode="singleInstance"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.NoTitleBar" />
+        
+        
+
         <activity
             android:name="com.prey.activities.PopUpAlertActivity"
             android:clearTaskOnLaunch="true"
@@ -153,6 +149,132 @@
         <activity
             android:name="com.prey.activities.AgreementDialogActivity"
             android:configChanges="orientation|keyboardHidden" />
+        
+        
+
+        
+        
+        
+        <!--  START ACCOUNT -->
+        <activity
+            android:name="com.prey.activities.preferences.PreferenceAccountActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            <intent-filter>
+                <action android:name="com.prey.activities.preferences.PreferenceAccountActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.prey.activities.preferences.PreyConfigurationAccountActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <!--  END ACCOUNT -->
+        
+        
+        <!--  START HELP -->
+        <activity
+            android:name="com.prey.activities.preferences.PreferenceHelpActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            <intent-filter>
+                <action android:name="com.prey.activities.preferences.PreferenceHelpActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.prey.activities.preferences.PreyConfigurationHelpActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <!--  END HELP -->
+        
+        
+        
+        
+        <!--  START STATUS -->
+        <activity
+            android:name="com.prey.activities.preferences.PreferenceStatusActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            <intent-filter>
+                <action android:name="com.prey.activities.preferences.PreferenceStatusActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.prey.activities.preferences.PreyConfigurationStatusActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <!--  END STATUS -->
+        
+        <!--  START SECURITY -->
+        <activity
+            android:name="com.prey.activities.preferences.PreferenceSecurityActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            <intent-filter>
+                <action android:name="com.prey.activities.preferences.PreferenceSecurityActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>        
+        <activity
+            android:name=".activities.preferences.PreyConfigurationSecurityActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <!--  END SECURITY -->
+        
+        <!--  START CONFIG -->
+        <activity
+            android:name="com.prey.activities.preferences.PreferenceConfigActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            <intent-filter>
+                <action android:name="com.prey.activities.preferences.PreferenceConfigActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.prey.activities.preferences.PreyConfigurationConfigActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoTitleBar" />
+         
+        <activity
+            android:name="com.prey.activities.PreyConfigurationActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoTitleBar" />
+         <intent-filter>
+            <action android:name="com.prey.activities.PreyConfigurationActivity" />
+            <category android:name="android.intent.category.DEFAULT" />
+         </intent-filter>
+		 <!--  END CONFIG -->
+
+       
+        
 
         <!-- Services -->
         <service android:name="com.prey.services.LocationService" />
@@ -219,6 +341,16 @@
                 <category android:name="com.prey" />
             </intent-filter>
         </receiver>
+        
+        
+                
+         <receiver android:name="com.prey.actions.geo.LocationAlertReceiver"
+             android:exported="false"  >
+         	<intent-filter>
+            	<action android:name="com.prey.actions.geo.LOCATION_ALERT" />
+            	<category android:name="android.intent.category.DEFAULT" />
+        	</intent-filter>
+    	 </receiver>
         
         <!-- Battery
         <receiver android:name="com.prey.receivers.BatteryLevelReceiver">

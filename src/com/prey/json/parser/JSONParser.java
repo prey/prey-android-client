@@ -70,7 +70,7 @@ public class JSONParser {
 	          
 	           //json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"screenshot\",\"access_points_list\"]}}]";
 	        
-	            json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"screenshot\",\"picture\",\"location\"]}}]";
+	        //    json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"screenshot\",\"picture\",\"location\"]}}]";
 	            
 	        //    json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"screenshot\"]}}]";
 	            
@@ -79,7 +79,8 @@ public class JSONParser {
 //	           json="[ {\"command\": \"start\",\"target\": \"geofencing\",\"options\": {\"origin\": \"-70.60713481,-36.42372147\",\"radius\": \"100\" }}]";
 	            
 	            
-	         
+	    //        json="[ {\"command\": \"start\",\"target\": \"geofencing\",\"options\": {\"origin\": \"-70.7193117,-32.7521112\",\"radius\": \"100\" }}]";
+	            
 	            
 	       //    json="[ {\"command\": \"start\",\"target\": \"geofencing\",\"options\": {\"origin\": \"-70.60713481,-33.42372147\",\"radius\": \"100\" }}]";
 	       //    json="[ {\"command\": \"stop\",\"target\": \"geofencing\",\"options\": {}}]";
