@@ -20,6 +20,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.telephony.TelephonyManager;
 
 
 public class PreyPhone {
@@ -47,7 +48,7 @@ public class PreyPhone {
 		Map<String,String> mapData=getProcessorData();
 		Map<String,String> mapMemoryData=getMemoryData();
 		hardware = new Hardware();
-		hardware.setUuid(Build.ID );
+		hardware.setUuid(getUuid());
 		hardware.setBiosVendor(Build.MANUFACTURER );
 		hardware.setBiosVersion(mapData.get("Revision"));
 		hardware.setMbVendor(Build.MANUFACTURER );
@@ -485,9 +486,16 @@ public class PreyPhone {
 	
 	 
 	
+	
 	private int getCpuCores(){
 		Runtime runtime = Runtime.getRuntime();
 		return runtime.availableProcessors();
+	}
+	
+	private String getUuid(){
+		TelephonyManager tManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
+		String uuid = tManager.getDeviceId();
+		return uuid;
 	}
  
 }
