@@ -60,6 +60,8 @@ public class ActionsRunnner {
 						preyConfig.setMissing(true);
 						PreyWebServices.getInstance().setMissing(ctx, true);
 						boolean isMissing = getInstructionsAndRun(waitNotify, true);
+						PreyRunnerService.interval = preyControlStatus.getDelay();
+						PreyRunnerService.pausedAt = System.currentTimeMillis();
 						PreyLogger.d("Prey is set to run once. Waiting for the report to be sent (if any), then finishing");
 						if (isMissing) //Have to wait for the report being sent.
 							waitNotify.doWait();
