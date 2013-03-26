@@ -12,6 +12,10 @@ import java.util.Map;
 
 import java.util.List;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.app.ActivityManager;
 import android.content.Context;
 import android.net.DhcpInfo;
@@ -19,6 +23,8 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Environment;
+import android.os.StatFs;
 import android.telephony.TelephonyManager;
 
 public class PreyPhone {
@@ -49,11 +55,11 @@ public class PreyPhone {
 	private void updateHardware() {
 		Map<String,String> mapData=getProcessorData();
 		hardware = new Hardware();
-		hardware.setUuid(Build.ID );
+		hardware.setUuid(getUuid() );
 		hardware.setBiosVendor(Build.MANUFACTURER );
 		hardware.setBiosVersion(mapData.get("Revision"));
 		hardware.setMbVendor(Build.MANUFACTURER );
-		hardware.setMbVersion(Build.BOOTLOADER );
+	//	hardware.setMbVersion(Build.BOOTLOADER );
 		hardware.setMbModel( Build.BOARD);
 		//hardware.setMbVersion(mbVersion);
 		hardware.setCpuModel(mapData.get("Processor"));
@@ -62,6 +68,13 @@ public class PreyPhone {
 		hardware.setRamSize(String.valueOf(getMemoryRamSize()));
 		// hardware.setRamModules(ramModules);
 		hardware.setSerialNumber(getSerialNumber());
+		
+		
+		hardware.setTotalMemory(String.valueOf(getTotalMemory()));
+		hardware.setFreeMemory(String.valueOf(getFreeMemory()));
+		hardware.setBusyMemory(String.valueOf(getBusyMemory()));
+	    
+		
 
 	}
 	
@@ -144,6 +157,34 @@ public class PreyPhone {
 		private String ramSize;
 		private String ramModules;
 		private String serialNumber;
+		private String totalMemory;
+		private String freeMemory;
+		private String busyMemory;
+	    
+
+		public String getTotalMemory() {
+			return totalMemory;
+		}
+
+		public void setTotalMemory(String totalMemory) {
+			this.totalMemory = totalMemory;
+		}
+
+		public String getFreeMemory() {
+			return freeMemory;
+		}
+
+		public void setFreeMemory(String freeMemory) {
+			this.freeMemory = freeMemory;
+		}
+
+		public String getBusyMemory() {
+			return busyMemory;
+		}
+
+		public void setBusyMemory(String busyMemory) {
+			this.busyMemory = busyMemory;
+		}
 
 		public String getRamSize() {
 			return ramSize;
@@ -449,4 +490,60 @@ public class PreyPhone {
 		TelephonyManager telephonyManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
 		return telephonyManager.getDeviceId();
 	}
+	
+    public long getTotalMemory()
+    {
+        StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());   
+        long Total = ( (long) statFs.getBlockCount() *  (long) statFs.getBlockSize()) / 1048576;
+        return Total;
+    }
+
+    public long getFreeMemory()
+    {
+        StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
+        long Free  = (statFs.getAvailableBlocks() *  (long) statFs.getBlockSize()) / 1048576;
+        return Free;
+    }
+
+    public long getBusyMemory()
+    {
+        StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());   
+        long Total = ( (long) statFs.getBlockCount() * (long) statFs.getBlockSize()) / 1048576;
+        long Free  = (statFs.getAvailableBlocks() *  (long) statFs.getBlockSize()) / 1048576;
+        long Busy  = Total - Free;
+        return Busy;
+    }
+    
+    public String getIPAddress() {
+       String ip="";
+       DefaultHttpClient httpClient = null;
+       HttpGet httpGet=null;
+       HttpResponse httpResponse=null;
+       InputStreamReader input=null;
+       BufferedReader buffer=null;
+       try {
+        	httpClient = new DefaultHttpClient();
+        	httpGet = new HttpGet("http://ifconfig.me/ip");
+        	httpResponse = httpClient.execute(httpGet);
+        	input=new InputStreamReader(httpResponse.getEntity().getContent());
+        	buffer=new BufferedReader(input);
+        	ip=buffer.readLine();
+       }catch (Exception e){
+    	   if (buffer!=null){
+    		   try {buffer.close();} catch (IOException e1) {}
+    	   }
+    	   if (input!=null){
+    		   try {input.close();} catch (IOException e1) {}
+    	   }
+       }
+       return ip;
+    }
+
+	private String getUuid(){
+		TelephonyManager tManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
+		String uuid = tManager.getDeviceId();
+		return uuid;
+	}
+
+    
 }
