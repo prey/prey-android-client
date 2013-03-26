@@ -10,6 +10,7 @@ package com.prey.actions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.prey.net.http.EntityFile;
 
@@ -18,7 +19,7 @@ import com.prey.net.http.EntityFile;
 public class HttpDataService {
 
 	private String key;
-	private HashMap<String, String> dataList;
+	private Map<String, String> dataList;
 	private String singleData;
 	private boolean isList;
 	private String httpMethod;
@@ -32,14 +33,15 @@ public class HttpDataService {
 		entityFiles= new ArrayList<EntityFile>();
 	}
 
-	public HashMap<String, String> getDataAsParameters() {
+	public HashMap<String, String> getReportAsParameters() {
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		if (isList()) {
 			StringBuffer key = new StringBuffer();
 			for (String valueKey : dataList.keySet()) {
 				String valueData = dataList.get(valueKey);
+				key.append("report[");
 				key.append(this.key);
-				key.append("[");
+				key.append("][");
 				key.append(valueKey);
 				key.append("]");
 				parameters.put(key.toString(), valueData);
@@ -52,6 +54,27 @@ public class HttpDataService {
 		return parameters;
 	}
 
+	public HashMap<String, String> getDataAsParameters() {
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		if (isList()) {
+			StringBuffer key = new StringBuffer();
+			for (String valueKey : dataList.keySet()) {
+				String valueData = dataList.get(valueKey);
+				key.append("data[");
+				key.append(this.key);
+				key.append("][");
+				key.append(valueKey);
+				key.append("]");
+				parameters.put(key.toString(), valueData);
+				key.delete(0, key.length());
+			}
+			key = null;
+		} else
+			parameters.put(key, singleData);
+
+		return parameters;
+	}
+	
 	public String getDataAsString() {
 		StringBuffer sb = new StringBuffer();
 
@@ -79,7 +102,7 @@ public class HttpDataService {
 		this.key = key;
 	}
 
-	public HashMap<String, String> getDataList() {
+	public Map<String, String> getDataList() {
 		return dataList;
 	}
 
@@ -87,6 +110,10 @@ public class HttpDataService {
 		this.dataList = dataList;
 	}
 
+	public void putData(Map<String, String> dataList){
+		this.dataList.putAll(dataList);
+	}
+	
 	public String getSingleData() {
 		return singleData;
 	}
