@@ -59,7 +59,7 @@ public class LocationService extends Service {
 		// its own in case needs resources.
 		// If not missing, this service running will only drain battery
 		PreyLogger.d("Checking if this device is missing");
-		if (preyConfig.isMissing()) {
+		//if (preyConfig.isMissing()) {
 			
 			if (!NetworkUtils.getNetworkUtils(getApplicationContext()).isWifiEnabled() && preyConfig.isShouldActivateWifi())
 				NetworkUtils.getNetworkUtils(getApplicationContext()).turnOnWifi(true);
@@ -94,9 +94,9 @@ public class LocationService extends Service {
 			}*/
 			
 			
-		} else {
-			stopSelf();
-		}
+		//} else {
+		//	stopSelf();
+		//}
 		PreyLogger.d("LocationService has been started...");
 	}
 

@@ -118,7 +118,7 @@ public class PreyRestHttpClient {
 		params.put("_method", methodAsString);
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
 		// method.setQueryString(getHttpParamsFromMap(params));
-		PreyLogger.d("Sending using " + methodAsString + "(using _method) - URI: " + url + " - parameters: " + params.toString());
+		PreyLogger.d("Sending using " + methodAsString + "(using _method) - URI: " + url + " -- parameters: " + params.toString());
 		return sendUsingMethod(method, preyConfig);
 	}
 
@@ -173,6 +173,7 @@ public class PreyRestHttpClient {
 		}
 		for(EntityFile entityFile:entityFiles){
 			entity.addPart( entityFile.getType(),entityFile.getName(),entityFile.getFile(),entityFile.getMimeType(),true);
+			PreyLogger.i("_Type:"+entityFile.getType()+" Name:"+entityFile.getName()+" File:"+entityFile.getFile()+" MimeType:"+entityFile.getMimeType() );
 		}
 		
 		method.setEntity( entity ); 
@@ -187,8 +188,8 @@ public class PreyRestHttpClient {
 	public PreyHttpResponse postAutentication(String url, Map<String, String> params, PreyConfig preyConfig, List<EntityFile>  entityFiles) throws IOException {
 		HttpPost method = new HttpPost(url);
 		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
 		
-		method.addHeader("Authorization", "Basic " + getCredentials("0lnpal2yga0h", "X"));
 		
 		SimpleMultipartEntity entity =new SimpleMultipartEntity();		
 		for (Iterator<Map.Entry<String, String>> it = params.entrySet().iterator(); it.hasNext();) {
@@ -197,11 +198,6 @@ public class PreyRestHttpClient {
 			String value = entry.getValue();
 			entity.addPart( key,   value );
 		}
-		
-		 
-		entity.addPart("access_points_list[]",  "{ssid:  \"NOMBRE WIFI1\" ,    mac_address: \"AA:BB-CC:11:22:33\",    signal_strength: \"-12\",    channel: 2,    security: \"WPA2\"  }");
-		entity.addPart("access_points_list[]",  "{ssid:  \"NOMBRE WIFI2\" ,    mac_address: \"AA:BB-CC:11:22:33\",    signal_strength: \"-12\",    channel: 2,    security: \"WPA2\"  }");
- 
 		
 		for(EntityFile entityFile:entityFiles){
 			entity.addPart( entityFile.getType(),entityFile.getName(),entityFile.getFile(),entityFile.getMimeType(),true);
@@ -219,12 +215,10 @@ public class PreyRestHttpClient {
 
 	public PreyHttpResponse postAutentication(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
 		HttpPost method = new HttpPost(url);
+		
 		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
-
-		//method.addHeader("Basic Authorization",Base64.encodeBytes("api_key:0lnpal2yga0h".getBytes() ) );
-
-		method.addHeader("Authorization", "Basic " + getCredentials("0lnpal2yga0h", "X"));
+		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
 		 
 		
 		
@@ -237,6 +231,26 @@ public class PreyRestHttpClient {
 		PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
+	
+	public PreyHttpResponse getAutentication(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
+		HttpPost method = new HttpPost(url);
+		
+		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
+		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
+		 
+		
+		
+		
+		// method.setParams(getHttpParamsFromMap(params));
+		PreyLogger.d("Sending using 'GET' - URI: " + url + " - parameters: " + params.toString());
+		httpclient.setRedirectHandler(new NotRedirectHandler());
+		HttpResponse httpResponse = httpclient.execute(method);
+		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
+		PreyLogger.d("Response from server: " + response.toString());
+		return response;
+	}
+	
 	
 	
 	public static HttpResponse postJson(String url, JSONObject jsonObject) throws Exception 
@@ -326,7 +340,7 @@ public class PreyRestHttpClient {
 
 			HttpResponse httpResponse = httpclient.execute(method);
 			response = new PreyHttpResponse(httpResponse);
-			PreyLogger.d("Response from server: " + response.toString());
+			PreyLogger.i("Response from server: " + response.toString());
 
 		} catch (IOException e) {
 			throw e;

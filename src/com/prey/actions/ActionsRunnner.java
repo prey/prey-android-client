@@ -7,6 +7,7 @@
 package com.prey.actions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -104,6 +105,7 @@ public class ActionsRunnner {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
 			
 				ctx.stopService(new Intent(ctx, LocationService.class));
 				ctx.stopService(new Intent(ctx, PreyRunnerService.class));
@@ -114,7 +116,7 @@ public class ActionsRunnner {
 		
 		private boolean getInstructionsJsonAndRun(Context ctx) throws PreyException {
 			// ArrayList<PreyAction> actions = null;
-			JSONObject jsonObject = null;
+			List<JSONObject> jsonObject = null;
 			try {
 				jsonObject = PreyWebServices.getInstance().getActionsJsonToPerform(ctx);
 				

@@ -61,7 +61,7 @@ public class PreyRunnerService extends Service {
 		//Setting back to not missing.
 		new Thread(new Runnable() {
 			public void run() {
-				PreyWebServices.getInstance().setMissing(PreyRunnerService.this, false);
+			//	PreyWebServices.getInstance().setMissing(PreyRunnerService.this, false);
 			}
 		}).start();
 		

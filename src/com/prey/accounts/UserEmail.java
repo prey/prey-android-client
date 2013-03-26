@@ -9,7 +9,7 @@ import android.os.Build;
 public class UserEmail {
 
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
-	public static String getEmail222(Context context) {
+	public static String getEmail(Context context) {
 	    AccountManager accountManager = AccountManager.get(context); 
 	    Account account = getAccount(accountManager);
 

@@ -42,6 +42,7 @@ public class PreyController {
 			} catch (NullPointerException npe) {
 				PreyLogger.e("A manager couldn't be instanciated. Execution will continue but we're not sure we could connect to internet", npe);
 			}
+			config.setRun(true);
 			final Context context = ctx;
 			new Thread(new Runnable() {
 				

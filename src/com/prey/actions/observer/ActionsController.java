@@ -100,14 +100,25 @@ public class ActionsController {
 		waitNotify.doNotify();
 	}
 
-	public void runActionJson(Context ctx, JSONObject jsonObject) {
+	public List<HttpDataService> runActionJson(Context ctx, List<JSONObject> jsonObjectList) {
+		List<HttpDataService> listData=new ArrayList<HttpDataService>();
+		
+		PreyLogger.i("tamanio:"+(jsonObjectList==null?-1:jsonObjectList.size()));
 		try {
-			if (jsonObject != null) {
+			for(int i=0;jsonObjectList!=null&&i<jsonObjectList.size();i++){
+				JSONObject jsonObject=jsonObjectList.get(i);
 				String nameAction = jsonObject.getString("target");
 				String methodAction = jsonObject.getString("command");
-				JSONObject parametersAction = jsonObject.getJSONObject("options");
+				JSONObject parametersAction =null;
+				try{
+					parametersAction = jsonObject.getJSONObject("options");
+				}catch(JSONException e){
+					
+				}
+				PreyLogger.i("nameAction:"+nameAction+" methodAction:"+methodAction);
+						 
 				List<ActionResult> lista = new ArrayList<ActionResult>();
-				ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction);
+				listData=ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction,listData);
 				if (lista.size() > 0) {
 					ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
 					for (ActionResult result : lista) {
@@ -116,9 +127,10 @@ public class ActionsController {
 					PreyWebServices.getInstance().sendPreyHttpReport(ctx, dataToBeSent);
 				}
 			}
+			return listData;
 		} catch (JSONException e) {
 			PreyLogger.e("Error, causa:" + e.getMessage(), e);
 		}
-
+		return null;
 	}
 }

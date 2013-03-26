@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -96,6 +97,12 @@ public class PreyConfig {
 	
 	
 	
+	
+	public static final String LAST_EXECUTION_TIME = "LAST_EXECUTION_TIME";
+	public static final String NOTIFICATION_ID="NOTIFICATION_ID";
+	public static final String REGISTRATION_ID="REGISTRATION_ID";
+	public static final String LAST_EVENT="LAST_EVENT";
+	
 	/* ------------- */
 
 	public static final String TAG = "PREY";
@@ -128,7 +135,12 @@ public class PreyConfig {
 	private boolean runGeofencing;
 	private boolean isUninstallPin;
 	private String digitUninstallPin;
-	 
+	private long lastExecutionTime=Long.MIN_VALUE;
+	private String notificationId;
+	private String registrationId;
+	private boolean run;
+	private String lastEvent;
+	
 	private Context ctx;
 
 	private PreyConfig(Context ctx) {
@@ -162,6 +174,8 @@ public class PreyConfig {
 		this.isUninstallPin =settings.getBoolean(PreyConfig.IS_UNINSTALL_PIN, false);
 		this.digitUninstallPin=settings.getString(PreyConfig.DIGIT_UNINSTALL_PIN, "");
 		this.runGeofencing=settings.getBoolean(PreyConfig.PREFS_GEOFENCING_RUN, false);
+		
+		
 	//	FroyoSupport.getInstance(ctx).changePasswordAndLock("osito", true);
 	}
 	
@@ -207,9 +221,9 @@ public class PreyConfig {
 
 
 	public String getDeviceID() {
-		//return deviceID; 
+		return deviceID; 
 		//return "u3zqay"; 
-		return "abcdef";
+		//return "abcdef";
 	}
 
 	public void setDeviceID(String deviceID) {
@@ -218,8 +232,8 @@ public class PreyConfig {
 	}
 
 	public String getApiKey() {
-		//return apiKey;
-		return "0lnpal2yga0h";
+		return apiKey;
+		//return "0lnpal2yga0h";
 	}
 
 	public void setApiKey(String apiKey) {
@@ -534,14 +548,19 @@ public class PreyConfig {
 		return FileConfigReader.getInstance(this.ctx).getAgreementId();
 	}
 
+	//TODO:SACAR
 	public String getPreyUrl() {
-		String subdomain = FileConfigReader.getInstance(this.ctx).getPreySubdomain();
-		return "https://".concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
+		//<String subdomain = FileConfigReader.getInstance(this.ctx).getPreySubdomain();
+		//return "https://".concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
+		String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain();
+		return "http://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
 	}
 	
+	//TODO:SACAR
 	public String getPreyUiUrl() {
 		String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain();
-		return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+		//return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+		return "http://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
 	}
 	
 	public String getPreySupportUrl() {
@@ -594,8 +613,59 @@ public class PreyConfig {
 		editor.commit();
 	}
 
- 
-
+	public void setLastExecutionTime(long lastExecutionTime) {
+		this.lastExecutionTime = lastExecutionTime;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putLong(PreyConfig.LAST_EXECUTION_TIME, lastExecutionTime);
+		editor.commit();
+	}
 	
+	public long getLastExecutionTime() {
+		return lastExecutionTime;
+	}
 
+	public String getNotificationId() {
+		return notificationId;
+	}
+
+	public void setNotificationId(String notificationId) {
+		this.notificationId = notificationId;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(PreyConfig.NOTIFICATION_ID, notificationId);
+		editor.commit();
+	}
+
+	public String getRegistrationId() {
+		return registrationId;
+	}
+
+	public void setRegistrationId(String registrationId) {
+		this.registrationId = registrationId;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(PreyConfig.REGISTRATION_ID, registrationId);
+		editor.commit();
+	}
+
+	public boolean isRun() {
+		return run;
+	}
+
+	public void setRun(boolean run) {
+		this.run = run;
+	}
+
+	public String getLastEvent() {
+		return lastEvent;
+	}
+
+	public void setLastEvent(String lastEvent) {
+		this.lastEvent = lastEvent;
+		
+	}
+
+ 
+	
 }
