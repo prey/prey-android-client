@@ -21,7 +21,7 @@ public class PopUpAlertActivity extends PreyActivity {
 		super.onCreate(savedInstanceState);
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
-			this.message = bundle.getString("alert_message");
+			this.message = bundle.getString("description_message");
 		}
 
 		showDialog(SHOW_POPUP);
@@ -30,11 +30,16 @@ public class PopUpAlertActivity extends PreyActivity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 
+		
+		Bundle bundle = this.getIntent().getExtras();
+		if (bundle != null) {
+			this.message = bundle.getString("description_message");
+		}
 		Dialog popup = null;
 		switch (id) {
 
 		case SHOW_POPUP:
-			popup = new AlertDialog.Builder(PopUpAlertActivity.this).setIcon(R.drawable.logo).setTitle(R.string.popup_alert_title).setMessage(this.message)
+			popup = new AlertDialog.Builder(PopUpAlertActivity.this).setIcon(R.drawable.logo).setTitle(R.string.popup_alert_title).setMessage(this.message+"_us")
 					.setCancelable(true).create();
 
 			popup.setOnDismissListener(new DialogInterface.OnDismissListener() {

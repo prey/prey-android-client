@@ -2,6 +2,7 @@ package com.prey.actions.camera;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import android.annotation.TargetApi;
@@ -32,18 +33,24 @@ public class TakePictureCamera {
 
 		try {
 
+
 			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 			if (preyConfig.isGingerbreadOrAbove()) {
 				mCamera = getCameraGingerbreadOrAbove(ctx);
 			} else {
 				mCamera = getCamera(ctx);
 			}
-
-			if (preyConfig.isFroyoOrAbove()) {
-				Parameters params = mCamera.getParameters();
-				params = setParameter(ctx, params);
-				mCamera.setParameters(params);
+			/*
+			try {
+				if (preyConfig.isFroyoOrAbove()) {
+					Parameters params = mCamera.getParameters();
+					params = setParameter(ctx, params);
+					mCamera.setParameters(params);
+				}	
+			}catch(Exception e1){
+				PreyLogger.d("Error in setParameter:"+e1.getMessage());
 			}
+			*/
 			TakePictureShutterCallback shutter = new TakePictureShutterCallback();
 
 			mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
@@ -52,6 +59,8 @@ public class TakePictureCamera {
 			mgr.setStreamMute(streamType, true);
 
 			TakePictureCallback callback = new TakePictureCallback();
+ 
+
 			mCamera.setPreviewDisplay(null);
 			mCamera.startPreview();
 			mCamera.takePicture(shutter, null, callback);
@@ -86,7 +95,7 @@ public class TakePictureCamera {
 			entityFile.setFile(file);
 			entityFile.setMimeType("image/png");
 			entityFile.setName("picture.jpg");
-			entityFile.setType("picture");
+			entityFile.setType("report[picture]");
 			data = new HttpDataService(CameraAction.DATA_ID);
 			data.setList(true);
 			data.addEntityFile(entityFile);
@@ -100,41 +109,29 @@ public class TakePictureCamera {
 		return Camera.open();
 	}
 
-	public static int CAMERA_FACING_FRONT = 1;
+
 
 	@SuppressWarnings("rawtypes")
 	private Camera getCameraGingerbreadOrAbove(Context ctx) {
 		PreyLogger.d("getCameraGingerbreadOrAbove");
 		Camera mCamera = null;
 		try {
-
 			Class noparams[] = {};
 			Class clsCamera;
-
 			clsCamera = Class.forName("android.hardware.Camera");
-
 			Method methodGetNumberOfCameras = clsCamera.getMethod("getNumberOfCameras", noparams);
 			Integer numberOfCamerasInt = (Integer) methodGetNumberOfCameras.invoke(null, null);
 			// int numberOfCameras = Camera.getNumberOfCameras();
 
-			// android.hardware.Camera.CameraInfo cameraInfo = new
-			// android.hardware.Camera.CameraInfo();
-			for (int camIdx = 0; numberOfCamerasInt != null && camIdx < numberOfCamerasInt.intValue(); camIdx++) {
-				// Camera.getCameraInfo(camIdx, cameraInfo);
-				// if (cameraInfo.facing == CameraInfo.CAMERA_FACING_FRONT) {
-				if (camIdx == CAMERA_FACING_FRONT) {
-					try {
-						Class[] param = new Class[1];
-						param[0] = Integer.TYPE;
-						Method methodOpen = clsCamera.getMethod("open", param);
-						Integer[] input = { Integer.valueOf(camIdx) };
-						mCamera = (Camera) methodOpen.invoke(null, input);
-						PreyLogger.d("Camera.open(camIdx)");
-						// mCamera = Camera.open(camIdx);
-					} catch (RuntimeException e) {
-						PreyLogger.d("Camera failed to open facing front: " + e.getMessage());
-					}
+		//	android.hardware.Camera.CameraInfo cameraInfo = new
+		//	 android.hardware.Camera.CameraInfo();
+			if ( numberOfCamerasInt != null){
+				if (numberOfCamerasInt==1){
+					mCamera=getCamera(0,clsCamera);
 				}
+				else{
+					mCamera=getCamera(1,clsCamera);
+				} 
 			}
 		} catch (Exception e1) {
 			PreyLogger.d("Camera failed to open facing front: " + e1.getMessage());
@@ -147,6 +144,22 @@ public class TakePictureCamera {
 		return mCamera;
 	}
 
+	 
+	private Camera getCamera(int idx,Class clsCamera) throws NoSuchMethodException, IllegalAccessException, ClassNotFoundException, InvocationTargetException{
+		Camera mCamera=null;
+		try {
+			Class[] param = new Class[1];
+			param[0] = Integer.TYPE;
+			Method methodOpen = clsCamera.getMethod("open", param);
+			Integer[] input = { Integer.valueOf(idx) };
+			mCamera = (Camera) methodOpen.invoke(null, input);
+			PreyLogger.d("Camera.open(camIdx)");
+			// mCamera = Camera.open(camIdx);
+		} catch (RuntimeException e) {
+			PreyLogger.d("Camera failed to open: " + e.getMessage());
+		}
+		return mCamera;
+	}
 
 	@TargetApi(8)
 	private Parameters setParameter(Context ctx, Parameters params) {
