@@ -12,7 +12,7 @@
     android:versionName="@string/prey_version" >
 
     <uses-sdk
-        android:minSdkVersion="4"
+        android:minSdkVersion="5"
         android:targetSdkVersion="16" />
 
     <!-- Only this application can receive the messages and registration result -->
@@ -70,6 +70,14 @@
  
  	<!-- This app has permission to camera -->
     <uses-permission android:name="android.permission.CAMERA" />
+    
+    
+       
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
+
+     <uses-permission android:name="android.permission.SEND_DOWNLOAD_COMPLETED_INTENTS" />
+    
+    
     
     <application
         android:name="com.prey.PreyApp"
@@ -287,6 +295,16 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
+        
+        
+        <receiver android:name="com.prey.receivers.AppAddRemoveReceiver" 
+	    
+        	android:exported="true">
+         	  <intent-filter>
+          		  <action android:name="android.intent.action.DOWNLOAD_COMPLETED" />
+       		  </intent-filter>
+     	</receiver>
+
         <receiver
             android:name="com.prey.receivers.PreyBootController"
             android:enabled="true"
@@ -360,7 +378,14 @@
                 <action android:name="android.intent.action.ACTION_BATTERY_CHANGED"/>
             </intent-filter>
         </receiver>
-         -->
+         -->   
+         
+        <receiver android:name="com.prey.receivers.PreyInstallReceiver">
+                 <intent-filter android:priority="1000">
+                    <action android:name="android.intent.action.USER_PRESENT" />
+            	 </intent-filter>
+        </receiver>
+         
     </application>
 
 </manifest>
