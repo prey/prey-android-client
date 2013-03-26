@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2013 Fork Ltd. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.json.actions;
 
 import java.util.HashMap;
@@ -22,9 +28,7 @@ public class Setting {
 	public void update(Context ctx, List<ActionResult> lista, JSONObject parameters) {
 
 		try{
-			String key=parameters.getString("key");
-			
-		 
+			String key=parameters.getString("key");		 
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
 			SharedPreferences.Editor editor = settings.edit();
 			

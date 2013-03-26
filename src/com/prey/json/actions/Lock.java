@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2013 Fork Ltd. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.json.actions;
 
 import java.util.List;
@@ -16,15 +22,12 @@ public class Lock {
 
 	public void start(Context ctx, List<ActionResult> lista, JSONObject parameters) {
 		try {
-			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-			if (preyConfig.isFroyoOrAbove()) {
-
+ 
+			if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {
 				String unlock = parameters.getString("password");
-
-				preyConfig.setLock(true);
-				preyConfig.setUnlockPass(unlock);
-				FroyoSupport.getInstance(ctx).changePasswordAndLock(unlock, true);// getConfig().get("unlock_pass"),true);
-				
+				PreyConfig.getPreyConfig(ctx).setLock(true);
+				PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
+				FroyoSupport.getInstance(ctx).changePasswordAndLock(unlock, true);
 				PreyWebServices.getInstance().sendEventsPreyHttpReport(ctx, "lock_started", "true");
 			 
 			}
@@ -35,8 +38,8 @@ public class Lock {
 	}
 
 	public void stop(Context ctx, List<ActionResult> lista, JSONObject options) {
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		if (preyConfig.isFroyoOrAbove()) {
+		 
+		if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {
 			PreyLogger.d("-- Unlock instruction received");
 			FroyoSupport.getInstance(ctx).changePasswordAndLock("", true);
 		}

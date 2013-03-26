@@ -1,6 +1,11 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2013 Fork Ltd. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.json.actions;
 
- 
 
 import java.util.List;
 
@@ -33,6 +38,7 @@ public class Alert {
 			popup.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 			popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			popup.putExtras(bundle);
+			popup.putExtra("description_message", description);
 			ctx.startActivity(popup);
 
 			PreyWebServices.getInstance().sendEventsPreyHttpReport(ctx, "alert_started", "true");

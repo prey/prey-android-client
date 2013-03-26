@@ -1,9 +1,14 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2013 Fork Ltd. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.json.actions;
 
  
 import java.util.List;
 
- 
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -13,28 +18,17 @@ import android.media.MediaPlayer;
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.R;
-
- 
 import com.prey.actions.observer.ActionResult;
 import com.prey.net.PreyWebServices;
  
 
 public class Alarm {
 
- 
-	
-	
 	public void start(Context ctx,List<ActionResult> lista,JSONObject parameters){
 		 
-			/*
-			String in=parameters.getString("in");
-			String sound=parameters.getString("sound");
-			String loops=parameters.getString("loops");
-			PreyLogger.i("in:"+in+" sound:"+sound+" loops:"+loops);
-			*/
-			
-			PreyLogger.d("Ejecuting Mp3PlayerAction Action");
+			PreyLogger.d("Ejecuting Alarm Action");
 			MediaPlayer mp =null;
+			boolean start=false;
 			try {
 				PreyStatus.getInstance().setAlarmStart();
 				final AudioManager audio = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
@@ -46,8 +40,8 @@ public class Alarm {
     			mp.start();
 				Mp3OnCompletionListener mp3Listener=new Mp3OnCompletionListener();
 				mp.setOnCompletionListener(mp3Listener);
-				
 				PreyWebServices.getInstance().sendEventsPreyHttpReport(ctx, "alarm_started", "true");
+				start=true;				
 				int i=0; 
 				while(PreyStatus.getInstance().isAlarmStart()&& i<40 ){
 					Thread.sleep(1000);
@@ -61,10 +55,10 @@ public class Alarm {
 				if(mp!=null)
 						mp.release();
 			}
-			PreyWebServices.getInstance().sendEventsPreyHttpReport(ctx, "alarm_finished", "true");
+			if (start){
+				PreyWebServices.getInstance().sendEventsPreyHttpReport(ctx, "alarm_finished", "true");
+			}
 			PreyLogger.d("Ejecuting Mp3PlayerAction Action[Finish]");
-			
-		 
 	}
 	
 

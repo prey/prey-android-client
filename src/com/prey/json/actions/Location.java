@@ -1,5 +1,12 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2013 Fork Ltd. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.json.actions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,32 +25,41 @@ import com.prey.actions.location.PreyLocationManager;
 
 import com.prey.actions.observer.ActionResult;
 import com.prey.exceptions.PreyException;
+import com.prey.json.JsonAction;
 import com.prey.services.LocationService;
 
-public class Location {
+public class Location extends JsonAction{
 
  
 	public static final String DATA_ID = "geo";
 	
-	public void get(Context ctx, List<ActionResult> lista, JSONObject parameters) {
+	public void report(Context ctx, List<ActionResult> lista, JSONObject parameters) {
 		PreyLogger.i(this.getClass().getName());
-		try {
+		HttpDataService data =run(ctx, lista, parameters);
+		if (data!=null){
+			ActionResult result = new ActionResult();
+			result.setDataToSend(data);
+		
+			lista.add(result);
+		}
+		PreyLogger.d("Ejecuting LocationNotifierAction Action. DONE!");
+		
+	}
+	
+	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+		PreyLogger.d("Ejecuting Location Data.");
+		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+		return listResult;
+	}
 
+	
+	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters){
+		HttpDataService data = new HttpDataService("location");
+		try {
 			
-			
-			
-			
-			 
-			
-		 
-			
-			
-			
-			
-			HttpDataService data = new HttpDataService("location");
 			data.setList(true);
 			
-			ctx.startService(new Intent(ctx, LocationService.class));
+			
 			ctx.startService(new Intent(ctx, LocationService.class));
 			boolean validLocation = false;
 			PreyLocation lastLocation;
@@ -64,30 +80,20 @@ public class Location {
 						throw new PreyException("Thread was intrrupted. Finishing Location NotifierAction", e);
 					}
 					if (i>2){
-						return;
+						return null;
 					}
 					i++;
 				}
 			}
 
-			data.getDataList().putAll(parametersMap);
+			data.getDataList().putAll(parametersMap);			
 			
 			
-			
-			
-			ActionResult result = new ActionResult();
-			result.setDataToSend(data);
-			
-		 
-			
-			
-			lista.add(result);
- 
-			PreyLogger.d("Ejecuting LocationNotifierAction Action. DONE!");
 
 		} catch (Exception e) {
 			PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
 		}
+		return data;
 	}
 
 }
