@@ -23,9 +23,9 @@ import com.prey.json.JsonAction;
 public class FirmwareInfo extends JsonAction{
 
  
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+	public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting FirmwareInfo Data.");
-		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+		List<HttpDataService> listResult=super.get(ctx, list, parameters);
 		return listResult;
 	}
 	
@@ -36,6 +36,7 @@ public class FirmwareInfo extends JsonAction{
 		parametersMap.put("uuid",phone.getHardware().getUuid());
 		parametersMap.put("serial_number",phone.getHardware().getSerialNumber());
 		data.putData(parametersMap);
+		data.setList(true);
 		return data;
 	}
 

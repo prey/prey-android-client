@@ -23,9 +23,9 @@ import com.prey.json.JsonAction;
 public class Imei extends JsonAction{
 
  
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+	public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting Imei Data.");
-		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+		List<HttpDataService> listResult=super.get(ctx, list, parameters);
 		return listResult;
 	}
 	
@@ -34,9 +34,9 @@ public class Imei extends JsonAction{
 		TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
 		String imei = mTelephonyMgr.getDeviceId();
  		HttpDataService data = new HttpDataService("imei");
-		HashMap<String, String> parametersMap = new HashMap<String, String>();
-		parametersMap.put("imei",imei);
-		data.getDataList().putAll(parametersMap);	
+		 
+		 
+		data.setSingleData(imei);
 		return data;
 	}
 

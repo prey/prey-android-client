@@ -64,7 +64,7 @@ public class Setting {
 					parametersMap.put(key, value);
 				}
 			}
-			data.getDataList().putAll(parametersMap);
+			data.addDataListAll(parametersMap);
 			ActionResult result = new ActionResult();
 			result.setDataToSend(data);
 			

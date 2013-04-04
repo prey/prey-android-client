@@ -10,7 +10,7 @@ package com.prey.json.actions;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import org.json.JSONObject;
@@ -31,14 +31,15 @@ public class Screenshot extends JsonAction{
 
 	public static final String DATA_ID = "screenshot";
 
-	public void report(Context ctx, List<ActionResult> list, JSONObject parameters) {
-		 super.report(ctx, list, parameters);
+	public List<HttpDataService> report(Context ctx, List<ActionResult> list, JSONObject parameters) {
+		List<HttpDataService> listResult=super.report(ctx, list, parameters);
 		 PreyLogger.d("Ejecuting Screenshot reports. DONE!");
+		 return listResult;
 	}
 	
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+	public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting Screenshot Data.");
-		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+		List<HttpDataService> listResult=super.get(ctx, list, parameters);
 		return listResult;
 	}
 	

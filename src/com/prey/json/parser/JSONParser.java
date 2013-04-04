@@ -1,31 +1,22 @@
 package com.prey.json.parser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URI;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 
 import com.prey.PreyLogger;
+import com.prey.net.PreyRestHttpClient;
 
 public class JSONParser {
-	InputStream is;
+
 	JSONObject jObj;
-	String json;
+
 	boolean error;
 
 	private final static String COMMAND = "\"command\"";
@@ -36,57 +27,22 @@ public class JSONParser {
 	}
 
 	public List<JSONObject> getJSONFromUrl(Context ctx, String url) {
-		is = null;
-		error = false;
-		PreyLogger.d("url:" + url);
-		// Making HTTP request
-		try {
-
-			// defaultHttpClient
-			HttpClient client = new DefaultHttpClient();
-			HttpGet request = new HttpGet();
-			request.setURI(new URI(url));
-			HttpResponse httpResponse = client.execute(request);
-			HttpEntity httpEntity = httpResponse.getEntity();
-			is = httpEntity.getContent();
-		} catch (Exception e) {
-			PreyLogger.e("Error, causa:" + e.getMessage(), e);
-			error = true;
-		}
-
-		if (!error) {
-			InputStreamReader input = null;
-			BufferedReader reader = null;
-			StringBuilder sb = null;
-			try {
-				input = new InputStreamReader(is, "iso-8859-1");
-				reader = new BufferedReader(input, 8);
-				sb = new StringBuilder();
-				String line = null;
-				while ((line = reader.readLine()) != null) {
-					sb.append(line + "\n");
-				}
-
+		PreyLogger.d("getJSONFromUrl:" + url);
+		PreyRestHttpClient httpClient=PreyRestHttpClient.getInstance(ctx);
+		StringBuilder sb=null;
+		String json=null;
+		try{
+			sb=httpClient.getStringUrl(url);
+			if (sb!=null)
 				json = sb.toString().trim();
-
-			} catch (Exception e) {
-				PreyLogger.e("Buffer Error, Error converting result " + e.toString(), e);
-				error = true;
-			} finally {
-				try {
-					is.close();
-				} catch (IOException e) {
-				}
-				try {
-					reader.close();
-				} catch (IOException e) {
-				}
-				try {
-					input.close();
-				} catch (IOException e) {
-				}
-			}
+		}catch(Exception e){
+			PreyLogger.e("Error, causa:" + e.getMessage(), e);
+			return null;
 		}
+	 
+	//	json = "[{\"command\":\"get\",\"target\":\"picture\",\"options\":{}}]";
+		
+		//json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\"]}}]";
 
 		// json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"screenshot\",\"access_points_list\"]}}]";
 

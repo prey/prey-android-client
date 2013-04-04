@@ -6,8 +6,6 @@
  ******************************************************************************/
 package com.prey.json.actions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -22,9 +20,9 @@ import com.prey.json.JsonAction;
 public class Uptime extends JsonAction{
 
  
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+	public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting Uptime Data.");
-		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+		List<HttpDataService> listResult=super.get(ctx, list, parameters);
 		return listResult;
 	}
 	
@@ -32,9 +30,8 @@ public class Uptime extends JsonAction{
 	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters){
 		long uptime=SystemClock.uptimeMillis();
  		HttpDataService data = new HttpDataService("uptime");
-		HashMap<String, String> parametersMap = new HashMap<String, String>();
-		parametersMap.put("uptime",Long.toString(uptime));
-		data.getDataList().putAll(parametersMap);	
+		String uptimeData=Long.toString(uptime);
+		data.setSingleData(uptimeData);
 		return data;
 	}
 

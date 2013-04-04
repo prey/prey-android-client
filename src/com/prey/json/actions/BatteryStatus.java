@@ -22,9 +22,9 @@ import com.prey.json.JsonAction;
 public class BatteryStatus extends JsonAction{
 
  
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+	public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting BatteryStatus Data.");
-		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+		List<HttpDataService> listResult=super.get(ctx, list, parameters);
 		return listResult;
 	}
 	

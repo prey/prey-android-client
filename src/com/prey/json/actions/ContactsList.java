@@ -24,9 +24,9 @@ import com.prey.json.JsonAction;
 
 public class ContactsList extends JsonAction {
 
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+	public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting ContactsList Data.");
-		ArrayList<HttpDataService> listResult = super.get(ctx, list, parameters);
+		List<HttpDataService> listResult = super.get(ctx, list, parameters);
 		return listResult;
 	}
 
@@ -65,7 +65,7 @@ public class ContactsList extends JsonAction {
 			cursor.close();
 		}
 		data.setList(true);
-		data.getDataList().putAll(parametersMap);
+		data.addDataListAll(parametersMap);
 		return data;
 	}
 

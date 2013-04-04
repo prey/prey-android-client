@@ -22,14 +22,15 @@ import com.prey.json.JsonAction;
 
 public class Picture extends JsonAction {
 
-	public void report(Context ctx, List<ActionResult> list, JSONObject parameters) {
-		 super.report(ctx, list, parameters);
+	public List<HttpDataService> report(Context ctx, List<ActionResult> list, JSONObject parameters) {
+		List<HttpDataService> listResult=super.report(ctx, list, parameters);
 		 PreyLogger.d("Ejecuting Picture reports. DONE!");
+		 return listResult;
 	}
 	
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+	public  List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting Picture Data.");
-		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+		 List<HttpDataService> listResult=super.get(ctx, list, parameters);
 		return listResult;
 	}
 	

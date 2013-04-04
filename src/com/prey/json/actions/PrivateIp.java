@@ -6,7 +6,7 @@
  ******************************************************************************/
 package com.prey.json.actions;
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,14 +23,14 @@ import com.prey.json.JsonAction;
 public class PrivateIp  extends JsonAction{
 
  
-	public void report(Context ctx, List<ActionResult> list, JSONObject parameters) {
-		 super.report(ctx, list, parameters);
-		 PreyLogger.d("Ejecuting PrivateIp reports. DONE!");
+	public List<HttpDataService> report(Context ctx, List<ActionResult> list, JSONObject parameters) {
+		List<HttpDataService> listResult=super.report(ctx, list, parameters);
+		return listResult;
 	}
 	
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+	public  List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting PrivateIp Data.");
-		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+		 List<HttpDataService> listResult=super.get(ctx, list, parameters);
 		return listResult;
 	}
 	
@@ -41,10 +41,11 @@ public class PrivateIp  extends JsonAction{
 		HashMap<String, String> parametersMap = new HashMap<String, String>();
 		
 		String privateIp=phone.getWifi().getIpAddress();
-		parametersMap.put("private_ip",privateIp);
+		parametersMap.put(privateIp,privateIp);
 		PreyLogger.d("privateIp:"+privateIp);;
 		
-		data.getDataList().putAll(parametersMap);	
+		data.setSingleData(privateIp);
+		 
 		return data;
 	}
  

@@ -24,9 +24,9 @@ import com.prey.json.JsonAction;
 public class RemainingStorage extends JsonAction{
 
  
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+	public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting RemainingStorage Data.");
-		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+		List<HttpDataService> listResult=super.get(ctx, list, parameters);
 		return listResult;
 	}
 	
@@ -38,7 +38,8 @@ public class RemainingStorage extends JsonAction{
 		parametersMap.put("total",Long.toString(phone.getTotalMemory()));
 		parametersMap.put("used",Long.toString(phone.getBusyMemory()));
 		parametersMap.put("free",Long.toString(phone.getFreeMemory()));
-		data.getDataList().putAll(parametersMap);	
+		data.addDataListAll(parametersMap);	
+		data.setList(true);
 		return data;
 	}
  

@@ -23,22 +23,14 @@ import com.prey.json.JsonAction;
 
 public class AccessPointsList extends JsonAction{
 
-	public void report(Context ctx, List<ActionResult> list, JSONObject parameters) {
-		PreyLogger.i(this.getClass().getName());
-		try {
-			HttpDataService dataWifi = run(ctx, list, parameters);
-			ActionResult resultWifi = new ActionResult();
-			resultWifi.setDataToSend(dataWifi);
-			list.add(resultWifi);
-			PreyLogger.d("Ejecuting Access_points_list Action. DONE!");
-		} catch (Exception e) {
-			PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
-		}
+	public List<HttpDataService> report(Context ctx, List<ActionResult> list, JSONObject parameters) {
+		List<HttpDataService> listResult=super.report(ctx, list, parameters);
+		return listResult;
 	}
 	
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+	public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting AccessPointsList Data.");
-		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+		List<HttpDataService> listResult=super.get(ctx, list, parameters);
 		return listResult;
 	}
 	

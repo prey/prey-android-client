@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.json.actions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,11 +20,11 @@ import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
  
 import com.prey.actions.location.PreyLocation;
-import com.prey.actions.location.PreyLocationManager;
 
 import com.prey.actions.observer.ActionResult;
 import com.prey.exceptions.PreyException;
 import com.prey.json.JsonAction;
+import com.prey.managers.PreyLocationManager;
 import com.prey.services.LocationService;
 
 public class Location extends JsonAction{
@@ -33,22 +32,15 @@ public class Location extends JsonAction{
  
 	public static final String DATA_ID = "geo";
 	
-	public void report(Context ctx, List<ActionResult> lista, JSONObject parameters) {
-		PreyLogger.i(this.getClass().getName());
-		HttpDataService data =run(ctx, lista, parameters);
-		if (data!=null){
-			ActionResult result = new ActionResult();
-			result.setDataToSend(data);
-		
-			lista.add(result);
-		}
-		PreyLogger.d("Ejecuting LocationNotifierAction Action. DONE!");
-		
+	public List<HttpDataService> report(Context ctx, List<ActionResult> list, JSONObject parameters) {
+		List<HttpDataService> listResult=super.report(ctx, list, parameters);
+		 PreyLogger.d("Ejecuting Location reports. DONE!");
+		 return listResult;
 	}
 	
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+	public  List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting Location Data.");
-		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+		 List<HttpDataService> listResult=super.get(ctx, list, parameters);
 		return listResult;
 	}
 
@@ -86,7 +78,7 @@ public class Location extends JsonAction{
 				}
 			}
 
-			data.getDataList().putAll(parametersMap);			
+			data.addDataListAll(parametersMap);			
 			
 			
 

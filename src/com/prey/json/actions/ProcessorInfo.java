@@ -23,9 +23,9 @@ import com.prey.json.JsonAction;
 public class ProcessorInfo extends JsonAction{
 
  
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+	public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting ProcessorInfo Data.");
-		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+		List<HttpDataService> listResult=super.get(ctx, list, parameters);
 		return listResult;
 	}
 	
@@ -37,7 +37,8 @@ public class ProcessorInfo extends JsonAction{
 		parametersMap.put("model",phone.getHardware().getCpuModel());
 		parametersMap.put("speed",phone.getHardware().getCpuSpeed());
 		parametersMap.put("cores",phone.getHardware().getCpuCores());
-		data.getDataList().putAll(parametersMap);	
+		data.addDataListAll(parametersMap);	
+		data.setList(true);
 		return data;
 	}
  

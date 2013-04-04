@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.json.actions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,32 +19,28 @@ import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
 
-public class PublicIp extends JsonAction{
+public class PublicIp extends JsonAction {
 
-	
-
-	public void report(Context ctx, List<ActionResult> list, JSONObject parameters) {
-		 super.report(ctx, list, parameters);
-		 PreyLogger.d("Ejecuting PublicIp reports. DONE!");
-	}
-	
- 
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
-		PreyLogger.d("Ejecuting PublicIp Data.");
-		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+	public List<HttpDataService> report(Context ctx, List<ActionResult> list, JSONObject parameters) {
+		List<HttpDataService> listResult = super.report(ctx, list, parameters);
 		return listResult;
 	}
-	
-	
-	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters){
-		PreyPhone phone=new PreyPhone(ctx);
+
+	public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+		PreyLogger.d("Ejecuting PublicIp Data.");
+		List<HttpDataService> listResult = super.get(ctx, list, parameters);
+		return listResult;
+	}
+
+	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters) {
+		PreyPhone phone = new PreyPhone(ctx);
 		HttpDataService data = new HttpDataService("public_ip");
 		HashMap<String, String> parametersMap = new HashMap<String, String>();
-		
-		String publicIp=phone.getIPAddress();
-		parametersMap.put("public_ip",publicIp);
-		PreyLogger.d("public_ip:"+publicIp);;
-		data.putData(parametersMap);	
+		String publicIp = phone.getIPAddress();
+		parametersMap.put(publicIp, publicIp);
+		data.setSingleData(publicIp);
+		PreyLogger.d("public_ip:" + publicIp);
+		;
 		return data;
 	}
 }

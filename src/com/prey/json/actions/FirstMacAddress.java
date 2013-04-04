@@ -22,18 +22,16 @@ import com.prey.json.JsonAction;
 
 public class FirstMacAddress  extends JsonAction{
 
-	public ArrayList<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+	public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting FirstMacAddress Data.");
-		ArrayList<HttpDataService> listResult=super.get(ctx, list, parameters);
+		List<HttpDataService> listResult=super.get(ctx, list, parameters);
 		return listResult;
 	}
 	
 	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters){
 		PreyPhone phone=new PreyPhone(ctx);
 		HttpDataService data = new HttpDataService("first_mac_address");
-		HashMap<String, String> parametersMap = new HashMap<String, String>();
-		parametersMap.put("first_mac_address",phone.getWifi().getMacAddress());
-		data.getDataList().putAll(parametersMap);	
+		data.setSingleData(phone.getWifi().getMacAddress());
 		return data;
 	}
 }
