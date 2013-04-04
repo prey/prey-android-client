@@ -19,6 +19,7 @@ import com.prey.actions.PreyAction;
 import com.prey.actions.observer.ActionJob;
 import com.prey.actions.observer.ActionResult;
 import com.prey.exceptions.PreyException;
+import com.prey.managers.PreyLocationManager;
 import com.prey.services.LocationService;
 
 public class LocationNotifierAction extends PreyAction {

@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.prey.PreyConfig;
 import com.prey.PreyStatus;
-import com.prey.actions.location.PreyLocationManager;
+import com.prey.managers.PreyLocationManager;
 import com.prey.services.PreyRunnerService;
 import com.prey.R;
 public class StatusActivity extends Activity {

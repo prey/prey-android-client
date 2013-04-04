@@ -98,7 +98,7 @@ public class FileConfigReader {
 	}
  
 	public String getApiV2(){
-		return properties.getProperty("api-v1");
+		return properties.getProperty("api-v2");
 	}
 	
 }

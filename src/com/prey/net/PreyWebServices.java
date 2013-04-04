@@ -603,7 +603,7 @@ public class PreyWebServices {
 		if (deviceKey == null || deviceKey == "")
 			throw new PreyException("Device key not found on the configuration");
 		String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
-		String url= this.getDeviceWebControlPanelUrl(ctx).concat(apiv2).concat("devices/").concat(deviceKey);
+		String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey);
 		return url;
 	}
 	 

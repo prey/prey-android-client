@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.prey.PreyLogger;
 import com.prey.actions.location.PreyLocation;
-import com.prey.actions.location.PreyLocationManager;
+import com.prey.managers.PreyLocationManager;
 import com.prey.services.LocationService;
 
 import android.content.BroadcastReceiver;

@@ -20,7 +20,7 @@ public class PreyInstallReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
 		this.ctx = ctx;
-
+		/*
 		try {
 
 			// esta registrado
@@ -50,6 +50,7 @@ public class PreyInstallReceiver extends BroadcastReceiver {
 		} catch (Exception e) {
 
 		}
+		*/
 	}
 
 	protected PreyConfig getPreyConfig() {

@@ -39,7 +39,9 @@ public class BatteryInformation {
 			parametersMap.put("state", battery.isCharging()?"charging":"discharging");
 			parametersMap.put("remaining", Double.toString(battery.getLevel()));
 			data.getDataList().putAll(parametersMap);	
+			data.setList(true);
 		}
+		
 		return data;
 	}
 

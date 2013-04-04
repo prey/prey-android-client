@@ -9,10 +9,9 @@ package com.prey;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.telephony.TelephonyManager;
 
+import com.prey.managers.PreyConnectivityManager;
+import com.prey.managers.PreyTelephonyManager;
 import com.prey.services.PreyRunnerService;
 
 public class PreyController {
@@ -25,15 +24,15 @@ public class PreyController {
 			nm.cancelAll();
 			// Since is missing, and we need to use http connections, we'll
 			// wait phone to be ready to connect to control panel
-			boolean isPhoneConnected = false;
-			final TelephonyManager tm = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-			final ConnectivityManager connectivityManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-			NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
-	
+			boolean isPhoneConnected = false;	
+			
+			PreyTelephonyManager preyTelephony = PreyTelephonyManager.getInstance(ctx);
+			PreyConnectivityManager preyConnectivity = PreyConnectivityManager.getInstance(ctx);
+			
 			try {
-				isPhoneConnected = (tm.getDataState() == TelephonyManager.DATA_CONNECTED) || activeNetInfo.isConnected();
+				isPhoneConnected = preyTelephony.isDataConnectivityEnabled() || preyConnectivity.isConnected();
 				while (!isPhoneConnected) {
-					isPhoneConnected = (tm.getDataState() == TelephonyManager.DATA_CONNECTED) || activeNetInfo.isConnected();
+					isPhoneConnected = preyTelephony.isDataConnectivityEnabled() || preyConnectivity.isConnected();
 					PreyLogger.d("Phone doesn't have internet connection now. Waiting 10 secs for it");
 					Thread.sleep(10000);
 				}

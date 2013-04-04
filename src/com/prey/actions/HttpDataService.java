@@ -27,6 +27,10 @@ public class HttpDataService {
 	private List<EntityFile> entityFiles;
  
 
+	public void addDataListAll(HashMap<String, String> map) {
+		dataList.putAll(map);
+	}
+	
 	public HttpDataService(String key) {
 		this.key = key;
 		dataList = new HashMap<String, String>();
@@ -49,7 +53,7 @@ public class HttpDataService {
 			}
 			key = null;
 		} else
-			parameters.put(key, singleData);
+			parameters.put("report["+key+"]", singleData);
 
 		return parameters;
 	}

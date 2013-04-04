@@ -22,8 +22,8 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.R;
-import com.prey.actions.location.PreyLocationManager;
 import com.prey.activities.PreyConfigurationActivity;
+import com.prey.managers.PreyLocationManager;
 import com.prey.services.PreyRunnerService;
 
 public class PreyConfigurationStatusActivity extends PreferenceActivity {

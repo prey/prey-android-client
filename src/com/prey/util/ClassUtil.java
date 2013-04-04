@@ -32,8 +32,10 @@ public class ClassUtil {
 			Method method = actionClass.getMethod(methodAction, new Class[] {Context.class, List.class, JSONObject.class });
 			Object[] params = new Object[] { ctx,lista,parametersAction };
 			List<HttpDataService> listDataTmp=(ArrayList<HttpDataService>)method.invoke(actionObject, params);
-			if (listDataTmp!=null)
-				listData.addAll(listDataTmp);
+			for (int i=0;listDataTmp!=null&&i<listDataTmp.size();i++){
+				HttpDataService httpDataService=listDataTmp.get(i);
+				listData.add(httpDataService);
+			}
 		} catch (Exception e) {
 			PreyLogger.e("Error, causa:" + e.getMessage(), e);
 		}

@@ -7,13 +7,17 @@
 package com.prey.net;
 
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
@@ -26,7 +30,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.utils.URLEncodedUtils; 
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -43,8 +47,9 @@ import android.content.Context;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-
 import com.prey.net.http.EntityFile;
+import com.prey.net.http.PreyHttpClient;
+import com.prey.net.http.PreyHttpClientImpl;
 import com.prey.net.http.SimpleMultipartEntity;
 /**
  * Implements a Rest API using android http client.
@@ -55,13 +60,13 @@ import com.prey.net.http.SimpleMultipartEntity;
 public class PreyRestHttpClient {
 
 	private static PreyRestHttpClient _instance = null;
-	private DefaultHttpClient httpclient = null;
+	private PreyHttpClient httpclient = null;
 	private Context ctx = null;
 
 	private PreyRestHttpClient(Context ctx) {
 		this.ctx = ctx;
-		//httpclient = new DefaultHttpClient();
-		httpclient = (DefaultHttpClient) HttpUtils.getNewHttpClient();
+		DefaultHttpClient defaultHttpClient=(DefaultHttpClient) HttpUtils.getNewHttpClient();
+		httpclient = new PreyHttpClientImpl (defaultHttpClient);
 
 		HttpParams params = new BasicHttpParams();
 		
@@ -81,22 +86,30 @@ public class PreyRestHttpClient {
 
 		httpclient.setParams(params);
 	}
+	
+	public void setHttpclient(PreyHttpClient httpclient){
+		this.httpclient=httpclient;
+	}
 
 	public static PreyRestHttpClient getInstance(Context ctx) {
-
-		_instance = new PreyRestHttpClient(ctx);
+		if(_instance==null)
+			_instance = new PreyRestHttpClient(ctx);
 		return _instance;
 
 	}
 
 	private static List<NameValuePair> getHttpParamsFromMap(Map<String, String> params) {
+		
+ 
+ 
+		
+ 
 
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 		for (Iterator<Map.Entry<String, String>> it = params.entrySet().iterator(); it.hasNext();) {
 			Map.Entry<String, String> entry = it.next();
 			String key = entry.getKey();
 			String value = entry.getValue();
-			PreyLogger.i("___  "+key+"   "+value);
 			// httpParams.setParameter(key, value);
 			parameters.add(new BasicNameValuePair(key, value));
 		}
@@ -259,9 +272,7 @@ public class PreyRestHttpClient {
 	    DefaultHttpClient httpclient = new DefaultHttpClient();
 
 	    //url with the post data
-	    HttpPost httpost = new HttpPost(url);
-
-	   
+	    HttpPost httpost = new HttpPost(url);	   
 
 	    //passes the results to a string builder/entity
 	    StringEntity se = new StringEntity(jsonObject.toString());
@@ -352,6 +363,44 @@ public class PreyRestHttpClient {
 		return "Prey/".concat(PreyConfig.getPreyConfig(ctx).getPreyVersion()).concat(" (Android) - v") + PreyConfig.getPreyConfig(ctx).getPreyMinorVersion();
 	}
 
+	public StringBuilder getStringUrl(String url) throws Exception {
+
+		HttpGet method = new HttpGet();
+		method.setURI(new URI(url));
+		HttpResponse httpResponse = httpclient.execute(method);
+		HttpEntity httpEntity = httpResponse.getEntity();
+		InputStream is = httpEntity.getContent();
+		InputStreamReader input = null;
+		BufferedReader reader = null;
+		StringBuilder sb = null;
+		try {
+			input = new InputStreamReader(is, "iso-8859-1");
+			reader = new BufferedReader(input, 8);
+			sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+
+			sb.toString().trim();
+		} catch (Exception e) {
+			PreyLogger.e("Buffer Error, Error converting result " + e.toString(), e);
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+			}
+			try {
+				reader.close();
+			} catch (IOException e) {
+			}
+			try {
+				input.close();
+			} catch (IOException e) {
+			}
+		}
+		return sb;
+	}
 }
 
 final class NotRedirectHandler implements RedirectHandler {

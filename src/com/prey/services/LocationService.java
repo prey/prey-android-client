@@ -20,7 +20,7 @@ import android.os.IBinder;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.location.PreyLocation;
-import com.prey.actions.location.PreyLocationManager;
+import com.prey.managers.PreyLocationManager;
 import com.prey.net.NetworkUtils;
 
 /**

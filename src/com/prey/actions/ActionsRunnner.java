@@ -21,6 +21,8 @@ import com.prey.PreyLogger;
 import com.prey.actions.observer.ActionsController;
 import com.prey.actions.parser.ResponseParser;
 import com.prey.exceptions.PreyException;
+import com.prey.managers.PreyTelephonyManager;
+import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyWebServices;
 import com.prey.services.LocationService;
 import com.prey.services.PreyRunnerService;
@@ -54,7 +56,7 @@ public class ActionsRunnner {
 		public void run() {
 			
 			preyConfig = PreyConfig.getPreyConfig(ctx);
-			if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey(true)){
+		 	if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey(true)){
 				
 				/*
 				PreyExecutionWaitNotify waitNotify = new PreyExecutionWaitNotify();
@@ -99,19 +101,30 @@ public class ActionsRunnner {
 					
 				}*/
 				
+				boolean connection=false;
+				if (PreyWifiManager.getInstance(ctx).isWifiEnabled()){
+					//PreyWifiManager.getInstance(ctx).setWifiEnabled(true);
+					connection=true;
+				}else{
+					if (PreyTelephonyManager.getInstance(ctx).isDataConnectivityEnabled()){
+						connection=true;
+					}
+				}
 				try {
-					getInstructionsJsonAndRun(ctx);
+					if (connection){
+						getInstructionsJsonAndRun(ctx);
+					}
 				} catch (PreyException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
-			
+				
 				ctx.stopService(new Intent(ctx, LocationService.class));
 				ctx.stopService(new Intent(ctx, PreyRunnerService.class));
 				//PreyConfig.getPreyConfig(ctx).setShowLockScreen(false);
 				PreyLogger.d("Prey execution has finished!!");
-			}
+		 	}
 		}
 		
 		private boolean getInstructionsJsonAndRun(Context ctx) throws PreyException {
