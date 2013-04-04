@@ -1,4 +1,4 @@
-package com.prey.actions.location;
+package com.prey.managers;
 
 import java.util.List;
 
@@ -9,11 +9,9 @@ import android.net.wifi.WifiManager;
 public class PreyWifiManager {
 
 	private WifiManager wifi=null;
-	private Context ctx;
 	private static PreyWifiManager _instance = null;
 	
 	private PreyWifiManager(Context ctx) {
-		this.ctx = ctx;
 		wifi = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
 	}
 	

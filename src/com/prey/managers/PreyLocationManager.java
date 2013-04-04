@@ -4,7 +4,9 @@
  * License: GPLv3
  * Full license at "/LICENSE"
  ******************************************************************************/
-package com.prey.actions.location;
+package com.prey.managers;
+
+import com.prey.actions.location.PreyLocation;
 
 import android.content.Context;
 import android.location.LocationManager;
@@ -13,11 +15,10 @@ public class PreyLocationManager {
 
 	private PreyLocation lastLocation;
 	private static PreyLocationManager _instance = null;
-	LocationManager androidLocationManager = null;
-	private Context ctx;
+	private LocationManager androidLocationManager = null;
+ 
 
 	private PreyLocationManager(Context ctx) {
-		this.ctx = ctx;
 		androidLocationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
 	}
 
