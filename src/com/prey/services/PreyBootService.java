@@ -7,20 +7,14 @@
 package com.prey.services;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.telephony.PhoneNumberUtils;
-import android.telephony.TelephonyManager;
 
-import com.prey.PreyConfig;
-import com.prey.PreyController;
 import com.prey.PreyLogger;
-import com.prey.backwardcompatibility.CupcakeSupport;
-import com.prey.exceptions.SMSNotSendException;
-import com.prey.sms.SMSSupport;
-import com.prey.R;
+
+import com.prey.sim.SIMCheckingThread;
+
 public class PreyBootService extends Service {
 
 	// This is the object that receives interactions from clients
@@ -39,7 +33,8 @@ public class PreyBootService extends Service {
 	@Override
 	public void onCreate() {
 		PreyLogger.d("Prey Boot Service Started!");
-		new Thread(new SIMCheckingThread()).start();
+		SIMCheckingThread simChecking= new SIMCheckingThread(getApplicationContext(),this);
+		new Thread(simChecking).start();
 	}
 
 
@@ -53,7 +48,7 @@ public class PreyBootService extends Service {
 	public IBinder onBind(Intent intent) {
 		return mBinder;
 	}
-	
+	/*
 	class SIMCheckingThread implements  Runnable {
 		
 		public void run() {
@@ -62,11 +57,10 @@ public class PreyBootService extends Service {
 			if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey(false)){
 				try {
 					boolean isSIMReady = false;
-					
-					final TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-					if (tm.getSimState() != TelephonyManager.SIM_STATE_ABSENT){
+					final PreyTelephonyManager telephony= PreyTelephonyManager.getInstance(PreyBootService.this); 
+					if (!telephony.isSimStateAbsent()){
 						while (!isSIMReady) {
-							isSIMReady = tm.getSimState() == TelephonyManager.SIM_STATE_READY;
+							isSIMReady = telephony.isSimStateReady();
 							if (isSIMReady) {
 								PreyLogger.d("SIM is ready to be checked now. Checking...");
 								if (preyConfig.isSimChanged()) {
@@ -105,6 +99,7 @@ public class PreyBootService extends Service {
 			}
 		}
 	}
+	 */
 	
 }
 
