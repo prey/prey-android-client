@@ -12,7 +12,7 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 
-public class JsonHttpResponse implements HttpResponseType{
+public class DataHttpResponse implements HttpResponseType{
 
  
 	
@@ -23,7 +23,7 @@ public class JsonHttpResponse implements HttpResponseType{
 		StatusLine statusLine=new BasicStatusLine(protocolVersion, statusCode, reasonPhrase);
 		HttpResponse response=new BasicHttpResponse(statusLine);
 		BasicHttpEntity httpEntity =new BasicHttpEntity();
-		String htmlTxt=PreyJsonAction.getInstance().getAction();// "[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"Oso!!\"} }]";
+		String htmlTxt="[]";
 		InputStream stream = new ByteArrayInputStream(htmlTxt.getBytes());
 		httpEntity.setContent(stream);
 		response.setEntity(httpEntity);

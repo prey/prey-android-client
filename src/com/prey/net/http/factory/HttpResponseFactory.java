@@ -1,7 +1,10 @@
 package com.prey.net.http.factory;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
+import java.util.Map;
+
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse; 
+ 
 
 public class HttpResponseFactory {
 
@@ -19,10 +22,10 @@ public class HttpResponseFactory {
 		return instance;
 	}
 	
-	public HttpResponse execute(HttpUriRequest request){
+	public HttpResponse execute(HttpRequest request,Map<String,String> map){
 		String url="";
 		try{
-			url=""+request.getURI().toURL();
+			url=""+request.getRequestLine().getUri();
 		}catch(Exception e){
 			
 		}
@@ -30,7 +33,18 @@ public class HttpResponseFactory {
 		if (url.indexOf(".json")>=0){
 			type= new  JsonHttpResponse();
 		}
-		return type.execute(request);
+		if (url.indexOf("/reports")>=0){
+			type= new  ReportHttpResponse();
+		}
+		if (url.indexOf("/data")>=0){
+			type= new  DataHttpResponse();
+		}
+		if (url.indexOf("/events")>=0){
+			type= new  EventHttpResponse();
+		}
+ 
+		
+		return type.execute(request,map);
 	}
 
 }

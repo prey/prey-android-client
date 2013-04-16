@@ -1,9 +1,11 @@
 package com.prey.net.http.factory;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
+import java.util.Map;
+
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse; 
 
 public interface HttpResponseType {
 
-	public HttpResponse execute(HttpUriRequest request);
+	public HttpResponse execute(HttpRequest request,Map<String,String> map);
 }
