@@ -10,6 +10,7 @@ import android.content.Context;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
+import com.prey.net.PreyWebServices;
  
 
 public abstract class JsonAction {
@@ -37,7 +38,7 @@ public abstract class JsonAction {
 		HttpDataService data = run(ctx, list, parameters);
 		ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
 		dataToBeSent.add(data);
-	//	PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
+		PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
 		return dataToBeSent;
 	}
 
