@@ -12,7 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -30,6 +30,7 @@ import android.telephony.TelephonyManager;
 import com.prey.actions.LockAction;
 import com.prey.actions.PreyAction;
 import com.prey.activities.WelcomeActivity;
+import com.prey.managers.PreyTelephonyManager;
 import com.prey.net.PreyWebServices;
 
 
@@ -79,6 +80,7 @@ public class PreyConfig {
 	public static final String PREFS_ACTIVATE_WIFI = "PREFS_ACTIVATE_WIFI";
 	public static final String PREFS_ACTIVATE_MOBILE_DATA = "PREFS_ACTIVATE_MOBILE_DATA";
 	public static final String IS_CAMOUFLAGE_SET = "PREFS_CAMOUFLAGE";
+	public static final String PREFS_ADMIN_DEVICE_REVOKED_CHECK= "PREFS_ADMIN_DEVICE_REVOKED_CHECK";
 	public static final String UNLOCK_PASS = "UNLOCK_PASS";
 	public static final String IS_LOCK_SET = "IS_LOCK_SET";
 	public static final String LAST_LAT = "LAST_LAT";
@@ -102,6 +104,11 @@ public class PreyConfig {
 	public static final String NOTIFICATION_ID="NOTIFICATION_ID";
 	public static final String REGISTRATION_ID="REGISTRATION_ID";
 	public static final String LAST_EVENT="LAST_EVENT";
+	
+	public static final String FLAG_SEND_INSTALL_REMOTE="FLAG_SEND_INSTALL_REMOTE";
+	 
+	public static final String PREY_DOMAIN="PREY_DOMAIN";
+
 	
 	/* ------------- */
 
@@ -135,11 +142,17 @@ public class PreyConfig {
 	private boolean runGeofencing;
 	private boolean isUninstallPin;
 	private String digitUninstallPin;
-	private long lastExecutionTime=Long.MIN_VALUE;
+	private long lastExecutionTime;
 	private String notificationId;
 	private String registrationId;
 	private boolean run;
 	private String lastEvent;
+	
+	
+	private boolean flagSendInstallRemote;
+ 
+	
+	private String preyDomain;
 	
 	private Context ctx;
 
@@ -175,6 +188,10 @@ public class PreyConfig {
 		this.digitUninstallPin=settings.getString(PreyConfig.DIGIT_UNINSTALL_PIN, "");
 		this.runGeofencing=settings.getBoolean(PreyConfig.PREFS_GEOFENCING_RUN, false);
 		
+		this.flagSendInstallRemote=settings.getBoolean(PreyConfig.FLAG_SEND_INSTALL_REMOTE, flagSendInstallRemote);
+		this.lastExecutionTime=settings.getLong(PreyConfig.LAST_EXECUTION_TIME,Long.MIN_VALUE);
+
+		this.preyDomain=settings.getString(PreyConfig.PREY_DOMAIN, FileConfigReader.getInstance(ctx).getPreyDomain());
 		
 	//	FroyoSupport.getInstance(ctx).changePasswordAndLock("osito", true);
 	}
@@ -222,8 +239,7 @@ public class PreyConfig {
 
 	public String getDeviceID() {
 		return deviceID; 
-		//return "u3zqay"; 
-		//return "abcdef";
+
 	}
 
 	public void setDeviceID(String deviceID) {
@@ -233,7 +249,6 @@ public class PreyConfig {
 
 	public String getApiKey() {
 		return apiKey;
-		//return "0lnpal2yga0h";
 	}
 
 	public void setApiKey(String apiKey) {
@@ -393,22 +408,34 @@ public class PreyConfig {
 	}
 
 	public void saveSimInformation() {
-		TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-		// String imsi = mTelephonyMgr.getSubscriberId();
-		String simSerialNumber = mTelephonyMgr.getSimSerialNumber();
-		this.saveString(PreyConfig.PREFS_SIM_SERIAL_NUMBER, simSerialNumber);
-		PreyLogger.d("SIM Serial number stored: " + simSerialNumber);
+		String simSerialNumber =PreyTelephonyManager.getInstance(ctx).getSimSerialNumber();
+		//TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
+		//String imsi = mTelephonyMgr.getSubscriberId();
+		//String simSerialNumber = mTelephonyMgr.getSimSerialNumber();
+		setStoredSerialNumber(simSerialNumber);
+		//this.saveString(PreyConfig.PREFS_SIM_SERIAL_NUMBER, simSerialNumber);
+		//PreyLogger.d("SIM Serial number stored: " + simSerialNumber);
 	}
-
+	public void setStoredSerialNumber(String storedSerialNumber) {
+		this.saveString(PreyConfig.PREFS_SIM_SERIAL_NUMBER, storedSerialNumber);
+		PreyLogger.d("SIM Serial number stored: " + storedSerialNumber);
+	}
+	
+	public String getStoredSerialNumber() {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		String storedSerialNumber = settings.getString(PreyConfig.PREFS_SIM_SERIAL_NUMBER, "");
+		return storedSerialNumber;
+	}
+	
+ 
+	
 	private boolean isThisTheRegisteredSim() {
-		TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-		// String imsi = mTelephonyMgr.getSubscriberId();
-		String simSerialNumber = mTelephonyMgr.getSimSerialNumber();
+		String simSerialNumber =PreyTelephonyManager.getInstance(ctx).getSimSerialNumber();
+ 
 		if (simSerialNumber == null)
 			return true; //Couldn't get the serial number, so can't check.
 		
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-		String storedSerialNumber = settings.getString(PreyConfig.PREFS_SIM_SERIAL_NUMBER, "");
+		String storedSerialNumber = getStoredSerialNumber();
 		PreyLogger.d("Checking SIM. Current SIM Serial Number: " + storedSerialNumber);
 		if (storedSerialNumber.equals(""))
 			return true; // true since SIM hasn't been registered.
@@ -535,7 +562,7 @@ public class PreyConfig {
 	}
 	
 	public String getPreyDomain() {
-		return FileConfigReader.getInstance(this.ctx).getPreyDomain();
+		return this.preyDomain;
 	}
 	
 	public String getc2dmAction(){
@@ -667,5 +694,25 @@ public class PreyConfig {
 	}
 
  
+	public boolean isFlagSendInstallRemote(){
+		return flagSendInstallRemote;
+	}
 	
+	public void setFlagSendInstallRemote(boolean flagSendInstallRemote){
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(PreyConfig.FLAG_SEND_INSTALL_REMOTE, flagSendInstallRemote);
+		editor.commit();
+	}
+	
+	public void setPreyDomain(String preyDomain) {
+		this.preyDomain=preyDomain;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(PreyConfig.PREY_DOMAIN, preyDomain);
+		editor.commit();
+	}
+	
+	
+	private int lastExecution;
 }
