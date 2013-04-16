@@ -6,26 +6,10 @@
  ******************************************************************************/
 package com.prey.actions;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONObject;
+ 
 
 
-import android.content.Context;
-import android.content.Intent;
-
-
-import com.prey.PreyConfig;
-import com.prey.PreyLogger;
-import com.prey.actions.observer.ActionsController;
-import com.prey.actions.parser.ResponseParser;
-import com.prey.exceptions.PreyException;
-import com.prey.managers.PreyTelephonyManager;
-import com.prey.managers.PreyWifiManager;
-import com.prey.net.PreyWebServices;
-import com.prey.services.LocationService;
-import com.prey.services.PreyRunnerService;
+import android.content.Context; 
 
 public class ActionsRunnner {
 
@@ -42,8 +26,8 @@ public class ActionsRunnner {
 		this.myActionsRunnerThread.start();
 
 	}
-
-	class ActionsRunner implements Runnable {
+/*
+	public class ActionsRunner implements Runnable {
 		private ReportActionResponse preyControlStatus;
 		private Context ctx;
 		private PreyConfig preyConfig = null;
@@ -54,6 +38,9 @@ public class ActionsRunnner {
 		}
 
 		public void run() {
+			execute();
+		}
+		public void execute() {
 			
 			preyConfig = PreyConfig.getPreyConfig(ctx);
 		 	if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey(true)){
@@ -100,7 +87,25 @@ public class ActionsRunnner {
 					}
 					
 				}*/
+		 		/*
+		 		
+		 		boolean connection=false;
+		 		try {
+		 			while(!connection){
+		 				connection=PreyWifiManager.getInstance(ctx).isWifiEnabled()||PreyTelephonyManager.getInstance(ctx).isDataConnectivityEnabled();
+						if(!connection){
+							PreyLogger.d("Phone doesn't have internet connection now. Waiting 10 secs for it");
+							Thread.sleep(10000);
+						}
+		 			}
 				
+					getInstructionsJsonAndRun(ctx);
+					
+				} catch (Exception e) {
+					PreyLogger.e("Error, because:"+e.getMessage(),e );
+				}
+				
+				/*
 				boolean connection=false;
 				if (PreyWifiManager.getInstance(ctx).isWifiEnabled()){
 					//PreyWifiManager.getInstance(ctx).setWifiEnabled(true);
@@ -115,11 +120,10 @@ public class ActionsRunnner {
 						getInstructionsJsonAndRun(ctx);
 					}
 				} catch (PreyException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					PreyLogger.e("Error, because:"+e.getMessage(),e );
 				}
-				
-				
+				*/
+				/*
 				ctx.stopService(new Intent(ctx, LocationService.class));
 				ctx.stopService(new Intent(ctx, PreyRunnerService.class));
 				//PreyConfig.getPreyConfig(ctx).setShowLockScreen(false);
@@ -194,6 +198,6 @@ public class ActionsRunnner {
 		}
 		*/
 
-	}
-
+	//}
+ 
 }
