@@ -10,7 +10,7 @@
     <string name="updating_info_message">S\'està actualitzant la informació...</string>
     <string name="agreements_title">Us donem la benvinguda a\nPrey per a Android™!</string>
     <string name="agreements_message1">Assegureu-vos que heu llegit i entès les condicions d\'ús de Prey</string>
-    <string name="agreements_message2">&lt;u&gt;Llegiu les condicions&lt;/u&gt;</string>
+    <string name="agreements_message2">&amp;lt;u&amp;gt;Llegiu les condicions&amp;lt;/u&amp;gt;</string>
     <string name="set_old_user_loading">S\'està associant el dispositiu\nal vostre compte d\'usuari...</string>
     <string name="set_old_user_no_more_devices_title">Caram!</string>
     <string name="set_old_user_no_more_devices_text">Sembla que heu exhaurit el nombre màxim de dispositius permesos al vostre compte\n\nHeu d\'esborrar els que ja no feu servir, o crear un compte nou.</string>
@@ -152,7 +152,7 @@
     <string name="your_hero_text">La persona de contacte qui designeu (el vostre heroi), rebrà un SMS si Prey detecta que la la tarjeta SIM és reemplaçada.</string>
     <string name="hero_chosen">Heroi assignat!</string>
     <string name="notify_your_hero_now">Bona elecció! Voleu enviar un SMS a %s indicant aquesta acció? Verificareu si el servei funciona, a més d\'avisar al contacte...</string>
-    <string name="hero_notification_message">T\'he triat com a heroi del meu Android %s! Si cap persona reemplaça la meva SIM, tu rebràs un SMS! +info a preyproject.com/hero</string>
+    <string name="hero_notification_message">T\'he triat com a heroi del meu Android %s! Si cap persona canvia la meva SIM, tu rebras un SMS! +info a preyproject.com/hero</string>
     <string name="gps_network_not_enabled">Els serveis de localització estan deshabilitats.\nHeu d\'activar un com a mínim per poder ubicar el dispositiu.</string>
     <string name="preferences_advanced_screen_title">Configuració avançada</string>
     <string name="preferences_advanced_screen_summary">Opcions de configuració avançades.</string>
