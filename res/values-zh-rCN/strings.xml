@@ -1,102 +1,173 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="preyForAndroid_name">Prey</string>
-    <!-- commons -->
     <string name="yes">是</string>
-    <string name="no">否</string>
+    <string name="no">不</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="agree">同意</string>
     <string name="dontagree">不同意</string>
+    <string name="updating_info_message">更新信息，请等待……</string>
     <string name="agreements_title">欢迎来到\nPrey for Android™!</string>
-    <!--<string name="agreements_message1">By clicking below you agree to Prey Terms and Conditions</string>-->
     <string name="agreements_message1">请务必阅读并同意Prey的条款和协议然后在下面点击</string>
-    <string name="agreements_message2"><u>阅读许可协议</u></string>
-    <!-- First dialog - Prey Configuration -->
-    <!-- Add device to an already created account  -->
-    <string name="set_old_user_loading">正在添加设备到帐户...\n只需几秒钟!</string>
+    <string name="agreements_message2">&lt;u&gt;阅读许可协议&lt;/u&gt;</string>
+    <string name="set_old_user_loading">正在添加设备到帐户……\n只需几秒钟!</string>
     <string name="set_old_user_no_more_devices_title">稍安毋躁!</string>
     <string name="set_old_user_no_more_devices_text">看起来您的 Prey 没有空位来添加设备了。\n\n请尝试在控制面板删除一个现有的设备或创建一个新账户。</string>
-    <!-- Create new Prey account -->
-    <string name="set_new_user_dialog_creating_popup">正在创建帐户。请稍候...</string>
-    <!-- Congratulations Dialog -->
-    <string name="congratulations_title">手机已添加!</string>
-    <string name="new_account_congratulations_text">您成功的在手机上安装了 Prey。\n要完成安装您需要通过打开刚刚发送到 %s 的连接来验证您的邮件地址。</string>
+    <string name="set_new_user_dialog_creating_popup">正在创建帐户，请稍候……</string>
+    <string name="congratulations_title">设备已添加！</string>
+    <string name="new_account_congratulations_text">您已经在手机上成功安装了Prey，要完成设置过程您需要通过打开刚刚发送到%s的连接来验证您的邮件地址。</string>
     <string name="device_added_congratulations_text">您成功的将本手机与您的 Prey 帐户进行了关联。现在花一分钟时间进行设置。</string>
-    <!-- Prey SMS Preferences -->
     <string name="preferences_sms_run">短信激活信息</string>
     <string name="preferences_sms_run_summary">唤醒 Prey 的单词或短语</string>
-    <string name="preferences_sms_run_edittext">当收到此文字时会激活 Prey</string>
+    <string name="preferences_sms_run_edittext">当收到此文字时会激活Prey</string>
     <string name="preferences_sms_stop">短信失效信息</string>
     <string name="preferences_sms_stop_summary">使 Prey 失效的单词或短语</string>
     <string name="preferences_sms_stop_edittext">当收到此文字时会使 Prey 失效</string>
-    <string name="preferences_destination_sms">SIM卡更换通知</string>
-    <string name="preferences_destination_sms_summary">手机将会通知的新号码</string>
-    <string name="preferences_destination_sms_not_valid">您输入的号码似乎不是有效的</string>
-    <string name="sms_to_send_text">您朋友的号码已经作为一个SIM卡被更换后会联系的新号码。如果您觉得您的手机被偷了，请联系他 %s。</string>
-    <string name="preferences_check_sim_change">锁定到当前 SIM 卡</string>
-    <string name="preferences_check_sim_change_summary">当 SIM 卡被替换时激活 Prey</string>
     <string name="preferences_show_notification_title">显示通知</string>
     <string name="preferences_show_notification_summary">如果 Prey 成功的发送了一条报告则会在屏幕上显示信息</string>
-    <!--  Prey Others Preferences -->
-    <!-- Prey Password Preferences -->
+    <string name="preferences_lock_sim_screen_title">激活SIM探测</string>
+    <string name="preferences_lock_sim_screen_summary">配置SIM改变事件</string>
+    <string name="preferences_check_sim_change">锁定到当前 SIM 卡</string>
+    <string name="preferences_check_sim_change_summary">当 SIM 卡被替换时激活 Prey</string>
+    <string name="preferences_destination_sms">SIM卡更换通知</string>
+    <string name="preferences_destination_sms_summary">手机将会通知的新号码</string>
+    <string name="preferences_destination_sms_not_valid">您输入的联系方式似乎不是一个有效的移动电话号码</string>
+    <string name="sms_to_send_text">您朋友的号码已经作为一个SIM卡被更换后会联系的新号码。如果您觉得您的手机被偷了，请联系他 %s。</string>
+    <string name="preferences_update_sim_title">分配给当前SIM</string>
+    <string name="preferences_update_sim_summary">指定当前SIM为有效</string>
+    <string name="preferences_update_sim_dialog_title">改变有效SIM</string>
+    <string name="preferences_update_sim_dialog_message">您将修改在此设备上已注册的SIM卡，点\'是\'Prey会假定当前卡为有效。\n\n您确定吗？</string>
+    <string name="preferences_category_other_title">账户管理</string>
+    <string name="preferences_category_other_summary">管理您的账户设置</string>
     <string name="preferences_password_title">更改密码</string>
     <string name="preferences_password_summary">甚至您的新的 Prey 管理密码</string>
     <string name="preferences_password_dialog_title">请输入您的\n新密码</string>
+    <string name="preferences_password_old">当前密码</string>
+    <string name="preferences_password_new">新密码</string>
+    <string name="preferences_password_confirm">确认密码</string>
     <string name="preferences_password_length_error">密码至少为 6 个字符</string>
     <string name="preferences_passwords_do_not_match">密码不匹配</string>
-    <string name="preferences_passwords_updating_dialog">正在更新您的 Prey 密码。\n请稍后...</string>
+    <string name="preferences_passwords_updating_dialog">正在更新您的Prey密码。\n请稍后……</string>
     <string name="preferences_passwords_successfully_changed">您的 Prey 密码已经成功更改</string>
-    <!-- Prey Detach Device Preferences -->
     <string name="preferences_detach_title">分离手机</string>
     <string name="preferences_detach_summary">从您的控制面板帐户移除手机</string>
     <string name="preferences_detach_dialog_title">分离手机</string>
-    <string name="preferences_password_old">Current password</string>
-    <string name="preferences_password_new">New password</string>
-    <string name="preferences_password_confirm">Confirm password</string>
     <string name="preferences_detach_dialog_message">您的手机将会从控制面板中分离。这也会删除它保存的报告。\n\nAre you sure?</string>
-    <string name="preferences_detach_dettaching_message">正在分离手机, 请稍后...</string>
+    <string name="preferences_detach_dettaching_message">正在分离手机，请稍后……</string>
     <string name="preferences_go_to_control_panel_title">查看生成的报告</string>
-    <string name="preferences_go_to_control_panel_summary">用浏览器打开您的 Prey 面板</string>
+    <string name="preferences_go_to_control_panel_summary">用浏览器打开您的Prey面板</string>
     <string name="preferences_go_to_control_panel_dialog_title">确认您的请求</string>
     <string name="preferences_go_to_control_panel_dialog_message">您的手机将会从控制面板中分离。这也会删除它保存的报告。\n\n您确定吗？</string>
-    <!-- Prey Operation Preferences -->
-    <string name="preferences_start_title">启动 Prey</string>
+    <string name="preferences_category_operations_title">执行控制</string>
+    <string name="preferences_category_operations_summary">从您的设备启动和停止Prey</string>
+    <string name="preferences_start_title">启动Prey</string>
     <string name="preferences_start_summary">标记此设备为遗失</string>
-    <string name="preferences_start_dialog_title">启动 Prey</string>
+    <string name="preferences_start_dialog_title">启动Prey</string>
     <string name="preferences_start_dialog_message">您正在试图标记设备为遗失, 并开始发送报告到控制面板。\n\n您确定么?</string>
-    <string name="preferences_stop_title">停止 Prey</string>
-    <string name="preferences_stop_summary">停止 prey 进程和相关模块</string>
-    <string name="preferences_stop_dialog_title">停止 Prey</string>
+    <string name="preferences_stop_title">停止Prey</string>
+    <string name="preferences_stop_summary">停止prey进程和相关模块</string>
+    <string name="preferences_stop_dialog_title">停止Prey</string>
     <string name="preferences_stop_dialog_message">Prey 将会停止发送报告到控制面板并且您的设备会被标记为已发现,\n您确认么?</string>
-    <!-- Prey Ringtone Preferences (Deprecated) -->
-    <!--  Prey About -->
+    <string name="preferences_admin_enabled_title">取消临时权限</string>
+    <string name="preferences_admin_enabled_summary">删除卸载保护</string>
+    <string name="preferences_admin_disabled_title">授予临时权限</string>
+    <string name="preferences_admin_disabled_summary">允许锁定和卸载防护</string>
+    <string name="preferences_admin_enabled_dialog_title">请注意</string>
+    <string name="preferences_admin_enabled_dialog_message">点击\'是\'您将取消此设备的Prey管理权限，没有这些权限Prey不能锁定该设备。\n确定吗？</string>
+    <string name="preferences_admin_disabled_dialog_title">临时权限</string>
+    <string name="preferences_admin_disabled_dialog_message">您将授予Prey特殊安全权限，其将允许您远程锁定设备。\n点击是继续。</string>
+    <string name="device_admin_label">Prey额外安全</string>
+    <string name="device_admin_description">这些权限用来远程锁定您的设备并防止Prey被卸载，如果您想卸载Prey就需要取消这些权限。</string>
     <string name="preferences_about_category_name">关于</string>
     <string name="preferences_about">Prey for Android™</string>
     <string name="preferences_about_title">Prey for Android™</string>
     <string name="preferences_about_message">Prey for Android™</string>
-    <!--  Password Validation -->
     <string name="verify_your_account_first">您必须首先验证您的帐户</string>
     <string name="password_wrong">密码错误。请重试。</string>
     <string name="password_intents_exceed">您已经错误 3 次了。抱歉!</string>
-    <string name="password_checking_dialog">正在检查您的密码...\n只需要几秒钟!</string>
-    <!-- Notifications -->
+    <string name="password_checking_dialog">正在检查您的密码……\n只需要几秒钟!</string>
     <string name="notification_title">Prey 正在施展它的魔法!</string>
     <string name="notification_msg">新的报告发送到您的网页控制面板</string>
-    <!-- Actions/Modules 
-     # These messages are shown as notification, on each report sent to Prey.
-     -->
-    <!-- Location action -->
-    <string name="location_notification_prefix">Geofix 发送: </string>
-    <!--  Call Logs Action -->
+    <string name="not_verified_device_title">Prey：设备未配置</string>
+    <string name="not_verified_device_msg">点击将其连接到控制面板</string>
+    <string name="location_notification_prefix">Geofix 发送：</string>
     <string name="call_logs_notification_prefix">通话列表: 拨号, 来电, 和未接的号码</string>
-    <!-- Popup Alert Action -->
     <string name="popup_alert_title">重要信息</string>
-    <!-- Exceptions -->
     <string name="error_title">我们遇到了问题!</string>
     <string name="error_communication_exception">无法连接到网络控制面板。\n\n请检查您的设置并重试。</string>
-    <string name="error_cant_add_this_device">无法添加此设备到您的 prey 帐户。请在此检查您提供的邮件和密码。%s</string>
+    <string name="error_cant_add_this_device">无法添加此设备到您的 prey 帐户,请再检查您提供的邮件和密码。%s</string>
     <string name="error_registered_password_has_changed">无法更改密码。控制面板密码自从您上次在这里登陆后已经更改。</string>
     <string name="error_cant_report_forgotten_password">无法报告忘记的密码。请稍后再试。</string>
     <string name="error_all_fields_are_required">需要全部字段</string>
+    <string name="prey_version">0.5.6</string>
+    <string name="change">改变</string>
+    <string name="accept">接受</string>
+    <string name="already_prey_user">已经是Prey用户</string>
+    <string name="new_user">新用户</string>
+    <string name="device_ready_h1">设备就绪</string>
+    <string name="device_not_ready_h1">设备未准备好！</string>
+    <string name="device_ready_h2">您的手机已被保护，请等待激活信号。</string>
+    <string name="device_not_ready_h2">位置服务不可用，报告不会发送。</string>
+    <string name="login_cp">登录到控制面板</string>
+    <string name="manage_prey_settings">管理Prey设置</string>
+    <string name="type_your_pass">输入您的密码：</string>
+    <string name="log_in">登录</string>
+    <string name="create_prey_account_h1">建立新账户</string>
+    <string name="your_name">您的名字</string>
+    <string name="your_email">您的邮箱</string>
+    <string name="choose_a_6_char_pass">输入密码</string>
+    <string name="repeat_your_pass">重复密码</string>
+    <string name="create_my_account">建立我的账户！</string>
+    <string name="creating_account_please_wait">正在创建帐户。请稍候...</string>
+    <string name="log_in_to_prey_h1">登录到Prey</string>
+    <string name="your_prey_email">您的Prey账户邮箱</string>
+    <string name="your_prey_pass">您的Prey账户密码</string>
+    <string name="add_this_device">添加此设备！</string>
+    <string name="device_set_up_h1">设备建立！</string>
+    <string name="go_to_settings">前往设置</string>
+    <string name="execution_status">执行状态</string>
+    <string name="running">运行</string>
+    <string name="stopped">停止</string>
+    <string name="execution_interval">执行间隔</string>
+    <string name="next_execution_in_aprox">下一次执行大约在</string>
+    <string name="running_since">运行自</string>
+    <string name="elapsed_time">运行时间</string>
+    <string name="hours">小时</string>
+    <string name="minutes">分钟</string>
+    <string name="network_ls">网络位置服务</string>
+    <string name="gps_ls">GPS位置服务</string>
+    <string name="enabled">启用</string>
+    <string name="disabled">关闭</string>
+    <string name="sms_activation">短信激活语句</string>
+    <string name="sms_deactivation">短信失活语句</string>
+    <string name="preferences_status">状态</string>
+    <string name="preferences_status_title">Prey当前状态</string>
+    <string name="preferences_status_summary">检查执行状态、所花时间和更多。</string>
+    <string name="preferences_config_title">主要配置</string>
+    <string name="preferences_camouflage_title">伪装模式</string>
+    <string name="preferences_camouflage_summary">显示一个假的登录界面</string>
+    <string name="choose_your_hero">选择您的hero！</string>
+    <string name="no_hero_selected">没有选择英雄</string>
+    <string name="your_hero_text">Hero是您自选的一个联系人，当Prey发现您的手机换新SIM卡时他将收到一个短信。</string>
+    <string name="hero_chosen">Hero已选择！</string>
+    <string name="notify_your_hero_now">选择正确！想让%s知道您已经选他做为您的hero了吗？我们将给他发一个短信。</string>
+    <string name="hero_notification_message">我刚刚选择您作为我的Android %s Prey Hero！如果有人更换了我的SIM卡您将收到短信通知。请检查preyproject.com/hero！</string>
+    <string name="gps_network_not_enabled">位置提供商不可用。\n如果想追踪您的设备，您需要激活至少一个提供商。</string>
+    <string name="preferences_advanced_screen_title">高级配置</string>
+    <string name="preferences_advanced_screen_summary">配置高级设置</string>
+    <string name="preferences_activate_wifi_title">激活wifi</string>
+    <string name="preferences_activate_wifi_summary">在Prey开始运行时打开wifi</string>
+    <string name="preferences_activate_mobile_data_title">激活移动数据</string>
+    <string name="preferences_activate_mobile_data_summary">警告：在某些设备上无法工作</string>
+    <string name="sms_not_sent">发送信息时出错，您的手机支持短信吗？</string>
+    <string name="preferences_admin_enabled_device_title">临时安全</string>
+    <string name="preferences_admin_enabled_device_summary">管理高级安全设置</string>
+    <string name="preferences_admin_device_password_check_title">卸载锁定</string>
+    <string name="preferences_admin_device_password_check_summary">选择此项后在卸载Prey时您需要输入一个解锁密码</string>
+    <string name="preferences_admin_device_uninstallation_password_title">卸载密码</string>
+    <string name="preferences_admin_device_uninstallation_password_summary">设置卸载锁定密码</string>
+    <string name="preferences_admin_device_uninstallation_password_dialog_title">新建卸载密码</string>
+    <string name="preferences_admin_device_setting_uninstallation_password">设置卸载密码</string>
+    <string name="first_dialog_title">欢迎来到\nPrey for Android™!</string>
 </resources>
