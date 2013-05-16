@@ -1,0 +1,38 @@
+#show {
+    width:290px;
+    height:20px;
+    padding:20px;
+    margin: 0 auto;
+    text-align: center;
+    /*background:#40464b;*/
+    /*border: 1px dotted red;*/
+}
+
+ 
+
+input[type="checkbox"] {
+    display:none;
+}
+
+input[type="checkbox"] + label {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    color: #333333;
+}
+
+input[type="checkbox"] + label span {
+    display:inline-block;
+    width:30px;
+    height:30px;
+    margin:0px 15px 0 0;
+    vertical-align:middle;
+    background:url(../images/check.png) left top no-repeat;
+    cursor:pointer;
+    /*border: 1px solid #cccccc;*/
+}
+
+input[type="checkbox"]:checked + label span {
+    background:url(../images/check.png) -39px top no-repeat;
+}

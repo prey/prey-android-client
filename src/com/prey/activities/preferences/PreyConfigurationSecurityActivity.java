@@ -147,7 +147,7 @@ public class PreyConfigurationSecurityActivity extends PreferenceActivity {
 				filter[0] = new InputFilter.LengthFilter(4);
 				//	input.setFilters(filter);
 				PreyConfig preyConfig = PreyConfig.getPreyConfig(this);
-				
+				 
 				LayoutInflater li = LayoutInflater.from(this);
 				View promptsView = li.inflate(R.layout.prompts_pin, null);
 		 

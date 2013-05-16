@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.prey.PreyConfig;
+ 
+import com.prey.activities.browser.manager.ManagerBrowser;
 
 public class LoginActivity extends PasswordActivity {
 
@@ -42,14 +44,24 @@ public class LoginActivity extends PasswordActivity {
 	}
 
 	private void startup() {
+		
+		ManagerBrowser managerBrowser=new ManagerBrowser();
+		
 		if (!isThisDeviceAlreadyRegisteredWithPrey()) {
+			managerBrowser.preLogin(getApplicationContext());
+			/*
 			Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
 			startActivity(intent);
-			finish();
-		} else if (!getPreyConfig().isCamouflageSet())
+			*/
+		} else {
+			managerBrowser.thisDeviceAlreadyRegistered(getApplicationContext());
+		}
+		finish();
+		/*if (!getPreyConfig().isCamouflageSet())
 			showLogin();
 		else
 			showCamouflage();
+			*/
 	}
 
 	private void showLogin() {

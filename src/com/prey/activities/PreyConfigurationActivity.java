@@ -39,23 +39,23 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 		
 		IconPreference test0 = (IconPreference) findPreference("PREFS_STATUS");
 		Drawable icon0 = res.getDrawable(R.drawable.ico_status);
-		test0.setIcon(icon0); 
+		 test0.setIcon(icon0); 
 		 
 		IconPreference test4 = (IconPreference) findPreference("PREFS_HELP");
 		Drawable icon4 = res.getDrawable(R.drawable.ico_help);
-		test4.setIcon(icon4);
+		 test4.setIcon(icon4);
 		
 		IconPreference test1 = (IconPreference) findPreference("PREFS_CONFIG");
 		Drawable icon1 = res.getDrawable(R.drawable.ico_activation);
-		test1.setIcon(icon1);
+		 test1.setIcon(icon1);
 	
 		IconPreference test2 = (IconPreference) findPreference("PREFS_SECURITY");
 		Drawable icon2 = res.getDrawable(R.drawable.ico_security);
-		test2.setIcon(icon2);
+		 test2.setIcon(icon2);
 		
 		IconPreference test3 = (IconPreference) findPreference("PREFS_ACCOUNT");
 		Drawable icon3 = res.getDrawable(R.drawable.ico_account);
-		test3.setIcon(icon3);
+		 test3.setIcon(icon3);
 		 	 
 		 
 		

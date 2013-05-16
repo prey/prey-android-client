@@ -67,7 +67,12 @@ public class C2DMReceiver extends BroadcastReceiver {
 	    } else if (registrationId != null) {
 	    	PreyLogger.i("Registration id: " + registrationId);
 	    	PreyConfig.getPreyConfig(context).setRegistrationId(registrationId);
-	    	new UpdateCD2MId().execute(registrationId, context);
+	    	
+	    	try{
+	    		new UpdateCD2MId().execute(registrationId, context);
+	    	}catch(Exception e){
+	    		
+	    	}
 	       // Send the registration ID to the 3rd party site that is sending the messages.
 	       // This should be done in a separate thread.
 	       // When done, remember that all registration is done. 

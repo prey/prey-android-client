@@ -24,10 +24,11 @@ import com.prey.managers.PreyLocationManager;
 import com.prey.net.PreyWebServices;
 import com.prey.PreyStatus;
 import com.prey.R;
+
 public class PasswordActivity extends PreyActivity {
-	
+
 	int wrongPasswordIntents = 0;
-	
+
 	protected void bindPasswordControls() {
 		Button checkPasswordOkButton = (Button) findViewById(R.id.password_btn_login);
 		final EditText pass1 = ((EditText) findViewById(R.id.password_pass_txt));
@@ -42,13 +43,14 @@ public class PasswordActivity extends PreyActivity {
 
 			}
 		});
-		
-		//Hack to fix hint's typeface: http://stackoverflow.com/questions/3406534/password-hint-font-in-android
+
+		// Hack to fix hint's typeface:
+		// http://stackoverflow.com/questions/3406534/password-hint-font-in-android
 		EditText password = (EditText) findViewById(R.id.password_pass_txt);
 		password.setTypeface(Typeface.DEFAULT);
 		password.setTransformationMethod(new PasswordTransformationMethod());
 	}
-	
+
 	protected void updateLoginScreen() {
 		ImageView loginIcon = (ImageView) findViewById(R.id.login_img);
 		String drawableIconName = "red_button";
@@ -74,14 +76,13 @@ public class PasswordActivity extends PreyActivity {
 		((TextView) findViewById(R.id.login_h1_text)).setText(h1);
 		((TextView) findViewById(R.id.login_h2_text)).setText(h2);
 	}
-	
+
 	protected class CheckPassword extends AsyncTask<String, Void, Void> {
 
 		ProgressDialog progressDialog = null;
 		boolean isPasswordOk = false;
 		boolean keepAsking = true;
 		String error = null;
-		
 
 		@Override
 		protected void onPreExecute() {
@@ -98,8 +99,8 @@ public class PasswordActivity extends PreyActivity {
 			try {
 				String email = getPreyConfig().getEmail();
 				isPasswordOk = PreyWebServices.getInstance().checkPassword(PasswordActivity.this, email, password[0]);
-				//if (isPasswordOk)
-					//PreyConfig.getPreyConfig(CheckPasswordActivity.this).setPassword(password[0]);
+				// if (isPasswordOk)
+				// PreyConfig.getPreyConfig(CheckPasswordActivity.this).setPassword(password[0]);
 
 			} catch (PreyException e) {
 				error = e.getMessage();
@@ -125,16 +126,15 @@ public class PasswordActivity extends PreyActivity {
 						finish();
 					} else {
 						Toast.makeText(PasswordActivity.this, R.string.password_wrong, Toast.LENGTH_SHORT).show();
-					}
+					}		
 				}
 			} else {
+				wrongPasswordIntents=0;
 				Intent intent = new Intent(PasswordActivity.this, PreyConfigurationActivity.class);
 				PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
 				startActivity(intent);
 			}
 		}
-		
-		
 
 	}
 

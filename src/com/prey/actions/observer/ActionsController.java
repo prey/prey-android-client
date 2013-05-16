@@ -104,6 +104,8 @@ public class ActionsController {
 		List<HttpDataService> listData=new ArrayList<HttpDataService>();
 		
 		PreyLogger.i("tamanio:"+(jsonObjectList==null?-1:jsonObjectList.size()));
+		ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
+		
 		try {
 			for(int i=0;jsonObjectList!=null&&i<jsonObjectList.size();i++){
 				JSONObject jsonObject=jsonObjectList.get(i);
@@ -119,14 +121,16 @@ public class ActionsController {
 						 
 				List<ActionResult> lista = new ArrayList<ActionResult>();
 				listData=ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction,listData);
-				if (lista.size() > 0) {
-					ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
+				/*if (lista!=null&&lista.size() > 0) {
 					for (ActionResult result : lista) {
 						dataToBeSent.add(result.getDataToSend());
 					}
-					PreyWebServices.getInstance().sendPreyHttpReport(ctx, dataToBeSent);
-				}
+				}*/
 			}
+			if(dataToBeSent!=null&&dataToBeSent.size()>0){
+				PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
+			}
+			
 			return listData;
 		} catch (JSONException e) {
 			PreyLogger.e("Error, causa:" + e.getMessage(), e);

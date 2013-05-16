@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -45,6 +46,7 @@ import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPhone;
+import com.prey.PreyUtils;
 import com.prey.PreyPhone.Hardware;
 import com.prey.PreyPhone.Wifi;
 import com.prey.actions.HttpDataService;
@@ -181,7 +183,9 @@ public class PreyWebServices {
 		parameters=increaseData(ctx, parameters);
 		PreyHttpResponse response = null;
 		try {
-			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("api/v1/").concat("devices.xml");
+			 
+			String apiv1=FileConfigReader.getInstance(ctx).getApiV1();
+			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat(apiv1).concat("devices.xml");
 			PreyLogger.i("url:"+url);
 			response = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig);
 			// No more devices allowed
@@ -316,7 +320,7 @@ public class PreyWebServices {
 				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig);
 			else
 				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(URL, parameters, preyConfig,entityFiles);
-			PreyLogger.d("Report sent: " + preyHttpResponse.getResponseAsString());
+			PreyLogger.d("Report sent_: " + preyHttpResponse.getResponseAsString());
 			try{
 				GoogleAnalyticsTracker.getInstance().trackEvent("Data","Sent", "", 1);
 			}catch(NullPointerException ex){
@@ -487,6 +491,7 @@ public class PreyWebServices {
 	public void changePassword(Context ctx, String email, String currentPassword, String newPassword) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		String userXml = this.checkPassword(email, currentPassword, ctx);
+		PreyLogger.i("userXml:"+userXml);
 		if (!userXml.contains("<key"))
 			throw new PreyException(ctx.getText(R.string.error_registered_password_has_changed).toString());
 
@@ -594,7 +599,7 @@ public class PreyWebServices {
 	}
 	
 	private String getEventsUrlJson(Context ctx) throws PreyException{
-		return getDeviceUrl(ctx).concat("/events");
+		return getDeviceUrlApiv2(ctx).concat("/events");
 	}
 	
 	private String getDeviceUrl(Context ctx) throws PreyException{
@@ -606,7 +611,27 @@ public class PreyWebServices {
 		String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey);
 		return url;
 	}
-	 
+	
+	private String getDeviceUrlApiv1(Context ctx) throws PreyException{
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		String deviceKey = preyConfig.getDeviceID();
+		if (deviceKey == null || deviceKey == "")
+			throw new PreyException("Device key not found on the configuration");
+		String apiv1=FileConfigReader.getInstance(ctx).getApiV1();
+		String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv1).concat("devices/").concat(deviceKey);
+		return url;
+	}
+
+	private String getDeviceUrlApiv2(Context ctx) throws PreyException{
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		String deviceKey = preyConfig.getDeviceID();
+		if (deviceKey == null || deviceKey == "")
+			throw new PreyException("Device key not found on the configuration");
+		String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
+		String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey);
+		return url;
+	}
+	
 	
 	private String getDeviceUiUrl(Context ctx) throws PreyException{
 		return this.getDeviceWebControlPanelUiUrl(ctx).concat(".xml");
@@ -676,16 +701,22 @@ public class PreyWebServices {
 		parameters.put(prefix + "[nic_" + nic + "][mac_address]", wifi.getMacAddress());
 		return parameters;
 	}
-	
-	public PreyHttpResponse registerNewDeviceNotificationId(Context ctx, String notificationId,String email) throws PreyException {
+ 
+	public int registerNewDeviceNotificationId(Context ctx, String notificationId,String email) throws PreyException {
 		//Enviar datos de HW, notificationId,email
 		HashMap<String, String> parameters = new HashMap<String, String>();
 
 		parameters.put("notification_id", notificationId);
 		parameters.put("email", email);
 		increaseData(ctx, parameters);
-		//send
-		return null;
+
+
+		PreyAccountData accountData =  registerNewDeviceToAccount(ctx, email,"prueba","Phone");
+		PreyLogger.d("Response creating account: " + accountData.toString());
+		PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
+		
+		
+		return 200;
 	}
 
 }

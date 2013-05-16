@@ -20,8 +20,9 @@ public class PreyInstallReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context ctx, Intent intent) {
 		this.ctx = ctx;
-		/*
+		 
 		try {
+			PreyConfig preyConfig=PreyConfig.getPreyConfig(ctx);
 
 			// esta registrado
 			if (isThisDeviceAlreadyRegisteredWithPrey()) {
@@ -36,11 +37,16 @@ public class PreyInstallReceiver extends BroadcastReceiver {
 					// a pasado 10 minutos de la ultima ejecucion
 					if (lastRunXMinuteAgo()) {
 						// envio registro GCM y mail y m
-						String notificationId = PreyConfig.getPreyConfig(ctx).getNotificationId();
-						String email = UserEmail.getEmail(ctx);
-						PreyHttpResponse response=PreyWebServices.getInstance().registerNewDeviceNotificationId(ctx, notificationId, email);
-						if (200!=response.getStatusLine().getStatusCode()){
-							
+						String notificationId = preyConfig.getNotificationId();
+						if (notificationId==null){
+							preyConfig.registerC2dm();
+						}else{
+							String email = UserEmail.getEmail(ctx);
+							int statusCode=PreyWebServices.getInstance().registerNewDeviceNotificationId(ctx, notificationId, email);
+							if (200!=statusCode){
+								preyConfig.setActiveTour(false);
+								preyConfig.setActiveWizard(false);
+							}
 						}
 					}
 				}
@@ -50,7 +56,7 @@ public class PreyInstallReceiver extends BroadcastReceiver {
 		} catch (Exception e) {
 
 		}
-		*/
+		 
 	}
 
 	protected PreyConfig getPreyConfig() {
@@ -74,6 +80,8 @@ public class PreyInstallReceiver extends BroadcastReceiver {
 		long xMinutes = new Date().getTime() - (10 * 60 * 1000);
 		long diff = lastExecutionTime - xMinutes;
 		PreyLogger.i("lastExecutionTime:" + lastExecutionTime + " xMinutes:" + xMinutes + " diff:" + diff);
-		return lastExecutionTime > xMinutes;
+	//	return lastExecutionTime > xMinutes;
+		
+		return true;
 	}
 }

@@ -108,7 +108,9 @@ public class PreyConfig {
 	public static final String FLAG_SEND_INSTALL_REMOTE="FLAG_SEND_INSTALL_REMOTE";
 	 
 	public static final String PREY_DOMAIN="PREY_DOMAIN";
-
+	public static final String ACTIVE_TOUR="ACTIVE_TOUR";
+	public static final String ACTIVE_WIZARD="ACTIVE_WIZARD";
+	public static final String ACTIVE_MANAGER="ACTIVE_MANAGER";
 	
 	/* ------------- */
 
@@ -148,6 +150,9 @@ public class PreyConfig {
 	private boolean run;
 	private String lastEvent;
 	
+	private boolean activeTour;
+	private boolean activeWizard;
+	private boolean activeManager;
 	
 	private boolean flagSendInstallRemote;
  
@@ -193,6 +198,9 @@ public class PreyConfig {
 
 		this.preyDomain=settings.getString(PreyConfig.PREY_DOMAIN, FileConfigReader.getInstance(ctx).getPreyDomain());
 		
+		this.activeTour=settings.getBoolean(PreyConfig.ACTIVE_TOUR, true);
+		this.activeWizard=settings.getBoolean(PreyConfig.ACTIVE_WIZARD, true);
+		this.activeManager=settings.getBoolean(PreyConfig.ACTIVE_MANAGER, true);
 	//	FroyoSupport.getInstance(ctx).changePasswordAndLock("osito", true);
 	}
 	
@@ -282,6 +290,33 @@ public class PreyConfig {
 		editor.commit();
 	}
 	
+	
+	public void setActiveTour(boolean activeTour) {
+		this.activeTour = activeTour;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(PreyConfig.ACTIVE_TOUR, activeTour);
+		editor.commit();
+	}
+	
+	public void setActiveWizard(boolean activeWizard) {
+		this.activeWizard = activeWizard;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(PreyConfig.ACTIVE_WIZARD, activeWizard);
+		editor.commit();
+	}
+	
+	public void setActiveManager(boolean activeManager) {
+		this.activeManager = activeManager;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(PreyConfig.ACTIVE_MANAGER, activeManager);
+		editor.commit();
+	}
+	
+	
+	
 	public void setRevokedPassword(boolean isRevokedPassword,String revokedPassword) {
 		this.isRevokedPassword = isRevokedPassword;
 		this.revokedPassword = revokedPassword;
@@ -324,6 +359,18 @@ public class PreyConfig {
 				lockAction.killAnyInstanceRunning(ctx);
 			}
 		}
+	}
+	
+	
+	public boolean isActiveTour() {
+		return activeTour;
+	}
+	
+	public boolean isActiveWizard() {
+		return activeWizard;
+	}
+	public boolean isActiveManager() {
+		return activeManager;
 	}
 	
 	public boolean isLockSet() {
@@ -513,7 +560,9 @@ public class PreyConfig {
 	public void registerC2dm(){
 		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0)); // boilerplate
-		registrationIntent.putExtra("sender", FileConfigReader.getInstance(this.ctx).getGcmId());
+		String gcmId= FileConfigReader.getInstance(this.ctx).getGcmId();
+		PreyLogger.i("gcmId:"+gcmId);
+		registrationIntent.putExtra("sender",gcmId);
 		this.ctx.startService(registrationIntent);
 	}
 	

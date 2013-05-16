@@ -1,0 +1,446 @@
+        /*---ESTILOS PARA PANTALLAS HDPI RATIO 1.0 A 1.5, resoluciones de 480x800px---*/ 
+        
+        /*----ESTILOS DE TEXTO---*/
+        h1{
+        font-size: 40px;
+        }
+        h2{
+
+        font-size: 40px;
+        
+        }
+        h4{
+        font-size: 24px;
+        }
+        h5{
+        font-size: 18px;
+        }
+        h6{
+        font-size: 1.2em;
+        }
+        span{
+        font-family: 'Open Sans', sans-serif;
+        font-size: 18px;
+        font-weight: 300;
+        text-align: center;
+        color: #333333;
+        }
+        
+        /*----FIN ESTILOS DE TEXTO---*/
+
+        /*----ESTILOS FORMULARIO---*/
+        fieldset
+        {
+        padding: 0;
+        margin: 0;
+        text-align: center;
+        }
+        /*--------------------*/
+
+        #inputs input
+        {
+        background: #f5f5f5 url(../images/login-sprite2.png) no-repeat;
+        padding: 15px 15px 15px 40px;
+        margin: 5px 0 10px 0;
+        width: 372px; /* 353 + 2 + 45 = 400 */
+        border: 1px solid #cfcfcf;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        outline: none;
+        -webkit-tap-highlight-color: rgba(0,0,0,0); 
+
+        }
+
+        #username
+        {
+        background-position: 10px 1px !important;
+        }
+
+        #email
+        {
+        background-position: 10px -98px !important;
+        }
+        #password {
+        background-position: 10px -48px !important;
+        }
+		#password2 {
+        background-position: 10px -48px !important;
+        }
+        #inputs input:focus
+        {
+        background-color: #fff;
+        }
+
+        /*--------------------*/
+        #actions
+        {
+        border: 0;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+        }
+
+        #submit
+        {   
+        height: 50px;
+        padding: 0;
+        margin-top:20px;
+        width: 430px;
+        font-size: 18px;
+        font-weight: 300;
+        outline: none;
+        -webkit-tap-highlight-color: rgba(0,0,0,0); 
+        }
+        #submit.select-hero   {   
+        width: 370px;
+        }
+
+        #actions a
+        {
+        color: #222222;    
+        float: right;
+        line-height: 50px;
+        margin-right: 25px;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        }
+
+        /*----FIN ESTILOS FORMULARIO---*/
+        
+        /*---- FIN ESTILOS FONDOS SWIPE HTML---*/
+
+        .container {
+        width: 480px;
+        height: auto;
+        margin: 0 auto;
+        /*background-color:green;*/
+       }
+
+        /*---- ESTILOS FONDOS SWIPE HTML---*/
+        
+        .central.welcome{
+        background-image: url(../images/01_welcome.jpg);
+        width: 480px;
+        height: 750px;
+        background-color: #000000;
+        }
+
+        .ninja{
+        background-image: url(../images/02_ninja.jpg);
+        background-repeat: no-repeat;
+        text-align:center;
+        width: 480px;
+        height: 400px;
+        margin: 0 auto;
+
+        }
+        .agent{
+        background-image: url(../images/03_agent.jpg);
+        background-repeat: no-repeat;
+        width: 480px;
+        height: 400px;
+        margin: 0 auto;
+        }
+        .cpanel{
+        background-image: url(../images/04_cpanel.jpg);
+        background-repeat: no-repeat;
+        width: 480px;
+        height: 400px;
+        margin: 0 auto;  
+        }
+        .capture{
+        background-image: url(../images/07_capture.jpg);
+        background-repeat: no-repeat;
+        width: 480px;
+        height: 440px;
+        margin:0 auto;
+        
+
+        }
+        .sim_change{
+        background-image: url(../images/08_sim.jpg);
+        width: 480px;
+        height: 440px;
+        margin:0 auto;
+
+        }
+        .hero{
+        background-image: url(../images/09_hero.jpg);
+        width: 480px;
+        height: 440px;
+        margin:0 auto;
+        }
+        .uninstall{
+        background-image: url(../images/10_uninstall.jpg);
+        width: 480px;
+        height: 480px;
+        margin:0 auto;
+
+        }
+        .credentials{
+        width: 480px;
+        height: auto;
+        margin: 0 auto;
+        padding-top:100px;
+        /*background-color:#cccccc;*/
+        }
+        
+        /*---- FIN ESTILOS FONDOS SWIPE HTML---*/
+        
+        #header{
+        margin-bottom: 0;
+        height: 64px;
+        width: 100%;
+        text-align: center;
+        }
+        #footer{
+        position:absolut;
+        height: 64px;
+        width: 100%;
+        text-align: center;
+        
+        }
+
+        /*----ESTILO BOTONES DE CONTROL SWIPE---*/
+
+        /*---ESTILOS CIRCULOS SLIDER---*/
+        .wrap_actions{
+        display: block;
+        width: 460px;
+        height: 60px;
+        margin:0 auto;
+        }
+        .wrap_circles{
+        /*border: 1px dotted red;*/
+        width: auto;
+        height: auto;
+        float: left;
+        margin-top: 28px;
+        margin-left: 78px;
+        }
+        .wrap_circles ul{
+        margin: 0;
+        padding: 0;
+
+        }
+        .wrap_circles li{
+        margin: 0;
+        padding: 0;
+        float: left;
+        margin-left: 8px;
+
+        }
+        .circle.on {
+        display: block;
+        width: 10px;
+        height: 10px;
+        background: #323536;
+        -webkit-border-radius: 40px;
+        -moz-border-radius: 40px;
+        border-radius: 40px;
+        }
+        .circle.off{
+        display: block;
+        width: 10px;
+        height: 10px;
+        background: #adadad;
+        -webkit-border-radius: 40px;
+        -moz-border-radius: 40px;
+        border-radius: 40px;
+        }
+
+        /*---FIN ESTILOS CIRCULOS SLIDER---*/
+
+
+        /*---ESTILOS PARA BOTONES SWIPE---*/
+
+        .btn_back{
+        display: block;
+        width: 114px;
+        height: 43px;
+        float: left;
+        margin-top: 12px;
+        text-align: center;
+        }
+        .btn_next{
+        display: block;
+        width: 114px;
+        height: 43px;
+        float: right;
+        margin-top: 12px;
+        text-align: center;
+        }
+        .noaccount{
+        display: block;
+        width: auto;
+        height: auto;
+        float: right;
+        margin-right: 15px;
+        margin-top: 20px;
+        text-align: center;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 18px;
+        font-weight: 300;
+        text-align: center;
+        color: #333333;
+        }
+        .account{
+        display: block;
+        width: auto;
+        height: auto;
+        float: right;
+        margin-right: 15px;
+        margin-top: 20px;
+        text-align: center;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 18px;
+        font-weight: 300;
+        text-align: center;
+        color: #333333;
+        }
+        .button {
+        display: inline-block;
+        position: relative;
+        right: 6px;
+        color: #333333;
+        text-shadow: 0 1px 0 rgba(255,255,255, 0.8);
+        text-decoration: none;
+        text-align: center;
+        padding: 12px 34px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: helvetica, arial, sans-serif;
+        border-radius: 6px;
+        border: 1px solid #c0c0c0;
+        outline: none;
+        -webkit-tap-highlight-color: rgba(0,0,0,0); 
+        -moz-box-shadow: inset 0px 1px 0px 0px #ffffff;
+        -webkit-box-shadow: inset 0px 1px 0px 0px #ffffff;
+        box-shadow: inset 0px 1px 0px 0px #ffffff;
+        background-image: -webkit-linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 50%,rgba(219,219,219,1) 100%);
+        background-image: -moz-linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 50%,rgba(219,219,219,1) 100%);
+        background-image: -o-linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 50%,rgba(219,219,219,1) 100%);
+        background-image: -ms-linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 50%,rgba(219,219,219,1) 100%);
+        background-image: linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 50%,rgba(219,219,219,1) 100%);
+        }
+
+        .button:hover {
+        color: #555;
+        }
+
+        .button:active{
+        -moz-box-shadow:inset -5px -1px 20px #e4e4e4;
+        -webkit-box-shadow:inset -5px -1px 20px #e4e4e4;
+        box-shadow:inset -5px -1px 20px #e4e4e4;
+        }
+
+        /* Back Button */
+        .button.back {
+        border-left: none;
+        padding: 12px 20px;
+        left: 5px;
+        }
+
+        .button.back:after {
+        content: '';
+        position: absolute;
+        height: 48%;
+        width: 15px;
+        border-left: 1px solid #c0c0c0;
+
+        background-image: -webkit-linear-gradient(top, rgba(219,219,219,0) 0%,rgba(219,219,219,0) 10%,rgba(240,240,240,0) 100%);
+        background-image: -moz-linear-gradient(top, rgba(219,219,219,0) 0%,rgba(219,219,219,0) 10%,rgba(240,240,240,0) 100%);
+        background-image: -o-linear-gradient(top, rgba(219,219,219,0) 0%,rgba(219,219,219,0) 10%,rgba(240,240,240,0) 100%);
+        background-image: -ms-linear-gradient(top, rgba(219,219,219,0) 0%,rgba(219,219,219,0) 10%,rgba(240,240,240,0) 100%);
+        background-image: linear-gradient(top, rgba(219,219,219,0) 0%,rgba(219,219,219,0) 10%,rgba(240,240,240,0) 100%);
+        left: -5px;
+        top: 1px;
+
+        -webkit-transform: skew(-35deg, 0);
+        -moz-transform: skew(-35deg, 0);
+        -o-transform: skew(-35deg, 0);
+        -ms-transform: skew(-35deg, 0);
+        transform: skew(-35deg, 0);
+        }
+
+        .button.back:before {
+        content: '';
+        position: absolute;
+        height: 48%;
+        width: 15px;
+        border-left: 1px solid #c0c0c0;
+        bottom: 1px;
+        left: -5px;
+
+        -webkit-transform: skew(35deg, 0);
+        -moz-transform: skew(35deg, 0);
+        -o-transform: skew(35deg, 0);
+        -ms-transform: skew(35deg, 0);
+        transform: skew(35deg, 0);
+
+        background-image: -webkit-linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 10%,rgba(219,219,219,1) 100%);
+        background-image: -moz-linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 10%,rgba(219,219,219,1) 100%);
+        background-image: -o-linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 10%,rgba(219,219,219,1) 100%);
+        background-image: -ms-linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 10%,rgba(219,219,219,1) 100%);
+        background-image: linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 10%,rgba(219,219,219,1) 100%);
+
+        -webkit-box-shadow: -2px 1px 2px rgba(100,100,100,0.1);
+        box-shadow: -2px 1px 2px rgba(100,100,100,0.1);
+        }
+
+        /* Next Button */
+        .button.next {
+        border-right: none;
+        }
+
+        .button.next:after {
+        content: '';
+        position: absolute;
+        height: 48%;
+        width: 15px;
+        border-right: 1px solid #c0c0c0;
+
+        background-image: -webkit-linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 10%,rgba(219,219,219,1) 100%);
+        background-image: -moz-linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 10%,rgba(219,219,219,1) 100%);
+        background-image: -o-linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 10%,rgba(219,219,219,1) 100%);
+        background-image: -ms-linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 10%,rgba(219,219,219,1) 100%);
+        background-image: linear-gradient(top, rgba(240,240,240,0) 0%,rgba(240,240,240,0) 10%,rgba(219,219,219,1) 100%);
+        right: -5px;
+        bottom: 1px;
+
+        -webkit-transform: skew(-35deg, 0);
+        -moz-transform: skew(-35deg, 0);
+        -o-transform: skew(-35deg, 0);
+        -ms-transform: skew(-35deg, 0);
+        transform: skew(-35deg, 0);
+
+        /*-webkit-box-shadow: 2px 1px 2px rgba(100,100,100,0.1);
+        box-shadow: 2px 1px 2px rgba(100,100,100,0.1);*/
+        }
+
+        .button.next:before {
+        content: '';
+        position: absolute;
+
+        background-image: -webkit-linear-gradient(top, rgba(219,219,219,0) 0%,rgba(240,240,240,0) 10%,rgba(240,240,240,1) 100%);
+        background-image: -moz-linear-gradient(top, rgba(219,219,219,0) 0%,rgba(240,240,240,0) 10%,rgba(240,240,240,1) 100%);
+        background-image: -o-linear-gradient(top, rgba(219,219,219,0) 0%,rgba(240,240,240,0) 10%,rgba(240,240,240,1) 100%);
+        background-image: -ms-linear-gradient(top, rgba(219,219,219,0) 0%,rgba(240,240,240,0) 10%,rgba(240,240,240,1) 100%);
+        background-image: linear-gradient(top, rgba(219,219,219,0) 0%,rgba(240,240,240,0) 10%,rgba(240,240,240,1) 100%);
+        height: 48%;
+        width: 15px;
+        border-right: 1px solid #c0c0c0;
+        top: 1px;
+        right: -5px;
+
+        -webkit-transform: skew(35deg, 0);
+        -moz-transform: skew(35deg, 0);
+        -o-transform: skew(35deg, 0);
+        -ms-transform: skew(35deg, 0);
+        transform: skew(35deg, 0);
+        }
+
+        /*---FIN ESTILOS PARA BOTONES SWIPE---*/
+
