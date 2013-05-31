@@ -33,7 +33,7 @@
     <string name="preferences_destination_sms">Contacte a notificar</string>
     <string name="preferences_destination_sms_summary">S\'avisarà del número reemplaçat mitjançant un SMS</string>
     <string name="preferences_destination_sms_not_valid">El número inserit no és un número mòbil vàlid</string>
-    <string name="sms_to_send_text">La SIM del vostre contacte ha estat reemplaçada. Contacteu amb %s si penseu que li poden haver robat.</string>
+    <string name="sms_to_send_text">La SIM del vostre contacte ha estat reemplaçada. Contacteu amb %s si creieu que li poden haver robat.</string>
     <string name="preferences_update_sim_title">Associa a la SIM actual</string>
     <string name="preferences_update_sim_summary">Associa la SIM actual com autoritzada</string>
     <string name="preferences_update_sim_dialog_title">Canvia la SIM autoritzada</string>
