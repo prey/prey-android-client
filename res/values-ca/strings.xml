@@ -33,7 +33,7 @@
     <string name="preferences_destination_sms">Contacte a notificar</string>
     <string name="preferences_destination_sms_summary">S\'avisarà del número reemplaçat mitjançant un SMS</string>
     <string name="preferences_destination_sms_not_valid">El número inserit no és un número mòbil vàlid</string>
-    <string name="sms_to_send_text">S\'ha reemplaçat la SIM al telèfon del vostre contacte. Contacteu amb %s si penseu que es pot tractar d\'un furt.</string>
+    <string name="sms_to_send_text">La SIM del vostre contacte ha estat reemplaçada. Contacteu amb %s si penseu que li poden haver robat.</string>
     <string name="preferences_update_sim_title">Associa a la SIM actual</string>
     <string name="preferences_update_sim_summary">Associa la SIM actual com autoritzada</string>
     <string name="preferences_update_sim_dialog_title">Canvia la SIM autoritzada</string>
@@ -152,7 +152,7 @@
     <string name="your_hero_text">La persona de contacte qui designeu (el vostre heroi), rebrà un SMS si Prey detecta que la la tarjeta SIM és reemplaçada.</string>
     <string name="hero_chosen">Heroi assignat!</string>
     <string name="notify_your_hero_now">Bona elecció! Voleu enviar un SMS a %s indicant aquesta acció? Verificareu si el servei funciona, a més d\'avisar al contacte...</string>
-    <string name="hero_notification_message">T\'he triat com a heroi del meu Android %s! Si cap persona canvia la meva SIM, tu rebras un SMS! +info a preyproject.com/hero</string>
+    <string name="hero_notification_message">Us he triat com a heroi del meu Android %s! Si cap persona canvia la meva SIM, rebreu un SMS. +info a preyproject.com/hero</string>
     <string name="gps_network_not_enabled">Els serveis de localització estan deshabilitats.\nHeu d\'activar un com a mínim per poder ubicar el dispositiu.</string>
     <string name="preferences_advanced_screen_title">Configuració avançada</string>
     <string name="preferences_advanced_screen_summary">Opcions de configuració avançades.</string>
