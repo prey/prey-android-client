@@ -92,7 +92,7 @@
     <string name="not_verified_device_title">Prey: Apparaat niet geconfigureerd</string>
     <string name="not_verified_device_msg">Tik om het te koppelen aan het controlepaneel</string>
     <string name="location_notification_prefix">Geofix verzonden:</string>
-    <string name="call_logs_notification_prefix">oproepenlijst: gebeld, ontvangen en gemiste oproepen</string>
+    <string name="call_logs_notification_prefix">oproepenlijst: gemaakte, ontvangen en gemiste oproepen</string>
     <string name="popup_alert_title">Belangrijk bericht</string>
     <string name="error_title">We hebben een situatie!</string>
     <string name="error_communication_exception">Prey kan geen verbinding maken met het controlepaneel.\n\nControleer je instellingen en probeer het opnieuw.</string>
@@ -133,7 +133,7 @@
     <string name="next_execution_in_aprox">Volgende uitvoering over ongeveer</string>
     <string name="running_since">Actief sinds</string>
     <string name="elapsed_time">Verstreken tijd</string>
-    <string name="hours">uren</string>
+    <string name="hours">uur</string>
     <string name="minutes">minuten</string>
     <string name="network_ls">Netwerklocatiedienst</string>
     <string name="gps_ls">GPS-locatiedienst</string>
