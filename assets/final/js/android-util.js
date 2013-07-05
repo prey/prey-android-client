@@ -1,16 +1,11 @@
-function pointCircle(cantidad,pag){
-    for (var i=1;i<cantidad;i++){
-    		var pointCircle=document.getElementById("circle0"+i);
-    		pointCircle.className="circle off";
-	}
-	var pointCirclePag=document.getElementById("circle0"+pag);
-	pointCirclePag.className="circle on";
+function pointCircle(pag){
+  $('#circle0' + pag).addClass('on').siblings().removeClass('on');
 }
 
 function onActiveCamouflage(){
-	activeCamouflageValue=document.getElementById("activeCamouflage").checked; 	 
+	activeCamouflageValue=document.getElementById("activeCamouflage").checked;
 	AndroidFunction.activeCamouflageHtml(""+activeCamouflageValue);
-} 
+}
 
 function onConfigureSim(){
 	configureSimValue=document.getElementById("configureSim").checked;
@@ -27,27 +22,27 @@ function onUninstallLock(){
 }
 
 function onUnlockPass(){
-	 unlockPassValue=document.getElementById("unlockPass").checked;
-	 AndroidFunction.onUnlockPass(unlockPassValue);
-} 
+	unlockPassValue=document.getElementById("unlockPass").checked;
+	AndroidFunction.onUnlockPass(unlockPassValue);
+}
 
 function prueba(){
-	 AndroidFunction.showToast("Prueba");
-} 
+	AndroidFunction.showToast("Prueba");
+}
 
 function login(){
 	user=document.getElementById("email").value;
 	pwd =document.getElementById("password").value;
 	AndroidFunction.login(user,pwd);
-}  
+}
 
 function newuser(){
-    name=document.getElementById("username").value;
+  name=document.getElementById("username").value;
 	user=document.getElementById("email").value;
 	pwd =document.getElementById("password").value;
 	pwd2 =document.getElementById("password2").value;
 	AndroidFunction.newuser(name,user,pwd,pwd2);
-} 
+}
 
 function userRegistered(){
 	pwd =document.getElementById("password").value;
@@ -59,4 +54,20 @@ function onPanel(){
 }
 
 
- 
+function changeNewUser(){
+	var url="newUser_div.html";
+    $("#central").load(url);
+}
+
+function loadUser(){
+	var url="login_div.html";
+    $("#central").load(url);
+}
+
+function permission(){
+	AndroidFunction.permission();
+}
+
+function onPermission(){
+	AndroidFunction.prePermission();
+}

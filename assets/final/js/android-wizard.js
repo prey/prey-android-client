@@ -1,50 +1,41 @@
+var current = 0,
+    start_page,
+    total_pages;
 
+var load_page = function(page){
+  $("#central").load("wizard0" + page + "_div.html");
+  current = page;
+};
 
+var toggle_page = function(dir){
 
-!function($){
+  var target = current + dir;
+  load_page(target);
 
- 	$(document).ready( function() { 
+  $("#btn_back_div").show();
+  $("#btn_next_div").show();
 
+  if (target <= start_page) { // first page
+    $("#btn_back_div").hide();
+  } else if (target >= total_pages) { // last page
+    $("#btn_next_div").hide();
+  }
 
+  pointCircle(target);
+};
 
-		$("#btn_back_div").hide();
+var load_wizard = function(start, total){
+  total_pages = total;
+  start_page  = start;
 
-		$("#central").load("wizard01_div.html");
-		
- 		 var pag=1; 
- 		 var cantidad=3
+  $("#btn_back_div").hide();
+  load_page(start);
 
-         $("#btn_next_div").click(function() {
-            			  pag=pag+1;
-            			  if (pag>1){
-            			 	    $("#btn_back_div").show();
-            			  }
-            			  if (pag<(cantidad+1)){
-							    $("#central").load("wizard0"+pag+"_div.html");
-						  }
-						  if (pag>=cantidad){
-							    $("#btn_next_div").hide();
-							    $("#wrap_circles").hide();
-						  }
-						  pointCircle(cantidad,pag);
-		});
+  $("#btn_next_div").click(function() {
+    toggle_page(+1);
+  });
 
-		$("#btn_back_div").click(function() {
-            			  pag=pag-1;
-            			  if (pag>0){
-								$("#central").load("wizard0"+pag+"_div.html");
-						  }
-						  if (pag<=1){
-            			 	    $("#btn_back_div").hide();	
-						  }
-						  if (pag<cantidad)	{
-							    $("#btn_next_div").show();
-							    $("#wrap_circles").show();
-						  }
-						  pointCircle(cantidad,pag); 
-		});
-								 
-		
-					
- 	} );
-}(window.jQuery);	
+  $("#btn_back_div").click(function() {
+    toggle_page(-1);
+  });
+};
