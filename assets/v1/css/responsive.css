@@ -1,0 +1,282 @@
+/* -------------------------------------------
+  Prey / Android Responsive CSS
+  Written by Tomas Pollak
+  (c) 2013 Fork Ltd. - forkhq.com
+----------------------------------------------*/
+
+/* 0 - 320 */
+@media only screen and (max-width : 320px) {
+
+  #main .img {
+    width: 320px;
+    height: 347px;
+  }
+
+  .first.img {
+    background-image: url(../img/1-320.png);
+  }
+
+  .second.img {
+    background-image: url(../img/1-320.png);
+  }
+
+  .third.img {
+    background-image: url(../img/1-320.png);
+  }
+
+  .container {
+    width: 260px;
+  }
+
+  #main {
+    padding-top: 2em;
+  }
+
+  #main h1 {
+    width: 80%;
+    font-size: 2.2em;
+  }
+
+  #main p {
+    font-size: 1.2em;
+  }
+
+  #main p.small {
+    margin-top: 8px;
+    font-size: .8em;
+  }
+
+  #signup,
+  #login {
+    margin-top: 1em;
+  }
+
+  #signup input,
+  #login input {
+    font-size: .9em;
+    padding: 10px;
+  }
+
+  #main p.switch {
+    font-size: 1em;
+    width: 90%;
+    left: 5%;
+  }
+
+  #footer {
+    height: 4em;
+    padding-top: 2em;
+    margin-top: -5em;
+    background: rgba(0,0,0,0.6);
+  }
+
+  #footer #circles {
+    display: none;
+  }
+
+  #footer .button {
+    font-size: 1em;
+    background-position-y: -47px;
+  }
+
+  #footer .button:active {
+    background-position-y: 2px;
+  }
+
+  #footer #next {
+    padding-right: 18px;
+  }
+
+  #footer #prev {
+    padding-left: 22px;
+  }
+
+
+}
+
+
+/* 321 - 480 */
+@media only screen
+and (min-width : 321px)
+and (max-width : 480px) {
+
+  #main .img {
+    width: 480px;
+    height: 520px;
+  }
+
+  .first.img {
+    background-image: url(../img/1-480.png);
+  }
+
+  .second.img {
+    background-image: url(../img/1-480.png);
+  }
+
+  .third.img {
+    background-image: url(../img/1-480.png);
+  }
+
+  .container {
+    width: 90%;
+  }
+
+  #main {
+    padding-top: 3em;
+  }
+
+  #main h1 {
+    font-size: 3em;
+    width: 78%;
+  }
+
+  #main p {
+    font-size: 1.4em;
+  }
+
+  #main p.small {
+    font-size: 1em;
+  }
+
+  #signup,
+  #login {
+    margin-top: 2em;
+  }
+
+  #signup input,
+  #login input {
+    font-size: 0.8em;
+    padding: 1em;
+  }
+
+  #footer {
+    height: 4em;
+  }
+
+  #circles li {
+    height: 0.8em;
+    width: 0.8em;
+    margin: 0 .5em;
+    top: 0px;
+  }
+
+  #footer .button {
+    font-size: 1.1em;
+    letter-spacing: 3px;
+    background-position-y: -45px;
+  }
+
+  #footer .button:active {
+    background-position-y: 4px;
+  }
+
+  #footer #next {
+    padding-right: 18px;
+  }
+
+  #footer #prev {
+    padding-left: 24px;
+  }
+
+}
+
+/* 481 - 800 */
+@media only screen
+and (min-width : 481px)
+and (max-width : 800px){
+
+  #main .img {
+    width: 800px;
+    height: 876px;
+  }
+
+  .first.img {
+    background-image: url(../img/1-800.png);
+  }
+
+  .second.img {
+    background-image: url(../img/1-800.png);
+  }
+
+  .third.img {
+    background-image: url(../img/1-800.png);
+  }
+
+  .container {
+    width: 600px;
+  }
+
+  #main {
+    padding-top: 3em;
+  }
+
+  #main h1 {
+    font-size: 4.5em;
+  }
+
+}
+
+/* 801+ */
+@media only screen and (min-width : 801px) {
+
+  #main .img {
+    width: 800px;
+    height: 876px;
+  }
+
+  .first.img {
+    background-image: url(../img/1-800.png);
+  }
+
+  .second.img {
+    background-image: url(../img/1-800.png);
+  }
+
+  .third.img {
+    background-image: url(../img/1-800.png);
+  }
+
+  .container {
+    width: 700px;
+  }
+
+  #main {
+    padding-top: 6em;
+  }
+
+  #main h1 {
+    font-size: 4.5em;
+  }
+
+  #signup input,
+  #login input {
+    margin-bottom: 1.5em;
+  }
+
+}
+
+
+
+/* fonts
+---------------------------------------------------*/
+
+@media only screen and (-webkit-device-pixel-ratio: .75) {
+  /* CSS for Low-density screens goes here *
+   * Ex: HTC Evo, HTC Incredible, Nexus One */
+}
+
+@media only screen and (-webkit-device-pixel-ratio: 1) and (max-device-width: 768px) {
+  /* CSS for Medium-density screens goes here *
+   * Ex: Samsung Ace, Kindle Fire, Macbook Pro *
+   * max-device-width added so you don't target laptops and desktops */
+}
+
+@media only screen and (-webkit-device-pixel-ratio: 1.5) {
+  /* CSS for High-density screens goes here *
+   * Ex: Samsung Galaxy SII, HTC Nexus One, HTC Evo 3D */
+}
+
+@media only screen and (-webkit-device-pixel-ratio: 2) {
+  /* CSS for Ultra-high-density (Retina) screens goes here *
+   * Ex: Samsung Galaxy SIII, HTC Evo LTE, iPhone 4 */
+}
