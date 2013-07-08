@@ -10,7 +10,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+ 
 import com.prey.PreyConfig;
 import com.prey.analytics.GoogleAnalyticsSessionManager;
 
@@ -32,7 +32,7 @@ public class PreyActivity extends Activity {
         super.onResume();
 
         // Example of how to track a pageview event
-        GoogleAnalyticsTracker.getInstance().trackPageView(getClass().getSimpleName());
+       // GoogleAnalyticsTracker.getInstance().trackPageView(getClass().getSimpleName());
     }
 
     @Override
@@ -40,7 +40,7 @@ public class PreyActivity extends Activity {
         super.onDestroy();
 
         // Purge analytics so they don't hold references to this activity
-        GoogleAnalyticsTracker.getInstance().dispatch();
+      //  GoogleAnalyticsTracker.getInstance().dispatch();
 
         // Need to do this for every activity that uses google analytics
         GoogleAnalyticsSessionManager.getInstance().decrementActivityCount();

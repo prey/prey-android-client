@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -47,6 +49,8 @@ import android.content.Context;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.R;
+import com.prey.exceptions.PreyException;
 import com.prey.net.http.EntityFile;
 import com.prey.net.http.PreyHttpClient;
 import com.prey.net.http.PreyHttpClientImpl;
@@ -83,7 +87,7 @@ public class PreyRestHttpClient {
 		HttpProtocolParams.setContentCharset(params, "UTF_8");
 		HttpProtocolParams.setUseExpectContinue(params, false);
 		HttpProtocolParams.setUserAgent(params, getUserAgent());
-
+		PreyLogger.i("getUserAgent():"+getUserAgent());
 		httpclient.setParams(params);
 	}
 	
@@ -99,19 +103,15 @@ public class PreyRestHttpClient {
 	}
 
 	private static List<NameValuePair> getHttpParamsFromMap(Map<String, String> params) {
-		
- 
- 
-		
- 
-
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>();
-		for (Iterator<Map.Entry<String, String>> it = params.entrySet().iterator(); it.hasNext();) {
-			Map.Entry<String, String> entry = it.next();
-			String key = entry.getKey();
-			String value = entry.getValue();
-			// httpParams.setParameter(key, value);
-			parameters.add(new BasicNameValuePair(key, value));
+		if (params!=null){
+			for (Iterator<Map.Entry<String, String>> it = params.entrySet().iterator(); it.hasNext();) {
+				Map.Entry<String, String> entry = it.next();
+				String key = entry.getKey();
+				String value = entry.getValue();
+				// httpParams.setParameter(key, value);
+				parameters.add(new BasicNameValuePair(key, value));
+			}
 		}
 		return parameters;
 	}
@@ -226,6 +226,26 @@ public class PreyRestHttpClient {
 		return response;
 	}
 
+	public PreyHttpResponse postStatusAutentication(String url,String status, Map<String, String> params, PreyConfig preyConfig) throws IOException {
+		HttpPost method = new HttpPost(url);
+		
+		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
+		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
+		method.addHeader("X-Prey-Status", status);
+		PreyLogger.i("status           "+status);
+		
+		
+		// method.setParams(getHttpParamsFromMap(params));
+		PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+		httpclient.setRedirectHandler(new NotRedirectHandler());
+		HttpResponse httpResponse = httpclient.execute(method);
+		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
+		PreyLogger.d("Response from server: " + response.toString());  
+		return response;
+	}
+	
+	
 	public PreyHttpResponse postAutentication(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
 		HttpPost method = new HttpPost(url);
 		
@@ -263,30 +283,14 @@ public class PreyRestHttpClient {
 		PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
-	
-	
-	
-	public static HttpResponse postJson(String url, JSONObject jsonObject) throws Exception 
-	{
-	    //instantiates httpclient to make request
-	    DefaultHttpClient httpclient = new DefaultHttpClient();
-
-	    //url with the post data
-	    HttpPost httpost = new HttpPost(url);	   
-
-	    //passes the results to a string builder/entity
-	    StringEntity se = new StringEntity(jsonObject.toString());
-
-	    //sets the post request as the resulting string
-	    httpost.setEntity(se);
-	    //sets a request header so the page receving the request
-	    //will know what to do with it
-	    httpost.setHeader("Accept", "application/json");
-	    httpost.setHeader("Content-type", "application/json");
-
-	    //Handles what is returned from the page 
-	    ResponseHandler responseHandler = new BasicResponseHandler();
-	    return httpclient.execute(httpost, responseHandler);
+		
+	public PreyHttpResponse get(String url) throws IOException {
+		HttpGet method = new HttpGet(url);
+		PreyLogger.d("Sending using 'GET' - URI: " + method.getURI());
+		HttpResponse httpResponse = httpclient.execute(method);
+		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
+		PreyLogger.d("Response from server: " + response.toString());
+		return response;
 	}
 	
 	public PreyHttpResponse get(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
@@ -363,17 +367,30 @@ public class PreyRestHttpClient {
 		return "Prey/".concat(PreyConfig.getPreyConfig(ctx).getPreyVersion()).concat(" (Android) - v") + PreyConfig.getPreyConfig(ctx).getPreyMinorVersion();
 	}
 
-	public StringBuilder getStringUrl(String url) throws Exception {
+	public String getStringUrl(String url,PreyConfig preyConfig) throws Exception {
 
-		HttpGet method = new HttpGet();
-		method.setURI(new URI(url));
-		HttpResponse httpResponse = httpclient.execute(method);
-		HttpEntity httpEntity = httpResponse.getEntity();
-		InputStream is = httpEntity.getContent();
+		PreyLogger.i("getStringUrl("+url+")");
+		Map<String, String> parameters = new HashMap<String, String>();
+		try {
+			return PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig).getResponseAsString();
+		} catch (IOException e) {
+			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
+		}
+		
+		 
+	}
+	
+	public StringBuilder getStringHttpResponse(HttpResponse httpResponse) throws Exception {
+
+
+		HttpEntity httpEntity = null;
+		InputStream is = null;
 		InputStreamReader input = null;
 		BufferedReader reader = null;
 		StringBuilder sb = null;
 		try {
+			httpEntity = httpResponse.getEntity();
+			is = httpEntity.getContent();
 			input = new InputStreamReader(is, "iso-8859-1");
 			reader = new BufferedReader(input, 8);
 			sb = new StringBuilder();
@@ -383,24 +400,30 @@ public class PreyRestHttpClient {
 			}
 
 			sb.toString().trim();
+		} catch (IllegalStateException e) {
+			
 		} catch (Exception e) {
 			PreyLogger.e("Buffer Error, Error converting result " + e.toString(), e);
 		} finally {
 			try {
-				is.close();
+				if(is!=null)
+					is.close();
 			} catch (IOException e) {
 			}
 			try {
-				reader.close();
+				if(reader!=null)
+					reader.close();
 			} catch (IOException e) {
 			}
 			try {
-				input.close();
+				if(input!=null)
+					input.close();
 			} catch (IOException e) {
 			}
 		}
 		return sb;
 	}
+	
 }
 
 final class NotRedirectHandler implements RedirectHandler {

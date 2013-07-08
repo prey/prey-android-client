@@ -92,10 +92,6 @@ public class FileConfigReader {
 	public String getAnalyticsUA() {
 		return properties.getProperty("analytics-ua");
 	}
-	
-	public String getApiV1(){
-		return properties.getProperty("api-v1");
-	}
  
 	public String getApiV2(){
 		return properties.getProperty("api-v2");

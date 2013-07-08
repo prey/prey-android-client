@@ -7,9 +7,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
-    android:installLocation="internalOnly"
-    android:versionCode="35"
-    android:versionName="@string/prey_version" >
+    android:versionCode="51"
+    android:versionName="1.0.0" >
 
     <uses-sdk android:minSdkVersion="4" />
 
@@ -44,6 +43,11 @@
  	<uses-feature android:name="android.hardware.camera.autofocus"  android:required="true"  />
  	<uses-feature android:name="android.hardware.camera.front"   android:required="true" />
  
+ 	
+ 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+   
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -77,10 +81,12 @@
        
     <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
 
-     <uses-permission android:name="android.permission.SEND_DOWNLOAD_COMPLETED_INTENTS" />
+    <uses-permission android:name="android.permission.SEND_DOWNLOAD_COMPLETED_INTENTS" />
     
+    <uses-permission android:name="android.permission.BATTERY_STATS" />
+    <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" /> 
     
-    
+        
     <application
         android:name="com.prey.PreyApp"
         android:icon="@drawable/logo"
@@ -279,65 +285,89 @@
             android:theme="@android:style/Theme.NoTitleBar" />
         
         
-        
-        <!--  INI BROWSER  -->
-        <activity android:name="com.prey.activities.browser.InstallBrowserActivity"
-            android:label="@string/preyForAndroid_name"
-            android:configChanges = "orientation"
-			android:screenOrientation = "portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+         <activity
+          android:name="com.prey.twilio.TwilioPhoneActivity"
+          android:screenOrientation="portrait">
+            <intent-filter >
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         
-        <activity android:name="com.prey.activities.browser.WizardBrowserActivity"
-            android:label="@string/preyForAndroid_name"
-            android:configChanges = "orientation"
-			android:screenOrientation = "portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>        
         
-        <activity android:name="com.prey.activities.browser.PanelBrowserActivity"
-            android:label="@string/preyForAndroid_name"
-            android:configChanges = "orientation"
-			android:screenOrientation = "portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>        
-        
-        
-        <activity android:name="com.prey.activities.browser.NewUserBrowserActivity"
-            android:label="@string/preyForAndroid_name"
-            android:configChanges = "orientation"
-			android:screenOrientation = "portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>        
+        <!--  INI BROWSER  -->
         
         <activity android:name="com.prey.activities.browser.LoginBrowserActivity"
             android:label="@string/preyForAndroid_name"
             android:configChanges = "orientation"
 			android:screenOrientation = "portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <intent-filter>              
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity android:name="com.prey.activities.browser.UserRegisteredBrowserActivity"
+        <activity android:name="com.prey.activities.browser.NewUserBrowserActivity"
             android:label="@string/preyForAndroid_name"
             android:configChanges = "orientation"
 			android:screenOrientation = "portrait" >
+            <intent-filter>            
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.prey.activities.browser.PermissionBrowserActivity"
+            android:label="@string/preyForAndroid_name"
+            android:configChanges = "orientation"
+			android:screenOrientation = "portrait" >
+            <intent-filter>             
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.prey.activities.browser.PrePermissionBrowserActivity"
+            android:label="@string/preyForAndroid_name"
+            android:configChanges = "orientation"
+			android:screenOrientation = "portrait" >
+            <intent-filter>             
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>                
+        <activity android:name="com.prey.activities.browser.ReadyBrowserActivity"
+            android:label="@string/preyForAndroid_name"
+            android:configChanges = "orientation"
+			android:screenOrientation = "portrait" >
+            <intent-filter>               
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>        
+        <activity android:name="com.prey.activities.browser.TourBrowserActivity" 
+            android:configChanges = "orientation"
+			android:screenOrientation = "portrait" >
+            <intent-filter>               
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.prey.activities.browser.UserRegisteredBrowserActivity" 
+            android:configChanges = "orientation"
+			android:screenOrientation = "portrait" >
+            <intent-filter>                
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>       
+        <activity android:name="com.prey.activities.browser.WarningBrowserActivity" 
+            android:configChanges = "orientation"
+			android:screenOrientation = "portrait" >
+            <intent-filter>               
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>        
+        <activity android:name="com.prey.activities.CamouflageActivity"
+            android:configChanges = "orientation"
+			android:screenOrientation = "portrait" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.prey.activities.GameSealsBrowserActivity"
+            android:configChanges = "orientation"
+			android:screenOrientation = "portrait" >
+            <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -349,39 +379,51 @@
          <intent-filter>
             <action android:name="com.prey.activities.PreyConfigurationActivity" />
             <category android:name="android.intent.category.DEFAULT" />
-         </intent-filter>
-         
-         
-         <intent-filter>
-            <action android:name="com.prey.activities.browser.InstallBrowserActivity" />
-            <category android:name="android.intent.category.DEFAULT" />
-         </intent-filter>
-         <intent-filter>
-            <action android:name="com.prey.activities.browser.PanelBrowserActivity" />
-            <category android:name="android.intent.category.DEFAULT" />
-         </intent-filter>
-         
-         <intent-filter>
-            <action android:name="com.prey.activities.browser.WizardBrowserActivity" />
-            <category android:name="android.intent.category.DEFAULT" />
-         </intent-filter>
-         
+         </intent-filter>         
          <intent-filter>
             <action android:name="com.prey.activities.browser.LoginBrowserActivity" />
             <category android:name="android.intent.category.DEFAULT" />
          </intent-filter>
-         
          <intent-filter>
             <action android:name="com.prey.activities.browser.NewUserBrowserActivity" />
             <category android:name="android.intent.category.DEFAULT" />
          </intent-filter>
-         
          <intent-filter>
+            <action android:name="com.prey.activities.browser.PermissionBrowserActivity" />
+            <category android:name="android.intent.category.DEFAULT" />
+         </intent-filter>
+         <intent-filter>
+            <action android:name="com.prey.activities.browser.PrePermissionBrowserActivity" />
+            <category android:name="android.intent.category.DEFAULT" />
+         </intent-filter>      
+         <intent-filter>
+            <action android:name="com.prey.activities.browser.ReadyBrowserActivity" />
+            <category android:name="android.intent.category.DEFAULT" />
+         </intent-filter>         
+ 		 <intent-filter>
+            <action android:name="com.prey.activities.browser.TourBrowserActivity" />
+            <category android:name="android.intent.category.DEFAULT" />
+         </intent-filter>         
+		 <intent-filter>
             <action android:name="com.prey.activities.browser.UserRegisteredBrowserActivity" />
+            <category android:name="android.intent.category.DEFAULT" />
+         </intent-filter>         
+         <intent-filter>
+            <action android:name="com.prey.activities.browser.WarningBrowserActivity" />
+            <category android:name="android.intent.category.DEFAULT" />
+         </intent-filter>
+         <intent-filter>
+            <action android:name="com.prey.activities.GameSealsBrowserActivity" />
             <category android:name="android.intent.category.DEFAULT" />
          </intent-filter>
          
 		 <!--  END CONFIG -->
+
+
+         <intent-filter >
+                <action android:name="com.prey.twilio.TwilioPhoneActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+         </intent-filter>
 
        
         
@@ -390,7 +432,9 @@
         <service android:name="com.prey.services.LocationService" />
         <service android:name="com.prey.services.PreyBootService" />
         <service android:name="com.prey.services.PreyRunnerService" />
-
+        <service android:name="com.prey.services.ImagenService" />
+        <service android:name="com.twilio.client.TwilioClientService" android:exported="false" />
+        
         <!-- Receivers -->
         <receiver android:name="com.prey.receivers.SmsReceiver" >
             <intent-filter android:priority="1000" >
@@ -438,6 +482,9 @@
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
                 <action android:name="android.app.action.ACTION_PASSWORD_SUCCEEDED" />
                 <action android:name="android.app.action.ACTION_PASSWORD_CHANGED" />
+                <action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLE_REQUESTED" />
+      			<action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLED" />
+      
             </intent-filter>
         </receiver>
         <receiver android:name=".buttonreceiver.MediaButtonIntentReceiver" >
@@ -445,8 +492,45 @@
             	<action android:name="android.intent.action.MEDIA_BUTTON" />
         	</intent-filter>
     	</receiver>
-        
+         
+        <receiver
+            android:name="com.prey.events.receivers.EventReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:label="EventReceiver" >
+            <intent-filter android:priority="20000">
+                
+                <!-- TURNED ON/OFF --> 
+                
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                 
+                <!-- BATTERY LOW -->   
+ 
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OKAY" />
+                
+                <!-- WIFI CHANGED -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
 
+                <!-- SIM CHANGED AND  BOOT COMPLETED -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />          
+                
+                <!-- (UN)PLUGGED -->              
+ 
+                
+ 
+        		<action android:name="android.intent.action.BATTERY_CHANGED" />
+        		<action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+    			<action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+                
+            </intent-filter>
+        </receiver>
+        
+        
+ 
+
+   
         <!-- Only C2DM servers can send messages for the app. If permission is not set - any other app can generate it -->
         <receiver android:name="com.prey.receivers.C2DMReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
 
@@ -480,14 +564,20 @@
                 <action android:name="android.intent.action.ACTION_BATTERY_CHANGED"/>
             </intent-filter>
         </receiver>
-         -->   
-         
+     
+        
+        <receiver android:name="com.prey.receivers.BatteryReceiver"> 
+    		<intent-filter> 
+        		<action android:name="android.intent.action.BATTERY_CHANGED" />
+    		</intent-filter> 
+		</receiver>
+   
         <receiver android:name="com.prey.receivers.PreyInstallReceiver">
                  <intent-filter android:priority="1000">
                     <action android:name="android.intent.action.USER_PRESENT" />
             	 </intent-filter>
         </receiver>
-         
+          -->   
     </application>
 
 </manifest>

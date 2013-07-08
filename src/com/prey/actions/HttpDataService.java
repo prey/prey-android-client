@@ -58,6 +58,7 @@ public class HttpDataService {
 		return parameters;
 	}
 
+	/*
 	public HashMap<String, String> getDataAsParameters() {
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		if (isList()) {
@@ -78,13 +79,33 @@ public class HttpDataService {
 
 		return parameters;
 	}
+	*/
+	public HashMap<String, String> getDataAsParameters() {
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		if (isList()) {
+			StringBuffer key = new StringBuffer();
+			for (String valueKey : dataList.keySet()) {
+				String valueData = dataList.get(valueKey);
+				key.append(this.key);
+				key.append("[");
+				key.append(valueKey);
+				key.append("]");
+				parameters.put(key.toString(), valueData);
+				key.delete(0, key.length());
+			}
+			key = null;
+		} else
+			parameters.put(key, singleData);
+
+		return parameters;
+	}
 	
 	public String getDataAsString() {
 		StringBuffer sb = new StringBuffer();
 
 		if (isList()) {
 			for (String valueKey : dataList.keySet()) {
-				String valueData = dataList.get(key);
+				String valueData = dataList.get(valueKey);
 				sb.append(key);
 				sb.append("[");
 				sb.append(valueKey);

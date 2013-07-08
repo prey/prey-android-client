@@ -16,6 +16,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.prey.managers.PreyConnectivityManager;
+
 import android.app.ActivityManager;
 import android.content.Context;
 import android.net.DhcpInfo;
@@ -43,8 +45,9 @@ public class PreyPhone {
 
 	private void init() {
 		updateHardware();
-		updateWifi();
 		updateListWifi();
+		updateWifi();
+		
 		update3g();
 	}
 
@@ -88,12 +91,40 @@ public class PreyPhone {
 		DhcpInfo dhcpInfo= wifiMgr.getDhcpInfo();
 		wifi.setNetmask(formatterIp(dhcpInfo.netmask));
 		wifi.setGatewayIp(formatterIp(dhcpInfo.serverAddress));
-		if(ipAddress!=0)
+		if(ipAddress!=0){
 			wifi.setInterfaceType("Wireless");
-		else
-			wifi.setInterfaceType("3G");
+		}else{
+			if (PreyConnectivityManager.getInstance(ctx).isMobileConnected()){
+				wifi.setInterfaceType("Mobile");
+			}else{
+				wifi.setInterfaceType("");
+			}
+		}
 		wifi.setName("eth0");
-		    	
+		String ssid=wifiInfo.getSSID();
+		try{
+			ssid=ssid.replaceAll("\"", "");
+		}catch(Exception e){
+			
+		}
+		wifi.setSsid(ssid);
+		
+		for (int i=0;listWifi!=null&&i<  listWifi.size();i++) {
+			Wifi _wifi=listWifi.get(i);
+			ssid=_wifi.getSsid();
+			try{
+				ssid=ssid.replaceAll("\"", "");
+			}catch(Exception e){
+				
+			}
+			if (ssid.equals(wifi.getSsid())){
+				wifi.setSecurity(_wifi.getSecurity());
+				wifi.setSignalStrength(_wifi.getSignalStrength());
+				wifi.setChannel(_wifi.getChannel());
+				break;
+			}
+		}
+		 
 	}
 	
  

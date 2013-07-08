@@ -24,5 +24,7 @@ public class PreyBootController extends BroadcastReceiver {
 			context.startService(new Intent(context, PreyBootService.class));
 		} else
 			PreyLogger.e("Received unexpected intent " + intent.toString(),null);
+		
+		//TwilioPhoneManager.getInstance(context);
 	}
 }

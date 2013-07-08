@@ -15,6 +15,7 @@ import com.prey.actions.parser.ResponseParser;
 import com.prey.exceptions.PreyException;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.managers.PreyTelephonyManager;
+import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyWebServices;
 import com.prey.services.LocationService;
 import com.prey.services.PreyRunnerService;
@@ -102,8 +103,8 @@ public class ActionsRunner implements Runnable {
 				PreyLogger.e("Error, because:"+e.getMessage(),e );
 			}
 			
-			/*
-			boolean connection=false;
+			 
+			 
 			if (PreyWifiManager.getInstance(ctx).isWifiEnabled()){
 				//PreyWifiManager.getInstance(ctx).setWifiEnabled(true);
 				connection=true;
@@ -119,7 +120,7 @@ public class ActionsRunner implements Runnable {
 			} catch (PreyException e) {
 				PreyLogger.e("Error, because:"+e.getMessage(),e );
 			}
-			*/
+			 
 			
 			ctx.stopService(new Intent(ctx, LocationService.class));
 			ctx.stopService(new Intent(ctx, PreyRunnerService.class));

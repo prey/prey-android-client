@@ -18,7 +18,7 @@ public class PreyController {
 
 	public static void startPrey(Context ctx) {
 		PreyConfig config = PreyConfig.getPreyConfig(ctx);
-		if (config.isThisDeviceAlreadyRegisteredWithPrey(true)){
+		if (config.isThisDeviceAlreadyRegisteredWithPrey()){
 			// Cancelling the notification of the SMS that started Prey
 			NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 			nm.cancelAll();

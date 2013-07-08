@@ -25,7 +25,6 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.telephony.TelephonyManager;
 
 import com.prey.actions.LockAction;
 import com.prey.actions.PreyAction;
@@ -79,7 +78,7 @@ public class PreyConfig {
 	public static final String ACTIVATE_DEVICE_ADMIN = "ACTIVATE_DEVICE_ADMIN";
 	public static final String PREFS_ACTIVATE_WIFI = "PREFS_ACTIVATE_WIFI";
 	public static final String PREFS_ACTIVATE_MOBILE_DATA = "PREFS_ACTIVATE_MOBILE_DATA";
-	public static final String IS_CAMOUFLAGE_SET = "PREFS_CAMOUFLAGE";
+	public static final String CAMOUFLAGE_SET = "PREFS_CAMOUFLAGE";
 	public static final String PREFS_ADMIN_DEVICE_REVOKED_CHECK= "PREFS_ADMIN_DEVICE_REVOKED_CHECK";
 	public static final String UNLOCK_PASS = "UNLOCK_PASS";
 	public static final String IS_LOCK_SET = "IS_LOCK_SET";
@@ -130,7 +129,7 @@ public class PreyConfig {
 	private boolean shouldActivateMobileData;
 	private boolean isTheAccountAlreadyVerified;
 	private boolean securityPrivilegesAlreadyPrompted;
-	private boolean isCamouflageSet;
+	private boolean camouflageSet;
 	private boolean locked;
 	private boolean runOnce;
 	private boolean isFroyoOrAbove;
@@ -180,7 +179,7 @@ public class PreyConfig {
 		this.shouldCheckSimChange = settings.getBoolean(PreyConfig.PREFS_CHECK_SIM_CHANGE, true);
 		this.shouldActivateWifi = settings.getBoolean(PreyConfig.PREFS_ACTIVATE_WIFI, false);
 		this.shouldActivateMobileData = settings.getBoolean(PreyConfig.PREFS_ACTIVATE_MOBILE_DATA, false);
-		this.isCamouflageSet = settings.getBoolean(PreyConfig.IS_CAMOUFLAGE_SET, false);
+		this.camouflageSet = settings.getBoolean(PreyConfig.CAMOUFLAGE_SET, false);
 		this.isTheAccountAlreadyVerified = settings.getBoolean(PreyConfig.PREFS_ACCOUNT_VERIFIED, false);
 		this.securityPrivilegesAlreadyPrompted = settings.getBoolean(PreyConfig.PREFS_SECURITY_PROMPT_SHOWN, false);
 		this.locked = settings.getBoolean(PreyConfig.IS_LOCK_SET, false);
@@ -378,7 +377,15 @@ public class PreyConfig {
 	}
 	
 	public boolean isCamouflageSet() {
-		return isCamouflageSet;
+		return camouflageSet;
+	}
+	
+	public void setCamouflageSet(boolean camouflageSet ) {
+		this.camouflageSet = camouflageSet;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(PreyConfig.CAMOUFLAGE_SET, camouflageSet);
+		editor.commit();
 	}
 
 	public String getSmsToStop() {
@@ -442,6 +449,10 @@ public class PreyConfig {
 		return isVerified;
 	}
 
+	public boolean isThisDeviceAlreadyRegisteredWithPrey() {
+		return deviceID!=null&&!"".equals(deviceID);
+	}
+	
 	public void setAccountVerified() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
 		SharedPreferences.Editor editor = settings.edit();
