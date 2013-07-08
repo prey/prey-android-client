@@ -17,7 +17,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.ActionsRunnner;
 import com.prey.actions.observer.ActionsController;
-import com.prey.net.PreyWebServices;
+
 
 /**
  * This class wraps Prey execution as a services, allowing the OS to kill it and

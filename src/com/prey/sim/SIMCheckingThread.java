@@ -9,6 +9,7 @@ import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.backwardcompatibility.CupcakeSupport;
 import com.prey.exceptions.SMSNotSendException;
+import com.prey.json.UtilJson;
 import com.prey.managers.PreyTelephonyManager;
 import com.prey.net.PreyWebServices;
 import com.prey.services.PreyBootService;
@@ -30,7 +31,7 @@ public class SIMCheckingThread implements Runnable {
 	public void execute() {
 		PreyLogger.d("SIM checking thread has started");
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey(false)) {
+		if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey()) {
 			try {
 				boolean isSIMReady = false;
 				final PreyTelephonyManager telephony = PreyTelephonyManager.getInstance(ctx);
@@ -47,11 +48,11 @@ public class SIMCheckingThread implements Runnable {
 									String message = ctx.getString(R.string.sms_to_send_text, mail);
 									if (PreyConfig.getPreyConfig(ctx).isCupcake()){
 										CupcakeSupport.sendSMS(destSMS, message);
-										PreyWebServices.getInstance().sendEventsPreyHttpReport(ctx, "send_simchanged_started", "true");
+										PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "sim_send_sms", "started"));
 									}else
 										try {
 											SMSSupport.sendSMS(destSMS, message);
-											PreyWebServices.getInstance().sendEventsPreyHttpReport(ctx, "send_simchanged_started", "true");
+											PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","sim_send_sms", "started"));
 										} catch (SMSNotSendException e) {
 											PreyLogger.i("There was an error sending the SIM replaced SMS alert");
 										}

@@ -87,4 +87,5 @@ public class Battery {
 		this.voltage = voltage;
 	}  
 
+	 
 }

@@ -48,4 +48,25 @@ public class PreyConnectivityManager {
 			return connectivity.getActiveNetworkInfo().isRoaming();
 		return false;
 	}
+	
+	public boolean isMobileAvailable(){
+		android.net.NetworkInfo mobile =connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);		 
+		return mobile.isAvailable();
+	}
+	
+	public boolean isMobileConnected(){
+		android.net.NetworkInfo mobile =connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);		
+		return mobile.isConnected();
+	}
+	
+	
+	public boolean isWifiAvailable(){
+		android.net.NetworkInfo wifi =connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);		 
+		return wifi.isAvailable();
+	}
+	
+	public boolean isWifiConnected(){
+		android.net.NetworkInfo wifi =connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);		
+		return wifi.isConnected();
+	}
 }

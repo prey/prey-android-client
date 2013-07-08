@@ -43,4 +43,10 @@ public class PreyTelephonyManager {
 		this.simSerialNumber=simSerialNumber;
 	}	 
 	 
+	public String getLine1Number(){
+		return telephony.getLine1Number();
+		
+	}
+	
+	
 }

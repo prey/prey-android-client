@@ -20,12 +20,10 @@ public class NoMoreDevicesAllowedException extends PreyException {
 	 */
 	public NoMoreDevicesAllowedException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
-		// TODO Auto-generated constructor stub
 	}
 
 	public NoMoreDevicesAllowedException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 }

@@ -46,7 +46,6 @@ public class PreyDeviceAdmin extends DeviceAdminReceiver {
 
 	@Override
 	public void onPasswordChanged(Context context, Intent intent) {
-		// TODO Auto-generated method stub
 		PreyLogger.d("Password was changed successfully");
 	}
 

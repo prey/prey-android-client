@@ -31,13 +31,13 @@ public class C2DMReceiver extends BroadcastReceiver {
 	 }
 
 	private void handleMessage(Context context, Intent intent) {
-		String c2dmAction=PreyConfig.getPreyConfig(context).getc2dmAction();
-		String pushedMessage = intent.getExtras().getString(c2dmAction);
-	        if (pushedMessage != null) {
-	            PreyLogger.i("Push message received " + pushedMessage);
+		//String c2dmAction=PreyConfig.getPreyConfig(context).getc2dmAction();
+		//String pushedMessage = intent.getExtras().getString(c2dmAction);
+	     //   if (pushedMessage != null) {
+	       //     PreyLogger.i("Push message received " + pushedMessage);
 	            try {
 					//PushMessage pMessage = new PushMessage(pushedMessage);
-					PreyConfig.getPreyConfig(context).setRunOnce(pushedMessage.indexOf("run_once") >= 0);
+				//	PreyConfig.getPreyConfig(context).setRunOnce(pushedMessage.indexOf("run_once") >= 0);
 					//boolean shouldPerform = pushedMessage.indexOf("run") >= 0;
 					//boolean shouldStop = pushedMessage.indexOf("stop") >= 0;
 						
@@ -51,7 +51,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 				} catch (Exception e) {
 					PreyLogger.e("Push execution failed to run", e);
 				}
-	        }
+	      //  }
 	}
 	
 
