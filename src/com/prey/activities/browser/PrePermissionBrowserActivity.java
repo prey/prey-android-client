@@ -1,21 +1,24 @@
 package com.prey.activities.browser;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.webkit.WebView;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 
-public class InstallBrowserActivity extends BaseBrowserActivity {
+public class PrePermissionBrowserActivity extends BaseBrowserActivity {
 
 	WebView installBrowser = null;
 
-	@SuppressLint("SetJavaScriptEnabled")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		createEnvironment();
 		WebView installBrowser = getWebView();
-		installBrowser.loadUrl("file:///android_asset/final/install.html");
+		//installBrowser.loadUrl("file:///android_asset/final/permission.html");
+		installBrowser.loadUrl("file:///android_asset/v1/index.html#error");
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
+		preyConfig.setActiveManager(true);
+		
 	}
 
 	@Override

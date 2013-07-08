@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Created by Carlos Yaconi
+m * Created by Carlos Yaconi
  * Copyright 2012 Fork Ltd. All rights reserved.
  * License: GPLv3
  * Full license at "/LICENSE"
@@ -18,7 +18,10 @@ import android.widget.Button;
 
 import com.prey.PreyConfig;
  
+
 import com.prey.activities.browser.manager.ManagerBrowser;
+import com.prey.events.Event;
+import com.prey.events.manager.EventManager;
 
 public class LoginActivity extends PasswordActivity {
 
@@ -35,6 +38,9 @@ public class LoginActivity extends PasswordActivity {
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancel(R.string.preyForAndroid_name);
 		startup();
+		if (isThisDeviceAlreadyRegisteredWithPrey()) {
+			new EventManager(getApplicationContext()).execute(new Event(Event.APPLICATION_OPENED));
+		}
 	}
 
 	@Override
@@ -44,24 +50,18 @@ public class LoginActivity extends PasswordActivity {
 	}
 
 	private void startup() {
-		
+		//TwilioPhoneManager.getInstance(getApplicationContext());
 		ManagerBrowser managerBrowser=new ManagerBrowser();
-		
 		if (!isThisDeviceAlreadyRegisteredWithPrey()) {
 			managerBrowser.preLogin(getApplicationContext());
-			/*
-			Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-			startActivity(intent);
-			*/
 		} else {
-			managerBrowser.thisDeviceAlreadyRegistered(getApplicationContext());
+			if (isCamouflageSet()){
+				showCamouflage();
+			}else{
+				managerBrowser.postLogin(getApplicationContext());
+			}
 		}
 		finish();
-		/*if (!getPreyConfig().isCamouflageSet())
-			showLogin();
-		else
-			showCamouflage();
-			*/
 	}
 
 	private void showLogin() {
@@ -86,15 +86,20 @@ public class LoginActivity extends PasswordActivity {
 	}
 
 	private void showCamouflage() {
-
-		setContentView(R.layout.camouflage);
-		bindPasswordControls();
+		Context ctx=getApplicationContext();
+		Intent intent = null;
+		intent = new Intent(ctx, CamouflageActivity.class);
+		//intent = new Intent(ctx, GameSealsBrowserActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		ctx.startActivity(intent);
 	}
 
 	private boolean isThisDeviceAlreadyRegisteredWithPrey() {
 		return getPreyConfig().isThisDeviceAlreadyRegisteredWithPrey(false);
 	}
 
-	
+	private boolean isCamouflageSet() {
+		return getPreyConfig().isCamouflageSet();
+	}
 
 }

@@ -4,7 +4,7 @@ import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
-import com.prey.activities.browser.WizardBrowserActivity;
+import com.prey.activities.browser.PermissionBrowserActivity;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 
@@ -33,7 +33,7 @@ public class NewUserScriptInterface {
 				PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(ctx, name, email,password,deviceType);
 				PreyLogger.d("Response creating account: " + accountData.toString());
 				PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
-				Intent intent = new Intent(ctx, WizardBrowserActivity.class);
+				Intent intent = new Intent(ctx, PermissionBrowserActivity.class);
     			ctx.startActivity(intent);
 			} catch (PreyException e) {
 				error = e.getMessage();

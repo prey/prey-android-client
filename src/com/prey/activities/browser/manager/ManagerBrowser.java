@@ -1,11 +1,16 @@
 package com.prey.activities.browser.manager;
 
 import com.prey.PreyConfig;
-import com.prey.activities.browser.InstallBrowserActivity;
-import com.prey.activities.browser.LoginBrowserActivity;
-import com.prey.activities.browser.PanelBrowserActivity;
+ 
+ 
+import com.prey.activities.browser.TourBrowserActivity;
+ 
+import com.prey.activities.browser.ReadyBrowserActivity;
 import com.prey.activities.browser.UserRegisteredBrowserActivity;
-import com.prey.activities.browser.WizardBrowserActivity;
+import com.prey.activities.browser.WarningBrowserActivity;
+import com.prey.backwardcompatibility.FroyoSupport;
+ 
+ 
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,22 +22,26 @@ public class ManagerBrowser {
 	public void preLogin(Context ctx){
 		Intent intent = null;
 		if (PreyConfig.getPreyConfig(ctx).isActiveTour()){
-			 intent = new Intent(ctx, InstallBrowserActivity.class);
+			 intent = new Intent(ctx, TourBrowserActivity.class);
 		}else{
-			 intent = new Intent(ctx, LoginBrowserActivity.class);
+			 if (PreyConfig.getPreyConfig(ctx).isActiveWizard()){
+				 intent = new Intent(ctx, WarningBrowserActivity.class);
+			 }else{
+				 intent = new Intent(ctx, ReadyBrowserActivity.class);
+			 }
 		}
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		ctx.startActivity(intent);
 	}
 	
 	public void postLogin(Context ctx){
-	
 		Intent intent =null;
-		if (PreyConfig.getPreyConfig(ctx).isActiveWizard()){
-			intent = new Intent(ctx, WizardBrowserActivity.class);
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		if (preyConfig.isFroyoOrAbove() && !FroyoSupport.getInstance(ctx).isAdminActive()){
+			 intent = new Intent(ctx, WarningBrowserActivity.class);
 		}else{
-			intent = new Intent(ctx, PanelBrowserActivity.class);
-		}
+        	 intent = new Intent(ctx, ReadyBrowserActivity.class);
+ 		}
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		ctx.startActivity(intent);
 		

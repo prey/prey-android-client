@@ -1,6 +1,6 @@
 package com.prey.activities.browser.javascript.action;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -10,6 +10,7 @@ import com.prey.R;
 
  
 import com.prey.activities.browser.manager.ManagerBrowser;
+import com.prey.analytics.PreyGoogleAnalytics;
 import com.prey.exceptions.NoMoreDevicesAllowedException;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
@@ -43,7 +44,7 @@ public class LoginScriptInterface {
 	public void execute(String email, String password, String deviceType, int wrongPasswordIntents) {
 		this.wrongPasswordIntents=wrongPasswordIntents;
 		PreyLogger.i("login(" + email + "," + password + ")");
-		if (!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey(false)) {
+		if (!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
 			new AddDeviceToAccount().execute(email, password, deviceType);
 		} else {
 			new CheckPassword().execute(password);
@@ -84,8 +85,8 @@ public class LoginScriptInterface {
 				error = e.getMessage();
 				try {
 					NoMoreDevicesAllowedException noMoreDevices = (NoMoreDevicesAllowedException) e;
+					PreyLogger.d("Message:"+noMoreDevices.getMessage());
 					noMoreDeviceError = true;
-
 				} catch (ClassCastException e1) {
 					noMoreDeviceError = false;
 				}
@@ -100,14 +101,14 @@ public class LoginScriptInterface {
 				Toast.makeText(ctx,R.string.set_old_user_no_more_devices_text, Toast.LENGTH_LONG).show();
 			}else {
 				if (error == null) {
-					GoogleAnalyticsTracker.getInstance().trackEvent(
-							"Device",  // Category
-				            "Added",  // Action
-				            "", // Label
-				            1);
+					PreyGoogleAnalytics.getInstance().trackAsynchronously(ctx,"Device/Added");
  
+					PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+					preyConfig.setActiveTour(false);
+					
 					ManagerBrowser manager = new ManagerBrowser();
 					manager.postLogin(ctx);
+					preyConfig.registerC2dm();
 				} else {
 					Toast.makeText(ctx,error, Toast.LENGTH_LONG).show();
 				}

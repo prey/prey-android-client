@@ -5,13 +5,19 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.prey.PreyConfig;
+import com.prey.PreyController;
+import com.prey.PreyLogger;
 import com.prey.accounts.UserEmail;
 import com.prey.activities.browser.LoginBrowserActivity;
 import com.prey.activities.browser.NewUserBrowserActivity;
-import com.prey.activities.browser.PanelBrowserActivity;
+import com.prey.activities.browser.PrePermissionBrowserActivity;
+import com.prey.activities.browser.ReadyBrowserActivity;
+import com.prey.activities.browser.PermissionBrowserActivity;
 import com.prey.activities.browser.javascript.action.LoginScriptInterface;
 import com.prey.activities.browser.javascript.action.NewUserScriptInterface;
 import com.prey.activities.browser.javascript.action.UnLockScriptInterface;
+import com.prey.analytics.PreyGoogleAnalytics; 
+ 
 
 public class PreyJavaScriptInterface {
 
@@ -30,13 +36,16 @@ public class PreyJavaScriptInterface {
 	}
 
 	public void login(String email, String password) {
-		
-		
 		LoginScriptInterface login = new LoginScriptInterface(ctx);
 		login.execute(email, password,deviceType, wrongPasswordIntents);
 	}
 	
 	public void userRegistered(String password) {
+		try{
+			PreyController.startPrey(ctx);
+		}catch(Exception e){
+			PreyLogger.e("Error, causa:"+e.getMessage(), e);
+		}
 		LoginScriptInterface login = new LoginScriptInterface(ctx);
 		String email = PreyConfig.getPreyConfig(ctx).getEmail();
 		login.execute(email, password,deviceType, wrongPasswordIntents);
@@ -54,7 +63,7 @@ public class PreyJavaScriptInterface {
 	}
 
 	public void goPanel() {
-		Intent intent = new Intent(ctx, PanelBrowserActivity.class);
+		Intent intent = new Intent(ctx, ReadyBrowserActivity.class);
 		ctx.startActivity(intent);
 	}
 
@@ -89,6 +98,24 @@ public class PreyJavaScriptInterface {
 		Toast.makeText(ctx, "Uninstall Lock:" + str, Toast.LENGTH_SHORT).show();
 	}
 	
+	public void permission(){
+		Intent intent = new Intent(ctx, PermissionBrowserActivity.class);
+		ctx.startActivity(intent);
+	}
 	
-
+	public void prePermission(){
+		Intent intent = new Intent(ctx, PrePermissionBrowserActivity.class);
+		ctx.startActivity(intent);
+	}
+	
+	public void preyOn(){
+	 	 
+		PreyController.startPrey(ctx);
+ 
+	}
+	
+	public void startPage(String page){
+		PreyLogger.i("startPage:"+page);
+		PreyGoogleAnalytics.getInstance().trackAsynchronously(ctx, page);
+	}
 }
