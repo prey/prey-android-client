@@ -12,24 +12,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
- 
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
- 
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -37,8 +29,6 @@ import com.prey.PreyStatus;
 import com.prey.R;
 import com.prey.activities.PreyConfigurationActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
-import com.prey.preferences.DeviceAdminPreference;
- 
 
 public class PreyConfigurationSecurityActivity extends PreferenceActivity {
 

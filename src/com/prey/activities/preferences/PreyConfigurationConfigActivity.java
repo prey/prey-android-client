@@ -7,10 +7,7 @@
 package com.prey.activities.preferences;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 import com.prey.PreyConfig;
@@ -18,7 +15,6 @@ import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.R;
 import com.prey.activities.PreyConfigurationActivity;
-import com.prey.preferences.IconPreference;
 
 public class PreyConfigurationConfigActivity extends PreferenceActivity {
 

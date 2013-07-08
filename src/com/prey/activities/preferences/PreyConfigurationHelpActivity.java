@@ -16,7 +16,6 @@ import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.R;
 import com.prey.activities.PreyConfigurationActivity;
-import com.prey.backwardcompatibility.FroyoSupport;
 
 public class PreyConfigurationHelpActivity extends PreferenceActivity {
 

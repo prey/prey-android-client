@@ -5,8 +5,6 @@ import com.prey.R;
 
 
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
 import android.app.Activity;
 import android.content.Intent;
  
