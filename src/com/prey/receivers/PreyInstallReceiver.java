@@ -5,13 +5,11 @@ import java.util.Date;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.accounts.UserEmail;
-import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract.CommonDataKinds.Email;
 
 public class PreyInstallReceiver extends BroadcastReceiver {
 
@@ -64,7 +62,7 @@ public class PreyInstallReceiver extends BroadcastReceiver {
 	}
 
 	private boolean isThisDeviceAlreadyRegisteredWithPrey() {
-		return getPreyConfig().isThisDeviceAlreadyRegisteredWithPrey(false);
+		return getPreyConfig().isThisDeviceAlreadyRegisteredWithPrey();
 	}
 
 	private boolean hasLastExecution() {
