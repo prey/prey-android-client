@@ -9,6 +9,7 @@
   <uses-policies>
     <force-lock />
     <reset-password />
+    <wipe-data />
     <watch-login />
   </uses-policies>
 </device-admin>
