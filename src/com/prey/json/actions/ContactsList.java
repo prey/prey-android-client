@@ -12,15 +12,19 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.ContactsContract;
 
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
+import com.prey.json.UtilJson;
+import com.prey.net.PreyWebServices;
 
 public class ContactsList extends JsonAction {
 
@@ -30,6 +34,7 @@ public class ContactsList extends JsonAction {
 		return listResult;
 	}
 
+	@TargetApi(Build.VERSION_CODES.ECLAIR) 
 	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters) {
 		HttpDataService data = new HttpDataService("contacts_list");
 		HashMap<String, String> parametersMap = new HashMap<String, String>();
@@ -61,6 +66,7 @@ public class ContactsList extends JsonAction {
 			}
 		} catch (Exception ex) {
 			PreyLogger.e("Error:"+ex.getMessage(), ex);
+			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("get","contacts_list","failed",ex.getMessage()));
 		} finally {
 			cursor.close();
 		}

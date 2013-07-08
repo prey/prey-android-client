@@ -18,11 +18,12 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
+import com.prey.json.UtilJson;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.util.ClassUtil;
 
-public class Report {
+public class Report  {
 
 	public void get(Context ctx, List<ActionResult> lista, JSONObject parameters) {
 		try {
@@ -52,7 +53,10 @@ public class Report {
 			}
 		} catch (Exception e) {
 			PreyLogger.e("Error, causa:" + e.getMessage(), e);
+			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get","report","failed",e.getMessage()));
 		}
 	}
+	
+ 
 
 }

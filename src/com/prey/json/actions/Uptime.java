@@ -20,6 +20,7 @@ import com.prey.json.JsonAction;
 public class Uptime extends JsonAction{
 
  
+
 	public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting Uptime Data.");
 		List<HttpDataService> listResult=super.get(ctx, list, parameters);

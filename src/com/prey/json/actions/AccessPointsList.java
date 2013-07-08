@@ -20,6 +20,8 @@ import com.prey.PreyPhone.Wifi;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
+import com.prey.json.UtilJson;
+import com.prey.net.PreyWebServices;
 
 public class AccessPointsList extends JsonAction{
 
@@ -52,6 +54,7 @@ public class AccessPointsList extends JsonAction{
 			dataWifi.getDataList().putAll(parametersMapWifi);		
 		} catch (Exception e) {
 			PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
+			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("get","access_points_list","failed",e.getMessage()));
 		}
 		return dataWifi;
 	}

@@ -18,17 +18,29 @@ import android.os.Bundle;
 
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
+import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
 import com.prey.activities.PopUpAlertActivity;
+import com.prey.json.JsonAction;
+import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 
-public class Alert {
+public class Alert extends JsonAction{
 
+
+	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters){
+		return null;
+	}
+	
 	public void start(Context ctx, List<ActionResult> lista, JSONObject parameters) {
 		try {
 			String title = "title";//parameters.getString("title");
-			String description = parameters.getString("message");
-
+			String description ="";
+			try{
+				description=parameters.getString("alert_message");
+			}catch(JSONException je){
+				description=parameters.getString("message");
+			}
 
 			Bundle bundle = new Bundle();
 			bundle.putString("title_message", title);
@@ -40,8 +52,7 @@ public class Alert {
 			popup.putExtras(bundle);
 			popup.putExtra("description_message", description);
 			ctx.startActivity(popup);
-
-			PreyWebServices.getInstance().sendEventsPreyHttpReport(ctx, "alert_started", "true");
+			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","alert","started"));
 			try {
 				int i = 0;
 				while (!PreyStatus.getInstance().isPreyPopUpOnclick() && i < 10) {
@@ -50,9 +61,10 @@ public class Alert {
 				}
 			} catch (InterruptedException e) {
 			}
-
+			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","alert","stopped"));
 		} catch (JSONException e) {
 			PreyLogger.e("Error, causa:" + e.getMessage(), e);
+			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","alert","failed",e.getMessage()));
 		}
 	}
 

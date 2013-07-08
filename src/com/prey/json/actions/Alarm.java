@@ -7,6 +7,7 @@
 package com.prey.json.actions;
 
  
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -18,11 +19,19 @@ import android.media.MediaPlayer;
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.R;
+import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
+import com.prey.json.JsonAction;
+import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
  
 
-public class Alarm {
+public class Alarm extends JsonAction{
+
+
+	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters){
+		return null;
+	}
 
 	public void start(Context ctx,List<ActionResult> lista,JSONObject parameters){
 		 
@@ -36,11 +45,13 @@ public class Alarm {
 				final int setVolFlags = AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE | AudioManager.FLAG_VIBRATE;
 				PreyLogger.d("volumenInicial:"+max);
 				audio.setStreamVolume(AudioManager.STREAM_MUSIC, max, setVolFlags);
+				
 				mp = MediaPlayer.create(ctx, R.raw.siren);
+				
     			mp.start();
 				Mp3OnCompletionListener mp3Listener=new Mp3OnCompletionListener();
 				mp.setOnCompletionListener(mp3Listener);
-				PreyWebServices.getInstance().sendEventsPreyHttpReport(ctx, "alarm_started", "true");
+				PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","started"));
 				start=true;				
 				int i=0; 
 				while(PreyStatus.getInstance().isAlarmStart()&& i<40 ){
@@ -51,18 +62,19 @@ public class Alarm {
 				PreyStatus.getInstance().setAlarmStop();
 			} catch (Exception e) {
 				PreyLogger.e("Error executing Mp3PlayerAction " + e.getMessage(),e);
+				PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","failed",e.getMessage()));
 			}finally{
 				if(mp!=null)
 						mp.release();
 			}
 			if (start){
-				PreyWebServices.getInstance().sendEventsPreyHttpReport(ctx, "alarm_finished", "true");
+				PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","stopped"));
 			}
 			PreyLogger.d("Ejecuting Mp3PlayerAction Action[Finish]");
 	}
 	
 
-	public void stop(JSONObject parameters){
+	public void stop(Context ctx, List<ActionResult> lista, JSONObject options) {
 		PreyStatus.getInstance().setAlarmStop();
 	}
 	

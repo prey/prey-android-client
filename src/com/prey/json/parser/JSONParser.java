@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.net.PreyRestHttpClient;
 
@@ -28,13 +29,14 @@ public class JSONParser {
 
 	public List<JSONObject> getJSONFromUrl(Context ctx, String url) {
 		PreyLogger.d("getJSONFromUrl:" + url);
-		PreyRestHttpClient httpClient=PreyRestHttpClient.getInstance(ctx);
-		StringBuilder sb=null;
+		PreyRestHttpClient preyRestHttpClient=PreyRestHttpClient.getInstance(ctx);
+		String sb=null;
 		String json=null;
 		try{
-			sb=httpClient.getStringUrl(url);
+			;
+			sb=preyRestHttpClient.getStringUrl(url,PreyConfig.getPreyConfig(ctx));
 			if (sb!=null)
-				json = sb.toString().trim();
+				json = sb.trim();
 		}catch(Exception e){
 			PreyLogger.e("Error, causa:" + e.getMessage(), e);
 			return null;
@@ -63,8 +65,20 @@ public class JSONParser {
 
 		// json="[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}}, {\"command\":\"get\",\"target\":\"report\",\"options\":{\"delay\": \"25\",\"include\"[\"picture\",\"location\",\"screenshot\",\"access_points_list\"]}}]";
 
+		// json="[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}}
+		
 		//json = "[ {\"command\": \"data\",\"target\": \"location\",\"options\": {}}]";
+		
+		// json="[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}}]"; 
+	//	 json="[{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}]"; 
 
+		
+	//	 json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"screenshot\",\"access_points_list\"],\"interval\":\"10\"}}]"; 
+				
+		
+		 //json="[{\"command\":\"start\",\"target\":\"camouflage\",\"options\":null}]"; 
+		// json="[{\"command\":\"stop\",\"target\":\"camouflage\",\"options\":null}]"; 
+		 
 		if ("[]".equals(json)) {
 			return null;
 		}

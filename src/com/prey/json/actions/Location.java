@@ -24,7 +24,9 @@ import com.prey.actions.location.PreyLocation;
 import com.prey.actions.observer.ActionResult;
 import com.prey.exceptions.PreyException;
 import com.prey.json.JsonAction;
+import com.prey.json.UtilJson;
 import com.prey.managers.PreyLocationManager;
+import com.prey.net.PreyWebServices;
 import com.prey.services.LocationService;
 
 public class Location extends JsonAction{
@@ -84,6 +86,7 @@ public class Location extends JsonAction{
 
 		} catch (Exception e) {
 			PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
+			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get","location","failed",e.getMessage()));
 		}
 		return data;
 	}

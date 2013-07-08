@@ -31,11 +31,9 @@ public class Imei extends JsonAction{
 	
 	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters){
 		TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-		String imei = mTelephonyMgr.getDeviceId();
+		String imeiValue = mTelephonyMgr.getDeviceId();
  		HttpDataService data = new HttpDataService("imei");
-		 
-		 
-		data.setSingleData(imei);
+		data.setSingleData(imeiValue);
 		return data;
 	}
 

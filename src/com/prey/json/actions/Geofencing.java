@@ -21,13 +21,17 @@ import android.os.Bundle;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
  
+import com.prey.actions.HttpDataService;
 import com.prey.actions.geo.ProxAlertActivity;
 import com.prey.actions.observer.ActionResult;
  
  
+import com.prey.json.JsonAction;
+import com.prey.json.UtilJson;
+import com.prey.net.PreyWebServices;
 import com.prey.services.LocationService;
 
-public class Geofencing {
+public class Geofencing extends JsonAction{
 
  
 
@@ -66,6 +70,7 @@ public class Geofencing {
 			
 		} catch (JSONException e) {
 			PreyLogger.e("Error en json:" + e.getMessage(), e);
+			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","geofence","failed",e.getMessage()));
 		}
 
 	}
@@ -86,6 +91,12 @@ public class Geofencing {
 		 
 			 PreyLogger.i("Finish Geofencing stop");
 		 
+	}
+
+	@Override
+	public HttpDataService run(Context ctx, List<ActionResult> list, JSONObject parameters) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
