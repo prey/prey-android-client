@@ -7,7 +7,6 @@ import android.os.Bundle;
 import com.prey.actions.observer.ActionJob;
 import com.prey.actions.observer.ActionResult;
 import com.prey.activities.ScreenShotActivity;
-import com.prey.activities.ScreenshotsActivity;
 import com.prey.exceptions.PreyException;
 
 public class ScreenshotsAction  extends PreyAction {

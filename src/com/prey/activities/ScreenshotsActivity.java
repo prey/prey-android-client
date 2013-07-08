@@ -1,36 +1,8 @@
 package com.prey.activities;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-
- 
-import com.prey.PreyLogger;
-import com.prey.R;
-import com.prey.actions.screenshot.ColorPanelView;
-
- 
- 
-
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
- 
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
  
 import android.os.Bundle;
  
-import android.view.View;
- 
-import android.view.View.MeasureSpec;
-import android.widget.RelativeLayout;
  
 
 public class ScreenshotsActivity extends PreyActivity {
