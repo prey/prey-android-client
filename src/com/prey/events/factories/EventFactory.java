@@ -26,7 +26,7 @@ public class EventFactory {
 	
 	
 	public static Event getEvent(Context ctx,Intent intent){
-		Toast.makeText(ctx, "getEvent["+intent.getAction()+"]", Toast.LENGTH_LONG).show();
+		//Toast.makeText(ctx, "getEvent["+intent.getAction()+"]", Toast.LENGTH_LONG).show();
 		if (BOOT_COMPLETED.equals(intent.getAction()) ){
 			if (PreyConfig.getPreyConfig(ctx).isSimChanged()){
 				JSONObject info=new JSONObject();

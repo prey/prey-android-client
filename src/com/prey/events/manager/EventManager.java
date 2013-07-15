@@ -2,7 +2,7 @@ package com.prey.events.manager;
 
 
 
-import org.json.JSONArray;
+
 import org.json.JSONObject;
 
 import android.content.Context;

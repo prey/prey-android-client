@@ -68,7 +68,7 @@ public class ProxAlertActivity extends Activity {
 			PendingIntent operation = PendingIntent.getBroadcast(this, pending_intent_unique_id, intent, 0);
 			locationManager.removeProximityAlert(operation);
 		} catch (Exception e) {
-			Toast.makeText(this, "Errro, causa:" + e.getMessage(), Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, "Error:" + e.getMessage(), Toast.LENGTH_LONG).show();
 		}
 
 	}
