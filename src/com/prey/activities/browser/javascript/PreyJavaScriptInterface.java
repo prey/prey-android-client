@@ -52,9 +52,9 @@ public class PreyJavaScriptInterface {
 	}
 	
 
-	public void newuser(String name, String email, String password, String repassword) {
+	public void newuser(String name, String email, String password) {
 		NewUserScriptInterface newUser = new NewUserScriptInterface(ctx);
-		newUser.execute(name, email, password, repassword, deviceType);
+		newUser.execute(name, email, password, password, deviceType);
 	}
 
 	public void goNewUser() {

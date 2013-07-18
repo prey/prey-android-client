@@ -8,6 +8,7 @@ import com.prey.activities.browser.javascript.PreyJavaScriptInterface;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.view.Window;
 import android.webkit.WebView;
 
@@ -16,8 +17,13 @@ public class BaseBrowserActivity  extends Activity {
 
 	public static final String PAGE_URL="pageUrl";
 	
+	public void onConfigurationChanged(Configuration newConfig){
+	    super.onConfigurationChanged(newConfig);
+	    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	}
+	
 	public void createEnvironment(){
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.install_browser);
 	}

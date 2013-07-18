@@ -60,19 +60,8 @@ public class PermissionBrowserActivity extends Activity {
 		startActivity(intent);
 	}
 
-	@Override
-	protected void onPause() {
-
-		super.onPause();
-
-		PreyLogger.i("onPause");
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		PreyLogger.i("onStart");
-	}
+ 
+	 
 
 	protected void onRestart() {
 		super.onRestart();
@@ -82,14 +71,6 @@ public class PermissionBrowserActivity extends Activity {
 		startActivity(intent);
 	}
 
-	protected void onStop() {
-		super.onStop();
-		PreyLogger.i("onStop");
-	}
-
-	protected void onDestroy() {
-		super.onDestroy();
-		PreyLogger.i("onDestroy");
-	}
+	 
 
 }
