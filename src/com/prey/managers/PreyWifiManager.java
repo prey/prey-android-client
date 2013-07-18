@@ -6,17 +6,18 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
 public class PreyWifiManager {
 
-	private WifiManager wifi=null;
+	private WifiManager wifiMgr=null;
 	private static PreyWifiManager _instance = null;
 	private Context ctx=null;
 	
 	private PreyWifiManager(Context ctx) {
 		this.ctx=ctx;
-		wifi = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
+		wifiMgr = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
 	}
 	
 	public static PreyWifiManager getInstance(Context ctx) {
@@ -26,17 +27,16 @@ public class PreyWifiManager {
 	}
 
 	public boolean isWifiEnabled(){
-		return wifi.isWifiEnabled();
+		return wifiMgr.isWifiEnabled();
 	}
 	
 	public void setWifiEnabled(boolean enabled){
-		wifi.setWifiEnabled(enabled);
+		wifiMgr.setWifiEnabled(enabled);
 	}
 	
 	public List<ScanResult>  lista(){
-		return  wifi.getScanResults();
+		return  wifiMgr.getScanResults();
 	}
-	
 	
 	public  boolean isOnline() {
  
@@ -47,5 +47,17 @@ public class PreyWifiManager {
 	    }
 	    return false;
 	}
+	
+	public WifiInfo getConnectionInfo(){
+		return wifiMgr.getConnectionInfo();
+	}
+	
+	public String getSSID(){
+		if (getConnectionInfo()!=null){
+			return getConnectionInfo().getSSID();
+		}
+		return null;
+	}
+ 
 	
 }

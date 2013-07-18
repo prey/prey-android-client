@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
-import android.widget.Toast;
 
 import com.prey.PreyConfig;
 import com.prey.events.Event;

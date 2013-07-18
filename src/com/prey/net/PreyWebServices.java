@@ -174,19 +174,6 @@ public class PreyWebServices {
 		
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		parameters.put("api_key", api_key);
-		/*
-		parameters.put("device[title]", vendor + " " + model);
-		parameters.put("device[device_type]", deviceType);
-		parameters.put("device[os]", "Android");
-		parameters.put("device[os_version]", Build.VERSION.RELEASE);
-		parameters.put("device[referer_device_id]", "");
-		parameters.put("device[plan]", "free");
-		parameters.put("device[activation_phrase]", preyConfig.getSmsToRun());
-		parameters.put("device[deactivation_phrase]", preyConfig.getSmsToStop());
-		parameters.put("device[model_name]", model);
-		parameters.put("device[vendor_name]", vendor);
-		parameters.put("device[physical_address]", imei);
-*/
 		parameters.put("title", vendor + " " + model);
 		parameters.put("device_type", deviceType);
 		parameters.put("os", "Android");
@@ -353,7 +340,7 @@ public class PreyWebServices {
 			parameters.put("name", event.getName());
 			parameters.put("info", event.getInfo().toString());
 			
-			Toast.makeText(ctx, "Event:"+event.getName(), Toast.LENGTH_LONG).show();
+			//Toast.makeText(ctx, "Event:"+event.getName(), Toast.LENGTH_LONG).show();
 			String status=jsonObject.toString();
 			PreyHttpResponse preyHttpResponse= PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters, PreyConfig.getPreyConfig(ctx));
 			runActionJson(ctx,preyHttpResponse);

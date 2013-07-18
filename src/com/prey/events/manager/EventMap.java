@@ -25,6 +25,7 @@ public class EventMap<K, V> extends HashMap<K, V> {
 	}
 	
 	
+	@SuppressWarnings("rawtypes")
 	public JSONObject toJSONObject(){
 		JSONObject jsonObject=new JSONObject();
 		Iterator<K> it = this.keySet().iterator();

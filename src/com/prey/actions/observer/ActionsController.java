@@ -103,7 +103,7 @@ public class ActionsController {
 	public List<HttpDataService> runActionJson(Context ctx, List<JSONObject> jsonObjectList) {
 		List<HttpDataService> listData=new ArrayList<HttpDataService>();
 		
-		PreyLogger.i("tamanio:"+(jsonObjectList==null?-1:jsonObjectList.size()));
+		PreyLogger.i("runActionJson size:"+(jsonObjectList==null?-1:jsonObjectList.size()));
 		ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
 		
 		try {

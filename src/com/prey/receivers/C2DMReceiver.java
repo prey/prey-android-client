@@ -25,33 +25,20 @@ public class C2DMReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 	    if (intent.getAction().equals("com.google.android.c2dm.intent.REGISTRATION")) {
 	        handleRegistration(context, intent);
-	    } else if (intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
-	        handleMessage(context, intent);
-	     }
+	    } else {
+	    	if (intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
+	    		handleMessage(context, intent);
+	    	}
+	    }
 	 }
 
 	private void handleMessage(Context context, Intent intent) {
-		//String c2dmAction=PreyConfig.getPreyConfig(context).getc2dmAction();
-		//String pushedMessage = intent.getExtras().getString(c2dmAction);
-	     //   if (pushedMessage != null) {
-	       //     PreyLogger.i("Push message received " + pushedMessage);
-	            try {
-					//PushMessage pMessage = new PushMessage(pushedMessage);
-				//	PreyConfig.getPreyConfig(context).setRunOnce(pushedMessage.indexOf("run_once") >= 0);
-					//boolean shouldPerform = pushedMessage.indexOf("run") >= 0;
-					//boolean shouldStop = pushedMessage.indexOf("stop") >= 0;
-						
-					//if (shouldPerform) {
-						PreyLogger.i("Push notification received, waking up Prey right now!");
-						PreyController.startPrey(context);
-					//} else if (shouldStop) {
-					//	PreyLogger.i("Push notification received, stopping Prey!");
-					//	PreyController.stopPrey(context);
-					//}
-				} catch (Exception e) {
-					PreyLogger.e("Push execution failed to run", e);
-				}
-	      //  }
+	    try {
+			PreyLogger.i("Push notification received, waking up Prey right now!");
+			PreyController.startPrey(context);
+		} catch (Exception e) {
+			PreyLogger.e("Push execution failed to run", e);
+		}
 	}
 	
 

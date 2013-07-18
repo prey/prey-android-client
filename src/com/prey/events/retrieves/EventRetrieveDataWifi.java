@@ -5,6 +5,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.events.manager.EventManager;
@@ -22,6 +23,7 @@ public class EventRetrieveDataWifi {
 		String ssid=wifiMapData.get(Wifi.SSID);
 		try {
 			wifiJSon.put("ssid_name",ssid );
+			PreyConfig.getPreyConfig(context).setPreviousSsid(ssid);
 		} catch (JSONException e) {
 		}
 		PreyLogger.d("wifi:"+ssid);

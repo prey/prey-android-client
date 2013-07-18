@@ -111,6 +111,8 @@ public class PreyConfig {
 	public static final String ACTIVE_WIZARD="ACTIVE_WIZARD";
 	public static final String ACTIVE_MANAGER="ACTIVE_MANAGER";
 	
+	public static final String PREVIOUS_SSID="PREVIOUS_SSID";
+	
 	/* ------------- */
 
 	public static final String TAG = "PREY";
@@ -155,6 +157,7 @@ public class PreyConfig {
 	
 	private boolean flagSendInstallRemote;
  
+	private String previousSsid;
 	
 	private String preyDomain;
 	
@@ -200,6 +203,7 @@ public class PreyConfig {
 		this.activeTour=settings.getBoolean(PreyConfig.ACTIVE_TOUR, true);
 		this.activeWizard=settings.getBoolean(PreyConfig.ACTIVE_WIZARD, true);
 		this.activeManager=settings.getBoolean(PreyConfig.ACTIVE_MANAGER, true);
+		this.previousSsid=settings.getString(PreyConfig.PREVIOUS_SSID, "");
 	//	FroyoSupport.getInstance(ctx).changePasswordAndLock("osito", true);
 	}
 	
@@ -280,6 +284,17 @@ public class PreyConfig {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
 		return settings.getString(PreyConfig.UNLOCK_PASS, "preyrocks");
 	}
+	
+	
+	public void setPreviousSsid(String previousSsid) {
+		this.saveString(PreyConfig.PREVIOUS_SSID, previousSsid);
+	}
+	
+	public String getPreviousSsid() {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return settings.getString(PreyConfig.PREVIOUS_SSID, previousSsid);
+	}
+	
 	
 	public void setLock(boolean locked) {
 		this.locked = locked;
