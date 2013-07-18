@@ -128,6 +128,9 @@
             android:configChanges="keyboardHidden" />
         <activity
             android:name="com.prey.activities.CongratulationsActivity"
+            android:configChanges="keyboardHidden" />    
+        <activity
+            android:name="com.prey.activities.PermissionInformationActivity"
             android:configChanges="keyboardHidden" />
         <activity
             android:name="com.prey.activities.AddDeviceToAccountActivity"
@@ -212,15 +215,6 @@
             </intent-filter>
         </receiver>
         
-        <!-- Battery
-        <receiver android:name="com.prey.receivers.BatteryLevelReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_BATTERY_LOW"/>
-                <action android:name="android.intent.action.ACTION_BATTERY_OKAY"/>
-                <action android:name="android.intent.action.ACTION_BATTERY_CHANGED"/>
-            </intent-filter>
-        </receiver>
-         -->
     </application>
 
 </manifest>

@@ -186,7 +186,7 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 				            "Added",  // Action
 				            "", // Label
 				            1);
-					Intent intent = new Intent(AddDeviceToAccountActivity.this, CongratulationsActivity.class);
+					Intent intent = new Intent(AddDeviceToAccountActivity.this, PermissionInformationActivity.class);
 					intent.putExtras(bundle);
 					startActivity(intent);
 					finish();

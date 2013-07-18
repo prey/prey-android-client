@@ -218,4 +218,8 @@
     <string name="error_cant_report_forgotten_password">Can\'t report forgotten password. Please try again later.</string>
     <string name="error_all_fields_are_required">All fields are required</string>
     <string name="sms_not_sent">There was an error sending the message. Does your device have SMS support?</string>
+    <!-- Permission Information --> 
+    <string name="permission_title_h1">Extra Protection</string> 
+    <string name="permission_body_text">Prey was granted special permissions in order to lock your device and to prevent thieves from uninstalling it. If you ever need to remove Prey, you first have to revoke these permissions from within the app.</string>
+    <string name="go_to_congratulations">Next</string>
 </resources>

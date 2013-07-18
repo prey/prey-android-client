@@ -22,7 +22,6 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		PreyLogger.i("onCreate");
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
 		preyConfig.setAccountVerified();
 		addPreferencesFromResource(R.xml.preferences);
@@ -41,7 +40,6 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 			
 		}
 		
-		PreyLogger.i("onResume");
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
 		Preference p = findPreference("PREFS_ADMIN_DEVICE");
 		if (preyConfig.isFroyoOrAbove()) {
@@ -65,34 +63,11 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 	
 	@Override
 	protected void onPause() {
-		
 		super.onPause();
 		PreyStatus.getInstance().setPreyConfigurationActivityResume(false);
-		PreyLogger.i("onPause");
 	}
 	
 	
-	@Override
-    protected void onStart(){
-		super.onStart();
-		PreyLogger.i("onStart");
-	}
-    
-    protected void onRestart(){
-    	super.onRestart();
-		PreyLogger.i("onRestart");
-	}
-
  
- 
-    protected void onStop(){
-    	super.onStop();
-		PreyLogger.i("onStop");
-	}
-
-    protected void onDestroy(){
-    	super.onDestroy();
-		PreyLogger.i("onDestroy");
-	}
 	
 }

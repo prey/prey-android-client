@@ -118,7 +118,7 @@ public class CreateAccountActivity extends SetupActivity {
 			            "Created",  // Action
 			            "", // Label
 			            1);
-				Intent intent = new Intent(CreateAccountActivity.this, CongratulationsActivity.class);
+				Intent intent = new Intent(CreateAccountActivity.this, PermissionInformationActivity.class);
 				intent.putExtras(bundle);
 				startActivity(intent);
 				finish();
