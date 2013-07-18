@@ -11,23 +11,14 @@
 
 html {
   height: 100%;
-
-  /* Safari 4-5, Chrome 1-9 */
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#000), to(#041622));
-
-  /* Safari 5.1, Chrome 10+ */
-  background: -webkit-linear-gradient(top, #041622, #000);
-
-  /* W3C */
-  background: linear-gradient(to bottom, #041622 0%, #000 100%);
+  overflow: hidden;
 }
 
 body {
-  background: url(img/glow.png) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#000), to(#041622)); /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-linear-gradient(top, #041622, #000); /* Safari 5.1, Chrome 10+ */
+  background: linear-gradient(to bottom, #041622 0%, #000 100%); /* W3C */
+  overflow: hidden;
   height: 100%;
   width: 100%;
 }
@@ -68,6 +59,17 @@ p.small a:active {
   height: 100%;
   position: relative;
   text-align: center;
+
+  background-image: url(img/glow.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
 }
 
 .container {
@@ -94,11 +96,6 @@ p.small a:active {
   margin: 30px auto;
 }
 
-#page-ok .bottom,
-#page-error .bottom {
-  margin: 0 auto 50px;
-
-}
 
 /* fonts
 ------------------------------------------------------------*/
@@ -170,13 +167,13 @@ p.small a:active {
   border-top: 1px solid #123;
   width: 80%;
   left: 10%;
-
   margin: 0 auto;
   font-weight: 400;
 }
 
 #page-4 #footer,
 #page-5 #footer,
+#page-enable #footer,
 #page-ok #footer,
 #page-error #footer {
   display: none;
@@ -206,12 +203,19 @@ p.small a:active {
   padding-top: 50% !important; /* to avoid redefining it in responsive.css */
 }
 
+#page-enable #submit,
 #page-ok #submit,
 #page-error #submit {
   display: block;
   width: 100%;
   padding: 1em 0;
   color: white;
+}
+
+#page-enable .bottom,
+#page-ok .bottom,
+#page-error .bottom {
+  margin: 0 auto 50px;
 }
 
 

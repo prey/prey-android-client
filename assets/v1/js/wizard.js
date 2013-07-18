@@ -46,21 +46,12 @@ Wizard.start = function(total){
 };
 
 Wizard.load = function(page){
-
   var url = 'views/' + page + '.html';
-  AndroidFunction.startPage(url);
-  try{
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-8743344-9', 'preyproject.com');
-  ga('send', 'pageview');
-  } catch(err) {}
-
-  $('#main').fadeOut(function(){
-    $(this).load(url).fadeIn();
+  $.get(url, function(html){
+    $('#main').fadeOut(function(){
+      $(this).html(html).fadeIn();
+    });
   });
 
   $('body').attr('id', 'page-' + page); // for css flexibility
@@ -70,13 +61,12 @@ Wizard.load = function(page){
 };
 
 Wizard.toggle = function(dir){
-  var target = current + dir;
+  var target = parseInt(current) + dir;
 
   if (target > total_pages || target < start_page)
     return;
 
   this.load(target);
-
   $('.button').show();
 
   if (target <= start_page) { // first page

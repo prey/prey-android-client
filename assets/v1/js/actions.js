@@ -1,17 +1,18 @@
 $(function(){
 
   // enable touch events
-  var opts = { drag: true, transform: true };
+  var opts = {}; // { drag: true, transform: true };
 
   $('#main').hammer(opts)
     .on("swipeleft", function() {
       Wizard.toggle(+1);
     })
     .on("swiperight", function() {
-      Wizard.toggle(-1);
+      var dir = current == 5 ? -2 : -1; // back two if on signup page
+      Wizard.toggle(dir);
     });
 
-  $('#signup').live('submit', function(e){
+  $('#signup').live('click', function(e){
 
     var data = {
       username: this.name.value,
@@ -19,16 +20,16 @@ $(function(){
       password: this.password.value
     }
 
-    console.log(data);
-    alert('Signing up!');
+    //console.log(data);
+    //alert('Signing up!');
 
-    // AndroidFunction.newuser();
-    Wizard.load(6);
+	 AndroidFunction.newuser(data.username,data.email,data.password);
+    //Wizard.load('enable');
 
-    e.preventDefault();
+    //e.preventDefault();
   })
 
-  $('#login').live('submit', function(e){
+  $('#login').live('click', function(e){
 
     var data = {
       email: this.email.value,
@@ -38,8 +39,8 @@ $(function(){
     //console.log(data);
     //alert('Logging in!');
 
-    AndroidFunction.login(data.email,data.password);
-    
+     AndroidFunction.login(data.email,data.password);
+    //Wizard.load('enable');
 
     //e.preventDefault();
   })

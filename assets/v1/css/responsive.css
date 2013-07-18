@@ -41,6 +41,10 @@
     font-size: 1.2em;
   }
 
+  .img {
+    margin-top: 1em;
+  }
+
   #main p.small {
     margin-top: 8px;
     font-size: .8em;
@@ -61,6 +65,20 @@
     font-size: 1em;
     width: 90%;
     left: 5%;
+  }
+
+  #page-enable .bottom,
+  #page-ok .bottom,
+  #page-error .bottom {
+    margin-bottom: 1em;
+  }
+
+  .bottom .container {
+    width: 90%;
+  }
+
+  .bottom #submit {
+    font-size: .9em;
   }
 
   #footer {
