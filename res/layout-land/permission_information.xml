@@ -17,10 +17,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="-80dp"
-        android:layout_marginTop="-80dp"
+        android:layout_marginRight="-70dp"
+        android:layout_marginTop="-70dp"
         android:adjustViewBounds="true"
-        android:padding="50dp"
+        android:padding="40dp"
         android:src="@drawable/info_icon_small" />
 
     <TextView
@@ -40,9 +40,9 @@
         android:id="@+id/congrats_h2_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/top_right_success"
         android:layout_below="@+id/congrats_h1_text"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
         android:layout_toLeftOf="@+id/top_right_success"
         android:gravity="center_vertical|center_horizontal"
