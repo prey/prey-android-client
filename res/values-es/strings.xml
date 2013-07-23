@@ -169,4 +169,8 @@
     <string name="preferences_admin_device_uninstallation_password_summary">Asignar contraseña de desinstalación</string>
     <string name="preferences_admin_device_uninstallation_password_dialog_title">Nueva contraseña de desinstalación</string>
     <string name="preferences_admin_device_setting_uninstallation_password">Asignando contraseña de desinstalación</string>
+    <!-- Permission Information --> 
+    <string name="permission_title_h1">Protección Extra</string> 
+    <string name="permission_body_text">Prey obtuvo permisos expeciales para poder bloquear tu dispositivo y también evitar que los ladrones lo desinstalen. Si en algún momento necesitas quitarnuestra aplicación, primero debes remover estos permisos desde Prey.</string>
+    <string name="go_to_congratulations">Siguiente</string>
 </resources>
