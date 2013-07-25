@@ -10,7 +10,9 @@
     android:versionCode="51"
     android:versionName="1.0.0" >
 
-    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk
+        android:minSdkVersion="8"
+         />
 
     
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
@@ -435,7 +437,11 @@
         <service android:name="com.prey.services.PreyBootService" />
         <service android:name="com.prey.services.PreyRunnerService" />
         <service android:name="com.prey.services.ImagenService" />
-        <service android:name="com.twilio.client.TwilioClientService" android:exported="false" />
+        <service android:name="com.prey.services.RecorderService" />
+        <!-- service android:name="com.twilio.client.TwilioClientService" android:exported="false" /-->
+        
+        
+ 
         
         <!-- Receivers -->
         <receiver android:name="com.prey.receivers.SmsReceiver" >
@@ -557,6 +563,8 @@
             	<category android:name="android.intent.category.DEFAULT" />
         	</intent-filter>
     	 </receiver>
+    	 
+         
         
         <!-- Battery
         <receiver android:name="com.prey.receivers.BatteryLevelReceiver">

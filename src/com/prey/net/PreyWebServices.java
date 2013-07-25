@@ -618,7 +618,11 @@ public class PreyWebServices {
 		return getDeviceUrl(ctx).concat("/reports");
 	}
 	
-	private String getDataUrlJson(Context ctx) throws PreyException{
+	public static String getFileUrlJson(Context ctx) throws PreyException{
+		return getDeviceUrl(ctx).concat("/files");
+	}
+	
+	public static String getDataUrlJson(Context ctx) throws PreyException{
 		return getDeviceUrl(ctx).concat("/data");
 	}
 	
@@ -630,7 +634,7 @@ public class PreyWebServices {
 		return getDeviceUrlApiv2(ctx).concat("/response");
 	}
 	
-	private String getDeviceUrl(Context ctx) throws PreyException{
+	public static String getDeviceUrl(Context ctx) throws PreyException{
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		String deviceKey = preyConfig.getDeviceID();
 		if (deviceKey == null || deviceKey == "")

@@ -11,13 +11,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.SurfaceHolder;
 
 import com.prey.R;
 import com.prey.activities.browser.manager.ManagerBrowser;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
 
-public class LoginActivity extends PasswordActivity {
+public class LoginActivity extends PasswordActivity implements SurfaceHolder.Callback {
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -77,4 +78,24 @@ public class LoginActivity extends PasswordActivity {
 		return getPreyConfig().isCamouflageSet();
 	}
 
+	
+ 
+	public void surfaceChanged(SurfaceHolder holder, int format, int width,
+			int height) {
+		// TODO Auto-generated method stub
+
+	}
+
+ 
+	public void surfaceCreated(SurfaceHolder holder) {
+		// TODO Auto-generated method stub
+
+	}
+
+ 
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		// TODO Auto-generated method stub
+
+	}
+	
 }

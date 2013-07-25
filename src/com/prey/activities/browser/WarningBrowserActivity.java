@@ -3,8 +3,10 @@ package com.prey.activities.browser;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+ 
 import android.webkit.WebView;
 
+ 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.activities.LoginActivity;
@@ -17,6 +19,7 @@ public class WarningBrowserActivity extends BaseBrowserActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+	
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
 		preyConfig.setActiveWizard(false);
 		

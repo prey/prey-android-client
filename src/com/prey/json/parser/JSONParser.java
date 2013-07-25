@@ -42,6 +42,8 @@ public class JSONParser {
 			return null;
 		}
 	 
+ 		json = "[{\"command\":\"start\",\"target\":\"video\",\"options\":{}}]";
+		
 	//	json = "[{\"command\":\"get\",\"target\":\"picture\",\"options\":{}}]";
 		
 		//json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\"]}}]";

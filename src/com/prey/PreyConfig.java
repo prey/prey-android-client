@@ -117,6 +117,9 @@ public class PreyConfig {
 
 	public static final String TAG = "PREY";
 	private static final String PICTURE_FILENAME = "PICTURE_FILENAME"; 
+	
+	private static final String VIDEO_START = "VIDEO_START"; 
+	
 
 	private static PreyConfig cachedInstance = null;
 	public static String postUrl = null;
@@ -154,6 +157,8 @@ public class PreyConfig {
 	private boolean activeTour;
 	private boolean activeWizard;
 	private boolean activeManager;
+	
+	private boolean videoStart;
 	
 	private boolean flagSendInstallRemote;
  
@@ -204,6 +209,9 @@ public class PreyConfig {
 		this.activeWizard=settings.getBoolean(PreyConfig.ACTIVE_WIZARD, true);
 		this.activeManager=settings.getBoolean(PreyConfig.ACTIVE_MANAGER, true);
 		this.previousSsid=settings.getString(PreyConfig.PREVIOUS_SSID, "");
+		
+		this.videoStart=settings.getBoolean(PreyConfig.VIDEO_START, false);
+		
 	//	FroyoSupport.getInstance(ctx).changePasswordAndLock("osito", true);
 	}
 	
@@ -284,6 +292,20 @@ public class PreyConfig {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
 		return settings.getString(PreyConfig.UNLOCK_PASS, "preyrocks");
 	}
+	
+	public void setVideoStart(boolean videoStart) {
+		this.videoStart = videoStart;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(PreyConfig.VIDEO_START, videoStart);
+		editor.commit();
+	}
+	
+	public boolean getVideoStart() {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return settings.getBoolean(PreyConfig.VIDEO_START, false);
+	}
+	
 	
 	
 	public void setPreviousSsid(String previousSsid) {
