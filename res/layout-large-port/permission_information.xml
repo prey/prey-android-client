@@ -40,11 +40,11 @@
         android:id="@+id/congrats_h2_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/congrats_btn_ok"
         android:layout_below="@+id/congrats_h1_text"
-        android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:gravity="center_vertical|center_horizontal"
+        android:gravity="center_vertical|center_horizontal|left"
         android:text="@string/permission_body_text"
         android:textColor="@color/lighter_txt"
         android:textSize="20dp" />
