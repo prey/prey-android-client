@@ -160,7 +160,7 @@
     <string name="preferences_activate_wifi_summary">Attiva wifi quando Prey si avvia</string>
     <string name="preferences_activate_mobile_data_title">Attiva traffico dati</string>
     <string name="preferences_activate_mobile_data_summary">Attenzione: Potrebbe non funzionare in alcuni dispositivi</string>
-    <string name="sms_not_sent">C\'è stato un errore nell'invio del messaggio. Il tuo dispositivo supporta gli SMS?</string>
+    <string name="sms_not_sent">C\'è stato un errore nell\'invio del messaggio. Il tuo dispositivo supporta gli SMS?</string>
     <string name="preferences_admin_enabled_device_title">Sicurezza extra</string>
     <string name="preferences_admin_enabled_device_summary">Gestisci impostazioni di sicurezza avanzate</string>
     <string name="preferences_admin_device_password_check_title">Blocco disinstallazione</string>
