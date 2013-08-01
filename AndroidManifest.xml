@@ -131,6 +131,10 @@
             android:name="com.prey.activities.CongratulationsActivity"
             android:configChanges="keyboardHidden" />    
         <activity
+            android:name="com.prey.activities.SimpleCameraActivity"
+            android:theme="@style/Theme.Transparent" 
+            android:configChanges="keyboardHidden" />     
+        <activity
             android:name="com.prey.activities.PermissionInformationActivity"
             android:configChanges="keyboardHidden" />
         <activity

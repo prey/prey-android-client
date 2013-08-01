@@ -185,7 +185,7 @@ public class JobsGroup {
 					PreyLogger.i(action.getClass().getName()+" termino el execute el action:");
 					waitNotifyPriority.doNotify();
 				} catch (Exception e) {
-					e.printStackTrace();
+					PreyLogger.e("Error:"+e.getMessage(),e);
 				}
 			}
 			  

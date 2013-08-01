@@ -250,7 +250,7 @@ public class PreyWebServices {
 				response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig).getResponseAsString();
 			else
 				response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig,entityFiles).getResponseAsString();
-			PreyLogger.d("Report sent: " + response);
+			PreyLogger.i("Report sent: " + response);
 			try{
 				GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
 			}catch(NullPointerException ex){
@@ -260,9 +260,7 @@ public class PreyWebServices {
 			if (preyConfig.isShouldNotify()) {
 				this.notifyUser(ctx);
 			}
-		} catch (IOException e) {
-			PreyLogger.e("Report wasn't send",e);
-		} catch (PreyException e) {
+		} catch (Exception e) {
 			PreyLogger.e("Report wasn't send",e);
 		}
 		return response;

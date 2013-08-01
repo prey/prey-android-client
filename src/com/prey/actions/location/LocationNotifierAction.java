@@ -56,8 +56,6 @@ public class LocationNotifierAction extends PreyAction {
 			latToShow = lat.substring(0, 6);
 			lonToShow = lng.substring(0, 6);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return prefix.concat(" lat=".concat(latToShow).concat(" lon=").concat(lonToShow));
 	}
