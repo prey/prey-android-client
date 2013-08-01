@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -44,93 +43,99 @@ public class CameraAction extends PreyAction {
 
 	@Override
 	public void execute(ActionJob actionJob2, Context ctx) throws PreyException {
+		try {
+			actionJob = actionJob2;
+			AudioManager mgr = null;
+			int streamType = AudioManager.STREAM_SYSTEM;
 
-		actionJob = actionJob2;
-		AudioManager mgr = null;
-		int streamType = AudioManager.STREAM_SYSTEM;
- 
-		
-		Intent intent = new Intent(ctx, SimpleCameraActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		ctx.startActivity(intent);
- 
-		int i = 0;
-		mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
-		mgr.setStreamSolo(streamType, true);
-		mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-		mgr.setStreamMute(streamType, true);
-		
-		while (SimpleCameraActivity.activity==null&& i < 10){
+			Intent intent = new Intent(ctx, SimpleCameraActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			ctx.startActivity(intent);
+
+			int i = 0;
+
+			mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+			mgr.setStreamSolo(streamType, true);
+			mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+			mgr.setStreamMute(streamType, true);
+
+			while (SimpleCameraActivity.activity == null && i < 10) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+				}
+				PreyLogger.i("esperando antes take [" + i + "]");
+				i++;
+			}
+
+			SimpleCameraActivity.activity.takePicture();
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 			}
-			PreyLogger.i("esperando antes take ["+i+"]");
-			i++;
-		}
-		
 
-		
-		SimpleCameraActivity.activity.takePicture();
-		try {Thread.sleep(2000);
-		} catch (InterruptedException e) {}
-		
-		
-		mgr.setStreamSolo(streamType, false);
-		mgr.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-		mgr.setStreamMute(streamType, false);
-		
-		
-		try {
-			i = 0;
-			while (SimpleCameraActivity.activity!=null &&SimpleCameraActivity.dataImagen == null && i < 20) {
-				Thread.sleep(1000);
-				i++;
-				PreyLogger.i("falta imagen["+i+"]");
+			mgr.setStreamSolo(streamType, false);
+			mgr.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+			mgr.setStreamMute(streamType, false);
+
+			try {
+				i = 0;
+				while (SimpleCameraActivity.activity != null && SimpleCameraActivity.dataImagen == null && i < 20) {
+					Thread.sleep(1000);
+					i++;
+					PreyLogger.i("falta imagen[" + i + "]");
+				}
+			} catch (InterruptedException e) {
+				PreyLogger.d("Error, causa:" + e.getMessage());
 			}
-		} catch (InterruptedException e) {
-			PreyLogger.d("Error, causa:" + e.getMessage());
+			SimpleCameraActivity.activity.finish();
+
+			HttpDataService data = null;
+			if (SimpleCameraActivity.dataImagen != null) {
+				PreyLogger.d("dataImagen data length=" + SimpleCameraActivity.dataImagen.length);
+				InputStream file = new ByteArrayInputStream(SimpleCameraActivity.dataImagen);
+				EntityFile entityFile = new EntityFile();
+				entityFile.setFile(file);
+				entityFile.setMimeType("image/png");
+				entityFile.setName("picture.jpg");
+				entityFile.setType("picture");
+
+				data = new HttpDataService(CameraAction.DATA_ID);
+				data.setList(true);
+				data.addEntityFile(entityFile);
+			} else {
+				PreyLogger.d("dataImagen null");
+			}
+
+			ActionResult result = new ActionResult();
+			result.setDataToSend(data);
+			actionJob.finish(result);
+		} finally {
+			SimpleCameraActivity.activity = null;
+			SimpleCameraActivity.dataImagen = null;
+			try {
+				SimpleCameraActivity.camera.stopPreview();
+			} catch (Exception e) {
+
+			}
+			try {
+				SimpleCameraActivity.camera.release();
+			} catch (Exception e) {
+
+			}
+			SimpleCameraActivity.camera = null;
+			SimpleCameraActivity.mHolder = null;
 		}
-		SimpleCameraActivity.activity.finish();
-		
-		
-	
-		
-		HttpDataService data = null;
-		if (SimpleCameraActivity.dataImagen != null) {
-			PreyLogger.d("dataImagen data length=" + SimpleCameraActivity.dataImagen.length);
-			InputStream file = new ByteArrayInputStream(SimpleCameraActivity.dataImagen);
-			EntityFile entityFile = new EntityFile();
-			entityFile.setFile(file);
-			entityFile.setMimeType("image/png");
-			entityFile.setName("picture.jpg");
-			entityFile.setType("picture");
-			
-			data = new HttpDataService(CameraAction.DATA_ID);
-			data.setList(true);
-			data.addEntityFile(entityFile);
-		} else {
-			PreyLogger.d("dataImagen null");
-		}
-		SimpleCameraActivity.activity=null;
-		SimpleCameraActivity.dataImagen=null;
-		SimpleCameraActivity.camera = null;
-		SimpleCameraActivity.mHolder =null;
-		
-		ActionResult result = new ActionResult();
-		result.setDataToSend(data);
-		actionJob.finish(result);
-		
+
 	}
 
-	private boolean existWebcamMessage(Bundle bundle){
-		boolean isWebcamMessage=false;
-		for (Iterator<Map.Entry<String, String>> it = getConfig().entrySet()
-				.iterator(); it.hasNext();) {
+	private boolean existWebcamMessage(Bundle bundle) {
+		boolean isWebcamMessage = false;
+		for (Iterator<Map.Entry<String, String>> it = getConfig().entrySet().iterator(); it.hasNext();) {
 			Map.Entry<String, String> entry = it.next();
 			String key = entry.getKey();
 			String value = entry.getValue();
-			PreyLogger.d("CameraAction key:"+key+" value:"+value);
+			PreyLogger.d("CameraAction key:" + key + " value:" + value);
 			bundle.putString(key, value);
 			if ("webcam_message".equals(key) && !"".equals(key)) {
 				isWebcamMessage = true;
@@ -138,6 +143,7 @@ public class CameraAction extends PreyAction {
 		}
 		return isWebcamMessage;
 	}
+
 	@Override
 	public boolean shouldNotify() {
 		return true;
@@ -151,6 +157,5 @@ public class CameraAction extends PreyAction {
 	public int getPriority() {
 		return WEBCAM_PRIORITY;
 	}
-
 
 }
