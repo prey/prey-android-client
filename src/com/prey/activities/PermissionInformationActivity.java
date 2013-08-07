@@ -20,10 +20,14 @@ import com.prey.backwardcompatibility.FroyoSupport;
 public class PermissionInformationActivity extends PreyActivity {
 	
 	private static final int SECURITY_PRIVILEGES = 10;
+	private String congratsMessage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Bundle bundle = getIntent().getExtras();
+		congratsMessage = bundle.getString("message");
+		
 	}
 	
 	@Override
@@ -46,20 +50,15 @@ public class PermissionInformationActivity extends PreyActivity {
 	
 	private void showScreen(){
 		setContentView(R.layout.permission_information);
-		
-		 
-		/*
-		Bundle bundle = getIntent().getExtras();
-		
-		((TextView) findViewById(R.id.congrats_h2_text)).setText(bundle.getString("message")); */
-
-	
 
 		Button ok = (Button) findViewById(R.id.congrats_btn_ok);
 		ok.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
 				Intent intent = new Intent(PermissionInformationActivity.this, CongratulationsActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString("message", congratsMessage);
+				intent.putExtras(bundle);
 				startActivity(intent);
 				finish();
 			}

@@ -13,6 +13,7 @@ import com.prey.R;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
  
 
 public class CongratulationsActivity extends PreyActivity {
@@ -37,6 +38,8 @@ public class CongratulationsActivity extends PreyActivity {
 	
 	private void showScreen(){
 		setContentView(R.layout.congratulations);
+		Bundle bundle = getIntent().getExtras();
+		((TextView) findViewById(R.id.congrats_h2_text)).setText(bundle.getString("message"));
 
 		getPreyConfig().registerC2dm();
 
