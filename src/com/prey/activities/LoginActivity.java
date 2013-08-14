@@ -7,12 +7,15 @@ m * Created by Carlos Yaconi
 package com.prey.activities;
 
 import android.app.NotificationManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
 
+import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.activities.browser.manager.ManagerBrowser;
 import com.prey.events.Event;
@@ -47,6 +50,13 @@ public class LoginActivity extends PasswordActivity implements SurfaceHolder.Cal
 
 	private void startup() {
 		//TwilioPhoneManager.getInstance(getApplicationContext());
+		
+		
+ 
+	    	     
+
+	    	    	    
+	    	    	    
 		ManagerBrowser managerBrowser=new ManagerBrowser();
 		if (!isThisDeviceAlreadyRegisteredWithPrey()) {
 			managerBrowser.preLogin(getApplicationContext());
@@ -57,6 +67,11 @@ public class LoginActivity extends PasswordActivity implements SurfaceHolder.Cal
 				managerBrowser.postLogin(getApplicationContext());
 			}
 		}
+		
+
+	   
+	    	    
+	        
 		finish();
 	}
  

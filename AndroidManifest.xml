@@ -45,7 +45,8 @@
  	<uses-feature android:name="android.hardware.camera.autofocus"  android:required="true"  />
  	<uses-feature android:name="android.hardware.camera.front"   android:required="true" />
  
- 	
+ 	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+ 	<uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
  
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -148,6 +149,14 @@
         <activity
             android:name="com.prey.activities.CongratulationsActivity"
             android:configChanges="keyboardHidden" />
+        <activity
+            android:name="com.prey.activities.SimpleCameraActivity"
+            android:theme="@style/Theme.Transparent"
+            android:configChanges="keyboardHidden" /> 
+        <activity
+            android:name="com.prey.activities.SimpleVideoActivity"
+            android:theme="@style/Theme.Transparent"
+            android:configChanges="keyboardHidden" />   
         <activity
             android:name="com.prey.activities.AddDeviceToAccountActivity"
             android:configChanges="keyboardHidden" />

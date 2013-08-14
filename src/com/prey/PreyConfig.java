@@ -677,14 +677,22 @@ public class PreyConfig {
 		//<String subdomain = FileConfigReader.getInstance(this.ctx).getPreySubdomain();
 		//return "https://".concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
 		String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain();
-		return "http://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+		if(uiSubdomain!=null||!"".equals(uiSubdomain))
+			return "http://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+		else
+			return "http://".concat(getPreyDomain()).concat("/");
 	}
 	
 	//TODO:SACAR
 	public String getPreyUiUrl() {
 		String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain();
 		//return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
-		return "http://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+		if(uiSubdomain!=null||!"".equals(uiSubdomain)){
+			return "http://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+		}else{
+			return "http://".concat(getPreyDomain()).concat("/");
+		}
+		
 	}
 	
 	public String getPreySupportUrl() {

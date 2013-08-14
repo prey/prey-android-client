@@ -1,6 +1,8 @@
 package com.prey.sim;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.telephony.PhoneNumberUtils;
 
 import com.prey.PreyConfig;
@@ -29,6 +31,9 @@ public class SIMCheckingThread implements Runnable {
 		execute();
 	}
 	public void execute() {
+		
+		
+
 		PreyLogger.d("SIM checking thread has started");
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey()) {

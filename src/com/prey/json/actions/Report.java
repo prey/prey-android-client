@@ -32,7 +32,16 @@ public class Report  {
 			preyConfig.setMissing(true);
 			int interval = parameters.getInt("interval");
 			while(preyConfig.isMissing()){
-				JSONArray jsonArray = parameters.getJSONArray("include");
+				
+				JSONArray jsonArray = null;
+				try{
+					jsonArray=parameters.getJSONArray("include");
+				}catch(Exception e){
+					jsonArray=new JSONArray();
+					jsonArray.put(new String("picture"));
+					jsonArray.put(new String("location"));
+					jsonArray.put(new String("access_points_list"));
+				}
 				for (int i = 0; i < jsonArray.length(); i++) {
 					String nameAction = jsonArray.getString(i);
 					PreyLogger.i("nameAction:" + nameAction);
