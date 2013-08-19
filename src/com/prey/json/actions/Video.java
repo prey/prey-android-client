@@ -26,6 +26,7 @@ public class Video extends JsonAction {
 		try {
 			Intent intent = new Intent(ctx, SimpleVideoActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);   
 			ctx.startActivity(intent);
 			
 			int i = 0;
@@ -47,8 +48,10 @@ public class Video extends JsonAction {
 			SimpleVideoActivity.activity.sendVideo(ctx);
 
 		} finally {
-			SimpleCameraActivity.activity.finish();
-			SimpleCameraActivity.activity = null;
+			if(SimpleCameraActivity.activity!=null){
+				SimpleCameraActivity.activity.finish();
+				SimpleCameraActivity.activity = null;
+			}
 		}
 	}
 

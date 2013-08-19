@@ -26,6 +26,8 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_camera);
 		activity=null;
+		dataImagen=null;
+		mHolder=null;
 		
 		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
 		mHolder = surfaceView.getHolder();
@@ -52,10 +54,17 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 				PreyLogger.e("Error open camera:" + e.getMessage(), e);
 			}
 		}
+		if (camera != null) {
+			PreyLogger.i("camera not null");
+			
+		}
 		activity = this;
+ 
 	}
 
 	public void takePicture() {
+		PreyLogger.i("takePicture");
+		/*
 		try {
 			if (camera != null) {
 				Camera.Parameters parameters = camera.getParameters();
@@ -74,12 +83,17 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 		} catch (Exception e) {
 			// PreyLogger.e("Error setParameters:" + e.getMessage(), e);
 		}
+		*/
 
 		try {
 			if (camera != null) {
+				PreyLogger.i("startPreview");
 				camera.startPreview();
+				PreyLogger.i("takePicture");
 				camera.takePicture(shutterCallback, rawCallback, jpegCallback);
 				PreyLogger.i("open takePicture()");
+			}else{
+				PreyLogger.i("startPreview nulo");
 			}
 		} catch (Exception e) {
 			 PreyLogger.e("Error takePicture:" + e.getMessage(), e);
@@ -107,6 +121,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 
 	PictureCallback jpegCallback = new PictureCallback() {
 		public void onPictureTaken(byte[] data, Camera camera) {
+			PreyLogger.i("onPictureTaken");
 			dataImagen = data;
 		}
 	};

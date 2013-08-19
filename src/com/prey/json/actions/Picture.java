@@ -58,7 +58,7 @@ public class Picture extends JsonAction {
 			mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 			mgr.setStreamMute(streamType, true);
 
-			while (SimpleCameraActivity.activity == null && i < 10) {
+			while (SimpleCameraActivity.activity == null && i < 20) {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -66,8 +66,12 @@ public class Picture extends JsonAction {
 				PreyLogger.i("esperando antes take [" + i + "]");
 				i++;
 			}
-
-			SimpleCameraActivity.activity.takePicture();
+			if(SimpleCameraActivity.activity!=null){
+				PreyLogger.i("takePicture activity no nulo");
+				SimpleCameraActivity.activity.takePicture();
+			}else{
+				PreyLogger.i("takePicture activity nulo");
+			}
 			try {
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
@@ -87,8 +91,9 @@ public class Picture extends JsonAction {
 			} catch (InterruptedException e) {
 				PreyLogger.d("Error, causa:" + e.getMessage());
 			}
-			SimpleCameraActivity.activity.finish();
-			
+			if(SimpleCameraActivity.activity!=null){
+				SimpleCameraActivity.activity.finish();
+			}
 			
 			 
 			if (SimpleCameraActivity.dataImagen != null) {

@@ -75,6 +75,7 @@ public class SimpleVideoActivity extends Activity implements SurfaceHolder.Callb
 			}
 		}
 		activity = this;
+	 
 	}
 	
 	

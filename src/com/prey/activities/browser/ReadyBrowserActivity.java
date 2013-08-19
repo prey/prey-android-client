@@ -10,6 +10,7 @@ import android.view.Window;
 import android.webkit.WebView;
 
 import com.prey.PreyConfig;
+import com.prey.PreyLogger;
 import com.prey.R;
 
 
@@ -20,7 +21,7 @@ public class ReadyBrowserActivity extends BaseBrowserActivity {
 	@SuppressLint("SetJavaScriptEnabled")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		PreyLogger.i("onCreate");
 		
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -40,6 +41,32 @@ public class ReadyBrowserActivity extends BaseBrowserActivity {
 		//installBrowser.loadUrl("file:///android_asset/final/ready.html");
 		installBrowser.loadUrl("file:///android_asset/v1/index.html#ok");
 	}
-
- 
+	
+	@Override
+	public void onDestroy() {
+	        super.onDestroy();
+	        PreyLogger.i("onDestroy");
+	        finish();
+	 }
+	
+	
+	@Override
+	public void onPause() {
+	        super.onPause();
+	        PreyLogger.i("onPause");
+	        finish();
+	 }
+	
+	@Override
+	public void onStop() {
+	        super.onStop();
+	        PreyLogger.i("onStop");
+	        finish();
+	 }
+	
+	 @Override
+	 protected void onResume() {
+	     super.onResume();
+	     PreyLogger.i("onResume");
+	 }
 }

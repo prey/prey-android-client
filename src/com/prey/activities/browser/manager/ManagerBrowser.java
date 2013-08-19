@@ -31,7 +31,9 @@ public class ManagerBrowser {
 			 }
 		}
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	 
 		ctx.startActivity(intent);
+		
 	}
 	
 	public void postLogin(Context ctx){
@@ -43,6 +45,7 @@ public class ManagerBrowser {
         	 intent = new Intent(ctx, ReadyBrowserActivity.class);
  		}
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		
 		ctx.startActivity(intent);
 		
 	}
