@@ -38,7 +38,8 @@ public class EventRetrieveDataBattery {
  				try {
  					JSONObject batteryElementJSon = new JSONObject();
  					batteryElementJSon.put("state", state);
- 					batteryElementJSon.put("remaining",remaining );
+ 					batteryElementJSon.put("percentage_remaining",remaining );
+ 			//		batteryElementJSon.put("time_remaining",remaining );
  					batteryJSon.put("battery_status", batteryElementJSon);
  				} catch (JSONException e) {
  				}

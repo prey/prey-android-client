@@ -511,10 +511,7 @@
     	</receiver>
          
         <receiver
-            android:name="com.prey.events.receivers.EventReceiver"
-            android:enabled="true"
-            android:exported="false"
-            android:label="EventReceiver" >
+            android:name="com.prey.events.receivers.EventReceiver"  >
             <intent-filter android:priority="20000">
                 
                 <!-- TURNED ON/OFF --> 

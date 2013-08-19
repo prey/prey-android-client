@@ -17,8 +17,8 @@ public class EventManagerRunner implements Runnable{
 	}
 	
 	public void run() {
-		PreyLogger.d("CheckInReceiver IN:" + event.getName());
+		PreyLogger.i("CheckInReceiver IN:" + event.getName());
 		new EventManager(ctx).execute(event);
-		PreyLogger.d("CheckInReceiver OUT:" + event.getName());
+		PreyLogger.i("CheckInReceiver OUT:" + event.getName());
 	}
 }
