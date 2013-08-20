@@ -34,6 +34,7 @@ public class NewUserScriptInterface {
 				PreyLogger.d("Response creating account: " + accountData.toString());
 				PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
 				Intent intent = new Intent(ctx, PermissionBrowserActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     			ctx.startActivity(intent);
 			} catch (PreyException e) {
 				error = e.getMessage();

@@ -34,29 +34,36 @@ public class WarningBrowserActivity extends BaseBrowserActivity {
 
 		super.onPause();
 
-		PreyLogger.i("onPause");
+		PreyLogger.i("WarningBrowserActivity onPause");
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		PreyLogger.i("onStart");
+		PreyLogger.i("WarningBrowserActivity onStart");
 	}
 
 	protected void onRestart() {
 		super.onRestart();
-		PreyLogger.i("onRestart");
+		PreyLogger.i("WarningBrowserActivity onRestart");
 		Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
 	}
 
 	protected void onStop() {
 		super.onStop();
-		PreyLogger.i("onStop");
+		PreyLogger.i("WarningBrowserActivity onStop");
 	}
 
 	protected void onDestroy() {
 		super.onDestroy();
-		PreyLogger.i("onDestroy");
+		PreyLogger.i("WarningBrowserActivity onDestroy");
+	}
+	
+	@Override
+	public void onBackPressed() {
+		PreyLogger.i("WarningBrowserActivity onBackPressed");
+		
+	    return;
 	}
 }

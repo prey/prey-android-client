@@ -22,6 +22,7 @@ public class PermissionBrowserActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		PreyLogger.i("PermissionBrowserActivity onResume");
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
 	 
 		if (!runOnce) {
@@ -66,11 +67,17 @@ public class PermissionBrowserActivity extends Activity {
 	protected void onRestart() {
 		super.onRestart();
 
-		PreyLogger.i("onRestart");
+		PreyLogger.i("PermissionBrowserActivity onRestart");
 		Intent intent = new Intent(this, LoginBrowserActivity.class);
 		startActivity(intent);
 	}
 
 	 
-
+	@Override
+	public void onBackPressed() {
+		PreyLogger.i("PermissionBrowserActivity onBackPressed");
+		
+	    return;
+	}
+	
 }

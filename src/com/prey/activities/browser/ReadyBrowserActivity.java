@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 
 import android.os.Bundle;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.Window;
 import android.webkit.WebView;
 
@@ -27,10 +25,7 @@ public class ReadyBrowserActivity extends BaseBrowserActivity {
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.install_browser);
 		
-		mSurfaceView = (SurfaceView) findViewById(R.id.surfaceview);
-		mSurfaceHolder = mSurfaceView.getHolder();
-		mSurfaceHolder.addCallback(this);
-		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
 		
 		
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
@@ -39,13 +34,15 @@ public class ReadyBrowserActivity extends BaseBrowserActivity {
 	 
 		WebView installBrowser = getWebView();
 		//installBrowser.loadUrl("file:///android_asset/final/ready.html");
-		installBrowser.loadUrl("file:///android_asset/v1/index.html#ok");
+		String url="file:///android_asset/v1/index.html#ok";
+		PreyLogger.i("url:"+url);
+		installBrowser.loadUrl(url);
 	}
 	
 	@Override
 	public void onDestroy() {
 	        super.onDestroy();
-	        PreyLogger.i("onDestroy");
+	        PreyLogger.i("ReadyBrowserActivity onDestroy");
 	        finish();
 	 }
 	
@@ -53,20 +50,27 @@ public class ReadyBrowserActivity extends BaseBrowserActivity {
 	@Override
 	public void onPause() {
 	        super.onPause();
-	        PreyLogger.i("onPause");
+	        PreyLogger.i("ReadyBrowserActivity onPause");
 	        finish();
 	 }
 	
 	@Override
 	public void onStop() {
 	        super.onStop();
-	        PreyLogger.i("onStop");
+	        PreyLogger.i("ReadyBrowserActivity onStop");
 	        finish();
 	 }
 	
 	 @Override
 	 protected void onResume() {
 	     super.onResume();
-	     PreyLogger.i("onResume");
+	     PreyLogger.i("ReadyBrowserActivity onResume");
 	 }
+	 
+		@Override
+		public void onBackPressed() {
+			PreyLogger.i("ReadyBrowserActivity onBackPressed");
+			
+		    return;
+		}
 }

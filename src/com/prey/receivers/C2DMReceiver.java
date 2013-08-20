@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
@@ -63,6 +64,8 @@ public class C2DMReceiver extends BroadcastReceiver {
 	       // Send the registration ID to the 3rd party site that is sending the messages.
 	       // This should be done in a separate thread.
 	       // When done, remember that all registration is done. 
+	    }else{
+	    	Toast.makeText(context, "registration_id nulo" , Toast.LENGTH_LONG).show();
 	    }
 	}
 	

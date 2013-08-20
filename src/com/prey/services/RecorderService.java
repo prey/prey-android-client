@@ -50,7 +50,7 @@ public class RecorderService extends Service {
 		mRecordingStatus = false;
 		mServiceCamera = BaseBrowserActivity.mCamera;
  
-		mSurfaceHolder = BaseBrowserActivity.mSurfaceHolder;
+	//	mSurfaceHolder = BaseBrowserActivity.mSurfaceHolder;
 		
 
 		super.onCreate();

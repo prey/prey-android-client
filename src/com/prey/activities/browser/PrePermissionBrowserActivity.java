@@ -24,27 +24,34 @@ public class PrePermissionBrowserActivity extends BaseBrowserActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		PreyLogger.i("onPause");
+		PreyLogger.i("PrePermissionBrowserActivity onPause");
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		PreyLogger.i("onStart");
+		PreyLogger.i("PrePermissionBrowserActivity onStart");
 	}
 
 	protected void onRestart() {
 		super.onRestart();
-		PreyLogger.i("onRestart");
+		PreyLogger.i("PrePermissionBrowserActivity onRestart");
 	}
 
 	protected void onStop() {
 		super.onStop();
-		PreyLogger.i("onStop");
+		PreyLogger.i("PrePermissionBrowserActivity onStop");
 	}
 
 	protected void onDestroy() {
 		super.onDestroy();
-		PreyLogger.i("onDestroy");
+		PreyLogger.i("PrePermissionBrowserActivity onDestroy");
+	}
+	
+	@Override
+	public void onBackPressed() {
+		PreyLogger.i("PrePermissionBrowserActivity onBackPressed");
+		
+	    return;
 	}
 }

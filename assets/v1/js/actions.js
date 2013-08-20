@@ -12,7 +12,7 @@ $(function(){
       Wizard.toggle(dir);
     });
 
-  $('#signup').live('click', function(e){
+  $('#signup').live('submit', function(e){
 
     var data = {
       username: this.name.value,
@@ -29,7 +29,7 @@ $(function(){
     //e.preventDefault();
   })
 
-  $('#login').live('click', function(e){
+  $('#login').live('submit', function(e){
 
     var data = {
       email: this.email.value,
