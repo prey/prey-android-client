@@ -71,6 +71,6 @@ public class ReadyBrowserActivity extends BaseBrowserActivity {
 		public void onBackPressed() {
 			PreyLogger.i("ReadyBrowserActivity onBackPressed");
 		    
-			onBackPressed();
+			super.onBackPressed();
 		}
 }
