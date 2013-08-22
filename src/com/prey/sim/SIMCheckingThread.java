@@ -36,6 +36,7 @@ public class SIMCheckingThread implements Runnable {
 
 		PreyLogger.d("SIM checking thread has started");
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		preyConfig.registerC2dm();
 		if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey()) {
 			try {
 				boolean isSIMReady = false;
@@ -76,7 +77,7 @@ public class SIMCheckingThread implements Runnable {
 			} catch (InterruptedException e) {
 				PreyLogger.e("Can't wait for SIM Ready state. Cancelling SIM Change check", e);
 			}
-			preyConfig.registerC2dm();
+			
 			// if (preyConfig.showLockScreen())
 			// PreyBootService.this.startService(new
 			// Intent(PreyBootService.this, LockMonitorService.class));

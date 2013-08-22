@@ -45,7 +45,8 @@ public class PermissionBrowserActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == SECURITY_PRIVILEGES){
 			showScreen();
-		
+			PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
+			preyConfig.registerC2dm();
 		}
 	}
 

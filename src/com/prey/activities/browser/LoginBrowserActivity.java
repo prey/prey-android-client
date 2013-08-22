@@ -12,7 +12,7 @@ public class LoginBrowserActivity extends BaseBrowserActivity {
 		super.onCreate(savedInstanceState);
 		createEnvironment();
 		WebView installBrowser = getWebView();
-		installBrowser.loadUrl("file:///android_asset/v1/index.html");
+		installBrowser.loadUrl("file:///android_asset/v2/index.html");
 	}
 
 }

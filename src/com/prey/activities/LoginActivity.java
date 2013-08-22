@@ -89,19 +89,19 @@ public class LoginActivity extends Activity  {
 	public void readyBrowser(){
 		createEnvironment();
 		WebView installBrowser = getWebView();
-		installBrowser.loadUrl("file:///android_asset/v1/ok.html");
+		installBrowser.loadUrl("file:///android_asset/v2/ok.html");
 	}
 	
 	public void tourBrowser() {
 		createEnvironment();
 		WebView installBrowser = getWebView();
-		installBrowser.loadUrl("file:///android_asset/v1/index.html");
+		installBrowser.loadUrl("file:///android_asset/v2/index.html");
 	}
 	
 	public void  warningBrowser() {
 		createEnvironment();
 		WebView installBrowser = getWebView();
-		installBrowser.loadUrl("file:///android_asset/v1/warning.html");
+		installBrowser.loadUrl("file:///android_asset/v2/warning.html");
 	}
 	
 	public void createEnvironment(){

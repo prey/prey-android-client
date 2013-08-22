@@ -15,7 +15,7 @@ public class PrePermissionBrowserActivity extends BaseBrowserActivity {
 		createEnvironment();
 		WebView installBrowser = getWebView();
 		//installBrowser.loadUrl("file:///android_asset/final/permission.html");
-		installBrowser.loadUrl("file:///android_asset/v1/index.html#error");
+		installBrowser.loadUrl("file:///android_asset/v2/index.html#error");
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
 		preyConfig.setActiveManager(true);
 		

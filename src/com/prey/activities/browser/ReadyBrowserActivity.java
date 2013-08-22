@@ -34,7 +34,7 @@ public class ReadyBrowserActivity extends BaseBrowserActivity {
 	 
 		WebView installBrowser = getWebView();
 		//installBrowser.loadUrl("file:///android_asset/final/ready.html");
-		String url="file:///android_asset/v1/ok.html";
+		String url="file:///android_asset/v2/ok.html";
 		PreyLogger.i("url:"+url);
 		installBrowser.loadUrl(url);
 	}
