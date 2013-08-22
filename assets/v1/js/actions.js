@@ -57,4 +57,8 @@ $(function(){
     AndroidFunction.permission();
   });
 
+  $('#submitWeb').live('click', function(e){
+  	AndroidFunction.openPanel();
+  });
+
 })

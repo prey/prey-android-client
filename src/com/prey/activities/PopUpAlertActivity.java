@@ -51,4 +51,8 @@ public class PopUpAlertActivity extends PreyActivity {
 		return popup;
 	}
 
+	@Override
+	public void onBackPressed() {
+		return;
+	}
 }

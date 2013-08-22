@@ -104,6 +104,7 @@
             android:label="@string/preyForAndroid_name"
             android:launchMode="singleInstance" 
             android:windowSoftInputMode="adjustPan"
+            android:noHistory="true"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -111,6 +112,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name="com.prey.activities.WarningActivity"
+            android:configChanges="keyboardHidden"
+            android:noHistory="true"
+            >
+
+        </activity>
+        
         <activity
             android:name="com.prey.activities.WelcomeActivity"
             android:configChanges="keyboardHidden" />
@@ -127,7 +137,9 @@
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/preyForAndroid_name"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:noHistory="true"
+             />
         <activity
             android:name="com.prey.activities.CameraActivity"
             android:clearTaskOnLaunch="true"
@@ -152,11 +164,13 @@
         <activity
             android:name="com.prey.activities.SimpleCameraActivity"
             android:theme="@style/Theme.Transparent"
-            android:configChanges="keyboardHidden" /> 
+            android:configChanges="keyboardHidden"
+            android:noHistory="true" /> 
         <activity
             android:name="com.prey.activities.SimpleVideoActivity"
             android:theme="@style/Theme.Transparent"
-            android:configChanges="keyboardHidden" />   
+            android:configChanges="keyboardHidden"
+            android:noHistory="true" />   
         <activity
             android:name="com.prey.activities.AddDeviceToAccountActivity"
             android:configChanges="keyboardHidden" />
@@ -336,7 +350,9 @@
         <activity android:name="com.prey.activities.browser.PrePermissionBrowserActivity"
             android:label="@string/preyForAndroid_name"
             android:configChanges = "orientation"
-			android:screenOrientation = "portrait" >
+			android:screenOrientation = "portrait"
+			android:noHistory="true"
+			 >
             <intent-filter>             
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -344,14 +360,16 @@
         <activity android:name="com.prey.activities.browser.ReadyBrowserActivity"
             android:label="@string/preyForAndroid_name"
             android:configChanges = "orientation"
-			android:screenOrientation = "portrait" >
+			android:screenOrientation = "portrait"
+			android:noHistory="true" >
             <intent-filter>               
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>        
         <activity android:name="com.prey.activities.browser.TourBrowserActivity" 
             android:configChanges = "orientation"
-			android:screenOrientation = "portrait" >
+			android:screenOrientation = "portrait"
+			android:noHistory="true" >
             <intent-filter>               
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

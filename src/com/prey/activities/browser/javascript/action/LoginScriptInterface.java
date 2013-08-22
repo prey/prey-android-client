@@ -9,7 +9,8 @@ import com.prey.R;
 
 
  
-import com.prey.activities.browser.manager.ManagerBrowser;
+import com.prey.activities.LoginActivity;
+import com.prey.activities.WarningActivity;
 import com.prey.analytics.PreyGoogleAnalytics;
 import com.prey.exceptions.NoMoreDevicesAllowedException;
 import com.prey.exceptions.PreyException;
@@ -17,6 +18,7 @@ import com.prey.net.PreyWebServices;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 
 
 
@@ -106,8 +108,10 @@ public class LoginScriptInterface {
 					PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 					preyConfig.setActiveTour(false);
 					
-					ManagerBrowser manager = new ManagerBrowser();
-					manager.postLogin(ctx);
+					Intent intent =null;
+					intent = new Intent(ctx, WarningActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
+					ctx.startActivity(intent);
 					preyConfig.registerC2dm();
 				} else {
 					Toast.makeText(ctx,error, Toast.LENGTH_LONG).show();
@@ -166,8 +170,10 @@ public class LoginScriptInterface {
 				}
 			} else {
 				wrongPasswordIntents=0;
-				ManagerBrowser manager = new ManagerBrowser();
-				manager.postLogin(ctx);
+				Intent intent =null;
+				intent = new Intent(ctx, LoginActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP  );
+				ctx.startActivity(intent);
 			}
 		}
 

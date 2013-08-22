@@ -51,6 +51,7 @@ public class PermissionBrowserActivity extends Activity {
 
 	@SuppressLint("SetJavaScriptEnabled")
 	private void showScreen() {
+		PreyLogger.i("PermissionBrowserActivity showScreen");
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
 		Intent intent = null;
 		if (preyConfig.isFroyoOrAbove() && !FroyoSupport.getInstance(this).isAdminActive()) {
@@ -58,7 +59,9 @@ public class PermissionBrowserActivity extends Activity {
 		} else {
 			intent = new Intent(getApplicationContext(), ReadyBrowserActivity.class);
 		}
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
+		finish();
 	}
 
  
@@ -69,6 +72,7 @@ public class PermissionBrowserActivity extends Activity {
 
 		PreyLogger.i("PermissionBrowserActivity onRestart");
 		Intent intent = new Intent(this, LoginBrowserActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
 

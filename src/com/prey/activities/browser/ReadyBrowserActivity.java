@@ -19,7 +19,7 @@ public class ReadyBrowserActivity extends BaseBrowserActivity {
 	@SuppressLint("SetJavaScriptEnabled")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		PreyLogger.i("onCreate");
+		PreyLogger.i("ReadyBrowserActivity onCreate");
 		
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -34,7 +34,7 @@ public class ReadyBrowserActivity extends BaseBrowserActivity {
 	 
 		WebView installBrowser = getWebView();
 		//installBrowser.loadUrl("file:///android_asset/final/ready.html");
-		String url="file:///android_asset/v1/index.html#ok";
+		String url="file:///android_asset/v1/ok.html";
 		PreyLogger.i("url:"+url);
 		installBrowser.loadUrl(url);
 	}
@@ -43,7 +43,7 @@ public class ReadyBrowserActivity extends BaseBrowserActivity {
 	public void onDestroy() {
 	        super.onDestroy();
 	        PreyLogger.i("ReadyBrowserActivity onDestroy");
-	        finish();
+	      
 	 }
 	
 	
@@ -51,7 +51,7 @@ public class ReadyBrowserActivity extends BaseBrowserActivity {
 	public void onPause() {
 	        super.onPause();
 	        PreyLogger.i("ReadyBrowserActivity onPause");
-	        finish();
+	        this.finish();
 	 }
 	
 	@Override
@@ -70,7 +70,7 @@ public class ReadyBrowserActivity extends BaseBrowserActivity {
 		@Override
 		public void onBackPressed() {
 			PreyLogger.i("ReadyBrowserActivity onBackPressed");
-			
-		    return;
+		    
+			onBackPressed();
 		}
 }

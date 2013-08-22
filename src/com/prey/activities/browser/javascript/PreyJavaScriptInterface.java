@@ -2,6 +2,7 @@ package com.prey.activities.browser.javascript;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.widget.Toast;
 
 import com.prey.PreyConfig;
@@ -11,7 +12,6 @@ import com.prey.accounts.UserEmail;
 import com.prey.activities.browser.LoginBrowserActivity;
 import com.prey.activities.browser.NewUserBrowserActivity;
 import com.prey.activities.browser.PrePermissionBrowserActivity;
-import com.prey.activities.browser.ReadyBrowserActivity;
 import com.prey.activities.browser.PermissionBrowserActivity;
 import com.prey.activities.browser.javascript.action.LoginScriptInterface;
 import com.prey.activities.browser.javascript.action.NewUserScriptInterface;
@@ -25,8 +25,10 @@ public class PreyJavaScriptInterface {
 
 	private Context ctx;
 	private String deviceType;
+ 
 
 	public PreyJavaScriptInterface(Context ctx, String deviceType) {
+		 
 		this.ctx = ctx;
 		this.deviceType = deviceType;
 	}
@@ -63,8 +65,7 @@ public class PreyJavaScriptInterface {
 	}
 
 	public void goPanel() {
-		Intent intent = new Intent(ctx, ReadyBrowserActivity.class);
-		ctx.startActivity(intent);
+ 
 	}
 
 	public void goLogin() {
@@ -100,12 +101,15 @@ public class PreyJavaScriptInterface {
 	
 	public void permission(){
 		Intent intent = new Intent(ctx, PermissionBrowserActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		ctx.startActivity(intent);
+		 
 	}
 	
 	public void prePermission(){
 		Intent intent = new Intent(ctx, PrePermissionBrowserActivity.class);
 		ctx.startActivity(intent);
+		 
 	}
 	
 	public void preyOn(){
@@ -118,4 +122,17 @@ public class PreyJavaScriptInterface {
 		PreyLogger.i("startPage:"+page);
 		PreyGoogleAnalytics.getInstance().trackAsynchronously(ctx, page);
 	}
+	
+	
+	public void openPanel(){
+		String url = "http://beta.preyproject.com/login";
+		PreyLogger.i("openPanel:"+url);		
+		Intent i = new Intent(Intent.ACTION_VIEW);
+		i.setData(Uri.parse(url));
+		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		ctx.startActivity(i);
+		 
+	}
+	
+	
 }

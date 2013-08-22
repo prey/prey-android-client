@@ -1,6 +1,7 @@
 package com.prey.activities.browser.manager;
 
 import com.prey.PreyConfig;
+import com.prey.PreyLogger;
  
  
 import com.prey.activities.browser.TourBrowserActivity;
@@ -19,7 +20,8 @@ public class ManagerBrowser {
 
 	
 	
-	public void preLogin(Context ctx){
+	private void preLogin(Context ctx){
+		PreyLogger.i("preLogin");
 		Intent intent = null;
 		if (PreyConfig.getPreyConfig(ctx).isActiveTour()){
 			 intent = new Intent(ctx, TourBrowserActivity.class);
@@ -30,13 +32,14 @@ public class ManagerBrowser {
 				 intent = new Intent(ctx, ReadyBrowserActivity.class);
 			 }
 		}
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK);
 	 
 		ctx.startActivity(intent);
 		
 	}
 	
-	public void postLogin(Context ctx){
+	private void postLogin(Context ctx){
+		PreyLogger.i("postLogin");
 		Intent intent =null;
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		if (preyConfig.isFroyoOrAbove() && !FroyoSupport.getInstance(ctx).isAdminActive()){
@@ -44,16 +47,16 @@ public class ManagerBrowser {
 		}else{
         	 intent = new Intent(ctx, ReadyBrowserActivity.class);
  		}
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK);
 		ctx.startActivity(intent);
 		
 	}
 	
 	public void thisDeviceAlreadyRegistered(Context ctx){
+		PreyLogger.i("thisDeviceAlreadyRegistered");
 		Intent intent = null;
 		intent = new Intent(ctx, UserRegisteredBrowserActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		ctx.startActivity(intent);
 	}
 }

@@ -26,7 +26,7 @@ public class WarningBrowserActivity extends BaseBrowserActivity {
 		createEnvironment();
 		WebView installBrowser = getWebView();
 		//installBrowser.loadUrl("file:///android_asset/final/warning.html");
-		installBrowser.loadUrl("file:///android_asset/v1/index.html#error");
+		installBrowser.loadUrl("file:///android_asset/v1/warning.html");
 	}
 
 	@Override
@@ -35,6 +35,7 @@ public class WarningBrowserActivity extends BaseBrowserActivity {
 		super.onPause();
 
 		PreyLogger.i("WarningBrowserActivity onPause");
+		this.finish();
 	}
 
 	@Override
@@ -47,23 +48,33 @@ public class WarningBrowserActivity extends BaseBrowserActivity {
 		super.onRestart();
 		PreyLogger.i("WarningBrowserActivity onRestart");
 		Intent intent = new Intent(this, LoginActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
 
 	protected void onStop() {
 		super.onStop();
 		PreyLogger.i("WarningBrowserActivity onStop");
+		 finish();
 	}
 
 	protected void onDestroy() {
 		super.onDestroy();
 		PreyLogger.i("WarningBrowserActivity onDestroy");
+		 
 	}
 	
+	 @Override
+	 protected void onResume() {
+	     super.onResume();
+	     PreyLogger.i("WarningBrowserActivity onResume");
+	 }
+	 
 	@Override
 	public void onBackPressed() {
 		PreyLogger.i("WarningBrowserActivity onBackPressed");
-		
+		//  this.finish();
+	    
 	    return;
 	}
 }
