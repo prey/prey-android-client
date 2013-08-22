@@ -28,12 +28,15 @@ html { font-size: 12px; }
 @media screen and (min-width: 1000px) { html { font-size: 24px; } }
 
 body {
-  background: #042237 url(../img/glow.png) no-repeat center center;
+  background-color: #042237;
+  background-image: url(../img/glow.png); /* Safari 4-5, Chrome 1-9 */
   background-image: url(../img/glow.png), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#000), to(#041622)); /* Safari 4-5, Chrome 1-9 */
   background-image: url(../img/glow.png), -webkit-linear-gradient(top, #041622, #000); /* Safari 5.1, Chrome 10+ */
   background-image: url(../img/glow.png), linear-gradient(to bottom, #041622 0%, #000 100%); /* W3C */
+  background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
+  background-position: top center;
   font-family: 'Open Sans', Helvetica, sans-serif;
   text-align: center;
   color: #FFF;
