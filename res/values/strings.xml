@@ -262,5 +262,13 @@
     <string name="preferences_logo_summary"></string>
     <string name="preferences_logo_title"></string>
     <string name="title_activity_screen_shot">ScreenShotActivity</string>
-
+    
+    <string name="html_1_first">Welcome to Prey for Android</string>
+    <string name="html_1_second">This will change everything.</string>
+    <string name="html_2_first">The black belt of anti-theft is back.</string>
+    <string name="html_2_second">Tougher, more ruthless than ever.</string>
+	<string name="html_3_first">We care as much as you do.</string>
+    <string name="html_3_second">Lightweight means low battery consumption. If it drains, we don\'t ship.</string>
+    <string name="html_4_first">Welcome back, master.</string>
+    
 </resources>

@@ -72,4 +72,9 @@ $(function(){
    	AndroidFunction.openPanel();
   });
 
+
+ 
+ 	
+ 
+
 })

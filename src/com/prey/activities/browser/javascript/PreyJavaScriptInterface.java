@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.prey.PreyConfig;
 import com.prey.PreyController;
 import com.prey.PreyLogger;
+import com.prey.R;
 import com.prey.accounts.UserEmail;
 import com.prey.activities.browser.LoginBrowserActivity;
 import com.prey.activities.browser.NewUserBrowserActivity;
@@ -17,6 +18,7 @@ import com.prey.activities.browser.javascript.action.LoginScriptInterface;
 import com.prey.activities.browser.javascript.action.NewUserScriptInterface;
 import com.prey.activities.browser.javascript.action.UnLockScriptInterface;
 import com.prey.analytics.PreyGoogleAnalytics; 
+import com.prey.util.RUtil;
  
 
 public class PreyJavaScriptInterface {
@@ -135,4 +137,7 @@ public class PreyJavaScriptInterface {
 	}
 	
 	
+	public String textStringXml(String id){
+		return ctx.getText(RUtil.idStringXml(id)).toString();
+	}
 }
