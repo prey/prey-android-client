@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.prey.PreyConfig;
 import com.prey.PreyController;
 import com.prey.PreyLogger;
-import com.prey.R;
+
 import com.prey.accounts.UserEmail;
 import com.prey.activities.browser.LoginBrowserActivity;
 import com.prey.activities.browser.NewUserBrowserActivity;

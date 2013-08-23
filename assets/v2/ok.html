@@ -15,6 +15,17 @@
   <script src="js/libs/jquery.js"></script>
   <script src="js/libs/jquery.hammer.min.js"></script>
   <script src="js/actions.js"></script>
+  
+  
+  <script>
+    $(function(){
+		 $('#html_ok_first').html(AndroidFunction.textStringXml("html_ok_first"));
+ 		 $('#html_ok_second').html(AndroidFunction.textStringXml("html_ok_second"));
+		 $('#submitWeb').html(AndroidFunction.textStringXml("html_ok_third"));
+ 
+    });
+  </script>
+  
 </head>
 
 <body>
@@ -34,11 +45,6 @@
   </section>
 
 
-<script>
-	document.getElementById("html_ok_first").innerHTML=AndroidFunction.textStringXml("html_ok_first");
-    document.getElementById("html_ok_second").innerHTML=AndroidFunction.textStringXml("html_ok_second");
-    document.getElementById("submitWeb").innerHTML=AndroidFunction.textStringXml("html_ok_third");
-</script>
 
 </body>
 </html>

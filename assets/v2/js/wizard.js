@@ -3,6 +3,7 @@
 // Written by Tomas Pollak
 // (c) 2013 Fork Ltd. - forkhq.com
 //////////////////////////////////////////
+$.getScript('js/i18n.js');
 
 var current = 0,
     start_page,
@@ -51,6 +52,7 @@ Wizard.load = function(page){
   $.get(url, function(html){
     $('#main').fadeOut(function(){
       $(this).html(html).fadeIn();
+	  replaceI18n(page);
     });
   });
 

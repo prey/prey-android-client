@@ -29,7 +29,7 @@ $(function(){
     //e.preventDefault();
   })
 
-  $('#login').live('submit', function(e){
+  $('#login').live('click', function(e){
 
     var data = {
       email: this.email.value,

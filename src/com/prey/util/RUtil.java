@@ -20,13 +20,12 @@ public class RUtil {
 		return idString(id, "raw");
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static Integer idString(String id, String tipo) {
 		try {
-			@SuppressWarnings("rawtypes")
 			Class actionClass = Class.forName("com.prey.R$" + tipo);
 			Field myField = actionClass.getDeclaredField(id);
-			Integer field = (Integer) myField.get(null);
-			return field;
+			return (Integer) myField.get(null);
 		} catch (Exception e) {
 			return null;
 		}

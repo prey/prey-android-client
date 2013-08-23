@@ -20,10 +20,13 @@
   <script>
     $(function(){
       // el unico IF!
-      if (window.location.hash.match('#'))
+      if (window.location.hash.match('#')){
         Wizard.load(window.location.hash.replace('#', ''));
-      else
+      }else{
         Wizard.start(4);
+      }
+      $('#prev').html(AndroidFunction.textStringXml("html_back"));
+      $('#next').html(AndroidFunction.textStringXml("html_next"));
     });
   </script>
 </head>
@@ -42,10 +45,9 @@
 
 
  
-<script>
-	document.getElementById("prev").innerHTML=AndroidFunction.textStringXml("html_back");
-    document.getElementById("next").innerHTML=AndroidFunction.textStringXml("html_next");
-</script>
+
+
+
 
 </body>
 </html>
