@@ -138,6 +138,8 @@ public class PreyJavaScriptInterface {
 	
 	
 	public String textStringXml(String id){
-		return ctx.getText(RUtil.idStringXml(id)).toString();
+		String text=ctx.getText(RUtil.idStringXml(id)).toString();
+		//PreyLogger.i("[id]:"+text);		
+		return text;
 	}
 }

@@ -35,10 +35,17 @@
   </section>
 
   <footer id="navigation">
-    <button id="prev" class="disabled">Back<span></span></button>
+    <button id="prev" class="disabled"></button>
     <ul id="circles" class="flex"></ul>
-    <button id="next">Next<span></span></button>
+    <button id="next"></button>
   </footer>
+
+
+ 
+<script>
+	document.getElementById("prev").innerHTML=AndroidFunction.textStringXml("html_back");
+    document.getElementById("next").innerHTML=AndroidFunction.textStringXml("html_next");
+</script>
 
 </body>
 </html>

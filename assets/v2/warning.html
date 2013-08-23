@@ -22,16 +22,24 @@
   <section id="main">
     <article class="post">
 
-      <h1>Device not protected.</h1>
+      <h1 id="html_warn_first"></h1>
 
-      <p class="legal">Prey obtuvo permisos expeciales para poder bloquear tu dispositivo y también evitar que los ladrones lo desinstalen. Si en algún momento necesitas quitar nuestra aplicación, primero debes remover estos permisos desde Prey</p>
+      <p class="legal" id="html_warn_second"></p>
 
       <div class="action">
-        <a class="button error" id="submitGrant" href="#">Grant admin rights</a>
+        <a class="button error" id="submitGrant" href="#"></a>
       </div>
 
     </article>
   </section>
+
+
+
+<script>
+	document.getElementById("html_warn_first").innerHTML=AndroidFunction.textStringXml("html_warn_first");
+    document.getElementById("html_warn_second").innerHTML=AndroidFunction.textStringXml("html_warn_second");
+    document.getElementById("submitGrant").innerHTML=AndroidFunction.textStringXml("html_warn_third");
+</script>
 
 </body>
 </html>

@@ -160,4 +160,26 @@
     <string name="preferences_activate_mobile_data_title">Activar datos móviles</string>
     <string name="preferences_activate_mobile_data_summary">Atención: Podría no funcionar en algunos dispositivos</string>
     <string name="sms_not_sent">Hubo un problema enviando el mensaje. ¿Estás seguro que tu equipo puede enviar SMS?</string>
+    
+    <string name="html_next">Siguiente&#60;span&#62;&#60;/span&#62;</string>
+    <string name="html_back">Anterior&#60;span&#62;&#60;/span&#62;</string>
+    <string name="html_1_first">Bienvenido a Prey para Android</string>
+    <string name="html_1_second">Esto va a cambiar todo.</string>
+    <string name="html_2_first">El cinturón negro de antirrobo está de vuelta.</string>
+    <string name="html_2_second">Más duro, más implacable que nunca.</string>
+	<string name="html_3_first">Nos importa tanto como usted lo hace.</string>
+    <string name="html_3_second">Ligero significa bajo consumo de batería. Si se agota, no enviamos.</string>
+    <string name="html_4_first">Bienvenido de nuevo, maestro.</string>
+    <string name="html_4_second">¿Olvidó su contraseña?</string>
+    <string name="html_4_third">Regístrate para obtener una cuenta nueva.</string>
+    <string name="html_5_first">Apúntate y te pondremos en marcha.</string>
+    <string name="html_5_second">Al suscribirte, estás de acuerdo con nuestra &#60;a target=&#34;_blank&#34; href=&#34;https://preyproject.com/terms&#34;&#62;Términos de Servicio&#60;/a&#62; y  &#60;a target=&#34;_blank&#34; href=&#34;https://preyproject.com/privacy&#34;&#62;Política de privacidad&#60;/a&#62;.</string>
+    <string name="html_5_third">I already have an account.</string>
+    <string name="html_warn_first">El dispositivo no protegido.</string>
+    <string name="html_warn_second">Prey obtuvo permisos expeciales para poder bloquear tu dispositivo y tambi&#233;n evitar que los ladrones lo desinstalen. Si en alg&#250;n momento necesitas quitar nuestra aplicaci&#243;n, primero debes remover estos permisos desde Prey</string>
+    <string name="html_warn_third">Conceder derechos de administrador</string>
+    <string name="html_ok_first">Dispositivo protegido.</string>
+    <string name="html_ok_second">Prey obtuvo permisos especiales para poder bloquear tu dispositivo y tambiÃ©n evitar que los ladrones lo desinstalen. Si en algÃºn momento necesitas quitar nuestra aplicaciÃ³n, primero debes remover estos permisos desde Prey</string>
+    <string name="html_ok_third">Administrar mis dispositivos</string>
+    
 </resources>

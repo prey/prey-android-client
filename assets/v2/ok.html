@@ -22,9 +22,9 @@
   <section id="main">
     <article class="post">
 
-      <h1>Device protected.</h1>
+      <h1 id="html_ok_first"></h1>
 
-      <p class="legal">Prey obtuvo permisos especiales para poder bloquear tu dispositivo y también evitar que los ladrones lo desinstalen. Si en algún momento necesitas quitar nuestra aplicación, primero debes remover estos permisos desde Prey</p>
+      <p class="legal" id="html_ok_second"></p>
 
       <div class="action">
         <a class="button success" id="submitWeb" href="#">Manage my devices</a>
@@ -32,6 +32,13 @@
 
     </article>
   </section>
+
+
+<script>
+	document.getElementById("html_ok_first").innerHTML=AndroidFunction.textStringXml("html_ok_first");
+    document.getElementById("html_ok_second").innerHTML=AndroidFunction.textStringXml("html_ok_second");
+    document.getElementById("submitWeb").innerHTML=AndroidFunction.textStringXml("html_ok_third");
+</script>
 
 </body>
 </html>
