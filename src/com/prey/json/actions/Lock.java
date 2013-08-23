@@ -50,7 +50,7 @@ public class Lock extends JsonAction{
 		if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {
 			PreyLogger.d("-- Unlock instruction received");
 			FroyoSupport.getInstance(ctx).changePasswordAndLock("", true);
-			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop","lock","started"));
+			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop","lock","stopped"));
 		}
 	}
 
