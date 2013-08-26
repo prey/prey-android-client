@@ -338,7 +338,7 @@ public class PreyWebServices {
 			String url =getEventsUrlJson(ctx);
 			Map<String, String> parameters = new HashMap<String, String>();
 			parameters.put("name", event.getName());
-			parameters.put("info", event.getInfo().toString());
+			parameters.put("info", event.getInfo());
 			
 			//Toast.makeText(ctx, "Event:"+event.getName(), Toast.LENGTH_LONG).show();
 			String status=jsonObject.toString();
