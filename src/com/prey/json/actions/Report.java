@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -21,6 +22,7 @@ import com.prey.actions.observer.ActionResult;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
+import com.prey.services.LocationService;
 import com.prey.util.ClassUtil;
 
 public class Report  {
@@ -60,6 +62,9 @@ public class Report  {
 					preyConfig.setMissing(false);
 				}
 			}
+			
+			ctx.stopService(new Intent(ctx, LocationService.class));
+			
 		} catch (Exception e) {
 			PreyLogger.e("Error, causa:" + e.getMessage(), e);
 			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get","report","failed",e.getMessage()));

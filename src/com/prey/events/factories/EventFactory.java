@@ -33,7 +33,7 @@ public class EventFactory {
 					info.put("new_phone_number",PreyTelephonyManager.getInstance(ctx).getLine1Number());
 				}catch (Exception e) {
 				}
-				return new Event(Event.SIM_CHANGED,info);
+				return new Event(Event.SIM_CHANGED,info.toString());
 			}else{
 				return new Event(Event.TURNED_ON);
 			}
@@ -54,7 +54,7 @@ public class EventFactory {
 				}
 			}catch (Exception e) {
 			}
-			return new Event(Event.WIFI_CHANGED,info);
+			return new Event(Event.WIFI_CHANGED,info.toString());
 		}
         
 		if (ACTION_POWER_CONNECTED.equals(intent.getAction()) ){
@@ -81,7 +81,7 @@ public class EventFactory {
 				}
 			}catch (Exception e) {
 			}
-			return new Event(Event.PLUGGED,info);
+			return new Event(Event.PLUGGED,info.toString());
 		}
 		return null;
 	}

@@ -10,6 +10,7 @@ import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.battery.Battery;
 import com.prey.actions.battery.BatteryInformation;
+import com.prey.events.Event;
 import com.prey.events.manager.EventManager;
 import com.prey.json.actions.Wifi;
  
@@ -34,6 +35,11 @@ public class EventRetrieveDataWifi {
 			accessElementJSon.put("channel",wifiMapData.get("channel") );
 			accessElementJSon.put("security", wifiMapData.get("security") );
 	 
+			if (Event.WIFI_CHANGED.equals(manager.event.getName())){
+				manager.event.setInfo(ssid);
+			}
+			
+			
 			
 			
 

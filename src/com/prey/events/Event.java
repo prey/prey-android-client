@@ -15,7 +15,7 @@ public class Event {
 
 	
 	private String name;
-	private JSONObject info;
+	private String info;
 	
 	public Event(){
 		
@@ -23,11 +23,11 @@ public class Event {
 	
 	public Event(String name){
 		this.name=name;
-		this.info=new JSONObject();
+		this.info="";
 	}
 	
 	
-	public Event(String name,JSONObject info){
+	public Event(String name,String info){
 		this.name=name;
 		this.info=info;
 	}
@@ -38,10 +38,10 @@ public class Event {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public JSONObject getInfo() {
+	public String getInfo() {
 		return info;
 	}
-	public void setInfo(JSONObject info) {
+	public void setInfo(String info) {
 		this.info = info;
 	}
 	

@@ -54,7 +54,11 @@ public class PreyWifiManager {
 	
 	public String getSSID(){
 		if (getConnectionInfo()!=null){
-			return getConnectionInfo().getSSID();
+			String ssid= getConnectionInfo().getSSID();
+			if(ssid!=null){
+				ssid=ssid.replace("\"", "");
+			}
+			return ssid;
 		}
 		return null;
 	}

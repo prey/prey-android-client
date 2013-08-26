@@ -19,7 +19,7 @@ public class EventManager {
 
 	private EventMap<String, JSONObject> mapData = null;
 	private Context ctx = null;
-	private Event event = null;
+	public Event event = null;
 
 	public final static String WIFI = "wifi";
 	public final static String UPTIME = "uptime";
@@ -36,7 +36,11 @@ public class EventManager {
 		boolean isOnline = false;
 		
 		String ssid=PreyWifiManager.getInstance(ctx).getSSID();
-		if (ssid!=null&&!ssid.equals(PreyConfig.getPreyConfig(ctx).getPreviousSsid())){
+		
+		String previousSsid=PreyConfig.getPreyConfig(ctx).getPreviousSsid();
+		PreyLogger.i("ssid["+ssid+"] previousSsid["+previousSsid+"]");
+		if (ssid!=null&&!"".equals(ssid)&&!ssid.equals(previousSsid)&&!"<unknown ssid>".equals(ssid)&&!"0x".equals(ssid)){
+			PreyLogger.i("change PreviousSsid:"+ssid);
 			PreyConfig.getPreyConfig(ctx).setPreviousSsid(ssid);
 			try {
 				isConnectionExists = isConnectionExists(ctx);
