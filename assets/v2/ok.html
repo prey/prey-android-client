@@ -17,14 +17,7 @@
   <script src="js/actions.js"></script>
   
   
-  <script>
-    $(function(){
-		 $('#html_ok_first').html(AndroidFunction.textStringXml("html_ok_first"));
- 		 $('#html_ok_second').html(AndroidFunction.textStringXml("html_ok_second"));
-		 $('#submitWeb').html(AndroidFunction.textStringXml("html_ok_third"));
- 
-    });
-  </script>
+
   
 </head>
 
@@ -33,9 +26,9 @@
   <section id="main">
     <article class="post">
 
-      <h1 id="html_ok_first"></h1>
+      <h1 id="html_ok_first">Device protected.</h1>
 
-      <p class="legal" id="html_ok_second"></p>
+      <p class="legal" id="html_ok_second">Prey obtuvo permisos expeciales para poder bloquear tu dispositivo y también evitar que los ladrones lo desinstalen. Si en algún momento necesitas quitar nuestra aplicación, primero debes remover estos permisos desde Prey</p>
 
       <div class="action">
         <a class="button success" id="submitWeb" href="#">Manage my devices</a>
@@ -44,7 +37,14 @@
     </article>
   </section>
 
-
+  <script>
+    $(function(){
+		 $('#html_ok_first').html(AndroidFunction.textStringXml("html_ok_first"));
+ 		 $('#html_ok_second').html(AndroidFunction.textStringXml("html_ok_second"));
+		 $('#submitWeb').html(AndroidFunction.textStringXml("html_ok_third"));
+ 
+    });
+  </script>
 
 </body>
 </html>

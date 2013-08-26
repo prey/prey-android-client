@@ -17,13 +17,7 @@
   <script src="js/actions.js"></script>
   
   
-  <script>
-    $(function(){
-		$('#html_warn_first').html(AndroidFunction.textStringXml("html_warn_first"));
- 		$('#html_warn_second').html(AndroidFunction.textStringXml("html_warn_second")); 
-  		$('#submitGrant').html(AndroidFunction.textStringXml("html_warn_third"));
-    });
-  </script>
+
   
 </head>
 
@@ -32,19 +26,25 @@
   <section id="main">
     <article class="post">
 
-      <h1 id="html_warn_first"></h1>
+      <h1 id="html_warn_first">Device not protected.</h1>
 
-      <p class="legal" id="html_warn_second"></p>
+      <p class="legal" id="html_warn_second">Prey obtuvo permisos expeciales para poder bloquear tu dispositivo y también evitar que los ladrones lo desinstalen. Si en algún momento necesitas quitar nuestra aplicación, primero debes remover estos permisos desde Prey</p>
 
       <div class="action">
-        <a class="button error" id="submitGrant" href="#"></a>
+        <a class="button error" id="submitGrant" href="#">Grant admin rights</a>
       </div>
 
     </article>
   </section>
 
 
-
+  <script>
+    $(function(){
+		$('#html_warn_first').html(AndroidFunction.textStringXml("html_warn_first"));
+ 		$('#html_warn_second').html(AndroidFunction.textStringXml("html_warn_second")); 
+  		$('#submitGrant').html(AndroidFunction.textStringXml("html_warn_third"));
+    });
+  </script>
 
 
 </body>

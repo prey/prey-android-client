@@ -17,18 +17,8 @@
   <script src="js/wizard.js"></script>
   <script src="js/actions.js"></script>
 
-  <script>
-    $(function(){
-      // el unico IF!
-      if (window.location.hash.match('#')){
-        Wizard.load(window.location.hash.replace('#', ''));
-      }else{
-        Wizard.start(4);
-      }
-      $('#prev').html(AndroidFunction.textStringXml("html_back"));
-      $('#next').html(AndroidFunction.textStringXml("html_next"));
-    });
-  </script>
+
+ 
 </head>
 
 <body>
@@ -38,15 +28,29 @@
   </section>
 
   <footer id="navigation">
-    <button id="prev" class="disabled"></button>
+    <button id="prev" class="disabled">Back<span></span></button>
     <ul id="circles" class="flex"></ul>
-    <button id="next"></button>
+    <button id="next">Next<span></span></button>
   </footer>
 
 
+
+
+ <script>
+    $(function(){
+      // el unico IF!
+      if (window.location.hash.match('#')){
+        Wizard.load(window.location.hash.replace('#', ''));
+      }else{
+        Wizard.start(4);
+      }
+    });
  
-
-
+    $(function(){
+      $('#prev').html(AndroidFunction.textStringXml("html_back"));
+      $('#next').html(AndroidFunction.textStringXml("html_next"));
+    });
+  </script>
 
 
 </body>
