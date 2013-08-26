@@ -38,8 +38,17 @@ public class EventManager {
 		String ssid=PreyWifiManager.getInstance(ctx).getSSID();
 		
 		String previousSsid=PreyConfig.getPreyConfig(ctx).getPreviousSsid();
-		PreyLogger.i("ssid["+ssid+"] previousSsid["+previousSsid+"]");
-		if (ssid!=null&&!"".equals(ssid)&&!ssid.equals(previousSsid)&&!"<unknown ssid>".equals(ssid)&&!"0x".equals(ssid)){
+		PreyLogger.i("name:"+event.getName()+" info:"+event.getInfo()+" ssid["+ssid+"] previousSsid["+previousSsid+"]");
+		boolean validation=true;
+		if (Event.WIFI_CHANGED.equals(event.getName())){
+			if (ssid!=null&&!"".equals(ssid)&&!ssid.equals(previousSsid)&&!"<unknown ssid>".equals(ssid)&&!"0x".equals(ssid)){
+				validation=true;
+			}else{
+				validation=false;
+			}
+		}
+		
+		if (validation){
 			PreyLogger.i("change PreviousSsid:"+ssid);
 			PreyConfig.getPreyConfig(ctx).setPreviousSsid(ssid);
 			try {

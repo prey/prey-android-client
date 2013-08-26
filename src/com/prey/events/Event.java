@@ -1,7 +1,5 @@
 package com.prey.events;
 
-import org.json.JSONObject;
-
 public class Event {
 	
 	public static final String SIM_CHANGED="sim_changed";

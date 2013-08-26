@@ -53,8 +53,8 @@ public class Location extends JsonAction{
 			
 			data.setList(true);
 			
-			
-			ctx.startService(new Intent(ctx, LocationService.class));
+			Intent intent=new Intent(ctx, LocationService.class);
+			ctx.startService(intent);
 			boolean validLocation = false;
 			PreyLocation lastLocation;
 			HashMap<String, String> parametersMap = new HashMap<String, String>();
@@ -82,7 +82,7 @@ public class Location extends JsonAction{
 
 			data.addDataListAll(parametersMap);			
 			
-			
+			ctx.stopService(intent);
 
 		} catch (Exception e) {
 			PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
