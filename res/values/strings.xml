@@ -277,10 +277,10 @@
     <string name="html_5_first">Sign up and we\'ll get you going.</string>
     <string name="html_5_second">By signing up, you agree to our &#60;a target=&#34;_blank&#34; href=&#34;https://preyproject.com/terms&#34;&#62;Terms of Service&#60;/a&#62; and  &#60;a target=&#34;_blank&#34; href=&#34;https://preyproject.com/privacy&#34;&#62;Privacy Policy&#60;/a&#62;.</string>
     <string name="html_5_third">I already have an account.</string>
-    <string name="html_warn_first">Device not protected.</string>
-    <string name="html_warn_second">Prey obtuvo permisos expeciales para poder bloquear tu dispositivo y tambi&#233;n evitar que los ladrones lo desinstalen. Si en alg&#250;n momento necesitas quitar nuestra aplicaci&#243;n, primero debes remover estos permisos desde Prey</string>
+    <string name="html_warn_first">Device Almost Protected.</string>
+    <string name="html_warn_second">Prey needs special permissions in order to be able to lock your device, and also to prevent thieves from uninstalling it. (If at any time you need to remove Prey, first you have to revoke these permisions from within the app.)</string>
     <string name="html_warn_third">Grant admin rights</string>
     <string name="html_ok_first">Device protected.</string>
-    <string name="html_ok_second">Prey obtuvo permisos especiales para poder bloquear tu dispositivo y tambiÃ©n evitar que los ladrones lo desinstalen. Si en algÃºn momento necesitas quitar nuestra aplicaciÃ³n, primero debes remover estos permisos desde Prey</string>
+    <string name="html_ok_second">We\'re done. From now on you can go to the Control Panel every time you want to know your device\'s location, or to run any of Prey\'s features. Happy hunting!</string>
     <string name="html_ok_third">Manage my devices</string>
 </resources>

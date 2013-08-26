@@ -175,11 +175,11 @@
     <string name="html_5_first">Apúntate y te pondremos en marcha.</string>
     <string name="html_5_second">Al suscribirte, estás de acuerdo con nuestra &#60;a target=&#34;_blank&#34; href=&#34;https://preyproject.com/terms&#34;&#62;Términos de Servicio&#60;/a&#62; y  &#60;a target=&#34;_blank&#34; href=&#34;https://preyproject.com/privacy&#34;&#62;Política de privacidad&#60;/a&#62;.</string>
     <string name="html_5_third">I already have an account.</string>
-    <string name="html_warn_first">El dispositivo no protegido.</string>
-    <string name="html_warn_second">Prey obtuvo permisos expeciales para poder bloquear tu dispositivo y tambi&#233;n evitar que los ladrones lo desinstalen. Si en alg&#250;n momento necesitas quitar nuestra aplicaci&#243;n, primero debes remover estos permisos desde Prey</string>
+    <string name="html_warn_first">Dispositivo casi protegido</string>
+    <string name="html_warn_second">Prey necesita permisos especiales para poder bloquear tu dispositivo, además de prevenir que los ladrones lo desinstalen. (Si en algún momento necesitas remover Prey, primero debes quitar estos permisos desde la aplicación).</string>
     <string name="html_warn_third">Conceder derechos de administrador</string>
     <string name="html_ok_first">Dispositivo protegido.</string>
-    <string name="html_ok_second">Prey obtuvo permisos especiales para poder bloquear tu dispositivo y tambiÃ©n evitar que los ladrones lo desinstalen. Si en algÃºn momento necesitas quitar nuestra aplicaciÃ³n, primero debes remover estos permisos desde Prey</string>
+    <string name="html_ok_second">Listo. Desde ahora puedes ir al Panel de Control cada vez que quieras conocer la ubicación de tu dispositivo o para correr cualquiera de las acciones de Prey. ¡Feliz cacería!</string>
     <string name="html_ok_third">Administrar mis dispositivos</string>
     
 </resources>
