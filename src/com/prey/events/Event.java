@@ -10,7 +10,8 @@ public class Event {
 	public static final String TURNED_OFF="device_turned_off";
 	public static final String BATTERY_LOW="low_battery";
 	public static final String APPLICATION_OPENED="prey_opened";
-
+	public static final String BATTERY_OK="ok_battery";
+	public static final String BATTERY_CHANGE="change_battery";
 	
 	private String name;
 	private String info;

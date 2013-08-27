@@ -40,6 +40,7 @@ public class SIMCheckingThread implements Runnable {
 		if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey()) {
 			try {
 				boolean isSIMReady = false;
+				int countSIMReady=12;
 				final PreyTelephonyManager telephony = PreyTelephonyManager.getInstance(ctx);
 				if (!telephony.isSimStateAbsent()) {
 					while (!isSIMReady) {
@@ -70,6 +71,10 @@ public class SIMCheckingThread implements Runnable {
 							PreyLogger.d("SIM not ready. Waiting 5 secs before check again.");
 							Thread.sleep(5000);
 						}
+						if (countSIMReady>5){
+							break;
+						}
+						countSIMReady++;
 					}
 				} else
 					PreyLogger.d("SIM absent. Can't check if changed");

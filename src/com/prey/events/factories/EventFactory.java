@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
+import android.widget.Toast;
 
 import com.prey.PreyConfig;
+import com.prey.PreyLogger;
 import com.prey.events.Event;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.managers.PreyTelephonyManager;
@@ -22,10 +24,14 @@ public class EventFactory {
 	private static final String ACTION_BATTERY_CHANGE="android.intent.action.ACTION_BATTERY_CHANGE";
 	private static final String ACTION_BATTERY_LOW="android.intent.action.ACTION_BATTERY_LOW";
 	private static final String ACTION_SHUTDOWN="android.intent.action.ACTION_SHUTDOWN";
-	
+	private static final String BATTERY_LOW="android.intent.action.BATTERY_LOW";
+	private static final String BATTERY_OKAY="android.intent.action.BATTERY_OKAY";
+	private static final String BATTERY_CHANGED="android.intent.action.BATTERY_CHANGED";
 	
 	public static Event getEvent(Context ctx,Intent intent){
-		//Toast.makeText(ctx, "getEvent["+intent.getAction()+"]", Toast.LENGTH_LONG).show();
+		String message="getEvent["+intent.getAction()+"]";
+		Toast.makeText(ctx, message, Toast.LENGTH_LONG).show();
+		PreyLogger.i(message);
 		if (BOOT_COMPLETED.equals(intent.getAction()) ){
 			if (PreyConfig.getPreyConfig(ctx).isSimChanged()){
 				JSONObject info=new JSONObject();
@@ -67,6 +73,17 @@ public class EventFactory {
 		if (ACTION_BATTERY_LOW.equals(intent.getAction()) ){
 			return new Event(Event.UN_PLUGGED);
 		}
+		if (BATTERY_LOW.equals(intent.getAction()) ){
+			return new Event(Event.UN_PLUGGED);
+		}
+		if (BATTERY_OKAY.equals(intent.getAction()) ){
+			return new Event(Event.BATTERY_OK);
+		}
+		if (BATTERY_CHANGED.equals(intent.getAction()) ){
+			return new Event(Event.BATTERY_CHANGE);
+		}
+		
+ 
 		
 		if (ACTION_BATTERY_CHANGE.equals(intent.getAction())){
 			int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
