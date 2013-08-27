@@ -170,7 +170,7 @@
 	<string name="html_3_first">Nos importa tanto como usted lo hace.</string>
     <string name="html_3_second">Ligero significa bajo consumo de batería. Si se agota, no enviamos.</string>
     <string name="html_4_first">Bienvenido de nuevo, maestro.</string>
-    <string name="html_4_second">¿Olvidó su contraseña?</string>
+    <string name="html_4_second">¿Olvidó su clave?</string>
     <string name="html_4_third">Regístrate para obtener una cuenta nueva.</string>
     <string name="html_5_first">Apúntate y te pondremos en marcha.</string>
     <string name="html_5_second">Al suscribirte, estás de acuerdo con nuestra &#60;a target=&#34;_blank&#34; href=&#34;https://preyproject.com/terms&#34;&#62;Términos de Servicio&#60;/a&#62; y  &#60;a target=&#34;_blank&#34; href=&#34;https://preyproject.com/privacy&#34;&#62;Política de privacidad&#60;/a&#62;.</string>
@@ -181,5 +181,6 @@
     <string name="html_ok_first">Dispositivo protegido.</string>
     <string name="html_ok_second">Listo. Desde ahora puedes ir al Panel de Control cada vez que quieras conocer la ubicación de tu dispositivo o para correr cualquiera de las acciones de Prey. ¡Feliz cacería!</string>
     <string name="html_ok_third">Administrar mis dispositivos</string>
-    
+    <string name="html_log_in">Iniciar la sesión</string>
+    <string name="html_sign_in">Registrarse</string>
 </resources>

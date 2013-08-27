@@ -283,4 +283,6 @@
     <string name="html_ok_first">Device protected.</string>
     <string name="html_ok_second">We\'re done. From now on you can go to the Control Panel every time you want to know your device\'s location, or to run any of Prey\'s features. Happy hunting!</string>
     <string name="html_ok_third">Manage my devices</string>
+    <string name="html_log_in">Log in</string>
+    <string name="html_sign_in">Sign in</string>
 </resources>

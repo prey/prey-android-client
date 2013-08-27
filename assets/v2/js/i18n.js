@@ -15,10 +15,12 @@ function replaceI18n(page) {
  	$('#html_4_first').html(AndroidFunction.textStringXml("html_4_first"));
  	$('#html_4_second').html(AndroidFunction.textStringXml("html_4_second"));
  	$('#html_4_third').html(AndroidFunction.textStringXml("html_4_third"));
+ 	$('#submit').val(AndroidFunction.textStringXml("html_log_in"));
  }
  if (page==5){
  	$('#html_5_first').html(AndroidFunction.textStringXml("html_5_first"));
  	$('#html_5_second').html(AndroidFunction.textStringXml("html_5_second"));
  	$('#html_5_third').html(AndroidFunction.textStringXml("html_5_third"));
+ 	$('#submit').val(AndroidFunction.textStringXml("html_sign_in"));
  }
 }
