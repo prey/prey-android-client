@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
-import android.widget.Toast;
+ 
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -30,7 +30,7 @@ public class EventFactory {
 	
 	public static Event getEvent(Context ctx,Intent intent){
 		String message="getEvent["+intent.getAction()+"]";
-		Toast.makeText(ctx, message, Toast.LENGTH_LONG).show();
+		 
 		PreyLogger.i(message);
 		if (BOOT_COMPLETED.equals(intent.getAction()) ){
 			if (PreyConfig.getPreyConfig(ctx).isSimChanged()){
