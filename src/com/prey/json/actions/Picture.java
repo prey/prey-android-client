@@ -30,12 +30,12 @@ public class Picture extends JsonAction {
 
 	public List<HttpDataService> report(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		List<HttpDataService> listResult=super.report(ctx, list, parameters);
-		 PreyLogger.d("Ejecuting Picture reports. DONE!");
+		 PreyLogger.i("Ejecuting Picture reports. DONE!");
 		 return listResult;
 	}
 	
 	public  List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
-		PreyLogger.d("Ejecuting Picture Data.");
+		PreyLogger.i("Ejecuting Picture Data.");
 		 List<HttpDataService> listResult=super.get(ctx, list, parameters);
 		return listResult;
 	}
@@ -63,14 +63,14 @@ public class Picture extends JsonAction {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 				}
-				PreyLogger.d("esperando antes take [" + i + "]");
+				PreyLogger.i("esperando antes take [" + i + "]");
 				i++;
 			}
 			if(SimpleCameraActivity.activity!=null){
-				PreyLogger.d("takePicture activity no nulo");
+				PreyLogger.i("takePicture activity no nulo");
 				SimpleCameraActivity.activity.takePicture();
 			}else{
-				PreyLogger.d("takePicture activity nulo");
+				PreyLogger.i("takePicture activity nulo");
 			}
 			try {
 				Thread.sleep(3000);
@@ -86,10 +86,10 @@ public class Picture extends JsonAction {
 				while (SimpleCameraActivity.activity != null && SimpleCameraActivity.dataImagen == null && i < 20) {
 					Thread.sleep(1000);
 					i++;
-					PreyLogger.d("falta imagen[" + i + "]");
+					PreyLogger.i("falta imagen[" + i + "]");
 				}
 			} catch (InterruptedException e) {
-				PreyLogger.d("Error, causa:" + e.getMessage());
+				PreyLogger.i("Error, causa:" + e.getMessage());
 			}
 			if(SimpleCameraActivity.activity!=null){
 				SimpleCameraActivity.activity.finish();
@@ -97,7 +97,7 @@ public class Picture extends JsonAction {
 			
 			 
 			if (SimpleCameraActivity.dataImagen != null) {
-				PreyLogger.d("dataImagen data length=" + SimpleCameraActivity.dataImagen.length);
+				PreyLogger.i("dataImagen data length=" + SimpleCameraActivity.dataImagen.length);
 				InputStream file = new ByteArrayInputStream(SimpleCameraActivity.dataImagen);
 				EntityFile entityFile = new EntityFile();
 				entityFile.setFile(file);
@@ -109,7 +109,7 @@ public class Picture extends JsonAction {
 				data.setList(true);
 				data.addEntityFile(entityFile);
 			} else {
-				PreyLogger.d("dataImagen null");
+				PreyLogger.i("dataImagen null");
 			}
 			 
 		} catch (Exception e) {
