@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
- 
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -30,8 +29,8 @@ public class EventFactory {
 	
 	public static Event getEvent(Context ctx,Intent intent){
 		String message="getEvent["+intent.getAction()+"]";
-		 
-		PreyLogger.i(message);
+		//Toast.makeText(ctx, message, Toast.LENGTH_LONG).show();
+		PreyLogger.d(message);
 		if (BOOT_COMPLETED.equals(intent.getAction()) ){
 			if (PreyConfig.getPreyConfig(ctx).isSimChanged()){
 				JSONObject info=new JSONObject();

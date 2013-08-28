@@ -63,14 +63,14 @@ public class Picture extends JsonAction {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 				}
-				PreyLogger.i("esperando antes take [" + i + "]");
+				PreyLogger.d("esperando antes take [" + i + "]");
 				i++;
 			}
 			if(SimpleCameraActivity.activity!=null){
-				PreyLogger.i("takePicture activity no nulo");
+				PreyLogger.d("takePicture activity no nulo");
 				SimpleCameraActivity.activity.takePicture();
 			}else{
-				PreyLogger.i("takePicture activity nulo");
+				PreyLogger.d("takePicture activity nulo");
 			}
 			try {
 				Thread.sleep(3000);
@@ -86,7 +86,7 @@ public class Picture extends JsonAction {
 				while (SimpleCameraActivity.activity != null && SimpleCameraActivity.dataImagen == null && i < 20) {
 					Thread.sleep(1000);
 					i++;
-					PreyLogger.i("falta imagen[" + i + "]");
+					PreyLogger.d("falta imagen[" + i + "]");
 				}
 			} catch (InterruptedException e) {
 				PreyLogger.d("Error, causa:" + e.getMessage());
