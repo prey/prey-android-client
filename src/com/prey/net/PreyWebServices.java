@@ -26,7 +26,6 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
  
 
@@ -40,7 +39,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.telephony.TelephonyManager;
-import android.widget.Toast;
 
 
 import com.prey.FileConfigReader;
@@ -173,18 +171,38 @@ public class PreyWebServices {
 		
 		
 		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("api_key", api_key);
+		
+		/*
+		parameters.put("device[title]", vendor + " " + model);
+		parameters.put("device[type]", deviceType);
+		parameters.put("device[model_name]", model);
+		parameters.put("device[vendor_name]", vendor);
+		parameters.put("device[os]", "Android");
+		parameters.put("device[os_version]", Build.VERSION.RELEASE);
+		
+		*/
+		//parameters.put("api_key", api_key);
 		parameters.put("title", vendor + " " + model);
 		parameters.put("device_type", deviceType);
 		parameters.put("os", "Android");
 		parameters.put("os_version", Build.VERSION.RELEASE);
 		parameters.put("referer_device_id", "");
-		parameters.put("plan", "free");
-		parameters.put("activation_phrase", preyConfig.getSmsToRun());
-		parameters.put("deactivation_phrase", preyConfig.getSmsToStop());
 		parameters.put("model_name", model);
 		parameters.put("vendor_name", vendor);
-		parameters.put("physical_address", imei);
+		//parameters.put("physical_address", imei);
+		
+		
+		//parameters.put("api_key", api_key);
+		//parameters.put("physical_address", imei);
+		
+		
+		//parameters.put("referer_device_id", "");
+		//parameters.put("plan", "free");
+		//parameters.put("activation_phrase", preyConfig.getSmsToRun());
+		//parameters.put("deactivation_phrase", preyConfig.getSmsToStop());
+		
+		
+		
 		
 		parameters=increaseData(ctx, parameters);
 		PreyHttpResponse response = null;
@@ -193,7 +211,7 @@ public class PreyWebServices {
 			String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
 			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat(apiv2).concat("devices.xml");
 			PreyLogger.i("url:"+url);
-			response = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig);
+			response = PreyRestHttpClient.getInstance(ctx).postBase(url, parameters, preyConfig,api_key);
 			// No more devices allowed
 			if ((response.getStatusLine().getStatusCode() == 302) || (response.getStatusLine().getStatusCode() == 422)) {
 				throw new NoMoreDevicesAllowedException(ctx.getText(R.string.set_old_user_no_more_devices_text).toString());
@@ -701,10 +719,9 @@ public class PreyWebServices {
 		return response;
 	} 
 	
-	public static HashMap<String, String> increaseData(Context ctx, HashMap<String, String> parameters) {
+	public HashMap<String, String> increaseData(Context ctx, HashMap<String, String> parameters) {
 		PreyPhone phone = new PreyPhone(ctx);
 		Hardware hardware = phone.getHardware();
-		//String prefix = "device[hardware_attributes]";
 		String prefix = "hardware_attributes";
 		parameters.put(prefix + "[uuid]", hardware.getUuid());
 		parameters.put(prefix + "[bios_vendor]", hardware.getBiosVendor());
@@ -716,21 +733,22 @@ public class PreyWebServices {
 		parameters.put(prefix + "[cpu_model]", hardware.getCpuModel());
 		parameters.put(prefix + "[cpu_speed]", hardware.getCpuSpeed());
 		parameters.put(prefix + "[cpu_cores]", hardware.getCpuCores());
-		parameters.put(prefix + "[ram_size]", hardware.getRamModules());
+		parameters.put(prefix + "[ram_size]", hardware.getRamSize());
+		parameters.put(prefix + "[serial_number]", hardware.getSerialNumber());
 		// parameters.put(prefix + "[ram_modules]", hardware.getRamModules());
 		int nic = 0;
 		Wifi wifi = phone.getWifi();
-		//prefix = "device[hardware_attributes][network]";
-		prefix = "hardware_attributes [network]";
+		if (wifi!=null){
+		prefix = "hardware_attributes[network]";
 		parameters.put(prefix + "[nic_" + nic + "][name]", wifi.getName());
 		parameters.put(prefix + "[nic_" + nic + "][interface_type]", wifi.getInterfaceType());
 		// parameters.put(prefix + "[nic_" + nic + "][model]", wifi.getModel());
-		// parameters.put(prefix + "[nic_" + nic + "][vendor]",
-		// wifi.getVendor());
+		// parameters.put(prefix + "[nic_" + nic + "][vendor]", wifi.getVendor());
 		parameters.put(prefix + "[nic_" + nic + "][ip_address]", wifi.getIpAddress());
 		parameters.put(prefix + "[nic_" + nic + "][gateway_ip]", wifi.getGatewayIp());
 		parameters.put(prefix + "[nic_" + nic + "][netmask]", wifi.getNetmask());
 		parameters.put(prefix + "[nic_" + nic + "][mac_address]", wifi.getMacAddress());
+		}
 		return parameters;
 	}
  
@@ -751,4 +769,7 @@ public class PreyWebServices {
 		return 200;
 	}
 
+	
+	
+	
 }

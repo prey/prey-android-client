@@ -43,9 +43,9 @@ public class HttpDataService {
 			StringBuffer key = new StringBuffer();
 			for (String valueKey : dataList.keySet()) {
 				String valueData = dataList.get(valueKey);
-				key.append("report[");
+				key.append("");
 				key.append(this.key);
-				key.append("][");
+				key.append("[");
 				key.append(valueKey);
 				key.append("]");
 				parameters.put(key.toString(), valueData);
@@ -53,7 +53,7 @@ public class HttpDataService {
 			}
 			key = null;
 		} else
-			parameters.put("report["+key+"]", singleData);
+			parameters.put(" "+key+" ", singleData);
 
 		return parameters;
 	}
