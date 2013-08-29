@@ -26,25 +26,30 @@
   <section id="main">
     <article class="post">
 
-      <h1 id="html_warn_first">Device Almost Protected.</h1>
+      <div class="flexl"></div>
 
-      <p class="legal" id="html_warn_second">Prey needs special permissions in order to be able to lock your device, and also to prevent thieves from uninstalling it. (If at any time you need to remove Prey, first you have to revoke these permisions from within the app.)</p>
+      <h1>One final step.</h1>
+
+	  <div class="flex"></div>
+
+      <p class="legal">
+         Prey needs special permissions in order to be able to lock your device, and also to prevent thieves from uninstalling it.
+         (If at any time you need to remove Prey, first you have to revoke these permisions from within the app.)
+      </p>
+      
+
+      <div class="flex"></div>
 
       <div class="action">
         <a class="button error" id="submitGrant" href="#">Grant admin rights</a>
       </div>
 
+      <div class="flexl"></div>
+
     </article>
   </section>
 
 
-  <script>
-    $(function(){
-		$('#html_warn_first').html(AndroidFunction.textStringXml("html_warn_first"));
- 		$('#html_warn_second').html(AndroidFunction.textStringXml("html_warn_second")); 
-  		$('#submitGrant').html(AndroidFunction.textStringXml("html_warn_third"));
-    });
-  </script>
 
 
 </body>

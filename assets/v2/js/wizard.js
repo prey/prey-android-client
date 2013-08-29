@@ -52,7 +52,8 @@ Wizard.load = function(page){
   $.get(url, function(html){
     $('#main').fadeOut(function(){
       $(this).html(html).fadeIn();
-	  replaceI18n(page);
+	  if (typeof I18n != 'undefined')
+			I18n.replace();
     });
   });
 

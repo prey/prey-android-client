@@ -26,25 +26,27 @@
   <section id="main">
     <article class="post">
 
-      <h1 id="html_ok_first">Device protected.</h1>
+	<div class="flexl"></div>
 
-      <p class="legal" id="html_ok_second">We're done. From now on you can go to the Control Panel every time you want to know your device's location, or to run any of Prey's features. Happy hunting!</p>
+     <h1 id="html_ok_first">Device protected.</h1>
 
+     <div class="flex"></div>
+     
+       <p class="legal" >
+       We're done. From now on you can go to the Control Panel every time you want to know your device's location, or to run any of Prey's features. Happy hunting!
+       </p>
+       
+      <div class="flex"></div>
+     	  
       <div class="action">
         <a class="button success" id="submitWeb" href="#">Manage my devices</a>
       </div>
+     
+    <div class="flexl"></div>
 
     </article>
   </section>
 
-  <script>
-    $(function(){
-		 $('#html_ok_first').html(AndroidFunction.textStringXml("html_ok_first"));
- 		 $('#html_ok_second').html(AndroidFunction.textStringXml("html_ok_second"));
-		 $('#submitWeb').html(AndroidFunction.textStringXml("html_ok_third"));
- 
-    });
-  </script>
 
 </body>
 </html>

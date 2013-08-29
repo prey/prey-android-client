@@ -12,7 +12,6 @@
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 
-
   -webkit-touch-callout: none;
     -webkit-user-select: none;
             user-select: none;
@@ -23,25 +22,19 @@ html, body {
   height: 100%;
 }
 
-
 html { font-size: 18px; }
-@media screen and (min-width:  400px) { html { font-size: 22px; } }
-@media screen and (min-width:  600px) { html { font-size: 26px; } }
-@media screen and (min-width:  800px) { html { font-size: 30px; } }
-@media screen and (min-width: 1000px) { html { font-size: 34px; } }
-
-
+@media screen and (min-width:  400px) { html { font-size: 20px; } }
+@media screen and (min-width:  600px) { html { font-size: 24px; } }
+@media screen and (min-width:  800px) { html { font-size: 28px; } }
+@media screen and (min-width: 1000px) { html { font-size: 32px; } }
 
 body {
-  background-color: #042237;
-  background-image: url(../img/glow.png); /* Safari 4-5, Chrome 1-9 */
+  background: #042237 url(../img/glow.png) no-repeat center center;
   background-image: url(../img/glow.png), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#000), to(#041622)); /* Safari 4-5, Chrome 1-9 */
   background-image: url(../img/glow.png), -webkit-linear-gradient(top, #041622, #000); /* Safari 5.1, Chrome 10+ */
   background-image: url(../img/glow.png), linear-gradient(to bottom, #041622 0%, #000 100%); /* W3C */
-  background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
-  background-position: top center;
   font-family: 'Open Sans', Helvetica, sans-serif;
   text-align: center;
   color: #FFF;
@@ -85,10 +78,14 @@ figure,
   -webkit-box-flex: 1; /* [5] */
   box-flex: 1;
 }
+.flexl {
+  -webkit-box-flex: 4; /* [5] */
+  box-flex: 4;
+}
 
 
 /* BASIC STYLES */
-section, footer { padding: 2em; }
+section, footer { padding: 2em 1.5em; }
 header  { padding-bottom: 2em; }
 footer  { padding-top: 0em; }
 
@@ -100,7 +97,6 @@ footer {
           transform: translate3d(0, 0, 0);
 }
 
-.legal  { margin: 4em 0; }
 .action {
   display: inline-block;
   margin: 2em 0;
@@ -123,54 +119,67 @@ footer {
 h1 {
   font-family: Lato, Helvetica, sans-serif;
   font-weight: 300;
-  font-size: 1.8em;
+  font-size: 2em;
   margin: 0;
-  margin-bottom: .2em;
+  letter-spacing: -0.05em;
 }
+
 p {
-  color: #8D97A0;
-  font-size: 1em;
+  margin-top: .6em;
+  color: #A9BBCA;
+  font-size: .8em;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
 }
+
 p.legal {
-  color: #FFF;
+  margin: 2em 0;
 }
+
 a {
   color: #FFF;
   text-decoration: none;
   border-bottom: 1px dashed #444;
 }
+
 .toggle {
-  background-color: rgba(255,255,255,.2);
-  padding: .3em 1em;
+  background-color: rgba(255,255,255,.15);
+  padding: .4em 1em;
   border-radius: 2em;
   border: 0;
+  font-size: .8em;
 }
 figure  {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
-  margin: 2em;
+  margin: 0em;
 }
 
-.first  { background-image: url('../img/img-1.png'); }
+.first  { background-image: url('../img/logo.png'); }
 .second { background-image: url('../img/img-2.png'); }
 .third  { background-image: url('../img/img-1.png'); }
 
+/* welcome screen */
+
+.first {
+  margin-bottom: 2em;
+}
 
 /* FORM ELEMENTS */
+
 form, .small {
   margin: 0 auto;
 }
-.small {
-  max-width: 540px;
-}
+
 form {
   max-width: 450px;
   margin-bottom: 1em;
 }
 input, .button {
   width: 100%;
-  padding: .8em 1em;
+  padding: .6em .8em;
   border: 0;
   -webkit-border-radius: .2em;
   border-radius: .2em;
@@ -188,29 +197,31 @@ input[type='submit'], .button {
   color: #FFF;
   font-weight: bold;
   margin-bottom: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .button.success { background-color: #5EB654; }
 .button.error   { background-color: #D8534E; }
 
 
-
 /* CIRCLES */
 #circles {
-  margin: 0;
-  padding: 0;
   line-height: 0;
+  padding: 0;
+  margin: 0;
+  margin-top: 3px;
 }
 #circles li {
   display: inline-block;
-  width: .5em;
-  height:.5em;
+  width:  .5em;
+  height: .5em;
   -webkit-border-radius: 2em;
   border-radius: 2em;
   background: #adadad;
   transition: background .3s;
 }
-#circles li + li { margin-left: 1em; }
+#circles li + li { margin-left: .5em; }
 #circles li.on   { background: #30A9ED; }
 
 
@@ -246,10 +257,9 @@ footer button span {
 }
 
 
-
 /* MISC STYLES */
 .disabled {
-  opacity: .5;
+  opacity: .4;
   pointer-events: none !important;
 }
 
@@ -264,13 +274,12 @@ footer button span {
  */
 .clearfix:before,
 .clearfix:after {
-    content: " "; /* 1 */
-    display: table; /* 2 */
-    
+  content: " "; /* 1 */
+  display: table; /* 2 */
 }
 
 .clearfix:after {
-    clear: both;
+  clear: both;
 }
 
 /**
@@ -278,6 +287,5 @@ footer button span {
  * Include this rule to trigger hasLayout and contain floats.
  */
 .clearfix {
-    *zoom: 1;
+  *zoom: 1;
 }
-
