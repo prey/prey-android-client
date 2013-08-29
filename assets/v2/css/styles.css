@@ -133,10 +133,6 @@ p {
   margin-right: auto;
 }
 
-p.legal {
-  margin: 2em 0;
-}
-
 a {
   color: #FFF;
   text-decoration: none;
@@ -159,7 +155,7 @@ figure  {
 
 .first  { background-image: url('../img/logo.png'); }
 .second { background-image: url('../img/img-2.png'); }
-.third  { background-image: url('../img/img-1.png'); }
+.third  { background-image: url('../img/img-map.png'); }
 
 /* welcome screen */
 
