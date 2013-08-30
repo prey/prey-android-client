@@ -45,7 +45,7 @@ public class WarningActivity extends Activity {
 	private void startup() {
 		createEnvironment();
 		WebView installBrowser = getWebView();
-		installBrowser.loadUrl("file:///android_asset/v2/warning.html");
+		installBrowser.loadUrl("file:///android_asset/v2/error.html");
 
 	}
 

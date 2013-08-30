@@ -3,6 +3,7 @@
 // Written by Tomas Pollak
 // (c) 2013 Fork Ltd. - forkhq.com
 //////////////////////////////////////////
+
 $.getScript('js/i18n.js');
 
 var current = 0,
@@ -52,8 +53,9 @@ Wizard.load = function(page){
   $.get(url, function(html){
     $('#main').fadeOut(function(){
       $(this).html(html).fadeIn();
-	  if (typeof I18n != 'undefined')
-			I18n.replace();
+
+      if (typeof I18n != 'undefined')
+        I18n.replace(page);
     });
   });
 

@@ -17,64 +17,50 @@ $(function(){
   }
 
   $('#signup').live('submit', function(e){
+    e.preventDefault();
 
     var data = {
-      username: this.name.value,
-      email: this.email.value,
-      password: this.password.value
+      username : this.name.value,
+      email    : this.email.value,
+      password : this.password.value
     }
 
-   // console.log(data);
-   // alert('Signing up!');
+    if (typeof AndroidFunction != 'undefined')
+      AndroidFunction.newuser(data.username, data.email, data.password);
 
-    AndroidFunction.newuser(data.username,data.email,data.password);
     // Wizard.load('enable');
-
-   //  e.preventDefault();
   })
 
   $('#login').live('submit', function(e){
+    e.preventDefault();
 
     var data = {
-      email: this.email.value,
-      password: this.password.value
+      email    : this.email.value,
+      password : this.password.value
     }
 
-   // console.log(data);
-   // alert('Logging in!');
+    if (typeof AndroidFunction != 'undefined')
+        AndroidFunction.login(data.email, data.password);
 
-    AndroidFunction.login(data.email,data.password);
     // Wizard.load('enable');
-
-   // e.preventDefault();
   })
 
-  $('a.panel').live('click', function(e){
-    // AndroidFunction.goPanel();
-   // alert('Going to panel');
-   // e.preventDefault();
-  })
-
-  $('a.grant-rights').live('click', function(e){
-    // alert('Showing grants');
-    // e.preventDefault();
-     AndroidFunction.permission();
-  });
-  
-    $('#submitGrant').live('click', function(e){
-    // alert('Showing grants');
-    // e.preventDefault();
-     AndroidFunction.permission();
+  $('#submitGrant').live('click', function(e){
+    e.preventDefault();
+    if (typeof AndroidFunction != 'undefined')
+      AndroidFunction.permission();
   });
 
- $('#submitWeb').live('click', function(e){
- 	// alert('Showing grants');
-   	AndroidFunction.openPanel();
+  $('#submitWeb').live('click', function(e){
+    e.preventDefault();
+
+    if (typeof AndroidFunction != 'undefined')
+     	AndroidFunction.openPanel();
   });
 
 
- 
- 	
- 
+
+
+
 
 })

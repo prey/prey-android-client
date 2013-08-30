@@ -25,8 +25,7 @@ public class WarningBrowserActivity extends BaseBrowserActivity {
 		
 		createEnvironment();
 		WebView installBrowser = getWebView();
-		//installBrowser.loadUrl("file:///android_asset/final/warning.html");
-		installBrowser.loadUrl("file:///android_asset/v2/warning.html");
+		installBrowser.loadUrl("file:///android_asset/v2/error.html");
 	}
 
 	@Override

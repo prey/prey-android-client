@@ -1,26 +1,32 @@
-function replaceI18n(page) {
- if (page==1){
- 	$('#html_1_first').html(AndroidFunction.textStringXml("html_1_first"));
- 	$('#html_1_second').html(AndroidFunction.textStringXml("html_1_second"));
- }
- if (page==2){
- 	$('#html_2_first').html(AndroidFunction.textStringXml("html_2_first"));
-	$('#html_2_second').html(AndroidFunction.textStringXml("html_2_second"));
- }
- if (page==3){
- 	$('#html_3_first').html(AndroidFunction.textStringXml("html_3_first"));
- 	$('#html_3_second').html(AndroidFunction.textStringXml("html_3_second"));
- }
- if (page==4){
- 	$('#html_4_first').html(AndroidFunction.textStringXml("html_4_first"));
- 	$('#html_4_second').html(AndroidFunction.textStringXml("html_4_second"));
- 	$('#html_4_third').html(AndroidFunction.textStringXml("html_4_third"));
- 	$('#submit').val(AndroidFunction.textStringXml("html_log_in"));
- }
- if (page==5){
- 	$('#html_5_first').html(AndroidFunction.textStringXml("html_5_first"));
- 	$('#html_5_second').html(AndroidFunction.textStringXml("html_5_second"));
- 	$('#html_5_third').html(AndroidFunction.textStringXml("html_5_third"));
- 	$('#submit').val(AndroidFunction.textStringXml("html_sign_in"));
- }
+var I18n = {};
+
+I18n.replace = function(page) {
+  return false; // disabled for now
+
+  if (typeof AndroidFunction != 'undefined') {
+    $('#html_1_first').html(AndroidFunction.textStringXml("html_1_first"));
+    $('#html_1_second').html(AndroidFunction.textStringXml("html_1_second"));
+
+    $('#html_2_first').html(AndroidFunction.textStringXml("html_2_first"));
+    $('#html_2_second').html(AndroidFunction.textStringXml("html_2_second"));
+
+    $('#html_3_first').html(AndroidFunction.textStringXml("html_3_first"));
+    $('#html_3_second').html(AndroidFunction.textStringXml("html_3_second"));
+
+    $('#html_4_first').html(AndroidFunction.textStringXml("html_4_first"));
+    $('#html_4_second').html(AndroidFunction.textStringXml("html_4_second"));
+    $('#html_4_third').html(AndroidFunction.textStringXml("html_4_third"));
+
+    $('#html_5_first').html(AndroidFunction.textStringXml("html_5_first"));
+    $('#html_5_second').html(AndroidFunction.textStringXml("html_5_second"));
+    $('#html_5_third').html(AndroidFunction.textStringXml("html_5_third"));
+
+    $('#html_ok_first').html(AndroidFunction.textStringXml("html_ok_first"));
+    $('#html_ok_second').html(AndroidFunction.textStringXml("html_ok_second"));
+    $('#submitWeb').html(AndroidFunction.textStringXml("html_ok_third"));
+
+    $('#html_warn_first').html(AndroidFunction.textStringXml("html_warn_first"));
+    $('#html_warn_second').html(AndroidFunction.textStringXml("html_warn_second"));
+    $('#submitGrant').html(AndroidFunction.textStringXml("html_warn_third"));
+  }
 }

@@ -29,6 +29,8 @@ import com.prey.events.manager.EventManagerRunner;
 
 public class LoginActivity extends Activity  {
 
+	private WebView installBrowser = null;
+			
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		// ignore orientation change
@@ -40,6 +42,8 @@ public class LoginActivity extends Activity  {
 		super.onCreate(savedInstanceState);
 		// Delete notifications (in case Activity was started by one of them)
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		setContentView(R.layout.install_browser);
 		
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancel(R.string.preyForAndroid_name);
@@ -57,8 +61,17 @@ public class LoginActivity extends Activity  {
 		startup();
 	}
 
+	@SuppressLint("SetJavaScriptEnabled") 
 	private void startup() {
 		Context ctx=getApplicationContext();
+		
+		installBrowser = (WebView) findViewById(R.id.install_browser);
+		installBrowser.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+		PreyJavaScriptInterface myJavaScriptInterface = null;
+		myJavaScriptInterface = new PreyJavaScriptInterface(this, PreyUtils.getDeviceType(this));
+		installBrowser.addJavascriptInterface(myJavaScriptInterface, "AndroidFunction");
+		installBrowser.getSettings().setJavaScriptEnabled(true);
+		
 		 
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		if (!isThisDeviceAlreadyRegisteredWithPrey()) {
@@ -87,40 +100,24 @@ public class LoginActivity extends Activity  {
 	}
 	
 	public void readyBrowser(){
-		createEnvironment();
-		WebView installBrowser = getWebView();
+ 
+ 
 		installBrowser.loadUrl("file:///android_asset/v2/ok.html");
 	}
 	
 	public void tourBrowser() {
-		createEnvironment();
-		WebView installBrowser = getWebView();
+ 
 		installBrowser.loadUrl("file:///android_asset/v2/index.html");
 	}
 	
 	public void  warningBrowser() {
-		createEnvironment();
-		WebView installBrowser = getWebView();
-		installBrowser.loadUrl("file:///android_asset/v2/warning.html");
-	}
-	
-	public void createEnvironment(){
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		//
-		setContentView(R.layout.install_browser);
  
+		installBrowser.loadUrl("file:///android_asset/v2/error.html");
 	}
 	
-	@SuppressLint("SetJavaScriptEnabled") 
-	public WebView getWebView(){
-		WebView installBrowser = (WebView) findViewById(R.id.install_browser);
-		installBrowser.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-		PreyJavaScriptInterface myJavaScriptInterface = null;
-		myJavaScriptInterface = new PreyJavaScriptInterface(this, PreyUtils.getDeviceType(this));
-		installBrowser.addJavascriptInterface(myJavaScriptInterface, "AndroidFunction");
-		installBrowser.getSettings().setJavaScriptEnabled(true);
-		return installBrowser;
-	}
+ 
+	
+ 
 	
 		
 	@Override
