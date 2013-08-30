@@ -29,7 +29,7 @@ html { font-size: 18px; }
 @media screen and (min-width: 1000px) { html { font-size: 32px; } }
 
 body {
-  background: #042237 url(../img/glow.png) no-repeat center top;
+  background: #042237 url(../img/glow.png) no-repeat center center;
   background-image: url(../img/glow.png), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#000), to(#041622)); /* Safari 4-5, Chrome 1-9 */
   background-image: url(../img/glow.png), -webkit-linear-gradient(top, #041622, #000); /* Safari 5.1, Chrome 10+ */
   background-image: url(../img/glow.png), linear-gradient(to bottom, #041622 0%, #000 100%); /* W3C */
@@ -128,7 +128,11 @@ h1 {
 only screen and (-webkit-min-device-pixel-ratio : 1.5),
 only screen and (min-device-pixel-ratio : 1.5) {
   html {
-    font-size: 32px;
+    font-size: 20px;
+  }
+
+  h1 {
+    max-width: 300px;
   }
 }
 
@@ -169,8 +173,9 @@ figure  {
 /* welcome screen */
 
 .first {
-  margin-left: 2em;
-  margin-right: 2em;
+  margin-bottom: 2em;
+  margin-left: 3em;
+  margin-right: 3em;
 }
 
 /* FORM ELEMENTS */
