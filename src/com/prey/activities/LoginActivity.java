@@ -9,18 +9,14 @@ package com.prey.activities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationManager;
-import android.app.ProgressDialog;
 
 import android.content.Context;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.prey.PreyConfig;
 import com.prey.PreyUtils;
@@ -30,6 +26,7 @@ import com.prey.activities.browser.javascript.PreyJavaScriptInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
+import com.prey.twilio.TwilioRunner;
 
 public class LoginActivity extends Activity {
 
@@ -52,7 +49,8 @@ public class LoginActivity extends Activity {
 		startup();
 		if (isThisDeviceAlreadyRegisteredWithPrey()) {
 			Event event = new Event(Event.APPLICATION_OPENED);
-			new Thread(new EventManagerRunner(getApplicationContext(), event));
+			new Thread(new EventManagerRunner(getApplicationContext(), event)).start();
+			new Thread(new TwilioRunner(getApplicationContext())).start();
 		}
 
 	 
@@ -86,7 +84,7 @@ public class LoginActivity extends Activity {
 				readyBrowser();
 			}
 		}
-
+		
 	}
 
 	private boolean isThisDeviceAlreadyRegisteredWithPrey() {

@@ -7,8 +7,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
-    android:versionCode="51"
-    android:versionName="1.0.0" >
+    android:versionCode="35"
+    android:versionName="0.5.5" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -466,7 +466,7 @@
         <service android:name="com.prey.services.PreyRunnerService" />
         <service android:name="com.prey.services.ImagenService" />
         <service android:name="com.prey.services.RecorderService" />
-        <!-- service android:name="com.twilio.client.TwilioClientService" android:exported="false" /-->
+        <service android:name="com.twilio.client.TwilioClientService" android:exported="false" />
         
         
  

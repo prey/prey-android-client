@@ -37,6 +37,8 @@ public class EventManager {
 		
 		String ssid=PreyWifiManager.getInstance(ctx).getSSID();
 		
+		
+		
 		String previousSsid=PreyConfig.getPreyConfig(ctx).getPreviousSsid();
 		PreyLogger.i("name:"+event.getName()+" info:"+event.getInfo()+" ssid["+ssid+"] previousSsid["+previousSsid+"]");
 		boolean validation=true;
@@ -96,8 +98,12 @@ public class EventManager {
 			PreyLogger.i("jsonObjectStatus: " + jsonObjectStatus.toString());
 			if (event != null) {
 				if (isOnline(ctx)) {
-					PreyLogger.i("event name[" + this.event.getName() + "], info[" + this.event.getInfo() + "]");
-					PreyWebServices.getInstance().sendPreyHttpEvent(ctx, event, jsonObjectStatus);
+					String lastEvent=PreyConfig.getPreyConfig(ctx).getLastEvent();
+					if(!Event.WIFI_CHANGED.equals(event.getName()) || !event.getName().equals(lastEvent)){
+						PreyConfig.getPreyConfig(ctx).setLastEvent(event.getName());
+						PreyLogger.i("event name[" + this.event.getName() + "], info[" + this.event.getInfo() + "]");
+						PreyWebServices.getInstance().sendPreyHttpEvent(ctx, event, jsonObjectStatus);
+					}
 				}
 			}
 		}

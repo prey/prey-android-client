@@ -54,7 +54,11 @@ public class Report  {
 					if (200!=response.getStatusLine().getStatusCode()){
 						preyConfig.setMissing(false);
 					}else{
-						Thread.sleep(interval * PreyConfig.DELAY_MULTIPLIER);
+						if (interval==0){
+							preyConfig.setMissing(false);
+						}else{
+							Thread.sleep(interval * PreyConfig.DELAY_MULTIPLIER);
+						}
 					}
 				}else{
 					preyConfig.setMissing(false);

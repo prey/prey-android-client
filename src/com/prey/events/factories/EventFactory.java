@@ -43,7 +43,6 @@ public class EventFactory {
 				return new Event(Event.TURNED_ON);
 			}
 		}
-		
 		if (ACTION_SHUTDOWN.equals(intent.getAction()) ){
 			return new Event(Event.TURNED_OFF);
 		}
@@ -67,13 +66,12 @@ public class EventFactory {
 		}
 		if (ACTION_POWER_DISCONNECTED.equals(intent.getAction()) ){
 			return new Event(Event.UN_PLUGGED);
-		}
-		
+		}		
 		if (ACTION_BATTERY_LOW.equals(intent.getAction()) ){
-			return new Event(Event.UN_PLUGGED);
+			return new Event(Event.BATTERY_LOW);
 		}
 		if (BATTERY_LOW.equals(intent.getAction()) ){
-			return new Event(Event.UN_PLUGGED);
+			return new Event(Event.BATTERY_LOW);
 		}
 		if (BATTERY_OKAY.equals(intent.getAction()) ){
 			return new Event(Event.BATTERY_OK);
@@ -81,9 +79,6 @@ public class EventFactory {
 		if (BATTERY_CHANGED.equals(intent.getAction()) ){
 			return new Event(Event.BATTERY_CHANGE);
 		}
-		
- 
-		
 		if (ACTION_BATTERY_CHANGE.equals(intent.getAction())){
 			int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
 			JSONObject info=new JSONObject();

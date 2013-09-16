@@ -1,8 +1,8 @@
 package com.prey.sim;
 
-import android.content.ComponentName;
+ 
 import android.content.Context;
-import android.content.pm.PackageManager;
+ 
 import android.telephony.PhoneNumberUtils;
 
 import com.prey.PreyConfig;

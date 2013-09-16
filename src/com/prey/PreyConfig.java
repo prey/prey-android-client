@@ -113,6 +113,8 @@ public class PreyConfig {
 	
 	public static final String PREVIOUS_SSID="PREVIOUS_SSID";
 	
+ 
+	
 	/* ------------- */
 
 	public static final String TAG = "PREY";
@@ -212,7 +214,8 @@ public class PreyConfig {
 		
 		this.videoStart=settings.getBoolean(PreyConfig.VIDEO_START, false);
 		
-	//	FroyoSupport.getInstance(ctx).changePasswordAndLock("osito", true);
+		this.lastEvent=settings.getString(PreyConfig.LAST_EVENT, "");
+ 
 	}
 	
 	public void saveAccount(PreyAccountData accountData) {
@@ -795,6 +798,10 @@ public class PreyConfig {
 
 	public void setLastEvent(String lastEvent) {
 		this.lastEvent = lastEvent;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(PreyConfig.LAST_EVENT, lastEvent);
+		editor.commit();
 		
 	}
 
