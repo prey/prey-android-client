@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.prey.actions.observer.ActionJob;
+import com.prey.activities.FeedBackActivity;
 import com.prey.activities.PopUpAlertActivity;
 
 public class PopUpAlertAction extends PreyAction {
@@ -39,7 +40,7 @@ public class PopUpAlertAction extends PreyAction {
 			bundle.putString(entry.getKey(), entry.getValue());
 		}
 
-		Intent popup = new Intent(ctx, PopUpAlertActivity.class);
+		Intent popup = new Intent(ctx, FeedBackActivity.class);
 		popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		popup.putExtras(bundle);
 		ctx.startActivity(popup);

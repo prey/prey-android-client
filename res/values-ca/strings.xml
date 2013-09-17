@@ -171,6 +171,6 @@
     <string name="preferences_admin_device_setting_uninstallation_password">S\'està creant la contrasenya...</string>
     <string name="preferences_admin_device_uninstallation_password_dialog_message">ATENCIÓ: AIXÒ NO ES POT RECUPERAR. Inseriu la informació necessària per evitar un bloqueig del dispositiu no intencionat.</string>
     <string name="permission_title_h1">Protecció extra</string>
-    <string name="permission_body_text">S\'han assignat els permisos especials a Prey perquè pugui blocar el vostre dispositiu en cas necessari, a més d'evitar que pugui ser desinstal·lat per persones no autoritzades. Si necessiteu suprimir el Prey del vostre dispositiu, primer heu de revocar aquests permisos des de la pròpia aplicació</string>
+    <string name="permission_body_text">bla</string>
     <string name="go_to_congratulations">Endavant</string>
 </resources>

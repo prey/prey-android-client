@@ -1,0 +1,46 @@
+
+#/* ---- CHECK THIS BEFORE PUBLISH!! -------------- */
+# - Check agreement is!
+# - Remove start prey preferences
+# - Update minor version here and in AndroidManifest.xml
+# - In case new version deploy, update @string/prey_version
+#
+# ask-for-password: Set to true in production
+# ------------------------------------------------- 
+
+#main config	
+ask-for-password=false
+prey-minor-version=75
+prey-subdomain=control
+prey-answers=answers
+prey-support=support
+#prey-ui-subdomain=panel
+prey-ui-subdomain=beta
+#prey-ui-subdomain=preyapp
+prey-domain=preyproject.com
+#prey-domain=preyproject.com:8888
+#prey-domain=com
+
+api-v1=api/v1/
+api-v2=api/v2/
+#api-v1=
+#api-v2=
+
+#api-key-batch=lmm3x8rydnes
+#email-batch=orlando@forkhq.com
+
+#gcm
+gcm-id-prefix=GCM__
+gcm-id=578864628893
+
+#c2dm
+#gcm-id-prefix=
+#gcm-id=prey-c2dm@usefork.com
+
+#c2dm-action=body-----
+c2dm-action=message
+c2dm-message-sync=sync
+
+#Analytics
+#analytics-ua=UA-8743344-5
+analytics-ua=UA-8743344-9
