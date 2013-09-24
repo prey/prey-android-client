@@ -32,10 +32,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 	}
 
 	private void handleMessage(Context context, Intent intent) {
-		// String pushedMessage =
-		// intent.getExtras().getString(PreyConfig.getPreyConfig(context).getc2dmAction());
-
-		String pushedMessage = "{\"event\":\"message\",\"data\":{\"type\":\"text\",\"body\":\"feedback\",\"key\":\"nfffn3\"}}";
+		String pushedMessage = intent.getExtras().getString(PreyConfig.getPreyConfig(context).getc2dmAction());
 		if (pushedMessage != null) {
 			PreyLogger.i("Push message received " + pushedMessage);
 			try {
