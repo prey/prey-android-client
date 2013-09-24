@@ -46,10 +46,17 @@ public class LoginActivity extends PasswordActivity {
 			Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
 			startActivity(intent);
 			finish();
-		} else if (!getPreyConfig().isCamouflageSet())
-			showLogin();
-		else
-			showCamouflage();
+		} else {
+			if(getPreyConfig().showFeedback()){
+				showFeedback(getApplicationContext());
+			}else{
+				if (!getPreyConfig().isCamouflageSet()){
+					showLogin();
+				}else{
+					showCamouflage();
+				}
+			}
+		}
 	}
 
 	private void showLogin() {
@@ -84,5 +91,9 @@ public class LoginActivity extends PasswordActivity {
 	}
 
 	
-
+	private void showFeedback(Context ctx){
+		Intent popup = new Intent(ctx, FeedbackActivity.class);
+		popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		ctx.startActivity(popup);
+	}
 }

@@ -85,4 +85,8 @@ public class FileConfigReader {
 		return properties.getProperty("analytics-ua");
 	}
 	
+	public String getEmailFeedback(){
+		return properties.getProperty("email-feedback");
+	}
+	
 }

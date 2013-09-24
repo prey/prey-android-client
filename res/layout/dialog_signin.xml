@@ -2,27 +2,32 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
+
     <EditText
-        android:id="@+id/titulo_dialog"
-        android:inputType="textEmailAddress"
-        android:layout_width="match_parent"
+        android:id="@+id/feedback_form_field_title"
+        android:layout_width="242dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="titutlo" />
+        android:layout_marginTop="16dp"
+        android:hint="@string/feedback_form_field_hint_title"
+        android:inputType="text" />
+
     <EditText
-        android:id="@+id/comment_dialog"
-        android:inputType="textPassword"
+        android:id="@+id/feedback_form_field_comment"
+        android:inputType="textMultiLine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif"
-        android:lines="3"
-        
-        android:hint="psp"/>
+        android:layout_marginBottom="16dp"    
+        android:lines="20"
+    	android:minLines="5"
+    	android:scrollHorizontally="false"
+    	android:scrollbars="vertical"
+    	android:singleLine="false"
+        android:hint="@string/feedback_form_field_hint_comment"/>
+    
 </LinearLayout>

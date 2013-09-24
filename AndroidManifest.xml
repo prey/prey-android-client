@@ -110,14 +110,14 @@
             android:label="@string/preyForAndroid_name"
             android:launchMode="singleTask" />
         <activity
-            android:name="com.prey.activities.FeedBackActivity"
+            android:name="com.prey.activities.FeedbackActivity"
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/preyForAndroid_name"
             android:launchMode="singleTask" />
         
         <activity
-            android:name="com.prey.activities.FormFeedBackActivity"
+            android:name="com.prey.activities.FormFeedbackActivity"
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/preyForAndroid_name"

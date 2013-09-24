@@ -1,5 +1,9 @@
 package com.prey.activities;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import com.prey.PreyConfig;
 import com.prey.R;
 
 import android.app.AlertDialog;
@@ -8,25 +12,21 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 
-public class FeedBackActivity  extends PreyActivity {
-	
+public class FeedbackActivity extends PreyActivity {
+
 	private static final int SHOW_POPUP = 0;
-	private String message = null;
-	
+
+	public static int FLAG_FEEDBACK_INIT = 0;
+	public static int FLAG_FEEDBACK_C2DM = 1;
+	public static int FLAG_FEEDBACK_SEND = 2;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle bundle = this.getIntent().getExtras();
-		if (bundle != null) {
-			this.message = bundle.getString("alert_message");
-		}
-
- 
 		showDialog(SHOW_POPUP);
 	}
-	
+
 	@Override
 	protected Dialog onCreateDialog(int id) {
 
@@ -34,58 +34,58 @@ public class FeedBackActivity  extends PreyActivity {
 		switch (id) {
 
 		case SHOW_POPUP:
-			AlertDialog.Builder alert = null;
-			 
+			AlertDialog.Builder alert = new AlertDialog.Builder(this);
+			alert.setIcon(R.drawable.logo);
+			alert.setTitle(R.string.feedback_principal_title);
+			alert.setMessage(R.string.feedback_principal_message);
 
-			 
-			alert = new AlertDialog.Builder(this);
-			alert.setIcon(R.drawable.logo).setTitle(R.string.popup_alert_title).setMessage(this.message)
-				.create();
-			
- 
+			alert.setPositiveButton(R.string.feedback_principal_button1, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri.parse("market://details?id=com.prey"));
+					startActivity(intent);
+					PreyConfig.getPreyConfig(getApplicationContext()).setFlagFeedback(FLAG_FEEDBACK_SEND);
+					finish();
+				}
+			});
 
-			
-			alert.setPositiveButton("Button 1 Text", new DialogInterface.OnClickListener() {
+			alert.setNeutralButton(R.string.feedback_principal_button2, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					Intent popup = new Intent(getApplicationContext(), FormFeedbackActivity.class);
+					popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					startActivity(popup);
+					PreyConfig.getPreyConfig(getApplicationContext()).setFlagFeedback(FLAG_FEEDBACK_SEND);
+					finish();
+				}
+			});
 
-				      public void onClick(DialogInterface dialog, int id) {
-
-	 
-				    	  
-				    	  Intent intent = new Intent(Intent.ACTION_VIEW);
-				    	  intent.setData(Uri.parse("market://details?id=com.prey"));
-				    	  startActivity(intent);
-				    	  
-				    	  finish();
-
-				    } }); 
-
-			alert.setNeutralButton( "Button 2 Text", new DialogInterface.OnClickListener() {
-
-				      public void onClick(DialogInterface dialog, int id) {
-
-				        //...
-				    	  
-				    	Intent popup = new Intent(getApplicationContext(),FormFeedBackActivity.class);
-				  		popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-				  		startActivity(popup);
-				  		finish();
-
-				    }}); 
-
-			alert.setNegativeButton("Button 3 Text", new DialogInterface.OnClickListener() {
-
-				      public void onClick(DialogInterface dialog, int id) {
-
-				        //...
-				    	  finish();
-				    }});
-			
-			popup=alert.create();
+			alert.setNegativeButton(R.string.feedback_principal_button3, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					PreyConfig.getPreyConfig(getApplicationContext()).setFlagFeedback(FLAG_FEEDBACK_SEND);
+					finish();
+				}
+			});
+			popup = alert.create();
 		}
 		return popup;
 	}
- 
- 
+
+	public static boolean showFeedback(long installationDate, int flagFeedback) {
+		if (flagFeedback == FLAG_FEEDBACK_C2DM) {
+			return true;
+		} else {
+			if (flagFeedback == FLAG_FEEDBACK_INIT) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(installationDate);
+				cal.add(Calendar.WEEK_OF_YEAR, 2);
+				long twoWeekOfYear = cal.getTimeInMillis();
+				long now = new Date().getTime();
+				if (now > twoWeekOfYear) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 }

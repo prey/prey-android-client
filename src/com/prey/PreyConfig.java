@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -28,6 +29,7 @@ import android.telephony.TelephonyManager;
 
 import com.prey.actions.LockAction;
 import com.prey.actions.PreyAction;
+import com.prey.activities.FeedbackActivity;
 import com.prey.activities.WelcomeActivity;
 import com.prey.net.PreyWebServices;
 
@@ -90,8 +92,8 @@ public class PreyConfig {
 	public static final String IS_REVOKED_PASSWORD = "IS_REVOKED_PASSWORD";
 	public static final String REVOKED_PASSWORD = "REVOKED_PASSWORD";
 	
- 
-	
+	public static final String INSTALLATION_DATE = "INSTALLATION_DATE"; 
+	public static final String FLAG_FEEDBACK = "FLAG_FEEDBACK"; 
 	
 	
 	/* ------------- */
@@ -121,6 +123,9 @@ public class PreyConfig {
 	
 	private boolean isRevokedPassword;
 	private String revokedPassword;
+	
+	private long installationDate;
+	private int flagFeedback;
 	 
 	private Context ctx;
 
@@ -151,7 +156,9 @@ public class PreyConfig {
 		this.isRevokedPassword=settings.getBoolean(PreyConfig.IS_REVOKED_PASSWORD, false);
 		this.revokedPassword=settings.getString(PreyConfig.REVOKED_PASSWORD, "");
 		
-	//	FroyoSupport.getInstance(ctx).changePasswordAndLock("osito", true);
+		this.installationDate=settings.getLong(PreyConfig.INSTALLATION_DATE, new Date().getTime());
+		this.flagFeedback=settings.getInt(PreyConfig.FLAG_FEEDBACK, FeedbackActivity.FLAG_FEEDBACK_INIT);
+
 	}
 	
 	public void saveAccount(PreyAccountData accountData) {
@@ -464,6 +471,13 @@ public class PreyConfig {
 		editor.putString(key, value);
 		editor.commit();
 	}
+	
+	private void saveInt(String key, int value){
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putInt(key, value);
+		editor.commit();
+	}
 
 	public boolean isRunOnce() {
 		return runOnce;
@@ -536,9 +550,18 @@ public class PreyConfig {
 	public String getRevokedPassword() {
 		return revokedPassword;
 	}
-
- 
-
 	
-
+	public int getFlagFeedback() {
+		return flagFeedback;
+	}
+ 
+	public void setFlagFeedback(int flagFeedback) {
+		this.flagFeedback=flagFeedback;
+		this.saveInt(PreyConfig.FLAG_FEEDBACK,flagFeedback);
+	}
+	 
+	public boolean showFeedback(){
+		return FeedbackActivity.showFeedback(installationDate, flagFeedback);
+	}
+	
 }

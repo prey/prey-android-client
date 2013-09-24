@@ -1,32 +1,33 @@
 package com.prey.activities;
 
+import org.apache.http.protocol.HTTP;
+
+import com.prey.FileConfigReader;
 import com.prey.R;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
-public class FormFeedBackActivity  extends PreyActivity {
-	
+public class FormFeedbackActivity extends PreyActivity {
+
 	private static final int SHOW_POPUP = 0;
-	private String message = null;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle bundle = this.getIntent().getExtras();
-		if (bundle != null) {
-			this.message = bundle.getString("alert_message");
-		}
 
- 
 		showDialog(SHOW_POPUP);
 	}
-	
+
 	@Override
 	protected Dialog onCreateDialog(int id) {
 
@@ -34,55 +35,54 @@ public class FormFeedBackActivity  extends PreyActivity {
 		switch (id) {
 
 		case SHOW_POPUP:
-			AlertDialog.Builder alert = null;
+
+			LayoutInflater factory = LayoutInflater.from(this);
+			final View textEntryView = factory.inflate(R.layout.dialog_signin, null);
+
+			AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+			alert.setIcon(R.drawable.logo);
+			alert.setTitle(R.string.feedback_form_title);
+			alert.setMessage(R.string.feedback_form_message);
+			alert.setView(textEntryView);
 			 
 
-			 
-			alert = new AlertDialog.Builder(this);
-			alert.setIcon(R.drawable.logo).setTitle(R.string.popup_alert_title).setMessage(this.message)
-				.create();
-			
-			LayoutInflater inflater = this.getLayoutInflater();
+			final EditText input1 = (EditText) textEntryView.findViewById(R.id.feedback_form_field_title);
+			final EditText input2 = (EditText) textEntryView.findViewById(R.id.feedback_form_field_comment);
 
-				
-			alert.setView(inflater.inflate(R.layout.dialog_signin, null));
+			alert.setPositiveButton(R.string.feedback_form_button1, new DialogInterface.OnClickListener() {
 
-			
-			alert.setPositiveButton("Button 1 Text", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
 
-				      public void onClick(DialogInterface dialog, int id) {
+					if (input1 != null && input2 != null) {
 
-	 
-				    	  
-				    	  Intent intent = new Intent(Intent.ACTION_VIEW);
-				    	  intent.setData(Uri.parse("market://details?id=com.prey"));
-				    	  startActivity(intent);
-				    	  
-				    	  finish();
+						Context ctx=getApplicationContext();
+						String emailFeedback=FileConfigReader.getInstance(getApplicationContext()).getEmailFeedback();
+						 
+						
+						Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+						intent.setType(HTTP.PLAIN_TEXT_TYPE);
+						intent.putExtra(Intent.EXTRA_EMAIL,  new String[]{emailFeedback});						
+						intent.putExtra(Intent.EXTRA_SUBJECT, "Subject:" + input1.getText().toString());
+						intent.putExtra(Intent.EXTRA_TEXT, "Body:" + input2.getText().toString());
+						Intent chooser = Intent.createChooser(intent, ctx.getText(R.string.feedback_form_send_email));
+						startActivity(chooser);
+					}  
+					finish();
 
-				    } }); 
+				}
+			});
 
-			alert.setNeutralButton( "Button 2 Text", new DialogInterface.OnClickListener() {
+			alert.setNegativeButton(R.string.feedback_form_button2, new DialogInterface.OnClickListener() {
 
-				      public void onClick(DialogInterface dialog, int id) {
+				public void onClick(DialogInterface dialog, int id) {
+					finish();
+				}
+			});
 
-				        //...
-
-				    }}); 
-
-			alert.setNegativeButton("Button 3 Text", new DialogInterface.OnClickListener() {
-
-				      public void onClick(DialogInterface dialog, int id) {
-
-				        //...
-				    	  finish();
-				    }});
-			
-			popup=alert.create();
+			popup = alert.create();
 		}
 		return popup;
 	}
- 
- 
 
 }
