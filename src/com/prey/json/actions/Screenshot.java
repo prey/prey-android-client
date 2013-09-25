@@ -9,11 +9,8 @@ package com.prey.json.actions;
  
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import java.util.Date;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -21,16 +18,10 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.os.Environment;
-import android.text.format.DateFormat;
- 
-
-
  
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
-import com.prey.actions.screenshot.ScreenShot2;
 import com.prey.json.JsonAction;
 import com.prey.net.http.EntityFile;
  

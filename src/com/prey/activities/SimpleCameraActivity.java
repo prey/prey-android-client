@@ -1,9 +1,7 @@
 package com.prey.activities;
 
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.hardware.Camera;
-import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.os.Bundle;

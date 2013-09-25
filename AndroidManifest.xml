@@ -11,7 +11,7 @@
     android:versionName="0.5.5" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="9"
          />
 
     
@@ -389,13 +389,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>        
-        <activity android:name="com.prey.activities.CamouflageActivity"
-            android:configChanges = "orientation"
-			android:screenOrientation = "portrait" >
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity android:name="com.prey.activities.GameSealsBrowserActivity"
             android:configChanges = "orientation"
 			android:screenOrientation = "portrait" >

@@ -14,7 +14,6 @@ import android.os.IBinder;
 import com.prey.PreyLogger;
 
 import com.prey.sim.SIMCheckingThread;
-import com.prey.twilio.TwilioRunner;
 
 public class PreyBootService extends Service {
 
@@ -36,8 +35,6 @@ public class PreyBootService extends Service {
 		PreyLogger.d("Prey Boot Service Started!");
 		SIMCheckingThread simChecking= new SIMCheckingThread(getApplicationContext(),this);
 		new Thread(simChecking).start();
-		TwilioRunner twilio=new TwilioRunner(getApplicationContext());
-		new Thread(twilio).start();
 	}
 
 

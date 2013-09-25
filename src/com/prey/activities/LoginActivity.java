@@ -26,7 +26,6 @@ import com.prey.activities.browser.javascript.PreyJavaScriptInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
-import com.prey.twilio.TwilioRunner;
 
 public class LoginActivity extends Activity {
 
@@ -50,11 +49,7 @@ public class LoginActivity extends Activity {
 		if (isThisDeviceAlreadyRegisteredWithPrey()) {
 			Event event = new Event(Event.APPLICATION_OPENED);
 			new Thread(new EventManagerRunner(getApplicationContext(), event)).start();
-			new Thread(new TwilioRunner(getApplicationContext())).start();
 		}
-
-	 
-		 
 	}
 
 	@Override
