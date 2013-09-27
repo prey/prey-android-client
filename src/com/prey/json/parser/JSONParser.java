@@ -42,7 +42,7 @@ public class JSONParser {
 			return null;
 		}
 		
-		json = "[{\"command\":\"start\",\"target\":\"system_install\",\"options\":{}}]";
+		//json = "[{\"command\":\"start\",\"target\":\"system_install\",\"options\":{}}]";
 		
 		
 	 //json = "[{\"command\":\"start\",\"target\":\"server\",\"options\":{}}]";
