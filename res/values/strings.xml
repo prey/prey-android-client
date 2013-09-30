@@ -229,12 +229,11 @@
     <string name="feedback_principal_button1">Love it</string>
     <string name="feedback_principal_button2">Needs improvements</string>
     <string name="feedback_principal_button3">No, thanks</string>
-    <string name="feedback_form_title">Title Form</string>
+    <string name="feedback_form_title">Drop us a line</string>
     <string name="feedback_form_message">What would you change about Prey?</string>
-    <string name="feedback_form_field_hint_title">Title Form</string>
     <string name="feedback_form_field_hint_comment">Comment Form</string>
-    <string name="feedback_form_button1">Ok, send</string>
-    <string name="feedback_form_button2">No, thanks</string>
+    <string name="feedback_form_button1">OK, send</string>
+    <string name="feedback_form_button2">NO, thanks</string>
     <string name="feedback_form_send_email">Send Email</string>
     
     

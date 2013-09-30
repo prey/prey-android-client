@@ -20,7 +20,7 @@ public class FeedbackActivity extends PreyActivity {
 	public static int FLAG_FEEDBACK_INIT = 0;
 	public static int FLAG_FEEDBACK_C2DM = 1;
 	public static int FLAG_FEEDBACK_SEND = 2;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -87,5 +87,4 @@ public class FeedbackActivity extends PreyActivity {
 		}
 		return false;
 	}
-
 }

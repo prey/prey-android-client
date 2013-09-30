@@ -3,16 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/feedback_form_field_title"
-        android:layout_width="242dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="16dp"
-        android:hint="@string/feedback_form_field_hint_title"
-        android:inputType="text" />
+
 
     <EditText
         android:id="@+id/feedback_form_field_comment"

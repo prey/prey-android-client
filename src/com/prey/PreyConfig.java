@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -155,6 +156,9 @@ public class PreyConfig {
 		
 		this.isRevokedPassword=settings.getBoolean(PreyConfig.IS_REVOKED_PASSWORD, false);
 		this.revokedPassword=settings.getString(PreyConfig.REVOKED_PASSWORD, "");
+		
+		 
+
 		
 		this.installationDate=settings.getLong(PreyConfig.INSTALLATION_DATE, new Date().getTime());
 		this.flagFeedback=settings.getInt(PreyConfig.FLAG_FEEDBACK, FeedbackActivity.FLAG_FEEDBACK_INIT);
