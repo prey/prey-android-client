@@ -17,6 +17,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyController;
 import com.prey.PreyLogger;
 import com.prey.backwardcompatibility.CupcakeSupport;
+import com.prey.sms.SMSFactory;
 import com.prey.sms.SMSSupport;
 
 public class SmsReceiver extends BroadcastReceiver {
@@ -56,10 +57,14 @@ public class SmsReceiver extends BroadcastReceiver {
 			PreyLogger.i("SMS Match!, waking up Prey right now!");
 			abortBroadcast(); //To remove the SMS from the inbox
 			PreyController.startPrey(ctx);
-		} else if (shouldStop) {
-			PreyLogger.i("SMS Match!, stopping Prey!");
-			abortBroadcast(); //To remove the SMS from the inbox
-			PreyController.stopPrey(ctx);
+		} else {
+			if (shouldStop) {
+				PreyLogger.i("SMS Match!, stopping Prey!");
+				abortBroadcast(); //To remove the SMS from the inbox
+				PreyController.stopPrey(ctx);
+			}else{
+				SMSFactory.execute(ctx, SMSMessage);
+			}
 		}
 	}
 
