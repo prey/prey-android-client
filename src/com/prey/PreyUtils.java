@@ -34,4 +34,15 @@ public class PreyUtils {
 		return isPhone && featureTelephony;
 	}
 
+	public static String randomAlphaNumeric(int length){
+		StringBuffer buffer = new StringBuffer();
+		String characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+		int charactersLength = characters.length();
+
+		for (int i = 0; i < length; i++) {
+			double index = Math.random() * charactersLength;
+			buffer.append(characters.charAt((int) index));
+		}
+	    return buffer.toString();
+	}
 }

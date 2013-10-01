@@ -1,8 +1,11 @@
 package com.prey.activities;
 
+import java.util.UUID;
+
 import org.apache.http.protocol.HTTP;
 
 import com.prey.FileConfigReader;
+import com.prey.PreyUtils;
 import com.prey.R;
 
 import android.app.AlertDialog;
@@ -59,23 +62,21 @@ public class FormFeedbackActivity extends PreyActivity {
 
 				
 				public void onClick(DialogInterface dialog, int id) {
-
 					if (input != null) {
-
 						Context ctx=getApplicationContext();
 						String emailFeedback=FileConfigReader.getInstance(getApplicationContext()).getEmailFeedback();
-						 
-						
+						StringBuffer subject=new StringBuffer();
+						subject.append(FileConfigReader.getInstance(ctx).getSubjectFeedback()).append(" ");
+						subject.append(PreyUtils.randomAlphaNumeric(7).toUpperCase());
 						Intent intent = new Intent(android.content.Intent.ACTION_SEND);
 						intent.setType(HTTP.PLAIN_TEXT_TYPE);
 						intent.putExtra(Intent.EXTRA_EMAIL,  new String[]{emailFeedback});						
-						intent.putExtra(Intent.EXTRA_SUBJECT,  FileConfigReader.getInstance(ctx).getSubjectFeedback());
-						intent.putExtra(Intent.EXTRA_TEXT, "Body:" + input.getText().toString());
+						intent.putExtra(Intent.EXTRA_SUBJECT, subject.toString() );
+						intent.putExtra(Intent.EXTRA_TEXT, input.getText().toString());
 						Intent chooser = Intent.createChooser(intent, ctx.getText(R.string.feedback_form_send_email));
 						startActivity(chooser);
 					}  
 					finish();
-
 				}
 			});
 

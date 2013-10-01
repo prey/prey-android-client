@@ -157,9 +157,8 @@ public class PreyConfig {
 		this.isRevokedPassword=settings.getBoolean(PreyConfig.IS_REVOKED_PASSWORD, false);
 		this.revokedPassword=settings.getString(PreyConfig.REVOKED_PASSWORD, "");
 		
-		 
 
-		
+
 		this.installationDate=settings.getLong(PreyConfig.INSTALLATION_DATE, new Date().getTime());
 		this.flagFeedback=settings.getInt(PreyConfig.FLAG_FEEDBACK, FeedbackActivity.FLAG_FEEDBACK_INIT);
 

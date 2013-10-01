@@ -224,14 +224,14 @@
     <string name="permission_body_text">Prey was granted special permissions in order to lock your device and to prevent thieves from uninstalling it. If you ever need to remove Prey, you first have to revoke these permissions from within the app.</string>
     <string name="go_to_congratulations">Next</string>
     <!-- Feedback -->
-    <string name="feedback_principal_title">Title Feedback</string>
-    <string name="feedback_principal_message">It seems you got your first report. What about telling us what you think about Prey?</string>
-    <string name="feedback_principal_button1">Love it</string>
-    <string name="feedback_principal_button2">Needs improvements</string>
+    <string name="feedback_principal_title">Is everything alright, dear?</string>
+    <string name="feedback_principal_message">It seems you\'ve been using Prey for a while now. Would you tell us what you think about it?</string>
+    <string name="feedback_principal_button1">I Love It</string>
+    <string name="feedback_principal_button2">It Needs Improvements</string>
     <string name="feedback_principal_button3">No, thanks</string>
     <string name="feedback_form_title">Drop us a line</string>
-    <string name="feedback_form_message">What would you change about Prey?</string>
-    <string name="feedback_form_field_hint_comment">Comment Form</string>
+    <string name="feedback_form_message">What would you change about Prey if you could?</string>
+    <string name="feedback_form_field_hint_comment"></string>
     <string name="feedback_form_button1">OK, send</string>
     <string name="feedback_form_button2">NO, thanks</string>
     <string name="feedback_form_send_email">Send Email</string>
