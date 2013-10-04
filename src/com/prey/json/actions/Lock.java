@@ -27,17 +27,12 @@ public class Lock extends JsonAction{
 	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters){
 		return null;
 	}
-
-	public void start(Context ctx, List<ActionResult> lista, JSONObject parameters) {
+	
+	public void sms(Context ctx, List<ActionResult> lista, JSONObject parameters) {
 		try {
-			if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {
-				String unlock = parameters.getString("unlock_pass");
-				PreyConfig.getPreyConfig(ctx).setLock(true);
-				PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
-				FroyoSupport.getInstance(ctx).changePasswordAndLock(unlock, true);
-				PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","lock","started"));
+			String unlock = parameters.getString("parameter");
+			lock(ctx, unlock);
 			 
-			}
 		} catch (Exception e) {
 			PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
 			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","lock","failed",e.getMessage()));
@@ -45,6 +40,32 @@ public class Lock extends JsonAction{
 
 	}
 
+	public void start(Context ctx, List<ActionResult> lista, JSONObject parameters) {
+		try {
+			String unlock = parameters.getString("unlock_pass");
+			lock(ctx, unlock);
+			 
+		} catch (Exception e) {
+			PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
+			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","lock","failed",e.getMessage()));
+		}
+
+	}
+
+	public void lock(Context ctx, String unlock) {
+		 
+			if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {
+				 
+				PreyConfig.getPreyConfig(ctx).setLock(true);
+				PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
+				FroyoSupport.getInstance(ctx).changePasswordAndLock(unlock, true);
+				PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","lock","started"));
+			 
+			}
+		 
+
+	}
+	
 	public void stop(Context ctx, List<ActionResult> lista, JSONObject options) {
 		 
 		if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {

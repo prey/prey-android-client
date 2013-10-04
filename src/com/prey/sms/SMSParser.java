@@ -1,11 +1,13 @@
 package com.prey.sms;
 
+import android.annotation.SuppressLint;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+@SuppressLint("DefaultLocale")
 public class SMSParser {
 
 	public static List<JSONObject> getJSONListFromText(String command) {
@@ -20,8 +22,16 @@ public class SMSParser {
 				json.put("target", listCommand.get(2));
 				if (listCommand.size() == 3) {
 					json.put("options", null);
-				} else {
-					json.put("options", listCommand.get(3));
+				} else{
+					JSONObject jsonParameter = new JSONObject();
+					 
+					String parameter="";
+					for(int i=3;listCommand!=null&&i<listCommand.size();i++){
+						parameter=parameter+" "+listCommand.get(i).toLowerCase();
+					}
+					parameter=parameter.trim();
+					jsonParameter.put("parameter", parameter);
+					json.put("options", jsonParameter);
 				}
 				jsonObjectList = new ArrayList<JSONObject>();
 				jsonObjectList.add(json);

@@ -16,11 +16,6 @@ public class SetupActivity extends PreyActivity {
 		return PreyUtils.getDeviceType(this);
 	}
 
-	@Override
-	public void onBackPressed() {
-		Intent intent = new Intent(SetupActivity.this, WelcomeActivity.class);
-		startActivity(intent);
-		finish();
-	}
+ 
 
 }

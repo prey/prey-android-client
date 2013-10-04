@@ -70,57 +70,7 @@ public class ActionsRunner implements Runnable {
 		return listData;
 	}
  
-	/*
-	private boolean getInstructionsAndRun(PreyExecutionWaitNotify waitNotify, boolean runIfNotMissing) throws PreyException{
-		ArrayList<PreyAction> actions = null;
-		String actionsToExecute = null;
-		try {
-			actionsToExecute = PreyWebServices.getInstance().getActionsToPerform(ctx);
-			preyControlStatus = ResponseParser.parseResponse(actionsToExecute);
-			boolean isMissing = preyControlStatus.isMissing();
-			PreyConfig.getPreyConfig(ctx).setMissing(isMissing);
-			if (runIfNotMissing || (!runIfNotMissing && isMissing)){
-				actions = PreyAction.getActionsFromPreyControlStatus(preyControlStatus);
-				preyConfig.unlockIfLockActionIsntEnabled(actions);
-				ActionsController.getInstance(ctx).stopUnselectedModules(actions);
-				ActionsController.getInstance(ctx).runActionGroup(actions,waitNotify,isMissing);
-			}
-			return isMissing;
-		} catch (PreyException e) {
-			PreyLogger.e("Exception getting device's xml instruction set", e);
-			throw e;
-		}			
-	}*/
-	
-	/*
-	private void notifyUser(PreyAction actionExecuted) {
-		String notificationTitle = this.ctx.getText(R.string.notification_title).toString();
-		NotificationManager nm = (NotificationManager) this.ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.prey_status_bar_icon, notificationTitle, System.currentTimeMillis());
-		notification.flags = Notification.FLAG_AUTO_CANCEL;
-
-		// In this version we redirect user to prey application
-		// ------------
-		// Set the info for the views that show in the notification panel.
-		// String url =
-		// PreyWebServices.getInstance().getDeviceWebControlPanelUrl(this.ctx);
-		// Intent notificationIntent = new Intent(Intent.ACTION_VIEW);
-		// notificationIntent.setData(Uri.parse(url));
-
-		Intent preyMainActivity = new Intent(this.ctx, WelcomeActivity.class);
-
-		String notificationToShow = actionExecuted.textToNotifyUserOnEachReport(ctx);
-		PendingIntent contentIntent = PendingIntent.getActivity(this.ctx, 0, preyMainActivity, 0);
-		notification.contentIntent = contentIntent;
-		notification.setLatestEventInfo(this.ctx, ctx.getText(R.string.notification_title), notificationToShow, contentIntent);
-
-		// Send the notification.
-		// We use a layout id because it is a unique number. We use it later
-		// to cancel.
-		nm.notify(R.string.preyForAndroid_name, notification);
-
-	}
-	*/
+	 
 
 }
  

@@ -14,7 +14,8 @@ import com.prey.net.PreyWebServices;
 public class SMSFactory {
 
 	public static void execute(Context ctx,String command){
-		if (SMSUtil.isValidSMSCommand(command)){
+ 
+		 
 			String secretKey=SMSUtil.getSecretKey(command);
 			
 			String email = PreyConfig.getPreyConfig(ctx).getEmail();
@@ -29,5 +30,5 @@ public class SMSFactory {
 				ActionsController.getInstance(ctx).runActionJson(ctx,jsonList);
 			}
 		}
-	}
+	 
 }

@@ -1,5 +1,6 @@
 package com.prey.sms;
 
+import android.annotation.SuppressLint;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +18,11 @@ public class SMSUtil {
 		return commandList;
 	}
 	
+	@SuppressLint("DefaultLocale")
 	public  static boolean isValidSMSCommand(String command){
 		List<String> commandList= getListCommand(command);
 		if (commandList!=null&&commandList.size()>=3){
-			if (!"prey".equals(commandList.get(0))){
+			if (!"prey".equals(commandList.get(0).toLowerCase())){
 				return false;
 			}else{
 				return true;
@@ -32,9 +34,11 @@ public class SMSUtil {
 	public static List<String> getListCommand(String command){
 		String [] array=command.split(" ");
 		List<String> list=new ArrayList<String>();
-		for(int i=0;list!=null&&i<list.size();i++){
+		for(int i=0;array!=null&&i<array.length;i++){
 			list.add(array[i]);
 		}
 		return list;
 	}
+	
+	
 }

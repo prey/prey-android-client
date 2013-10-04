@@ -28,7 +28,6 @@ import android.preference.PreferenceManager;
 
 import com.prey.actions.LockAction;
 import com.prey.actions.PreyAction;
-import com.prey.activities.WelcomeActivity;
 import com.prey.managers.PreyTelephonyManager;
 import com.prey.net.PreyWebServices;
 
@@ -477,12 +476,9 @@ public class PreyConfig {
 			Notification notification = new Notification(R.drawable.ic_stat_notify_exclamation25, notificationTitle, System.currentTimeMillis());
 			notification.flags = Notification.FLAG_AUTO_CANCEL;
 	
-			Intent preyMainActivity = new Intent(ctx, WelcomeActivity.class);
-			String notificationToShow = ctx.getText(R.string.not_verified_device_msg).toString();
-			PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, preyMainActivity, 0);
-			notification.contentIntent = contentIntent;
-			notification.setLatestEventInfo(ctx, ctx.getText(R.string.not_verified_device_title), notificationToShow, contentIntent);
-	
+		 
+			 
+		 
 			nm.notify(R.string.preyForAndroid_name, notification);
 		}
 			

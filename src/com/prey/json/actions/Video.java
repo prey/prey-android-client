@@ -20,6 +20,10 @@ public class Video extends JsonAction {
 	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters) {
 		return null;
 	}
+	
+	public void sms(Context ctx, List<ActionResult> lista, JSONObject parameters) {
+		start(ctx, lista, parameters);
+	}
 
 	public void start(Context ctx, List<ActionResult> lista, JSONObject parameters) {
 		SimpleVideoActivity.activity = null;

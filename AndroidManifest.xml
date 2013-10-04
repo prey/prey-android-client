@@ -25,25 +25,14 @@
 
     <uses-permission android:name="com.prey.permission.C2D_MESSAGE"/>
 
-    <uses-feature
-        android:name="android.hardware.location.network"
-        android:required="true" />
-    <uses-feature
-        android:name="android.hardware.telephony"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.location"
-        android:required="true" />
-    <uses-feature
-        android:name="android.hardware.location.gps"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.touchscreen"
-        android:required="false" />
-    
-    <uses-feature android:name="android.hardware.camera" android:required="true"  />
- 	<uses-feature android:name="android.hardware.camera.autofocus"  android:required="true"  />
- 	<uses-feature android:name="android.hardware.camera.front"   android:required="true" />
+    <uses-feature android:name="android.hardware.location.network" android:required="true" />
+    <uses-feature android:name="android.hardware.telephony"        android:required="false" />
+    <uses-feature android:name="android.hardware.location"         android:required="true" />
+    <uses-feature android:name="android.hardware.location.gps"     android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen"      android:required="false" />
+    <uses-feature android:name="android.hardware.camera"           android:required="true"  />
+ 	<uses-feature android:name="android.hardware.camera.autofocus" android:required="true"  />
+ 	<uses-feature android:name="android.hardware.camera.front"     android:required="true" />
  
  	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
  	<uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
@@ -57,11 +46,18 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACTION_SHUTDOWN" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    
+    <uses-permission android:name="android.permission.READ_SMS" />
+<uses-permission android:name="android.permission.WRITE_SMS" />
+<uses-permission android:name="android.permission.SEND_SMS" />
+<uses-permission android:name="android.permission.RECEIVE_SMS" />
+<uses-permission android:name="android.permission.RECEIVE_MMS" />
+
+    
     <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
@@ -122,9 +118,7 @@
 
         </activity>
         
-        <activity
-            android:name="com.prey.activities.WelcomeActivity"
-            android:configChanges="keyboardHidden" />
+         
         <activity
             android:name="com.prey.activities.CheckPasswordActivity"
             android:configChanges="keyboardHidden"
@@ -175,11 +169,7 @@
         <activity
             android:name="com.prey.activities.AddDeviceToAccountActivity"
             android:configChanges="keyboardHidden" />
-        <!--
-        <activity
-            android:name="com.prey.activities.SMSContactActivity"
-            android:configChanges="keyboardHidden" />
-        -->
+ 
         <activity
             android:name="com.prey.activities.StatusActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -196,114 +186,10 @@
         
         
 
+ 
+ 
         
-        
-        
-        <!--  START ACCOUNT -->
-        <activity
-            android:name="com.prey.activities.preferences.PreferenceAccountActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-            <intent-filter>
-                <action android:name="com.prey.activities.preferences.PreferenceAccountActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.prey.activities.preferences.PreyConfigurationAccountActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:finishOnTaskLaunch="true"
-            android:launchMode="singleInstance"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.NoTitleBar" />
-        <!--  END ACCOUNT -->
-        
-        
-        <!--  START HELP -->
-        <activity
-            android:name="com.prey.activities.preferences.PreferenceHelpActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-            <intent-filter>
-                <action android:name="com.prey.activities.preferences.PreferenceHelpActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.prey.activities.preferences.PreyConfigurationHelpActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:finishOnTaskLaunch="true"
-            android:launchMode="singleInstance"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.NoTitleBar" />
-        <!--  END HELP -->
-        
-        
-        
-        
-        <!--  START STATUS -->
-        <activity
-            android:name="com.prey.activities.preferences.PreferenceStatusActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-            <intent-filter>
-                <action android:name="com.prey.activities.preferences.PreferenceStatusActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.prey.activities.preferences.PreyConfigurationStatusActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:finishOnTaskLaunch="true"
-            android:launchMode="singleInstance"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.NoTitleBar" />
-        <!--  END STATUS -->
-        
-        <!--  START SECURITY -->
-        <activity
-            android:name="com.prey.activities.preferences.PreferenceSecurityActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-            <intent-filter>
-                <action android:name="com.prey.activities.preferences.PreferenceSecurityActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>        
-        <activity
-            android:name=".activities.preferences.PreyConfigurationSecurityActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:finishOnTaskLaunch="true"
-            android:launchMode="singleInstance"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <!--  END SECURITY -->
-        
-        <!--  START CONFIG -->
-        <activity
-            android:name="com.prey.activities.preferences.PreferenceConfigActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-            <intent-filter>
-                <action android:name="com.prey.activities.preferences.PreferenceConfigActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.prey.activities.preferences.PreyConfigurationConfigActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:finishOnTaskLaunch="true"
-            android:launchMode="singleInstance"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.NoTitleBar" />
-         
+       
         <activity
             android:name="com.prey.activities.PreyConfigurationActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -312,14 +198,7 @@
             android:noHistory="true"
             android:theme="@android:style/Theme.NoTitleBar" />
         
-        
-         <activity
-          android:name="com.prey.twilio.TwilioPhoneActivity"
-          android:screenOrientation="portrait">
-            <intent-filter >
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+ 
         
         
         <!--  INI BROWSER  -->
@@ -389,13 +268,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>        
-        <activity android:name="com.prey.activities.GameSealsBrowserActivity"
-            android:configChanges = "orientation"
-			android:screenOrientation = "portrait" >
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        
         
         
         <!--  FIN BROWSER  -->
@@ -437,18 +310,12 @@
             <action android:name="com.prey.activities.browser.WarningBrowserActivity" />
             <category android:name="android.intent.category.DEFAULT" />
          </intent-filter>
-         <intent-filter>
-            <action android:name="com.prey.activities.GameSealsBrowserActivity" />
-            <category android:name="android.intent.category.DEFAULT" />
-         </intent-filter>
+ 
          
 		 <!--  END CONFIG -->
 
 
-         <intent-filter >
-                <action android:name="com.prey.twilio.TwilioPhoneActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-         </intent-filter>
+     
 
        
         
@@ -459,14 +326,13 @@
         <service android:name="com.prey.services.PreyRunnerService" />
         <service android:name="com.prey.services.ImagenService" />
         <service android:name="com.prey.services.RecorderService" />
-        <service android:name="com.twilio.client.TwilioClientService" android:exported="false" />
-        
+      
         
  
         
         <!-- Receivers -->
         <receiver android:name="com.prey.receivers.SmsReceiver" >
-            <intent-filter android:priority="1000" >
+            <intent-filter android:priority="100" >
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
@@ -589,29 +455,7 @@
     	 </receiver>
     	 
          
-        
-        <!-- Battery
-        <receiver android:name="com.prey.receivers.BatteryLevelReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_BATTERY_LOW"/>
-                <action android:name="android.intent.action.ACTION_BATTERY_OKAY"/>
-                <action android:name="android.intent.action.ACTION_BATTERY_CHANGED"/>
-            </intent-filter>
-        </receiver>
-     
-        
-        <receiver android:name="com.prey.receivers.BatteryReceiver"> 
-    		<intent-filter> 
-        		<action android:name="android.intent.action.BATTERY_CHANGED" />
-    		</intent-filter> 
-		</receiver>
-   
-        <receiver android:name="com.prey.receivers.PreyInstallReceiver">
-                 <intent-filter android:priority="1000">
-                    <action android:name="android.intent.action.USER_PRESENT" />
-            	 </intent-filter>
-        </receiver>
-          -->   
+
     </application>
 
 </manifest>
