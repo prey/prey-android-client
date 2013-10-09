@@ -1,4 +1,4 @@
-package com.prey.sms;
+package com.prey.actions.sms;
 
 import android.annotation.SuppressLint;
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+ 
 
 @SuppressLint("DefaultLocale")
 public class SMSParser {

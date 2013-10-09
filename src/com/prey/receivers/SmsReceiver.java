@@ -15,9 +15,9 @@ import android.telephony.SmsMessage;
  
 import com.prey.PreyLogger;
  
-import com.prey.sms.SMSFactory;
+import com.prey.actions.sms.SMSFactory;
+import com.prey.actions.sms.SMSUtil;
  
-import com.prey.sms.SMSUtil;
 
 public class SmsReceiver extends BroadcastReceiver {
 

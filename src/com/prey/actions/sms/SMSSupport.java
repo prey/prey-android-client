@@ -4,7 +4,7 @@
  * License: GPLv3
  * Full license at "/LICENSE"
  ******************************************************************************/
-package com.prey.sms;
+package com.prey.actions.sms;
 
 import java.util.ArrayList;
 

@@ -58,13 +58,6 @@ public class PreyRunnerService extends Service {
 	public void onDestroy() {
 		PreyLogger.d("PreyRunnerService is going to be destroyed");
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(PreyRunnerService.this);
-		//Setting back to not missing.
-		new Thread(new Runnable() {
-			public void run() {
-			//	PreyWebServices.getInstance().setMissing(PreyRunnerService.this, false);
-			}
-		}).start();
-		
 		preyConfig.setMissing(false);
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancelAll();

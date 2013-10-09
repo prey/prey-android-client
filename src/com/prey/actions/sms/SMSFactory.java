@@ -1,4 +1,4 @@
-package com.prey.sms;
+package com.prey.actions.sms;
 
 import java.util.List;
 
@@ -10,6 +10,7 @@ import com.prey.PreyConfig;
 import com.prey.actions.observer.ActionsController;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
+
 
 public class SMSFactory {
 

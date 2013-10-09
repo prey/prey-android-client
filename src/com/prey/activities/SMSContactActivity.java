@@ -23,10 +23,10 @@ import android.widget.Toast;
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.PreyUtils;
+import com.prey.actions.sms.SMSSupport;
 import com.prey.contacts.ContactAccessor;
 import com.prey.contacts.ContactInfo;
 import com.prey.exceptions.SMSNotSendException;
-import com.prey.sms.SMSSupport;
 import com.prey.R;
 public class SMSContactActivity extends PreyActivity {
 

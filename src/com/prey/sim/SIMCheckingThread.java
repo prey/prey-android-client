@@ -9,13 +9,13 @@ import com.prey.PreyConfig;
 import com.prey.PreyController;
 import com.prey.PreyLogger;
 import com.prey.R;
+import com.prey.actions.sms.SMSSupport;
 import com.prey.backwardcompatibility.CupcakeSupport;
 import com.prey.exceptions.SMSNotSendException;
 import com.prey.json.UtilJson;
 import com.prey.managers.PreyTelephonyManager;
 import com.prey.net.PreyWebServices;
 import com.prey.services.PreyBootService;
-import com.prey.sms.SMSSupport;
 
 public class SIMCheckingThread implements Runnable {
 
