@@ -16,7 +16,6 @@ import android.telephony.SmsMessage;
 import com.prey.PreyConfig;
 import com.prey.PreyController;
 import com.prey.PreyLogger; 
-import com.prey.actions.sms.SMSFactory;
 import com.prey.actions.sms.SMSUtil;
 import com.prey.sms.SmsThread;
 

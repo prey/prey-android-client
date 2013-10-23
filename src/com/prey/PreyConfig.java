@@ -121,6 +121,8 @@ public class PreyConfig {
 	private boolean isFroyoOrAbove;
 	private boolean isCupcake;
 	private boolean isGingerbreadOrAbove;
+	private boolean camouflageSet;
+	
 	
 	private boolean isRevokedPassword;
 	private String revokedPassword;
@@ -573,6 +575,10 @@ public class PreyConfig {
 	 
 	public boolean showFeedback(){
 		return FeedbackActivity.showFeedback(installationDate, flagFeedback);
+	}
+	
+	public void setCamouflageSet(boolean camouflageSet){
+		this.camouflageSet=camouflageSet;
 	}
 	
 }

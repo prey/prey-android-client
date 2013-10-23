@@ -70,6 +70,10 @@
     <uses-permission android:name="android.permission.BATTERY_STATS" />
     <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" /> 
     
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />  
+     
+     
     <application
         android:name="com.prey.PreyApp"
         android:icon="@drawable/logo"
@@ -221,6 +225,14 @@
                 <action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLED" />
             </intent-filter>
         </receiver>
+        
+        <receiver android:name="com.prey.receivers.PreyOutgoingCallReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        
         
 
         <!-- Only C2DM servers can send messages for the app. If permission is not set - any other app can generate it -->
