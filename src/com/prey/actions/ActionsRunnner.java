@@ -49,7 +49,7 @@ public class ActionsRunnner {
 		}
 
 		public void run() {
-			
+ 
 			preyConfig = PreyConfig.getPreyConfig(ctx);
 			if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey(true)){
 				PreyExecutionWaitNotify waitNotify = new PreyExecutionWaitNotify();

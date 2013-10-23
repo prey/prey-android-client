@@ -25,7 +25,10 @@ public class HttpDataService {
 	private String url;
 	private List<EntityFile> entityFiles;
  
-
+	public void addDataListAll(HashMap<String, String> map) {
+        dataList.putAll(map);
+	}
+	
 	public HttpDataService(String key) {
 		this.key = key;
 		dataList = new HashMap<String, String>();

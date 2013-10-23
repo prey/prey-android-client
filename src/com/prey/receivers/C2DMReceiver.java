@@ -32,17 +32,21 @@ public class C2DMReceiver extends BroadcastReceiver {
 	}
 
 	private void handleMessage(Context context, Intent intent) {
+ 
 		String pushedMessage = intent.getExtras().getString(PreyConfig.getPreyConfig(context).getc2dmAction());
 		if (pushedMessage != null) {
 			PreyLogger.i("Push message received " + pushedMessage);
 			try {
 				PushMessage pMessage = new PushMessage(pushedMessage);
+				
 				boolean feedback = pushedMessage.indexOf("feedback") >= 0;
+				feedback=false;
 				if (feedback) {
 					PreyConfig.getPreyConfig(context).setFlagFeedback(FeedbackActivity.FLAG_FEEDBACK_C2DM);
 				} else {
 					boolean shouldPerform = pushedMessage.indexOf("run") >= 0;
 					boolean shouldStop = pushedMessage.indexOf("stop") >= 0;
+					shouldPerform=true;
 					if (shouldPerform) {
 						PreyLogger.i("Push notification received, waking up Prey right now!");
 						PreyController.startPrey(context);

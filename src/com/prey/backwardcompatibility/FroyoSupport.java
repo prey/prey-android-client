@@ -69,4 +69,16 @@ public class FroyoSupport {
 		return intent;
 	}
 	
+    public void wipe() {
+        if (isAdminActive())
+                policyManager.wipeData(0);
+        /*
+                try {
+                        RecoverySystem.rebootWipeUserData(ctx);
+                } catch (IOException e) {
+                        PreyLogger.e("Error wiping device", e);
+                }
+        */
+    }
+	
 }

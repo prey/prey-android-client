@@ -7,6 +7,10 @@
 package com.prey.actions.observer;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 
@@ -15,6 +19,7 @@ import com.prey.actions.HttpDataService;
 import com.prey.actions.PreyAction;
 import com.prey.actions.PreyExecutionWaitNotify;
 import com.prey.net.PreyWebServices;
+import com.prey.util.ClassUtil;
 
 public class ActionsController {
 
@@ -89,5 +94,43 @@ public class ActionsController {
 		}
 		waitNotify.doNotify();
 	}
+	
+	 public List<HttpDataService> runActionJson(Context ctx, List<JSONObject> jsonObjectList) {
+         List<HttpDataService> listData=new ArrayList<HttpDataService>();
+         
+         PreyLogger.i("runActionJson size:"+(jsonObjectList==null?-1:jsonObjectList.size()));
+         ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
+         
+         try {
+                 for(int i=0;jsonObjectList!=null&&i<jsonObjectList.size();i++){
+                         JSONObject jsonObject=jsonObjectList.get(i);
+                         String nameAction = jsonObject.getString("target");
+                         String methodAction = jsonObject.getString("command");
+                         JSONObject parametersAction =null;
+                         try{
+                                 parametersAction = jsonObject.getJSONObject("options");
+                         }catch(JSONException e){
+                                 
+                         }
+                         PreyLogger.i("nameAction:"+nameAction+" methodAction:"+methodAction);
+                                         
+                         List<ActionResult> lista = new ArrayList<ActionResult>();
+                         listData=ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction,listData);
+                         /*if (lista!=null&&lista.size() > 0) {
+                                 for (ActionResult result : lista) {
+                                         dataToBeSent.add(result.getDataToSend());
+                                 }
+                         }*/
+                 }
+                 /*if(dataToBeSent!=null&&dataToBeSent.size()>0){
+                         PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
+                 }*/
+                 
+                 return listData;
+         } catch (JSONException e) {
+                 PreyLogger.e("Error, causa:" + e.getMessage(), e);
+         }
+         return null;
+	 }
 
 }

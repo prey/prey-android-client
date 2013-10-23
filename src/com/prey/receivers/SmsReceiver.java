@@ -6,18 +6,19 @@
  ******************************************************************************/
 package com.prey.receivers;
 
-import java.util.ArrayList;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.SmsMessage;
 
 import com.prey.PreyConfig;
 import com.prey.PreyController;
-import com.prey.PreyLogger;
-import com.prey.backwardcompatibility.CupcakeSupport;
-import com.prey.sms.SMSSupport;
+import com.prey.PreyLogger; 
+import com.prey.actions.sms.SMSFactory;
+import com.prey.actions.sms.SMSUtil;
+import com.prey.sms.SmsThread;
 
 public class SmsReceiver extends BroadcastReceiver {
 
@@ -35,32 +36,50 @@ public class SmsReceiver extends BroadcastReceiver {
 			if (bundle != null) {
 				// ---retrieve the SMS message received---
 				Object[] pdus = (Object[]) bundle.get("pdus");
-				ArrayList<String> smsMessages = null;
-				if (PreyConfig.getPreyConfig(context).isCupcake())
-					smsMessages = CupcakeSupport.getSMSMessage(pdus);
-				else
-					smsMessages = SMSSupport.getSMSMessage(pdus);
-				for (String sms : smsMessages) {
-					executeActionsBasedOnSMSMessage(context, sms);
-				}
+                String messageSMS ="";
+                for (int i = 0; i < pdus.length; i++) {
+               
+                	SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdus[i]);
+                	String phoneNumber = currentMessage.getDisplayOriginatingAddress();
+               
+                	String senderNum = phoneNumber;
+                	messageSMS = currentMessage.getDisplayMessageBody();
+               
+                	PreyLogger.i( "senderNum: "+ senderNum + "; message: " + messageSMS);
+               
+                	executeActionsBasedOnSMSMessage(context, messageSMS);
+                	executeActions(context, messageSMS,phoneNumber);
+               
+                } // end for loop
 			}
 		}
 	}
 
-	private void executeActionsBasedOnSMSMessage(Context ctx, String SMSMessage) {
+	private void executeActionsBasedOnSMSMessage(Context ctx, String messageSMS) {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		PreyLogger.i("SMS received: " + SMSMessage);
-		boolean shouldPerform = SMSMessage.indexOf(preyConfig.getSmsToRun()) >= 0;
-		boolean shouldStop = SMSMessage.indexOf(preyConfig.getSmsToStop()) >= 0;
+		PreyLogger.i("SMS received: " + messageSMS);
+		boolean shouldPerform = messageSMS.indexOf(preyConfig.getSmsToRun()) >= 0;
+		boolean shouldStop = messageSMS.indexOf(preyConfig.getSmsToStop()) >= 0;
 		if (shouldPerform) {
 			PreyLogger.i("SMS Match!, waking up Prey right now!");
 			abortBroadcast(); //To remove the SMS from the inbox
 			PreyController.startPrey(ctx);
-		} else if (shouldStop) {
-			PreyLogger.i("SMS Match!, stopping Prey!");
-			abortBroadcast(); //To remove the SMS from the inbox
-			PreyController.stopPrey(ctx);
+		} else {
+			if (shouldStop) {
+				PreyLogger.i("SMS Match!, stopping Prey!");
+				abortBroadcast(); //To remove the SMS from the inbox
+				PreyController.stopPrey(ctx);
+			}
 		}
+	}
+	
+	
+	private void executeActions(Context ctx, String messageSMS,String phoneNumber) {
+		 if (SMSUtil.isValidSMSCommand(messageSMS)){
+             this.abortBroadcast();
+             new SmsThread(ctx,messageSMS,phoneNumber).start();
+            
+		 }	
 	}
 
 }
