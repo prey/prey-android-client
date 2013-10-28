@@ -2,7 +2,6 @@ package com.prey.actions.picture;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,17 +100,20 @@ public class PictureUtil {
 
 	public static void sendPictureMail(Context ctx, HttpDataService data) {
 		try {
-			List<EntityFile> entityFiles = data.getEntityFiles();
+			if (data!=null ){
+				List<EntityFile> entityFiles = data.getEntityFiles();
+				if(entityFiles!=null&&entityFiles.size()>=0){ 
+					String url = PreyWebServices.getFileUrlJson(ctx);
+					PreyLogger.i("URL:" + url);
 
-			String url = PreyWebServices.getFileUrlJson(ctx);
-			PreyLogger.i("URL:" + url);
-
-			Map<String, String> parameters = new HashMap<String, String>();
-			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-			PreyHttpResponse preyHttpResponse = null;
-			preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig, entityFiles);
-			;
-			PreyLogger.i("status line:" + preyHttpResponse.getStatusLine());
+					Map<String, String> parameters = new HashMap<String, String>();
+					PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+					PreyHttpResponse preyHttpResponse = null;
+					preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig, entityFiles);
+			
+					PreyLogger.i("status line:" + preyHttpResponse.getStatusLine());
+				}
+			}
 		} catch (Exception e) {
 			PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
 		}

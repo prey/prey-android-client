@@ -35,7 +35,7 @@ public class AlertThread extends Thread {
                         try {
                                         int i = 0;
                                         while (!PreyStatus.getInstance().isPreyPopUpOnclick() && i < 10) {
-                                                Thread.sleep(1000);
+                                                sleep(1000);
                                                 i++;
                                         }
                         } catch (InterruptedException e) {

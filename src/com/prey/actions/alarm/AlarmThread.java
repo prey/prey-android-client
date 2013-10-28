@@ -20,7 +20,7 @@ public class AlarmThread extends Thread {
         public void run() {
                 PreyLogger.d("Ejecuting Alarm Action");
                 MediaPlayer mp =null;
-                boolean start=false;
+               
                 try {
                        	PreyStatus.getInstance().setAlarmStart();
                         final AudioManager audio = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
@@ -35,7 +35,7 @@ public class AlarmThread extends Thread {
                         Mp3OnCompletionListener mp3Listener=new Mp3OnCompletionListener();
                         mp.setOnCompletionListener(mp3Listener);
                       //  PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","started"));
-                        start=true;                                
+                        
                         int i=0;
                         while(PreyStatus.getInstance().isAlarmStart()&& i<40 ){
                                 sleep(1000);
