@@ -459,7 +459,7 @@ public class PreyWebServices {
 		
 	}
 	
-	public String getDeviceWebControlPanelUrl(Context ctx) throws PreyException {
+	public static String getDeviceWebControlPanelUrl(Context ctx) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		String deviceKey = preyConfig.getDeviceID();
 		if (deviceKey == null || deviceKey == "")
@@ -475,8 +475,23 @@ public class PreyWebServices {
 		return PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("devices/").concat(deviceKey);
 	}
 	
-	private String getDeviceUrl(Context ctx) throws PreyException{
-		return this.getDeviceWebControlPanelUrl(ctx).concat(".xml");
+	 public static String getFileUrlJson(Context ctx) throws PreyException{
+         return getDeviceUrl2(ctx).concat("/files");
+	 }
+	 
+	 public static String getDeviceUrl2(Context ctx) throws PreyException{
+         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+         String deviceKey = preyConfig.getDeviceID();
+         if (deviceKey == null || deviceKey == "")
+                 throw new PreyException("Device key not found on the configuration");
+         String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
+         String url=PreyConfig.getPreyConfig(ctx).getPreyUrl2().concat(apiv2).concat("devices/").concat(deviceKey);
+         return url;
+ }
+	 
+	 
+	private static String getDeviceUrl(Context ctx) throws PreyException{
+		return getDeviceWebControlPanelUrl(ctx).concat(".xml");
 	}
 	
 	private String getDeviceUiUrl(Context ctx) throws PreyException{

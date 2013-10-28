@@ -121,6 +121,8 @@ public class PreyConfig {
 	private boolean isFroyoOrAbove;
 	private boolean isCupcake;
 	private boolean isGingerbreadOrAbove;
+	private boolean camouflageSet;
+	
 	
 	private boolean isRevokedPassword;
 	private String revokedPassword;
@@ -529,6 +531,14 @@ public class PreyConfig {
 		return "https://".concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
 	}
 	
+	public String getPreyUrl2() {
+           String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain2();
+           if(uiSubdomain!=null||!"".equals(uiSubdomain))
+                   return "http://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+           else
+                   return "http://".concat(getPreyDomain()).concat("/");
+    }
+	   
 	public String getPreyUiUrl() {
 		String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain();
 		return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
@@ -565,6 +575,10 @@ public class PreyConfig {
 	 
 	public boolean showFeedback(){
 		return FeedbackActivity.showFeedback(installationDate, flagFeedback);
+	}
+	
+	public void setCamouflageSet(boolean camouflageSet){
+		this.camouflageSet=camouflageSet;
 	}
 	
 }

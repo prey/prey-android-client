@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.net;
 
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.utils.URLEncodedUtils; 
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
@@ -42,6 +41,7 @@ import com.prey.PreyLogger;
 
 import com.prey.net.http.EntityFile;
 import com.prey.net.http.SimpleMultipartEntity;
+
 /**
  * Implements a Rest API using android http client.
  * 
@@ -56,20 +56,20 @@ public class PreyRestHttpClient {
 
 	private PreyRestHttpClient(Context ctx) {
 		this.ctx = ctx;
-		//httpclient = new DefaultHttpClient();
+		// httpclient = new DefaultHttpClient();
 		httpclient = (DefaultHttpClient) HttpUtils.getNewHttpClient();
 
 		HttpParams params = new BasicHttpParams();
-		
+
 		// Set the timeout in milliseconds until a connection is established.
 		int timeoutConnection = 30000;
 		HttpConnectionParams.setConnectionTimeout(params, timeoutConnection);
-		
-		// Set the default socket timeout (SO_TIMEOUT) 
+
+		// Set the default socket timeout (SO_TIMEOUT)
 		// in milliseconds which is the timeout for waiting for data.
 		int timeoutSocket = 50000;
 		HttpConnectionParams.setSoTimeout(params, timeoutSocket);
-		
+
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		HttpProtocolParams.setContentCharset(params, "UTF_8");
 		HttpProtocolParams.setUseExpectContinue(params, false);
@@ -98,8 +98,7 @@ public class PreyRestHttpClient {
 		return parameters;
 	}
 
-	public PreyHttpResponse methodAsParameter(String url, String methodAsString, Map<String, String> params, PreyConfig preyConfig, String user, String pass)
-			throws IOException {
+	public PreyHttpResponse methodAsParameter(String url, String methodAsString, Map<String, String> params, PreyConfig preyConfig, String user, String pass) throws IOException {
 		HttpPost method = new HttpPost(url);
 		params.put("_method", methodAsString);
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
@@ -155,23 +154,100 @@ public class PreyRestHttpClient {
 		PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
-	
-	public PreyHttpResponse post(String url, Map<String, String> params, PreyConfig preyConfig, List<EntityFile>  entityFiles) throws IOException {
+
+	public PreyHttpResponse post(String url, Map<String, String> params, PreyConfig preyConfig, List<EntityFile> entityFiles) throws IOException {
 		HttpPost method = new HttpPost(url);
 		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
-		SimpleMultipartEntity entity =new SimpleMultipartEntity();		
+		SimpleMultipartEntity entity = new SimpleMultipartEntity();
 		for (Iterator<Map.Entry<String, String>> it = params.entrySet().iterator(); it.hasNext();) {
 			Map.Entry<String, String> entry = it.next();
 			String key = entry.getKey();
 			String value = entry.getValue();
-			entity.addPart( key,   value );
+			entity.addPart(key, value);
 		}
-		for(EntityFile entityFile:entityFiles){
-			entity.addPart( entityFile.getType(),entityFile.getName(),entityFile.getFile(),entityFile.getMimeType(),true);
+		for (EntityFile entityFile : entityFiles) {
+			entity.addPart(entityFile.getType(), entityFile.getName(), entityFile.getFile(), entityFile.getMimeType(), true);
 		}
-		
-		method.setEntity( entity ); 
+
+		method.setEntity(entity);
 		PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+		httpclient.setRedirectHandler(new NotRedirectHandler());
+		HttpResponse httpResponse = httpclient.execute(method);
+		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
+		PreyLogger.d("Response from server: " + response.toString());
+		return response;
+	}
+
+	public PreyHttpResponse postAutentication(String url, Map<String, String> params, PreyConfig preyConfig, List<EntityFile> entityFiles) throws IOException {
+		HttpPost method = new HttpPost(url);
+		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
+
+		SimpleMultipartEntity entity = new SimpleMultipartEntity();
+		for (Iterator<Map.Entry<String, String>> it = params.entrySet().iterator(); it.hasNext();) {
+			Map.Entry<String, String> entry = it.next();
+			String key = entry.getKey();
+			String value = entry.getValue();
+			entity.addPart(key, value);
+		}
+
+		for (EntityFile entityFile : entityFiles) {
+			entity.addPart(entityFile.getType(), entityFile.getName(), entityFile.getFile(), entityFile.getMimeType(), true);
+			PreyLogger.i("Type:" + entityFile.getType() + " Name:" + entityFile.getName() + " File:" + entityFile.getFile() + " MimeType:" + entityFile.getMimeType());
+		}
+
+		method.setEntity(entity);
+		PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+		httpclient.setRedirectHandler(new NotRedirectHandler());
+		HttpResponse httpResponse = httpclient.execute(method);
+		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
+		PreyLogger.d("Response from server: " + response.toString());
+		return response;
+	}
+
+	public PreyHttpResponse postStatusAutentication(String url, String status, Map<String, String> params, PreyConfig preyConfig) throws IOException {
+		HttpPost method = new HttpPost(url);
+
+		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
+		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
+		method.addHeader("X-Prey-Status", status);
+		PreyLogger.i("status " + status);
+
+		// method.setParams(getHttpParamsFromMap(params));
+		PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+		httpclient.setRedirectHandler(new NotRedirectHandler());
+		HttpResponse httpResponse = httpclient.execute(method);
+		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
+		PreyLogger.d("Response from server: " + response.toString());
+		return response;
+	}
+
+	public PreyHttpResponse postAutentication(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
+		HttpPost method = new HttpPost(url);
+
+		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
+		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
+
+		// method.setParams(getHttpParamsFromMap(params));
+		PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+		httpclient.setRedirectHandler(new NotRedirectHandler());
+		HttpResponse httpResponse = httpclient.execute(method);
+		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
+		PreyLogger.d("Response from server: " + response.toString());
+		return response;
+	}
+
+	public PreyHttpResponse getAutentication(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
+		HttpPost method = new HttpPost(url);
+
+		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
+		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
+
+		// method.setParams(getHttpParamsFromMap(params));
+		PreyLogger.d("Sending using 'GET' - URI: " + url + " - parameters: " + params.toString());
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
@@ -193,10 +269,10 @@ public class PreyRestHttpClient {
 		HttpGet method = new HttpGet(url + URLEncodedUtils.format(getHttpParamsFromMap(params), "UTF-8"));
 		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
 		method.addHeader("Authorization", "Basic " + getCredentials(user, pass));
-		PreyLogger.d("Sending using 'GET' (Basic Authentication) - URI: " + method.getURI());
+		PreyLogger.i("Sending using 'GET' (Basic Authentication) - URI: " + method.getURI());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.d("Response from server: " + response.toString());
+		PreyLogger.i("Response from server: " + response.toString());
 		method.removeHeaders("Authorization");
 		return response;
 	}

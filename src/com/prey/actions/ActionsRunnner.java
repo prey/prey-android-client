@@ -49,11 +49,9 @@ public class ActionsRunnner {
 		}
 
 		public void run() {
-			
 			preyConfig = PreyConfig.getPreyConfig(ctx);
 			if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey(true)){
 				PreyExecutionWaitNotify waitNotify = new PreyExecutionWaitNotify();
-				
 				if (preyConfig.isRunOnce()){
 					try {
 						preyConfig.setRunOnce(false);
@@ -93,9 +91,7 @@ public class ActionsRunnner {
 							PreyLogger.e("Error while running on interval: ",e);
 						}
 					}
-					
 				}
-			
 				ctx.stopService(new Intent(ctx, LocationService.class));
 				ctx.stopService(new Intent(ctx, PreyRunnerService.class));
 				//PreyConfig.getPreyConfig(ctx).setShowLockScreen(false);
@@ -121,7 +117,7 @@ public class ActionsRunnner {
 			} catch (PreyException e) {
 				PreyLogger.e("Exception getting device's xml instruction set", e);
 				throw e;
-			}			
+			} 
 		}
 		
 		/*
@@ -153,6 +149,7 @@ public class ActionsRunnner {
 
 		}
 		*/
+		 
 
 	}
 

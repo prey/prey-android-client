@@ -22,21 +22,11 @@
 
     <uses-permission android:name="com.prey.permission.C2D_MESSAGE" />
 
-    <uses-feature
-        android:name="android.hardware.location.network"
-        android:required="true" />
-    <uses-feature
-        android:name="android.hardware.telephony"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.location"
-        android:required="true" />
-    <uses-feature
-        android:name="android.hardware.location.gps"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.touchscreen"
-        android:required="false" />
+    <uses-feature android:name="android.hardware.location.network" android:required="true" />
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+    <uses-feature android:name="android.hardware.location" android:required="true" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
     
     <uses-feature android:name="android.hardware.camera" android:required="false" />
  	<uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
@@ -54,6 +44,14 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    
+    <uses-permission android:name="android.permission.READ_SMS" />
+	<uses-permission android:name="android.permission.WRITE_SMS" />
+	<uses-permission android:name="android.permission.SEND_SMS" />
+	<uses-permission android:name="android.permission.RECEIVE_SMS" />
+	<uses-permission android:name="android.permission.RECEIVE_MMS" />
+
+	<uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -69,6 +67,13 @@
  	<!-- This app has permission to camera -->
     <uses-permission android:name="android.permission.CAMERA" />
     
+    <uses-permission android:name="android.permission.BATTERY_STATS" />
+    <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" /> 
+    
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />  
+     
+     
     <application
         android:name="com.prey.PreyApp"
         android:icon="@drawable/logo"
@@ -215,8 +220,19 @@
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
                 <action android:name="android.app.action.ACTION_PASSWORD_SUCCEEDED" />
                 <action android:name="android.app.action.ACTION_PASSWORD_CHANGED" />
+                <action android:name="android.app.action.ACTION_PASSWORD_FAILED" />
+                <action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLE_REQUESTED" />
+                <action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLED" />
             </intent-filter>
         </receiver>
+        
+        <receiver android:name="com.prey.receivers.PreyOutgoingCallReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        
         
 
         <!-- Only C2DM servers can send messages for the app. If permission is not set - any other app can generate it -->
