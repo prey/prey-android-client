@@ -100,7 +100,7 @@
     <string name="error_registered_password_has_changed">La contraseña actual ingresada no es válida.</string>
     <string name="error_cant_report_forgotten_password">La contraseña no se pudo reportar como olvidada. Por favor inténtalo nuevamente.</string>
     <string name="error_all_fields_are_required">Todos los campos son requeridos</string>
-    <string name="prey_version">0.5.6</string>
+    <string name="prey_version">0.5.7</string>
     <string name="change">Cambiar</string>
     <string name="accept">Aceptar</string>
     <string name="already_prey_user">Tengo cuenta en Prey</string>
@@ -173,4 +173,15 @@
     <string name="permission_title_h1">Protección Extra</string>
     <string name="permission_body_text">Prey obtuvo permisos expeciales para poder bloquear tu dispositivo y también evitar que los ladrones lo desinstalen. Si en algún momento necesitas quitarnuestra aplicación, primero debes remover estos permisos desde Prey.</string>
     <string name="go_to_congratulations">Siguiente</string>
+    <string name="feedback_principal_title">Está todo bien?</string>
+    <string name="feedback_principal_message">Al parecer llevas usando Prey por un buen tiempo. ¿Estarías dispuesto a darnos tu opinión?</string>
+    <string name="feedback_principal_button1">Me encanta</string>
+    <string name="feedback_principal_button2">Necesita mejoras</string>
+    <string name="feedback_principal_button3">No, gracias</string>
+    <string name="feedback_form_title">Contacta al equipo</string>
+    <string name="feedback_form_message">¿Qué cambiarías de Prey si pudieras?</string>
+    <string name="feedback_form_field_hint_comment">Toda opinión es bienvenida.</string>
+    <string name="feedback_form_button1">OK, enviar</string>
+    <string name="feedback_form_button2">NO, gracias</string>
+    <string name="feedback_form_send_email">Enviar correo</string>
 </resources>
