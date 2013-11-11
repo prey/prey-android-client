@@ -100,7 +100,6 @@
     <string name="error_registered_password_has_changed">无法更改密码。控制面板密码自从您上次在这里登陆后已经更改。</string>
     <string name="error_cant_report_forgotten_password">无法报告忘记的密码。请稍后再试。</string>
     <string name="error_all_fields_are_required">需要全部字段</string>
-    <string name="prey_version">0.5.6</string>
     <string name="change">改变</string>
     <string name="accept">接受</string>
     <string name="already_prey_user">已经是Prey用户</string>

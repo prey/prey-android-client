@@ -100,7 +100,6 @@
     <string name="error_registered_password_has_changed">No es pot canviar la contrasenya. La contrasenya actual no és vàlida.</string>
     <string name="error_cant_report_forgotten_password">No es pot reportar la contrasenya oblidada. Torneu a provar més tard.</string>
     <string name="error_all_fields_are_required">Tots els camps són necessaris</string>
-    <string name="prey_version">0.5.6</string>
     <string name="change">Canvia</string>
     <string name="accept">Accepta</string>
     <string name="already_prey_user">Ja sóc usuari de Prey</string>
