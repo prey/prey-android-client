@@ -15,15 +15,22 @@ import android.util.DisplayMetrics;
 public class PreyUtils {
 	
 	public static String getDeviceType(Activity act){
-		
-		DisplayMetrics dm = new DisplayMetrics();
-		act.getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int width = dm.widthPixels; //320
-		int height = dm.heightPixels; //480
-		if (width >= 800 && height >= 480)
+		if (isTablet(act.getApplicationContext()))
 			return "Tablet";
 		else
 			return "Phone";
+	}
+	
+	public static boolean isTablet(Context ctx) {
+	    try {
+	        DisplayMetrics dm = ctx.getResources().getDisplayMetrics();
+	        float screenWidth  = dm.widthPixels / dm.xdpi;
+	        float screenHeight = dm.heightPixels / dm.ydpi;
+	        double size = Math.sqrt(Math.pow(screenWidth, 2)+Math.pow(screenHeight, 2));
+	        return size >= 6;
+	    } catch(Throwable t) {
+	        return false;
+	    }
 	}
 	
 	public static boolean supportSMS(Context ctx){
