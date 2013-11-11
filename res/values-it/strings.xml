@@ -100,7 +100,6 @@
     <string name="error_registered_password_has_changed">Impossibile cambiare la password. La password del Pannello di Controllo è cambiata dal tuo ultimo login.</string>
     <string name="error_cant_report_forgotten_password">Impossibile inviare la password tramite report. Riprova in seguito.</string>
     <string name="error_all_fields_are_required">Tutti i campi sono obbligatori</string>
-    <string name="prey_version">0.5.6</string>
     <string name="change">Cambia</string>
     <string name="accept">Accetta</string>
     <string name="already_prey_user">Utente Prey già registrato</string>
@@ -209,6 +208,6 @@
     posizione tramite pannello di controllo, o a scelta attivando le notifiche via SMS.\n\nSei già registrato su preyproject.com?</string>
     <string name="first_dialog_title">Benvenuto su Prey per Android™!</string>
     <string name="back">Indietro</string>
-    <string name="preferences_about_summary">Versione 0.3.73 - © Fork Ltd.</string>
+    <string name="preferences_about_summary">Versione 0.5.8 - © Fork Ltd.</string>
     <string name="app_name">Prey Per Android™</string>
 </resources>

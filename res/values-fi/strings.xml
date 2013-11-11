@@ -100,7 +100,6 @@
     <string name="error_registered_password_has_changed">Salasanaa ei voitu vaihtaa. Syötetty salasana on virheellinen.</string>
     <string name="error_cant_report_forgotten_password">Unohtuneen salasanan raportointi epäonnistui. Yritä myöhemmin uudelleen.</string>
     <string name="error_all_fields_are_required">Kaikki kentät vaaditaan</string>
-    <string name="prey_version">0.5.6</string>
     <string name="change">Vaihda</string>
     <string name="accept">Hyväksy</string>
     <string name="already_prey_user">On jo Prey-käyttäjä</string>

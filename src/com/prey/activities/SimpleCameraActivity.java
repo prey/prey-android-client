@@ -4,10 +4,10 @@ package com.prey.activities;
 
 import android.app.Activity;
  
-import android.content.pm.PackageManager;
+
 import android.content.res.Configuration;
 import android.hardware.Camera;
-import android.hardware.Camera.CameraInfo;
+
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
@@ -47,15 +47,11 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 			}
 
 		} catch (Exception e) {
-			//PreyLogger.e("Error open camera:" + e.getMessage(), e);
-		 
-			 
 		}
 		if (camera==null){
 			try {
 				camera = Camera.open(0); 
 			} catch (Exception e) {
-				//PreyLogger.e("Error open camera:" + e.getMessage(), e);
 			}
 		}
 		activity = this;
@@ -78,7 +74,6 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 				
 			}
 		} catch (Exception e) {
-			//PreyLogger.e("Error takePicture:" + e.getMessage(), e);
 		}	
 		
 		try {	
@@ -88,7 +83,6 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 				PreyLogger.i("open takePicture()");
 			}
 		} catch (Exception e) {
-			//PreyLogger.e("Error takePicture:" + e.getMessage(), e);
 		}
 	}
 
@@ -135,8 +129,14 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		PreyLogger.i("camera surfaceDestroyed()");
 		if (camera != null) {
-			camera.stopPreview();
-			camera.release();
+			try{
+				camera.stopPreview();
+			}catch(Exception e){
+			}
+			try{
+				camera.release();
+			}catch(Exception e){
+			}
 			camera = null;
 		}
 	}

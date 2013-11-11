@@ -100,7 +100,6 @@
     <string name="error_registered_password_has_changed">Kan het wachtwoord niet wijzigen. Het wachtwoord van je controlepaneel is gewijzigd sinds je hier voor het laatst hebt ingelogd.</string>
     <string name="error_cant_report_forgotten_password">Kan het wachtwoord niet verzenden. Probeer het later opnieuw.</string>
     <string name="error_all_fields_are_required">Alle velden zijn verplicht</string>
-    <string name="prey_version">0.5.6</string>
     <string name="change">Wijzigen</string>
     <string name="accept">Accepteren</string>
     <string name="already_prey_user">Bestaande Prey-gebruiker</string>

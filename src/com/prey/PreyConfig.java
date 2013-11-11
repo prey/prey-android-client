@@ -534,9 +534,9 @@ public class PreyConfig {
 	public String getPreyUrl2() {
            String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain2();
            if(uiSubdomain!=null||!"".equals(uiSubdomain))
-                   return "http://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+                   return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
            else
-                   return "http://".concat(getPreyDomain()).concat("/");
+                   return "https://".concat(getPreyDomain()).concat("/");
     }
 	   
 	public String getPreyUiUrl() {

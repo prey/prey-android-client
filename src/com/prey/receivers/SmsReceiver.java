@@ -55,20 +55,25 @@ public class SmsReceiver extends BroadcastReceiver {
 	}
 
 	private void executeActionsBasedOnSMSMessage(Context ctx, String messageSMS) {
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		PreyLogger.i("SMS received: " + messageSMS);
-		boolean shouldPerform = messageSMS.indexOf(preyConfig.getSmsToRun()) >= 0;
-		boolean shouldStop = messageSMS.indexOf(preyConfig.getSmsToStop()) >= 0;
-		if (shouldPerform) {
-			PreyLogger.i("SMS Match!, waking up Prey right now!");
-			abortBroadcast(); //To remove the SMS from the inbox
-			PreyController.startPrey(ctx);
-		} else {
-			if (shouldStop) {
-				PreyLogger.i("SMS Match!, stopping Prey!");
+		try{
+			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+			PreyLogger.i("SMS received: " + messageSMS);
+		
+			boolean shouldPerform = messageSMS.indexOf(preyConfig.getSmsToRun()) >= 0;
+			boolean shouldStop = messageSMS.indexOf(preyConfig.getSmsToStop()) >= 0;
+			if (shouldPerform) {
+				PreyLogger.i("SMS Match!, waking up Prey right now!");
 				abortBroadcast(); //To remove the SMS from the inbox
-				PreyController.stopPrey(ctx);
+				PreyController.startPrey(ctx);
+			} else {
+				if (shouldStop) {
+					PreyLogger.i("SMS Match!, stopping Prey!");
+					abortBroadcast(); //To remove the SMS from the inbox
+					PreyController.stopPrey(ctx);
+				}
 			}
+		}catch(Exception e){
+			
 		}
 	}
 	

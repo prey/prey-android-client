@@ -83,28 +83,37 @@ public class SMSContactActivity extends PreyActivity {
 	}
 
 	private void showContactNowAlert() {
-		AlertDialog.Builder alertDialog = new AlertDialog.Builder(SMSContactActivity.this);
-        alertDialog.setTitle(getText(R.string.hero_chosen));
-        alertDialog.setMessage(getString(R.string.notify_your_hero_now,getPreyConfig().getDestinationSmsName()));
-        //alertDialog.setIcon(getPreyConfig().getDestinationSmsPicture().);
+		try{
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(SMSContactActivity.this);
+			try{
+				alertDialog.setTitle(getText(R.string.hero_chosen));
+			}catch(Exception e){
+			}
+			try{
+				alertDialog.setMessage(getString(R.string.notify_your_hero_now,getPreyConfig().getDestinationSmsName()));
+			}catch(Exception e){	
+			}
+			alertDialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,int which) {
+					String deviceType = PreyUtils.getDeviceType(SMSContactActivity.this).toLowerCase();
+            		try {
+            			SMSSupport.sendSMS(getPreyConfig().getDestinationSmsNumber(), getString(R.string.hero_notification_message,deviceType));
+					} catch (SMSNotSendException e) {
+						Toast.makeText(SMSContactActivity.this, R.string.sms_not_sent, Toast.LENGTH_LONG).show();
+					}
+            	}
+			});
  
-        alertDialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int which) {
-            	String deviceType = PreyUtils.getDeviceType(SMSContactActivity.this).toLowerCase();
-            	try {
-					SMSSupport.sendSMS(getPreyConfig().getDestinationSmsNumber(), getString(R.string.hero_notification_message,deviceType));
-				} catch (SMSNotSendException e) {
-					Toast.makeText(SMSContactActivity.this, R.string.sms_not_sent, Toast.LENGTH_LONG).show();
-				}
-            }
-        });
- 
-        alertDialog.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            dialog.cancel();
-            }
-        });
-        alertDialog.show();
+			alertDialog.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+            	}
+        	});
+        	alertDialog.show();
+        }catch(Exception e){
+        	
+        }
+		
 	}
 
 	private void loadContactInfo(Uri contactUri) {

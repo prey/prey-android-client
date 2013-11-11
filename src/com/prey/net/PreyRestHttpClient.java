@@ -165,8 +165,12 @@ public class PreyRestHttpClient {
 			String value = entry.getValue();
 			entity.addPart(key, value);
 		}
-		for (EntityFile entityFile : entityFiles) {
-			entity.addPart(entityFile.getType(), entityFile.getName(), entityFile.getFile(), entityFile.getMimeType(), true);
+		try{
+			for (EntityFile entityFile : entityFiles) {
+				entity.addPart(entityFile.getType(), entityFile.getName(), entityFile.getFile(), entityFile.getMimeType(), true);
+			}
+		}catch(Exception e){
+			
 		}
 
 		method.setEntity(entity);

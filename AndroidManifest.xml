@@ -8,9 +8,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
     android:installLocation="internalOnly"
-    android:versionCode="43"
-    android:versionName="0.5.7" >
-
+    android:versionCode="44"
+    android:versionName="0.5.8" >
+    
     <uses-sdk
         android:minSdkVersion="4"
         android:targetSdkVersion="17" />
@@ -33,7 +33,10 @@
  	<uses-feature android:name="android.hardware.camera.flash" android:required="false"/>
  	<uses-feature android:name="android.hardware.camera.front" android:required="false"/>
  
-
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    
+    
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -55,6 +58,7 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.UPDATE_DEVICE_STATS" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -67,7 +71,7 @@
  	<!-- This app has permission to camera -->
     <uses-permission android:name="android.permission.CAMERA" />
     
-    <uses-permission android:name="android.permission.BATTERY_STATS" />
+    
     <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" /> 
     
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
@@ -153,6 +157,14 @@
             android:name="com.prey.activities.SimpleCameraActivity"
             android:theme="@style/Theme.Transparent" 
             android:configChanges="keyboardHidden" />     
+        <activity
+            android:name="com.prey.activities.SimpleVideoActivity"
+             android:theme="@style/Theme.Transparent" 
+            android:configChanges="keyboardHidden" /> 
+        <activity
+            android:name="com.prey.activities.VideoActivity"
+             android:theme="@style/Theme.Transparent" 
+            android:configChanges="keyboardHidden" /> 
         <activity
             android:name="com.prey.activities.PermissionInformationActivity"
             android:configChanges="keyboardHidden" />
