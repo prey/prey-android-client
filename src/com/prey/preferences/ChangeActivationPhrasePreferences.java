@@ -54,12 +54,15 @@ public class ChangeActivationPhrasePreferences extends EditTextPreference {
 		 
 		@Override
 		protected void onPreExecute() {
-			
-			progressDialog = new ProgressDialog(getContext());
-			progressDialog.setMessage(getContext().getText(R.string.updating_info_message).toString());
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(false);
-			progressDialog.show();
+			try{
+				progressDialog = new ProgressDialog(getContext());
+				progressDialog.setMessage(getContext().getText(R.string.updating_info_message).toString());
+				progressDialog.setIndeterminate(true);
+				progressDialog.setCancelable(false);
+				progressDialog.show();
+			}catch(Exception e){
+				
+			}
 		}
 
 		@Override
@@ -74,7 +77,11 @@ public class ChangeActivationPhrasePreferences extends EditTextPreference {
 
 		@Override
 		protected void onPostExecute(Void unused) {
-			progressDialog.dismiss();
+			try{
+				progressDialog.dismiss();
+			}catch(Exception e){
+				
+			}
 		}
 
 	}

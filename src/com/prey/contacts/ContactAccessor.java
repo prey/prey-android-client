@@ -91,8 +91,11 @@ public class ContactAccessor {
         
         
         
-        
-        contactInfo.setPicture(this.loadContactPhoto(contentResolver, contactId, contactInfo.getPhotoId()));
+        try{
+        	contactInfo.setPicture(this.loadContactPhoto(contentResolver, contactId, contactInfo.getPhotoId()));
+        }catch(Exception e){
+        	
+        }
         return contactInfo;
     }
     
