@@ -97,19 +97,6 @@
                 android:title="@string/preferences_update_sim_title" />
         </PreferenceScreen>
 
-        <!--
-    <PreferenceCategory
-            	android:title="@string/preferences_category_title_ringtone">
-	    <RingtonePreference
-				android:key="PREFS_RINGTONE"
-				android:title="@string/preferences_ringtone_title"
-				android:showDefault="false"
-				android:showSilent="false"
-				android:ringtoneType="all"
-				android:summary="@string/preferences_ringtone_summary"
-			/>
-    </PreferenceCategory>
-        -->
         <PreferenceScreen
             android:key="PREFS_ACCOUNT_MANAGEMENT_SCREEN"
             android:summary="@string/preferences_category_other_summary"
@@ -179,7 +166,7 @@
                 android:summary="@string/preferences_show_notification_summary"  />
 
     </PreferenceScreen>  
-    -->
+    -->  
     <PreferenceScreen
             android:key="PREFS_ADVANCED"
             android:summary="@string/preferences_advanced_screen_summary"
