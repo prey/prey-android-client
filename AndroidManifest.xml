@@ -196,6 +196,8 @@
         <service android:name="com.prey.services.LocationService" />
         <service android:name="com.prey.services.PreyBootService" />
         <service android:name="com.prey.services.PreyRunnerService" />
+        <service android:name="com.prey.services.PreyKeepOnService" />
+        
 
         <!-- Receivers -->
         <receiver android:name="com.prey.receivers.SmsReceiver" >
@@ -247,7 +249,11 @@
             </intent-filter>
         </receiver>
         
-        
+        <receiver android:name="com.prey.receivers.PreyKeepOnReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.CLOSE_SYSTEM_DIALOGS" />
+            </intent-filter>
+        </receiver>
 
         <!-- Only C2DM servers can send messages for the app. If permission is not set - any other app can generate it -->
         <receiver android:name="com.prey.receivers.C2DMReceiver" android:permission="com.google.android.c2dm.permission.SEND" >

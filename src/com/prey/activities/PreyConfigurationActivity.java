@@ -12,7 +12,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 import com.prey.PreyConfig;
-import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.R;
@@ -55,7 +54,7 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 			p.setEnabled(false);
 		
 		p = findPreference("PREFS_ABOUT");
-		p.setSummary("Version " + preyConfig.getPreyVersion() + "-" + preyConfig.getPreyMinorVersion() + " © Fork Ltd.");
+		p.setSummary("Version " + preyConfig.getPreyVersion() + "-" + preyConfig.getPreyMinorVersion() + " ï¿½ Fork Ltd.");
 		
 	} 
 	

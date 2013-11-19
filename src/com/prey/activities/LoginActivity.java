@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.prey.PreyConfig;
+import com.prey.services.PreyKeepOnService;
 
 public class LoginActivity extends PasswordActivity {
 
@@ -33,6 +34,13 @@ public class LoginActivity extends PasswordActivity {
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancel(R.string.preyForAndroid_name);
 		startup();
+		
+		boolean keepOn = PreyConfig.getPreyConfig(getApplicationContext()).isKeepOn();
+		if (keepOn) {
+			startService(new Intent(getApplicationContext(), PreyKeepOnService.class));
+		}else{
+			stopService(new Intent(getApplicationContext(), PreyKeepOnService.class));
+		}
 	}
 
 	@Override

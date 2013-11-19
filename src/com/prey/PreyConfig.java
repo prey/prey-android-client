@@ -95,7 +95,7 @@ public class PreyConfig {
 	
 	public static final String INSTALLATION_DATE = "INSTALLATION_DATE"; 
 	public static final String FLAG_FEEDBACK = "FLAG_FEEDBACK"; 
-	
+	public static final String KEEP_ON = "KEEP_ON";
 	
 	/* ------------- */
 
@@ -129,6 +129,8 @@ public class PreyConfig {
 	
 	private long installationDate;
 	private int flagFeedback;
+	
+	private boolean keepOn;
 	 
 	private Context ctx;
 
@@ -163,7 +165,7 @@ public class PreyConfig {
 
 		this.installationDate=settings.getLong(PreyConfig.INSTALLATION_DATE, new Date().getTime());
 		this.flagFeedback=settings.getInt(PreyConfig.FLAG_FEEDBACK, FeedbackActivity.FLAG_FEEDBACK_INIT);
-
+		this.keepOn=settings.getBoolean(PreyConfig.KEEP_ON, false);
 	}
 	
 	public void saveAccount(PreyAccountData accountData) {
@@ -316,6 +318,15 @@ public class PreyConfig {
 		return shouldCheckSimChange;
 	}
 
+	public boolean isKeepOn() {
+		return keepOn;
+	}
+	
+	public void setKeepOn(boolean keepOn) {
+		this.keepOn=keepOn;
+		this.saveBoolean(PreyConfig.KEEP_ON,keepOn);
+	}
+	
 	public String getEmail() {
 		return email;
 	}
@@ -481,6 +492,13 @@ public class PreyConfig {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putInt(key, value);
+		editor.commit();
+	}
+	
+	private void saveBoolean(String key, boolean value){
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(key, value);
 		editor.commit();
 	}
 
