@@ -36,10 +36,8 @@ public class PreyKeepOnService extends Service {
 	}
 
 	public int onStartCommand(Intent intent, int i, int j) {
-
 		boolean keepOn = PreyConfig.getPreyConfig(getApplicationContext()).isKeepOn();
 		if (keepOn) {
-			PreyLogger.i(  "PreyKeepOnService");
 			IntentFilter intentfilter = new IntentFilter("android.intent.action.CLOSE_SYSTEM_DIALOGS");
 			registerReceiver(mReceiver, intentfilter);
 		}

@@ -166,7 +166,6 @@ public class PreyConfig {
 		this.installationDate=settings.getLong(PreyConfig.INSTALLATION_DATE, new Date().getTime());
 		this.flagFeedback=settings.getInt(PreyConfig.FLAG_FEEDBACK, FeedbackActivity.FLAG_FEEDBACK_INIT);
 		this.keepOn=settings.getBoolean(PreyConfig.KEEP_ON, false);
-
 	}
 	
 	public void saveAccount(PreyAccountData accountData) {

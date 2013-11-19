@@ -10,8 +10,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.services.PreyBootService;
+import com.prey.services.PreyKeepOnService;
 
 public class PreyBootController extends BroadcastReceiver {
 
@@ -22,6 +24,12 @@ public class PreyBootController extends BroadcastReceiver {
 		// sorry)
 		if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
 			context.startService(new Intent(context, PreyBootService.class));
+			boolean keepOn = PreyConfig.getPreyConfig(context).isKeepOn();
+			if (keepOn) {
+				context.startService(new Intent(context, PreyKeepOnService.class));
+			}else{
+				context.stopService(new Intent(context, PreyKeepOnService.class));
+			}
 		} else
 			PreyLogger.e("Received unexpected intent " + intent.toString(),null);
 	}

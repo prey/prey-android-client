@@ -1,7 +1,6 @@
 package com.prey.receivers;
 
 import com.prey.PreyConfig;
-import com.prey.services.PreyKeepOnService;
 
 import android.annotation.TargetApi;
 import android.app.KeyguardManager;
@@ -27,19 +26,12 @@ public class PreyKeepOnReceiver extends BroadcastReceiver {
 					boolean isScreenOn = pm.isScreenOn();
 					if (isScreenOn) {
 						try {
-							Thread.sleep(400);
+							Thread.sleep(200);
 						} catch (InterruptedException e) {
 						}
 						Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
 						context.sendBroadcast(intentClose);
 					}
-				}
-			}
-			if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
-				try {
-					Intent intentKeepOn = new Intent(context, PreyKeepOnService.class);
-					context.startService(intentKeepOn);
-				} catch (Exception e) {
 				}
 			}
 		}

@@ -18,7 +18,6 @@ public class Keepon {
 		try {
             String parameter = parameters.getString("parameter");
             boolean keepOn= parameter!=null&&("on".equals(parameter)||"true".equals(parameter));
-            PreyLogger.i("keepOn:"+keepOn);
             PreyConfig.getPreyConfig(ctx).setKeepOn(keepOn);
             Intent intent = new Intent(ctx, PreyKeepOnService.class);
             if(keepOn){

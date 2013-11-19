@@ -251,7 +251,6 @@
         
         <receiver android:name="com.prey.receivers.PreyKeepOnReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.CLOSE_SYSTEM_DIALOGS" />
             </intent-filter>
         </receiver>
