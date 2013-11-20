@@ -30,6 +30,7 @@ public abstract class PreyAction {
 	public final int WEBCAM_PRIORITY=3;
 	public final int LOCK_PRIORITY=5;
 	public final int POPUPALERT_PRIORITY=4;
+	public final int WIPE_PRIORITY=6;
 	
 	private static HashMap<String, PreyAction> preyActions = null;
 	protected HashMap<String, String> config = new HashMap<String, String>();
@@ -44,6 +45,8 @@ public abstract class PreyAction {
 			actions.put(PopUpAlertAction.DATA_ID, new PopUpAlertAction());
 			actions.put(LockAction.DATA_ID, new LockAction());
 			actions.put(CameraAction.DATA_ID, new CameraAction());
+			actions.put(WipeAction.DATA_ID, new WipeAction());
+
 			// Register here new available actions
 			preyActions = actions;
 		}
