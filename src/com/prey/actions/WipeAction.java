@@ -32,7 +32,7 @@ public class WipeAction extends PreyAction {
 		String formatSim = getConfig().get("format_sim");
 		PreyLogger.i("format_sim:"+formatSim);
 		try {
-			if ("s".equals(formatSim)) {
+			if ("y".equals(formatSim)) {
 				WipeUtil.deleteSD();
 			}
 		} catch (Exception e) {
