@@ -208,6 +208,5 @@
     posizione tramite pannello di controllo, o a scelta attivando le notifiche via SMS.\n\nSei già registrato su preyproject.com?</string>
     <string name="first_dialog_title">Benvenuto su Prey per Android™!</string>
     <string name="back">Indietro</string>
-    <string name="preferences_about_summary">Versione 0.5.8 - © Fork Ltd.</string>
     <string name="app_name">Prey Per Android™</string>
 </resources>

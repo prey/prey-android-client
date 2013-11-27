@@ -23,8 +23,10 @@ public class ResponsesXMLHandler extends DefaultHandler {
 	private boolean inAlertMessage;
 	private boolean inUnlockPass;
 	private boolean inWebCamMessage;
+	private boolean inFormatSim;
 	private String alertMessage = "";
 	private String webCamMessage = "";
+	private String formatSim="";
 
 	private ReportActionResponse actionResponse = new ReportActionResponse();
 
@@ -82,6 +84,8 @@ public class ResponsesXMLHandler extends DefaultHandler {
 				inUnlockPass = true;
 			} else if (localName.equals("webcam_message")){
 				inWebCamMessage = true;
+			} else if(localName.equals("format_sim")){
+				inFormatSim = true;
 			}
 		}
 	}
@@ -109,6 +113,9 @@ public class ResponsesXMLHandler extends DefaultHandler {
 		} else if (localName.equals("webcam_message")) {
 			this.inWebCamMessage = false;
 			this.webCamMessage = "";
+		} else if (localName.equals("format_sim")){
+			this.inFormatSim = false;
+			this.formatSim = "";
 		}
 	}
 
@@ -138,6 +145,9 @@ public class ResponsesXMLHandler extends DefaultHandler {
 		} else if (this.inWebCamMessage){
 			webCamMessage = webCamMessage.concat(new String(ch, start, length));
 			actionResponse.addActionConfigParameter("webcam", "webcam_message", webCamMessage);
+		} else if (this.inFormatSim){
+			formatSim = formatSim.concat(new String(ch, start, length));
+			actionResponse.addActionConfigParameter("wipe", "format_sim", formatSim);
 		}
 
 	}

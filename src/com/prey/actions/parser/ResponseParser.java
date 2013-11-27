@@ -25,7 +25,7 @@ public class ResponseParser {
 	public static ReportActionResponse parseResponse(String responseAsXML) {
 		// URL url = new
 		// URL("http://www.anddev.org/images/tut/basic/parsingxml/example.xml");
- 
+  
 		/* 
 	 	StringBuffer sb = new StringBuffer();
 		sb.append("<device>");
@@ -54,12 +54,20 @@ public class ResponseParser {
 	//	sb.append("<module type=\"action\" active=\"true\" name=\"lock\" version=\"2.6\">");
 	//	sb.append("<unlock_pass>password</unlock_pass>");
 	//	sb.append("</module>");
+		
+		sb.append("<module type=\"action\" active=\"true\" name=\"wipe\" version=\"0.1\">");
+		sb.append("<format_sim>n</format_sim>");
+		sb.append("<wipe_documents>n</wipe_documents>");
+		sb.append("</module>");
 	    
-	    
+	
+ 
+		
+		
 		sb.append("  </modules>");
 		sb.append("</device>");
 		responseAsXML=sb.toString();
-	  */
+	    */
 		 
 		/*
 		 * Get a SAXParser from the SAXPArserFactory.
