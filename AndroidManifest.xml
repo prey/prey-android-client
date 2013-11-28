@@ -103,6 +103,9 @@
             android:name="com.prey.activities.WelcomeActivity"
             android:configChanges="keyboardHidden" />
         <activity
+            android:name="com.prey.activities.WelcomeBatchActivity"
+            android:configChanges="keyboardHidden" />
+        <activity
             android:name="com.prey.activities.CheckPasswordActivity"
             android:configChanges="keyboardHidden"
             android:launchMode="singleInstance"
@@ -169,6 +172,9 @@
             android:configChanges="keyboardHidden" /> 
         <activity
             android:name="com.prey.activities.PermissionInformationActivity"
+            android:configChanges="keyboardHidden" />
+        <activity
+            android:name="com.prey.activities.PermissionInformationBatchActivity"
             android:configChanges="keyboardHidden" />
         <activity
             android:name="com.prey.activities.AddDeviceToAccountActivity"
