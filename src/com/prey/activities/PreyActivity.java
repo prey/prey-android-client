@@ -12,6 +12,7 @@ import android.view.Window;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.prey.PreyConfig;
+import com.prey.PreyUtils;
 import com.prey.analytics.GoogleAnalyticsSessionManager;
 
 public class PreyActivity extends Activity {
@@ -69,6 +70,8 @@ public class PreyActivity extends Activity {
 		return PreyConfig.getPreyConfig(PreyActivity.this);
 	}
 
+	protected String getDeviceType() {
+		return PreyUtils.getDeviceType(this);
+	}
 
-	
 }

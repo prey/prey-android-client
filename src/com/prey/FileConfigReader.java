@@ -100,4 +100,12 @@ public class FileConfigReader {
 	public String getApiV2(){
         return properties.getProperty("api-v2");
 	}
+
+	public String getApiKeyBatch() {
+		return properties.getProperty("api-key-batch");
+	}
+	
+	public String getEmailBatch() {
+		return properties.getProperty("email-batch");
+	}
 }
