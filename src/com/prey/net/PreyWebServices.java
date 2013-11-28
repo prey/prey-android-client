@@ -225,6 +225,27 @@ public class PreyWebServices {
 		return newAccount;
 
 	}
+	
+	public PreyAccountData registerNewDeviceWithApiKeyEmail(Context ctx, String apiKey,String email, String deviceType) throws PreyException {
+		int from;
+		int to;
+		String xmlDeviceId = this.registerNewDevice(ctx, apiKey, deviceType);
+
+		if (!xmlDeviceId.contains("<key"))
+			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"Error"));
+
+		from = xmlDeviceId.indexOf("<key>") + 5;
+		to = xmlDeviceId.indexOf("</key>");
+		String deviceId = xmlDeviceId.substring(from, to);
+
+		PreyAccountData newAccount = new PreyAccountData();
+		newAccount.setApiKey(apiKey);
+		newAccount.setDeviceId(deviceId);
+		newAccount.setEmail(email);
+		newAccount.setPassword("");
+		return newAccount;
+
+	}
 
 	public String sendPreyHttpReport(Context ctx, ArrayList<HttpDataService> dataToSend) {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);

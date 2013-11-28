@@ -599,4 +599,11 @@ public class PreyConfig {
 		this.camouflageSet=camouflageSet;
 	}
 	
+	public String getApiKeyBatch() {
+		return FileConfigReader.getInstance(this.ctx).getApiKeyBatch();
+	}
+
+	public String getEmailBatch() {
+		return FileConfigReader.getInstance(this.ctx).getEmailBatch();
+	}
 }

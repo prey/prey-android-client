@@ -51,7 +51,13 @@ public class LoginActivity extends PasswordActivity {
 
 	private void startup() {
 		if (!isThisDeviceAlreadyRegisteredWithPrey()) {
-			Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+			Intent intent =null;
+			if (!isThereBatchInstallationKey()){
+				intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+				
+			}else{
+				intent = new Intent(LoginActivity.this, WelcomeBatchActivity.class);
+			}
 			startActivity(intent);
 			finish();
 		} else {
@@ -104,4 +110,10 @@ public class LoginActivity extends PasswordActivity {
 		popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		ctx.startActivity(popup);
 	}
+	
+	private boolean isThereBatchInstallationKey() {
+		String apiKeyBatch=getPreyConfig().getApiKeyBatch();
+		return (apiKeyBatch!=null&&!"".equals(apiKeyBatch));
+	}
+
 }
