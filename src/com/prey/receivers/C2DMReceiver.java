@@ -6,6 +6,9 @@
  ******************************************************************************/
 package com.prey.receivers;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -34,8 +37,39 @@ public class C2DMReceiver extends BroadcastReceiver {
 	private void handleMessage(Context context, Intent intent) {
  
 		String pushedMessage = intent.getExtras().getString(PreyConfig.getPreyConfig(context).getc2dmAction());
-		if (pushedMessage != null) {
+		
+		Set<String> set=intent.getExtras().keySet();
+		Iterator<String>  ite=set.iterator();
+		while(ite.hasNext()){
+			String key=ite.next();
+			PreyLogger.i("key_:"+key+" value:"+intent.getExtras().getString(key));
+		}
+		String version=intent.getExtras().getString("version");
+		if ("beta".equals(version)){
+			handleMessageBeta(context, pushedMessage);
+		}else{
+			handleMessageMaster(context, pushedMessage);
+		}
+	}
+	
+	
+	private void handleMessageBeta(Context context, String pushedMessage) {
+	    try {
+			PreyLogger.i("Push notification received, waking up Prey right now!");
 			PreyLogger.i("Push message received " + pushedMessage);
+			PreyController.startPrey(context);
+		} catch (Exception e) {
+			PreyLogger.e("Push execution failed to run", e);
+		}
+	}
+	private void handleMessageMaster(Context context, String pushedMessage) {	
+		 
+		
+ 
+		PreyLogger.i("Push notification received, waking up Prey right now!");
+		PreyLogger.i("Push message received " + pushedMessage);
+		if (pushedMessage != null) {
+		 
 			try {
 				PushMessage pMessage = new PushMessage(pushedMessage);
 				
@@ -74,7 +108,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 			// be rejected
 			PreyLogger.d("Unregistered from c2dm: " + intent.getStringExtra("unregistered"));
 		} else if (registration != null) {
-			PreyLogger.d("Registration id: " + registration);
+			PreyLogger.i("Registration id: " + registration);
 			new UpdateCD2MId().execute(registration, context);
 			// Send the registration ID to the 3rd party site that is sending
 			// the messages.
@@ -89,7 +123,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		protected Void doInBackground(Object... data) {
 			try {
 				String registration = FileConfigReader.getInstance((Context) data[1]).getGcmIdPrefix() + (String) data[0];
-				PreyLogger.d("Registration id: " + registration);
+				PreyLogger.i("Registration id: " + registration);
 				PreyWebServices.getInstance().setPushRegistrationId((Context) data[1], registration);
 
 			} catch (Exception e) {

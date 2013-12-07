@@ -100,7 +100,6 @@
     <string name="error_registered_password_has_changed">Não é possível alterar a senha. A senha atual digitada é inválida.</string>
     <string name="error_cant_report_forgotten_password">Não é possível relatar senha esquecida. Por favor, tente novamente mais tarde.</string>
     <string name="error_all_fields_are_required">Todos os campos são obrigatório</string>
-    <string name="prey_version">0.5.9</string>
     <string name="change">Mude</string>
     <string name="accept">Aceite</string>
     <string name="already_prey_user">Já usuário do Prey</string>

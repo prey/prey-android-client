@@ -12,6 +12,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
  
 
  
@@ -34,9 +48,13 @@ import com.prey.PreyPhone;
 import com.prey.PreyPhone.Hardware;
 import com.prey.PreyPhone.Wifi;
 import com.prey.actions.HttpDataService;
+import com.prey.actions.observer.ActionsController;
+import com.prey.analytics.PreyGoogleAnalytics;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
+import com.prey.events.Event;
 import com.prey.exceptions.NoMoreDevicesAllowedException;
 import com.prey.exceptions.PreyException;
+import com.prey.json.parser.JSONParser;
 import com.prey.net.http.EntityFile;
 import com.prey.R;
 /**
@@ -496,8 +514,29 @@ public class PreyWebServices {
 		return PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("devices/").concat(deviceKey);
 	}
 	
+	
+	private String getDeviceUrlJson(Context ctx) throws PreyException{
+		 return getDeviceUrl(ctx).concat(".json");
+	}
+		
+	 private String getReportUrlJson(Context ctx) throws PreyException{
+		 return getDeviceUrl(ctx).concat("/reports");
+	 }
+		
 	 public static String getFileUrlJson(Context ctx) throws PreyException{
-         return getDeviceUrl2(ctx).concat("/files");
+		 return getDeviceUrl(ctx).concat("/files");
+	 }
+		
+	 public static String getDataUrlJson(Context ctx) throws PreyException{
+		 return getDeviceUrl(ctx).concat("/data");
+	 }
+		
+	 private String getEventsUrlJson(Context ctx) throws PreyException{
+		 return getDeviceUrlApiv2(ctx).concat("/events");
+	 }
+		
+	 private String getResponseUrlJson(Context ctx) throws PreyException{
+		 return getDeviceUrlApiv2(ctx).concat("/response");
 	 }
 	 
 	 public static String getDeviceUrl2(Context ctx) throws PreyException{
@@ -508,9 +547,19 @@ public class PreyWebServices {
          String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
          String url=PreyConfig.getPreyConfig(ctx).getPreyUrl2().concat(apiv2).concat("devices/").concat(deviceKey);
          return url;
- }
+	 }
 	 
-	 
+	private String getDeviceUrlApiv2(Context ctx) throws PreyException{
+			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+			String deviceKey = preyConfig.getDeviceID();
+			if (deviceKey == null || deviceKey == "")
+				throw new PreyException("Device key not found on the configuration");
+			//String apiv=FileConfigReader.getInstance(ctx).getApiV1();
+			String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
+			String url=PreyConfig.getPreyConfig(ctx).getPreyUrl2().concat(apiv2).concat("devices/").concat(deviceKey);
+			return url;
+	}
+	
 	private static String getDeviceUrl(Context ctx) throws PreyException{
 		return getDeviceWebControlPanelUrl(ctx).concat(".xml");
 	}
@@ -553,4 +602,102 @@ public class PreyWebServices {
 	}
 	
 
+	public PreyHttpResponse sendPreyHttpData(Context ctx, ArrayList<HttpDataService> dataToSend) {
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		
+		Map<String, String> parameters = new HashMap<String, String>();
+		List<EntityFile> entityFiles=new ArrayList<EntityFile>();
+		for (HttpDataService httpDataService : dataToSend) {
+			if (httpDataService!=null){
+				parameters.putAll(httpDataService.getDataAsParameters());
+				if (httpDataService.getEntityFiles()!=null&&httpDataService.getEntityFiles().size()>0){
+					entityFiles.addAll(httpDataService.getEntityFiles());
+				}
+			}
+		}
+
+		//parameters.put("api_key", preyConfig.getApiKey());
+
+ 
+		PreyHttpResponse preyHttpResponse=null;
+		try {
+			String URL =getDataUrlJson(ctx);
+			//String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
+			PreyConfig.postUrl = null;
+			
+			
+			
+			if (entityFiles.size()==0)
+				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(URL, parameters, preyConfig);
+			else
+				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(URL, parameters, preyConfig,entityFiles);
+			PreyLogger.d("Data sent_: " + preyHttpResponse.getResponseAsString());
+			PreyGoogleAnalytics.getInstance().trackAsynchronously(ctx,"Data/Sent");
+			if (preyConfig.isShouldNotify()) {
+				this.notifyUser(ctx);
+			}
+		} catch (Exception e) {
+			PreyLogger.e("Data wasn't send",e);
+		} 
+		return preyHttpResponse;
+	}
+	
+	
+	public void sendPreyHttpEvent(Context ctx, Event event, JSONObject jsonObject){
+		try {
+			String url =getEventsUrlJson(ctx);
+			Map<String, String> parameters = new HashMap<String, String>();
+			parameters.put("name", event.getName());
+			parameters.put("info", event.getInfo());
+			
+			PreyLogger.i("url:"+url);
+			PreyLogger.i("name:"+event.getName()+" info:"+event.getInfo());
+			
+			//Toast.makeText(ctx, "Event:"+event.getName(), Toast.LENGTH_LONG).show();
+			String status=jsonObject.toString();
+			PreyHttpResponse preyHttpResponse= PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters, PreyConfig.getPreyConfig(ctx));
+			runActionJson(ctx,preyHttpResponse);
+		} catch (Exception e) {
+			PreyLogger.e("Event wasn't send",e);
+		} 
+	}
+	
+	public void runActionJson(Context ctx,PreyHttpResponse preyHttpResponse) throws Exception{
+		StringBuilder jsonString=PreyRestHttpClient.getInstance(ctx).getStringHttpResponse(preyHttpResponse.getResponse());
+		if (jsonString!=null&&jsonString.length()>0){
+			List<JSONObject> jsonObjectList=new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
+			if (jsonObjectList!=null&&jsonObjectList.size()>0){
+				ActionsController.getInstance(ctx).runActionJson(ctx,jsonObjectList);
+			}
+		}
+	}
+	
+	public void postData(String url,JSONObject obj) {
+
+
+	    HttpParams myParams = new BasicHttpParams();
+	    HttpConnectionParams.setConnectionTimeout(myParams, 10000);
+	    HttpConnectionParams.setSoTimeout(myParams, 10000);
+	    HttpClient httpclient = new DefaultHttpClient(myParams);
+	    String json=obj.toString();
+
+	    try {
+
+	        HttpPost httppost = new HttpPost(url.toString());
+	        httppost.setHeader("Content-type", "application/json");
+
+	        StringEntity se = new StringEntity(json); 
+	        se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+	        httppost.setEntity(se); 
+
+	        HttpResponse response = httpclient.execute(httppost);
+	        String temp = EntityUtils.toString(response.getEntity());
+	        PreyLogger.i("tag"+ temp);
+
+
+	    } catch (ClientProtocolException e) {
+
+	    } catch (IOException e) {
+	    }
+	}
 }

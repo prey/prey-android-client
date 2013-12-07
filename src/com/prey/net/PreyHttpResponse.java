@@ -20,6 +20,7 @@ public class PreyHttpResponse {
 
 	private StatusLine statusLine;
 	private String responseAsString;
+	private HttpResponse response;
 
 	// public PreyHttpResponse(HttpMethod method){
 	// this.statusLine = method.getStatusLine();
@@ -35,6 +36,7 @@ public class PreyHttpResponse {
 	// }
 
 	public PreyHttpResponse(HttpResponse response) {
+		this.response=response;
 		this.statusLine = response.getStatusLine();
 
 		try {
@@ -82,6 +84,14 @@ public class PreyHttpResponse {
 	public String toString() {
 
 		return statusLine.toString() + " " + responseAsString;
+	}
+	
+	public HttpResponse getResponse() {
+		return response;
+	}
+
+	public void setResponse(HttpResponse response) {
+		this.response = response;
 	}
 
 }

@@ -8,8 +8,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
     android:installLocation="internalOnly"
-    android:versionCode="45"
-    android:versionName="0.5.9" >
+    android:versionCode="35"
+    android:versionName="0.5.5" >
     
     <uses-sdk
         android:minSdkVersion="4"
@@ -261,6 +261,41 @@
             </intent-filter>
         </receiver>
 
+        
+        <receiver
+            android:name="com.prey.events.receivers.EventReceiver"  >
+            <intent-filter android:priority="20000">
+                
+                <!-- TURNED ON/OFF --> 
+                
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                 
+                <!-- BATTERY LOW -->   
+ 
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OKAY" />
+                
+                <!-- WIFI CHANGED -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+
+                <!-- SIM CHANGED AND  BOOT COMPLETED -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />          
+                
+                <!-- (UN)PLUGGED -->              
+ 
+                
+ 
+        		<action android:name="android.intent.action.BATTERY_CHANGED" />
+        		<action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+    			<action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+                
+    			 
+    			<action android:name="android.intent.action.USER_PRESENT" />
+    			
+            </intent-filter>
+        </receiver>
+        
         <!-- Only C2DM servers can send messages for the app. If permission is not set - any other app can generate it -->
         <receiver android:name="com.prey.receivers.C2DMReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
 

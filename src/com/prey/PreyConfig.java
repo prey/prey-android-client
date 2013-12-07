@@ -97,6 +97,10 @@ public class PreyConfig {
 	public static final String FLAG_FEEDBACK = "FLAG_FEEDBACK"; 
 	public static final String KEEP_ON = "KEEP_ON";
 	
+	public static final String LAST_EVENT="LAST_EVENT";
+	public static final String PREVIOUS_SSID="PREVIOUS_SSID";
+	
+	
 	/* ------------- */
 
 	public static final String TAG = "PREY";
@@ -123,7 +127,8 @@ public class PreyConfig {
 	private boolean isGingerbreadOrAbove;
 	private boolean camouflageSet;
 	
-	
+	private String lastEvent;
+	private String previousSsid;
 	private boolean isRevokedPassword;
 	private String revokedPassword;
 	
@@ -166,6 +171,11 @@ public class PreyConfig {
 		this.installationDate=settings.getLong(PreyConfig.INSTALLATION_DATE, new Date().getTime());
 		this.flagFeedback=settings.getInt(PreyConfig.FLAG_FEEDBACK, FeedbackActivity.FLAG_FEEDBACK_INIT);
 		this.keepOn=settings.getBoolean(PreyConfig.KEEP_ON, false);
+		
+		this.previousSsid=settings.getString(PreyConfig.PREVIOUS_SSID, "");
+
+		
+		this.lastEvent=settings.getString(PreyConfig.LAST_EVENT, "");
 	}
 	
 	public void saveAccount(PreyAccountData accountData) {
@@ -338,6 +348,7 @@ public class PreyConfig {
 		editor.commit();
 	}
 
+	
 	public boolean isThisDeviceAlreadyRegisteredWithPrey(boolean notifyUser) {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
 		String deviceId = settings.getString(PreyConfig.PREFS_DEVICE_ID, null);
@@ -361,6 +372,11 @@ public class PreyConfig {
 			
 		return isVerified;
 	}
+	
+	public boolean isThisDeviceAlreadyRegisteredWithPrey() {
+		return deviceID!=null&&!"".equals(deviceID);
+	}
+	
 
 	public void setAccountVerified() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -465,10 +481,15 @@ public class PreyConfig {
 		editor.commit();
 	}
 	
+	
+	
+	
 	public void registerC2dm(){
 		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0)); // boilerplate
-		registrationIntent.putExtra("sender", FileConfigReader.getInstance(this.ctx).getGcmId());
+		String gcmId= FileConfigReader.getInstance(this.ctx).getGcmId();
+		PreyLogger.i("gcmId:"+gcmId);
+		registrationIntent.putExtra("sender",gcmId);
 		this.ctx.startService(registrationIntent);
 	}
 	
@@ -480,6 +501,11 @@ public class PreyConfig {
 		this.ctx.startService(unregIntent);
 		
 	}
+	
+	
+
+	
+ 
 	
 	private void saveString(String key, String value){
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -606,4 +632,30 @@ public class PreyConfig {
 	public String getEmailBatch() {
 		return FileConfigReader.getInstance(this.ctx).getEmailBatch();
 	}
+	
+	
+	public void setPreviousSsid(String previousSsid) {
+		this.saveString(PreyConfig.PREVIOUS_SSID, previousSsid);
+	}
+	
+	public String getPreviousSsid() {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return settings.getString(PreyConfig.PREVIOUS_SSID, previousSsid);
+	}
+	
+	public String getLastEvent() {
+		return lastEvent;
+	}
+
+	public void setLastEvent(String lastEvent) {
+		this.lastEvent = lastEvent;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(PreyConfig.LAST_EVENT, lastEvent);
+		editor.commit();
+		
+	}
+	
+	
+	
 }

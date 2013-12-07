@@ -100,7 +100,6 @@
     <string name="error_registered_password_has_changed">Det gick inte att ändra lösenordet. Det angivna nuvarande lösenordet är felaktigt.</string>
     <string name="error_cant_report_forgotten_password">Det gick inte att rapportera bortglömt lösenord. Försök igen senare.</string>
     <string name="error_all_fields_are_required">Alla fält är obligatoriska</string>
-    <string name="prey_version">0.5.9</string>
     <string name="change">Ändra</string>
     <string name="accept">Godkänn</string>
     <string name="already_prey_user">Redan Prey-användare</string>

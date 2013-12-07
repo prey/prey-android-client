@@ -100,7 +100,6 @@
     <string name="error_registered_password_has_changed">Nie można zmienić hasła. Hasło do Panelu Sterowania Prey uległo zmianie od czasu ostatniej wizyty.</string>
     <string name="error_cant_report_forgotten_password">Nie można zgłosić zapomnianego hasła. Spróbuj później.</string>
     <string name="error_all_fields_are_required">Wszystkie pola są wymagane</string>
-    <string name="prey_version">0.5.9</string>
     <string name="change">Zmień</string>
     <string name="accept">Akceptuj</string>
     <string name="already_prey_user">Obecny użytkownik Prey</string>

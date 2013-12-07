@@ -6,13 +6,18 @@
  ******************************************************************************/
 package com.prey.net;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
@@ -38,7 +43,9 @@ import android.content.Context;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.R;
 
+import com.prey.exceptions.PreyException;
 import com.prey.net.http.EntityFile;
 import com.prey.net.http.SimpleMultipartEntity;
 
@@ -333,6 +340,70 @@ public class PreyRestHttpClient {
 		return "Prey/".concat(PreyConfig.getPreyConfig(ctx).getPreyVersion()).concat(" (Android) - v") + PreyConfig.getPreyConfig(ctx).getPreyMinorVersion();
 	}
 
+	public String getStringUrl(String url,PreyConfig preyConfig) throws Exception {
+
+		PreyLogger.i("getStringUrl("+url+")");
+		Map<String, String> parameters = new HashMap<String, String>();
+		try {
+			return PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig).getResponseAsString();
+		} catch (IOException e) {
+			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
+		}
+		
+		 
+	}
+	public PreyHttpResponse get(String url) throws IOException {
+		HttpGet method = new HttpGet(url);
+		PreyLogger.d("Sending using 'GET' - URI: " + method.getURI());
+		HttpResponse httpResponse = httpclient.execute(method);
+		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
+		PreyLogger.d("Response from server: " + response.toString());
+		return response;
+	}
+	
+	public StringBuilder getStringHttpResponse(HttpResponse httpResponse) throws Exception {
+
+
+		HttpEntity httpEntity = null;
+		InputStream is = null;
+		InputStreamReader input = null;
+		BufferedReader reader = null;
+		StringBuilder sb = null;
+		try {
+			httpEntity = httpResponse.getEntity();
+			is = httpEntity.getContent();
+			input = new InputStreamReader(is, "iso-8859-1");
+			reader = new BufferedReader(input, 8);
+			sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+
+			sb.toString().trim();
+		} catch (IllegalStateException e) {
+			
+		} catch (Exception e) {
+			PreyLogger.e("Buffer Error, Error converting result " + e.toString(), e);
+		} finally {
+			try {
+				if(is!=null)
+					is.close();
+			} catch (IOException e) {
+			}
+			try {
+				if(reader!=null)
+					reader.close();
+			} catch (IOException e) {
+			}
+			try {
+				if(input!=null)
+					input.close();
+			} catch (IOException e) {
+			}
+		}
+		return sb;
+	}
 }
 
 final class NotRedirectHandler implements RedirectHandler {
