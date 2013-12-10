@@ -136,7 +136,9 @@ public class PreyConfig {
 	private int flagFeedback;
 	
 	private boolean keepOn;
-	 
+	
+	private boolean run;
+	
 	private Context ctx;
 
 	private PreyConfig(Context ctx) {
@@ -572,7 +574,7 @@ public class PreyConfig {
 
 	public String getPreyUrl() {
 		String subdomain = FileConfigReader.getInstance(this.ctx).getPreySubdomain();
-		return "https://".concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
+		return "http://".concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
 	}
 	
 	public String getPreyUrl2() {
@@ -656,6 +658,12 @@ public class PreyConfig {
 		
 	}
 	
-	
+	public boolean isRun() {
+		return run;
+	}
+
+	public void setRun(boolean run) {
+		this.run = run;
+	}
 	
 }

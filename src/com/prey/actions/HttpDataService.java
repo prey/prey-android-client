@@ -10,6 +10,7 @@ package com.prey.actions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.prey.net.http.EntityFile;
 
@@ -35,6 +36,26 @@ public class HttpDataService {
 		entityFiles= new ArrayList<EntityFile>();
 	}
 
+	public HashMap<String, String> getReportAsParameters() {
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		if (isList()) {
+			StringBuffer key = new StringBuffer();
+			for (String valueKey : dataList.keySet()) {
+				String valueData = dataList.get(valueKey);
+				key.append("");
+				key.append(this.key);
+				key.append("[");
+				key.append(valueKey);
+				key.append("]");
+				parameters.put(key.toString(), valueData);
+				key.delete(0, key.length());
+			}
+			key = null;
+		} else
+			parameters.put(" "+key+" ", singleData);
+
+		return parameters;
+	}
 	public HashMap<String, String> getDataAsParameters() {
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		if (isList()) {
@@ -96,6 +117,10 @@ public class HttpDataService {
 
 	public void setSingleData(String singleData) {
 		this.singleData = singleData;
+	}
+	
+	public void putData(Map<String, String> dataList){
+		this.dataList.putAll(dataList);
 	}
 
 	public boolean isList() {

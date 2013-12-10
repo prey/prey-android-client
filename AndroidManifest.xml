@@ -8,8 +8,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
     android:installLocation="internalOnly"
-    android:versionCode="35"
-    android:versionName="0.5.5" >
+    android:versionCode="54"
+    android:versionName="1" >
     
     <uses-sdk
         android:minSdkVersion="4"
@@ -203,7 +203,7 @@
         <service android:name="com.prey.services.PreyBootService" />
         <service android:name="com.prey.services.PreyRunnerService" />
         <service android:name="com.prey.services.PreyKeepOnService" />
-        
+        <service android:name="com.prey.beta.services.PreyBetaRunnerService" />
 
         <!-- Receivers -->
         <receiver android:name="com.prey.receivers.SmsReceiver">

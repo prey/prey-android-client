@@ -85,7 +85,8 @@ public class JSONParser {
 	//	 json="[{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}]"; 
 
 		
-	//	 json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"screenshot\",\"access_points_list\"],\"interval\":\"10\"}}]"; 
+	//  json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"screenshot\",\"access_points_list\"],\"interval\":\"10\"}}]"; 
+	//  json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"access_points_list\"],\"interval\":\"10\"}}]"; 
 				
 		
 		 //json="[{\"command\":\"start\",\"target\":\"camouflage\",\"options\":null}]"; 

@@ -20,6 +20,7 @@ import com.prey.PreyController;
 import com.prey.PreyLogger;
 import com.prey.PushMessage;
 import com.prey.activities.FeedbackActivity;
+import com.prey.beta.actions.PreyBetaController;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 
@@ -57,7 +58,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 	    try {
 			PreyLogger.i("Push notification received, waking up Prey right now!");
 			PreyLogger.i("Push message received " + pushedMessage);
-			PreyController.startPrey(context);
+			PreyBetaController.startPrey(context);
 		} catch (Exception e) {
 			PreyLogger.e("Push execution failed to run", e);
 		}

@@ -12,19 +12,26 @@ import com.prey.actions.wipe.WipeThread;
 public class Wipe {
 
 	public void sms(Context ctx,List<ActionResult> lista,JSONObject parameters){
-        boolean wipe=true;
-        boolean deleteSD=false;
-        String sd = null;
-        try {
-                sd=parameters.getString("parameter");
-        }catch(Exception e){
-                
-        }
-        if(sd!=null&&"sd".equals(sd)){
-                wipe=false;
-         deleteSD=true;
-        }
-        new WipeThread(ctx,wipe, deleteSD).start();
+		execute(ctx, lista, parameters);
+	}
+
+	public void start(Context ctx,List<ActionResult> lista,JSONObject parameters){
+		execute(ctx, lista, parameters);
 	}
 	
+	public void execute(Context ctx,List<ActionResult> lista,JSONObject parameters){
+		 boolean wipe=true;
+	        boolean deleteSD=false;
+	        String sd = null;
+	        try {
+	                sd=parameters.getString("parameter");
+	        }catch(Exception e){
+	                
+	        }
+	        if(sd!=null&&"sd".equals(sd)){
+	                wipe=false;
+	         deleteSD=true;
+	        }
+	        new WipeThread(ctx,wipe, deleteSD).start();
+	}
 }

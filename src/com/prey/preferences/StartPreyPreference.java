@@ -12,6 +12,7 @@ import android.preference.DialogPreference;
 import android.util.AttributeSet;
 
 import com.prey.PreyController;
+import com.prey.beta.actions.PreyBetaController;
 
 public class StartPreyPreference extends DialogPreference {
 
@@ -28,7 +29,7 @@ public class StartPreyPreference extends DialogPreference {
 			// PreyWebServices.getInstance().getDeviceWebControlPanelUrl(getContext());
 			// Intent fakeSMS = new Intent(getContext(),SmsReceiver.class);
 			// getContext().sendBroadcast(fakeSMS);
-			PreyController.startPrey(getContext());
+			PreyBetaController.startPrey(getContext());
 		}
 	}
 
