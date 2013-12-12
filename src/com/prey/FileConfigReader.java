@@ -62,6 +62,10 @@ public class FileConfigReader {
 		return properties.getProperty("prey-domain");
 	}
 	
+	public String getPreyDomain2(){
+		return properties.getProperty("prey-domain2");
+	}
+	
 	public String getPreySubdomain(){
 		return properties.getProperty("prey-subdomain");
 	}

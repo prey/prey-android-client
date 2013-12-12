@@ -46,10 +46,19 @@ public class C2DMReceiver extends BroadcastReceiver {
 			PreyLogger.i("key_:"+key+" value:"+intent.getExtras().getString(key));
 		}
 		String version=intent.getExtras().getString("version");
+		
+		String body=intent.getExtras().getString("body");
+		
+		
 		if ("beta".equals(version)){
 			handleMessageBeta(context, pushedMessage);
 		}else{
-			handleMessageMaster(context, pushedMessage);
+			if (body!=null&&!"".equals(body)){
+				handleMessageMaster(context, body);
+			}else{
+				handleMessageMaster(context, pushedMessage);
+			}
+			
 		}
 	}
 	
@@ -72,7 +81,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		if (pushedMessage != null) {
 		 
 			try {
-				PushMessage pMessage = new PushMessage(pushedMessage);
+				//PushMessage pMessage = new PushMessage(pushedMessage);
 				
 				boolean feedback = pushedMessage.indexOf("feedback") >= 0;
 				feedback=false;
@@ -91,9 +100,9 @@ public class C2DMReceiver extends BroadcastReceiver {
 							PreyController.stopPrey(context);
 						}
 					}
-					PreyConfig.getPreyConfig(context).setRunOnce(pMessage.getBody().indexOf("run_once") >= 0);
+					PreyConfig.getPreyConfig(context).setRunOnce(pushedMessage.indexOf("run_once") >= 0);
 				}
-			} catch (PreyException e) {
+			} catch (Exception e) {
 				PreyLogger.e("Push execution failed to run", e);
 			}
 		}

@@ -102,7 +102,7 @@ public class EventManager {
 					if(!Event.WIFI_CHANGED.equals(event.getName()) || !event.getName().equals(lastEvent)){
 						PreyConfig.getPreyConfig(ctx).setLastEvent(event.getName());
 						PreyLogger.i("event name[" + this.event.getName() + "], info[" + this.event.getInfo() + "]");
-						PreyWebServices.getInstance().sendPreyHttpEvent(ctx, event, jsonObjectStatus);
+						new EventThread(ctx, event, jsonObjectStatus).start();
 					}
 				}
 			}

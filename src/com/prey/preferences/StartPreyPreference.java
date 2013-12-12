@@ -29,7 +29,9 @@ public class StartPreyPreference extends DialogPreference {
 			// PreyWebServices.getInstance().getDeviceWebControlPanelUrl(getContext());
 			// Intent fakeSMS = new Intent(getContext(),SmsReceiver.class);
 			// getContext().sendBroadcast(fakeSMS);
-			PreyBetaController.startPrey(getContext());
+			//PreyBetaController.startPrey(getContext());
+			
+			PreyController.startPrey(getContext());
 		}
 	}
 

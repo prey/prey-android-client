@@ -363,7 +363,7 @@ public class PreyWebServices {
 		parameters.put("device["+key+"]", value);
 
 		try {
-			//String url=this.getDeviceUrl2(ctx);
+			//String url=this.getDeviceUrl2(ctx)+".json";
 		    String url=this.getDeviceUrl(ctx);
 			PreyLogger.i("updateDeviceAttribute url:"+url);
 			PreyRestHttpClient.getInstance(ctx).methodAsParameter(url,"PUT", parameters, preyConfig);
@@ -539,7 +539,9 @@ public class PreyWebServices {
 	}
 	
 	 private String getReportUrlJson(Context ctx) throws PreyException{
-		 return getDeviceUrl(ctx).concat("/reports");
+		 String url=getDeviceUrl(ctx);
+		 url=url.replaceAll(".xml", "");
+		 return url.concat("/reports");
 	 }
 		
 	 public static String getFileUrlJson(Context ctx) throws PreyException{
@@ -675,7 +677,7 @@ public class PreyWebServices {
 	
 	public void sendPreyHttpEvent(Context ctx, Event event, JSONObject jsonObject){
 		try {
-			String url =getEventsUrlJson(ctx);
+			String url =getEventsUrlJson(ctx)+".json";
 			Map<String, String> parameters = new HashMap<String, String>();
 			parameters.put("name", event.getName());
 			parameters.put("info", event.getInfo());
@@ -688,6 +690,7 @@ public class PreyWebServices {
 			PreyHttpResponse preyHttpResponse= PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters, PreyConfig.getPreyConfig(ctx));
 			runActionJson(ctx,preyHttpResponse);
 		} catch (Exception e) {
+			PreyLogger.i("message:"+e.getMessage());
 			PreyLogger.e("Event wasn't send",e);
 		} 
 	}
@@ -772,16 +775,16 @@ public class PreyWebServices {
 	 
 		PreyHttpResponse preyHttpResponse=null;
 		try {
-			String URL =getReportUrlJson(ctx);
+			String url =getReportUrlJson(ctx)+".xml";
 			//String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
 			PreyConfig.postUrl = null;
-			
+			PreyLogger.i("report url:"+url);
 			
 			
 			if (entityFiles.size()==0)
-				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(URL, parameters, preyConfig);
+				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig);
 			else
-				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(URL, parameters, preyConfig,entityFiles);
+				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig,entityFiles);
 			PreyLogger.d("Report sent: " + preyHttpResponse.getResponseAsString());
 			PreyGoogleAnalytics.getInstance().trackAsynchronously(ctx,"Report/Sent");
 			if (preyConfig.isShouldNotify()) {

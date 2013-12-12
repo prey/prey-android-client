@@ -51,6 +51,8 @@ public class Report  {
 				}
 				if (listData!=null&&listData.size()>0){
 					PreyHttpResponse response=PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
+					PreyLogger.i("response.getStatusLine():"+response.getStatusLine());
+					
 					if (200!=response.getStatusLine().getStatusCode()){
 						preyConfig.setMissing(false);
 					}else{

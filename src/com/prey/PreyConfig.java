@@ -562,6 +562,10 @@ public class PreyConfig {
 		return FileConfigReader.getInstance(this.ctx).getPreyDomain();
 	}
 	
+	public String getPreyDomain2() {
+		return FileConfigReader.getInstance(this.ctx).getPreyDomain2();
+	}
+	
 	public String getc2dmAction(){
 		return FileConfigReader.getInstance(this.ctx).getc2dmAction();
 	}
@@ -580,9 +584,9 @@ public class PreyConfig {
 	public String getPreyUrl2() {
            String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain2();
            if(uiSubdomain!=null||!"".equals(uiSubdomain))
-                   return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+                   return "http://".concat(uiSubdomain).concat(".").concat(getPreyDomain2()).concat("/");
            else
-                   return "https://".concat(getPreyDomain()).concat("/");
+                   return "http://".concat(getPreyDomain2()).concat("/");
     }
 	   
 	public String getPreyUiUrl() {
