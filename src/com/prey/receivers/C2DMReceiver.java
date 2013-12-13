@@ -18,11 +18,10 @@ import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
 import com.prey.PreyController;
 import com.prey.PreyLogger;
-import com.prey.PushMessage;
 import com.prey.activities.FeedbackActivity;
 import com.prey.beta.actions.PreyBetaController;
-import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
+import com.prey.util.PreyTime;
 
 public class C2DMReceiver extends BroadcastReceiver {
 
@@ -36,15 +35,10 @@ public class C2DMReceiver extends BroadcastReceiver {
 	}
 
 	private void handleMessage(Context context, Intent intent) {
- 
+		PreyLogger.i("PUSH_______________");
 		String pushedMessage = intent.getExtras().getString(PreyConfig.getPreyConfig(context).getc2dmAction());
 		
-		Set<String> set=intent.getExtras().keySet();
-		Iterator<String>  ite=set.iterator();
-		while(ite.hasNext()){
-			String key=ite.next();
-			PreyLogger.i("key_:"+key+" value:"+intent.getExtras().getString(key));
-		}
+		 
 		String version=intent.getExtras().getString("version");
 		
 		String body=intent.getExtras().getString("body");
@@ -74,37 +68,42 @@ public class C2DMReceiver extends BroadcastReceiver {
 	}
 	private void handleMessageMaster(Context context, String pushedMessage) {	
 		 
-		
- 
-		PreyLogger.i("Push notification received, waking up Prey right now!");
-		PreyLogger.i("Push message received " + pushedMessage);
-		if (pushedMessage != null) {
+		if(PreyTime.getInstance().isTimeC2dm()){
+			PreyTime.getInstance().setTimeC2dm();
 		 
-			try {
+ 
+			PreyLogger.i("Push notification received, waking up Prey right now!");
+			PreyLogger.i("Push message received " + pushedMessage);
+			if (pushedMessage != null) {
+		 
+				try {
 				//PushMessage pMessage = new PushMessage(pushedMessage);
 				
-				boolean feedback = pushedMessage.indexOf("feedback") >= 0;
-				feedback=false;
-				if (feedback) {
-					PreyConfig.getPreyConfig(context).setFlagFeedback(FeedbackActivity.FLAG_FEEDBACK_C2DM);
-				} else {
-					boolean shouldPerform = pushedMessage.indexOf("run") >= 0;
-					boolean shouldStop = pushedMessage.indexOf("stop") >= 0;
-					shouldPerform=true;
-					if (shouldPerform) {
-						PreyLogger.i("Push notification received, waking up Prey right now!");
-						PreyController.startPrey(context);
+					boolean feedback = pushedMessage.indexOf("feedback") >= 0;
+					feedback=false;
+					if (feedback) {
+						PreyConfig.getPreyConfig(context).setFlagFeedback(FeedbackActivity.FLAG_FEEDBACK_C2DM);
 					} else {
-						if (shouldStop) {
-							PreyLogger.i("Push notification received, stopping Prey!");
-							PreyController.stopPrey(context);
+						boolean shouldPerform = pushedMessage.indexOf("run") >= 0;
+						boolean shouldStop = pushedMessage.indexOf("stop") >= 0;
+						shouldPerform=true;
+						if (shouldPerform) {
+							PreyLogger.i("Push notification received, waking up Prey right now!");
+							PreyController.startPrey(context);
+						} else {
+							if (shouldStop) {
+								PreyLogger.i("Push notification received, stopping Prey!");
+								PreyController.stopPrey(context);
+							}
 						}
+						PreyConfig.getPreyConfig(context).setRunOnce(pushedMessage.indexOf("run_once") >= 0);
 					}
-					PreyConfig.getPreyConfig(context).setRunOnce(pushedMessage.indexOf("run_once") >= 0);
+				} catch (Exception e) {
+					PreyLogger.e("Push execution failed to run", e);
 				}
-			} catch (Exception e) {
-				PreyLogger.e("Push execution failed to run", e);
 			}
+		}else{
+			PreyLogger.i("uuups");
 		}
 	}
 

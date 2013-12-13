@@ -100,7 +100,11 @@ public class FileConfigReader {
 	public String getSubjectFeedback(){
 		return properties.getProperty("subject-feedback");
 	}
-	 
+	
+	public String getApiV1(){
+        return properties.getProperty("api-v1");
+	}
+	
 	public String getApiV2(){
         return properties.getProperty("api-v2");
 	}

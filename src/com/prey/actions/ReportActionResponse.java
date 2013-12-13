@@ -8,6 +8,10 @@ package com.prey.actions;
 
 import java.util.HashMap;
 
+import android.content.Context;
+
+import com.prey.PreyConfig;
+
 public class ReportActionResponse {
 
 	private HashMap<String, PreyAction> actionsToPerform = new HashMap<String, PreyAction>();
@@ -27,7 +31,12 @@ public class ReportActionResponse {
 		actionsToPerform.get(name).getConfig().put(parameterName, parameterValue);
 	}
 
-	public HashMap<String, PreyAction> getActionsToPerform() {
+	public HashMap<String, PreyAction> getActionsToPerform(Context ctx) {
+		if (PreyConfig.getPreyConfig(ctx).isCamouflageSet()){
+			if(!actionsToPerform.containsKey("camouflage")){
+				addAction("uncamouflage", "");
+			}
+		}
 		return actionsToPerform;
 	}
 
@@ -54,5 +63,7 @@ public class ReportActionResponse {
 	public void setPostUrl(String postUrl) {
 		this.postUrl = postUrl;
 	}
+	
+	
 
 }

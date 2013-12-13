@@ -108,7 +108,7 @@ public class ActionsRunnner {
 				boolean isMissing = preyControlStatus.isMissing();
 				PreyConfig.getPreyConfig(ctx).setMissing(isMissing);
 				if (runIfNotMissing || (!runIfNotMissing && isMissing)){
-					actions = PreyAction.getActionsFromPreyControlStatus(preyControlStatus);
+					actions = PreyAction.getActionsFromPreyControlStatus(ctx,preyControlStatus);
 					preyConfig.unlockIfLockActionIsntEnabled(actions);
 					ActionsController.getInstance(ctx).stopUnselectedModules(actions);
 					ActionsController.getInstance(ctx).runActionGroup(actions,waitNotify,isMissing);

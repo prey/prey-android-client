@@ -337,7 +337,9 @@ public class PreyRestHttpClient {
 	}
 
 	private String getUserAgent() {
-		return "Prey/".concat(PreyConfig.getPreyConfig(ctx).getPreyVersion()).concat(" (Android) - v") + PreyConfig.getPreyConfig(ctx).getPreyMinorVersion();
+		String userAgent= "Prey/".concat(PreyConfig.getPreyConfig(ctx).getPreyVersion()).concat(" (Android) - v") + PreyConfig.getPreyConfig(ctx).getPreyMinorVersion();
+		PreyLogger.i("userAgent:"+userAgent);
+		return userAgent;
 	}
 
 	public String getStringUrl(String url,PreyConfig preyConfig) throws Exception {

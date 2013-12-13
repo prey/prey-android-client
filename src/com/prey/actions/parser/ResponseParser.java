@@ -60,7 +60,7 @@ public class ResponseParser {
 		sb.append("<wipe_documents>n</wipe_documents>");
 		sb.append("</module>");
 	    
-	
+	    sb.append("<module name="camouflage" type="action" version="0.1" active="true"/>");	
  
 		
 		

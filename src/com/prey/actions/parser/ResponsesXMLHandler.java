@@ -11,6 +11,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.prey.PreyConfig;
+import com.prey.PreyLogger;
 import com.prey.actions.ReportActionResponse;
 
 public class ResponsesXMLHandler extends DefaultHandler {
@@ -75,6 +76,7 @@ public class ResponsesXMLHandler extends DefaultHandler {
 				String active = atts.getValue("active");
 
 				actionResponse.addAction(name, active);
+				PreyLogger.i("name:"+name+" active:"+active);
 			}
 		}
 		if (inModule) {

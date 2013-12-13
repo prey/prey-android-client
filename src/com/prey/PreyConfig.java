@@ -631,6 +631,7 @@ public class PreyConfig {
 	
 	public void setCamouflageSet(boolean camouflageSet){
 		this.camouflageSet=camouflageSet;
+		this.saveBoolean(PreyConfig.IS_CAMOUFLAGE_SET,camouflageSet);
 	}
 	
 	public String getApiKeyBatch() {

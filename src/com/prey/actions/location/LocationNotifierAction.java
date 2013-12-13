@@ -84,7 +84,7 @@ public class LocationNotifierAction extends PreyAction {
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
-					throw new PreyException("Thread was intrrupted. Finishing Location NotifierAction", e);
+					//throw new PreyException("Thread was intrrupted. Finishing Location NotifierAction", e);
 				}
 		}
 

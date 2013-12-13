@@ -186,7 +186,9 @@ public class PreyWebServices {
 
 		PreyHttpResponse response = null;
 		try {
-			response = PreyRestHttpClient.getInstance(ctx).post(PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("devices.xml"), parameters, preyConfig);
+			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("devices.xml");
+			PreyLogger.i("url:"+url);
+			response = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig);
 			// No more devices allowed
 			if ((response.getStatusLine().getStatusCode() == 302) || (response.getStatusLine().getStatusCode() == 422)) {
 				throw new NoMoreDevicesAllowedException(ctx.getText(R.string.set_old_user_no_more_devices_text).toString());
@@ -204,7 +206,9 @@ public class PreyWebServices {
 		PreyHttpResponse response=null;
 		String xml;
 		try {
-			response=PreyRestHttpClient.getInstance(ctx).get(PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("profile.xml"), parameters, preyConfig, email, password);
+			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("profile.xml");
+			PreyLogger.i("url:"+url);
+			response=PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig, email, password);
 			xml = response.getResponseAsString(); 
 		} catch (IOException e) {
 			PreyLogger.e("Error!",e);
@@ -283,12 +287,12 @@ public class PreyWebServices {
 
 		String response = null;
 		try {
-			String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
+			String url = PreyConfig.postUrl != null ? PreyConfig.postUrl : getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
 			PreyConfig.postUrl = null;
 			if (entityFiles.size()==0)
-				response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig).getResponseAsString();
+				response = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig).getResponseAsString();
 			else
-				response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig,entityFiles).getResponseAsString();
+				response = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig,entityFiles).getResponseAsString();
 			PreyLogger.i("Report sent: " + response);
 			try{
 				GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
@@ -471,9 +475,15 @@ public class PreyWebServices {
 
 		Map<String, String> parameters = new HashMap<String, String>();
 		try {
-			return PreyRestHttpClient.getInstance(ctx).get(this.getDeviceUrl(ctx), parameters, preyConfig).getResponseAsString();
+			String url=getDeviceUrl(ctx)+".xml";
+			return PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig).getResponseAsString();
 		} catch (IOException e) {
-			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
+			try {
+				String url=getDeviceUrlApiv1(ctx)+".xml";
+				return PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig).getResponseAsString();
+			} catch (IOException e2) {
+				throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e2);
+			}		
 		}
 	}
 
@@ -570,6 +580,16 @@ public class PreyWebServices {
          String url=PreyConfig.getPreyConfig(ctx).getPreyUrl2().concat(apiv2).concat("devices/").concat(deviceKey);
          return url;
 	 }
+	 
+	private String getDeviceUrlApiv1(Context ctx) throws PreyException{
+			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+			String deviceKey = preyConfig.getDeviceID();
+			if (deviceKey == null || deviceKey == "")
+				throw new PreyException("Device key not found on the configuration");
+			String apiv1=FileConfigReader.getInstance(ctx).getApiV1();
+			String url=PreyConfig.getPreyConfig(ctx).getPreyUrl2().concat(apiv1).concat("devices/").concat(deviceKey);
+			return url;
+	}
 	 
 	private String getDeviceUrlApiv2(Context ctx) throws PreyException{
 			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
