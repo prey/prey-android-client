@@ -591,7 +591,9 @@ public class PreyConfig {
 	   
 	public String getPreyUiUrl() {
 		String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain();
-		return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+		//TODO:OSO SACAR
+		//return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+		return "http://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
 	}
 
 	public boolean askForPassword() {

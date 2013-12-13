@@ -366,7 +366,8 @@ public class PreyWebServices {
 			//String url=this.getDeviceUrl2(ctx)+".json";
 		    String url=this.getDeviceUrl(ctx);
 			PreyLogger.i("updateDeviceAttribute url:"+url);
-			PreyRestHttpClient.getInstance(ctx).methodAsParameter(url,"PUT", parameters, preyConfig);
+			PreyHttpResponse response= PreyRestHttpClient.getInstance(ctx).methodAsParameter(url,"PUT", parameters, preyConfig);
+			PreyLogger.i("response:"+response.getResponseAsString());
 			PreyLogger.i("Update device attribute ["+ key + "] with value: " + value);
 		} catch (IOException e) {
 			e.printStackTrace();

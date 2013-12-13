@@ -21,11 +21,11 @@ public class EventThread extends Thread  {
 	}
 	 
 	public void run() {
-		/* try {
+		  try {
 	        	PreyWebServices.getInstance().sendPreyHttpEvent(ctx, event, jsonObjectStatus);
 	     } catch (Exception e) {
 	            e.printStackTrace();
-	     }*/
+	     }
 	}
 
 }

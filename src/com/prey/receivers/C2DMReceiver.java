@@ -50,7 +50,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		String body=intent.getExtras().getString("body");
 		
 		
-		if ("beta".equals(version)){
+		if ("beta".equals(version)||"v2".equals(version)){
 			handleMessageBeta(context, pushedMessage);
 		}else{
 			if (body!=null&&!"".equals(body)){
