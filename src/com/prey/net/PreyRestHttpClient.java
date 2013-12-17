@@ -110,7 +110,7 @@ public class PreyRestHttpClient {
 		params.put("_method", methodAsString);
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
 		// method.setQueryString(getHttpParamsFromMap(params));
-		PreyLogger.d("Sending using " + methodAsString + "(using _method) - URI: " + url + " - parameters: " + params.toString());
+		PreyLogger.d("Sending using user,pass " + methodAsString + "(using _method) - URI: " + url + " - parameters: " + params.toString());
 		return sendUsingMethodUsingCredentials(method, preyConfig, user, pass);
 	}
 

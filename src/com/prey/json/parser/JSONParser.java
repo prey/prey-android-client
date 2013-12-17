@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,7 +22,8 @@ public class JSONParser {
 	boolean error;
 
 	private final static String COMMAND = "\"command\"";
-
+	private final static String TARGET  = "\"target\"";
+	
 	// constructor
 	public JSONParser() {
 
@@ -91,14 +93,35 @@ public class JSONParser {
 		
 		 //json="[{\"command\":\"start\",\"target\":\"camouflage\",\"options\":null}]"; 
 		// json="[{\"command\":\"stop\",\"target\":\"camouflage\",\"options\":null}]"; 
+		
+		
+		//json="[{\"target\":\"alert\",\"command\":\"start\",\"options\":{\"alert_message\":\"This device is stolen property. Please contact testforkhq@gmail.com to arrange its safe return.\"}},{\"target\":\"lock\",\"command\":\"start\",\"options\":{\"unlock_pass\":\"oso\"}},{\"command\":\"get\",\"target\":\"location\"},{\"target\":\"network\",\"command\":\"start\"},{\"target\":\"geo\",\"command\":\"start\"}]";
+				
 		 
 		if ("[]".equals(json)) {
 			return null;
 		}
 		return getJSONFromTxt(ctx, json);
 	}
-
+	
 	public List<JSONObject> getJSONFromTxt(Context ctx, String json) {
+		List<JSONObject> listaJson = new ArrayList<JSONObject>();
+		json="{\"oso\":"+json+"}"; 
+		try{
+			JSONObject jsnobject = new JSONObject(json);
+			JSONArray jsonArray = jsnobject.getJSONArray("oso");
+			for (int i = 0; i < jsonArray.length(); i++) {
+				JSONObject explrObject = jsonArray.getJSONObject(i);
+				PreyLogger.i(explrObject.toString());
+				listaJson.add(explrObject);
+			}
+		}catch(Exception e){
+		 
+		}
+		return listaJson;
+	}
+	
+	public List<JSONObject> getJSONFromTxt2(Context ctx, String json) {
 		jObj = null;
 		List<JSONObject> listaJson = new ArrayList<JSONObject>();
 		List<String> listCommands = getListCommands(json);
@@ -115,8 +138,34 @@ public class JSONParser {
 		// return JSON String
 		return listaJson;
 	}
-
+	
 	private List<String> getListCommands(String json) {
+		if (json.indexOf("[{"+COMMAND)==0){
+			return getListCommandsCmd(json);
+		}else{
+			return getListCommandsTarget(json);
+		}
+	}
+	
+	private List<String> getListCommandsTarget(String json) {
+		json = json.replaceAll("nil", "{}");
+		json = json.replaceAll("null", "{}");
+		List<String> lista = new ArrayList<String>();
+		int posicion = json.indexOf(TARGET);
+		json = json.substring(posicion + 8);
+		posicion = json.indexOf(TARGET);
+		String command = "";
+		while (posicion > 0) {
+			command = json.substring(0, posicion);
+			json = json.substring(posicion + 8);
+			lista.add("{" + TARGET + cleanChar(command));
+			posicion = json.indexOf("\"target\"");
+		}
+		lista.add("{" + TARGET + cleanChar(json));
+		return lista;
+	}
+	
+	private List<String> getListCommandsCmd(String json) {
 		json = json.replaceAll("nil", "{}");
 		json = json.replaceAll("null", "{}");
 		List<String> lista = new ArrayList<String>();

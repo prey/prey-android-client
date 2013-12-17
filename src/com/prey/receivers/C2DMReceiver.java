@@ -40,6 +40,9 @@ public class C2DMReceiver extends BroadcastReceiver {
 		
 		 
 		String version=intent.getExtras().getString("version");
+		if(pushedMessage!=null&&pushedMessage.indexOf("v2")>0){
+			version="v2";
+		}
 		
 		String body=intent.getExtras().getString("body");
 		

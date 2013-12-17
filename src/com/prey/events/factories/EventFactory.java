@@ -74,9 +74,6 @@ public class EventFactory {
 		if (BATTERY_LOW.equals(intent.getAction()) ){
 			return new Event(Event.BATTERY_LOW);
 		}
-		if (USER_PRESENT.equals(intent.getAction()) ){
-			return new Event(Event.BATTERY_OK);
-		}
 		if (BATTERY_OKAY.equals(intent.getAction()) ){
 			return new Event(Event.BATTERY_OK);
 		}

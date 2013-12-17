@@ -475,11 +475,13 @@ public class PreyWebServices {
 
 		Map<String, String> parameters = new HashMap<String, String>();
 		try {
-			String url=getDeviceUrl(ctx)+".xml";
+			String url=getDeviceUrl(ctx);
+			PreyLogger.i("getActionsToPerform:"+url);
 			return PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig).getResponseAsString();
 		} catch (IOException e) {
 			try {
 				String url=getDeviceUrlApiv1(ctx)+".xml";
+				PreyLogger.i("getActionsToPerform2:"+url);
 				return PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig).getResponseAsString();
 			} catch (IOException e2) {
 				throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e2);
@@ -818,7 +820,9 @@ public class PreyWebServices {
 	}
 	
 	public List<JSONObject> getActionsJsonToPerform(Context ctx) throws PreyException {
-		List<JSONObject> lista=new JSONParser().getJSONFromUrl(ctx,getDeviceUrlJson2(ctx)); 
+		String url=getDeviceUrlJson2(ctx);
+		PreyLogger.i("url:"+url);
+		List<JSONObject> lista=new JSONParser().getJSONFromUrl(ctx,url); 
 	 
 		return lista;
 	}

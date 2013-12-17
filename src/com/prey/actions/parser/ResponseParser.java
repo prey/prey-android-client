@@ -18,6 +18,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import com.prey.PreyLogger;
 import com.prey.actions.ReportActionResponse;
 
 public class ResponseParser {
@@ -95,15 +96,19 @@ public class ResponseParser {
 		} catch (FactoryConfigurationError e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			PreyLogger.i("FactoryConfigurationError:"+e.getMessage());
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			PreyLogger.i("ParserConfigurationException:"+e.getMessage());
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			PreyLogger.i("SAXException:"+e.getMessage());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			PreyLogger.i("IOException:"+e.getMessage());
 		}
 
 		/* Our ExampleHandler now provides the parsed data to us. */

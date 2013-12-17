@@ -578,22 +578,20 @@ public class PreyConfig {
 
 	public String getPreyUrl() {
 		String subdomain = FileConfigReader.getInstance(this.ctx).getPreySubdomain();
-		return "http://".concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
+		return "https://".concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
 	}
 	
 	public String getPreyUrl2() {
            String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain2();
            if(uiSubdomain!=null||!"".equals(uiSubdomain))
-                   return "http://".concat(uiSubdomain).concat(".").concat(getPreyDomain2()).concat("/");
+                   return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain2()).concat("/");
            else
-                   return "http://".concat(getPreyDomain2()).concat("/");
+                   return "https://".concat(getPreyDomain2()).concat("/");
     }
 	   
 	public String getPreyUiUrl() {
 		String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain();
-		//TODO:OSO SACAR
-		//return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
-		return "http://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+		return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
 	}
 
 	public boolean askForPassword() {
