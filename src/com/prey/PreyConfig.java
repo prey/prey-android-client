@@ -96,6 +96,9 @@ public class PreyConfig {
 	public static final String INSTALLATION_DATE = "INSTALLATION_DATE"; 
 	public static final String FLAG_FEEDBACK = "FLAG_FEEDBACK"; 
 	public static final String KEEP_ON = "KEEP_ON";
+	public static final String VERSION = "VERSION";
+	public static final String VERSION_V1 = "V1";
+	public static final String VERSION_V2 = "V2";
 	
 	public static final String LAST_EVENT="LAST_EVENT";
 	public static final String PREVIOUS_SSID="PREVIOUS_SSID";
@@ -139,6 +142,9 @@ public class PreyConfig {
 	
 	private boolean run;
 	
+	
+	private String version;
+	
 	private Context ctx;
 
 	private PreyConfig(Context ctx) {
@@ -178,6 +184,8 @@ public class PreyConfig {
 
 		
 		this.lastEvent=settings.getString(PreyConfig.LAST_EVENT, "");
+		
+		this.version=settings.getString(PreyConfig.VERSION, VERSION_V1);
 	}
 	
 	public void saveAccount(PreyAccountData accountData) {
@@ -576,22 +584,24 @@ public class PreyConfig {
 		return FileConfigReader.getInstance(this.ctx).getAgreementId();
 	}
 
+	private static final String HTTP="https://";
+	
 	public String getPreyUrl() {
 		String subdomain = FileConfigReader.getInstance(this.ctx).getPreySubdomain();
-		return "https://".concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
+		return HTTP.concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
 	}
 	
 	public String getPreyUrl2() {
-           String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain2();
-           if(uiSubdomain!=null||!"".equals(uiSubdomain))
-                   return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain2()).concat("/");
-           else
-                   return "https://".concat(getPreyDomain2()).concat("/");
+        String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain2();
+        if(uiSubdomain!=null||!"".equals(uiSubdomain))
+           return HTTP.concat(uiSubdomain).concat(".").concat(getPreyDomain2()).concat("/");
+        else
+           return HTTP.concat(getPreyDomain2()).concat("/");
     }
 	   
 	public String getPreyUiUrl() {
 		String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain();
-		return "https://".concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+		return HTTP.concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
 	}
 
 	public boolean askForPassword() {
@@ -671,4 +681,12 @@ public class PreyConfig {
 		this.run = run;
 	}
 	
+	public void setVersion(String version) {
+		this.version=version;
+		this.saveString(PreyConfig.VERSION,version);
+	}
+	
+	public String getVersion() {
+		return version;
+	}
 }

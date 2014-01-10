@@ -6,9 +6,6 @@
  ******************************************************************************/
 package com.prey.receivers;
 
-import java.util.Iterator;
-import java.util.Set;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,26 +33,29 @@ public class C2DMReceiver extends BroadcastReceiver {
 
 	private void handleMessage(Context context, Intent intent) {
 		PreyLogger.i("PUSH_______________");
-		String pushedMessage = intent.getExtras().getString(PreyConfig.getPreyConfig(context).getc2dmAction());
+		PreyConfig config=PreyConfig.getPreyConfig(context);
+		String pushedMessage = intent.getExtras().getString(config.getc2dmAction());
 		
 		 
 		String version=intent.getExtras().getString("version");
-		if(pushedMessage!=null&&pushedMessage.indexOf("v2")>0){
-			version="v2";
+		if(pushedMessage!=null&&pushedMessage.indexOf(PreyConfig.VERSION_V2)>0){
+			version=PreyConfig.VERSION_V2;
 		}
 		
 		String body=intent.getExtras().getString("body");
 		
 		
-		if ("beta".equals(version)||"v2".equals(version)){
+		if ("beta".equals(version)||PreyConfig.VERSION_V2.equals(version)){
 			handleMessageBeta(context, pushedMessage);
+			config.setVersion(PreyConfig.VERSION_V2);
+			config.setMissing(false);
 		}else{
+			config.setVersion(PreyConfig.VERSION_V1);
 			if (body!=null&&!"".equals(body)){
 				handleMessageMaster(context, body);
 			}else{
 				handleMessageMaster(context, pushedMessage);
 			}
-			
 		}
 	}
 	
@@ -71,8 +71,8 @@ public class C2DMReceiver extends BroadcastReceiver {
 	}
 	private void handleMessageMaster(Context context, String pushedMessage) {	
 		 
-		if(PreyTime.getInstance().isTimeC2dm()){
-			PreyTime.getInstance().setTimeC2dm();
+		if(!PreyTime.getInstance().isRunning()){
+			PreyTime.getInstance().setRunning(true);
 		 
  
 			PreyLogger.i("Push notification received, waking up Prey right now!");

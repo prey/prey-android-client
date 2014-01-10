@@ -21,6 +21,7 @@ import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 import com.prey.services.LocationService;
 import com.prey.services.PreyRunnerService;
+import com.prey.util.PreyTime;
 
 public class ActionsRunnner {
 
@@ -56,13 +57,15 @@ public class ActionsRunnner {
 					try {
 						preyConfig.setRunOnce(false);
 						preyConfig.setMissing(true);
-						PreyWebServices.getInstance().setMissing(ctx, true);
+						//PreyWebServices.getInstance().setMissing(ctx, true);
 						boolean isMissing = getInstructionsAndRun(waitNotify, true);
 						PreyRunnerService.interval = preyControlStatus.getDelay();
 						PreyRunnerService.pausedAt = System.currentTimeMillis();
 						PreyLogger.d("Prey is set to run once. Waiting for the report to be sent (if any), then finishing");
 						if (isMissing) //Have to wait for the report being sent.
 							waitNotify.doWait();
+						
+						PreyWebServices.getInstance().setMissing(ctx, false);
 					} catch (PreyException e) {
 						PreyLogger.e("Error while running once: ",e);
 					}
@@ -70,8 +73,8 @@ public class ActionsRunnner {
 				else {
 					boolean isMissing = true;
 					preyConfig.setMissing(isMissing);
-					PreyWebServices.getInstance().setMissing(ctx, isMissing);
-					while (isMissing) {
+					//PreyWebServices.getInstance().setMissing(ctx, isMissing);
+					while (preyConfig.isMissing()) {
 						try {
 							isMissing = getInstructionsAndRun(waitNotify, false);
 							preyConfig.setMissing(isMissing);
@@ -96,6 +99,7 @@ public class ActionsRunnner {
 				ctx.stopService(new Intent(ctx, PreyRunnerService.class));
 				//PreyConfig.getPreyConfig(ctx).setShowLockScreen(false);
 				PreyLogger.d("Prey execution has finished!!");
+				PreyTime.getInstance().setRunning(false);
 			}
 		}
 		
@@ -119,37 +123,6 @@ public class ActionsRunnner {
 				throw e;
 			} 
 		}
-		
-		/*
-		private void notifyUser(PreyAction actionExecuted) {
-			String notificationTitle = this.ctx.getText(R.string.notification_title).toString();
-			NotificationManager nm = (NotificationManager) this.ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-			Notification notification = new Notification(R.drawable.prey_status_bar_icon, notificationTitle, System.currentTimeMillis());
-			notification.flags = Notification.FLAG_AUTO_CANCEL;
-
-			// In this version we redirect user to prey application
-			// ------------
-			// Set the info for the views that show in the notification panel.
-			// String url =
-			// PreyWebServices.getInstance().getDeviceWebControlPanelUrl(this.ctx);
-			// Intent notificationIntent = new Intent(Intent.ACTION_VIEW);
-			// notificationIntent.setData(Uri.parse(url));
-
-			Intent preyMainActivity = new Intent(this.ctx, WelcomeActivity.class);
-
-			String notificationToShow = actionExecuted.textToNotifyUserOnEachReport(ctx);
-			PendingIntent contentIntent = PendingIntent.getActivity(this.ctx, 0, preyMainActivity, 0);
-			notification.contentIntent = contentIntent;
-			notification.setLatestEventInfo(this.ctx, ctx.getText(R.string.notification_title), notificationToShow, contentIntent);
-
-			// Send the notification.
-			// We use a layout id because it is a unique number. We use it later
-			// to cancel.
-			nm.notify(R.string.preyForAndroid_name, notification);
-
-		}
-		*/
-		 
 
 	}
 

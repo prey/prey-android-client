@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.observer.ActionResult;
+import com.prey.json.UtilJson;
+import com.prey.net.PreyWebServices;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,7 +18,7 @@ public class Camouflage {
 
 	public static void hide(Context ctx, List<ActionResult> lista, JSONObject parameters) {
 		PreyLogger.i("hide start");
-		//PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "camouflage", "started"));
+		PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "camouflage", "started"));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(true);
 
         ComponentName componentToDisabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
@@ -27,7 +29,7 @@ public class Camouflage {
 
 	public static void unhide(Context ctx, List<ActionResult> lista, JSONObject options) {
 		PreyLogger.i("unhide start");
-        //PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "camouflage", "stopped"));
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "camouflage", "stopped"));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(false);
 
         ComponentName componentToEnabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");

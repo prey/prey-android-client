@@ -1,6 +1,7 @@
 package com.prey.actions.location;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -10,6 +11,8 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.exceptions.PreyException;
+import com.prey.json.UtilJson;
+import com.prey.net.PreyWebServices;
 import com.prey.services.LocationService;
 
 public class LocationUtil {
@@ -48,17 +51,17 @@ public class LocationUtil {
 
 			data.addDataListAll(parametersMap);
 
-			//ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
-			//dataToBeSent.add(data);
-			//PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
+			ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
+			dataToBeSent.add(data);
+			PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
 
 			ctx.stopService(intent);
 			PreyConfig.getPreyConfig(ctx).setMissing(false);
 
 		} catch (Exception e) {
 			PreyLogger.e("Error causa:" + e.getMessage() , e);
-			// PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,
-			// UtilJson.makeMapParam("get","location","failed",e.getMessage()));
+			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,
+			UtilJson.makeMapParam("get","location","failed",e.getMessage()));
 		}
 		return data;
 	}

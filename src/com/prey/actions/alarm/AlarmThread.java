@@ -8,6 +8,8 @@ import android.media.MediaPlayer;
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.R;
+import com.prey.json.UtilJson;
+import com.prey.net.PreyWebServices;
 
 public class AlarmThread extends Thread {
 
@@ -20,7 +22,7 @@ public class AlarmThread extends Thread {
         public void run() {
                 PreyLogger.d("Ejecuting Alarm Action");
                 MediaPlayer mp =null;
-               
+                boolean start=false;
                 try {
                        	PreyStatus.getInstance().setAlarmStart();
                         final AudioManager audio = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
@@ -34,8 +36,8 @@ public class AlarmThread extends Thread {
                         mp.start();
                         Mp3OnCompletionListener mp3Listener=new Mp3OnCompletionListener();
                         mp.setOnCompletionListener(mp3Listener);
-                      //  PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","started"));
-                        
+                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","started"));
+                        start=true;	
                         int i=0;
                         while(PreyStatus.getInstance().isAlarmStart()&& i<40 ){
                                 sleep(1000);
@@ -45,14 +47,14 @@ public class AlarmThread extends Thread {
                         PreyStatus.getInstance().setAlarmStop();
                 } catch (Exception e) {
                         PreyLogger.i("Error executing Mp3PlayerAction " + e.getMessage());
-                       // PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","failed",e.getMessage()));
+                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","failed",e.getMessage()));
                 }finally{
                         if(mp!=null)
                                         mp.release();
                 }
-               /* if (start){
+                if (start){
                         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","stopped"));
-                }*/
+                }
                 PreyLogger.i("Ejecuting Mp3PlayerAction Action[Finish]");
         }
         

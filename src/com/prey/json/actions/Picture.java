@@ -39,6 +39,9 @@ public class Picture extends JsonAction {
 		return PictureUtil.getPicture(ctx);
 	}
 
+	public HttpDataService start(Context ctx, List<ActionResult> list, JSONObject parameters){
+		return PictureUtil.getPicture(ctx);
+	}
        
         
         public List<HttpDataService> sms(Context ctx, List<ActionResult> list, JSONObject parameters) {

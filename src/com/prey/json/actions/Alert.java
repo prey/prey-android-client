@@ -9,6 +9,8 @@ import com.prey.actions.HttpDataService;
 import com.prey.actions.alert.AlertThread;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
+import com.prey.json.UtilJson;
+import com.prey.net.PreyWebServices;
 
 import android.content.Context;
 
@@ -47,7 +49,7 @@ public class Alert extends JsonAction{
                  }
          } catch (Exception e) {
                  PreyLogger.e("Error, causa:" + e.getMessage(), e);
-                 //PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","alert","failed",e.getMessage()));
+                 PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","alert","failed",e.getMessage()));
          }
 	 }
 }

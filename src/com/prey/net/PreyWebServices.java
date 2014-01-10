@@ -289,11 +289,13 @@ public class PreyWebServices {
 		try {
 			String url = PreyConfig.postUrl != null ? PreyConfig.postUrl : getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
 			PreyConfig.postUrl = null;
+			PreyHttpResponse  httpResponse=null;
 			if (entityFiles.size()==0)
-				response = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig).getResponseAsString();
+				httpResponse = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig);
 			else
-				response = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig,entityFiles).getResponseAsString();
-			PreyLogger.i("Report sent: " + response);
+				httpResponse = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig,entityFiles);
+			response=httpResponse.getResponseAsString();
+			PreyLogger.i("Report sent:["+httpResponse.getStatusLine()+"]" + response);
 			try{
 				GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
 			}catch(NullPointerException ex){
@@ -304,7 +306,7 @@ public class PreyWebServices {
 				this.notifyUser(ctx);
 			}
 		} catch (Exception e) {
-			PreyLogger.e("Report wasn't send",e);
+			PreyLogger.e("Report wasn't send:"+e.getMessage(),e);
 		}
 		return response;
 	}
@@ -472,17 +474,21 @@ public class PreyWebServices {
 
 	public String getActionsToPerform(Context ctx) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-
+        PreyHttpResponse response=null;
 		Map<String, String> parameters = new HashMap<String, String>();
 		try {
 			String url=getDeviceUrl(ctx);
 			PreyLogger.i("getActionsToPerform:"+url);
-			return PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig).getResponseAsString();
+			response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig);
+			PreyLogger.i("status:"+response.getStatusLine()+" "+response.getResponseAsString());
+			return response.getResponseAsString();
 		} catch (IOException e) {
 			try {
 				String url=getDeviceUrlApiv1(ctx)+".xml";
 				PreyLogger.i("getActionsToPerform2:"+url);
-				return PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig).getResponseAsString();
+				response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig);
+				PreyLogger.i("status:"+response.getStatusLine()+" "+response.getResponseAsString());
+				return response.getResponseAsString();
 			} catch (IOException e2) {
 				throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e2);
 			}		
@@ -814,7 +820,7 @@ public class PreyWebServices {
 				this.notifyUser(ctx);
 			}
 		} catch (Exception e) {
-			PreyLogger.e("Report wasn't send",e);
+			PreyLogger.e("Report wasn't send:"+e.getMessage(),e);
 		} 
 		return preyHttpResponse;
 	}

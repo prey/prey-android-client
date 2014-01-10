@@ -106,17 +106,18 @@ public class JSONParser {
 	
 	public List<JSONObject> getJSONFromTxt(Context ctx, String json) {
 		List<JSONObject> listaJson = new ArrayList<JSONObject>();
-		json="{\"oso\":"+json+"}"; 
+		json="{\"prey\":"+json+"}"; 
 		try{
 			JSONObject jsnobject = new JSONObject(json);
-			JSONArray jsonArray = jsnobject.getJSONArray("oso");
+			JSONArray jsonArray = jsnobject.getJSONArray("prey");
 			for (int i = 0; i < jsonArray.length(); i++) {
-				JSONObject explrObject = jsonArray.getJSONObject(i);
+				String jsonCommand= jsonArray.get(i).toString();
+				JSONObject explrObject =new JSONObject(jsonCommand);
 				PreyLogger.i(explrObject.toString());
 				listaJson.add(explrObject);
 			}
 		}catch(Exception e){
-		 
+		    PreyLogger.e("error in parser:"+e.getMessage(), e);
 		}
 		return listaJson;
 	}

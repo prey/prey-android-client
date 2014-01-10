@@ -7,11 +7,14 @@
 package com.prey.activities;
 
 import android.app.NotificationManager;
+
+import com.prey.PreyLogger;
 import com.prey.R;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;

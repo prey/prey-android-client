@@ -95,18 +95,19 @@ public class PreyGoogleAnalytics {
 	}
 
 	public void trackSynchronously(Context ctx, String page) {
-		PreyLogger.i("PreyJGoogleAnalytics: Tracking synchronously focusPoint=" + page);
+		/*PreyLogger.i("PreyJGoogleAnalytics: Tracking synchronously focusPoint=" + page);
 		try {
 			PreyRestHttpClient.getInstance(ctx).get(buildURL(ctx, page));
 		} catch (IOException e) {
 			PreyLogger.e("Error PreyGoogleAnalytics Synchronously:"+e.getMessage(),e);
-		}
+		}*/
 
 	}
 
 	public void trackAsynchronously(Context ctx, String page) {
-		PreyLogger.i("PreyJGoogleAnalytics: Tracking Asynchronously focusPoint=" + page);
+		/*PreyLogger.i("PreyJGoogleAnalytics: Tracking Asynchronously focusPoint=" + page);
 		new TrackingThread(ctx, page).start();
+		*/
 	}
 
 	private class TrackingThread extends Thread {

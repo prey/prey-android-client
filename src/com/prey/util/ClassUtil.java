@@ -37,7 +37,7 @@ public class ClassUtil {
                                 listData.add(httpDataService);
                         }
                 } catch (Exception e) {
-                        PreyLogger.e("Error, causa:" + e.getMessage(), e);
+                        //PreyLogger.e("Error, causa:" + e.getMessage(), e);
                 }
                 return listData;
         }

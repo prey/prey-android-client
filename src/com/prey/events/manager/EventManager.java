@@ -40,7 +40,7 @@ public class EventManager {
 		
 		
 		String previousSsid=PreyConfig.getPreyConfig(ctx).getPreviousSsid();
-		PreyLogger.i("name:"+event.getName()+" info:"+event.getInfo()+" ssid["+ssid+"] previousSsid["+previousSsid+"]");
+		
 		boolean validation=true;
 		if (Event.WIFI_CHANGED.equals(event.getName())){
 			if (ssid!=null&&!"".equals(ssid)&&!ssid.equals(previousSsid)&&!"<unknown ssid>".equals(ssid)&&!"0x".equals(ssid)){
@@ -51,6 +51,7 @@ public class EventManager {
 		}
 		
 		if (validation){
+			PreyLogger.i("name:"+event.getName()+" info:"+event.getInfo()+" ssid["+ssid+"] previousSsid["+previousSsid+"]");
 			PreyLogger.i("change PreviousSsid:"+ssid);
 			PreyConfig.getPreyConfig(ctx).setPreviousSsid(ssid);
 			try {
@@ -113,10 +114,10 @@ public class EventManager {
 		boolean isOnline = false;
 		try {
 			int i = 0;
-			// wait at most 10 seconds
+			// wait at most 5 seconds
 			while (!isOnline) {
 				isOnline = PreyWifiManager.getInstance(ctx).isOnline();
-				if (i < 10 && !isOnline) {
+				if (i < 5 && !isOnline) {
 					PreyLogger.i("Phone doesn't have internet connection now. Waiting 1 secs for it");
 					Thread.sleep(1000);
 				}
