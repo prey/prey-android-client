@@ -12,7 +12,6 @@ import android.content.Intent;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.services.PreyBootService;
 import com.prey.services.PreyKeepOnService;
 
 public class PreyBootController extends BroadcastReceiver {
@@ -23,7 +22,7 @@ public class PreyBootController extends BroadcastReceiver {
 		// just make sure we are getting the right intent (better safe than
 		// sorry)
 		if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
-			context.startService(new Intent(context, PreyBootService.class));
+			//context.startService(new Intent(context, PreyBootService.class));
 			boolean keepOn = PreyConfig.getPreyConfig(context).isKeepOn();
 			if (keepOn) {
 				context.startService(new Intent(context, PreyKeepOnService.class));

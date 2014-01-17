@@ -39,7 +39,7 @@ public class PreyBootService extends Service {
 	@Override
 	public void onCreate() {
 		PreyLogger.d("Prey Boot Service Started!");
-		new Thread(new SIMCheckingThread()).start();
+		//new Thread(new SIMCheckingThread()).start();
 	}
 
 
