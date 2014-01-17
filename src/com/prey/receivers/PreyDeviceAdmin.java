@@ -17,6 +17,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.LockAction;
 import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 import com.prey.R;
 public class PreyDeviceAdmin extends DeviceAdminReceiver {
@@ -58,6 +59,7 @@ public class PreyDeviceAdmin extends DeviceAdminReceiver {
 			new DeactivateModulesTask().execute(context);
 	        preyConfig.setLock(false);
 	        FroyoSupport.getInstance(context).changePasswordAndLock("", false);
+	        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(context, UtilJson.makeMapParam("stop","lock","stopped"));
 		}
 	}
 	

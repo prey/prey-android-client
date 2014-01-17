@@ -52,7 +52,7 @@ public class Lock extends JsonAction{
                 
         } catch (Exception e) {
                 PreyLogger.i("Error causa:" + e.getMessage() );
-                //PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","lock","failed",e.getMessage()));
+                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","lock","failed",e.getMessage()));
         }
 
 	}
@@ -64,7 +64,7 @@ public class Lock extends JsonAction{
                 PreyConfig.getPreyConfig(ctx).setLock(true);
                 PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
                 FroyoSupport.getInstance(ctx).changePasswordAndLock(unlock, true);
-                //PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","lock","started"));
+                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","lock","started"));
         
         }
 
