@@ -38,7 +38,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		
 		 
 		String version=intent.getExtras().getString("version");
-		if(pushedMessage!=null&&pushedMessage.indexOf(PreyConfig.VERSION_V2)>0){
+		if(pushedMessage!=null&&pushedMessage.toUpperCase().indexOf(PreyConfig.VERSION_V2)>0){
 			version=PreyConfig.VERSION_V2;
 		}
 		
