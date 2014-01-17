@@ -9,7 +9,7 @@
     package="com.prey"
     android:installLocation="internalOnly"
     android:versionCode="54"
-    android:versionName="1" >
+    android:versionName="1.0.0" >
     
     <uses-sdk
         android:minSdkVersion="4"
