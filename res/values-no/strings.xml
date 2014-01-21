@@ -100,7 +100,6 @@
     <string name="error_registered_password_has_changed">Det gikk ikke å endre passordet. Det angitte nåværende passordet er feilaktig.</string>
     <string name="error_cant_report_forgotten_password">Det gikk ikke å rapportere glemt passord. Forsøk igjen senere.</string>
     <string name="error_all_fields_are_required">Alle felt er obligatoriske</string>
-    <string name="prey_version">0.5.6</string>
     <string name="change">Endre</string>
     <string name="accept">Godkjenn</string>
     <string name="already_prey_user">Allerede en Prey bruker?</string>
