@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.prey.PreyConfig;
+import com.prey.net.PreyWebServices;
 import com.prey.services.PreyKeepOnService;
 
 public class LoginActivity extends PasswordActivity {
@@ -64,6 +65,7 @@ public class LoginActivity extends PasswordActivity {
 			startActivity(intent);
 			finish();
 		} else {
+			verify(this);
 			if(getPreyConfig().showFeedback()){
 				showFeedback(getApplicationContext());
 			}else{
@@ -103,6 +105,14 @@ public class LoginActivity extends PasswordActivity {
 		bindPasswordControls();
 	}
 
+	private void verify(Context ctx){
+		final Context myContext=ctx;
+		new Thread(){
+			public void run() {
+				PreyWebServices.getInstance().verify(myContext);
+        	}
+		}.start();
+	}
 	private boolean isThisDeviceAlreadyRegisteredWithPrey() {
 		return getPreyConfig().isThisDeviceAlreadyRegisteredWithPrey(false);
 	}
