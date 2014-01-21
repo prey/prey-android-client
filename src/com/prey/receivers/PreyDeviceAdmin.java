@@ -59,7 +59,12 @@ public class PreyDeviceAdmin extends DeviceAdminReceiver {
 			new DeactivateModulesTask().execute(context);
 	        preyConfig.setLock(false);
 	        FroyoSupport.getInstance(context).changePasswordAndLock("", false);
-	        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(context, UtilJson.makeMapParam("stop","lock","stopped"));
+	        final Context contexfinal=context;
+	        new Thread(){
+	            public void run() {
+	            	PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(contexfinal, UtilJson.makeMapParam("stop","lock","stopped"));
+	            }
+	        }.start();
 		}
 	}
 	
