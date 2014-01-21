@@ -255,11 +255,14 @@ public class PreyRestHttpClient {
 		HttpPost method = new HttpPost(url);
 
 		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
-		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
+		if(params!=null){
+			method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
+		}
+		PreyLogger.i("apikey:"+preyConfig.getApiKey());
 		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
 
 		// method.setParams(getHttpParamsFromMap(params));
-		PreyLogger.d("Sending using 'GET' - URI: " + url + " - parameters: " + params.toString());
+		PreyLogger.d("Sending using 'GET' - URI: " + url + " - parameters: " + (params!=null?params.toString():""));
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
@@ -278,7 +281,12 @@ public class PreyRestHttpClient {
 	}
 
 	public PreyHttpResponse get(String url, Map<String, String> params, PreyConfig preyConfig, String user, String pass) throws IOException {
-		HttpGet method = new HttpGet(url + URLEncodedUtils.format(getHttpParamsFromMap(params), "UTF-8"));
+		HttpGet method =null;
+		if(params!=null){
+			 method = new HttpGet(url + URLEncodedUtils.format(getHttpParamsFromMap(params), "UTF-8"));
+		}else{
+			 method = new HttpGet(url);
+		}
 		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
 		method.addHeader("Authorization", "Basic " + getCredentials(user, pass));
 		PreyLogger.i("Sending using 'GET' (Basic Authentication) - URI: " + method.getURI());

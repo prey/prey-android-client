@@ -28,14 +28,18 @@ public class SMSUtil {
 	
 	@SuppressLint("DefaultLocale")
 	public  static boolean isValidSMSCommand(String command){
-		List<String> commandList= getListCommand(command);
-		if (commandList!=null&&commandList.size()>=3){
-			if (!"prey".equals(commandList.get(0).toLowerCase())){
-				return false;
+		try{
+			List<String> commandList= getListCommand(command);
+			if (commandList!=null&&commandList.size()>=3){
+				if (!"prey".equals(commandList.get(0).toLowerCase())){
+					return false;
+				}else{
+					return true;
+				}
 			}else{
-				return true;
+				return false;
 			}
-		}else{
+		}catch(Exception e){
 			return false;
 		}
 	}

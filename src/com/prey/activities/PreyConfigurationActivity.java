@@ -54,7 +54,7 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 			p.setEnabled(false);
 		
 		p = findPreference("PREFS_ABOUT");
-		p.setSummary("Version " + preyConfig.getPreyVersion() + "-" + preyConfig.getPreyMinorVersion() + " � Fork Ltd.");
+		p.setSummary("Version " + preyConfig.getPreyVersion() + " - Fork Ltd.");
 		
 	} 
 	
