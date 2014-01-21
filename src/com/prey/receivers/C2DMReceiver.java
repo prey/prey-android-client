@@ -41,11 +41,14 @@ public class C2DMReceiver extends BroadcastReceiver {
 		if(pushedMessage!=null&&pushedMessage.toUpperCase().indexOf(PreyConfig.VERSION_V2)>0){
 			version=PreyConfig.VERSION_V2;
 		}
+		if(version!=null){
+			version=version.toUpperCase();
+		}
 		
 		String body=intent.getExtras().getString("body");
 		
 		
-		if ("beta".equals(version)||PreyConfig.VERSION_V2.equals(version)){
+		if (PreyConfig.VERSION_V2.equals(version)){
 			handleMessageBeta(context, pushedMessage);
 			config.setVersion(PreyConfig.VERSION_V2);
 			config.setMissing(false);
