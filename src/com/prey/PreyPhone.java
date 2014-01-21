@@ -519,7 +519,11 @@ public class PreyPhone {
 	}
 	private String getSerialNumber(){
 		TelephonyManager telephonyManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
-		return telephonyManager.getDeviceId();
+		if (telephonyManager.getSimSerialNumber()!=null){
+			return telephonyManager.getSimSerialNumber();
+		}else{
+			return telephonyManager.getDeviceId();
+		}
 	}
 	
     public long getTotalMemory()
