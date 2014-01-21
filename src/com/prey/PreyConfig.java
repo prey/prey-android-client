@@ -102,6 +102,7 @@ public class PreyConfig {
 	
 	public static final String LAST_EVENT="LAST_EVENT";
 	public static final String PREVIOUS_SSID="PREVIOUS_SSID";
+	public static final String SIM_SERIAL_NUMBER="SIM_SERIAL_NUMBER";
 	
 	
 	/* ------------- */
@@ -141,7 +142,7 @@ public class PreyConfig {
 	private boolean keepOn;
 	
 	private boolean run;
-	
+	private String simSerialNumber;
 	
 	private String version;
 	
@@ -186,6 +187,7 @@ public class PreyConfig {
 		this.lastEvent=settings.getString(PreyConfig.LAST_EVENT, "");
 		
 		this.version=settings.getString(PreyConfig.VERSION, VERSION_V1);
+		this.simSerialNumber=settings.getString(PreyConfig.SIM_SERIAL_NUMBER, "");
 	}
 	
 	public void saveAccount(PreyAccountData accountData) {
@@ -337,7 +339,7 @@ public class PreyConfig {
 	public boolean isShouldCheckSimChange() {
 		return shouldCheckSimChange;
 	}
-
+ 
 	public boolean isKeepOn() {
 		return keepOn;
 	}
@@ -401,34 +403,32 @@ public class PreyConfig {
 	}
 
 	public void saveSimInformation() {
-		TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-		// String imsi = mTelephonyMgr.getSubscriberId();
-		String simSerialNumber = mTelephonyMgr.getSimSerialNumber();
-		this.saveString(PreyConfig.PREFS_SIM_SERIAL_NUMBER, simSerialNumber);
-		PreyLogger.d("SIM Serial number stored: " + simSerialNumber);
+		TelephonyManager telephonyManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
+		String simSerial=telephonyManager.getSimSerialNumber();
+		if(simSerial!=null){
+			this.setSimSerialNumber(simSerial);
+		}
+		this.saveString(PreyConfig.PREFS_SIM_SERIAL_NUMBER, this.getSimSerialNumber());
+		PreyLogger.d("SIM Serial number stored: " + this.getSimSerialNumber());
 	}
 
-	private boolean isThisTheRegisteredSim() {
-		TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-		// String imsi = mTelephonyMgr.getSubscriberId();
-		String simSerialNumber = mTelephonyMgr.getSimSerialNumber();
-		if (simSerialNumber == null)
-			return true; //Couldn't get the serial number, so can't check.
-		
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-		String storedSerialNumber = settings.getString(PreyConfig.PREFS_SIM_SERIAL_NUMBER, "");
-		PreyLogger.d("Checking SIM. Current SIM Serial Number: " + storedSerialNumber);
-		if (storedSerialNumber.equals(""))
-			return true; // true since SIM hasn't been registered.
-		
-		PreyLogger.d("Checking SIM. Registered SIM Serial Number: " + simSerialNumber);
-		return simSerialNumber.equals(storedSerialNumber);
-	}
+ 
 
 	public boolean isSimChanged() {
-		boolean shouldStartOnSimChange = this.isShouldCheckSimChange();
-		if (shouldStartOnSimChange)
-			return !this.isThisTheRegisteredSim();
+		if (this.isShouldCheckSimChange()){
+			TelephonyManager telephonyManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
+			String simSerial=telephonyManager.getSimSerialNumber();
+			PreyLogger.i("simSerial:"+simSerial+" actual:"+this.simSerialNumber);
+			if (this.simSerialNumber==null||"".equals(this.simSerialNumber)){
+				if(simSerial!=null){
+					this.setSimSerialNumber(simSerial);
+				}
+				return false;
+			}
+			if(simSerial!=null&&!simSerial.equals(this.getSimSerialNumber())){
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -688,5 +688,14 @@ public class PreyConfig {
 	
 	public String getVersion() {
 		return version;
+	}
+	
+	public String getSimSerialNumber(){
+		return simSerialNumber;
+	}
+	
+	public void setSimSerialNumber(String simSerialNumber) {
+		this.simSerialNumber=simSerialNumber;
+		this.saveString(PreyConfig.SIM_SERIAL_NUMBER,simSerialNumber);
 	}
 }
