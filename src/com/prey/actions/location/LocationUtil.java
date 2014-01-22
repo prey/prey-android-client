@@ -1,7 +1,6 @@
 package com.prey.actions.location;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -51,9 +50,9 @@ public class LocationUtil {
 
 			data.addDataListAll(parametersMap);
 
-			ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
+			/*ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
 			dataToBeSent.add(data);
-			PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
+			PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);*/
 
 			ctx.stopService(intent);
 			PreyConfig.getPreyConfig(ctx).setMissing(false);
