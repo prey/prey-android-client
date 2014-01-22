@@ -100,7 +100,6 @@
     <string name="error_registered_password_has_changed">La contraseña actual ingresada no es válida.</string>
     <string name="error_cant_report_forgotten_password">La contraseña no se pudo reportar como olvidada. Por favor inténtalo nuevamente.</string>
     <string name="error_all_fields_are_required">Todos los campos son requeridos</string>
-    <string name="prey_version">0.5.9</string>
     <string name="change">Cambiar</string>
     <string name="accept">Aceptar</string>
     <string name="already_prey_user">Tengo cuenta en Prey</string>
