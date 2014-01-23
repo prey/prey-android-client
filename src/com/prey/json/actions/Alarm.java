@@ -15,26 +15,25 @@ import com.prey.json.JsonAction;
 
 public class Alarm extends JsonAction{
 
-
 	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters){
 		return null;
 	}
-	
- 
 
 	public void start(Context ctx,List<ActionResult> lista,JSONObject parameters){
-		new AlarmThread(ctx).start();
-			
+		String sound=null;
+	    try {
+	    	sound = parameters.getString("sound");
+	    } catch (Exception e) {
+	    }
+		new AlarmThread(ctx,sound).start();		
 	}
-	
 
 	public void stop(Context ctx, List<ActionResult> lista, JSONObject options) {
 		PreyStatus.getInstance().setAlarmStop();
 	}
 	
-
 	public void sms(Context ctx,List<ActionResult> lista,JSONObject parameters){
-        new AlarmThread(ctx).start();
+		this.start(ctx,lista,parameters);
 	}
 	
 }

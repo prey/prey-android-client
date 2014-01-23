@@ -14,9 +14,11 @@ import com.prey.net.PreyWebServices;
 public class AlarmThread extends Thread {
 
         private Context ctx;
+        private String sound;
 
-        public AlarmThread(Context ctx) {
+        public AlarmThread(Context ctx,String sound) {
                 this.ctx = ctx;
+                this.sound=sound;
         }
         
         public void run() {
@@ -31,7 +33,15 @@ public class AlarmThread extends Thread {
                         PreyLogger.i("volumenInicial:"+max);
                         audio.setStreamVolume(AudioManager.STREAM_MUSIC, max, setVolFlags);
                         
-                        mp = MediaPlayer.create(ctx, R.raw.siren);
+      
+                        if("alarm".equals(sound))
+                        	mp = MediaPlayer.create(ctx, R.raw.alarm);
+                        else if("ring".equals(sound))
+                        	mp = MediaPlayer.create(ctx, R.raw.ring);
+                        else if ("modem".equals(sound))
+                        	mp = MediaPlayer.create(ctx, R.raw.modem);
+                        else
+                        	mp = MediaPlayer.create(ctx, R.raw.siren);
                         
                         mp.start();
                         Mp3OnCompletionListener mp3Listener=new Mp3OnCompletionListener();
