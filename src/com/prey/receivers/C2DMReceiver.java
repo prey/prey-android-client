@@ -48,18 +48,18 @@ public class C2DMReceiver extends BroadcastReceiver {
 		String body=intent.getExtras().getString("body");
 		
 		
-		if (PreyConfig.VERSION_V2.equals(version)){
-			handleMessageBeta(context, pushedMessage);
+		/*if (PreyConfig.VERSION_V2.equals(version)){
+		*/	handleMessageBeta(context, pushedMessage);
 			config.setVersion(PreyConfig.VERSION_V2);
 			config.setMissing(false);
-		}else{
+		/*}else{
 			config.setVersion(PreyConfig.VERSION_V1);
 			if (body!=null&&!"".equals(body)){
 				handleMessageMaster(context, body);
 			}else{
 				handleMessageMaster(context, pushedMessage);
 			}
-		}
+		}*/
 	}
 	
 	
