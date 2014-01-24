@@ -104,6 +104,9 @@ public class PreyConfig {
 	public static final String PREVIOUS_SSID="PREVIOUS_SSID";
 	public static final String SIM_SERIAL_NUMBER="SIM_SERIAL_NUMBER";
 	
+	public static final String INTERVAL_REPORT="INTERVAL_REPORT";
+ 
+	
 	
 	/* ------------- */
 
@@ -145,6 +148,9 @@ public class PreyConfig {
 	private String simSerialNumber;
 	
 	private String version;
+
+	private String intervalReport;
+ 
 	
 	private Context ctx;
 
@@ -188,6 +194,8 @@ public class PreyConfig {
 		
 		this.version=settings.getString(PreyConfig.VERSION, VERSION_V1);
 		this.simSerialNumber=settings.getString(PreyConfig.SIM_SERIAL_NUMBER, "");
+		this.intervalReport=settings.getString(PreyConfig.INTERVAL_REPORT, "");
+ 
 	}
 	
 	public void saveAccount(PreyAccountData accountData) {
@@ -698,4 +706,17 @@ public class PreyConfig {
 		this.simSerialNumber=simSerialNumber;
 		this.saveString(PreyConfig.SIM_SERIAL_NUMBER,simSerialNumber);
 	}
+	
+ 
+	public String getIntervalReport(){
+		return intervalReport;
+	}
+	
+	public void setIntervalReport(String intervalReport) {
+		this.intervalReport=intervalReport;
+		this.saveString(PreyConfig.INTERVAL_REPORT,intervalReport);
+	}
+	
+ 
+	
 }

@@ -31,6 +31,7 @@ public class Report  {
 			PreyConfig preyConfig=PreyConfig.getPreyConfig(ctx);
 			preyConfig.setMissing(true);
 			int interval = parameters.getInt("interval");
+			PreyConfig.getPreyConfig(ctx).setIntervalReport(""+interval);
 			while(preyConfig.isMissing()){
 				
 				JSONArray jsonArray = null;
@@ -49,6 +50,8 @@ public class Report  {
 					JSONObject parametersAction = null;
 					listData=ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction,listData);
 				}
+				
+				
 				if (listData!=null&&listData.size()>0){
 					PreyHttpResponse response=PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
 					PreyLogger.i("response.getStatusLine():"+response.getStatusLine());
@@ -66,8 +69,7 @@ public class Report  {
 					preyConfig.setMissing(false);
 				}
 			}
-			
-			 
+			PreyConfig.getPreyConfig(ctx).setIntervalReport("");
 			
 		} catch (Exception e) {
 			PreyLogger.e("Error, causa:" + e.getMessage(), e);
