@@ -47,7 +47,7 @@ public class PreyRunnerService extends Service {
 
 	@Override
 	public void onCreate() {
-		PreyLogger.d("PreyRunnerService has been started...");
+		//PreyLogger.d("PreyRunnerService has been started...");
 		ActionsRunnner exec = new ActionsRunnner();
 		running = true;
 		startedAt = System.currentTimeMillis();
@@ -56,22 +56,14 @@ public class PreyRunnerService extends Service {
 
 	@Override
 	public void onDestroy() {
-		PreyLogger.d("PreyRunnerService is going to be destroyed");
+		//PreyLogger.d("PreyRunnerService is going to be destroyed");
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(PreyRunnerService.this);
-		//Setting back to not missing.
-		/*new Thread(new Runnable() {
-			public void run() {
-				PreyWebServices.getInstance().setMissing(PreyRunnerService.this, false);
-			}
-		}).start();*/
-		
-		//preyConfig.setMissing(false);
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancelAll();
 		ActionsController.getInstance(PreyRunnerService.this).finishRunningJosb();
 		stopService(new Intent(PreyRunnerService.this, LocationService.class));
 		running = false;
-		PreyLogger.d("PreyRunnerService has been destroyed");
+		//PreyLogger.d("PreyRunnerService has been destroyed");
 	}
 
 	@Override

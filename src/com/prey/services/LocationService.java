@@ -102,14 +102,12 @@ public class LocationService extends Service {
 
 	@Override
 	public void onDestroy() {
-		PreyLogger.d("Location Serviceis going to be stopped");
-		/*if (networkLocationManager != null)
-			networkLocationManager.removeUpdates(networkLocationListener);*/
+		//PreyLogger.d("Location Serviceis going to be stopped");
 		if (androidLocationManager != null){
 			androidLocationManager.removeUpdates(gpsLocationListener);
 			androidLocationManager.removeUpdates(networkLocationListener);
 		}
-		PreyLogger.d("Location Service has been stopped");
+		//PreyLogger.d("Location Service has been stopped");
 	}
 
 	@Override
@@ -125,31 +123,20 @@ public class LocationService extends Service {
 		PreyLogger.d("["+newLocation.getProvider() +"] Fix found!. Accuracy: [" + newLocation.getAccuracy()+"]");
 		
 		if (lastRegisteredLocation == null){
-			PreyLogger.d("-----> First fix. Set as last location!");
+			//PreyLogger.d("-----> First fix. Set as last location!");
 			lastRegisteredLocation = newLocation;
 		} else {
 			if (newLocation.getTime() - lastRegisteredLocation.getTime()  > PreyConfig.LAST_LOCATION_MAX_AGE) {
 				//Last registered fix was set more that 2 minutes ago. It's older so must be updated!
-				PreyLogger.d("-----> Old fix has expired (older than 2 minutes). Setting new fix as last location!");
+				//PreyLogger.d("-----> Old fix has expired (older than 2 minutes). Setting new fix as last location!");
 				lastRegisteredLocation = newLocation;
 			} else if (newLocation.hasAccuracy() && (newLocation.getAccuracy() < lastRegisteredLocation.getAccuracy())) {
 				//New location is more accurate than the previous one. Win!
-				PreyLogger.d("-------> Newer and more accurate fix. Set as last location!");
+				//PreyLogger.d("-------> Newer and more accurate fix. Set as last location!");
 				lastRegisteredLocation = newLocation;
 			}
 		}
 		PreyLocationManager.getInstance(getApplicationContext()).setLastLocation(new PreyLocation(lastRegisteredLocation));
-		/* ** I'll keep both provider competing for the more accurate fix ****
-		 * 
-		if (newLocation.getProvider().equals(LocationManager.GPS_PROVIDER)) {
-			// finally our GPS give us an accurate fix, so we can now securely
-			// remove network update listener
-			if (androidLocationManager != null) {
-				PreyLogger.d("[LocationService] Fix comes from GPS. Removing temporal network listener updates");
-				androidLocationManager.removeUpdates(networkLocationListener);
-				//androidLocationManager = null;
-			}
-		}*/
 	}
 
 	private LocationListener gpsLocationListener = new LocationListener() {

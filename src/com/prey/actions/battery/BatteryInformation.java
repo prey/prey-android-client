@@ -15,11 +15,13 @@ import com.prey.actions.HttpDataService;
  
  
  
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
+import android.os.Build;
  
  
 
@@ -28,7 +30,8 @@ public class BatteryInformation {
 	public Battery battery=null;
 	
 	private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
-	    @Override
+	    @TargetApi(Build.VERSION_CODES.ECLAIR)
+		@Override
 	    public void onReceive(Context arg0, Intent intent) {
 	    	int health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, 0);
 			int iconSmall = intent.getIntExtra(BatteryManager.EXTRA_ICON_SMALL, 0);
@@ -56,10 +59,7 @@ public class BatteryInformation {
 			battery.setTemperature(temperature);
 			battery.setVoltage(voltage);
 			battery.setCharging(charging);
-			PreyLogger.i("voltage:"+voltage);
-			PreyLogger.i("status:"+status);
-			PreyLogger.i("technology:"+technology);
-			PreyLogger.i("temperature:"+voltage);
+			PreyLogger.i("voltage:"+voltage+" status:"+status+" technology:"+technology+" temperature:"+voltage);
 			
 	        arg0.unregisterReceiver(mBatInfoReceiver);
 	    }
@@ -104,7 +104,8 @@ public class BatteryInformation {
 	}
  
 	private BroadcastReceiver batteryInfoReceiver = new BroadcastReceiver() {
-		 @Override
+		@TargetApi(Build.VERSION_CODES.ECLAIR)
+		@Override
 		public void onReceive(Context context, Intent intent) {
 			int health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, 0);
 			int iconSmall = intent.getIntExtra(BatteryManager.EXTRA_ICON_SMALL, 0);
@@ -135,6 +136,7 @@ public class BatteryInformation {
 		}
 	};
 	
+	@TargetApi(Build.VERSION_CODES.ECLAIR)
 	public Battery makeBattery(Intent intent){
 		int health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, 0);
 		int iconSmall = intent.getIntExtra(BatteryManager.EXTRA_ICON_SMALL, 0);

@@ -30,7 +30,7 @@ public class JSONParser {
 	}
 
 	public List<JSONObject> getJSONFromUrl(Context ctx, String url) {
-		PreyLogger.d("getJSONFromUrl:" + url);
+		//PreyLogger.d("getJSONFromUrl:" + url);
 		PreyRestHttpClient preyRestHttpClient=PreyRestHttpClient.getInstance(ctx);
 		String sb=null;
 		String json=null;

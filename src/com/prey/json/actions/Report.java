@@ -54,15 +54,16 @@ public class Report  {
 				
 				if (listData!=null&&listData.size()>0){
 					PreyHttpResponse response=PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
-					PreyLogger.i("response.getStatusLine():"+response.getStatusLine());
-					
-					if (200!=response.getStatusLine().getStatusCode()){
-						preyConfig.setMissing(false);
-					}else{
-						if (interval==0){
+					if(response!=null){
+						PreyLogger.i("response.getStatusLine():"+response.getStatusLine());	
+						if (200!=response.getStatusLine().getStatusCode()){
 							preyConfig.setMissing(false);
 						}else{
-							Thread.sleep(interval * PreyConfig.DELAY_MULTIPLIER);
+							if (interval==0){
+								preyConfig.setMissing(false);
+							}else{
+								Thread.sleep(interval * PreyConfig.DELAY_MULTIPLIER);
+							}
 						}
 					}
 				}else{

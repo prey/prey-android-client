@@ -123,7 +123,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 			// be rejected
 			PreyLogger.d("Unregistered from c2dm: " + intent.getStringExtra("unregistered"));
 		} else if (registration != null) {
-			PreyLogger.i("Registration id: " + registration);
+			//PreyLogger.d("Registration id: " + registration);
 			new UpdateCD2MId().execute(registration, context);
 			// Send the registration ID to the 3rd party site that is sending
 			// the messages.
@@ -138,7 +138,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		protected Void doInBackground(Object... data) {
 			try {
 				String registration = FileConfigReader.getInstance((Context) data[1]).getGcmIdPrefix() + (String) data[0];
-				PreyLogger.i("Registration id: " + registration);
+				//PreyLogger.d("Registration id: " + registration);
 				PreyWebServices.getInstance().setPushRegistrationId((Context) data[1], registration);
 
 			} catch (Exception e) {
