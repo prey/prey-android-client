@@ -19,7 +19,6 @@ import android.content.Intent;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.observer.ActionsController;
-import com.prey.json.parser.JSONParser;
 import com.prey.services.PreyKeepOnService;
 
 public class PreyBootController extends BroadcastReceiver {
@@ -50,7 +49,7 @@ public class PreyBootController extends BroadcastReceiver {
 			new Thread(){
 		            public void run() {
 		            	try{
-		            	Thread.sleep(60000);
+		            	Thread.sleep(90000);
 						List<JSONObject> list=new ArrayList<JSONObject>();
 						JSONObject jsonParams=new JSONObject();
 						jsonParams.put("interval",interval );

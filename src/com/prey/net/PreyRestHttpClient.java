@@ -59,13 +59,15 @@ import com.prey.net.http.SimpleMultipartEntity;
 public class PreyRestHttpClient {
 
 	private static PreyRestHttpClient _instance = null;
-	private DefaultHttpClient httpclient = null;
+	private PreyDefaultHttpClient httpclient = null;
+	//private DefaultHttpClient httpclient = null;
 	private Context ctx = null;
 
 	private PreyRestHttpClient(Context ctx) {
 		this.ctx = ctx;
 		// httpclient = new DefaultHttpClient();
-		httpclient = (DefaultHttpClient) HttpUtils.getNewHttpClient();
+		//httpclient = (DefaultHttpClient) HttpUtils.getNewHttpClient();
+		httpclient = new PreyDefaultHttpClient((DefaultHttpClient) HttpUtils.getNewHttpClient());
 
 		HttpParams params = new BasicHttpParams();
 
@@ -120,7 +122,7 @@ public class PreyRestHttpClient {
 		params.put("_method", methodAsString);
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
 		// method.setQueryString(getHttpParamsFromMap(params));
-		PreyLogger.d("Sending using " + methodAsString + "(using _method) - URI: " + url + " - parameters: " + params.toString());
+		//PreyLogger.d("Sending using " + methodAsString + "(using _method) - URI: " + url + " - parameters: " + params.toString());
 		return sendUsingMethod(method, preyConfig);
 	}
 
@@ -132,7 +134,7 @@ public class PreyRestHttpClient {
 		PreyLogger.d("Sending using 'PUT' - URI: " + url + " - parameters: " + params.toString());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.d("Response from server: " + response.toString());
+		//PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
 
@@ -141,11 +143,11 @@ public class PreyRestHttpClient {
 		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
 		method.addHeader("Authorization", "Basic " + getCredentials(user, pass));
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
-		// method.setParams(getHttpParamsFromMap(params));
-		PreyLogger.d("Sending using 'PUT' (Basic Authentication) - URI: " + url + " - parameters: " + params.toString());
+		//method.setParams(getHttpParamsFromMap(params));
+		//PreyLogger.d("Sending using 'PUT' (Basic Authentication) - URI: " + url + " - parameters: " + params.toString());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.d("Response from server: " + response.toString());
+		//PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
 
@@ -155,11 +157,11 @@ public class PreyRestHttpClient {
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
 
 		// method.setParams(getHttpParamsFromMap(params));
-		PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+		//PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.d("Response from server: " + response.toString());
+		//PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
 
@@ -182,11 +184,11 @@ public class PreyRestHttpClient {
 		}
 
 		method.setEntity(entity);
-		PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+		//PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.d("Response from server: " + response.toString());
+		//PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
 
@@ -213,7 +215,7 @@ public class PreyRestHttpClient {
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.d("Response from server: " + response.toString());
+		//PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
 
@@ -231,7 +233,7 @@ public class PreyRestHttpClient {
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.d("Response from server: " + response.toString());
+		//PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
 
@@ -247,7 +249,7 @@ public class PreyRestHttpClient {
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.d("Response from server: " + response.toString());
+		//PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
 
@@ -266,7 +268,7 @@ public class PreyRestHttpClient {
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.d("Response from server: " + response.toString());
+		//PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
 
@@ -276,7 +278,7 @@ public class PreyRestHttpClient {
 		PreyLogger.d("Sending using 'GET' - URI: " + method.getURI());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.d("Response from server: " + response.toString());
+		//PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
 
@@ -289,10 +291,10 @@ public class PreyRestHttpClient {
 		}
 		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
 		method.addHeader("Authorization", "Basic " + getCredentials(user, pass));
-		PreyLogger.i("Sending using 'GET' (Basic Authentication) - URI: " + method.getURI());
+		//PreyLogger.d("Sending using 'GET' (Basic Authentication) - URI: " + method.getURI());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.i("Response from server: " + response.toString());
+		//PreyLogger.d("Response from server: " + response.toString());
 		method.removeHeaders("Authorization");
 		return response;
 	}
@@ -301,10 +303,10 @@ public class PreyRestHttpClient {
 		HttpDelete method = new HttpDelete(url + URLEncodedUtils.format(getHttpParamsFromMap(params), "UTF-8"));
 		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
 		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
-		PreyLogger.d("Sending using 'DELETE' (Basic Authentication) - URI: " + url + " - parameters: " + params.toString());
+		//PreyLogger.d("Sending using 'DELETE' (Basic Authentication) - URI: " + url + " - parameters: " + params.toString());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.d("Response from server: " + response.toString());
+		//PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
 
@@ -316,7 +318,7 @@ public class PreyRestHttpClient {
 			method.addHeader("Authorization", "Basic " + getCredentials(user, pass));
 			HttpResponse httpResponse = httpclient.execute(method);
 			response = new PreyHttpResponse(httpResponse);
-			PreyLogger.d("Response from server: " + response.toString());
+			//PreyLogger.d("Response from server: " + response.toString());
 
 		} catch (IOException e) {
 			PreyLogger.e("Error connecting with server", e);
@@ -337,7 +339,7 @@ public class PreyRestHttpClient {
 
 			HttpResponse httpResponse = httpclient.execute(method);
 			response = new PreyHttpResponse(httpResponse);
-			PreyLogger.d("Response from server: " + response.toString());
+		//	//PreyLogger.d("Response from server: " + response.toString());
 
 		} catch (IOException e) {
 			throw e;
@@ -347,28 +349,26 @@ public class PreyRestHttpClient {
 
 	private String getUserAgent() {
 		String userAgent= "Prey/".concat(PreyConfig.getPreyConfig(ctx).getPreyVersion()).concat(" (Android "+Build.VERSION.RELEASE+")") ;
-		PreyLogger.i("userAgent:"+userAgent);
+		//PreyLogger.i("userAgent:"+userAgent);
 		return userAgent;
 	}
 
 	public String getStringUrl(String url,PreyConfig preyConfig) throws Exception {
-
-		PreyLogger.i("getStringUrl("+url+")");
+		//PreyLogger.i("getStringUrl("+url+")");
 		Map<String, String> parameters = new HashMap<String, String>();
 		try {
 			return PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig).getResponseAsString();
 		} catch (IOException e) {
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
 		}
-		
-		 
 	}
+	
 	public PreyHttpResponse get(String url) throws IOException {
 		HttpGet method = new HttpGet(url);
 		PreyLogger.d("Sending using 'GET' - URI: " + method.getURI());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.d("Response from server: " + response.toString());
+		//PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
 	
