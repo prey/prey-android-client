@@ -187,7 +187,7 @@ public class PreyWebServices {
 		PreyHttpResponse response = null;
 		try {
 			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("devices.xml");
-			PreyLogger.i("url:"+url);
+			//PreyLogger.i("url:"+url);
 			response = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig);
 			// No more devices allowed
 			if ((response.getStatusLine().getStatusCode() == 302) || (response.getStatusLine().getStatusCode() == 422)) {
@@ -207,7 +207,7 @@ public class PreyWebServices {
 		String xml;
 		try {
 			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("profile.xml");
-			PreyLogger.i("url:"+url);
+			//PreyLogger.i("url:"+url);
 			response=PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig, email, password);
 			xml = response.getResponseAsString(); 
 		} catch (IOException e) {
@@ -369,30 +369,14 @@ public class PreyWebServices {
 		parameters.put("device["+key+"]", value);
 
 		try {
-			//String url=this.getDeviceUrl2(ctx)+".json";
-		    String url=this.getDeviceUrl(ctx);
-			PreyLogger.i("updateDeviceAttribute url:"+url);
-			PreyHttpResponse response= PreyRestHttpClient.getInstance(ctx).methodAsParameter(url,"PUT", parameters, preyConfig);
-			PreyLogger.i("response:"+response.getResponseAsString());
-			PreyLogger.i("Update device attribute ["+ key + "] with value: " + value);
+		    String url=getDeviceUrl(ctx);
+			PreyRestHttpClient.getInstance(ctx).methodAsParameter(url,"PUT", parameters, preyConfig);
+			//PreyLogger.i("Update device attribute ["+ key + "] with value: " + value);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (PreyException e) {
 			PreyLogger.e("Attribute ["+key+"] wasn't updated to ["+value+"]", e);
 		}
-		/*
-		try {
-			String url=this.getDeviceUrl2(ctx);
-		    //String url=this.getDeviceUrl(ctx);
-			PreyLogger.i("updateDeviceAttribute url:"+url);
-			PreyRestHttpClient.getInstance(ctx).methodAsParameter(url,"PUT", parameters, preyConfig);
-			PreyLogger.d("Update device attribute ["+ key + "] with value: " + value);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (PreyException e) {
-			PreyLogger.e("Attribute ["+key+"] wasn't updated to ["+value+"]", e);
-		}*/
-		
 	}
 	
 	private void updateDeviceAttributeUi(Context ctx, String key, String value){
@@ -404,7 +388,7 @@ public class PreyWebServices {
 
 		try {
 			PreyRestHttpClient.getInstance(ctx).methodAsParameter(this.getDeviceUiUrl(ctx),"PUT", parameters, preyConfig);
-			PreyLogger.d("Update device attribute ["+ key + "] with value: " + value);
+			//PreyLogger.d("Update device attribute ["+ key + "] with value: " + value);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (PreyException e) {
@@ -482,14 +466,14 @@ public class PreyWebServices {
 			String url=getDeviceUrl(ctx);
 			PreyLogger.i("getActionsToPerform:"+url);
 			response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig);
-			PreyLogger.i("status:"+response.getStatusLine()+" "+response.getResponseAsString());
+			PreyLogger.d("status:"+response.getStatusLine()+" "+response.getResponseAsString());
 			return response.getResponseAsString();
 		} catch (IOException e) {
 			try {
 				String url=getDeviceUrlApiv1(ctx)+".xml";
 				PreyLogger.i("getActionsToPerform2:"+url);
 				response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig);
-				PreyLogger.i("status:"+response.getStatusLine()+" "+response.getResponseAsString());
+				PreyLogger.d("status:"+response.getStatusLine()+" "+response.getResponseAsString());
 				return response.getResponseAsString();
 			} catch (IOException e2) {
 				throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e2);
@@ -690,7 +674,7 @@ public class PreyWebServices {
 		PreyHttpResponse preyHttpResponse=null;
 		try {
 			String url =getDataUrlJson(ctx);
-			PreyLogger.i("URL:"+url);
+			//PreyLogger.i("URL:"+url);
 			//String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
 			PreyConfig.postUrl = null;
 			
@@ -700,7 +684,7 @@ public class PreyWebServices {
 				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig);
 			else
 				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig,entityFiles);
-			PreyLogger.d("Data sent_: " + preyHttpResponse.getResponseAsString());
+			//PreyLogger.d("Data sent_: " + preyHttpResponse.getResponseAsString());
 			PreyGoogleAnalytics.getInstance().trackAsynchronously(ctx,"Data/Sent");
 			if (preyConfig.isShouldNotify()) {
 				this.notifyUser(ctx);
@@ -712,21 +696,18 @@ public class PreyWebServices {
 	}
 	
 	
-	public boolean verify(Context ctx){
+	public boolean verify(Context ctx) throws PreyException, IOException{
 		boolean result=false;
-		try {
-			String url =getVerifyUrl(ctx);
-			PreyHttpResponse preyHttpResponse  =null;
-			PreyConfig config=PreyConfig.getPreyConfig(ctx);
-			preyHttpResponse  =PreyRestHttpClient.getInstance(ctx).get(url, null, config,config.getApiKey(),"X");
-			PreyLogger.i(preyHttpResponse.getResponseAsString());
-			result = (preyHttpResponse.getStatusLine().getStatusCode()==200);
-		} catch (Exception e) {
-			PreyLogger.e("Verify wasn't send",e);
-		} 
+		String url =getVerifyUrl(ctx);
+		//PreyLogger.i("verify url:"+url);
+		PreyHttpResponse preyHttpResponse  =null;
+		PreyConfig config=PreyConfig.getPreyConfig(ctx);
+		preyHttpResponse  =PreyRestHttpClient.getInstance(ctx).get(url, null, config,config.getApiKey(),"X");
+		//PreyLogger.d("status:"+preyHttpResponse.getStatusLine().getStatusCode());
+		result = (preyHttpResponse.getStatusLine().getStatusCode()==200);
 		return result;
 	}
-	
+
 	public void sendPreyHttpEvent(Context ctx, Event event, JSONObject jsonObject){
 		try {
 			String url =getEventsUrlJson(ctx)+".json";
@@ -789,19 +770,15 @@ public class PreyWebServices {
 	public String sendNotifyActionResultPreyHttp(Context ctx,   Map<String, String> params) {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		//preyConfig.setLastEvent(action);
-		
-	 
-		String response = null;
+		String response = null;   
 		try {			
 			String url=getResponseUrlJson(ctx);
-			PreyLogger.i("result["+url+"]");
-			 
-			PreyLogger.i("apiKey["+preyConfig.getApiKey()+"]");
+			//PreyLogger.i("result["+url+"]");
+			//PreyLogger.i("apiKey["+preyConfig.getApiKey()+"]");
 			PreyConfig.postUrl = null;
 			PreyHttpResponse httpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, params,preyConfig);
-			PreyLogger.i("statusLine["+httpResponse.getStatusLine() +"]");
 			response=httpResponse.toString();
-			PreyLogger.i("Notify Action Result sent: " + response);
+			//PreyLogger.i("Notify Action Result sent: " + response);
 		} catch (Exception e) {
 			//PreyLogger.e("Notify Action Result wasn't send",e);
 		}  
@@ -850,7 +827,7 @@ public class PreyWebServices {
 	
 	public List<JSONObject> getActionsJsonToPerform(Context ctx) throws PreyException {
 		String url=getDeviceUrlJson2(ctx);
-		PreyLogger.i("url:"+url);
+		//PreyLogger.i("url:"+url);
 		List<JSONObject> lista=new JSONParser().getJSONFromUrl(ctx,url); 
 	 
 		return lista;
