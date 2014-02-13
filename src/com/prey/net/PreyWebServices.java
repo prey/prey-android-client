@@ -832,4 +832,44 @@ public class PreyWebServices {
 	 
 		return lista;
 	}
+	
+	public PreyHttpResponse registerNewDeviceRemote(Context ctx,String mail,String notificationId,String deviceType) throws PreyException {
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		
+		String model = Build.MODEL;
+		String vendor = "Google";
+		if (!PreyConfig.getPreyConfig(ctx).isCupcake())
+			vendor = AboveCupcakeSupport.getDeviceVendor();
+		
+		
+		
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("device[notification_id]", notificationId);
+		parameters.put("device[remote_email]", mail);
+		parameters.put("device[title]", vendor + " " + model);
+		parameters.put("device[device_type]", deviceType);
+		parameters.put("device[os]", "Android");
+		parameters.put("device[os_version]", Build.VERSION.RELEASE);
+		parameters.put("device[referer_device_id]", "");
+		parameters.put("device[plan]", "free");
+		parameters.put("device[activation_phrase]", preyConfig.getSmsToRun());
+		parameters.put("device[deactivation_phrase]", preyConfig.getSmsToStop());
+		parameters.put("device[model_name]", model);
+		parameters.put("device[vendor_name]", vendor);
+		
+		parameters=increaseData(ctx,parameters);
+		TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
+		String imei = mTelephonyMgr.getDeviceId();
+		parameters.put("device[physical_address]", imei);
+
+		PreyHttpResponse response = null;
+		try {
+			String url="https://panel.preyapp.com/api/v2/remote.json";
+			response = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig);
+		} catch (IOException e) {
+			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
+		}
+
+		return response;
+	}
 }

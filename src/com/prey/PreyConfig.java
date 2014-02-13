@@ -106,7 +106,11 @@ public class PreyConfig {
 	
 	public static final String INTERVAL_REPORT="INTERVAL_REPORT";
  
+	public static final String NOTIFICATION_ID="NOTIFICATION_ID";
+	public static final String SEND_NOTIFICATION_ID="SEND_NOTIFICATION_ID";
 	
+	private boolean sendNotificationId;
+	private String notificationId;
 	
 	/* ------------- */
 
@@ -195,7 +199,9 @@ public class PreyConfig {
 		this.version=settings.getString(PreyConfig.VERSION, VERSION_V1);
 		this.simSerialNumber=settings.getString(PreyConfig.SIM_SERIAL_NUMBER, "");
 		this.intervalReport=settings.getString(PreyConfig.INTERVAL_REPORT, "");
- 
+		this.sendNotificationId=settings.getBoolean(PreyConfig.SEND_NOTIFICATION_ID,false);
+		this.installationDate=settings.getLong(PreyConfig.INSTALLATION_DATE, new Date().getTime());
+		saveLong(PreyConfig.INSTALLATION_DATE,installationDate);
 	}
 	
 	public void saveAccount(PreyAccountData accountData) {
@@ -545,6 +551,13 @@ public class PreyConfig {
 		editor.putBoolean(key, value);
 		editor.commit();
 	}
+	
+	private void saveLong(String key, long value){
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putLong(key, value);
+		editor.commit();
+	}
 
 	public boolean isRunOnce() {
 		return runOnce;
@@ -717,6 +730,26 @@ public class PreyConfig {
 		this.saveString(PreyConfig.INTERVAL_REPORT,intervalReport);
 	}
 	
- 
+	public void setNotificationId(String notificationId){
+		this.notificationId=notificationId;
+		saveString(PreyConfig.NOTIFICATION_ID, notificationId);
+	}
 	
+	public String getNotificationId(){
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return settings.getString(PreyConfig.NOTIFICATION_ID, "");
+	}
+	
+	public void setSendNotificationId(boolean sendNotificationId){
+		this.sendNotificationId=sendNotificationId;
+		saveBoolean(PreyConfig.SEND_NOTIFICATION_ID, sendNotificationId);
+	}
+	
+	public boolean isSendNotificationId(){
+		return this.sendNotificationId;
+	}
+	
+	public long getInstallationDate(){
+		return this.installationDate;
+	}
 }

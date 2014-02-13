@@ -5,6 +5,8 @@
  * Full license at "/LICENSE"
  ******************************************************************************/
 package com.prey.receivers;
+ 
+import org.json.JSONObject;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,13 +14,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 
 import com.prey.FileConfigReader;
-import com.prey.PreyConfig;
-import com.prey.PreyController;
+import com.prey.PreyConfig; 
 import com.prey.PreyLogger;
-import com.prey.activities.FeedbackActivity;
+import com.prey.PreyUtils; 
 import com.prey.beta.actions.PreyBetaController;
+import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
-import com.prey.util.PreyTime;
+ 
 
 public class C2DMReceiver extends BroadcastReceiver {
 
@@ -37,31 +39,40 @@ public class C2DMReceiver extends BroadcastReceiver {
 		String pushedMessage = intent.getExtras().getString(config.getc2dmAction());
 		
 		 
-		String version=intent.getExtras().getString("version");
-		if(pushedMessage!=null&&pushedMessage.toUpperCase().indexOf(PreyConfig.VERSION_V2)>0){
-			version=PreyConfig.VERSION_V2;
-		}
-		if(version!=null){
-			version=version.toUpperCase();
-		}
-		
-		String body=intent.getExtras().getString("body");
-		
-		
-		/*if (PreyConfig.VERSION_V2.equals(version)){
-		*/	handleMessageBeta(context, pushedMessage);
+		String api_key=intent.getExtras().getString("api_key");
+		String remote_email=intent.getExtras().getString("remote_email");
+		 
+		if((api_key!=null&&!"".equals(api_key))||pushedMessage.indexOf("api_key")>0){
+			registrationPlanB(context,api_key,remote_email, pushedMessage);
+		}else{
+			handleMessageBeta(context, pushedMessage);
 			config.setVersion(PreyConfig.VERSION_V2);
 			config.setMissing(false);
-		/*}else{
-			config.setVersion(PreyConfig.VERSION_V1);
-			if (body!=null&&!"".equals(body)){
-				handleMessageMaster(context, body);
-			}else{
-				handleMessageMaster(context, pushedMessage);
-			}
-		}*/
+		}
+ 
+		
+
 	}
 	
+	private void registrationPlanB(Context context, String apiKey, String remoteEmail,String pushedMessage){
+		if(apiKey==null){
+			try{
+				JSONObject jsnobject = new JSONObject(pushedMessage);
+				apiKey=jsnobject.getString("api_key");
+				remoteEmail=jsnobject.getString("remote_email");
+			}catch(Exception e){
+				
+			}
+		}
+		if(apiKey!=null){
+			try {
+				PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(context, apiKey, remoteEmail, PreyUtils.getDeviceType(context));
+			} catch (PreyException e) {
+				PreyLogger.e("Error, causa:"+e.getMessage(), e);
+			}
+		}
+		 
+	}
 	
 	private void handleMessageBeta(Context context, String pushedMessage) {
 	    try {
@@ -72,7 +83,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 			PreyLogger.e("Push execution failed to run", e);
 		}
 	}
-	private void handleMessageMaster(Context context, String pushedMessage) {	
+	/*private void handleMessageMaster(Context context, String pushedMessage) {	
 		 
 		if(!PreyTime.getInstance().isRunning()){
 			PreyTime.getInstance().setRunning(true);
@@ -111,7 +122,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		}else{
 			PreyLogger.i("uuups");
 		}
-	}
+	}*/
 
 	private void handleRegistration(Context context, Intent intent) {
 		String registration = intent.getStringExtra("registration_id");

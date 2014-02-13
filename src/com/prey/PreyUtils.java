@@ -6,16 +6,22 @@
  ******************************************************************************/
 package com.prey;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 
 public class PreyUtils {
 	
 	public static String getDeviceType(Activity act){
-		if (isTablet(act.getApplicationContext()))
+		return getDeviceType(act.getApplicationContext());
+	}
+	
+	public static String getDeviceType(Context ctx){
+		if (isTablet(ctx))
 			return "Tablet";
 		else
 			return "Phone";
@@ -33,6 +39,7 @@ public class PreyUtils {
 	    }
 	}
 	
+	@TargetApi(Build.VERSION_CODES.ECLAIR)
 	public static boolean supportSMS(Context ctx){
 		//Froyo or above!!
 		TelephonyManager telephonyManager1 = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
