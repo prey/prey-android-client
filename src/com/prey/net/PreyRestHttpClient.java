@@ -157,7 +157,7 @@ public class PreyRestHttpClient {
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
 
 		// method.setParams(getHttpParamsFromMap(params));
-		//PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+		PreyLogger.i("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
@@ -249,7 +249,7 @@ public class PreyRestHttpClient {
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		//PreyLogger.d("Response from server: " + response.toString());
+		PreyLogger.i("Response from server: " + response.toString());
 		return response;
 	}
 
@@ -298,6 +298,25 @@ public class PreyRestHttpClient {
 		method.removeHeaders("Authorization");
 		return response;
 	}
+	
+	public PreyHttpResponse getAutentication2(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
+		HttpGet method =null;
+		if(params!=null){
+			 method = new HttpGet(url + URLEncodedUtils.format(getHttpParamsFromMap(params), "UTF-8"));
+		}else{
+			 method = new HttpGet(url);
+		}
+		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		PreyLogger.i("apikey:"+preyConfig.getApiKey());
+		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
+		//PreyLogger.d("Sending using 'GET' (Basic Authentication) - URI: " + method.getURI());
+		HttpResponse httpResponse = httpclient.execute(method);
+		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
+		//PreyLogger.d("Response from server: " + response.toString());
+		method.removeHeaders("Authorization");
+		return response;
+	}
+	
 
 	public PreyHttpResponse delete(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
 		HttpDelete method = new HttpDelete(url + URLEncodedUtils.format(getHttpParamsFromMap(params), "UTF-8"));

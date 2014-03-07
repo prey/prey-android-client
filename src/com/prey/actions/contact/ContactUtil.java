@@ -4,15 +4,18 @@ import org.json.JSONArray;
 
 import com.prey.PreyLogger; 
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri; 
+import android.os.Build;
 import android.provider.ContactsContract;
  
 
 public class ContactUtil {
 
-	public JSONArray history(Context ctx){
+	@TargetApi(Build.VERSION_CODES.ECLAIR)
+	public static JSONArray history(Context ctx){
 		JSONArray array=new JSONArray();
 		Cursor c = null;
 		try{

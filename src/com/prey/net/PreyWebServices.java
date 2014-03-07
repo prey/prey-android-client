@@ -187,8 +187,10 @@ public class PreyWebServices {
 		PreyHttpResponse response = null;
 		try {
 			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("devices.xml");
-			//PreyLogger.i("url:"+url);
+			//String url="http://10.0.0.25:8000/api/v1/devices.xml"; 
+			PreyLogger.i("url:"+url);
 			response = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig);
+			PreyLogger.i("response:"+response.getStatusLine() +" "+ response.getResponseAsString());
 			// No more devices allowed
 			if ((response.getStatusLine().getStatusCode() == 302) || (response.getStatusLine().getStatusCode() == 422)) {
 				throw new NoMoreDevicesAllowedException(ctx.getText(R.string.set_old_user_no_more_devices_text).toString());
@@ -207,7 +209,7 @@ public class PreyWebServices {
 		String xml;
 		try {
 			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("profile.xml");
-			//PreyLogger.i("url:"+url);
+			PreyLogger.i("url:"+url);
 			response=PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig, email, password);
 			xml = response.getResponseAsString(); 
 		} catch (IOException e) {
@@ -370,6 +372,7 @@ public class PreyWebServices {
 
 		try {
 		    String url=getDeviceUrl(ctx);
+		    PreyLogger.i("update url:"+url);
 			PreyRestHttpClient.getInstance(ctx).methodAsParameter(url,"PUT", parameters, preyConfig);
 			//PreyLogger.i("Update device attribute ["+ key + "] with value: " + value);
 		} catch (IOException e) {
@@ -871,5 +874,89 @@ public class PreyWebServices {
 		}
 
 		return response;
+	}
+	
+	
+	public PreyHttpResponse sendContact(Context ctx, HashMap<String, String> parameters) {
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		
+		 
+  
+		
+		
+		//parameters.put("api_key", preyConfig.getApiKey());
+
+ 
+		PreyHttpResponse preyHttpResponse=null;
+		try {
+			//String url =getDataUrlJson(ctx);
+			String url=getDeviceUrlApiv2(ctx).concat("/contacts");
+			
+			//String url ="http://10.0.0.25:8080/api/v2/devices/key/contact";
+			
+			//PreyLogger.i("URL:"+url);
+			//String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
+			PreyConfig.postUrl = null;
+			
+			
+			
+			 
+				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig);
+		 
+		 
+			 
+		} catch (Exception e) {
+			PreyLogger.e("Contact wasn't send",e);
+		} 
+		return preyHttpResponse;
+	}
+	
+	public PreyHttpResponse sendBrowser(Context ctx, HashMap<String, String> parameters) {
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		
+		 
+  
+		
+		
+		//parameters.put("api_key", preyConfig.getApiKey());
+
+ 
+		PreyHttpResponse preyHttpResponse=null;
+		try {
+			//String url =getDataUrlJson(ctx);
+			String url=getDeviceUrlApiv2(ctx).concat("/browser");
+			
+			//String url ="http://10.0.0.25:8080/api/v2/devices/key/contact";
+			
+			//PreyLogger.i("URL:"+url);
+			//String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
+			PreyConfig.postUrl = null;
+			
+			
+			
+			 
+				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig);
+		 
+		 
+			 
+		} catch (Exception e) {
+			PreyLogger.e("Contact wasn't send",e);
+		} 
+		return preyHttpResponse;
+	}
+	
+	public PreyHttpResponse getContact(Context ctx){
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		PreyHttpResponse preyHttpResponse=null;
+		try {
+		HashMap<String, String> parameters=new HashMap<String, String> ();
+		String url=getDeviceUrlApiv2(ctx).concat("/contacts.json");
+		PreyLogger.i("url:"+url);
+		preyHttpResponse=PreyRestHttpClient.getInstance(ctx).getAutentication2(url, parameters, preyConfig);
+		} catch (Exception e) {
+			PreyLogger.e("Contact wasn't send",e);
+		} 
+		 
+		 return preyHttpResponse;
 	}
 }

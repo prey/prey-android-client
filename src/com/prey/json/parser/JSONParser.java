@@ -72,8 +72,8 @@ public class JSONParser {
 
 		// json="[ {\"command\": \"start\",\"target\": \"geofencing\",\"options\": {\"origin\": \"-70.7193117,-32.7521112\",\"radius\": \"100\" }}]";
 
-		// json="[ {\"command\": \"start\",\"target\": \"geofencing\",\"options\": {\"origin\": \"-70.60713481,-33.42372147\",\"radius\": \"100\" }}]";
-		// json="[ {\"command\": \"stop\",\"target\": \"geofencing\",\"options\": {}}]";
+		// json="[ {\"command\": \"start\",\"target\": \"geofencing\",\"options\": {\"id\":\"id1\",\"origin\":\"-70.60713481,-33.42372147\",\"radius\":\"100\",\"type:\":\"in",\"expire":"-1" }}]";
+		// json="[ {\"command\": \"stop\",\"target\": \"geofencing\",\"options\": {\"id\":\"id1\"}}]";
 
 		// json="[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}},{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}, {\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\"[\"picture\",\"location\",\"screenshot\",\"access_points_list\"]}}]";
 
@@ -97,6 +97,11 @@ public class JSONParser {
 		
 		//json="[{\"target\":\"alert\",\"command\":\"start\",\"options\":{\"alert_message\":\"This device is stolen property. Please contact testforkhq@gmail.com to arrange its safe return.\"}},{\"target\":\"lock\",\"command\":\"start\",\"options\":{\"unlock_pass\":\"oso\"}},{\"command\":\"get\",\"target\":\"location\"},{\"target\":\"network\",\"command\":\"start\"},{\"target\":\"geo\",\"command\":\"start\"}]";
 				
+		// json="[{\"command\":\"start\",\"target\":\"contacts_backup\" }]"; 
+		
+	//	 json="[{\"command\":\"start\",\"target\":\"contacts_restore\" }]"; 
+		 
+//		 json="[{\"command\":\"start\",\"target\":\"browser\" }]"; 
 		 
 		if ("[]".equals(json)) {
 			return null;
@@ -105,6 +110,7 @@ public class JSONParser {
 	}
 	
 	public List<JSONObject> getJSONFromTxt(Context ctx, String json) {
+		if("Invalid data received".equals(json)) return null;
 		List<JSONObject> listaJson = new ArrayList<JSONObject>();
 		json="{\"prey\":"+json+"}"; 
 		try{
