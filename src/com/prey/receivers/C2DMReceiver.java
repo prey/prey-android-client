@@ -42,7 +42,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		String api_key=intent.getExtras().getString("api_key");
 		String remote_email=intent.getExtras().getString("remote_email");
 		 
-		if((api_key!=null&&!"".equals(api_key))||pushedMessage.indexOf("api_key")>0){
+		if((api_key!=null&&!"".equals(api_key))||(pushedMessage!=null&&pushedMessage.indexOf("api_key")>0)){
 			registrationPlanB(context,api_key,remote_email, pushedMessage);
 		}else{
 			handleMessageBeta(context, pushedMessage);
