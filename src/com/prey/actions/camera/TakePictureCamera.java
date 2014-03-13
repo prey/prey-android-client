@@ -40,17 +40,6 @@ public class TakePictureCamera {
 			} else {
 				mCamera = getCamera(ctx);
 			}
-			/*
-			try {
-				if (preyConfig.isFroyoOrAbove()) {
-					Parameters params = mCamera.getParameters();
-					params = setParameter(ctx, params);
-					mCamera.setParameters(params);
-				}	
-			}catch(Exception e1){
-				PreyLogger.d("Error in setParameter:"+e1.getMessage());
-			}
-			*/
 			TakePictureShutterCallback shutter = new TakePictureShutterCallback();
 
 			mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);

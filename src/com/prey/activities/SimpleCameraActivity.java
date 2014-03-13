@@ -2,6 +2,7 @@ package com.prey.activities;
 
  
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
  
 
@@ -27,10 +28,15 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 	public static SurfaceHolder mHolder;
 	public static byte[] dataImagen = null;
 
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_camera);
+		
+		Bundle extras=getIntent().getExtras();
+		String focus=extras.getString("focus");
+		PreyLogger.i("focus:"+focus);
 		
 		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
 		mHolder = surfaceView.getHolder();
@@ -39,11 +45,16 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 		try {
 			int numberOfCameras = Camera.getNumberOfCameras();
 			if (numberOfCameras == 1) {
-				camera = Camera.open();
-				PreyLogger.i("open camera()");
+			camera = Camera.open();
+			PreyLogger.i("open camera()");
 			} else {
-				camera = Camera.open(1);
-				PreyLogger.i("open camera(1)");
+			if ("front".equals(focus)){
+			camera = Camera.open(0);
+			PreyLogger.i("open camera(0)");
+			} else {
+			camera = Camera.open(1);
+			PreyLogger.i("open camera(1)");
+			}
 			}
 
 		} catch (Exception e) {
@@ -56,20 +67,39 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 		}
 		activity = this;
 	}
+	
 
-	public void takePicture() {
+	@SuppressLint("NewApi")
+	public void takePicture(String focus) {
 		try {
 			if (camera != null) {
 				Camera.Parameters parameters = camera.getParameters();
-			 	if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-					parameters.set("orientation", "portrait");
-					parameters.set("rotation", 90);
+				if("front".equals(focus)){
+					if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+						parameters.set("orientation", "portrait");
+						parameters.set("rotation", 90);
+					}
+					if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+						parameters.set("orientation", "landscape");
+						parameters.set("rotation", 180);
+					}
+				}else{
+					if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+						parameters.set("orientation", "portrait");
+						parameters.set("rotation", 270);
+					}
+					if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+						parameters.set("orientation", "landscape");
+						parameters.set("rotation", 0);
+					}
 				}
-				if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-					parameters.set("orientation", "landscape");
-					parameters.set("rotation", 180);
-				} 
 				parameters.setFlashMode(Parameters.FLASH_MODE_OFF);
+				parameters.setWhiteBalance(Parameters.WHITE_BALANCE_AUTO);
+				parameters.setSceneMode(Parameters.SCENE_MODE_AUTO);
+				//parameters.setFocusMode(Parameters.FOCUS_MODE_AUTO);
+				parameters.set("iso", 400);
+				parameters.setExposureCompensation(parameters.getMaxExposureCompensation());
+				
 				camera.setParameters(parameters);
 				
 			}
