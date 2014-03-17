@@ -14,6 +14,8 @@ import com.prey.actions.observer.ActionsController;
 import com.prey.exceptions.PreyException;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.managers.PreyTelephonyManager;
+import com.prey.managers.PreyWifiManager;
+import com.prey.net.NetworkUtils;
 import com.prey.net.PreyWebServices;
 import com.prey.services.LocationService;
 import com.prey.beta.services.PreyBetaRunnerService;
@@ -44,6 +46,12 @@ public class PreyBetaActionsRunner implements Runnable {
 	 				connection= preyTelephony.isDataConnectivityEnabled() || preyConnectivity.isConnected();
 	 				if(!connection){
 						PreyLogger.d("Phone doesn't have internet connection now. Waiting 10 secs for it");
+						
+						if(!PreyWifiManager.getInstance(ctx).isWifiEnabled())
+							PreyWifiManager.getInstance(ctx).setWifiEnabled(true);
+						if(!NetworkUtils.getNetworkUtils(ctx).isMobileDataEnabled())
+							NetworkUtils.getNetworkUtils(ctx).enableMobileData(true);
+						
 						Thread.sleep(10000);
 					}
 	 			}

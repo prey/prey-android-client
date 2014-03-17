@@ -14,7 +14,6 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.prey.PreyConfig;
-import com.prey.PreyLogger;
 import com.prey.beta.actions.PreyBetaActionsRunnner;
 import com.prey.services.LocationService;
 import com.prey.actions.observer.ActionsController;

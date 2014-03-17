@@ -31,7 +31,7 @@ public class StartPreyPreference extends DialogPreference {
 			// getContext().sendBroadcast(fakeSMS);
 			//PreyBetaController.startPrey(getContext());
 			
-			PreyController.startPrey(getContext());
+			PreyBetaController.startPrey(getContext());
 		}
 	}
 

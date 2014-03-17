@@ -17,7 +17,7 @@ import com.prey.services.PreyRunnerService;
 
 public class PreyController {
 
-	public static void startPrey(Context ctx) {
+	private static void startPrey(Context ctx) {
 		PreyConfig config = PreyConfig.getPreyConfig(ctx);
 		if (config.isThisDeviceAlreadyRegisteredWithPrey(true)){
 			// Cancelling the notification of the SMS that started Prey

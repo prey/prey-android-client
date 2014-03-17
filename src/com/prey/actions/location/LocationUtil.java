@@ -18,11 +18,12 @@ public class LocationUtil {
 	public static HttpDataService dataLocation(Context ctx) {
 
 		HttpDataService data = new HttpDataService("location");
+		Intent intent = new Intent(ctx, LocationService.class);
 		try {
 
 			data.setList(true);
 			PreyConfig.getPreyConfig(ctx).setMissing(true);
-			Intent intent = new Intent(ctx, LocationService.class);
+			
 			ctx.startService(intent);
 			boolean validLocation = false;
 			PreyLocation lastLocation;
@@ -61,6 +62,7 @@ public class LocationUtil {
 			PreyLogger.e("Error causa:" + e.getMessage() , e);
 			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,
 			UtilJson.makeMapParam("get","location","failed",e.getMessage()));
+			ctx.stopService(intent);
 		}
 		return data;
 	}

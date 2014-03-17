@@ -13,8 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 
-import com.prey.PreyConfig;
-import com.prey.PreyController;
+
 import com.prey.PreyLogger; 
 import com.prey.actions.sms.SMSUtil;
 import com.prey.sms.SmsThread;
@@ -46,7 +45,7 @@ public class SmsReceiver extends BroadcastReceiver {
                
                 	PreyLogger.i( "senderNum: "+ senderNum + "; message: " + messageSMS);
                
-                	executeActionsBasedOnSMSMessage(context, messageSMS);
+                	//executeActionsBasedOnSMSMessage(context, messageSMS);
                 	executeActions(context, messageSMS,phoneNumber);
                
                 } // end for loop
@@ -54,6 +53,7 @@ public class SmsReceiver extends BroadcastReceiver {
 		}
 	}
 
+	/*
 	private void executeActionsBasedOnSMSMessage(Context ctx, String messageSMS) {
 		try{
 			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
@@ -64,7 +64,7 @@ public class SmsReceiver extends BroadcastReceiver {
 			if (shouldPerform) {
 				PreyLogger.i("SMS Match!, waking up Prey right now!");
 				abortBroadcast(); //To remove the SMS from the inbox
-				PreyController.startPrey(ctx);
+				PreyBetaController.startPrey(ctx);
 			} else {
 				if (shouldStop) {
 					PreyLogger.i("SMS Match!, stopping Prey!");
@@ -75,7 +75,7 @@ public class SmsReceiver extends BroadcastReceiver {
 		}catch(Exception e){
 			
 		}
-	}
+	}*/
 	
 	
 	private void executeActions(Context ctx, String messageSMS,String phoneNumber) {

@@ -18,6 +18,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
+import com.prey.actions.observer.ActionsController;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
@@ -30,7 +31,12 @@ public class Report  {
 			List<HttpDataService> listData=new ArrayList<HttpDataService>();
 			PreyConfig preyConfig=PreyConfig.getPreyConfig(ctx);
 			preyConfig.setMissing(true);
-			int interval = parameters.getInt("interval");
+			int interval =0;
+			try{
+				interval = parameters.getInt("interval");
+			}catch(Exception e){
+				interval =0;
+			}
 			PreyConfig.getPreyConfig(ctx).setIntervalReport(""+interval);
 			while(preyConfig.isMissing()){
 				
@@ -78,6 +84,28 @@ public class Report  {
 		}
 	}
 	
- 
+	public static void run(Context ctx,int intervalReport){
+		
+		final int interval=intervalReport;
+		final Context myContext=ctx;
+		new Thread(){
+		            public void run() {
+		            	try{
+		            	Thread.sleep(90000);
+						List<JSONObject> list=new ArrayList<JSONObject>();
+						JSONObject jsonParams=new JSONObject();
+						jsonParams.put("interval",interval );
+						JSONObject json=new JSONObject();
+						json.put("command", "get");
+						json.put("target", "report");
+						json.put("options",	jsonParams);
+						list.add(json);
+		            	ActionsController.getInstance(myContext).runActionJson(myContext,list);
+		            	}catch(Exception e){
+		    				
+		    			}
+		            }
+		}.start();
+	}
 
 }

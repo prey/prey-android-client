@@ -19,8 +19,10 @@ public class NetworkUtils {
 	private WifiManager wifiManager;
 	private ConnectivityManager mdataManager;
 	private static NetworkUtils cachedInstance = null;
+	private Context ctx;
 	
 	private NetworkUtils(Context ctx) {
+		this.ctx=ctx;
 		this.wifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
 		try {
 			this.mdataManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -52,6 +54,21 @@ public class NetworkUtils {
 		} catch (Exception e) {
 			PreyLogger.e("Couldn't enable mobile data", e);
 		}
+	}
+	
+	public boolean isMobileDataEnabled(){
+	    
+	    ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+	    try {
+	        Class<?> c = Class.forName(cm.getClass().getName());
+	        Method m = c.getDeclaredMethod("getMobileDataEnabled");
+	        m.setAccessible(true);
+	        return (Boolean)m.invoke(cm);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 
 }
