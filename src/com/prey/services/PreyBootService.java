@@ -18,7 +18,10 @@ import com.prey.PreyConfig;
 import com.prey.PreyController;
 import com.prey.PreyLogger;
 import com.prey.backwardcompatibility.CupcakeSupport;
+import com.prey.beta.actions.PreyBetaController;
 import com.prey.exceptions.SMSNotSendException;
+import com.prey.json.actions.Report;
+import com.prey.net.PreyWebServices;
 import com.prey.sms.SMSSupport;
 import com.prey.R;
 public class PreyBootService extends Service {
@@ -39,7 +42,6 @@ public class PreyBootService extends Service {
 	@Override
 	public void onCreate() {
 		PreyLogger.d("Prey Boot Service Started!");
-		//new Thread(new SIMCheckingThread()).start();
 	}
 
 
@@ -53,58 +55,6 @@ public class PreyBootService extends Service {
 	public IBinder onBind(Intent intent) {
 		return mBinder;
 	}
-	
-	class SIMCheckingThread implements  Runnable {
-		
-		public void run() {
-			PreyLogger.d("SIM checking thread has started");
-			PreyConfig preyConfig = PreyConfig.getPreyConfig(PreyBootService.this);
-			if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey(false)){
-				try {
-					boolean isSIMReady = false;
-					
-					final TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-					if (tm.getSimState() != TelephonyManager.SIM_STATE_ABSENT){
-						while (!isSIMReady) {
-							isSIMReady = tm.getSimState() == TelephonyManager.SIM_STATE_READY;
-							if (isSIMReady) {
-								PreyLogger.d("SIM is ready to be checked now. Checking...");
-								if (preyConfig.isSimChanged()) {
-									PreyLogger.d("Starting prey right now since SIM was replaced!");
-									String destSMS = preyConfig.getDestinationSmsNumber();
-									if (PhoneNumberUtils.isWellFormedSmsAddress(destSMS)) {
-										String mail = PreyConfig.getPreyConfig(PreyBootService.this).getEmail();
-										String message = getString(R.string.sms_to_send_text, mail);
-										if (PreyConfig.getPreyConfig(PreyBootService.this).isCupcake())
-											CupcakeSupport.sendSMS(destSMS,message);
-										else
-											try {
-												SMSSupport.sendSMS(destSMS,message);
-											} catch (SMSNotSendException e) {
-												PreyLogger.i("There was an error sending the SIM replaced SMS alert");
-											}
-										
-									}
-									PreyController.startPrey(getApplicationContext());
-								}
-							} else {
-								PreyLogger.d("SIM not ready. Waiting 5 secs before check again.");
-								Thread.sleep(5000);
-							}
-						}
-					} else
-						PreyLogger.d("SIM absent. Can't check if changed");
-	
-				} catch (InterruptedException e) {
-					PreyLogger.e("Can't wait for SIM Ready state. Cancelling SIM Change check", e);
-				}
-				preyConfig.registerC2dm();
-	//			if (preyConfig.showLockScreen())
-	//				PreyBootService.this.startService(new Intent(PreyBootService.this, LockMonitorService.class));
-				stopSelf();
-			}
-		}
-	}
-	
+ 	
 }
 
