@@ -61,7 +61,7 @@ public class LocationService extends Service {
 		PreyLogger.d("Checking if this device is missing");
 		if (preyConfig.isMissing()) {
 			
-			if (!NetworkUtils.getNetworkUtils(getApplicationContext()).isWifiEnabled() && preyConfig.isShouldActivateWifi())
+			if (!NetworkUtils.getNetworkUtils(getApplicationContext()).isWifiEnabled() )
 				NetworkUtils.getNetworkUtils(getApplicationContext()).turnOnWifi(true);
 			
 			androidLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

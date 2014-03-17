@@ -78,8 +78,7 @@ public class PreyConfig {
 	public static final String PREFS_ACCOUNT_VERIFIED = "PREFS_ACCOUNT_VERIFIED";
 	public static final String PREFS_SECURITY_PROMPT_SHOWN = "PREFS_SECURITY_PROMPT_SHOWN";
 	public static final String ACTIVATE_DEVICE_ADMIN = "ACTIVATE_DEVICE_ADMIN";
-	public static final String PREFS_ACTIVATE_WIFI = "PREFS_ACTIVATE_WIFI";
-	public static final String PREFS_ACTIVATE_MOBILE_DATA = "PREFS_ACTIVATE_MOBILE_DATA";
+ 
 	public static final String IS_CAMOUFLAGE_SET = "PREFS_CAMOUFLAGE";
 	public static final String UNLOCK_PASS = "UNLOCK_PASS";
 	public static final String IS_LOCK_SET = "IS_LOCK_SET";
@@ -126,8 +125,7 @@ public class PreyConfig {
 	private String destinationSms;
 	private boolean shouldNotify;
 	private boolean shouldCheckSimChange;
-	private boolean shouldActivateWifi;
-	private boolean shouldActivateMobileData;
+ 
 	private boolean isTheAccountAlreadyVerified;
 	private boolean securityPrivilegesAlreadyPrompted;
 	private boolean isCamouflageSet;
@@ -175,8 +173,7 @@ public class PreyConfig {
 		this.email = settings.getString(PreyConfig.PREFS_EMAIL, "");
 		this.shouldNotify = settings.getBoolean(PreyConfig.PREFS_SHOW_NOTIFICATION, false);
 		this.shouldCheckSimChange = settings.getBoolean(PreyConfig.PREFS_CHECK_SIM_CHANGE, true);
-		this.shouldActivateWifi = settings.getBoolean(PreyConfig.PREFS_ACTIVATE_WIFI, false);
-		this.shouldActivateMobileData = settings.getBoolean(PreyConfig.PREFS_ACTIVATE_MOBILE_DATA, false);
+
 		this.isCamouflageSet = settings.getBoolean(PreyConfig.IS_CAMOUFLAGE_SET, false);
 		this.isTheAccountAlreadyVerified = settings.getBoolean(PreyConfig.PREFS_ACCOUNT_VERIFIED, false);
 		this.securityPrivilegesAlreadyPrompted = settings.getBoolean(PreyConfig.PREFS_SECURITY_PROMPT_SHOWN, false);
@@ -342,13 +339,7 @@ public class PreyConfig {
 		return shouldNotify;
 	}
 
-	public boolean isShouldActivateMobileData() {
-		return shouldActivateMobileData;
-	}
-	
-	public boolean isShouldActivateWifi() {
-		return shouldActivateWifi;
-	}
+ 
 	
 	public boolean isShouldCheckSimChange() {
 		return shouldCheckSimChange;

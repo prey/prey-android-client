@@ -6,7 +6,7 @@
   Full license at "/LICENSE"
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-
+	<!--  
     <PreferenceCategory android:title="@string/preferences_status" >
         <Preference
             android:key="PREFS_STATUS"
@@ -15,13 +15,14 @@
             <intent android:action="com.prey.activities.StatusActivity" />
         </Preference>
     </PreferenceCategory>
+    -->
     <PreferenceCategory android:title="@string/preferences_config_title" >
         <!--  <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="PREFS_CAMOUFLAGE"
                 android:title="@string/preferences_camouflage_title" 
                 android:summary="@string/preferences_camouflage_summary"/>-->
-        <com.prey.preferences.ChangeActivationPhrasePreferences
+       <!--  <com.prey.preferences.ChangeActivationPhrasePreferences
             android:defaultValue="GO PREY"
             android:dialogTitle="@string/preferences_sms_run_edittext"
             android:key="PREFS_SMS_RUN"
@@ -33,7 +34,7 @@
             android:dialogTitle="@string/preferences_sms_stop_edittext"
             android:key="PREFS_SMS_STOP"
             android:summary="@string/preferences_sms_stop_summary"
-            android:title="@string/preferences_sms_stop" />
+            android:title="@string/preferences_sms_stop" />-->
 
         <PreferenceScreen
             android:key="PREFS_ADMIN_ENABLE_DEVICE"
@@ -168,6 +169,7 @@
 
     </PreferenceScreen>  
     -->  
+    <!--  
     <PreferenceScreen
             android:key="PREFS_ADVANCED"
             android:summary="@string/preferences_advanced_screen_summary"
@@ -185,7 +187,7 @@
                 android:summary="@string/preferences_activate_mobile_data_summary"/>
 
         </PreferenceScreen>
-      
+    -->  
 	
 	
     </PreferenceCategory>
