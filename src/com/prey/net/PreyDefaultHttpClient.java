@@ -41,7 +41,8 @@ public class PreyDefaultHttpClient {
 		do {
 			try {
 				response = client.execute(base);
-				PreyLogger.i("[" + count + "]base:" + base.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
+				if (response!=null)
+					PreyLogger.i("[" + count + "]base:" + base.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
 				if (count < MAX_RETRIES) {
 					response = null;
@@ -69,7 +70,8 @@ public class PreyDefaultHttpClient {
 		do {
 			try {
 				response = client.execute(httpPost);
-				PreyLogger.i("[" + count + "]post:" + httpPost.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
+				if (response!=null)
+					PreyLogger.i("[" + count + "]post:" + httpPost.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
 				if (count < MAX_RETRIES) {
 					response = null;
@@ -97,7 +99,8 @@ public class PreyDefaultHttpClient {
 		do {
 			try {
 				response = client.execute(httpGet);
-				PreyLogger.i("[" + count + "]get:" + httpGet.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
+				if (response!=null)
+					PreyLogger.i("[" + count + "]get:" + httpGet.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
 				if (count < MAX_RETRIES) {
 					response = null;
@@ -125,7 +128,8 @@ public class PreyDefaultHttpClient {
 		do {
 			try {
 				response = client.execute(httpPut);
-				PreyLogger.i("[" + count + "]put:" + httpPut.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
+				if (response!=null)
+					PreyLogger.i("[" + count + "]put:" + httpPut.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
 				if (count < MAX_RETRIES) {
 					response = null;
@@ -153,7 +157,8 @@ public class PreyDefaultHttpClient {
 		do {
 			try {
 				response = client.execute(httpDelete);
-				PreyLogger.i("[" + count + "]delete:" + httpDelete.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
+				if (response!=null)
+					PreyLogger.i("[" + count + "]delete:" + httpDelete.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
 				if (count < MAX_RETRIES) {
 					response = null;
