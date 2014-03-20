@@ -108,7 +108,10 @@ public class CreateAccountActivity extends SetupActivity {
 
 		@Override
 		protected void onPostExecute(Void unused) {
-			progressDialog.dismiss();
+			try{
+				progressDialog.dismiss();
+			}catch(Exception e){
+			}
 			if (error == null) {
 				String message = getString(R.string.new_account_congratulations_text, email);
 				Bundle bundle = new Bundle();

@@ -109,8 +109,12 @@ public class PasswordActivity extends PreyActivity {
 
 		@Override
 		protected void onPostExecute(Void unused) {
-			if (progressDialog.isShowing())
-				progressDialog.dismiss();
+			if (progressDialog.isShowing()){
+				try{
+					progressDialog.dismiss();
+				}catch(Exception e){
+				}
+			}
 			if (error != null)
 				Toast.makeText(PasswordActivity.this, error, Toast.LENGTH_LONG).show();
 			else if (!isPasswordOk) {

@@ -37,10 +37,13 @@ public class PreyHttpResponse {
 
 	public PreyHttpResponse(HttpResponse response) {
 		this.response=response;
-		this.statusLine = response.getStatusLine();
-
 		try {
-			this.responseAsString = convertStreamToString(response.getEntity().getContent());
+			if(response!=null){
+				this.statusLine = response.getStatusLine();
+				this.responseAsString = convertStreamToString(response.getEntity().getContent());
+			}else{
+				this.responseAsString = "";
+			}
 		} catch (IOException e) {
 			PreyLogger.d("Can't receive body stream from http connection, setting response string as ''");
 			this.responseAsString = "";

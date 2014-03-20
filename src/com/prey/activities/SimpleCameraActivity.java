@@ -35,9 +35,13 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 		setContentView(R.layout.simple_camera);
 		
 		Bundle extras=getIntent().getExtras();
-		String focus=extras.getString("focus");
+		String focus=null;
+		if(extras!=null){
+			focus=extras.getString("focus");
+		}else{
+			focus="front";
+		}
 		PreyLogger.i("focus:"+focus);
-		
 		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
 		mHolder = surfaceView.getHolder();
 		mHolder.addCallback(this);
@@ -45,18 +49,18 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 		try {
 			int numberOfCameras = Camera.getNumberOfCameras();
 			if (numberOfCameras == 1) {
-			camera = Camera.open();
-			PreyLogger.i("open camera()");
+				camera = Camera.open();
+				PreyLogger.i("open camera()");
 			} else {
-			if ("front".equals(focus)){
-			camera = Camera.open(0);
-			PreyLogger.i("open camera(0)");
-			} else {
-			camera = Camera.open(1);
-			PreyLogger.i("open camera(1)");
+				if ("front".equals(focus)){
+					camera = Camera.open(0);
+					PreyLogger.i("open camera(0)");
+				} else {
+					camera = Camera.open(1);
+					PreyLogger.i("open camera(1)");
+				}
 			}
-			}
-
+		} catch(java.lang.NoSuchMethodError ne){	
 		} catch (Exception e) {
 		}
 		if (camera==null){
