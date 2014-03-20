@@ -42,7 +42,7 @@
             android:title="@string/preferences_admin_enabled_device_title" >
             
            
-        
+        <!--
           	<CheckBoxPreference
                 android:defaultValue="false"
                 android:key="PREFS_ADMIN_DEVICE_REVOKED_CHECK"
@@ -57,7 +57,7 @@
 	            android:key="PREFS_ADMIN_DEVICE_REVOKED_PASSWORD"
 	            android:summary="@string/preferences_admin_device_uninstallation_password_summary"
 	            android:title="@string/preferences_admin_device_uninstallation_password_title" />
-          	
+          	-->
           	
         	<com.prey.preferences.DeviceAdminPreference
             	android:dialogIcon="@drawable/logo"
@@ -103,6 +103,7 @@
             android:key="PREFS_ACCOUNT_MANAGEMENT_SCREEN"
             android:summary="@string/preferences_category_other_summary"
             android:title="@string/preferences_category_other_title" >
+ 
             <com.prey.preferences.ChangePasswordPreferences
                 android:dialogIcon="@drawable/logo"
                 android:dialogTitle="@string/preferences_password_dialog_title"
@@ -120,7 +121,7 @@
                 android:negativeButtonText="@string/no"
                 android:positiveButtonText="@string/yes"
                 android:summary="@string/preferences_detach_summary"
-                android:title="@string/preferences_detach_title" />
+                android:title="@string/preferences_detach_title" /> 
 
             <com.prey.preferences.GoToControlPanelDialogPreference
                 android:dialogIcon="@drawable/info"
