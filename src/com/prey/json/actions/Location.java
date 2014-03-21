@@ -33,8 +33,11 @@ public class Location extends JsonAction{
 		return listResult;
 	}
 	
- 
-
+	public  List<HttpDataService> start(Context ctx, List<ActionResult> list, JSONObject parameters) {
+		PreyLogger.d("Ejecuting Location Data.");
+		List<HttpDataService> listResult=super.get(ctx, list, parameters);
+		return listResult;
+	}
 	
 	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters){
 		HttpDataService data = LocationUtil.dataLocation(ctx);
