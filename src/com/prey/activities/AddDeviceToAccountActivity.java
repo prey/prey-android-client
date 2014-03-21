@@ -172,7 +172,9 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 
 		@Override
 		protected void onPostExecute(Void unused) {
-			progressDialog.dismiss();
+			try{
+				progressDialog.dismiss();
+			}catch(Exception e){}
 			if (noMoreDeviceError)
 				showDialog(NO_MORE_DEVICES_WARNING);
 

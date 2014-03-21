@@ -7,11 +7,13 @@
 package com.prey.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 import com.prey.PreyConfig;
+import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.R;
@@ -55,6 +57,22 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 		
 		p = findPreference("PREFS_ABOUT");
 		p.setSummary("Version " + preyConfig.getPreyVersion() + " - Fork Ltd.");
+		
+		Preference pGo= findPreference("PREFS_GOTO_WEB_CONTROL_PANEL");
+		pGo.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+			public boolean onPreferenceClick(Preference preference) {
+				
+				String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyUrl();
+				PreyLogger.d("url control:"+url);
+				Intent internetIntent = new Intent(Intent.ACTION_VIEW);
+				internetIntent.setData(Uri.parse(url));
+				
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+				startActivity(intent);
+				return false;
+			}
+		});
 		
 	} 
 	

@@ -26,10 +26,10 @@
     <string name="device_not_ready_h1">Device not ready!</string>
     <string name="device_ready_h2">Your phone is protected and waiting for the activation signal.</string>
     <string name="device_not_ready_h2">Location services are disabled for Prey. Reports will not be sent.</string>
-    <string name="login_cp">Log into the Control Panel</string>
-    <string name="manage_prey_settings">Manage Prey settings</string>
+    <string name="login_cp">Log into your Prey account</string>
+    <string name="manage_prey_settings">Manage app settings</string>
     <!-- Password screen -->
-    <string name="type_your_pass">Type in your password:</string>
+    <string name="type_your_pass">Type in your password</string>
     <string name="log_in">Log in</string>
     <!-- New account screen -->
     <string name="create_prey_account_h1">Create new account</string>
@@ -82,7 +82,7 @@
     <string name="preferences_status">Status</string>
     <string name="preferences_status_title">Prey current status</string>
     <string name="preferences_status_summary">Check execution status, time running and more.</string>
-    <string name="preferences_config_title">Main configuration</string>
+    <string name="preferences_config_title">Manage Your Devices</string>
     <string name="preferences_camouflage_title">Camouflage mode</string>
     <string name="preferences_camouflage_summary">Display a fake log in screen</string>
     <!-- Prey SMS Preferences -->
@@ -131,12 +131,12 @@
     <string name="preferences_passwords_successfully_changed">Your Prey password was successfully changed</string>
     <!-- Prey Detach Device Preferences -->
     <string name="preferences_detach_title">Detach device</string>
-    <string name="preferences_detach_summary">Remove this device from your Control Panel account</string>
+    <string name="preferences_detach_summary">Deletes this device from your Prey account</string>
     <string name="preferences_detach_dialog_title">Detaching device</string>
     <string name="preferences_detach_dialog_message">Your device will be detached from the Control Panel. This will also delete all its stored reports.\n\nAre you sure?</string>
     <string name="preferences_detach_dettaching_message">Detaching device, please wait…</string>
-    <string name="preferences_go_to_control_panel_title">View generated reports</string>
-    <string name="preferences_go_to_control_panel_summary">Opens browser with your Prey control panel</string>
+    <string name="preferences_go_to_control_panel_title">Manage Your Devices</string>
+    <string name="preferences_go_to_control_panel_summary">Go to your Prey account</string>
     <string name="preferences_go_to_control_panel_dialog_title">Acknowledge your request</string>
     <string name="preferences_go_to_control_panel_dialog_message">You\'ll be redirected to your Control Panel account.\n\n Are you sure?</string>
     <!-- Prey Operation Preferences -->
@@ -152,7 +152,7 @@
     <string name="preferences_stop_dialog_message">Prey will stop sending reports to the Control Panel and your device will be mark as recovered.\n\nAre you sure?</string>
     <!-- Prey security privileges -->
     <string name="preferences_admin_enabled_title">Revoke extra permissions</string>
-    <string name="preferences_admin_enabled_summary">Removes uninstall protection</string>
+    <string name="preferences_admin_enabled_summary">Allows you to uninstall Prey</string>
     <string name="preferences_admin_disabled_title">Grant extra permissions</string>
     <string name="preferences_admin_disabled_summary">Allows lock and uninstall protection</string>
     <string name="preferences_admin_enabled_dialog_title">Please note</string>
@@ -235,6 +235,5 @@
     <string name="feedback_form_button1">OK, send</string>
     <string name="feedback_form_button2">NO, thanks</string>
     <string name="feedback_form_send_email">Send Email</string>
-    
-    
+                
 </resources>

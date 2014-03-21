@@ -50,13 +50,13 @@
     <string name="preferences_passwords_do_not_match">Las contraseñas no coinciden</string>
     <string name="preferences_passwords_updating_dialog">Actualizando tu cuenta Prey.\nUn segundo…</string>
     <string name="preferences_passwords_successfully_changed">Tu contraseña fue cambiada exitosamente</string>
-    <string name="preferences_detach_title">Remover equipo</string>
-    <string name="preferences_detach_summary">Elimina este equipo de tu cuenta</string>
+    <string name="preferences_detach_title">Remover dispositivo</string>
+    <string name="preferences_detach_summary">Elimina este equipo de tu cuenta Prey</string>
     <string name="preferences_detach_dialog_title">Se removerá tu equipo</string>
     <string name="preferences_detach_dialog_message">Se va a eliminar este equipo del Panel de Control. Esto además eliminará todos los reportes almacenados para este equipo.\n\n¿Estás seguro?</string>
     <string name="preferences_detach_dettaching_message">Removiendo el equipo.\nUn segundo…</string>
-    <string name="preferences_go_to_control_panel_title">Ver reportes</string>
-    <string name="preferences_go_to_control_panel_summary">Abre el navegador en tu Panel de Control Prey</string>
+    <string name="preferences_go_to_control_panel_title">Administrar tus Dispositivos</string>
+    <string name="preferences_go_to_control_panel_summary">Ir a tu cuenta Prey</string>
     <string name="preferences_go_to_control_panel_dialog_title">Abriendo el navegador</string>
     <string name="preferences_go_to_control_panel_dialog_message">Vas a ser redirigido a tu cuenta en el Panel de Control web.\n\n ¿Estás seguro?</string>
     <string name="preferences_category_operations_title">Control de ejecución</string>
@@ -69,8 +69,8 @@
     <string name="preferences_stop_summary">Detiene Prey y las acciones asociadas</string>
     <string name="preferences_stop_dialog_title">Deteniendo Prey</string>
     <string name="preferences_stop_dialog_message">Prey no seguirá enviando reportes al Panel de Control y tu dispositivo dejará de estar marcado como desaparecido.\n\n¿Estás seguro?</string>
-    <string name="preferences_admin_enabled_title">Deshabilitar permisos extra</string>
-    <string name="preferences_admin_enabled_summary">Quita protección de desinstalación</string>
+    <string name="preferences_admin_enabled_title">Quitar Permisos Extra</string>
+    <string name="preferences_admin_enabled_summary">Te permite desinstalar Prey</string>
     <string name="preferences_admin_disabled_title">Habilitar permisos extras</string>
     <string name="preferences_admin_disabled_summary">Evita la desinstalación de Prey</string>
     <string name="preferences_admin_enabled_dialog_title">Atención</string>
@@ -108,8 +108,8 @@
     <string name="device_not_ready_h1">¡Equipo aún no listo!</string>
     <string name="device_ready_h2">Tu equipo está protegido y a la espera de la señal de activación.</string>
     <string name="device_not_ready_h2">Servicios de localización desactivados. Los reportes no serán enviados.</string>
-    <string name="login_cp">Ingresa al Panel de Control</string>
-    <string name="manage_prey_settings">Configuración de Prey</string>
+    <string name="login_cp">Ingresar a tu cuenta Prey</string>
+    <string name="manage_prey_settings">Cambiar la configuración</string>
     <string name="type_your_pass">Ingresa tu contraseña</string>
     <string name="log_in">Ingresar</string>
     <string name="create_prey_account_h1">Crear nueva cuenta</string>
@@ -183,4 +183,6 @@
     <string name="feedback_form_button1">OK, enviar</string>
     <string name="feedback_form_button2">NO, gracias</string>
     <string name="feedback_form_send_email">Enviar correo</string>
+ 
+
 </resources>
