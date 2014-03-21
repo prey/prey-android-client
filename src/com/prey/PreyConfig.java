@@ -420,20 +420,20 @@ public class PreyConfig {
  
 
 	public boolean isSimChanged() {
-		if (this.isShouldCheckSimChange()){
+		
 			TelephonyManager telephonyManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
 			String simSerial=telephonyManager.getSimSerialNumber();
 			PreyLogger.i("simSerial:"+simSerial+" actual:"+this.simSerialNumber);
 			if (this.simSerialNumber==null||"".equals(this.simSerialNumber)){
-				if(simSerial!=null){
+				if(simSerial!=null&&!"".equals(simSerial)){
 					this.setSimSerialNumber(simSerial);
 				}
 				return false;
 			}
-			if(simSerial!=null&&!simSerial.equals(this.getSimSerialNumber())){
+			if(simSerial!=null&&!"".equals(simSerial)&&!simSerial.equals(this.getSimSerialNumber())){
 				return true;
 			}
-		}
+		
 		return false;
 	}
 
