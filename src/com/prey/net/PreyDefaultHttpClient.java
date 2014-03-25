@@ -1,6 +1,7 @@
 package com.prey.net;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -31,6 +32,7 @@ public class PreyDefaultHttpClient {
 	private int MAX_RETRIES = 5;
 	private int STATUS_CODE_503 = 503;
 
+
 	public PreyDefaultHttpClient(DefaultHttpClient client) {
 		this.client = client;
 	}
@@ -40,10 +42,19 @@ public class PreyDefaultHttpClient {
 		int count = 0;
 		do {
 			try {
+				PreyLogger.d("[" + count + "]ini base:" + base.getURI());
 				response = client.execute(base);
 				if (response!=null)
 					PreyLogger.i("[" + count + "]base:" + base.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
+				PreyLogger.d("[" + count + "]base ConnectTimeoutException:");
+				if (count < MAX_RETRIES) {
+					response = null;
+				} else {
+					throw e;
+				}
+			} catch (SocketTimeoutException e) {
+				PreyLogger.d("[" + count + "]base SocketTimeoutException:");
 				if (count < MAX_RETRIES) {
 					response = null;
 				} else {
@@ -54,7 +65,7 @@ public class PreyDefaultHttpClient {
 				count++;
 			} else {
 				if (response.getStatusLine().getStatusCode() != STATUS_CODE_503) {
-					count = MAX_RETRIES;
+					return response;
 				} else {
 					count++;
 					sleep();
@@ -69,10 +80,19 @@ public class PreyDefaultHttpClient {
 		int count = 0;
 		do {
 			try {
+				PreyLogger.d("[" + count + "]ini post:" + httpPost.getURI());
 				response = client.execute(httpPost);
 				if (response!=null)
 					PreyLogger.i("[" + count + "]post:" + httpPost.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
+				PreyLogger.d("[" + count + "]post ConnectTimeoutException:");
+				if (count < MAX_RETRIES) {
+					response = null;
+				} else {
+					throw e;
+				}
+			} catch (SocketTimeoutException e) {
+				PreyLogger.d("[" + count + "]post SocketTimeoutException:");
 				if (count < MAX_RETRIES) {
 					response = null;
 				} else {
@@ -83,7 +103,7 @@ public class PreyDefaultHttpClient {
 				count++;
 			} else {
 				if (response.getStatusLine().getStatusCode() != STATUS_CODE_503) {
-					count = MAX_RETRIES;
+					return response;
 				} else {
 					count++;
 					sleep();
@@ -98,10 +118,19 @@ public class PreyDefaultHttpClient {
 		int count = 0;
 		do {
 			try {
+				PreyLogger.d("[" + count + "]ini get:" + httpGet.getURI());
 				response = client.execute(httpGet);
 				if (response!=null)
 					PreyLogger.i("[" + count + "]get:" + httpGet.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
+				PreyLogger.d("[" + count + "]get ConnectTimeoutException:");
+				if (count < MAX_RETRIES) {
+					response = null;
+				} else {
+					throw e;
+				}
+			} catch (SocketTimeoutException e) {
+				PreyLogger.d("[" + count + "]get SocketTimeoutException:");
 				if (count < MAX_RETRIES) {
 					response = null;
 				} else {
@@ -112,7 +141,7 @@ public class PreyDefaultHttpClient {
 				count++;
 			} else {
 				if (response.getStatusLine().getStatusCode() != STATUS_CODE_503) {
-					count = MAX_RETRIES;
+					return response;
 				} else {
 					count++;
 					sleep();
@@ -127,10 +156,19 @@ public class PreyDefaultHttpClient {
 		int count = 0;
 		do {
 			try {
+				PreyLogger.d("[" + count + "]ini put:" + httpPut.getURI());
 				response = client.execute(httpPut);
 				if (response!=null)
 					PreyLogger.i("[" + count + "]put:" + httpPut.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
+				PreyLogger.d("[" + count + "]put ConnectTimeoutException:");
+				if (count < MAX_RETRIES) {
+					response = null;
+				} else {
+					throw e;
+				}
+			} catch (SocketTimeoutException e) {
+				PreyLogger.d("[" + count + "]put SocketTimeoutException:");
 				if (count < MAX_RETRIES) {
 					response = null;
 				} else {
@@ -141,7 +179,7 @@ public class PreyDefaultHttpClient {
 				count++;
 			} else {
 				if (response.getStatusLine().getStatusCode() != STATUS_CODE_503) {
-					count = MAX_RETRIES;
+					return response;
 				} else {
 					count++;
 					sleep();
@@ -156,10 +194,19 @@ public class PreyDefaultHttpClient {
 		int count = 0;
 		do {
 			try {
+				PreyLogger.d("[" + count + "]ini delete:" + httpDelete.getURI());
 				response = client.execute(httpDelete);
 				if (response!=null)
 					PreyLogger.i("[" + count + "]delete:" + httpDelete.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
+				PreyLogger.d("[" + count + "]delete ConnectTimeoutException:");
+				if (count < MAX_RETRIES) {
+					response = null;
+				} else {
+					throw e;
+				}
+			} catch (SocketTimeoutException e) {
+				PreyLogger.d("[" + count + "]delete SocketTimeoutException:");
 				if (count < MAX_RETRIES) {
 					response = null;
 				} else {
@@ -169,8 +216,9 @@ public class PreyDefaultHttpClient {
 			if (response == null) {
 				count++;
 			} else {
+				PreyLogger.d("[" + count + "]delete:" + httpDelete.getURI());
 				if (response.getStatusLine().getStatusCode() != STATUS_CODE_503) {
-					count = MAX_RETRIES;
+					return response;
 				} else {
 					count++;
 					sleep();
