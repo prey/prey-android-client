@@ -107,6 +107,7 @@ public class PreyConfig {
  
 	public static final String NOTIFICATION_ID="NOTIFICATION_ID";
 	public static final String SEND_NOTIFICATION_ID="SEND_NOTIFICATION_ID";
+	public static final String SIGNAL_FLARE_DATE="SIGNAL_FLARE_DATE";
 	
 	private boolean sendNotificationId;
 	private String notificationId;
@@ -154,6 +155,8 @@ public class PreyConfig {
 	private String intervalReport;
  
 	
+	private long signalFlareDate;
+	
 	private Context ctx;
 
 	private PreyConfig(Context ctx) {
@@ -184,7 +187,6 @@ public class PreyConfig {
 		
 
 
-		this.installationDate=settings.getLong(PreyConfig.INSTALLATION_DATE, new Date().getTime());
 		this.flagFeedback=settings.getInt(PreyConfig.FLAG_FEEDBACK, FeedbackActivity.FLAG_FEEDBACK_INIT);
 		this.keepOn=settings.getBoolean(PreyConfig.KEEP_ON, false);
 		
@@ -197,6 +199,9 @@ public class PreyConfig {
 		this.simSerialNumber=settings.getString(PreyConfig.SIM_SERIAL_NUMBER, "");
 		this.intervalReport=settings.getString(PreyConfig.INTERVAL_REPORT, "");
 		this.sendNotificationId=settings.getBoolean(PreyConfig.SEND_NOTIFICATION_ID,false);
+		
+		this.signalFlareDate=settings.getLong(PreyConfig.SIGNAL_FLARE_DATE, 0);
+		
 		this.installationDate=settings.getLong(PreyConfig.INSTALLATION_DATE, new Date().getTime());
 		saveLong(PreyConfig.INSTALLATION_DATE,installationDate);
 	}
@@ -743,4 +748,14 @@ public class PreyConfig {
 	public long getInstallationDate(){
 		return this.installationDate;
 	}
+	
+	public void setSignalFlareDate(long signalFlareDate){
+		this.signalFlareDate=signalFlareDate;
+		saveLong(PreyConfig.SIGNAL_FLARE_DATE, this.signalFlareDate);
+	}
+	
+	public long getSignalFlareDate(){
+		return this.signalFlareDate;
+	}
+ 
 }

@@ -13,7 +13,6 @@ import com.prey.events.retrieves.EventRetrieveDataUptime;
 import com.prey.events.retrieves.EventRetrieveDataWifi;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.managers.PreyWifiManager;
-import com.prey.net.PreyWebServices;
 
 public class EventManager {
 
