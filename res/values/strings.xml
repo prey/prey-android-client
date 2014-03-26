@@ -7,7 +7,7 @@
 -->
 <resources>
     <string name="preyForAndroid_name">Prey</string>
-    <string name="prey_version">1.0.5</string>
+    <string name="prey_version">1.0.6</string>
     <!-- commons -->
     <string name="yes">Yes</string>
     <string name="no">No</string>
