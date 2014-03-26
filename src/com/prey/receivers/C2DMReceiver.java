@@ -17,6 +17,7 @@ import com.prey.FileConfigReader;
 import com.prey.PreyConfig; 
 import com.prey.PreyLogger;
 import com.prey.PreyUtils; 
+import com.prey.activities.PreyActivity;
 import com.prey.beta.actions.PreyBetaController;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
@@ -133,6 +134,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 			// unregistration done, new messages from the authorized sender will
 			// be rejected
 			PreyLogger.d("Unregistered from c2dm: " + intent.getStringExtra("unregistered"));
+			PreyConfig.getPreyConfig(context).registerC2dm();
 		} else if (registration != null) {
 			//PreyLogger.d("Registration id: " + registration);
 			new UpdateCD2MId().execute(registration, context);
