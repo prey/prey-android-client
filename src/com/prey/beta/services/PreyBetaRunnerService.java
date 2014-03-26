@@ -15,7 +15,6 @@ import android.os.IBinder;
 
 import com.prey.PreyConfig;
 import com.prey.beta.actions.PreyBetaActionsRunnner;
-import com.prey.services.LocationService;
 import com.prey.actions.observer.ActionsController;
 
 
@@ -62,7 +61,6 @@ public class PreyBetaRunnerService extends Service {
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancelAll();
 		ActionsController.getInstance(PreyBetaRunnerService.this).finishRunningJosb();
-		stopService(new Intent(PreyBetaRunnerService.this, LocationService.class));
 		running = false;
 		//PreyLogger.d("PreyRunnerService has been destroyed");
 	}

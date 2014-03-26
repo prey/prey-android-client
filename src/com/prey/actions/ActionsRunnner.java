@@ -19,7 +19,6 @@ import com.prey.actions.observer.ActionsController;
 import com.prey.actions.parser.ResponseParser;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
-import com.prey.services.LocationService;
 import com.prey.services.PreyRunnerService;
 import com.prey.util.PreyTime;
 
@@ -95,9 +94,7 @@ public class ActionsRunnner {
 						}
 					}
 				}
-				ctx.stopService(new Intent(ctx, LocationService.class));
 				ctx.stopService(new Intent(ctx, PreyRunnerService.class));
-				//PreyConfig.getPreyConfig(ctx).setShowLockScreen(false);
 				PreyLogger.d("Prey execution has finished!!");
 				PreyTime.getInstance().setRunning(false);
 			}

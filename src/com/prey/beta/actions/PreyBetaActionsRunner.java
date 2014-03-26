@@ -17,7 +17,6 @@ import com.prey.managers.PreyTelephonyManager;
 import com.prey.managers.PreyWifiManager;
 import com.prey.net.NetworkUtils;
 import com.prey.net.PreyWebServices;
-import com.prey.services.LocationService;
 import com.prey.beta.services.PreyBetaRunnerService;
 
 public class PreyBetaActionsRunner implements Runnable {
@@ -59,7 +58,6 @@ public class PreyBetaActionsRunner implements Runnable {
 			} catch (Exception e) {
 				PreyLogger.e("Error, because:"+e.getMessage(),e );
 			}
-			ctx.stopService(new Intent(ctx, LocationService.class));
 			ctx.stopService(new Intent(ctx, PreyBetaRunnerService.class));
 			PreyLogger.d("Prey execution has finished!!");
 	 	}

@@ -29,20 +29,19 @@ import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
-import com.prey.services.LocationService;
 
 public class Geofencing extends JsonAction{
 
  
 
 	public void start(Context ctx, List<ActionResult> lista, JSONObject parameters) {
-
+		
 		try {
 			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 			preyConfig.setMissing(true);
 			
 			 
-			ctx.startService(new Intent(ctx, LocationService.class));
+			 
 			
 			String origin = parameters.getString("origin");
 			String[] centralPoints = origin.split(",");

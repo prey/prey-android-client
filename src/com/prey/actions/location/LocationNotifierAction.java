@@ -7,6 +7,7 @@
 package com.prey.actions.location;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +20,6 @@ import com.prey.actions.PreyAction;
 import com.prey.actions.observer.ActionJob;
 import com.prey.actions.observer.ActionResult;
 import com.prey.exceptions.PreyException;
-import com.prey.services.LocationService;
 
 public class LocationNotifierAction extends PreyAction {
 
@@ -67,30 +67,7 @@ public class LocationNotifierAction extends PreyAction {
 
 	@Override
 	public void execute(ActionJob actionJob, Context ctx) throws PreyException {
-		ctx.startService(new Intent(ctx, LocationService.class));
-		boolean validLocation = false;
-		PreyLocation lastLocation;
-		HashMap<String, String> parameters = new HashMap<String, String>(); // HashMap<String,
-		// String>();
-		while (!validLocation) {
-			lastLocation = PreyLocationManager.getInstance(ctx).getLastLocation();
-			if (lastLocation.isValid()) {
-				validLocation = true;
-				parameters.put("lat", Double.toString(lastLocation.getLat()));
-				parameters.put("lng", Double.toString(lastLocation.getLng()));
-				parameters.put("acc", Float.toString(lastLocation.getAccuracy()));
-				parameters.put("alt", Double.toString(lastLocation.getAltitude()));
-			} else
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					//throw new PreyException("Thread was intrrupted. Finishing Location NotifierAction", e);
-				}
-		}
-
-		data.getDataList().putAll(parameters);
-		parameters = null;
-
+		HttpDataService data = LocationUtil.dataLocation(ctx);
 		PreyLogger.d("Ejecuting LocationNotifierAction Action. DONE!");
 		ActionResult result = new ActionResult();
 		result.setDataToSend(data);
