@@ -154,6 +154,7 @@ public class PreyConfig {
 
 	private String intervalReport;
  
+	private boolean registerC2dm=false;
 	
 	private long signalFlareDate;
 	
@@ -758,4 +759,11 @@ public class PreyConfig {
 		return this.signalFlareDate;
 	}
  
+	public void setRegisterC2dm(boolean registerC2dm){
+		this.registerC2dm=registerC2dm;
+	}
+	public boolean isRegisterC2dm(){
+		return registerC2dm;
+	}
+	
 }

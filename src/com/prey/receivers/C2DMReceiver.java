@@ -129,15 +129,16 @@ public class C2DMReceiver extends BroadcastReceiver {
 		String registration = intent.getStringExtra("registration_id");
 		if (intent.getStringExtra("error") != null) {
 			PreyLogger.d("Couldn't register to c2dm: " + intent.getStringExtra("error"));
-
+			PreyConfig.getPreyConfig(context).setRegisterC2dm(false);
 		} else if (intent.getStringExtra("unregistered") != null) {
 			// unregistration done, new messages from the authorized sender will
 			// be rejected
 			PreyLogger.d("Unregistered from c2dm: " + intent.getStringExtra("unregistered"));
-			PreyConfig.getPreyConfig(context).registerC2dm();
+			PreyConfig.getPreyConfig(context).setRegisterC2dm(false);
 		} else if (registration != null) {
 			//PreyLogger.d("Registration id: " + registration);
 			new UpdateCD2MId().execute(registration, context);
+			PreyConfig.getPreyConfig(context).setRegisterC2dm(true);
 			// Send the registration ID to the 3rd party site that is sending
 			// the messages.
 			// This should be done in a separate thread.

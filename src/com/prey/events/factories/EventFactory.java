@@ -53,9 +53,13 @@ public class EventFactory {
 			try{
 				if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
 					info.put("connected", "wifi");
+					if(!PreyConfig.getPreyConfig(ctx).isRegisterC2dm())
+						PreyConfig.getPreyConfig(ctx).registerC2dm();
 				}
 				if (PreyConnectivityManager.getInstance(ctx).isMobileConnected()) {
 					info.put("connected", "mobile");
+					if(!PreyConfig.getPreyConfig(ctx).isRegisterC2dm())
+						PreyConfig.getPreyConfig(ctx).registerC2dm();
 				}
 			}catch (Exception e) {
 			}
