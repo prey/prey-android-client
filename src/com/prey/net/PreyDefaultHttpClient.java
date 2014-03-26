@@ -3,6 +3,8 @@ package com.prey.net;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 
+import javax.net.ssl.SSLException;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.RedirectHandler;
@@ -29,7 +31,7 @@ public class PreyDefaultHttpClient {
 
 	private DefaultHttpClient client;
 
-	private int MAX_RETRIES = 5;
+	private int MAX_RETRIES = 4;
 	private int STATUS_CODE_503 = 503;
 
 
@@ -60,7 +62,15 @@ public class PreyDefaultHttpClient {
 				} else {
 					throw e;
 				}
+			} catch (SSLException e) {
+				PreyLogger.d("[" + count + "]base SSLException:");
+				if (count < MAX_RETRIES) {
+					response = null;
+				} else {
+					throw e;
+				}
 			}
+			
 			if (response == null) {
 				count++;
 			} else {
@@ -98,7 +108,15 @@ public class PreyDefaultHttpClient {
 				} else {
 					throw e;
 				}
+			} catch (SSLException e) {
+				PreyLogger.d("[" + count + "]base SSLException:");
+				if (count < MAX_RETRIES) {
+					response = null;
+				} else {
+					throw e;
+				}
 			}
+			
 			if (response == null) {
 				count++;
 			} else {
@@ -136,7 +154,15 @@ public class PreyDefaultHttpClient {
 				} else {
 					throw e;
 				}
+			} catch (SSLException e) {
+				PreyLogger.d("[" + count + "]base SSLException:");
+				if (count < MAX_RETRIES) {
+					response = null;
+				} else {
+					throw e;
+				}
 			}
+			
 			if (response == null) {
 				count++;
 			} else {
@@ -174,7 +200,15 @@ public class PreyDefaultHttpClient {
 				} else {
 					throw e;
 				}
+			} catch (SSLException e) {
+				PreyLogger.d("[" + count + "]base SSLException:");
+				if (count < MAX_RETRIES) {
+					response = null;
+				} else {
+					throw e;
+				}
 			}
+			
 			if (response == null) {
 				count++;
 			} else {
@@ -212,7 +246,15 @@ public class PreyDefaultHttpClient {
 				} else {
 					throw e;
 				}
+			} catch (SSLException e) {
+				PreyLogger.d("[" + count + "]base SSLException:");
+				if (count < MAX_RETRIES) {
+					response = null;
+				} else {
+					throw e;
+				}
 			}
+			
 			if (response == null) {
 				count++;
 			} else {
