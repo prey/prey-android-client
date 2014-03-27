@@ -12,10 +12,10 @@ import org.json.JSONObject;
 import com.prey.PreyLogger;
 
 public class EventControl {
-
 	
 	private static EventControl instance=null;
 	private static Map<String,Long> map=null;
+	private SimpleDateFormat sdf2=new SimpleDateFormat("dd/MM/yy hh:mm:ss",Locale.getDefault());
 	
 	private EventControl(){
 		map=new HashMap<String, Long>();
@@ -27,43 +27,36 @@ public class EventControl {
 		} 
 		return instance;
 	}
-	
-	private SimpleDateFormat sdf2=new SimpleDateFormat("dd/MM/yy hh:mm:ss",Locale.getDefault());
-	//private SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss",Locale.getDefault());
+
 	public boolean valida(JSONObject json){
-		
-		
 		String state="";
-		String remaining="";
-		
+		double percentage=-1;
 		try{
-			
-			 
-		
 			JSONObject jsonBattery=json.getJSONObject("battery_status");
 			state=jsonBattery.getString("state");
-			remaining=jsonBattery.getString("percentage_remaining");
+			String remaining=jsonBattery.getString("percentage_remaining");
 			PreyLogger.d("state:"+state+" remaining:"+remaining);
+			percentage=Double.parseDouble(remaining);
 		}catch(Exception e){
-			
+			percentage=-1;
 		}
 		Date nowDate=new Date();
 		long now = nowDate.getTime();
 		if ("discharging".equals(state)||"stopped_charging".equals(state)){
-			if(remaining!=null&&!"".equals(remaining)){
-		 
+			if(percentage>0){
 				if(map.containsKey(state)){
 					long time=map.get(state);
-				
 					Calendar cal = Calendar.getInstance();
 					cal.setTimeInMillis(time);
-					cal.add(Calendar.MINUTE, 2);
-					long timeMoreTwo=cal.getTimeInMillis();
-				
-				
+					if(percentage<=15){
+						cal.add(Calendar.MINUTE, 4);
+					}else{
+						cal.add(Calendar.MINUTE, 1);
+					}
+					long timeMore=cal.getTimeInMillis();
 					PreyLogger.d("now        :"+now+" "+sdf2.format(new Date(now)));
-					PreyLogger.d("timeMoreTwo:"+timeMoreTwo+" "+sdf2.format(new Date(timeMoreTwo)));
-					if(timeMoreTwo>now){
+					PreyLogger.d("timeMore:"+timeMore+" "+sdf2.format(new Date(timeMore)));
+					if(timeMore>now){
 						return false;
 					}else{
 						map.put(state,now);
@@ -79,9 +72,6 @@ public class EventControl {
 		}else{
 			return true;
 		}
-	
-		
 	}
-	
 	
 }
