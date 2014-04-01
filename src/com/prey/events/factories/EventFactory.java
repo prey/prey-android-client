@@ -18,15 +18,15 @@ public class EventFactory {
 	private static final String BOOT_COMPLETED="android.intent.action.BOOT_COMPLETED";
 	private static final String CONNECTIVITY_CHANGE="android.net.conn.CONNECTIVITY_CHANGE";
 	private static final String WIFI_STATE_CHANGED="android.net.wifi.WIFI_STATE_CHANGED";
-	private static final String ACTION_POWER_CONNECTED="android.intent.action.ACTION_POWER_CONNECTED";
-	private static final String ACTION_POWER_DISCONNECTED="android.intent.action.ACTION_POWER_DISCONNECTED";
+//	private static final String ACTION_POWER_CONNECTED="android.intent.action.ACTION_POWER_CONNECTED";
+//	private static final String ACTION_POWER_DISCONNECTED="android.intent.action.ACTION_POWER_DISCONNECTED";
 	private static final String ACTION_BATTERY_CHANGE="android.intent.action.ACTION_BATTERY_CHANGE";
 	private static final String ACTION_BATTERY_LOW="android.intent.action.ACTION_BATTERY_LOW";
 	private static final String ACTION_SHUTDOWN="android.intent.action.ACTION_SHUTDOWN";
 	private static final String BATTERY_LOW="android.intent.action.BATTERY_LOW";
 	private static final String BATTERY_OKAY="android.intent.action.BATTERY_OKAY";
 	private static final String BATTERY_CHANGED="android.intent.action.BATTERY_CHANGED";
-	private static final String USER_PRESENT="android.intent.action.USER_PRESENT";
+//	private static final String USER_PRESENT="android.intent.action.USER_PRESENT";
 	
 	public static Event getEvent(Context ctx,Intent intent){
 		String message="getEvent["+intent.getAction()+"]";
@@ -65,13 +65,14 @@ public class EventFactory {
 			}
 			return new Event(Event.WIFI_CHANGED,info.toString());
 		}
-        
+		/*
 		if (ACTION_POWER_CONNECTED.equals(intent.getAction()) ){
 			return new Event(Event.PLUGGED);
 		}
 		if (ACTION_POWER_DISCONNECTED.equals(intent.getAction()) ){
 			return new Event(Event.UN_PLUGGED);
-		}		
+		}
+		*/		
 		if (ACTION_BATTERY_LOW.equals(intent.getAction()) ){
 			return new Event(Event.BATTERY_LOW);
 		}
@@ -97,7 +98,7 @@ public class EventFactory {
 				}
 			}catch (Exception e) {
 			}
-			return new Event(Event.PLUGGED,info.toString());
+			//return new Event(Event.PLUGGED,info.toString());
 		}
 		return null;
 	}

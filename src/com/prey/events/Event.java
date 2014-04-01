@@ -4,8 +4,8 @@ public class Event {
 
 	public static final String SIM_CHANGED="sim_changed";
 	public static final String WIFI_CHANGED="ssid_changed";
-	public static final String PLUGGED="started_charging";
-	public static final String UN_PLUGGED="stopped_charging";
+//	public static final String PLUGGED="started_charging";
+//	public static final String UN_PLUGGED="stopped_charging";
 	public static final String TURNED_ON="device_turned_on";
 	public static final String TURNED_OFF="device_turned_off";
 	public static final String BATTERY_LOW="low_battery";
