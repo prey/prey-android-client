@@ -518,11 +518,12 @@ public class PreyPhone {
 		return runtime.availableProcessors();
 	}
 	private String getSerialNumber(){
-		TelephonyManager telephonyManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
-		if (telephonyManager.getSimSerialNumber()!=null){
-			return telephonyManager.getSimSerialNumber();
-		}else{
-			return telephonyManager.getDeviceId();
+		PreyConfig config=PreyConfig.getPreyConfig(ctx);
+		if (config.isFroyoOrAbove()){
+			TelephonyManager tManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
+			return tManager.getDeviceId();
+		} else {
+			return "";
 		}
 	}
 	
