@@ -25,7 +25,7 @@ public class PictureUtil {
 			data = new HttpDataService(CameraAction.DATA_ID);
 			data.setList(true);
 			if (frontPicture != null) {
-				PreyLogger.i("dataImagen front data length=" + frontPicture.length);
+				PreyLogger.d("dataImagen front data length=" + frontPicture.length);
 				InputStream file = new ByteArrayInputStream(frontPicture);
 				EntityFile entityFile = new EntityFile();
 				entityFile.setFile(file);
@@ -34,14 +34,14 @@ public class PictureUtil {
 				entityFile.setType("picture");
 				data.addEntityFile(entityFile);
 			} else {
-				PreyLogger.i("dataImagen front null");
+				PreyLogger.d("dataImagen front null");
 			}
 			int numberOfCameras = Camera.getNumberOfCameras();
 			if (numberOfCameras > 1) {
 				Thread.sleep(6000);
 				byte[] backPicture = getPicture(ctx, "back");
 				if (backPicture != null) {
-					PreyLogger.i("dataImagen back data length=" + backPicture.length);
+					PreyLogger.d("dataImagen back data length=" + backPicture.length);
 					InputStream file = new ByteArrayInputStream(backPicture);
 					EntityFile entityFile = new EntityFile();
 					entityFile.setFile(file);
@@ -78,14 +78,14 @@ public class PictureUtil {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 			}
-			PreyLogger.i("esperando antes take picture[" + i + "]");
+			PreyLogger.d("esperando antes take picture[" + i + "]");
 			i++;
 		}
 		if (SimpleCameraActivity.activity != null) {
-			PreyLogger.i("takePicture activity no nulo");
+			PreyLogger.d("takePicture activity no nulo");
 			SimpleCameraActivity.activity.takePicture(focus);
 		} else {
-			PreyLogger.i("takePicture activity nulo");
+			PreyLogger.d("takePicture activity nulo");
 		}
 		try {
 			Thread.sleep(3000);
@@ -99,7 +99,7 @@ public class PictureUtil {
 			while (SimpleCameraActivity.activity != null && SimpleCameraActivity.dataImagen == null && i < 20) {
 				Thread.sleep(1000);
 				i++;
-				PreyLogger.i("falta imagen[" + i + "]");
+				PreyLogger.d("falta imagen[" + i + "]");
 			}
 		} catch (InterruptedException e) {
 			PreyLogger.i("Error, causa:" + e.getMessage());

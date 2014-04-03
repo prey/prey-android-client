@@ -29,13 +29,13 @@ public class PreyInstallRemoteThread extends Thread {
 			if (!PreyConfig.getPreyConfig(ctx).isCupcake())
 				vendor = AboveCupcakeSupport.getDeviceVendor();
  	
-			PreyLogger.i("email:"+email+" vendor:"+vendor+" model:"+model+" notificationId:"+notificationId);
+			PreyLogger.d("email:"+email+" vendor:"+vendor+" model:"+model+" notificationId:"+notificationId);
 			
 			if (notificationId!=null&&!"".equals(notificationId)){
 				String deviceType = PreyUtils.getDeviceType(ctx);
 				PreyHttpResponse response=PreyWebServices.getInstance().registerNewDeviceRemote(ctx, email,notificationId, deviceType);
-				PreyLogger.i("remote install response:"+response.getResponseAsString());
-				PreyLogger.i("remote install code:"+response.getStatusLine().getStatusCode());
+				PreyLogger.d("remote install response:"+response.getResponseAsString());
+				PreyLogger.d("remote install code:"+response.getStatusLine().getStatusCode());
 
 				if (response.getStatusLine().getStatusCode()==200){
 					PreyConfig.getPreyConfig(ctx).setSendNotificationId(true); 

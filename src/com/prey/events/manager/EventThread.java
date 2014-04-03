@@ -24,7 +24,7 @@ public class EventThread extends Thread  {
 	public void run() {
 		 try {
 			 boolean valida=EventControl.getInstance().valida(jsonObjectStatus);
-			 PreyLogger.i("valida:"+valida+" eventName:"+event.getName());
+			 PreyLogger.d("valida:"+valida+" eventName:"+event.getName());
 			 if (valida){
 				PreyWebServices.getInstance().sendPreyHttpEvent(ctx, event, jsonObjectStatus);
 			 }

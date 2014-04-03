@@ -51,7 +51,7 @@ public class Report  {
 				}
 				for (int i = 0; i < jsonArray.length(); i++) {
 					String nameAction = jsonArray.getString(i);
-					PreyLogger.i("nameAction:" + nameAction);
+					PreyLogger.d("nameAction:" + nameAction);
 					String methodAction = "report";
 					JSONObject parametersAction = null;
 					listData=ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction,listData);
@@ -61,7 +61,7 @@ public class Report  {
 				if (listData!=null&&listData.size()>0){
 					PreyHttpResponse response=PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
 					if(response!=null){
-						PreyLogger.i("response.getStatusLine():"+response.getStatusLine());	
+						PreyLogger.d("response.getStatusLine():"+response.getStatusLine());	
 						if (200!=response.getStatusLine().getStatusCode()){
 							preyConfig.setMissing(false);
 						}else{

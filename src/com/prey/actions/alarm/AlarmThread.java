@@ -30,7 +30,7 @@ public class AlarmThread extends Thread {
                         final AudioManager audio = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
                         int max = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
                         final int setVolFlags = AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE | AudioManager.FLAG_VIBRATE;
-                        PreyLogger.i("volumenInicial:"+max);
+                        PreyLogger.d("volumenInicial:"+max);
                         audio.setStreamVolume(AudioManager.STREAM_MUSIC, max, setVolFlags);
                         
       
@@ -65,7 +65,7 @@ public class AlarmThread extends Thread {
                 if (start){
                         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","stopped"));
                 }
-                PreyLogger.i("Ejecuting Mp3PlayerAction Action[Finish]");
+                PreyLogger.d("Ejecuting Mp3PlayerAction Action[Finish]");
         }
         
         class Mp3OnCompletionListener implements MediaPlayer.OnCompletionListener{

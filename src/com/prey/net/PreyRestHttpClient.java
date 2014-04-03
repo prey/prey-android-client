@@ -253,7 +253,7 @@ public class PreyRestHttpClient {
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		PreyLogger.i("Response from server: " + response.toString());
+		//PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
 

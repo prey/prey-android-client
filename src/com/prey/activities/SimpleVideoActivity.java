@@ -196,7 +196,7 @@ public class SimpleVideoActivity extends Activity implements
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		PreyLogger.i("camera surfaceDestroyed()");
+		PreyLogger.d("camera surfaceDestroyed()");
 		if (mServiceCamera != null) {
 			mServiceCamera.stopPreview();
 			mServiceCamera.release();

@@ -20,9 +20,9 @@ public class ClassUtil {
         public static List<HttpDataService> execute(Context ctx,List<ActionResult> lista,String nameAction, String methodAction, JSONObject parametersAction,List<HttpDataService> listData) {
 
                 
-                PreyLogger.i("name:" + nameAction);
-                PreyLogger.i("target:" + methodAction);
-                PreyLogger.i("options:" + parametersAction);
+                PreyLogger.d("name:" + nameAction);
+                PreyLogger.d("target:" + methodAction);
+                PreyLogger.d("options:" + parametersAction);
                 nameAction = StringUtil.classFormat(nameAction);
                 
                 

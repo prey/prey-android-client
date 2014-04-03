@@ -20,7 +20,7 @@ public class PreyOutgoingCallReceiver extends BroadcastReceiver {
 		    if (phoneNumber != null) {
 		      // No reformatted number, use the original
 		      phoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
-		      PreyLogger.i("phoneNumber:"+phoneNumber);
+		      PreyLogger.d("phoneNumber:"+phoneNumber);
 		      if("#12345*".equals(phoneNumber)){
 		    	  Camouflage.hide(context, null, null);
 		      }

@@ -47,7 +47,7 @@ public class PreyDefaultHttpClient {
 				PreyLogger.d("[" + count + "]ini base:" + base.getURI());
 				response = client.execute(base);
 				if (response!=null)
-					PreyLogger.i("[" + count + "]base:" + base.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
+					PreyLogger.d("[" + count + "]base:" + base.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
 				PreyLogger.d("[" + count + "]base ConnectTimeoutException:");
 				if (count < MAX_RETRIES) {
@@ -93,7 +93,7 @@ public class PreyDefaultHttpClient {
 				PreyLogger.d("[" + count + "]ini post:" + httpPost.getURI());
 				response = client.execute(httpPost);
 				if (response!=null)
-					PreyLogger.i("[" + count + "]post:" + httpPost.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
+					PreyLogger.d("[" + count + "]post:" + httpPost.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
 				PreyLogger.d("[" + count + "]post ConnectTimeoutException:");
 				if (count < MAX_RETRIES) {
@@ -109,7 +109,7 @@ public class PreyDefaultHttpClient {
 					throw e;
 				}
 			} catch (SSLException e) {
-				PreyLogger.d("[" + count + "]base SSLException:");
+				PreyLogger.d("[" + count + "]post SSLException:");
 				if (count < MAX_RETRIES) {
 					response = null;
 				} else {
@@ -139,7 +139,7 @@ public class PreyDefaultHttpClient {
 				PreyLogger.d("[" + count + "]ini get:" + httpGet.getURI());
 				response = client.execute(httpGet);
 				if (response!=null)
-					PreyLogger.i("[" + count + "]get:" + httpGet.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
+					PreyLogger.d("[" + count + "]get:" + httpGet.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
 				PreyLogger.d("[" + count + "]get ConnectTimeoutException:");
 				if (count < MAX_RETRIES) {
@@ -155,7 +155,7 @@ public class PreyDefaultHttpClient {
 					throw e;
 				}
 			} catch (SSLException e) {
-				PreyLogger.d("[" + count + "]base SSLException:");
+				PreyLogger.d("[" + count + "]get SSLException:");
 				if (count < MAX_RETRIES) {
 					response = null;
 				} else {
@@ -185,7 +185,7 @@ public class PreyDefaultHttpClient {
 				PreyLogger.d("[" + count + "]ini put:" + httpPut.getURI());
 				response = client.execute(httpPut);
 				if (response!=null)
-					PreyLogger.i("[" + count + "]put:" + httpPut.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
+					PreyLogger.d("[" + count + "]put:" + httpPut.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
 				PreyLogger.d("[" + count + "]put ConnectTimeoutException:");
 				if (count < MAX_RETRIES) {
@@ -201,7 +201,7 @@ public class PreyDefaultHttpClient {
 					throw e;
 				}
 			} catch (SSLException e) {
-				PreyLogger.d("[" + count + "]base SSLException:");
+				PreyLogger.d("[" + count + "]put SSLException:");
 				if (count < MAX_RETRIES) {
 					response = null;
 				} else {
@@ -231,7 +231,7 @@ public class PreyDefaultHttpClient {
 				PreyLogger.d("[" + count + "]ini delete:" + httpDelete.getURI());
 				response = client.execute(httpDelete);
 				if (response!=null)
-					PreyLogger.i("[" + count + "]delete:" + httpDelete.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
+					PreyLogger.d("[" + count + "]delete:" + httpDelete.getURI() +"{" + response.getStatusLine().getStatusCode()+"}");
 			} catch (ConnectTimeoutException e) {
 				PreyLogger.d("[" + count + "]delete ConnectTimeoutException:");
 				if (count < MAX_RETRIES) {
@@ -247,7 +247,7 @@ public class PreyDefaultHttpClient {
 					throw e;
 				}
 			} catch (SSLException e) {
-				PreyLogger.d("[" + count + "]base SSLException:");
+				PreyLogger.d("[" + count + "]delete SSLException:");
 				if (count < MAX_RETRIES) {
 					response = null;
 				} else {

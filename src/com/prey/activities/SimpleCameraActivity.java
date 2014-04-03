@@ -41,7 +41,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 		}else{
 			focus="front";
 		}
-		PreyLogger.i("focus:"+focus);
+		PreyLogger.d("focus:"+focus);
 		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
 		mHolder = surfaceView.getHolder();
 		mHolder.addCallback(this);
@@ -50,14 +50,14 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 			int numberOfCameras = Camera.getNumberOfCameras();
 			if (numberOfCameras == 1) {
 				camera = Camera.open();
-				PreyLogger.i("open camera()");
+				PreyLogger.d("open camera()");
 			} else {
 				if ("front".equals(focus)){
 					camera = Camera.open(0);
-					PreyLogger.i("open camera(0)");
+					PreyLogger.d("open camera(0)");
 				} else {
 					camera = Camera.open(1);
-					PreyLogger.i("open camera(1)");
+					PreyLogger.d("open camera(1)");
 				}
 			}
 		} catch(java.lang.NoSuchMethodError ne){	
@@ -114,7 +114,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 			if(camera!=null){
 				camera.startPreview();
 				camera.takePicture(shutterCallback, rawCallback, jpegCallback);
-				PreyLogger.i("open takePicture()");
+				PreyLogger.d("open takePicture()");
 			}
 		} catch (Exception e) {
 		}
@@ -150,7 +150,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
-		PreyLogger.i("camera setPreviewDisplay()");
+		PreyLogger.d("camera setPreviewDisplay()");
 		mHolder = holder;
 		try {
 			if (camera != null)
@@ -161,7 +161,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		PreyLogger.i("camera surfaceDestroyed()");
+		PreyLogger.d("camera surfaceDestroyed()");
 		if (camera != null) {
 			try{
 				camera.stopPreview();
