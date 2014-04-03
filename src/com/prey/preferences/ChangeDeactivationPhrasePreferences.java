@@ -62,11 +62,11 @@ public class ChangeDeactivationPhrasePreferences extends EditTextPreference {
 
 		@Override
 		protected Void doInBackground(String... data) {
-			try {
+			/*try {
 				PreyWebServices.getInstance().updateDeactivationPhrase(ctx, getText());
 			} catch (Exception e) {
 				error = e.getMessage();
-			}
+			}*/
 			return null;
 		}
 

@@ -24,10 +24,9 @@ public class StopPreyPreference extends DialogPreference {
 	public void onClick(DialogInterface dialog, int which) {
 		super.onClick(dialog, which);
 		PreyLogger.d("Stopping Prey");
-		if (which == DialogInterface.BUTTON_POSITIVE) {
+		/*if (which == DialogInterface.BUTTON_POSITIVE) {
 			PreyController.stopPrey(getContext());
-
-		}
+		}*/
 	}
 
 }

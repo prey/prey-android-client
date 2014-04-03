@@ -67,11 +67,11 @@ public class ChangeActivationPhrasePreferences extends EditTextPreference {
 
 		@Override
 		protected Void doInBackground(String... data) {
-			try {
+			/*try {
 				PreyWebServices.getInstance().updateActivationPhrase(getContext(), getText());
 			} catch (Exception e) {
 				error = e.getMessage();
-			}
+			}*/
 			return null;
 		}
 

@@ -64,7 +64,7 @@ public class ActionsRunnner {
 						if (isMissing) //Have to wait for the report being sent.
 							waitNotify.doWait();
 						
-						PreyWebServices.getInstance().setMissing(ctx, false);
+						//PreyWebServices.getInstance().setMissing(ctx, false);
 					} catch (PreyException e) {
 						PreyLogger.e("Error while running once: ",e);
 					}
