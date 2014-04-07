@@ -38,15 +38,17 @@ public class SmsReceiver extends BroadcastReceiver {
                 for (int i = 0; i < pdus.length; i++) {
                
                 	SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdus[i]);
-                	String phoneNumber = currentMessage.getDisplayOriginatingAddress();
-               
-                	String senderNum = phoneNumber;
-                	messageSMS = currentMessage.getDisplayMessageBody();
-               
-                	PreyLogger.i( "senderNum: "+ senderNum + "; message: " + messageSMS);
-               
-                	//executeActionsBasedOnSMSMessage(context, messageSMS);
-                	executeActions(context, messageSMS,phoneNumber);
+                	String phoneNumber = null;
+                	try{
+                		phoneNumber=currentMessage.getDisplayOriginatingAddress();
+                	}catch(Exception e){}
+                	try{
+                		messageSMS = currentMessage.getDisplayMessageBody();
+                	}catch(Exception e){}                	
+                	if(messageSMS!=null){
+                		PreyLogger.i( "senderNum: "+ phoneNumber + "; message: " + messageSMS);
+                		executeActions(context, messageSMS,phoneNumber);
+                	}
                
                 } // end for loop
 			}

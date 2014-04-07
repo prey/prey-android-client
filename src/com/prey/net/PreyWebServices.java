@@ -116,7 +116,11 @@ public class PreyWebServices {
 			to = xml.indexOf("</key>");
 			apiKey = xml.substring(from, to);
 		} catch (Exception e) { 
-			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
+			if (response!=null&&response.getStatusLine()!=null){
+				throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
+			}else{
+				throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,""));		
+			}	
 		}
 
 		String xmlDeviceId = this.registerNewDevice(ctx, apiKey, deviceType);
@@ -216,9 +220,12 @@ public class PreyWebServices {
 			PreyLogger.e("Error!",e);
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
 		}
-
+		String status="";
+		if(response!=null&&response.getStatusLine()!=null){
+			status="["+response.getStatusLine().getStatusCode()+"]";
+		}
 		if (!xml.contains("<key"))
-			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
+			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,status));
 		//
 
 		int from;
@@ -229,13 +236,13 @@ public class PreyWebServices {
 			to = xml.indexOf("</key>");
 			apiKey = xml.substring(from, to);
 		} catch (Exception e) {
-			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
+			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,status));
 		}
 
 		String xmlDeviceId = this.registerNewDevice(ctx, apiKey, deviceType);
 
 		if (!xmlDeviceId.contains("<key"))
-			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
+			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,status));
 
 		from = xmlDeviceId.indexOf("<key>") + 5;
 		to = xmlDeviceId.indexOf("</key>");

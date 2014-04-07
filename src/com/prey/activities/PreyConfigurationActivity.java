@@ -36,7 +36,9 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 			Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			intent.putExtra("EXIT", true);
+			try{
 			startActivity(intent);
+			}catch(Exception e){}
 			finish();
 			
 		}
@@ -67,9 +69,10 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 				PreyLogger.d("url control:"+url);
 				Intent internetIntent = new Intent(Intent.ACTION_VIEW);
 				internetIntent.setData(Uri.parse(url));
-				
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-				startActivity(intent);
+				try{
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+					startActivity(intent);
+				}catch(Exception e){}
 				return false;
 			}
 		});
