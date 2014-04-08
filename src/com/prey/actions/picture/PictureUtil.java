@@ -32,6 +32,7 @@ public class PictureUtil {
 				entityFile.setMimeType("image/png");
 				entityFile.setName("picture.jpg");
 				entityFile.setType("picture");
+				entityFile.setLength(frontPicture.length);
 				data.addEntityFile(entityFile);
 			} else {
 				PreyLogger.d("dataImagen front null");
@@ -48,6 +49,7 @@ public class PictureUtil {
 					entityFile.setMimeType("image/png");
 					entityFile.setName("screenshot.jpg");
 					entityFile.setType("screenshot");
+					entityFile.setLength(backPicture.length);
 					data.addEntityFile(entityFile);
 				} else {
 					PreyLogger.i("dataImagen back null");

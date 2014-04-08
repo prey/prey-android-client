@@ -34,7 +34,8 @@ public class ClassUtil {
                         List<HttpDataService> listDataTmp=(ArrayList<HttpDataService>)method.invoke(actionObject, params);
                         for (int i=0;listDataTmp!=null&&i<listDataTmp.size();i++){
                                 HttpDataService httpDataService=listDataTmp.get(i);
-                                listData.add(httpDataService);
+                                if(httpDataService!=null)
+                                	listData.add(httpDataService);
                         }
                 } catch (Exception e) {
                         //PreyLogger.e("Error, causa:" + e.getMessage(), e);

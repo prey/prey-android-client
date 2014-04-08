@@ -22,6 +22,7 @@ import com.prey.actions.observer.ActionsController;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
+import com.prey.net.http.EntityFile;
 import com.prey.util.ClassUtil;
 
 public class Report  {
@@ -57,8 +58,21 @@ public class Report  {
 					listData=ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction,listData);
 				}
 				
+				int parms=0;
+				for (int i=0;listData!=null&&i<listData.size();i++) {
+					HttpDataService httpDataService=listData.get(i);
+					parms=parms+httpDataService.getDataAsParameters().size();
+					if (httpDataService.getEntityFiles()!=null){
+						for(int j=0;j<httpDataService.getEntityFiles().size();j++){
+							EntityFile entity= httpDataService.getEntityFiles().get(j);
+							if (entity!=null&&entity.getLength()>0){
+								parms=parms+1;
+							}
+						}
+					}
+				}
 				
-				if (listData!=null&&listData.size()>0){
+				if (parms>0){
 					PreyHttpResponse response=PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
 					if(response!=null){
 						PreyLogger.d("response.getStatusLine():"+response.getStatusLine());	
@@ -74,6 +88,7 @@ public class Report  {
 					}
 				}else{
 					preyConfig.setMissing(false);
+					PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get","report","failed","Unable to retrieve data"));
 				}
 			}
 			PreyConfig.getPreyConfig(ctx).setIntervalReport("");
