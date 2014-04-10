@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="preyForAndroid_name">Prey</string>
+    <string name="prey_version">1.0.7</string>
     <string name="yes">Kyllä</string>
     <string name="no">Ei</string>
     <string name="ok">OK</string>
@@ -16,9 +17,9 @@
     <string name="device_not_ready_h1">Laite ei ole valmiina!</string>
     <string name="device_ready_h2">Puhelimesi on suojattu ja odottaa aktivointisignaalia.</string>
     <string name="device_not_ready_h2">Preyn sijaintipalvelut ovat otettu pois käytöstä. Raportteja ei lähetetä.</string>
-    <string name="login_cp">Kirjaudu ohjauspaneeliin</string>
-    <string name="manage_prey_settings">Hallitse Preyn asetuksia</string>
-    <string name="type_your_pass">Syötä salasanasi:</string>
+    <string name="login_cp">Kirjaudu Prey-tilillesi</string>
+    <string name="manage_prey_settings">Hallitse sovelluksen asetuksia</string>
+    <string name="type_your_pass">Syötä salasanasi</string>
     <string name="log_in">Kirjaudu sisään</string>
     <string name="create_prey_account_h1">Luo uusi tili</string>
     <string name="your_name">Nimesi</string>
@@ -52,7 +53,7 @@
     <string name="sms_deactivation">Aktivoinnin poiston tekstiviesti</string>
     <string name="agreements_title">Tervetuloa Preyn\nAndroid™ -versioon!</string>
     <string name="agreements_message1">Lue ja hyväksy Preyn käyttöehdot napsauttamalla alta</string>
-    <string name="agreements_message2">&amp;lt;u&amp;gt;Lue käyttöehdot&amp;lt;/u&amp;gt;</string>
+    <string name="agreements_message2">&amp;amp;lt;u&amp;amp;gt;Lue käyttöehdot&amp;amp;lt;/u&amp;amp;gt;</string>
     <string name="set_old_user_loading">Liitetään laitetta tiliin...\nOdotapa hetki!</string>
     <string name="set_old_user_no_more_devices_title">Otetaanpa rauhallisesti!</string>
     <string name="set_old_user_no_more_devices_text">Näyttää siltä, että Prey-tilisi vapaat laitepaikat ovat lopussa.\n\nPoista olemassa oleva laite ohjauspaneelista tai luo uusi tili.</string>
@@ -61,7 +62,7 @@
     <string name="preferences_status">Tila</string>
     <string name="preferences_status_title">Preyn nykyinen tila</string>
     <string name="preferences_status_summary">Tarkista suorituksen tila, käynnissäoloaika ja muuta.</string>
-    <string name="preferences_config_title">Tärkeimmät määritykset</string>
+    <string name="preferences_config_title">Hallitse laitteitasi</string>
     <string name="preferences_camouflage_title">Naamiointitila</string>
     <string name="preferences_camouflage_summary">Näytä huijauskirjautumisikkuna</string>
     <string name="preferences_sms_run">Aktivointi tekstiviestillä</string>
@@ -104,12 +105,12 @@
     <string name="preferences_passwords_updating_dialog">Päivitetään Prey-salasanaasi.\nOdota hetki...</string>
     <string name="preferences_passwords_successfully_changed">Prey-salasanasi vaihdettiin onnistuneesti</string>
     <string name="preferences_detach_title">Irrota laite</string>
-    <string name="preferences_detach_summary">Poista tämä laite tilisi ohjauspaneelitilistäsi</string>
+    <string name="preferences_detach_summary">Poistaa tämän laitteen Prey-tililtäsi</string>
     <string name="preferences_detach_dialog_title">Irrotetaan laitetta</string>
     <string name="preferences_detach_dialog_message">Laitteesi irrotetaan ohjauspaneelista. Tämä poistaa myös laitteen tallentamat raportit.\n\nOletko varma?</string>
     <string name="preferences_detach_dettaching_message">Irrotetaan laitetta, odota hetki...</string>
-    <string name="preferences_go_to_control_panel_title">Näytä luodut raportit</string>
-    <string name="preferences_go_to_control_panel_summary">Avaa Prey-ohjauspaneelisi selaimessa</string>
+    <string name="preferences_go_to_control_panel_title">Hallitse laitteitasi</string>
+    <string name="preferences_go_to_control_panel_summary">Siirry Prey-tilillesi</string>
     <string name="preferences_go_to_control_panel_dialog_title">Kuittaa pyyntösi</string>
     <string name="preferences_go_to_control_panel_dialog_message">Sinut uudelleenohjataan tilisi ohjauspaneeliin.\n\nOletko varma?</string>
     <string name="preferences_category_operations_title">Suoritusvalvonta</string>
@@ -123,7 +124,7 @@
     <string name="preferences_stop_dialog_title">Pysäyttää Preytä</string>
     <string name="preferences_stop_dialog_message">Prey lopettaa raporttien lähetyksen ohjauspaneeliisi ja laitteesi merkitään löydetyksi.\n\nOletko varma?</string>
     <string name="preferences_admin_enabled_title">Peruuta lisäluvat</string>
-    <string name="preferences_admin_enabled_summary">Poistaa asennuksen poiston suojan</string>
+    <string name="preferences_admin_enabled_summary">Mahdollistaa Preyn asennuksen poiston</string>
     <string name="preferences_admin_disabled_title">Myönnä lisäluvat</string>
     <string name="preferences_admin_disabled_summary">Sallii lukituksen ja asennuksen poiston suojauksen</string>
     <string name="preferences_admin_enabled_dialog_title">Huomaa</string>
