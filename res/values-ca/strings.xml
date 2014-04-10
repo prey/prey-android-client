@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="preyForAndroid_name">Prey</string>
+    <string name="prey_version">1.0.7</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="ok">D\'acord</string>
@@ -16,9 +17,9 @@
     <string name="device_not_ready_h1">Dispositiu no preparat!</string>
     <string name="device_ready_h2">El dispositiu està preparat i a l\'espera de rebre el senyal d\'activació.</string>
     <string name="device_not_ready_h2">Els serveis de localització de Prey no estan habilitats. No s\'enviarà cap informe.</string>
-    <string name="login_cp">Inicia la sessió al panel de control</string>
+    <string name="login_cp">Inicia la sessió al compte de Prey</string>
     <string name="manage_prey_settings">Administració de Prey</string>
-    <string name="type_your_pass">Inseriu la contrasenya:</string>
+    <string name="type_your_pass">Inseriu la contrasenya</string>
     <string name="log_in">Inicia la sessió</string>
     <string name="create_prey_account_h1">Crea un compte nou</string>
     <string name="your_name">Nom</string>
@@ -77,7 +78,7 @@
     <string name="preferences_check_sim_change">Mostra un avís en canviar la targeta SIM</string>
     <string name="preferences_check_sim_change_summary">Activa Prey si la targeta SIM principal és reemplaçada</string>
     <string name="choose_your_hero">Trieu el vostre heroi!</string>
-    <string name="no_hero_selected">No heu selecionat cap heroi</string>
+    <string name="no_hero_selected">No heu seleccionat cap heroi</string>
     <string name="your_hero_text">La persona de contacte qui designeu (el vostre heroi), rebrà un SMS si Prey detecta que la la targeta SIM és reemplaçada.</string>
     <string name="hero_chosen">Heroi assignat!</string>
     <string name="notify_your_hero_now">Bona elecció! Voleu enviar un SMS a %s indicant aquesta acció? Verificareu si el servei funciona, a més d\'avisar al contacte...</string>
@@ -104,12 +105,12 @@
     <string name="preferences_passwords_updating_dialog">S\'està actualitzant\nla contrasenya...</string>
     <string name="preferences_passwords_successfully_changed">S\'ha actualitzat la contrasenya!</string>
     <string name="preferences_detach_title">Oblida aquest dispositiu</string>
-    <string name="preferences_detach_summary">Suprimeix aquest dispositiu del panel de control</string>
+    <string name="preferences_detach_summary">Suprimeix aquest dispositiu del vostre compte</string>
     <string name="preferences_detach_dialog_title">Suprimeix el dispositiu</string>
     <string name="preferences_detach_dialog_message">El dispositiu serà suprimit del panel de control i també la informació associada, com ara els informes.\n\n Voleu continuar?</string>
     <string name="preferences_detach_dettaching_message">S\'està suprimint el dispositiu del panel de control de Prey...</string>
-    <string name="preferences_go_to_control_panel_title">Visualitza l\'historial d\'informes</string>
-    <string name="preferences_go_to_control_panel_summary">Obre el panel de control de Prey des del navegador</string>
+    <string name="preferences_go_to_control_panel_title">Administra els dispositius</string>
+    <string name="preferences_go_to_control_panel_summary">Obre el panel de control de Prey</string>
     <string name="preferences_go_to_control_panel_dialog_title">S\'està enviant la sol·licitud...</string>
     <string name="preferences_go_to_control_panel_dialog_message">Si us redireccionarà al vostre panel de control.\n\nVoleu continuar?</string>
     <string name="preferences_category_operations_title">Control d\'execució</string>
@@ -121,9 +122,9 @@
     <string name="preferences_stop_title">Atura Prey</string>
     <string name="preferences_stop_summary">Atura els mòduls i processos de Prey</string>
     <string name="preferences_stop_dialog_title">Atura Prey</string>
-    <string name="preferences_stop_dialog_message">Prey aturará l\'enviament d\'informes al panel de control i marcarà aquest dispositiu com a recuperat.\n\nVoleu continuar?</string>
+    <string name="preferences_stop_dialog_message">Prey aturarà l\'enviament d'informes al panel de control i marcarà aquest dispositiu com a recuperat.\n\nVoleu continuar?</string>
     <string name="preferences_admin_enabled_title">Revoca els permisos addicionals</string>
-    <string name="preferences_admin_enabled_summary">Suprimeix la protecció de desinstal·lació de Prey</string>
+    <string name="preferences_admin_enabled_summary">Permet la desinstal·lació de Prey</string>
     <string name="preferences_admin_disabled_title">Concedeix els permisos addicionals</string>
     <string name="preferences_admin_disabled_summary">Permet blocar i desinstal·lar la protecció</string>
     <string name="preferences_admin_enabled_dialog_title">Atenció:</string>
