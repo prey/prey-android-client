@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="preyForAndroid_name">Prey</string>
-    <string name="prey_version">1.0.7</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="ok">D\'acord</string>
@@ -122,7 +121,7 @@
     <string name="preferences_stop_title">Atura Prey</string>
     <string name="preferences_stop_summary">Atura els mòduls i processos de Prey</string>
     <string name="preferences_stop_dialog_title">Atura Prey</string>
-    <string name="preferences_stop_dialog_message">Prey aturarà l\'enviament d'informes al panel de control i marcarà aquest dispositiu com a recuperat.\n\nVoleu continuar?</string>
+    <string name="preferences_stop_dialog_message">Prey aturarà l\'enviament d\'informes al panel de control i marcarà aquest dispositiu com a recuperat.\n\nVoleu continuar?</string>
     <string name="preferences_admin_enabled_title">Revoca els permisos addicionals</string>
     <string name="preferences_admin_enabled_summary">Permet la desinstal·lació de Prey</string>
     <string name="preferences_admin_disabled_title">Concedeix els permisos addicionals</string>
