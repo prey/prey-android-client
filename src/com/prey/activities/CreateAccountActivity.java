@@ -8,7 +8,6 @@ package com.prey.activities;
 
 import android.app.AlertDialog;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.prey.R;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -116,11 +115,6 @@ public class CreateAccountActivity extends SetupActivity {
 				String message = getString(R.string.new_account_congratulations_text, email);
 				Bundle bundle = new Bundle();
 				bundle.putString("message", message);
-				GoogleAnalyticsTracker.getInstance().trackEvent(
-						"Account",  // Category
-			            "Created",  // Action
-			            "", // Label
-			            1);
 				Intent intent = new Intent(CreateAccountActivity.this, PermissionInformationActivity.class);
 				intent.putExtras(bundle);
 				startActivity(intent);

@@ -9,7 +9,7 @@ package com.prey.analytics;
 import android.app.Application;
 import android.content.Context;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import com.prey.FileConfigReader;
 
 public class GoogleAnalyticsSessionManager {
@@ -43,12 +43,12 @@ public class GoogleAnalyticsSessionManager {
      * unusual you should synchronize them yourself.
      */
     public void incrementActivityCount() {
-        if( activityCount==0 )
-            if( dispatchIntervalSecs==null )
+    	 /*  if( activityCount==0 )
+          if( dispatchIntervalSecs==null )
                 GoogleAnalyticsTracker.getInstance().startNewSession(apiKey,context);
             else
                 GoogleAnalyticsTracker.getInstance().startNewSession(apiKey,dispatchIntervalSecs,context);
-
+*/
         ++activityCount;
     }
 
@@ -61,8 +61,8 @@ public class GoogleAnalyticsSessionManager {
     public void decrementActivityCount() {
         activityCount = Math.max(activityCount-1, 0);
 
-        if( activityCount==0 )
-            GoogleAnalyticsTracker.getInstance().stopSession();
+       // if( activityCount==0 )
+          //  GoogleAnalyticsTracker.getInstance().stopSession();
     }
 
 

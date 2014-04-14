@@ -39,7 +39,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
@@ -49,7 +48,6 @@ import com.prey.PreyPhone.Hardware;
 import com.prey.PreyPhone.Wifi;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionsController;
-import com.prey.analytics.PreyGoogleAnalytics;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 import com.prey.events.Event;
 import com.prey.exceptions.NoMoreDevicesAllowedException;
@@ -305,12 +303,6 @@ public class PreyWebServices {
 				httpResponse = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig,entityFiles);
 			response=httpResponse.getResponseAsString();
 			PreyLogger.i("Report sent:["+httpResponse.getStatusLine()+"]" + response);
-			try{
-				GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
-			}catch(NullPointerException ex){
-				GoogleAnalyticsTracker.getInstance().startNewSession(FileConfigReader.getInstance(ctx).getAnalyticsUA(),ctx);
-				GoogleAnalyticsTracker.getInstance().trackEvent("Report","Sent", "", 1);
-			}
 			if (preyConfig.isShouldNotify()) {
 				this.notifyUser(ctx);
 			}
@@ -705,7 +697,6 @@ public class PreyWebServices {
 			else
 				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig,entityFiles);
 			//PreyLogger.d("Data sent_: " + preyHttpResponse.getResponseAsString());
-			PreyGoogleAnalytics.getInstance().trackAsynchronously(ctx,"Data/Sent");
 			if (preyConfig.isShouldNotify()) {
 				this.notifyUser(ctx);
 			}
@@ -835,7 +826,6 @@ public class PreyWebServices {
 			else
 				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig,entityFiles);
 			PreyLogger.i("Report sent: " + preyHttpResponse.getResponseAsString());
-			PreyGoogleAnalytics.getInstance().trackAsynchronously(ctx,"Report/Sent");
 			if (preyConfig.isShouldNotify()) {
 				this.notifyUser(ctx);
 			}

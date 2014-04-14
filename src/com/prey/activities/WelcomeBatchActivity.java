@@ -12,7 +12,6 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
  
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.R;
@@ -67,11 +66,6 @@ public class WelcomeBatchActivity extends PreyActivity {
 				String message = getString(R.string.device_added_congratulations_text);
 				Bundle bundle = new Bundle();
 				bundle.putString("message", message);
-				GoogleAnalyticsTracker.getInstance().trackEvent(
-						"Device",  // Category
-			            "Added",  // Action
-			            "", // Label
-			            1);
 				PreyConfig.getPreyConfig(WelcomeBatchActivity.this).setCamouflageSet(true);
 				Intent intent = new Intent(WelcomeBatchActivity.this, PermissionInformationBatchActivity.class);
 				intent.putExtras(bundle);
