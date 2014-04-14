@@ -6,6 +6,8 @@
  ******************************************************************************/
 package com.prey;
 
+import java.util.StringTokenizer;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -58,5 +60,23 @@ public class PreyUtils {
 			buffer.append(characters.charAt((int) index));
 		}
 	    return buffer.toString();
+	}
+	
+	public static String getBuildVersionRelease() {
+		String version = "";
+		try {
+			String release = Build.VERSION.RELEASE;
+			StringTokenizer st = new StringTokenizer(release, ".");
+			boolean first = true;
+			while (st.hasMoreElements()) {
+				String number = st.nextToken();
+				if (number != null)
+					number = number.substring(0, 1);
+				version = (first) ? number : version + "." + number;
+				first = false;
+			}
+		} catch (Exception e) {
+		}
+		return version;
 	}
 }

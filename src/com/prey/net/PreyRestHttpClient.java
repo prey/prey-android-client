@@ -40,10 +40,10 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
 import android.content.Context;
-import android.os.Build;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyUtils;
 import com.prey.R;
 
 import com.prey.exceptions.PreyException;
@@ -371,8 +371,8 @@ public class PreyRestHttpClient {
 	}
 
 	private String getUserAgent() {
-		String userAgent= "Prey/".concat(PreyConfig.getPreyConfig(ctx).getPreyVersion()).concat(" (Android "+Build.VERSION.RELEASE+")") ;
-		//PreyLogger.i("userAgent:"+userAgent);
+		String userAgent= "Prey/".concat(PreyConfig.getPreyConfig(ctx).getPreyVersion()).concat(" (Android "+ PreyUtils.getBuildVersionRelease()+")") ;
+		PreyLogger.d("userAgent:"+userAgent);
 		return userAgent;
 	}
 
