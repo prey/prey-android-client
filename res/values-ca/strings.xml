@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="preyForAndroid_name">Prey</string>
+    <string name="prey_version">1.0.8</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="ok">D\'acord</string>
@@ -52,7 +53,7 @@
     <string name="sms_deactivation">Missatge SMS de desactivació</string>
     <string name="agreements_title">Us donem la benvinguda a\nPrey per a Android™!</string>
     <string name="agreements_message1">Assegureu-vos que heu llegit i entès les condicions d\'ús de Prey</string>
-    <string name="agreements_message2">&lt;u&gt;Llegiu les condicions&lt;/u&gt;</string>
+    <string name="agreements_message2">&amp;lt;u&amp;gt;Llegiu les condicions&amp;lt;/u&amp;gt;</string>
     <string name="set_old_user_loading">S\'està associant el dispositiu\nal vostre compte d\'usuari...</string>
     <string name="set_old_user_no_more_devices_title">Caram!</string>
     <string name="set_old_user_no_more_devices_text">Sembla que heu exhaurit el nombre màxim de dispositius permesos al vostre compte\n\nHeu d\'esborrar els que ja no feu servir, o crear un compte nou.</string>
