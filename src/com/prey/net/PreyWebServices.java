@@ -188,13 +188,20 @@ public class PreyWebServices {
 		PreyHttpResponse response = null;
 		try {
 			String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
-			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat(apiv2).concat("devices.xml"); 
+			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat(apiv2).concat("devices.json"); 
 			PreyLogger.d("url:"+url);
 			response = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig);
 			PreyLogger.d("response:"+response.getStatusLine() +" "+ response.getResponseAsString());
 			// No more devices allowed
+			
+			
+			
+			
 			if ((response.getStatusLine().getStatusCode() == 302) || (response.getStatusLine().getStatusCode() == 422)) {
 				throw new NoMoreDevicesAllowedException(ctx.getText(R.string.set_old_user_no_more_devices_text).toString());
+			}
+			if (response.getStatusLine().getStatusCode()>299){
+				throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
 			}
 		} catch (IOException e) {
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
@@ -236,16 +243,25 @@ public class PreyWebServices {
 		} catch (Exception e) {
 			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,status));
 		}
-
+		String deviceId =null;
 		String xmlDeviceId = this.registerNewDevice(ctx, apiKey, deviceType);
-
-		if (!xmlDeviceId.contains("<key"))
-			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,status));
-
-		from = xmlDeviceId.indexOf("<key>") + 5;
-		to = xmlDeviceId.indexOf("</key>");
-		String deviceId = xmlDeviceId.substring(from, to);
-
+		//if json
+		if (xmlDeviceId.contains("{\"key\"") ){
+			try{
+				JSONObject jsnobject = new JSONObject(xmlDeviceId);
+				deviceId=jsnobject.getString("key");
+			}catch(Exception e){
+				
+			}
+		}
+		//if xml
+		if(deviceId==null){
+			if (!xmlDeviceId.contains("<key") )
+				throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,status));
+			from = xmlDeviceId.indexOf("<key>") + 5;
+			to = xmlDeviceId.indexOf("</key>");
+			deviceId = xmlDeviceId.substring(from, to);
+		}
 		PreyAccountData newAccount = new PreyAccountData();
 		newAccount.setApiKey(apiKey);
 		newAccount.setDeviceId(deviceId);
@@ -479,7 +495,7 @@ public class PreyWebServices {
 			return response.getResponseAsString();
 		} catch (IOException e) {
 			try {
-				String url=getDeviceUrlApiv1(ctx)+".xml";
+				String url=getDeviceUrlApiv2(ctx)+".xml";
 				PreyLogger.i("getActionsToPerform2:"+url);
 				response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig);
 				PreyLogger.d("status:"+response.getStatusLine()+" "+response.getResponseAsString());
@@ -583,25 +599,8 @@ public class PreyWebServices {
 	 
 	 
 	 
-	 public static String getDeviceUrl2(Context ctx) throws PreyException{
-         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-         String deviceKey = preyConfig.getDeviceID();
-         if (deviceKey == null || deviceKey == "")
-                 throw new PreyException("Device key not found on the configuration");
-         String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
-         String url=PreyConfig.getPreyConfig(ctx).getPreyUrl2().concat(apiv2).concat("devices/").concat(deviceKey);
-         return url;
-	 }
-	 
-	private String getDeviceUrlApiv1(Context ctx) throws PreyException{
-			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-			String deviceKey = preyConfig.getDeviceID();
-			if (deviceKey == null || deviceKey == "")
-				throw new PreyException("Device key not found on the configuration");
-			String apiv1=FileConfigReader.getInstance(ctx).getApiV1();
-			String url=PreyConfig.getPreyConfig(ctx).getPreyUrl2().concat(apiv1).concat("devices/").concat(deviceKey);
-			return url;
-	}
+ 
+ 
 	 
 	private String getDeviceUrlApiv2(Context ctx) throws PreyException{
 			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
@@ -610,7 +609,7 @@ public class PreyWebServices {
 				throw new PreyException("Device key not found on the configuration");
 			//String apiv=FileConfigReader.getInstance(ctx).getApiV1();
 			String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
-			String url=PreyConfig.getPreyConfig(ctx).getPreyUrl2().concat(apiv2).concat("devices/").concat(deviceKey);
+			String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey);
 			return url;
 	}
 	
@@ -624,7 +623,7 @@ public class PreyWebServices {
 		if (deviceKey == null || deviceKey == "")
 			throw new PreyException("Device key not found on the configuration");
 		String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
-		String url=PreyConfig.getPreyConfig(ctx).getPreyUrl2().concat(apiv2).concat("devices/").concat(deviceKey);
+		String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey);
 		return url;
 	}
 	
