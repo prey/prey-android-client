@@ -20,6 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prey.actions.location.PreyLocationManager;
+import com.prey.events.Event;
+import com.prey.events.factories.EventFactory;
+import com.prey.events.manager.EventManagerRunner;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 import com.prey.PreyStatus;
@@ -135,6 +138,7 @@ public class PasswordActivity extends PreyActivity {
 				Intent intent = new Intent(PasswordActivity.this, PreyConfigurationActivity.class);
 				PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
 				startActivity(intent);
+				new Thread(new EventManagerRunner(PasswordActivity.this,new Event(Event.APPLICATION_OPENED))).start();
 			}
 		}
 		

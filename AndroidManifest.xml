@@ -164,6 +164,10 @@
             android:theme="@style/Theme.Transparent" 
             android:configChanges="keyboardHidden" />     
         <activity
+            android:name="com.prey.activities.SimpleCameraActivity2"
+            android:theme="@style/Theme.Transparent" 
+            android:configChanges="keyboardHidden" /> 
+        <activity
             android:name="com.prey.activities.SimpleVideoActivity"
              android:theme="@style/Theme.Transparent" 
             android:configChanges="keyboardHidden" /> 
@@ -285,9 +289,12 @@
                 
                 <!-- (UN)PLUGGED -->              
  
-                
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
  
-        		<action android:name="android.intent.action.BATTERY_CHANGED" />
+                <!-- AIRPLANE -->
+        		<action android:name="android.intent.action.AIRPLANE_MODE" />
+        		
+        		
         		<!--
         		<action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
     			<action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>

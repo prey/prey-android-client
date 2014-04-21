@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
+import android.provider.Settings;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -26,6 +27,9 @@ public class EventFactory {
 	private static final String BATTERY_LOW="android.intent.action.BATTERY_LOW";
 	private static final String BATTERY_OKAY="android.intent.action.BATTERY_OKAY";
 	private static final String BATTERY_CHANGED="android.intent.action.BATTERY_CHANGED";
+	
+	private static final String AIRPLANE_MODE="android.intent.action.AIRPLANE_MODE";
+	
 //	private static final String USER_PRESENT="android.intent.action.USER_PRESENT";
 	
 	public static Event getEvent(Context ctx,Intent intent){
@@ -65,6 +69,10 @@ public class EventFactory {
 			}
 			return new Event(Event.WIFI_CHANGED,info.toString());
 		}
+		if (AIRPLANE_MODE.equals(intent.getAction())){
+			if(isAirplaneModeOn(ctx))
+				PreyConfig.getPreyConfig(ctx).setPreviousSsid("");
+		}
 		/*
 		if (ACTION_POWER_CONNECTED.equals(intent.getAction()) ){
 			return new Event(Event.PLUGGED);
@@ -102,4 +110,9 @@ public class EventFactory {
 		}
 		return null;
 	}
+	
+	public static boolean isAirplaneModeOn(Context context){
+		   return Settings.System.getInt(context.getContentResolver
+		                        (),Settings.System.AIRPLANE_MODE_ON, 0) != 0;
+		 }
 }
