@@ -12,7 +12,8 @@ import android.media.AudioManager;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.camera.CameraAction;
-import com.prey.activities.SimpleCameraActivity;
+ 
+import com.prey.activities.SimpleCameraActivity2;
 import com.prey.net.http.EntityFile;
 
 public class PictureUtil {
@@ -63,10 +64,10 @@ public class PictureUtil {
 
 	private static byte[] getPicture(Context ctx, String focus) {
 		AudioManager mgr = null;
-		SimpleCameraActivity.dataImagen = null;
+		SimpleCameraActivity2.dataImagen = null;
 		int streamType = AudioManager.STREAM_SYSTEM;
-		SimpleCameraActivity.activity = null;
-		Intent intent = new Intent(ctx, SimpleCameraActivity.class);
+		SimpleCameraActivity2.activity = null;
+		Intent intent = new Intent(ctx, SimpleCameraActivity2.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.putExtra("focus", focus);
 		ctx.startActivity(intent);
@@ -75,7 +76,7 @@ public class PictureUtil {
 		mgr.setStreamSolo(streamType, true);
 		mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 		mgr.setStreamMute(streamType, true);
-		while (SimpleCameraActivity.activity == null && i < 20) {
+		while (SimpleCameraActivity2.activity == null&& SimpleCameraActivity2.camera ==null && i < 20) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -83,14 +84,14 @@ public class PictureUtil {
 			PreyLogger.d("esperando antes take picture[" + i + "]");
 			i++;
 		}
-		if (SimpleCameraActivity.activity != null) {
+		if (SimpleCameraActivity2.activity != null&&SimpleCameraActivity2.camera != null) {
 			PreyLogger.d("takePicture activity no nulo");
-			SimpleCameraActivity.activity.takePicture(focus);
+			SimpleCameraActivity2.activity.takePicture(focus);
 		} else {
 			PreyLogger.d("takePicture activity nulo");
 		}
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 		}
 		mgr.setStreamSolo(streamType, false);
@@ -98,18 +99,23 @@ public class PictureUtil {
 		mgr.setStreamMute(streamType, false);
 		try {
 			i = 0;
-			while (SimpleCameraActivity.activity != null && SimpleCameraActivity.dataImagen == null && i < 20) {
-				Thread.sleep(1000);
+			while (SimpleCameraActivity2.activity != null && SimpleCameraActivity2.dataImagen == null && i < 20) {
+				Thread.sleep(2000);
 				i++;
 				PreyLogger.d("falta imagen[" + i + "]");
 			}
 		} catch (InterruptedException e) {
 			PreyLogger.i("Error, causa:" + e.getMessage());
 		}
-		if (SimpleCameraActivity.activity != null) {
-			SimpleCameraActivity.activity.finish();
+		byte[] out=null;
+		if (SimpleCameraActivity2.activity != null) {
+			out=SimpleCameraActivity2.dataImagen;
+			SimpleCameraActivity2.activity.finish();
+			SimpleCameraActivity2.activity=null;
+			SimpleCameraActivity2.dataImagen=null;
+			 
 		}
-		return SimpleCameraActivity.dataImagen;
+		return out;
 	}
 
 }
