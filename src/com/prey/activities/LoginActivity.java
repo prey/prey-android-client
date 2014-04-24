@@ -85,7 +85,8 @@ public class LoginActivity extends PasswordActivity {
 		gotoCP.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				try{
-					Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(PreyConfig.CONTROL_PANEL_URL));
+					String url=PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelUrl();
+					Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
 					startActivity(browserIntent);
 				}catch(Exception e){
 				}

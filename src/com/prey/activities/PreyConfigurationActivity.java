@@ -65,7 +65,7 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 
 			public boolean onPreferenceClick(Preference preference) {
 				
-				String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyUrl();
+				String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelUrl();
 				PreyLogger.d("url control:"+url);
 				Intent internetIntent = new Intent(Intent.ACTION_VIEW);
 				internetIntent.setData(Uri.parse(url));

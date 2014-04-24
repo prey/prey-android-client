@@ -41,6 +41,10 @@ public class FileConfigReader {
 		
 	}
 	
+	public String getPreyPanel(){
+		return properties.getProperty("prey-panel");
+	}
+	
 	public String getAgreementId(){
 		return properties.getProperty("agreement-id");
 	}

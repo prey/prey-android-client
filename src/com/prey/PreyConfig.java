@@ -605,6 +605,12 @@ public class PreyConfig {
 		return HTTP.concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
 		
 	}
+	
+	public String getPreyPanelUrl() {
+		String panel = FileConfigReader.getInstance(this.ctx).getPreyPanel();
+		return HTTP.concat(panel).concat(".").concat(getPreyDomain()).concat("/");
+		
+	}
 	   
 	public String getPreyUiUrl() {
 		String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain();

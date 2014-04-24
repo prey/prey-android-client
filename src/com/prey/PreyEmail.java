@@ -24,14 +24,12 @@ public class PreyEmail {
 			if (data!=null ){
 				List<EntityFile> entityFiles = data.getEntityFiles();
 				if(entityFiles!=null&&entityFiles.size()>=0){ 
-					String url = PreyWebServices.getFileUrlJson(ctx);
-					PreyLogger.i("URL:" + url);
-
+					String url = PreyWebServices.getInstance().getFileUrlJson(ctx);
+					PreyLogger.d("URL:" + url);
 					Map<String, String> parameters = new HashMap<String, String>();
 					PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 					PreyHttpResponse preyHttpResponse = null;
 					preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig, entityFiles);
-			
 					PreyLogger.i("status line:" + preyHttpResponse.getStatusLine());
 				}
 			}
