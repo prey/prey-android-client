@@ -87,7 +87,7 @@ public class SimpleVideoActivity extends Activity implements
 			entityFile.setName("video.mp4");
 			entityFile.setType("video");
 			Map<String, String> parameters = new HashMap<String, String>();
-			String URL = PreyWebServices.getFileUrlJson(ctx);
+			String URL = PreyWebServices.getInstance().getFileUrlJson(ctx);
 			List<EntityFile> entityFiles = new ArrayList<EntityFile>();
 			entityFiles.add(entityFile);
 			PreyHttpResponse preyHttpResponse = null;

@@ -1,6 +1,5 @@
 package com.prey.activities;
 
- 
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -69,6 +68,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 			} catch (Exception e) {
 			}
 		}
+		camera.startPreview();
 		activity = this;
 	}
 	
@@ -112,7 +112,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 		
 		try {	
 			if(camera!=null){
-				camera.startPreview();
+			
 				camera.takePicture(shutterCallback, rawCallback, jpegCallback);
 				PreyLogger.d("open takePicture()");
 			}
@@ -146,7 +146,11 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 	};
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-		
+		if(camera != null) {
+    		Camera.Parameters parameters = camera.getParameters();
+    		camera.setParameters(parameters);
+    		camera.startPreview();
+    	}
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
@@ -174,5 +178,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 			camera = null;
 		}
 	}
-
+	
+	
+	  
 }
