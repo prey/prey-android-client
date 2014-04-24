@@ -128,7 +128,7 @@ public class PreyRestHttpClient {
 
 	public PreyHttpResponse put(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
 		HttpPut method = new HttpPut(url);
-		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setHeader("Accept", "*/*");
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
 		// method.setParams(getHttpParamsFromMap(params));
 		PreyLogger.d("Sending using 'PUT' - URI: " + url + " - parameters: " + params.toString());
@@ -140,7 +140,7 @@ public class PreyRestHttpClient {
 
 	public PreyHttpResponse put(String url, Map<String, String> params, PreyConfig preyConfig, String user, String pass) throws IOException {
 		HttpPut method = new HttpPut(url);
-		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setHeader("Accept", "*/*");
 		method.addHeader("Authorization", "Basic " + getCredentials(user, pass));
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
 		//method.setParams(getHttpParamsFromMap(params));
@@ -151,13 +151,17 @@ public class PreyRestHttpClient {
 		return response;
 	}
 
-	public PreyHttpResponse post(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
+	public PreyHttpResponse post(String url, Map<String, String> params) throws IOException {
+ 
+		
 		HttpPost method = new HttpPost(url);
-		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+
+		method.setHeader("Accept", "*/*");
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
+ 
 
 		// method.setParams(getHttpParamsFromMap(params));
-		PreyLogger.i("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+		PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
@@ -165,9 +169,9 @@ public class PreyRestHttpClient {
 		return response;
 	}
 
-	public PreyHttpResponse post(String url, Map<String, String> params, PreyConfig preyConfig, List<EntityFile> entityFiles) throws IOException {
+	public PreyHttpResponse post(String url, Map<String, String> params, List<EntityFile> entityFiles) throws IOException {
 		HttpPost method = new HttpPost(url);
-		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setHeader("Accept", "*/*");
 		SimpleMultipartEntity entity = new SimpleMultipartEntity();
 		for (Iterator<Map.Entry<String, String>> it = params.entrySet().iterator(); it.hasNext();) {
 			Map.Entry<String, String> entry = it.next();
@@ -187,17 +191,17 @@ public class PreyRestHttpClient {
 		}
 
 		method.setEntity(entity);
-		//PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+		PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
 		httpclient.setRedirectHandler(new NotRedirectHandler());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
-		//PreyLogger.d("Response from server: " + response.toString());
+		PreyLogger.d("Response from server: " + response.toString());
 		return response;
 	}
 
 	public PreyHttpResponse postAutentication(String url, Map<String, String> params, PreyConfig preyConfig, List<EntityFile> entityFiles) throws IOException {
 		HttpPost method = new HttpPost(url);
-		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setHeader("Accept", "*/*");
 		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
 
 		SimpleMultipartEntity entity = new SimpleMultipartEntity();
@@ -226,7 +230,7 @@ public class PreyRestHttpClient {
 	public PreyHttpResponse postStatusAutentication(String url, String status, Map<String, String> params, PreyConfig preyConfig) throws IOException {
 		HttpPost method = new HttpPost(url);
 
-		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setHeader("Accept", "*/*");
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
 		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
 		method.addHeader("X-Prey-Status", status);
@@ -244,7 +248,7 @@ public class PreyRestHttpClient {
 	public PreyHttpResponse postAutentication(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
 		HttpPost method = new HttpPost(url);
 
-		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setHeader("Accept", "*/*");
 		method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
 		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
 
@@ -260,7 +264,7 @@ public class PreyRestHttpClient {
 	public PreyHttpResponse getAutentication(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
 		HttpPost method = new HttpPost(url);
 
-		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setHeader("Accept", "*/*");
 		if(params!=null){
 			method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
 		}
@@ -278,7 +282,7 @@ public class PreyRestHttpClient {
 
 	public PreyHttpResponse get(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
 		HttpGet method = new HttpGet(url + URLEncodedUtils.format(getHttpParamsFromMap(params), "UTF-8"));
-		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setHeader("Accept", "*/*");
 		PreyLogger.d("Sending using 'GET' - URI: " + method.getURI());
 		HttpResponse httpResponse = httpclient.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
@@ -293,7 +297,7 @@ public class PreyRestHttpClient {
 		}else{
 			 method = new HttpGet(url);
 		}
-		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setHeader("Accept", "*/*");
 		method.addHeader("Authorization", "Basic " + getCredentials(user, pass));
 		//PreyLogger.d("Sending using 'GET' (Basic Authentication) - URI: " + method.getURI());
 		HttpResponse httpResponse = httpclient.execute(method);
@@ -310,8 +314,8 @@ public class PreyRestHttpClient {
 		}else{
 			 method = new HttpGet(url);
 		}
-		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
-		PreyLogger.i("apikey:"+preyConfig.getApiKey());
+		method.setHeader("Accept", "*/*");
+		PreyLogger.d("apikey:"+preyConfig.getApiKey());
 		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
 		//PreyLogger.d("Sending using 'GET' (Basic Authentication) - URI: " + method.getURI());
 		HttpResponse httpResponse = httpclient.execute(method);
@@ -324,7 +328,7 @@ public class PreyRestHttpClient {
 
 	public PreyHttpResponse delete(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
 		HttpDelete method = new HttpDelete(url + URLEncodedUtils.format(getHttpParamsFromMap(params), "UTF-8"));
-		method.setHeader("Accept", "application/xml,text/html,application/xhtml+xml;q=0.9,*/*;q=0.8");
+		method.setHeader("Accept", "*/*");
 		method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
 		//PreyLogger.d("Sending using 'DELETE' (Basic Authentication) - URI: " + url + " - parameters: " + params.toString());
 		HttpResponse httpResponse = httpclient.execute(method);
