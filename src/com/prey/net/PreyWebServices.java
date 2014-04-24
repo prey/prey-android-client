@@ -65,7 +65,6 @@ import com.prey.R;
 public class PreyWebServices {
 
 	private static PreyWebServices _instance = null;
-	//private static String preyURL = null;
 
 	private PreyWebServices() {
 
@@ -85,52 +84,65 @@ public class PreyWebServices {
 	 * 
 	 */
 	public PreyAccountData registerNewAccount(Context ctx, String name, String email, String password, String deviceType) throws PreyException {
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		///PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 
 		HashMap<String, String> parameters = new HashMap<String, String>();
+		/* 
 		parameters.put("user[name]", name);
 		parameters.put("user[email]", email);
 		parameters.put("user[password]", password);
 		parameters.put("user[password_confirmation]", password);
 		parameters.put("user[referer_user_id]", "");
 		parameters.put("user[country_name]", Locale.getDefault().getDisplayCountry());
-		parameters.put("agreement[key]", PreyConfig.getPreyConfig(ctx).getAgreementId());
+		  */
+		
+		parameters.put("name", name);
+		parameters.put("email", email);
+		parameters.put("password", password);
+		parameters.put("password_confirmation", password);
+		parameters.put("country_name", Locale.getDefault().getDisplayCountry());
+
 		
 		PreyHttpResponse response=null;
 		String xml;
 		try {
-			response=PreyRestHttpClient.getInstance(ctx).post(PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("users.xml"), parameters, preyConfig);
+			String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
+			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat(apiv2).concat("signup.json");
+			//String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("users.xml");
+			response=PreyRestHttpClient.getInstance(ctx).post(url, parameters);
 			xml = response.getResponseAsString();
 		} catch (IOException e) {
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
 		}
-		checkForError(xml);
-
-		int from;
-		int to;
-		String apiKey;
-		try {
-			from = xml.indexOf("<key>") + 5;
-			to = xml.indexOf("</key>");
-			apiKey = xml.substring(from, to);
-		} catch (Exception e) { 
-			if (response!=null&&response.getStatusLine()!=null){
+		
+		String apiKey="";
+		if (xml.contains("\"key\"") ){
+			try{
+				JSONObject jsnobject = new JSONObject(xml);
+				apiKey=jsnobject.getString("key");
+			}catch(Exception e){
+				
+			}
+		} else{
+			if (response!=null&&response.getStatusLine()!=null&&response.getStatusLine().getStatusCode()>299){
 				throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
-			}else{
+			}else{	
 				throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,""));		
-			}	
+			}
 		}
 
-		String xmlDeviceId = this.registerNewDevice(ctx, apiKey, deviceType);
-		checkForError(xmlDeviceId);
-		from = xmlDeviceId.indexOf("<key>") + 5;
-		to = xmlDeviceId.indexOf("</key>");
-
+		PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType);
+		String xmlDeviceId=responseDevice.getResponseAsString();
 		String deviceId = null;
-		try {
-			deviceId = xmlDeviceId.substring(from, to);
-		} catch (Exception e) {
-			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
+		if (xmlDeviceId.contains("{\"key\"") ){
+			try{
+				JSONObject jsnobject = new JSONObject(xmlDeviceId);
+				deviceId=jsnobject.getString("key");
+			}catch(Exception e){
+				
+			}
+		}else{
+			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,""));		
 		}
 
 		PreyAccountData newAccount = new PreyAccountData();
@@ -142,6 +154,7 @@ public class PreyWebServices {
 		return newAccount;
 	}
 
+	/*
 	private void checkForError(String xml) throws PreyException {
 		if (xml!=null&&xml.contains("errors")) {
 			int errorFrom = xml.indexOf("<error>") + 7;
@@ -150,7 +163,7 @@ public class PreyWebServices {
 			throw new PreyException(errorMsg); //
 		}
 
-	}
+	}*/
 
 	/**
 	 * Register a new device for a given API_KEY, needed just after obtain the
@@ -158,7 +171,7 @@ public class PreyWebServices {
 	 * 
 	 * @throws PreyException
 	 */
-	public String registerNewDevice(Context ctx, String api_key, String deviceType) throws PreyException {
+	private PreyHttpResponse registerNewDevice(Context ctx, String api_key, String deviceType) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		
 		String model = Build.MODEL;
@@ -190,12 +203,9 @@ public class PreyWebServices {
 			String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
 			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat(apiv2).concat("devices.json"); 
 			PreyLogger.d("url:"+url);
-			response = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig);
+			response = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
 			PreyLogger.d("response:"+response.getStatusLine() +" "+ response.getResponseAsString());
 			// No more devices allowed
-			
-			
-			
 			
 			if ((response.getStatusLine().getStatusCode() == 302) || (response.getStatusLine().getStatusCode() == 422)) {
 				throw new NoMoreDevicesAllowedException(ctx.getText(R.string.set_old_user_no_more_devices_text).toString());
@@ -207,7 +217,7 @@ public class PreyWebServices {
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
 		}
 
-		return response.getResponseAsString();
+		return response;
 	}
 
 	public PreyAccountData registerNewDeviceToAccount(Context ctx, String email, String password, String deviceType) throws PreyException {
@@ -218,7 +228,7 @@ public class PreyWebServices {
 		try {
 			String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
 			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat(apiv2).concat("profile.xml");
-			PreyLogger.i("url:"+url);
+			PreyLogger.d("url:"+url);
 			response=PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig, email, password);
 			xml = response.getResponseAsString(); 
 		} catch (IOException e) {
@@ -229,9 +239,9 @@ public class PreyWebServices {
 		if(response!=null&&response.getStatusLine()!=null){
 			status="["+response.getStatusLine().getStatusCode()+"]";
 		}
-		if (!xml.contains("<key"))
+		if (!xml.contains("<key")){
 			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,status));
-		//
+		}
 
 		int from;
 		int to;
@@ -244,7 +254,8 @@ public class PreyWebServices {
 			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,status));
 		}
 		String deviceId =null;
-		String xmlDeviceId = this.registerNewDevice(ctx, apiKey, deviceType);
+		PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType);
+		String xmlDeviceId=responseDevice.getResponseAsString();
 		//if json
 		if (xmlDeviceId.contains("{\"key\"") ){
 			try{
@@ -253,14 +264,6 @@ public class PreyWebServices {
 			}catch(Exception e){
 				
 			}
-		}
-		//if xml
-		if(deviceId==null){
-			if (!xmlDeviceId.contains("<key") )
-				throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,status));
-			from = xmlDeviceId.indexOf("<key>") + 5;
-			to = xmlDeviceId.indexOf("</key>");
-			deviceId = xmlDeviceId.substring(from, to);
 		}
 		PreyAccountData newAccount = new PreyAccountData();
 		newAccount.setApiKey(apiKey);
@@ -274,7 +277,9 @@ public class PreyWebServices {
 	public PreyAccountData registerNewDeviceWithApiKeyEmail(Context ctx, String apiKey,String email, String deviceType) throws PreyException {
 		int from;
 		int to;
-		String xmlDeviceId = this.registerNewDevice(ctx, apiKey, deviceType);
+		
+		PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType);
+		String xmlDeviceId=responseDevice.getResponseAsString();
 
 		if (!xmlDeviceId.contains("<key"))
 			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"Error"));
@@ -292,7 +297,8 @@ public class PreyWebServices {
 
 	}
 
-	public String sendPreyHttpReport(Context ctx, ArrayList<HttpDataService> dataToSend) {
+	/*
+	public String sendPreyHttpReport2(Context ctx, ArrayList<HttpDataService> dataToSend) {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		
 		Map<String, String> parameters = new HashMap<String, String>();
@@ -314,9 +320,9 @@ public class PreyWebServices {
 			PreyConfig.postUrl = null;
 			PreyHttpResponse  httpResponse=null;
 			if (entityFiles.size()==0)
-				httpResponse = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig);
+				httpResponse = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
 			else
-				httpResponse = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig,entityFiles);
+				httpResponse = PreyRestHttpClient.getInstance(ctx).post(url, parameters,entityFiles);
 			response=httpResponse.getResponseAsString();
 			PreyLogger.i("Report sent:["+httpResponse.getStatusLine()+"]" + response);
 			if (preyConfig.isShouldNotify()) {
@@ -326,15 +332,15 @@ public class PreyWebServices {
 			PreyLogger.e("Report wasn't send:"+e.getMessage(),e);
 		}
 		return response;
-	}
+	}*/
 
 	private void notifyUser(Context ctx) {
 		String notificationTitle = ctx.getText(R.string.notification_title).toString();
 		NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 		Notification notification = new Notification(R.drawable.prey_status_bar_icon, notificationTitle, System.currentTimeMillis());
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
-		
-		Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(PreyConfig.CONTROL_PANEL_URL));
+		String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl();
+		Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
 		String notificationToShow = ctx.getText(R.string.notification_msg).toString();
 		PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, browserIntent, 0);
 		notification.contentIntent = contentIntent;
@@ -365,7 +371,7 @@ public class PreyWebServices {
 	}*/
 
 
-	public void setPushRegistrationId(Context ctx, String regId) {
+	public PreyHttpResponse setPushRegistrationId(Context ctx, String regId) {
 		//this.updateDeviceAttribute(ctx, "notification_id", regId);
 		HttpDataService data = new HttpDataService("notification_id");
 	    data.setList(false);
@@ -373,8 +379,11 @@ public class PreyWebServices {
 		data.setSingleData(regId);
 		ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
 		dataToBeSent.add(data);
-		PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
-		PreyLogger.d("c2dm registry id set succesfully");
+		PreyHttpResponse response=PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
+		if (response!=null&&response.getStatusLine()!=null&&response.getStatusLine().getStatusCode()==200){
+			PreyLogger.d("c2dm registry id set succesfully");
+		}
+		return response;
 	}
 	/*
 	public void updateActivationPhrase(Context ctx, String activationPhrase) {
@@ -446,17 +455,19 @@ public class PreyWebServices {
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		String xml;
 		try {
-			xml = PreyRestHttpClient.getInstance(ctx)
-					.delete(this.getDeviceUiUrl(ctx), parameters, preyConfig)
-					.getResponseAsString();
+			String url=this.getDeviceWebControlPanelUiUrl(ctx);
+			PreyHttpResponse response=PreyRestHttpClient.getInstance(ctx)
+					.delete(url, parameters, preyConfig);
+			PreyLogger.d(response.toString());
+			xml = response.getResponseAsString();
 
 		} catch (IOException e) {
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
 		}
 		return xml;
 	}
-
-	public void changePassword(Context ctx, String email, String currentPassword, String newPassword) throws PreyException {
+    /*
+	public void changePassword2(Context ctx, String email, String currentPassword, String newPassword) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		String userXml = this.checkPassword(email, currentPassword, ctx);
 		if (!userXml.contains("<key"))
@@ -481,9 +492,10 @@ public class PreyWebServices {
 		} catch (Exception e) {
 		}
 		checkForError(xml);
-	}
+	}*/
 
-	public String getActionsToPerform(Context ctx) throws PreyException {
+	/*
+	public String getActionsToPerform2(Context ctx) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         PreyHttpResponse response=null;
 		Map<String, String> parameters = new HashMap<String, String>();
@@ -504,7 +516,7 @@ public class PreyWebServices {
 				throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e2);
 			}		
 		}
-	}
+	}*/
 
 	public boolean forgotPassword(Context ctx) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
@@ -514,7 +526,7 @@ public class PreyWebServices {
 		parameters.put("user[email]", preyConfig.getEmail());
 
 		try {
-			PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters, preyConfig);
+			PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).post(URL, parameters);
 			if (response.getStatusLine().getStatusCode() != 302) {
 				throw new PreyException(ctx.getText(R.string.error_cant_report_forgotten_password).toString());
 			}
@@ -525,6 +537,7 @@ public class PreyWebServices {
 		return true;
 	}
 	
+	/*
 	public void deactivateModules(Context ctx, ArrayList<String> modules){
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		HashMap<String, String> parameters = new HashMap<String, String>();
@@ -533,7 +546,7 @@ public class PreyWebServices {
 		}
 		parameters.put("api_key", preyConfig.getApiKey());
 		try {
-			PreyRestHttpClient.getInstance(ctx).methodAsParameter(this.getDeviceUrl(ctx),"PUT", parameters, preyConfig);
+			PreyRestHttpClient.getInstance(ctx).methodAsParameter(getDeviceUrl(ctx),"PUT", parameters, preyConfig);
 			PreyLogger.d("Modules deactivation instruction sent");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -541,7 +554,7 @@ public class PreyWebServices {
 			PreyLogger.e("Modules weren't deactivated", e);
 		}
 		
-	}
+	}*/
 	
 	public static String getDeviceWebControlPanelUrl(Context ctx) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
@@ -549,7 +562,7 @@ public class PreyWebServices {
 		if (deviceKey == null || deviceKey == "")
 			throw new PreyException("Device key not found on the configuration");
 		String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
-		apiv2="";
+		//apiv2="";
 		return PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey);
 	}
 	
@@ -564,10 +577,6 @@ public class PreyWebServices {
 	
 	
 	private String getDeviceUrlJson(Context ctx) throws PreyException{
-		 return getDeviceUrl(ctx).concat(".json");
-	}
-	
-	private String getDeviceUrlJson2(Context ctx) throws PreyException{
 		 return getDeviceUrlApiv2(ctx).concat(".json");
 	}
 	
@@ -576,13 +585,11 @@ public class PreyWebServices {
 	}
 	
 	 private String getReportUrlJson(Context ctx) throws PreyException{
-		 String url=getDeviceUrl(ctx);
-		 url=url.replaceAll(".xml", "");
-		 return url.concat("/reports");
+		 return getDeviceUrlApiv2(ctx).concat("/reports.json");  
 	 }
 		
-	 public static String getFileUrlJson(Context ctx) throws PreyException{
-		 return getDeviceUrl(ctx).concat("/files");
+	 public String getFileUrlJson(Context ctx) throws PreyException{
+		 return getDeviceUrlApiv2(ctx).concat("/files");
 	 }
 		
 	 public String getDataUrlJson(Context ctx) throws PreyException{
@@ -597,11 +604,6 @@ public class PreyWebServices {
 		 return getDeviceUrlApiv2(ctx).concat("/response");
 	 }
 	 
-	 
-	 
- 
- 
-	 
 	private String getDeviceUrlApiv2(Context ctx) throws PreyException{
 			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 			String deviceKey = preyConfig.getDeviceID();
@@ -613,9 +615,10 @@ public class PreyWebServices {
 			return url;
 	}
 	
-	private static String getDeviceUrl(Context ctx) throws PreyException{
+	/*
+	private static String getDeviceUrl2(Context ctx) throws PreyException{
 		return getDeviceWebControlPanelUrl(ctx).concat(".xml");
-	}
+	}*/
 	
 	public  String getDeviceUrlV2(Context ctx) throws PreyException{
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
@@ -627,9 +630,8 @@ public class PreyWebServices {
 		return url;
 	}
 	
-	private String getDeviceUiUrl(Context ctx) throws PreyException{
-		return this.getDeviceWebControlPanelUiUrl(ctx).concat(".xml");
-	}
+	
+
 	
 	public HashMap<String, String> increaseData(Context ctx, HashMap<String, String> parameters) {
 		PreyPhone phone = new PreyPhone(ctx);
@@ -685,8 +687,7 @@ public class PreyWebServices {
 		PreyHttpResponse preyHttpResponse=null;
 		try {
 			String url =getDataUrlJson(ctx);
-			//PreyLogger.i("URL:"+url);
-			//String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
+			PreyLogger.d("URL:"+url);
 			PreyConfig.postUrl = null;
 			
 			
@@ -814,10 +815,9 @@ public class PreyWebServices {
 	 
 		PreyHttpResponse preyHttpResponse=null;
 		try {
-			String url =getReportUrlJson(ctx)+".xml";
-			//String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
+			String url =getReportUrlJson(ctx);
 			PreyConfig.postUrl = null;
-			PreyLogger.i("report url:"+url);
+			PreyLogger.d("report url:"+url);
 			
 			
 			if (entityFiles.size()==0)
@@ -835,7 +835,7 @@ public class PreyWebServices {
 	}
 	
 	public List<JSONObject> getActionsJsonToPerform(Context ctx) throws PreyException {
-		String url=getDeviceUrlJson2(ctx);
+		String url=getDeviceUrlJson(ctx);
 		//PreyLogger.i("url:"+url);
 		List<JSONObject> lista=new JSONParser().getJSONFromUrl(ctx,url); 
 	 
@@ -874,7 +874,7 @@ public class PreyWebServices {
 		PreyHttpResponse response = null;
 		try {
 			String url="https://panel.preyapp.com/api/v2/remote.json";
-			response = PreyRestHttpClient.getInstance(ctx).post(url, parameters, preyConfig);
+			response = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
 		} catch (IOException e) {
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
 		}
@@ -885,23 +885,14 @@ public class PreyWebServices {
 	
 	public PreyHttpResponse sendContact(Context ctx, HashMap<String, String> parameters) {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		
-		 
-  
-		
-		
-		//parameters.put("api_key", preyConfig.getApiKey());
+
 
  
 		PreyHttpResponse preyHttpResponse=null;
 		try {
-			//String url =getDataUrlJson(ctx);
+
 			String url=getDeviceUrlApiv2(ctx).concat("/contacts");
 			
-			//String url ="http://10.0.0.25:8080/api/v2/devices/key/contact";
-			
-			//PreyLogger.i("URL:"+url);
-			//String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
 			PreyConfig.postUrl = null;
 			
 			
@@ -919,29 +910,12 @@ public class PreyWebServices {
 	
 	public PreyHttpResponse sendBrowser(Context ctx, HashMap<String, String> parameters) {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		
-		 
-  
-		
-		
-		//parameters.put("api_key", preyConfig.getApiKey());
-
- 
 		PreyHttpResponse preyHttpResponse=null;
 		try {
-			//String url =getDataUrlJson(ctx);
 			String url=getDeviceUrlApiv2(ctx).concat("/browser");
-			
-			//String url ="http://10.0.0.25:8080/api/v2/devices/key/contact";
-			
-			//PreyLogger.i("URL:"+url);
-			//String URL = PreyConfig.postUrl != null ? PreyConfig.postUrl : this.getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
 			PreyConfig.postUrl = null;
 			
-			
-			
-			 
-				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig);
+			preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig);
 		 
 		 
 			 
