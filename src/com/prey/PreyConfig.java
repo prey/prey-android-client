@@ -55,7 +55,7 @@ public class PreyConfig {
 	//Amount of millisecond the app can be suspended before ask for the password. 
 	public static final long PASSWORD_PROMPT_DELAY = 5000;
 	
-	public static final String CONTROL_PANEL_URL = "https://panel.preyproject.com/login";
+//	public static final String CONTROL_PANEL_URL = "https://panel.preyproject.com/login";
 
 
 	public static final String PREFS_NAME = "PREY_PREFS";

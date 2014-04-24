@@ -6,19 +6,13 @@
  ******************************************************************************/
 package com.prey.actions;
 
-import java.util.ArrayList;
-
-
 import android.content.Context;
 import android.content.Intent;
 
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.actions.observer.ActionsController;
-import com.prey.actions.parser.ResponseParser;
 import com.prey.exceptions.PreyException;
-import com.prey.net.PreyWebServices;
 import com.prey.services.PreyRunnerService;
 import com.prey.util.PreyTime;
 
@@ -101,6 +95,7 @@ public class ActionsRunnner {
 		}
 		
 		private boolean getInstructionsAndRun(PreyExecutionWaitNotify waitNotify, boolean runIfNotMissing) throws PreyException{
+			/*
 			ArrayList<PreyAction> actions = null;
 			String actionsToExecute = null;
 			try {
@@ -118,7 +113,8 @@ public class ActionsRunnner {
 			} catch (PreyException e) {
 				PreyLogger.e("Exception getting device's xml instruction set", e);
 				throw e;
-			} 
+			}*/
+			return false;
 		}
 
 	}

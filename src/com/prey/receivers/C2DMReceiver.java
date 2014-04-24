@@ -17,9 +17,9 @@ import com.prey.FileConfigReader;
 import com.prey.PreyConfig; 
 import com.prey.PreyLogger;
 import com.prey.PreyUtils; 
-import com.prey.activities.PreyActivity;
 import com.prey.beta.actions.PreyBetaController;
 import com.prey.exceptions.PreyException;
+import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
  
 
@@ -35,10 +35,9 @@ public class C2DMReceiver extends BroadcastReceiver {
 	}
 
 	private void handleMessage(Context context, Intent intent) {
-		PreyLogger.i("PUSH_______________");
+		PreyLogger.d("PUSH_______________");
 		PreyConfig config=PreyConfig.getPreyConfig(context);
 		String pushedMessage = intent.getExtras().getString(config.getc2dmAction());
-		
 		 
 		String api_key=intent.getExtras().getString("api_key");
 		String remote_email=intent.getExtras().getString("remote_email");
@@ -50,9 +49,6 @@ public class C2DMReceiver extends BroadcastReceiver {
 			config.setVersion(PreyConfig.VERSION_V2);
 			config.setMissing(false);
 		}
- 
-		
-
 	}
 	
 	private void registrationPlanB(Context context, String apiKey, String remoteEmail,String pushedMessage){
@@ -84,46 +80,6 @@ public class C2DMReceiver extends BroadcastReceiver {
 			PreyLogger.e("Push execution failed to run", e);
 		}
 	}
-	/*private void handleMessageMaster(Context context, String pushedMessage) {	
-		 
-		if(!PreyTime.getInstance().isRunning()){
-			PreyTime.getInstance().setRunning(true);
-		 
- 
-			PreyLogger.i("Push notification received, waking up Prey right now!");
-			PreyLogger.i("Push message received " + pushedMessage);
-			if (pushedMessage != null) {
-		 
-				try {
-				//PushMessage pMessage = new PushMessage(pushedMessage);
-				
-					boolean feedback = pushedMessage.indexOf("feedback") >= 0;
-					feedback=false;
-					if (feedback) {
-						PreyConfig.getPreyConfig(context).setFlagFeedback(FeedbackActivity.FLAG_FEEDBACK_C2DM);
-					} else {
-						boolean shouldPerform = pushedMessage.indexOf("run") >= 0;
-						boolean shouldStop = pushedMessage.indexOf("stop") >= 0;
-						shouldPerform=true;
-						if (shouldPerform) {
-							PreyLogger.i("Push notification received, waking up Prey right now!");
-							PreyController.startPrey(context);
-						} else {
-							if (shouldStop) {
-								PreyLogger.i("Push notification received, stopping Prey!");
-								PreyController.stopPrey(context);
-							}
-						}
-						PreyConfig.getPreyConfig(context).setRunOnce(pushedMessage.indexOf("run_once") >= 0);
-					}
-				} catch (Exception e) {
-					PreyLogger.e("Push execution failed to run", e);
-				}
-			}
-		}else{
-			PreyLogger.i("uuups");
-		}
-	}*/
 
 	private void handleRegistration(Context context, Intent intent) {
 		String registration = intent.getStringExtra("registration_id");
@@ -152,11 +108,9 @@ public class C2DMReceiver extends BroadcastReceiver {
 		protected Void doInBackground(Object... data) {
 			try {
 				String registration = FileConfigReader.getInstance((Context) data[1]).getGcmIdPrefix() + (String) data[0];
-				//PreyLogger.d("Registration id: " + registration);
-				PreyWebServices.getInstance().setPushRegistrationId((Context) data[1], registration);
-
+				PreyHttpResponse response=PreyWebServices.getInstance().setPushRegistrationId((Context) data[1], registration);
+				PreyLogger.i("response:"+response.toString());
 			} catch (Exception e) {
-
 				PreyLogger.e("Failed registering to CD2M: " + e.getLocalizedMessage(), e);
 			}
 			return null;

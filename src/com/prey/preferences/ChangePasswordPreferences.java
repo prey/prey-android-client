@@ -18,9 +18,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.prey.PreyConfig;
-import com.prey.exceptions.PreyException;
-import com.prey.net.PreyWebServices;
 import com.prey.R;
 public class ChangePasswordPreferences extends DialogPreference {
 
@@ -78,14 +75,14 @@ public class ChangePasswordPreferences extends DialogPreference {
 
 		@Override
 		protected Void doInBackground(String... passwords) {
-			try {
+			/*try {
 				String email = PreyConfig.getPreyConfig(getContext()).getEmail();
 				PreyWebServices.getInstance().changePassword(getContext(), email,passwords[0], passwords[1]);
 
 			} catch (PreyException e) {
 				e.printStackTrace();
 				error = e.getMessage();
-			}
+			}*/
 			return null;
 		}
 
