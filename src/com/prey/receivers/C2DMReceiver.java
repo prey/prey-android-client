@@ -86,20 +86,33 @@ public class C2DMReceiver extends BroadcastReceiver {
 		if (intent.getStringExtra("error") != null) {
 			PreyLogger.d("Couldn't register to c2dm: " + intent.getStringExtra("error"));
 			PreyConfig.getPreyConfig(context).setRegisterC2dm(false);
+			retryRegistration(context);
 		} else if (intent.getStringExtra("unregistered") != null) {
 			// unregistration done, new messages from the authorized sender will
 			// be rejected
 			PreyLogger.d("Unregistered from c2dm: " + intent.getStringExtra("unregistered"));
 			PreyConfig.getPreyConfig(context).setRegisterC2dm(false);
+			PreyConfig.getPreyConfig(context).setNotificationId("");
 		} else if (registration != null) {
 			//PreyLogger.d("Registration id: " + registration);
 			new UpdateCD2MId().execute(registration, context);
 			PreyConfig.getPreyConfig(context).setRegisterC2dm(true);
+			
 			// Send the registration ID to the 3rd party site that is sending
 			// the messages.
 			// This should be done in a separate thread.
 			// When done, remember that all registration is done.
 		}
+	}
+	
+	private void retryRegistration(Context context){
+		final Context ctx=context;
+		new Thread(new Runnable() {
+			public void run() {
+				try{Thread.sleep(5000);}catch(Exception e){};
+				PreyConfig.getPreyConfig(ctx).registerC2dm();
+			}
+		}).start();
 	}
 
 	private class UpdateCD2MId extends AsyncTask<Object, Void, Void> {
@@ -109,6 +122,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 			try {
 				String registration = FileConfigReader.getInstance((Context) data[1]).getGcmIdPrefix() + (String) data[0];
 				PreyHttpResponse response=PreyWebServices.getInstance().setPushRegistrationId((Context) data[1], registration);
+				PreyConfig.getPreyConfig((Context) data[1]).setNotificationId(registration);
 				PreyLogger.i("response:"+response.toString());
 			} catch (Exception e) {
 				PreyLogger.e("Failed registering to CD2M: " + e.getLocalizedMessage(), e);

@@ -593,7 +593,7 @@ public class PreyWebServices {
 	 }
 		
 	 public String getDataUrlJson(Context ctx) throws PreyException{
-		 return getDeviceUrlApiv2(ctx).concat("/data");
+		 return getDeviceUrlApiv2(ctx).concat("/data.json");
 	 }
 		
 	 private String getEventsUrlJson(Context ctx) throws PreyException{
@@ -681,7 +681,7 @@ public class PreyWebServices {
 			}
 		}
 
-		//parameters.put("api_key", preyConfig.getApiKey());
+	//	parameters.put("notification_id", preyConfig.getNotificationId());
 
  
 		PreyHttpResponse preyHttpResponse=null;

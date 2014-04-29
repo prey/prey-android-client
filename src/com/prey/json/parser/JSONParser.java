@@ -113,6 +113,7 @@ public class JSONParser {
 		if("Invalid data received".equals(json)) return null;
 		List<JSONObject> listaJson = new ArrayList<JSONObject>();
 		json="{\"prey\":"+json+"}"; 
+		PreyLogger.d(json);
 		try{
 			JSONObject jsnobject = new JSONObject(json);
 			JSONArray jsonArray = jsnobject.getJSONArray("prey");

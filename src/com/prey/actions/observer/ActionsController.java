@@ -99,7 +99,6 @@ public class ActionsController {
          List<HttpDataService> listData=new ArrayList<HttpDataService>();
          
          PreyLogger.i("runActionJson size:"+(jsonObjectList==null?-1:jsonObjectList.size()));
-         ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
          
          try {
                  for(int i=0;jsonObjectList!=null&&i<jsonObjectList.size();i++){
