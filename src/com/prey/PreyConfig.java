@@ -21,6 +21,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -108,6 +109,8 @@ public class PreyConfig {
 	public static final String NOTIFICATION_ID="NOTIFICATION_ID";
 	public static final String SEND_NOTIFICATION_ID="SEND_NOTIFICATION_ID";
 	public static final String SIGNAL_FLARE_DATE="SIGNAL_FLARE_DATE";
+	
+	public static final String VERSION_PREY_DEFAULT="1.0.9";
 	
 	private boolean sendNotificationId;
 	private String notificationId;
@@ -577,7 +580,13 @@ public class PreyConfig {
 	}
 	
 	public String getPreyVersion() {
-		return this.ctx.getString(R.string.prey_version);
+		String versionName=VERSION_PREY_DEFAULT;
+		try{
+			PackageInfo pinfo =ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
+		 	versionName = pinfo.versionName;
+		}catch(Exception e){
+		}
+		return versionName;
 	}
 	
 	public String getPreyMinorVersion() {
