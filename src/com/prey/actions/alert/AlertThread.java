@@ -9,6 +9,7 @@ import com.prey.net.PreyWebServices;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 
 public class AlertThread extends Thread {
 
@@ -33,6 +34,12 @@ public class AlertThread extends Thread {
                         popup.putExtras(bundle);
                         popup.putExtra("description_message", description);
                         ctx.startActivity(popup);
+                        
+                        
+                        Settings.System.putString(ctx.getContentResolver(),
+                        Settings.System.NEXT_ALARM_FORMATTED, description);
+                        
+                         
                         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","alert","started"));
                         try {
                                         int i = 0;
