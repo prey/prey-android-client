@@ -8,8 +8,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
     android:installLocation="internalOnly"
-    android:versionCode="86"
-    android:versionName="1.0.9" >
+    android:versionCode="87"
+    android:versionName="1.0.10" >
     
     <uses-sdk
         android:minSdkVersion="4"
@@ -253,6 +253,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.media.VOLUME_CHANGED_ACTION" />
             </intent-filter>
         </receiver>
         
