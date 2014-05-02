@@ -207,7 +207,7 @@ public class PreyWebServices {
 			PreyLogger.d("response:"+response.getStatusLine() +" "+ response.getResponseAsString());
 			// No more devices allowed
 			
-			if ((response.getStatusLine().getStatusCode() == 302) || (response.getStatusLine().getStatusCode() == 422)) {
+			if ((response.getStatusLine().getStatusCode() == 302) || (response.getStatusLine().getStatusCode() == 422)||(response.getStatusLine().getStatusCode() == 403)) {
 				throw new NoMoreDevicesAllowedException(ctx.getText(R.string.set_old_user_no_more_devices_text).toString());
 			}
 			if (response.getStatusLine().getStatusCode()>299){
