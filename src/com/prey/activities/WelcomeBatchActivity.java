@@ -70,6 +70,7 @@ public class WelcomeBatchActivity extends PreyActivity {
 				Intent intent = new Intent(WelcomeBatchActivity.this, PermissionInformationBatchActivity.class);
 				intent.putExtras(bundle);
 				startActivity(intent);
+				PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
 				finish();
 			}
 		}

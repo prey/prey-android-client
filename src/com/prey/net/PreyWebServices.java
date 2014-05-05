@@ -275,19 +275,17 @@ public class PreyWebServices {
 	}
 	
 	public PreyAccountData registerNewDeviceWithApiKeyEmail(Context ctx, String apiKey,String email, String deviceType) throws PreyException {
-		int from;
-		int to;
-		
+		String deviceId ="";
 		PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType);
 		String xmlDeviceId=responseDevice.getResponseAsString();
-
-		if (!xmlDeviceId.contains("<key"))
-			throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"Error"));
-
-		from = xmlDeviceId.indexOf("<key>") + 5;
-		to = xmlDeviceId.indexOf("</key>");
-		String deviceId = xmlDeviceId.substring(from, to);
-
+		//if json
+		if (xmlDeviceId.contains("{\"key\"") ){
+			try{
+				JSONObject jsnobject = new JSONObject(xmlDeviceId);
+				deviceId=jsnobject.getString("key");
+				}catch(Exception e){
+			}
+		}
 		PreyAccountData newAccount = new PreyAccountData();
 		newAccount.setApiKey(apiKey);
 		newAccount.setDeviceId(deviceId);
