@@ -76,8 +76,6 @@
   <string name="preferences_password_updated">Fjalëkalimi u përditësua</string>
   <string name="preferences_ringtone_summary"></string>
   <string name="preferences_ringtone_title"></string>
-  <string name="preferences_show_notification_summary"></string>
-  <string name="preferences_show_notification_title"></string>
   <string name="preferences_sms_run">Mesazhi në SMS aktivizues </string>
   <string name="preferences_sms_run_edittext">Ky tekst do te aktivizojë Prey-in, kur të arrijë tek ne</string>
   <string name="preferences_sms_run_summary">Fjala apo fraza që do të zgjojë Prey-n</string>

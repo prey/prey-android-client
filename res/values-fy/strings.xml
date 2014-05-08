@@ -72,8 +72,6 @@
     <string name="preferences_password_updated">Wachtwurd bywurke!</string>
     <string name="preferences_ringtone_summary">Selektearje it lûd dat ôfspile wurdt by aktivaasje</string>
     <string name="preferences_ringtone_title">Lûd dat ôfspyle wurdt</string>
-    <string name="preferences_show_notification_summary">In berjocht wurdt op it skerm toand at Prey mei súkses in rapport stjoerd hat</string>
-    <string name="preferences_show_notification_title">Toan notifikaasjes</string>
     <string name="preferences_sms_run">SMS-aktivaasje berjocht</string>
     <string name="preferences_sms_run_edittext">Dizze tekst skeakelt nei ûntfangst Prey yn</string>
     <string name="preferences_sms_run_summary">Wurd of sin wêr\'t Prey fan wekker wurdt</string>

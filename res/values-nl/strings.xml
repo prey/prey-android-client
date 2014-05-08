@@ -24,8 +24,6 @@
     <string name="preferences_sms_stop">Sms-deactivatiebericht</string>
     <string name="preferences_sms_stop_summary">Woord of zin waardoor Prey zal stoppen</string>
     <string name="preferences_sms_stop_edittext">Deze tekst zal Prey afsluiten wanneer ontvangen</string>
-    <string name="preferences_show_notification_title">Meldingen weergeven</string>
-    <string name="preferences_show_notification_summary">Bericht op het scherm weergeven als Prey een rapport heeft verzonden</string>
     <string name="preferences_lock_sim_screen_title">Actieve SIM-detectie</string>
     <string name="preferences_lock_sim_screen_summary">Configureer wisselen van SIM</string>
     <string name="preferences_check_sim_change">Koppelen aan huidige SIM-kaart</string>

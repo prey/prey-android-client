@@ -76,8 +76,6 @@
   <string name="preferences_password_updated">Пароль обновлен!</string>
   <string name="preferences_ringtone_summary">Выберите звук для воспроизведения при активации</string>
   <string name="preferences_ringtone_title">Выбрать звук</string>
-  <string name="preferences_show_notification_summary">Показывает сообщение на экране, если Prey послал успешный отчет</string>
-  <string name="preferences_show_notification_title">Показывать уведомления</string>
   <string name="preferences_sms_run">Активирующее SMS сообщение</string>
   <string name="preferences_sms_run_edittext">Этот текст активирует Prey, когда будет получен</string>
   <string name="preferences_sms_run_summary">Слово или фраза, которая разбудит Prey</string>

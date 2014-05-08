@@ -30,12 +30,8 @@ import org.json.JSONObject;
 
  
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 
@@ -331,7 +327,7 @@ public class PreyWebServices {
 		}
 		return response;
 	}*/
-
+    /*
 	private void notifyUser(Context ctx) {
 		String notificationTitle = ctx.getText(R.string.notification_title).toString();
 		NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -349,7 +345,7 @@ public class PreyWebServices {
 		// to cancel.
 		nm.notify(R.string.preyForAndroid_name, notification);
 
-	}
+	}*/
 /*
 	public void setMissing(Context ctx, boolean isMissing) {
 		final PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
@@ -695,9 +691,6 @@ public class PreyWebServices {
 			else
 				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig,entityFiles);
 			//PreyLogger.d("Data sent_: " + preyHttpResponse.getResponseAsString());
-			if (preyConfig.isShouldNotify()) {
-				this.notifyUser(ctx);
-			}
 		} catch (Exception e) {
 			PreyLogger.e("Data wasn't send",e);
 		} 
@@ -820,9 +813,6 @@ public class PreyWebServices {
 			else
 				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig,entityFiles);
 			PreyLogger.i("Report sent: " + preyHttpResponse.getResponseAsString());
-			if (preyConfig.isShouldNotify()) {
-				this.notifyUser(ctx);
-			}
 		} catch (Exception e) {
 			PreyLogger.e("Report wasn't send:"+e.getMessage(),e);
 		} 

@@ -76,8 +76,6 @@
   <string name="preferences_password_updated">סיסמה עודכנה!</string>
   <string name="preferences_ringtone_summary">בחר את הצליל שיושמע בזמן ההפעלה</string>
   <string name="preferences_ringtone_title">צליל להשמעה</string>
-  <string name="preferences_show_notification_summary">הצג התרעה קופצת אם Prey שלח בהצלחה דו"ח</string>
-  <string name="preferences_show_notification_title">הצג התרעות</string>
   <string name="preferences_sms_run">מסרון SMS להפעלה</string>
   <string name="preferences_sms_run_edittext">הודעה זו תפעיל את Prey כשתתקבל</string>
   <string name="preferences_sms_run_summary">מילה או משפט שיעיר את Prey</string>

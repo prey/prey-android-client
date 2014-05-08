@@ -24,8 +24,6 @@
     <string name="preferences_sms_stop">SMS di disattivazione</string>
     <string name="preferences_sms_stop_summary">Parola o frase che disattiverà Prey</string>
     <string name="preferences_sms_stop_edittext">Quando al tuo telefono arriverà questo testo Prey verrà disattivato</string>
-    <string name="preferences_show_notification_title">Mostra notifiche</string>
-    <string name="preferences_show_notification_summary">Mostra un messaggio sullo schermo se Prey invia report con successo</string>
     <string name="preferences_lock_sim_screen_title">Rilevamento SIM card</string>
     <string name="preferences_lock_sim_screen_summary">Configura gli eventi alla sostituzione della SIM</string>
     <string name="preferences_check_sim_change">Lega alla SIM corrente</string>

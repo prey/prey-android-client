@@ -76,8 +76,6 @@
   <string name="preferences_password_updated">Passwort aktualisiert!</string>
   <string name="preferences_ringtone_summary">Wählen sie den Ton aus, der bei einer Aktivierung abgespielt werden soll</string>
   <string name="preferences_ringtone_title">Abzuspielender Ton</string>
-  <string name="preferences_show_notification_summary">Zeigt Benachrichtigung an, wenn Prey einen Bericht erfolgreich gesendet hat</string>
-  <string name="preferences_show_notification_title">Benachrichtigungen anzeigen</string>
   <string name="preferences_sms_run">Aktivierungs-Nachricht per SMS</string>
   <string name="preferences_sms_run_edittext">Dieser Text wird Prey nach dem Empfang aktivieren</string>
   <string name="preferences_sms_run_summary">Wort oder Satz zur Aktivierung von Prey</string>

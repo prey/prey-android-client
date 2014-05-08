@@ -70,8 +70,6 @@
     <string name="preferences_sms_stop">Meddelande för sms-inaktivering</string>
     <string name="preferences_sms_stop_summary">Ord eller fras som skall stoppa Prey</string>
     <string name="preferences_sms_stop_edittext">Skicka denna text från en annan enhet för att stänga av Prey</string>
-    <string name="preferences_show_notification_title">Visa meddelanden</string>
-    <string name="preferences_show_notification_summary">Visar skärmmeddelande när Prey har skickat en rapport</string>
     <string name="preferences_lock_sim_screen_title">Aktiv SIM-identifiering</string>
     <string name="preferences_lock_sim_screen_summary">Konfigurera SIM-ändringshändelser</string>
     <string name="preferences_check_sim_change">Varna vid SIM-kortsbyte</string>

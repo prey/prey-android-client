@@ -24,8 +24,6 @@
     <string name="preferences_sms_stop">Melding for sms-deaktivering</string>
     <string name="preferences_sms_stop_summary">Ord eller setning som skal stoppe Prey</string>
     <string name="preferences_sms_stop_edittext">Send denne teksten fra en annen enhet for å stoppe Prey</string>
-    <string name="preferences_show_notification_title">Vis melding</string>
-    <string name="preferences_show_notification_summary">Viser feilmelding på skjerm når Prey har sendt en rapport</string>
     <string name="preferences_lock_sim_screen_title">Aktiv SIM-identifiering</string>
     <string name="preferences_lock_sim_screen_summary">Konfigurer SIM-endringshendelser</string>
     <string name="preferences_check_sim_change">Advar ved bytte av SIM-kort</string>

@@ -76,8 +76,6 @@
   <string name="preferences_password_updated">Parola modificată!</string>
   <string name="preferences_ringtone_summary">Alegeți un sunet care va fi reprodus la activare</string>
   <string name="preferences_ringtone_title">Sunetul</string>
-  <string name="preferences_show_notification_summary">Afișează mesajul pe ecran dacă Prey a trimis cu success un raport</string>
-  <string name="preferences_show_notification_title">Afișează notificările</string>
   <string name="preferences_sms_run">SMS-ul de activare</string>
   <string name="preferences_sms_run_edittext">Acest text va activa Prey la primire</string>
   <string name="preferences_sms_run_summary">Cuvântul sau fraza care îl va trezi pe Prey</string>

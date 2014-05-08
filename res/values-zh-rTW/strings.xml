@@ -36,8 +36,6 @@
     <string name="sms_to_send_text">您朋友的號碼已經作為一個SIM卡被更換後會聯繫的新號碼。如果您覺得您的手機被偷了，請聯繫他 %s。</string>
     <string name="preferences_check_sim_change">鎖定到目前 SIM 卡</string>
     <string name="preferences_check_sim_change_summary">當 SIM 卡被替換時啟用 Prey</string>
-    <string name="preferences_show_notification_title">顯示通知</string>
-    <string name="preferences_show_notification_summary">如果 Prey 成功的傳送了一條報告則會在屏幕上顯示訊息</string>
     <!--  Prey Others Preferences -->
     <!-- Prey Password Preferences -->
     <string name="preferences_password_title">變更密碼</string>

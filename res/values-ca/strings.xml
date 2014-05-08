@@ -70,8 +70,6 @@
     <string name="preferences_sms_stop">Missatge SMS de desactivació</string>
     <string name="preferences_sms_stop_summary">Mot o frase per aturar Prey</string>
     <string name="preferences_sms_stop_edittext">Envieu aquest text des d\'altre telèfon per aturar Prey</string>
-    <string name="preferences_show_notification_title">Mostra les notificacions</string>
-    <string name="preferences_show_notification_summary">Mostra un missatge en pantalla si Prey envia un informe satisfactòriament</string>
     <string name="preferences_lock_sim_screen_title">Activa la detecció de SIM</string>
     <string name="preferences_lock_sim_screen_summary">Configura què fer en detectar una SIM diferent</string>
     <string name="preferences_check_sim_change">Mostra un avís en canviar la targeta SIM</string>

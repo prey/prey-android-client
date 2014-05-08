@@ -70,8 +70,6 @@
     <string name="preferences_sms_stop">Aktivoinnin poisto tekstiviestillä</string>
     <string name="preferences_sms_stop_summary">Sana tai lause, joka pysäyttää Preyn</string>
     <string name="preferences_sms_stop_edittext">Lähetä tämä teksti toisesta laitteesta pysäyttääksesi Preyn</string>
-    <string name="preferences_show_notification_title">Näytä huomautukset</string>
-    <string name="preferences_show_notification_summary">Näyttää viestin näytöllä, jos Prey lähetti raportin onnistuneesti</string>
     <string name="preferences_lock_sim_screen_title">Aktivoi SIM-havainnointi</string>
     <string name="preferences_lock_sim_screen_summary">Määritä SIM-kortin vaihtotapahtumat</string>
     <string name="preferences_check_sim_change">Varoita SIM-kortin vaihdosta</string>

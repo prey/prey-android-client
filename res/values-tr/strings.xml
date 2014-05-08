@@ -78,8 +78,6 @@
   <string name="preferences_password_updated">Şifre değiştirildi !</string>
   <string name="preferences_ringtone_summary">Çalınması için bir ses seçiniz</string>
   <string name="preferences_ringtone_title">Ses çal</string>
-  <string name="preferences_show_notification_summary">Prey başarılı bir rapor gönderdiyse ekranda gösterilecek mesaj</string>
-  <string name="preferences_show_notification_title">Ekran bildirimleri</string>
   <string name="preferences_sms_run">SMS aktivasyon mesajı</string>
   <string name="preferences_sms_run_edittext">Prey bu mesajı aldığında aktif görevine başlayacak.</string>
   <string name="preferences_sms_run_summary">Prey\'in harekete geçeceği kelime veya kelime grubu</string>

@@ -72,7 +72,6 @@ public class PreyConfig {
 	public static final String PREFS_SMS_STOP = "PREFS_SMS_STOP";
 	public static final String PREFS_DESTINATION_SMS = "PREFS_DESTINATION_SMS";
 	public static final String PREFS_DESTINATION_SMS_NAME = "PREFS_DESTINATION_SMS_NAME";
-	public static final String PREFS_SHOW_NOTIFICATION = "PREFS_SHOW_NOTIFICATION";
 	public static final String PREFS_CHECK_SIM_CHANGE = "PREFS_CHECK_SIM_CHANGE";
 	public static final String PREFS_RINGTONE = "PREFS_RINGTONE";
 	public static final String PREFS_SIM_SERIAL_NUMBER = "PREFS_SIM_SERIAL_NUMBER";
@@ -127,7 +126,7 @@ public class PreyConfig {
 	private boolean missing;
 	private String email;
 	private String destinationSms;
-	private boolean shouldNotify;
+	 
 	private boolean shouldCheckSimChange;
  
 	private boolean isTheAccountAlreadyVerified;
@@ -178,7 +177,7 @@ public class PreyConfig {
 		this.destinationSms = settings.getString(PreyConfig.PREFS_DESTINATION_SMS, "");
 		this.missing = Boolean.valueOf(settings.getString(PreyConfig.PREFS_IS_MISSING, "false"));
 		this.email = settings.getString(PreyConfig.PREFS_EMAIL, "");
-		this.shouldNotify = settings.getBoolean(PreyConfig.PREFS_SHOW_NOTIFICATION, false);
+		 
 		this.shouldCheckSimChange = settings.getBoolean(PreyConfig.PREFS_CHECK_SIM_CHANGE, true);
 
 		this.isCamouflageSet = settings.getBoolean(PreyConfig.IS_CAMOUFLAGE_SET, false);
@@ -244,8 +243,6 @@ public class PreyConfig {
 	SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-			//if (key.equals(PREFS_SHOW_NOTIFICATION))
-				//shouldNotify = sharedPreferences.getBoolean(PREFS_SHOW_NOTIFICATION, false);
 			PreyConfig.deleteCacheInstance();
 		}
 	};
@@ -344,9 +341,7 @@ public class PreyConfig {
 		return settings.getString(PreyConfig.PREFS_SMS_RUN, "GO PREY");
 	}
 
-	public boolean isShouldNotify() {
-		return shouldNotify;
-	}
+	 
 
  
 	

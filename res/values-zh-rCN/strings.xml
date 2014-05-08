@@ -24,8 +24,6 @@
     <string name="preferences_sms_stop">短信失效信息</string>
     <string name="preferences_sms_stop_summary">使 Prey 失效的单词或短语</string>
     <string name="preferences_sms_stop_edittext">当收到此文字时会使 Prey 失效</string>
-    <string name="preferences_show_notification_title">显示通知</string>
-    <string name="preferences_show_notification_summary">如果 Prey 成功的发送了一条报告则会在屏幕上显示信息</string>
     <string name="preferences_lock_sim_screen_title">激活SIM探测</string>
     <string name="preferences_lock_sim_screen_summary">配置SIM改变事件</string>
     <string name="preferences_check_sim_change">锁定到当前 SIM 卡</string>

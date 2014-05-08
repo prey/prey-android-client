@@ -76,8 +76,6 @@
   <string name="preferences_password_updated">Kata laluan dikemaskini!</string>
   <string name="preferences_ringtone_summary">Pilih bunyi untuk dimainkan semasa pengaktifan</string>
   <string name="preferences_ringtone_title">Bunyi untuk dimainkan</string>
-  <string name="preferences_show_notification_summary">Papar mesej pada skrin jika Prey berjaya menghantar laporan</string>
-  <string name="preferences_show_notification_title">Papar notifikasi</string>
   <string name="preferences_sms_run">SMS mesej pengaktifan </string>
   <string name="preferences_sms_run_edittext">Teks ini akan mengaktifkan Prey apabila diterima</string>
   <string name="preferences_sms_run_summary">Perkataan atau frasa yang akan mengaktifkan Prey</string>

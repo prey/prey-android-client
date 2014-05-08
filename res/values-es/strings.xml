@@ -70,8 +70,6 @@
     <string name="preferences_sms_stop">SMS de desactivación</string>
     <string name="preferences_sms_stop_summary">Palabra o frase que detendrá Prey</string>
     <string name="preferences_sms_stop_edittext">SMS que detendrá Prey cuando sea recibido</string>
-    <string name="preferences_show_notification_title">Notificar reportes</string>
-    <string name="preferences_show_notification_summary">Alerta cada vez que se envía un reporte</string>
     <string name="preferences_lock_sim_screen_title">Detección cambio de SIM</string>
     <string name="preferences_lock_sim_screen_summary">Configura los eventos de cambio de SIM</string>
     <string name="preferences_check_sim_change">Alertar cambio de SIM</string>

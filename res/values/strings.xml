@@ -91,8 +91,6 @@
     <string name="preferences_sms_stop">SMS deactivation message</string>
     <string name="preferences_sms_stop_summary">Word or phrase that will stop Prey</string>
     <string name="preferences_sms_stop_edittext">Send this text from another device to stop Prey</string>
-    <string name="preferences_show_notification_title">Display notifications</string>
-    <string name="preferences_show_notification_summary">Shows onscreen message if Prey sent a successful report</string>
     <!-- Prey Lock to SIM Preferences -->
     <string name="preferences_lock_sim_screen_title">Active SIM detection</string>
     <string name="preferences_lock_sim_screen_summary">Configure SIM change events</string>

@@ -76,8 +76,6 @@
   <string name="preferences_password_updated">Ο κωδικός ενημερώθηκε!</string>
   <string name="preferences_ringtone_summary">Επιλογή ήχου ενεργοποίησης</string>
   <string name="preferences_ringtone_title">Επιλογή ήχου</string>
-  <string name="preferences_show_notification_summary">Εμφανίζει μήνυμα στην οθόνη εάν το Prey έχει στείλει επιτυχημένα μια αναφορά</string>
-  <string name="preferences_show_notification_title">Εμφάνιση μηνυμάτων</string>
   <string name="preferences_sms_run">Μήνυμα SMS ενεργοποιήσης</string>
   <string name="preferences_sms_run_edittext">Αυτό το κείμενο θα ενεργοποιήσει το Prey όταν παραληφθεί</string>
   <string name="preferences_sms_run_summary">Λέξη ή φράση που θα εκκινήσει το Prey</string>
