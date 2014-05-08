@@ -509,6 +509,12 @@ public class PreyConfig {
 	
 	
 	public void registerC2dm(){
+		PreyLogger.d("______________________");
+		PreyLogger.d("______________________");
+		PreyLogger.d("___ registerC2dm _____");
+		PreyLogger.d("______________________");
+		PreyLogger.d("______________________");
+		PreyLogger.d("______________________");
 		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0)); // boilerplate
 		String gcmId= FileConfigReader.getInstance(this.ctx).getGcmId();

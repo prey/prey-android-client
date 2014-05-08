@@ -25,6 +25,7 @@ public class Camouflage {
         PackageManager pm = ctx.getPackageManager();
         pm.setComponentEnabledSetting(componentToDisabled, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     	PreyLogger.i("hide stop");
+    	PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_hide");
 	}
 
 	public static void unhide(Context ctx, List<ActionResult> lista, JSONObject options) {
@@ -36,5 +37,6 @@ public class Camouflage {
         PackageManager pm = ctx.getApplicationContext().getPackageManager();
         pm.setComponentEnabledSetting(componentToEnabled, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
     	PreyLogger.i("unhide stop");
+    	PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_unhide");
 	}
 }

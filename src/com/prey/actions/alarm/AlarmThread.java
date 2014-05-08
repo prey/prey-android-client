@@ -5,6 +5,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.R;
@@ -55,6 +56,8 @@ public class AlarmThread extends Thread {
                         }
                         mp.stop();        
                         PreyStatus.getInstance().setAlarmStop();
+                        PreyConfig.getPreyConfig(ctx).setLastEvent("alarm_finished");
+                        
                 } catch (Exception e) {
                         PreyLogger.i("Error executing Mp3PlayerAction " + e.getMessage());
                         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","failed",e.getMessage()));

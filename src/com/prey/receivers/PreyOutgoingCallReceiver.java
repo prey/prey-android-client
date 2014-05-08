@@ -22,7 +22,7 @@ public class PreyOutgoingCallReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		PreyLogger.d("Out call Broadcast - Action received: "+intent.getAction());
+		//PreyLogger.d("Out call Broadcast - Action received: "+intent.getAction());
 		if (intent.getAction() != null && intent.getAction().equals(ACTION)) {
 			
 			String phoneNumber = getResultData();

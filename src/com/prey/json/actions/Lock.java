@@ -43,6 +43,7 @@ public class Lock extends JsonAction{
 				PreyLogger.d("-- Unlock instruction received");
 				FroyoSupport.getInstance(ctx).changePasswordAndLock("", true);
 				PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop","lock","stopped"));
+				PreyConfig.getPreyConfig(ctx).setLastEvent("lock_stopped");
 			}
 		}
 	public void sms(Context ctx, List<ActionResult> lista, JSONObject parameters) {
@@ -65,7 +66,7 @@ public class Lock extends JsonAction{
                 PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
                 FroyoSupport.getInstance(ctx).changePasswordAndLock(unlock, true);
                 PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","lock","started"));
-        
+                PreyConfig.getPreyConfig(ctx).setLastEvent("lock_started");
         }
 
 

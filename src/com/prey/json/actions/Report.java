@@ -79,6 +79,7 @@ public class Report  {
 						if (200!=response.getStatusLine().getStatusCode()){
 							preyConfig.setMissing(false);
 						}else{
+							PreyConfig.getPreyConfig(ctx).setLastEvent("report_send");
 							if (interval==0){
 								preyConfig.setMissing(false);
 							}else{

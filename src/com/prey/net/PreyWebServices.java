@@ -778,16 +778,13 @@ public class PreyWebServices {
 	
 	public String sendNotifyActionResultPreyHttp(Context ctx,   Map<String, String> params) {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		//preyConfig.setLastEvent(action);
 		String response = null;   
 		try {			
 			String url=getResponseUrlJson(ctx);
-			//PreyLogger.i("result["+url+"]");
-			//PreyLogger.i("apiKey["+preyConfig.getApiKey()+"]");
 			PreyConfig.postUrl = null;
 			PreyHttpResponse httpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, params,preyConfig);
 			response=httpResponse.toString();
-			//PreyLogger.i("Notify Action Result sent: " + response);
+			PreyLogger.d("Notify Action Result sent: " + response);
 		} catch (Exception e) {
 			//PreyLogger.e("Notify Action Result wasn't send",e);
 		}  
