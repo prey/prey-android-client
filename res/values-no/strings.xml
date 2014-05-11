@@ -85,8 +85,6 @@
     <string name="password_wrong">Feil passord. Forsøk igjen.</string>
     <string name="password_intents_exceed">Synd! Du mislyktes tre ganger.</string>
     <string name="password_checking_dialog">Kontrollerer ditt passord …\nEtt øyeblikk!</string>
-    <string name="notification_title">Prey utfører sin magi!</string>
-    <string name="notification_msg">Ny rapport er sendt til ditt nettkontrollpanel</string>
     <string name="not_verified_device_title">Prey: Enheten er ikke konfigurert</string>
     <string name="not_verified_device_msg">Trykk for å linke den til kontrollpanelet</string>
     <string name="location_notification_prefix">Geofix sendes:</string>

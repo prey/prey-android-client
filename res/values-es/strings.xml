@@ -153,8 +153,6 @@
     <string name="password_wrong">Contraseña incorrecta. Inténtalo nuevamente.</string>
     <string name="password_intents_exceed">Has fallado 3 veces.</string>
     <string name="password_checking_dialog">Comprobando tu contraseña…\n¡Un segundo!</string>
-    <string name="notification_title">¡Prey esta funcionando a la perfección!</string>
-    <string name="notification_msg">Nuevo reporte enviado a tu Panel de Control</string>
     <string name="not_verified_device_title">Prey: Dispositivo no configurado</string>
     <string name="not_verified_device_msg">Haz clic para ir al Panel de Control</string>
     <string name="location_notification_prefix">Geofix enviado:</string>

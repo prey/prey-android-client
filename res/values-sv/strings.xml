@@ -153,8 +153,6 @@
     <string name="password_wrong">Felaktigt lösenord. Försök igen.</string>
     <string name="password_intents_exceed">Ledsen! Du har misslyckats tre gånger.</string>
     <string name="password_checking_dialog">Kontrollerar ditt lösenord …\nEtt ögonblick!</string>
-    <string name="notification_title">Prey utför sina trollkonster!</string>
-    <string name="notification_msg">Ny rapport har skickats till din webbkontrollpanel</string>
     <string name="not_verified_device_title">Prey: Enheten har inte konfigurerats</string>
     <string name="not_verified_device_msg">Tryck för att länka den till kontrollpanelen</string>
     <string name="location_notification_prefix">Geofix skickade:</string>

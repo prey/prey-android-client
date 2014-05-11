@@ -194,8 +194,6 @@
     <string name="password_intents_exceed">You have failed 3 times. Sorry!</string>
     <string name="password_checking_dialog">Checking your password…\nJust a sec!</string>
     <!-- Notifications -->
-    <string name="notification_title">Prey is working its magic!</string>
-    <string name="notification_msg">New report sent to your web Control Panel</string>
     <string name="not_verified_device_title">Prey: Device not configured</string>
     <string name="not_verified_device_msg">Tap to link it to the Control Panel</string>
     <!-- Actions/Modules

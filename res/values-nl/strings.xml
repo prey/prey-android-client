@@ -85,8 +85,6 @@
     <string name="password_wrong">Wachtwoord is onjuist. Probeer het opnieuw.</string>
     <string name="password_intents_exceed">Je hebt 3 keer het verkeerde wachtwoord ingevuld. Sorry!</string>
     <string name="password_checking_dialog">Wachtwoord wordt gecontroleerd...\nOgenblikje!</string>
-    <string name="notification_title">Prey doet zijn werk!</string>
-    <string name="notification_msg">Er is een nieuw rapport verzonden naar je controlepaneel</string>
     <string name="not_verified_device_title">Prey: Apparaat niet geconfigureerd</string>
     <string name="not_verified_device_msg">Tik om het te koppelen aan het controlepaneel</string>
     <string name="location_notification_prefix">Geofix verzonden:</string>

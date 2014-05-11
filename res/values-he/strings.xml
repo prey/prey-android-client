@@ -24,8 +24,6 @@
   <string name="location_notification_prefix">Geofix שלח: </string>
   <string name="new_account_congratulations_text">התקנת בהצלחה את Prey על הטלפון שלך.\nעל מנת לסיים את תהליך ההתקנה עליך לאמת את כתובת הדואר שלך ע"י לחיצה על הקישור ששלחנו לך עכשיו אל %s.</string>
   <string name="no">לא</string>
-  <string name="notification_msg">דו"ח חדש נשלח אל לוח-הבקרה שלך</string>
-  <string name="notification_title">Prey מפעיל את מגע הקסם שלו!</string>
   <string name="ok">אישור</string>
   <string name="password_checking_dialog">הסיסמה נבדקת..\nרק רגע!</string>
   <string name="password_dialog_forgot_requesting">מדווח על סיסמה שנשכחה...\nרק רגע!</string>

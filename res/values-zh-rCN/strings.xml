@@ -85,8 +85,6 @@
     <string name="password_wrong">密码错误。请重试。</string>
     <string name="password_intents_exceed">您已经错误 3 次了。抱歉!</string>
     <string name="password_checking_dialog">正在检查您的密码……\n只需要几秒钟!</string>
-    <string name="notification_title">Prey 正在施展它的魔法!</string>
-    <string name="notification_msg">新的报告发送到您的网页控制面板</string>
     <string name="not_verified_device_title">Prey：设备未配置</string>
     <string name="not_verified_device_msg">点击将其连接到控制面板</string>
     <string name="location_notification_prefix">Geofix 发送：</string>

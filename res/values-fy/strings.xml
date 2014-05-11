@@ -22,8 +22,6 @@
     <string name="location_notification_prefix">Geofix stjoerd: </string>
     <string name="new_account_congratulations_text">Do hast mei súkses Prey op dyn tillefoan ynstallearre.\nOm dizze ynstallaasje ôf te rûnje moatst do dyn emailadres ferifiearje mei de keppeling dy\'t wy krekt stjoerd hawwe nei %s.</string>
     <string name="no">Nee</string>
-    <string name="notification_msg">Nij rapport nei dyn web betsjinningspaniel stjoert</string>
-    <string name="notification_title">Prey wurket! It is in wûnder!</string>
     <string name="ok">Oké</string>
     <string name="password_checking_dialog">Dyn wachtwurd kontrolearjen... \nSa klear, hear!</string>
     <string name="password_dialog_forgot_requesting">Ferjitten wacthwurd rapportearje... \nEfkes geduld graach!</string>

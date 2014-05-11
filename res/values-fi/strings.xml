@@ -153,8 +153,6 @@
     <string name="password_wrong">Väärä salasana. Yritä uudelleen.</string>
     <string name="password_intents_exceed">Olet epäonnistunut 3 kertaa. Pahoittelumme!</string>
     <string name="password_checking_dialog">Tarkistetaan salasanaasi...\nOdotapa hetki!</string>
-    <string name="notification_title">Prey tekee taikojaan!</string>
-    <string name="notification_msg">Uusi raportti lähetetty web-ohjauspaneeliisi</string>
     <string name="not_verified_device_title">Prey: Laitetta ei ole määritetty</string>
     <string name="not_verified_device_msg">Napsauta linkittääksesi sen ohjauspaneeliin</string>
     <string name="location_notification_prefix">Geofix lähetetty:</string>

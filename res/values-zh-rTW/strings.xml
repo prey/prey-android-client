@@ -79,8 +79,6 @@
     <string name="password_intents_exceed">您已經錯誤 3 次了。抱歉!</string>
     <string name="password_checking_dialog">正在檢查您的密碼...\n只需要幾秒鐘!</string>
     <!-- Notifications -->
-    <string name="notification_title">Prey 正在施展它的魔法!</string>
-    <string name="notification_msg">新的報告傳送到您的網頁控制台</string>
     <!-- Actions/Modules 
      # These messages are shown as notification, on each report sent to Prey.
      -->

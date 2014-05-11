@@ -24,8 +24,6 @@
   <string name="location_notification_prefix">Отправлено местоположение:</string>
   <string name="new_account_congratulations_text">Вы только что успешно установили Prey на ваш телефон.\nЧтобы завершить процесс установки, вы должны подтвердить ваш адрес, перейдя по ссылке, которую мы только что отправили на %s.</string>
   <string name="no">Нет</string>
-  <string name="notification_msg">Новый отчет отправлен на вашу панель управления</string>
-  <string name="notification_title">Prey работает над своей магией!</string>
   <string name="ok">OK</string>
   <string name="password_checking_dialog">Проверяю пароль...\nСекундочку!</string>
   <string name="password_dialog_forgot_requesting">Сообщаю о забытом пароле...\nСекундочку!</string>

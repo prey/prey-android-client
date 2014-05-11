@@ -85,8 +85,6 @@
     <string name="password_wrong">Password errata. Riprova.</string>
     <string name="password_intents_exceed">Hai fallito l\'inserimento 3 volte. Ci dispiace!</string>
     <string name="password_checking_dialog">Controllo della password...\nAttendere!</string>
-    <string name="notification_title">Prey è al lavoro!</string>
-    <string name="notification_msg">Un nuovo report è stato inviato al Pannello di Controllo web</string>
     <string name="not_verified_device_title">Prey: Dispositivo non configurato</string>
     <string name="not_verified_device_msg">Tocca per collegare il Pannello di Controllo</string>
     <string name="location_notification_prefix">Geofix inviato:</string>

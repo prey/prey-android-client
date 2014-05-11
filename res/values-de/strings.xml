@@ -24,8 +24,6 @@
   <string name="location_notification_prefix">Geofix berichtete: </string>
   <string name="new_account_congratulations_text">Prey wurde erfolgreich auf ihrem Telefon installiert.\nUm den Installationsvorgang fertigzustellen, müssen sie ihre E-Mail-Adresse verifzieren, indem sie auf den Link klicken, den wir an %s gesendet haben.</string>
   <string name="no">Nein</string>
-  <string name="notification_msg">Neuer Bericht an das Kontroll-Zentrum gesendet</string>
-  <string name="notification_title">Prey entfaltet seine magische Kraft!</string>
   <string name="ok">OK</string>
   <string name="password_checking_dialog">Überprüfe ihr Passwort...\nEinen Moment!</string>
   <string name="password_dialog_forgot_requesting">Erstatte Bericht über vergessenes Passwort...\nEinen Moment, bitte!</string>

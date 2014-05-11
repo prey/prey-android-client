@@ -153,8 +153,6 @@
     <string name="password_wrong">Senha errada. Tente novamente.</string>
     <string name="password_intents_exceed">Você errou 3 vezes. Desculpe!</string>
     <string name="password_checking_dialog">Verificando a sua senha …\nSó um segundo!</string>
-    <string name="notification_title">Prey está trabalhando a sua mágica!</string>
-    <string name="notification_msg">Novo relatório enviado para o seu Painel de Controle web</string>
     <string name="not_verified_device_title">Prey: Dispositivo não configurado</string>
     <string name="not_verified_device_msg">Toque para vinculá-lo ao Painel de Controle</string>
     <string name="location_notification_prefix">Geofix enviado:</string>

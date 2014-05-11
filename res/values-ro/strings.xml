@@ -24,8 +24,6 @@
   <string name="location_notification_prefix">Geofix trimis: </string>
   <string name="new_account_congratulations_text">Ați instalat cu succes Prey pe telefonul Dvs.\nPentru a finisa procesul de configurare trebuie să verificăm adresa Dvs de email prin intermediul link-ului pe care vi l-am trimis la %s.</string>
   <string name="no">Nu</string>
-  <string name="notification_msg">Un nou raport a fost trimis la Panouls de Control web</string>
-  <string name="notification_title">Prey își face magia!</string>
   <string name="ok">OK</string>
   <string name="password_checking_dialog">Verific parola...\nO clipă!</string>
   <string name="password_dialog_forgot_requesting">Roportez parola uitată...\nNumai o clipă!</string>

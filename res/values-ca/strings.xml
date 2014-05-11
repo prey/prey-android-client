@@ -153,8 +153,6 @@
     <string name="password_wrong">Contrasenya errònia. Torneu a provar</string>
     <string name="password_intents_exceed">Bé, és lamentable. Heu inserit una contrasenya incorrecta 3 vegades seguides!</string>
     <string name="password_checking_dialog">S\'està verificant \nla contrasenya...</string>
-    <string name="notification_title">Prey està emprant la seva màgia!</string>
-    <string name="notification_msg">S\'ha enviat un informe nou al vostre panel de control</string>
     <string name="not_verified_device_title">Prey: Dispositiu no configurat</string>
     <string name="not_verified_device_msg">Toqueu a l\'enllaç per accedir al panel de control</string>
     <string name="location_notification_prefix">Ubicació enviada:</string>

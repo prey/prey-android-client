@@ -24,8 +24,6 @@
   <string name="location_notification_prefix"></string>
   <string name="new_account_congratulations_text"></string>
   <string name="no">Jo</string>
-  <string name="notification_msg"></string>
-  <string name="notification_title"></string>
   <string name="ok">Në rregull</string>
   <string name="password_checking_dialog"></string>
   <string name="password_dialog_forgot_requesting"></string>

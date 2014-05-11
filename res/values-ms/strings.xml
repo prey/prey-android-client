@@ -24,8 +24,6 @@
   <string name="location_notification_prefix">Geofix dihantar:</string>
   <string name="new_account_congratulations_text">Anda telah berjaya memasang Prey pada telefon anda.\nUntuk melengkapkan proses pemasangan anda perlu mengesahkan emel dengan mengikuti link yang kami telah hantar pada %s.</string>
   <string name="no">Tidak</string>
-  <string name="notification_msg">Laporan baru telah dihantar ke Panel Kawalan web</string>
-  <string name="notification_title">Prey sedang melakukan keajaibannya!</string>
   <string name="ok">Ok</string>
   <string name="password_checking_dialog">Memeriksan kata laluan...\nTunggu sebentar!</string>
   <string name="password_dialog_forgot_requesting">Melaporkan kata laluan yang lupa...\nTunggu sebentar!</string>

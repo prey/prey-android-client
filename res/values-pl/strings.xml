@@ -153,8 +153,6 @@
     <string name="password_wrong">Błędne hasło. Sróbuj ponownie</string>
     <string name="password_intents_exceed">Osiągnąłeś limit 3 prób. Przepraszamy!</string>
     <string name="password_checking_dialog">Sprawdzamy twoje hasło...Jedna chwila!</string>
-    <string name="notification_title">Prey właśnie zaczął czarować!</string>
-    <string name="notification_msg">Nowy raport został wysłany do twojego Panelu Sterowania Prey</string>
     <string name="not_verified_device_title">Prey: Urządzenie nie skonfigurowane</string>
     <string name="not_verified_device_msg">Wybierz aby połączyć urządzenie z Panelem Sterowania</string>
     <string name="location_notification_prefix">Lokalizacja GPS wysłana:</string>

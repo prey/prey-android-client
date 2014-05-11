@@ -24,8 +24,6 @@
   <string name="location_notification_prefix">Αποστολή Geofix:</string>
   <string name="new_account_congratulations_text">Εγκαταστήσατε επιτυχώς το Prey στο κινητό σας!\nΓια να ολοκληρώσετε την εγκατάσταση πρέπει να πιστοποιήσειτε το email σας ακολουθώντας τον σύνδεσμο που μόλις σας στείλαμε στο %s.</string>
   <string name="no">Όχι</string>
-  <string name="notification_msg">Έχει σταλεί νέα αναφορά στον διαδικτυακό Πίνακα Ελέγχου</string>
-  <string name="notification_title">Το Prey κάνει τα μαγικά του!</string>
   <string name="ok">ΟΚ</string>
   <string name="password_checking_dialog">Έλεγχος κωδικού...\nΜια στιγμή!</string>
   <string name="password_dialog_forgot_requesting">Αποστολή αναφοράς χαμένου κωδικού...\nΜια στιγμή!</string>

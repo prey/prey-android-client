@@ -26,8 +26,6 @@
   <string name="location_notification_prefix">Uydu Gönderimi:</string>
   <string name="new_account_congratulations_text">Telefonunuzu Prey hesabına başarıyla aktardınız.\nYapılandırmayı bitirmek için e-mail hesabınıza gelen maildeki linki tıklayarak aktivasyonunuzu gerçekleştiriniz.%s.</string>
   <string name="no">Hayır</string>
-  <string name="notification_msg">Web Kontrol Panelinden yeni rapor gönder</string>
-  <string name="notification_title">Prey sihrini yapıyor!</string>
   <string name="ok">TAMAM</string>
   <string name="password_checking_dialog">Şifreniz kontrol ediliyor...\nBekleyiniz!</string>
   <string name="password_dialog_forgot_requesting">Şifre unuttulduğu raporlanıyor...\nBekleyiniz!</string>
