@@ -72,9 +72,13 @@ public class C2DMReceiver extends BroadcastReceiver {
 	}
 	
 	private void handleMessageBeta(Context context, String pushedMessage) {
+	    PreyLogger.i("Push notification received, waking up Prey right now!");
+		PreyLogger.i("Push message received " + pushedMessage);
+		startPrey(context);
+	}
+	
+	private void startPrey(Context context) {
 	    try {
-			PreyLogger.i("Push notification received, waking up Prey right now!");
-			PreyLogger.i("Push message received " + pushedMessage);
 			PreyBetaController.startPrey(context);
 		} catch (Exception e) {
 			PreyLogger.e("Push execution failed to run", e);
@@ -96,7 +100,6 @@ public class C2DMReceiver extends BroadcastReceiver {
 		} else if (registration != null) {
 			//PreyLogger.d("Registration id: " + registration);
 			new UpdateCD2MId().execute(registration, context);
-			PreyConfig.getPreyConfig(context).setRegisterC2dm(true);
 			
 			// Send the registration ID to the 3rd party site that is sending
 			// the messages.
@@ -120,16 +123,18 @@ public class C2DMReceiver extends BroadcastReceiver {
 		@Override
 		protected Void doInBackground(Object... data) {
 			try {
-				String registration = FileConfigReader.getInstance((Context) data[1]).getGcmIdPrefix() + (String) data[0];
-				PreyHttpResponse response=PreyWebServices.getInstance().setPushRegistrationId((Context) data[1], registration);
-				PreyConfig.getPreyConfig((Context) data[1]).setNotificationId(registration);
-				PreyLogger.i("response:"+response.toString());
+				Context ctx=(Context) data[1];
+				String registration = FileConfigReader.getInstance(ctx).getGcmIdPrefix() + (String) data[0];
+				PreyHttpResponse response=PreyWebServices.getInstance().setPushRegistrationId(ctx, registration);
+				PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
+				PreyLogger.d("response:"+response.toString());
+				PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
+				startPrey(ctx);
 			} catch (Exception e) {
 				PreyLogger.e("Failed registering to CD2M: " + e.getLocalizedMessage(), e);
 			}
 			return null;
 		}
-
 	}
 
 }
