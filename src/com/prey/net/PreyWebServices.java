@@ -291,80 +291,6 @@ public class PreyWebServices {
 
 	}
 
-	/*
-	public String sendPreyHttpReport2(Context ctx, ArrayList<HttpDataService> dataToSend) {
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		
-		Map<String, String> parameters = new HashMap<String, String>();
-		List<EntityFile> entityFiles=new ArrayList<EntityFile>();
-		for (HttpDataService httpDataService : dataToSend) {
-			if (httpDataService!=null){
-				parameters.putAll(httpDataService.getDataAsParameters());
-				if (httpDataService.getEntityFiles()!=null&&httpDataService.getEntityFiles().size()>0){
-					entityFiles.addAll(httpDataService.getEntityFiles());
-				}
-			}
-		}
-
-		parameters.put("api_key", preyConfig.getApiKey());
-
-		String response = null;
-		try {
-			String url = PreyConfig.postUrl != null ? PreyConfig.postUrl : getDeviceWebControlPanelUrl(ctx).concat("/reports.xml");
-			PreyConfig.postUrl = null;
-			PreyHttpResponse  httpResponse=null;
-			if (entityFiles.size()==0)
-				httpResponse = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
-			else
-				httpResponse = PreyRestHttpClient.getInstance(ctx).post(url, parameters,entityFiles);
-			response=httpResponse.getResponseAsString();
-			PreyLogger.i("Report sent:["+httpResponse.getStatusLine()+"]" + response);
-			if (preyConfig.isShouldNotify()) {
-				this.notifyUser(ctx);
-			}
-		} catch (Exception e) {
-			PreyLogger.e("Report wasn't send:"+e.getMessage(),e);
-		}
-		return response;
-	}*/
-    /*
-	private void notifyUser(Context ctx) {
-		String notificationTitle = ctx.getText(R.string.notification_title).toString();
-		NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.prey_status_bar_icon, notificationTitle, System.currentTimeMillis());
-		notification.flags = Notification.FLAG_AUTO_CANCEL;
-		String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl();
-		Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
-		String notificationToShow = ctx.getText(R.string.notification_msg).toString();
-		PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, browserIntent, 0);
-		notification.contentIntent = contentIntent;
-		notification.setLatestEventInfo(ctx, ctx.getText(R.string.notification_title), notificationToShow, contentIntent);
-
-		// Send the notification.
-		// We use a layout id because it is a unique number. We use it later
-		// to cancel.
-		nm.notify(R.string.preyForAndroid_name, notification);
-
-	}*/
-/*
-	public void setMissing(Context ctx, boolean isMissing) {
-		final PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		HashMap<String, String> parameters = new HashMap<String, String>();
-
-		parameters.put("api_key", preyConfig.getApiKey());
-		if (isMissing)
-			parameters.put("missing", "1");
-		else
-			parameters.put("missing", "0");
-
-		try {
-			PreyRestHttpClient.getInstance(ctx).methodAsParameter(getDeviceUrl(ctx),"PUT", parameters, preyConfig);
-		} catch (Exception e) {
-			PreyLogger.e("Couldn't update missing state", e);
-		}
-	}*/
-
-
 	public PreyHttpResponse setPushRegistrationId(Context ctx, String regId) {
 		//this.updateDeviceAttribute(ctx, "notification_id", regId);
 		HttpDataService data = new HttpDataService("notification_id");
@@ -379,51 +305,6 @@ public class PreyWebServices {
 		}
 		return response;
 	}
-	/*
-	public void updateActivationPhrase(Context ctx, String activationPhrase) {
-		this.updateDeviceAttributeUi(ctx, "activation_phrase", activationPhrase);
-	}
-	
-	public void updateDeactivationPhrase(Context ctx, String deactivationPhrase) {
-		this.updateDeviceAttributeUi(ctx, "deactivation_phrase", deactivationPhrase);
-	}
-	private void updateDeviceAttribute(Context ctx, String key, String value){
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		HashMap<String, String> parameters = new HashMap<String, String>();
-
-		parameters.put("api_key", preyConfig.getApiKey());
-		parameters.put("device["+key+"]", value);
-
-		try {
-		    String url=getDeviceUrl(ctx);
-		    PreyLogger.d("update url:"+url);
-		    PreyLogger.d("Update device attribute ["+ key + "] with value: " + value);
-			PreyHttpResponse response= PreyRestHttpClient.getInstance(ctx).methodAsParameter(url,"PUT", parameters, preyConfig);
-			PreyLogger.d("response"+response.getStatusLine().getStatusCode()+" "+response.getResponseAsString());
-		} catch (IOException e) {
-			PreyLogger.e("Attribute ["+key+"] wasn't updated to ["+value+"]", e);
-		} catch (PreyException e) {
-			PreyLogger.e("Attribute ["+key+"] wasn't updated to ["+value+"]", e);
-		}
-	}
-	
-	private void updateDeviceAttributeUi(Context ctx, String key, String value){
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		HashMap<String, String> parameters = new HashMap<String, String>();
-
-		parameters.put("api_key", preyConfig.getApiKey());
-		parameters.put(""+key+"", value);
-
-		try {
-			PreyRestHttpClient.getInstance(ctx).methodAsParameter(this.getDeviceUiUrl(ctx),"PUT", parameters, preyConfig);
-			//PreyLogger.d("Update device attribute ["+ key + "] with value: " + value);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (PreyException e) {
-			PreyLogger.e("Attribute ["+key+"] wasn't updated to ["+value+"]", e);
-		}
-		
-	}*/
 
 	public boolean checkPassword(Context ctx, String email, String password) throws PreyException {
 		String xml = this.checkPassword(email, password, ctx);
@@ -460,57 +341,6 @@ public class PreyWebServices {
 		}
 		return xml;
 	}
-    /*
-	public void changePassword2(Context ctx, String email, String currentPassword, String newPassword) throws PreyException {
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		String userXml = this.checkPassword(email, currentPassword, ctx);
-		if (!userXml.contains("<key"))
-			throw new PreyException(ctx.getText(R.string.error_registered_password_has_changed).toString());
-		String xml=null;
-		try {
-			int from = userXml.indexOf("<id>") + 4;
-			int to = userXml.indexOf("</id>");
-			String userId = userXml.substring(from, to);
-
-			HashMap<String, String> parameters = new HashMap<String, String>();
-			parameters.put("user[password]", newPassword);
-			parameters.put("user[password_confirmation]", newPassword);
-		
-		 
-			xml = PreyRestHttpClient
-					.getInstance(ctx)
-					.methodAsParameter(PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("users/").concat(userId).concat(".xml"), "PUT", parameters, preyConfig,
-							preyConfig.getApiKey(), "X").getResponseAsString();
-		} catch (IOException e) {
-			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
-		} catch (Exception e) {
-		}
-		checkForError(xml);
-	}*/
-
-	/*
-	public String getActionsToPerform2(Context ctx) throws PreyException {
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-        PreyHttpResponse response=null;
-		Map<String, String> parameters = new HashMap<String, String>();
-		try {
-			String url=getDeviceUrl(ctx);
-			PreyLogger.i("getActionsToPerform:"+url);
-			response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig);
-			PreyLogger.d("status:"+response.getStatusLine()+" "+response.getResponseAsString());
-			return response.getResponseAsString();
-		} catch (IOException e) {
-			try {
-				String url=getDeviceUrlApiv2(ctx)+".xml";
-				PreyLogger.i("getActionsToPerform2:"+url);
-				response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig);
-				PreyLogger.d("status:"+response.getStatusLine()+" "+response.getResponseAsString());
-				return response.getResponseAsString();
-			} catch (IOException e2) {
-				throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e2);
-			}		
-		}
-	}*/
 
 	public boolean forgotPassword(Context ctx) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
@@ -530,25 +360,6 @@ public class PreyWebServices {
 
 		return true;
 	}
-	
-	/*
-	public void deactivateModules(Context ctx, ArrayList<String> modules){
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		for (String module : modules) {
-			parameters.put("deactivate_modules[]", module);
-		}
-		parameters.put("api_key", preyConfig.getApiKey());
-		try {
-			PreyRestHttpClient.getInstance(ctx).methodAsParameter(getDeviceUrl(ctx),"PUT", parameters, preyConfig);
-			PreyLogger.d("Modules deactivation instruction sent");
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (PreyException e) {
-			PreyLogger.e("Modules weren't deactivated", e);
-		}
-		
-	}*/
 	
 	public static String getDeviceWebControlPanelUrl(Context ctx) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
@@ -608,11 +419,6 @@ public class PreyWebServices {
 			String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey);
 			return url;
 	}
-	
-	/*
-	private static String getDeviceUrl2(Context ctx) throws PreyException{
-		return getDeviceWebControlPanelUrl(ctx).concat(".xml");
-	}*/
 	
 	public  String getDeviceUrlV2(Context ctx) throws PreyException{
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
