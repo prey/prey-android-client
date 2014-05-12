@@ -111,6 +111,8 @@ public class PreyConfig {
 	
 	public static final String VERSION_PREY_DEFAULT="1.0.11";
 	
+	public static final String SEND_DATA="SEND_DATA";
+	
 	private boolean sendNotificationId;
 	private String notificationId;
 	
@@ -160,6 +162,8 @@ public class PreyConfig {
 	
 	private long signalFlareDate;
 	
+	private boolean sendData;
+	
 	private Context ctx;
 
 	private PreyConfig(Context ctx) {
@@ -206,6 +210,7 @@ public class PreyConfig {
 		this.signalFlareDate=settings.getLong(PreyConfig.SIGNAL_FLARE_DATE, 0);
 		
 		this.installationDate=settings.getLong(PreyConfig.INSTALLATION_DATE, new Date().getTime());
+		this.sendData=settings.getBoolean(PreyConfig.SEND_DATA, false);
 		saveLong(PreyConfig.INSTALLATION_DATE,installationDate);
 	}
 	
@@ -771,4 +776,13 @@ public class PreyConfig {
 		return registerC2dm;
 	}
 	
+	
+	public boolean isSendData(){
+		return sendData;
+	}
+
+	public void setSendData(boolean sendData) {
+		this.sendData = sendData;
+		this.saveBoolean(PreyConfig.SEND_DATA, sendData);
+	}
 }

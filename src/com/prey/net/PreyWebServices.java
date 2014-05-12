@@ -447,7 +447,7 @@ public class PreyWebServices {
 		parameters.put(prefix + "[cpu_model]", hardware.getCpuModel());
 		parameters.put(prefix + "[cpu_speed]", hardware.getCpuSpeed());
 		parameters.put(prefix + "[cpu_cores]", hardware.getCpuCores());
-		parameters.put(prefix + "[ram_size]", hardware.getRamSize());
+		parameters.put(prefix + "[ram_size]", hardware.getTotalMemory());
 		parameters.put(prefix + "[serial_number]", hardware.getSerialNumber());
 		// parameters.put(prefix + "[ram_modules]", hardware.getRamModules());
 		int nic = 0;
@@ -480,7 +480,13 @@ public class PreyWebServices {
 				}
 			}
 		}
-
+		
+		if(!PreyConfig.getPreyConfig(ctx).isSendData()){
+			PreyConfig.getPreyConfig(ctx).setSendData(true);
+			parameters.put("hardware_attributes[ram_size]",new PreyPhone(ctx).getHardware().getTotalMemory());
+		}
+		
+		
 	//	parameters.put("notification_id", preyConfig.getNotificationId());
 
  

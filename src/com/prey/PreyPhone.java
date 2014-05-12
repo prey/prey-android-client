@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -19,14 +18,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import com.prey.managers.PreyConnectivityManager;
 
 import android.app.ActivityManager;
+import android.app.ActivityManager.MemoryInfo;
 import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.os.Environment;
-import android.os.StatFs;
 import android.telephony.TelephonyManager;
 
 public class PreyPhone {
@@ -73,9 +71,18 @@ public class PreyPhone {
 		hardware.setSerialNumber(getSerialNumber());
 		
 		
-		hardware.setTotalMemory(String.valueOf(getTotalMemory()));
-		hardware.setFreeMemory(String.valueOf(getFreeMemory()));
-		hardware.setBusyMemory(String.valueOf(getBusyMemory()));
+		ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+		MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+		activityManager.getMemoryInfo(memoryInfo);
+		long totalMemory=memoryInfo.totalMem/1048576L;
+        long freeMemory=memoryInfo.availMem/1048576L;
+        long usageMemory=totalMemory-freeMemory;
+       
+		 
+		
+		hardware.setTotalMemory(String.valueOf(totalMemory));
+		hardware.setFreeMemory(String.valueOf(totalMemory));
+		hardware.setBusyMemory(String.valueOf(usageMemory));
 	    
 		
 
@@ -527,28 +534,8 @@ public class PreyPhone {
 		}
 	}
 	
-    public long getTotalMemory()
-    {
-        StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());   
-        long Total = ( (long) statFs.getBlockCount() *  (long) statFs.getBlockSize()) / 1048576;
-        return Total;
-    }
-
-    public long getFreeMemory()
-    {
-        StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
-        long Free  = (statFs.getAvailableBlocks() *  (long) statFs.getBlockSize()) / 1048576;
-        return Free;
-    }
-
-    public long getBusyMemory()
-    {
-        StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());   
-        long Total = ( (long) statFs.getBlockCount() * (long) statFs.getBlockSize()) / 1048576;
-        long Free  = (statFs.getAvailableBlocks() *  (long) statFs.getBlockSize()) / 1048576;
-        long Busy  = Total - Free;
-        return Busy;
-    }
+  
+   
     
     public String getIPAddress() {
        String ip="";

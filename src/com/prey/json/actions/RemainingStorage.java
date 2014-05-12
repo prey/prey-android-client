@@ -35,9 +35,9 @@ public class RemainingStorage extends JsonAction{
 		HttpDataService data = new HttpDataService("remaining_storage");
  		PreyPhone phone=new PreyPhone(ctx);
 		HashMap<String, String> parametersMap = new HashMap<String, String>();
-		parametersMap.put("total",Long.toString(phone.getTotalMemory()));
-		parametersMap.put("used",Long.toString(phone.getBusyMemory()));
-		parametersMap.put("free",Long.toString(phone.getFreeMemory()));
+		parametersMap.put("total",phone.getHardware().getTotalMemory());
+		parametersMap.put("used" ,phone.getHardware().getBusyMemory());
+		parametersMap.put("free" ,phone.getHardware().getFreeMemory());
 		data.addDataListAll(parametersMap);	
 		data.setList(true);
 		return data;
