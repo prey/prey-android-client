@@ -90,7 +90,6 @@ public class C2DMReceiver extends BroadcastReceiver {
 		if (intent.getStringExtra("error") != null) {
 			PreyLogger.d("Couldn't register to c2dm: " + intent.getStringExtra("error"));
 			PreyConfig.getPreyConfig(context).setRegisterC2dm(false);
-			retryRegistration(context);
 		} else if (intent.getStringExtra("unregistered") != null) {
 			// unregistration done, new messages from the authorized sender will
 			// be rejected
@@ -106,16 +105,6 @@ public class C2DMReceiver extends BroadcastReceiver {
 			// This should be done in a separate thread.
 			// When done, remember that all registration is done.
 		}
-	}
-	
-	private void retryRegistration(Context context){
-		final Context ctx=context;
-		new Thread(new Runnable() {
-			public void run() {
-				try{Thread.sleep(5000);}catch(Exception e){};
-				PreyConfig.getPreyConfig(ctx).registerC2dm();
-			}
-		}).start();
 	}
 
 	private class UpdateCD2MId extends AsyncTask<Object, Void, Void> {
