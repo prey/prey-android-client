@@ -217,6 +217,7 @@ public class PreyWebServices {
 	}
 
 	public PreyAccountData registerNewDeviceToAccount(Context ctx, String email, String password, String deviceType) throws PreyException {
+		PreyLogger.d("email:"+email+" password:"+password);
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		PreyHttpResponse response=null;
@@ -430,7 +431,15 @@ public class PreyWebServices {
 		return url;
 	}
 	
-	
+	public  String getDeviceUrl(Context ctx) throws PreyException{
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		String deviceKey = preyConfig.getDeviceID();
+		if (deviceKey == null || deviceKey == "")
+			throw new PreyException("Device key not found on the configuration");
+		 
+		String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("devices/").concat(deviceKey);
+		return url;
+	}
 
 	
 	public HashMap<String, String> increaseData(Context ctx, HashMap<String, String> parameters) {
@@ -735,5 +744,29 @@ public class PreyWebServices {
 		} 
 		 
 		 return preyHttpResponse;
+	}
+	
+	public PreyHttpResponse setMissing(Context ctx, boolean isMissing) {
+		PreyLogger.d("-----------------------------------------------");
+		PreyLogger.d("----------missing ["+isMissing+"]--------------");
+		final PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		HashMap<String, String> parameters = new HashMap<String, String>();
+
+		parameters.put("api_key", preyConfig.getApiKey());
+		if (isMissing)
+		parameters.put("device[missing]", "1");
+		else
+		parameters.put("device[missing]", "0");
+		
+		PreyHttpResponse preyHttpResponse=null;
+		try {
+			String url=getDeviceUrl(ctx);
+			PreyLogger.d("url:"+url);
+			preyHttpResponse=PreyRestHttpClient.getInstance(ctx).methodAsParameter(url,"PUT", parameters, preyConfig);
+			PreyLogger.i("missing ["+isMissing+"] response:"+preyHttpResponse.toString());
+		} catch (Exception e) {
+		PreyLogger.e("Couldn't update missing state", e);
+		}
+		return preyHttpResponse;
 	}
 }

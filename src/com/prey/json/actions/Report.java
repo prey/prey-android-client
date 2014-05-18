@@ -38,6 +38,7 @@ public class Report  {
 			}catch(Exception e){
 				interval =0;
 			}
+			PreyLogger.i("interval:"+interval);
 			PreyConfig.getPreyConfig(ctx).setIntervalReport(""+interval);
 			while(preyConfig.isMissing()){
 				
@@ -93,7 +94,7 @@ public class Report  {
 				}
 			}
 			PreyConfig.getPreyConfig(ctx).setIntervalReport("");
-			
+			PreyLogger.i("Report completed");
 		} catch (Exception e) {
 			PreyLogger.e("Error, causa:" + e.getMessage(), e);
 			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get","report","failed",e.getMessage()));
