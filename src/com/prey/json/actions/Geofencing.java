@@ -37,8 +37,7 @@ public class Geofencing extends JsonAction{
 	public void start(Context ctx, List<ActionResult> lista, JSONObject parameters) {
 		
 		try {
-			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-			preyConfig.setMissing(true);
+
 			
 			 
 			 

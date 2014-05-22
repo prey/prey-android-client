@@ -54,12 +54,12 @@ public class LocationService extends Service {
 	@Override
 	public void onCreate() {
 		PreyLogger.d("LocationService is going to be started...");
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(LocationService.this);
+		
 		// This check is needed because Android can kill and start process by
 		// its own in case needs resources.
 		// If not missing, this service running will only drain battery
 		PreyLogger.d("Checking if this device is missing");
-		if (preyConfig.isMissing()) {
+		 
 			
 			if (!NetworkUtils.getNetworkUtils(getApplicationContext()).isWifiEnabled() )
 				NetworkUtils.getNetworkUtils(getApplicationContext()).turnOnWifi(true);
@@ -80,23 +80,9 @@ public class LocationService extends Service {
 					networkLocationListener);
 				PreyLogger.d("NETWORK Location provider has been started.");
 			}
-			/*
-			if (gpsLocationProvider == null || !androidLocationManager.isProviderEnabled(gpsLocationProvider.getName())) {
-				// using this until GPS is turned on.
-				PreyLogger.d("[LocationService] GPS provider unavailable, using network provider");
-				//gpsLocationProvider = androidLocationManager.getProvider(LocationManager.NETWORK_PROVIDER);
-			} else {
-				// Since GPS is slow, we use another listener (network provider)
-				// to find faster fixes until first GPS fix arrives.
-				
-				PreyLogger.d("[LocationService] GPS provider available. Starting parallel network provider to get faster fixes.");
-				//networkLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-			}*/
+ 
 			
-			
-		} else {
-			stopSelf();
-		}
+		 
 		PreyLogger.d("LocationService has been started...");
 	}
 

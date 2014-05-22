@@ -76,7 +76,7 @@ public class PictureUtil {
 		mgr.setStreamSolo(streamType, true);
 		mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 		mgr.setStreamMute(streamType, true);
-		while (SimpleCameraActivity.activity == null&& i < 20) {
+		while (SimpleCameraActivity.activity == null&& i < 10) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

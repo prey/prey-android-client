@@ -59,7 +59,6 @@ public class C2DMReceiver extends BroadcastReceiver {
 		}else{
 			handleMessageBeta(context, body,version);
 			config.setVersion(PreyConfig.VERSION_V2);
-			config.setMissing(false);
 		}
 	}
 	
@@ -94,6 +93,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		if (intent.getStringExtra("error") != null) {
 			PreyLogger.d("Couldn't register to c2dm: " + intent.getStringExtra("error"));
 			PreyConfig.getPreyConfig(context).setRegisterC2dm(false);
+			PreyConfig.getPreyConfig(context).setNotificationId("");
 		} else if (intent.getStringExtra("unregistered") != null) {
 			// unregistration done, new messages from the authorized sender will
 			// be rejected

@@ -36,9 +36,8 @@ public class AlertThread extends Thread {
                         popup.putExtra("description_message", description);
                         ctx.startActivity(popup);
                         
-                        Settings.System.putString(ctx.getContentResolver(),
-                        Settings.System.NEXT_ALARM_FORMATTED, description);
-                        
+                        Settings.System.putString(ctx.getContentResolver(),Settings.System.NEXT_ALARM_FORMATTED,description);
+                        PreyConfig.getPreyConfig(ctx).setNextAlert(true);
                        
                         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","alert","started"));
                         try {

@@ -13,7 +13,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.provider.Settings;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.PreyAction;
@@ -98,7 +100,13 @@ public class ActionsController {
 	 public List<HttpDataService> runActionJson(Context ctx, List<JSONObject> jsonObjectList) {
          List<HttpDataService> listData=new ArrayList<HttpDataService>();
          
-         PreyLogger.i("runActionJson size:"+(jsonObjectList==null?-1:jsonObjectList.size()));
+         int size=jsonObjectList==null?-1:jsonObjectList.size();
+         PreyLogger.i("runActionJson size:"+size);
+         
+         if(size>=0&&PreyConfig.getPreyConfig(ctx).isNextAlert()){
+        	 PreyConfig.getPreyConfig(ctx).setNextAlert(false);
+        	 Settings.System.putString(ctx.getContentResolver(),Settings.System.NEXT_ALARM_FORMATTED,"");
+         }
          
          try {
                  for(int i=0;jsonObjectList!=null&&i<jsonObjectList.size();i++){

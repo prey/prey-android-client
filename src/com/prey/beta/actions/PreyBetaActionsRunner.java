@@ -66,12 +66,7 @@ public class PreyBetaActionsRunner implements Runnable {
 	 			List<JSONObject> jsonObject = getInstructions();
 	 			PreyLogger.d("version:"+version+" body:"+body);
 	 			if(jsonObject==null||jsonObject.size()==0){
-	 				if("v1".equals(version)&&"run_once".equals(body)){
-	 					PreyLogger.d("onlyReport");
-	 					onlyReport();
-	 				}else{
-	 					PreyLogger.d("nothing");
-	 				}
+	 				PreyLogger.d("nothing");
 	 			}else{
 	 				PreyLogger.d("runInstructions");
 	 				runInstructions(jsonObject);
@@ -103,41 +98,8 @@ public class PreyBetaActionsRunner implements Runnable {
 		return listData;
 	}
 	
-	private void onlyReport() throws PreyException {
-		boolean missing=executeMissing(3,true);
-	    if(missing){
-	    	try{
-	    		List<JSONObject> jsonList=new ArrayList<JSONObject>();	    		
-	    		JSONObject json = new JSONObject();
-	    		json.put("command", "get");
-	    		json.put("target", "report");
-	    		jsonList.add(json);
-				runInstructions(jsonList);
-	    	}catch(Exception e){}
-	    	executeMissing(3,false);
-	    	getInstructions();
-		}
-			
-	}
+	 
 	
-	private boolean executeMissing(int count,boolean missing){
-		PreyHttpResponse response=null;
-    	int i=0;
-    	boolean okMissing=false;
-    	while(!okMissing){
-    		try{
-    			response=PreyWebServices.getInstance().setMissing(ctx, missing);
-    		}catch(Exception e){
- 			}
-    		if(response!=null&&response.getStatusLine().getStatusCode()==200){
-    			okMissing=true;
-    		}
-    		if (i==count){
-    			break;
-    		}
-    		i=i+1;
-    	}
-    	return okMissing;
-	}
+	
 }
  

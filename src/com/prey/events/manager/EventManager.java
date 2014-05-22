@@ -6,6 +6,7 @@ import android.content.Context;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.beta.actions.PreyBetaActionsRunner;
 import com.prey.events.Event;
 import com.prey.events.retrieves.EventRetrieveDataBattery;
 import com.prey.events.retrieves.EventRetrieveDataPrivateIp;
@@ -49,13 +50,16 @@ public class EventManager {
 			}
 		}
 		
+		 
+		
+		
 		if (validation){
 			PreyLogger.i("name:"+event.getName()+" info:"+event.getInfo()+" ssid["+ssid+"] previousSsid["+previousSsid+"]");
 			PreyLogger.i("change PreviousSsid:"+ssid);
 			PreyConfig.getPreyConfig(ctx).setPreviousSsid(ssid);
 			try {
-				isConnectionExists = isConnectionExists(ctx);
-				isOnline = isOnline(ctx);
+				isConnectionExists = PreyConfig.getPreyConfig(ctx).isConnectionExists();
+				isOnline = PreyConfig.getPreyConfig(ctx).isOnline();
 			} catch (Exception e) {
 
 			}
@@ -76,6 +80,9 @@ public class EventManager {
 						new EventRetrieveDataWifi().execute(ctx, this);
 						new EventRetrieveDataPrivateIp().execute(ctx, this);
 						new EventRetrieveDataBattery().execute(ctx, this);
+						
+						//new Thread(new PreyBetaActionsRunner(ctx)).start();
+						 
 					}
 
 				}
@@ -84,6 +91,10 @@ public class EventManager {
 		
 		
 	}
+	
+	
+	
+	
 
 	public void receivesData(String key, JSONObject data) {
 		mapData.put(key, data);
@@ -97,7 +108,7 @@ public class EventManager {
 			JSONObject jsonObjectStatus = mapData.toJSONObject();
 			PreyLogger.i("jsonObjectStatus: " + jsonObjectStatus.toString());
 			if (event != null) {
-				if (isOnline(ctx)) {
+				if (PreyConfig.getPreyConfig(ctx).isOnline()) {
 					String lastEvent=PreyConfig.getPreyConfig(ctx).getLastEvent();
 					if(!Event.WIFI_CHANGED.equals(event.getName()) || !event.getName().equals(lastEvent)){
 						PreyConfig.getPreyConfig(ctx).setLastEvent(event.getName());
@@ -109,37 +120,9 @@ public class EventManager {
 		}
 	}
 
-	private boolean isOnline(Context ctx) {
-		boolean isOnline = false;
-		try {
-			int i = 0;
-			// wait at most 5 seconds
-			while (!isOnline) {
-				isOnline = PreyWifiManager.getInstance(ctx).isOnline();
-				if (i < 5 && !isOnline) {
-					PreyLogger.i("Phone doesn't have internet connection now. Waiting 1 secs for it");
-					Thread.sleep(1000);
-				}
-				i++;
-			}
-		} catch (Exception e) {
-			PreyLogger.e("Error, because:" + e.getMessage(), e);
-		}
-		return isOnline;
-	}
 
-	private boolean isConnectionExists(Context ctx) {
-		boolean isConnectionExists = false;
-		// There is wifi connexion?
-		if (PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {
-			isConnectionExists = true;
-		}
-		// if there is no connexion wifi, verify mobile connection?
-		if (!isConnectionExists && PreyConnectivityManager.getInstance(ctx).isMobileConnected()) {
-			isConnectionExists = true;
-		}
-		return isConnectionExists;
-	}
+
+
 
 	private boolean isThisDeviceAlreadyRegisteredWithPrey(Context ctx) {
 		return PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey();

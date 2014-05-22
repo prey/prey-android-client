@@ -7,13 +7,15 @@
 package com.prey.json.actions;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
- 
+
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
@@ -29,9 +31,16 @@ public class Report  {
 
 	public void get(Context ctx, List<ActionResult> lista, JSONObject parameters) {
 		try {
+			boolean valida=valida(ctx);
+			if (!valida){
+				return;
+			}
+			long lastReportStartDate=new Date().getTime();
+			PreyLogger.d("____lastReportStartDate:"+lastReportStartDate);
+			PreyConfig.getPreyConfig(ctx).setLastReportStartDate(lastReportStartDate);
 			List<HttpDataService> listData=new ArrayList<HttpDataService>();
-			PreyConfig preyConfig=PreyConfig.getPreyConfig(ctx);
-			preyConfig.setMissing(true);
+			 
+			PreyConfig.getPreyConfig(ctx).setMissing(true);
 			int interval =0;
 			try{
 				interval = parameters.getInt("interval");
@@ -40,7 +49,7 @@ public class Report  {
 			}
 			PreyLogger.i("interval:"+interval);
 			PreyConfig.getPreyConfig(ctx).setIntervalReport(""+interval);
-			while(preyConfig.isMissing()){
+			while(PreyConfig.getPreyConfig(ctx).isMissing()){
 				
 				JSONArray jsonArray = null;
 				try{
@@ -78,22 +87,26 @@ public class Report  {
 					if(response!=null){
 						PreyLogger.d("response.getStatusLine():"+response.getStatusLine());	
 						if (200!=response.getStatusLine().getStatusCode()){
-							preyConfig.setMissing(false);
+							PreyConfig.getPreyConfig(ctx).setMissing(false);
 						}else{
 							PreyConfig.getPreyConfig(ctx).setLastEvent("report_send");
 							if (interval==0){
-								preyConfig.setMissing(false);
+								PreyConfig.getPreyConfig(ctx).setMissing(false);
 							}else{
 								Thread.sleep(interval * PreyConfig.DELAY_MULTIPLIER);
 							}
 						}
+					}else{
+						Thread.sleep(interval * PreyConfig.DELAY_MULTIPLIER);
 					}
 				}else{
-					preyConfig.setMissing(false);
+					PreyConfig.getPreyConfig(ctx).setMissing(false);
 					PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get","report","failed","Unable to retrieve data"));
 				}
+				PreyLogger.d("fin missing:"+PreyConfig.getPreyConfig(ctx).isMissing());
 			}
 			PreyConfig.getPreyConfig(ctx).setIntervalReport("");
+			PreyConfig.getPreyConfig(ctx).setLastReportStartDate(0);
 			PreyLogger.i("Report completed");
 		} catch (Exception e) {
 			PreyLogger.e("Error, causa:" + e.getMessage(), e);
@@ -101,8 +114,25 @@ public class Report  {
 		}
 	}
 	
+	public boolean valida(Context ctx){
+		long lastReportStartDate=PreyConfig.getPreyConfig(ctx).getLastReportStartDate();
+		PreyLogger.d("last:"+lastReportStartDate);
+		if(lastReportStartDate!=0){
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(lastReportStartDate);
+			cal.add(Calendar.MINUTE, 2);
+			long timeMore=cal.getTimeInMillis();
+			PreyLogger.d("timM:"+timeMore);
+			Date nowDate=new Date();
+			long now = nowDate.getTime();
+			PreyLogger.d("now_:"+now);
+			PreyLogger.d("now>=timeMore:"+(now>=timeMore));
+			return (now>=timeMore);
+		}
+		return true;
+	}
+	
 	public static void run(Context ctx,int intervalReport){
-		
 		final int interval=intervalReport;
 		final Context myContext=ctx;
 		new Thread(){

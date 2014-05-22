@@ -14,7 +14,6 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -33,6 +32,8 @@ import com.prey.actions.LockAction;
 import com.prey.actions.PreyAction;
 import com.prey.activities.FeedbackActivity;
 import com.prey.activities.WelcomeActivity;
+import com.prey.managers.PreyConnectivityManager;
+import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyWebServices;
 
 
@@ -113,6 +114,10 @@ public class PreyConfig {
 	
 	public static final String SEND_DATA="SEND_DATA";
 	
+	public static final String LAST_REPORT_START_DATE="LAST_REPORT_START_DATE";
+	
+	public static final String NEXT_ALERT="NEXT_ALERT";
+	
 	private boolean sendNotificationId;
 	private String notificationId;
 
@@ -162,6 +167,8 @@ public class PreyConfig {
 	
 	private boolean sendData;
 	
+	private boolean nextAlert; 
+	
 	private Context ctx;
 
 	private PreyConfig(Context ctx) {
@@ -209,6 +216,7 @@ public class PreyConfig {
 		
 		this.installationDate=settings.getLong(PreyConfig.INSTALLATION_DATE, new Date().getTime());
 		this.sendData=settings.getBoolean(PreyConfig.SEND_DATA, false);
+		this.nextAlert=settings.getBoolean(PreyConfig.NEXT_ALERT, false);
 		saveLong(PreyConfig.INSTALLATION_DATE,installationDate);
 	}
 	
@@ -507,18 +515,20 @@ public class PreyConfig {
 	
 	
 	public void registerC2dm(){
-		PreyLogger.d("______________________");
-		PreyLogger.d("______________________");
-		PreyLogger.d("___ registerC2dm _____");
-		PreyLogger.d("______________________");
-		PreyLogger.d("______________________");
-		PreyLogger.d("______________________");
-		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0)); // boilerplate
-		String gcmId= FileConfigReader.getInstance(this.ctx).getGcmId();
-		//PreyLogger.i("gcmId:"+gcmId);
-		registrationIntent.putExtra("sender",gcmId);
-		this.ctx.startService(registrationIntent);
+		if( PreyConfig.getPreyConfig(ctx).isOnline() ){
+			PreyLogger.d("______________________");
+			PreyLogger.d("______________________");
+			PreyLogger.d("___ registerC2dm _____");
+			PreyLogger.d("______________________");
+			PreyLogger.d("______________________");
+			PreyLogger.d("______________________");
+			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+			registrationIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0)); // boilerplate
+			String gcmId= FileConfigReader.getInstance(this.ctx).getGcmId();
+			//PreyLogger.i("gcmId:"+gcmId);
+			registrationIntent.putExtra("sender",gcmId);
+			this.ctx.startService(registrationIntent);
+		}
 	}
 	
 	public void unregisterC2dm(boolean updatePrey){
@@ -782,5 +792,56 @@ public class PreyConfig {
 	public void setSendData(boolean sendData) {
 		this.sendData = sendData;
 		this.saveBoolean(PreyConfig.SEND_DATA, sendData);
+	}
+	
+	public void setLastReportStartDate(long lastReportStartDate){
+		saveLong(PreyConfig.LAST_REPORT_START_DATE, lastReportStartDate);
+	}
+	
+	public long getLastReportStartDate(){
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		return settings.getLong(PreyConfig.LAST_REPORT_START_DATE, 0);
+	}
+	
+	public void setNextAlert(boolean nextAlert){
+		this.nextAlert=nextAlert;
+		saveBoolean(PreyConfig.NEXT_ALERT, nextAlert);
+	}
+	
+	public boolean isNextAlert(){
+		return nextAlert;
+	}
+	
+	
+	public boolean isConnectionExists() {
+		boolean isConnectionExists = false;
+		// There is wifi connexion?
+		if (PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {
+			isConnectionExists = true;
+		}
+		// if there is no connexion wifi, verify mobile connection?
+		if (!isConnectionExists && PreyConnectivityManager.getInstance(ctx).isMobileConnected()) {
+			isConnectionExists = true;
+		}
+		return isConnectionExists;
+	}
+	
+	public boolean isOnline() {
+		boolean isOnline = false;
+		try {
+			int i = 0;
+			// wait at most 5 seconds
+			while (!isOnline) {
+				isOnline = PreyWifiManager.getInstance(ctx).isOnline();
+				if (i < 5 && !isOnline) {
+					PreyLogger.i("Phone doesn't have internet connection now. Waiting 1 secs for it");
+					Thread.sleep(1000);
+				}
+				i++;
+			}
+		} catch (Exception e) {
+			PreyLogger.e("Error, because:" + e.getMessage(), e);
+		}
+		return isOnline;
 	}
 }

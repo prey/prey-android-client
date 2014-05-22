@@ -30,7 +30,6 @@ public class LocationUtil {
 		try {
 
 			data.setList(true);
-			PreyConfig.getPreyConfig(ctx).setMissing(true);
 			
 			ctx.startService(intent);
 			boolean validLocation = false;
@@ -60,7 +59,7 @@ public class LocationUtil {
 			data.addDataListAll(parametersMap);
 
 			ctx.stopService(intent);
-			PreyConfig.getPreyConfig(ctx).setMissing(false);
+
 
 		} catch (Exception e) {
 			PreyLogger.e("Error causa:" + e.getMessage() , e);

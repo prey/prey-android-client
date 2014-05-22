@@ -51,27 +51,52 @@ public class EventFactory {
 		if (ACTION_SHUTDOWN.equals(intent.getAction()) ){
 			return new Event(Event.TURNED_OFF);
 		}
-		if (CONNECTIVITY_CHANGE.equals(intent.getAction())|| WIFI_STATE_CHANGED.equals(intent.getAction()) ){
+		if (CONNECTIVITY_CHANGE.equals(intent.getAction())  ){
+			JSONObject info=new JSONObject();
+			
+			int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
+			PreyLogger.d("__wifiState:"+wifiState);;
+			try{
+				if (PreyConnectivityManager.getInstance(ctx).isMobileConnected()) {
+						info.put("connected", "mobile");
+						if(!PreyConfig.getPreyConfig(ctx).isRegisterC2dm())
+							PreyConfig.getPreyConfig(ctx).registerC2dm();
+				
+				}else{
+					if (wifiState == WifiManager.WIFI_STATE_UNKNOWN) {
+						PreyConfig.getPreyConfig(ctx).setRegisterC2dm(false);
+					}
+				}
+			}catch (Exception e) {
+			}
+			return new Event(Event.WIFI_CHANGED,info.toString());
+		}
+		if (  WIFI_STATE_CHANGED.equals(intent.getAction()) ){
 			JSONObject info=new JSONObject();
 			int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
+			PreyLogger.d("__wifiState:"+wifiState);;
 			try{
 				if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
 					info.put("connected", "wifi");
 					if(!PreyConfig.getPreyConfig(ctx).isRegisterC2dm())
 						PreyConfig.getPreyConfig(ctx).registerC2dm();
 				}
-				if (PreyConnectivityManager.getInstance(ctx).isMobileConnected()) {
-					info.put("connected", "mobile");
-					if(!PreyConfig.getPreyConfig(ctx).isRegisterC2dm())
-						PreyConfig.getPreyConfig(ctx).registerC2dm();
+				if (wifiState == WifiManager.WIFI_STATE_DISABLED) {
+					if(!PreyConnectivityManager.getInstance(ctx).isMobileConnected()){
+						PreyConfig.getPreyConfig(ctx).setRegisterC2dm(false);
+					}
 				}
+				
+				 
 			}catch (Exception e) {
 			}
 			return new Event(Event.WIFI_CHANGED,info.toString());
 		}
 		if (AIRPLANE_MODE.equals(intent.getAction())){
-			if(isAirplaneModeOn(ctx))
+			if(isAirplaneModeOn(ctx)){
 				PreyConfig.getPreyConfig(ctx).setPreviousSsid("");
+				PreyConfig.getPreyConfig(ctx).setRegisterC2dm(false);
+			}
 		}
 		/*
 		if (ACTION_POWER_CONNECTED.equals(intent.getAction()) ){

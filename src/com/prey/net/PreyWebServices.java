@@ -746,27 +746,4 @@ public class PreyWebServices {
 		 return preyHttpResponse;
 	}
 	
-	public PreyHttpResponse setMissing(Context ctx, boolean isMissing) {
-		PreyLogger.d("-----------------------------------------------");
-		PreyLogger.d("----------missing ["+isMissing+"]--------------");
-		final PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		HashMap<String, String> parameters = new HashMap<String, String>();
-
-		parameters.put("api_key", preyConfig.getApiKey());
-		if (isMissing)
-		parameters.put("device[missing]", "1");
-		else
-		parameters.put("device[missing]", "0");
-		
-		PreyHttpResponse preyHttpResponse=null;
-		try {
-			String url=getDeviceUrl(ctx);
-			PreyLogger.d("url:"+url);
-			preyHttpResponse=PreyRestHttpClient.getInstance(ctx).methodAsParameter(url,"PUT", parameters, preyConfig);
-			PreyLogger.i("missing ["+isMissing+"] response:"+preyHttpResponse.toString());
-		} catch (Exception e) {
-		PreyLogger.e("Couldn't update missing state", e);
-		}
-		return preyHttpResponse;
-	}
 }
