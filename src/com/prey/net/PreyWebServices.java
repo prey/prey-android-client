@@ -172,7 +172,7 @@ public class PreyWebServices {
 		
 		String model = Build.MODEL;
 		String vendor = "Google";
-		if (!PreyConfig.getPreyConfig(ctx).isCupcake())
+		if (!PreyConfig.getPreyConfig(ctx).isCupcakeOrAbove())
 			vendor = AboveCupcakeSupport.getDeviceVendor();
 		
 		HashMap<String, String> parameters = new HashMap<String, String>();
@@ -456,7 +456,7 @@ public class PreyWebServices {
 		parameters.put(prefix + "[cpu_model]", hardware.getCpuModel());
 		parameters.put(prefix + "[cpu_speed]", hardware.getCpuSpeed());
 		parameters.put(prefix + "[cpu_cores]", hardware.getCpuCores());
-		parameters.put(prefix + "[ram_size]", hardware.getTotalMemory());
+		parameters.put(prefix + "[ram_size]", ""+hardware.getTotalMemory());
 		parameters.put(prefix + "[serial_number]", hardware.getSerialNumber());
 		// parameters.put(prefix + "[ram_modules]", hardware.getRamModules());
 		int nic = 0;
@@ -489,10 +489,10 @@ public class PreyWebServices {
 				}
 			}
 		}
-		
-		if(!PreyConfig.getPreyConfig(ctx).isSendData()){
+		Hardware hardware=new PreyPhone(ctx).getHardware();
+		if(!PreyConfig.getPreyConfig(ctx).isSendData()&&hardware.getTotalMemory()>0){
 			PreyConfig.getPreyConfig(ctx).setSendData(true);
-			parameters.put("hardware_attributes[ram_size]",new PreyPhone(ctx).getHardware().getTotalMemory());
+			parameters.put("hardware_attributes[ram_size]",""+hardware.getTotalMemory());
 		}
 		
 		
@@ -653,7 +653,7 @@ public class PreyWebServices {
 		
 		String model = Build.MODEL;
 		String vendor = "Google";
-		if (!PreyConfig.getPreyConfig(ctx).isCupcake())
+		if (!PreyConfig.getPreyConfig(ctx).isCupcakeOrAbove())
 			vendor = AboveCupcakeSupport.getDeviceVendor();
 		
 		

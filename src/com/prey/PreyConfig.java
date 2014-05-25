@@ -139,9 +139,14 @@ public class PreyConfig {
 	private boolean isCamouflageSet;
 	private boolean locked;
 	private boolean runOnce;
-	private boolean isFroyoOrAbove;
-	private boolean isCupcake;
-	private boolean isGingerbreadOrAbove;
+	private boolean froyoOrAbove;
+	private boolean cupcakeOrAbove;
+	private boolean gingerbreadOrAbove;
+	private boolean kitKatOrAbove;
+	private boolean jellyBeanOrAbove;
+	private boolean iceCreamOrAbove;
+	private boolean honeycombOrAbove;
+	
 	private boolean camouflageSet;
 	
 	private String lastEvent;
@@ -173,9 +178,13 @@ public class PreyConfig {
 
 	private PreyConfig(Context ctx) {
 		this.ctx = ctx;
-		this.isGingerbreadOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 9;
-		this.isFroyoOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 8;
-		this.isCupcake = Integer.parseInt(Build.VERSION.SDK) == 3;
+		this.kitKatOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 19;
+		this.jellyBeanOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 16;
+		this.iceCreamOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 15;
+		this.honeycombOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 13;
+		this.gingerbreadOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 9;
+		this.froyoOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 8;
+		this.cupcakeOrAbove = Integer.parseInt(Build.VERSION.SDK) == 3;
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
 		settings.registerOnSharedPreferenceChangeListener(listener);
 		this.deviceID = settings.getString(PreyConfig.PREFS_DEVICE_ID, "");
@@ -582,15 +591,28 @@ public class PreyConfig {
 	}
 
 	public boolean isFroyoOrAbove() {
-		return isFroyoOrAbove;
+		return froyoOrAbove;
 	}
 
-	public boolean isCupcake() {
-		return isCupcake;
+	public boolean isCupcakeOrAbove() {
+		return cupcakeOrAbove;
 	}
 
 	public boolean isGingerbreadOrAbove() {
-		return isGingerbreadOrAbove;
+		return gingerbreadOrAbove;
+	}
+	
+	public boolean isKitKatOrAbove() {
+		return kitKatOrAbove;
+	}
+	public boolean isJellyBeanOrAbove() {
+		return jellyBeanOrAbove;
+	}
+	public boolean isIceCreamOrAbove() {
+		return iceCreamOrAbove;
+	}
+	public boolean isHoneycombOrAbove() {
+		return honeycombOrAbove;
 	}
 	
 	public String getPreyVersion() {

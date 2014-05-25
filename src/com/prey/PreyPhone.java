@@ -1,10 +1,13 @@
 package com.prey;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,6 +20,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.prey.managers.PreyConnectivityManager;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
 import android.content.Context;
@@ -25,6 +29,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Debug;
 import android.telephony.TelephonyManager;
 
 public class PreyPhone {
@@ -70,22 +75,83 @@ public class PreyPhone {
 		// hardware.setRamModules(ramModules);
 		hardware.setSerialNumber(getSerialNumber());
 		
-		
-		ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
-		MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-		activityManager.getMemoryInfo(memoryInfo);
-		long totalMemory=memoryInfo.totalMem/1048576L;
-        long freeMemory=memoryInfo.availMem/1048576L;
-        long usageMemory=totalMemory-freeMemory;
-       
-		 
-		
-		hardware.setTotalMemory(String.valueOf(totalMemory));
-		hardware.setFreeMemory(String.valueOf(totalMemory));
-		hardware.setBusyMemory(String.valueOf(usageMemory));
+		initMemory();
+
 	    
 		
 
+	}
+	
+	@TargetApi (16)
+	private void initMemory(){
+		ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+		MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+		activityManager.getMemoryInfo(memoryInfo);
+		long totalMemory=totalMemory();
+		 
+        long freeMemory=memoryInfo.availMem/1048576L;
+        long usageMemory=totalMemory-freeMemory;
+		hardware.setTotalMemory( totalMemory );
+		hardware.setFreeMemory( totalMemory );
+		hardware.setBusyMemory( usageMemory);
+	}
+	
+	public long totalMemory(){
+		String line="";
+		File file= null;
+		FileInputStream fi=null;
+		InputStreamReader ir=null;
+		BufferedReader br=null;
+		long totalMemory=0;
+		try{
+			file= new File("/proc/meminfo");
+		    fi=new FileInputStream(file);
+		    ir=new InputStreamReader(fi);
+		    br=new BufferedReader(ir);
+		    while ((line = br.readLine()) != null) {
+		    	if(line.indexOf("MemTotal")>=0){
+		    		line=line.replace("MemTotal", "");
+		    		line=line.replace(":", "");
+		    		line=line.replace("kB", "");
+		    		line=line.trim();
+		    		break;
+		    	}
+		    }
+		    totalMemory=Long.parseLong(line)/1024;
+		}catch(Exception e){
+		}finally{
+	        try{br.close();}catch(Exception e){}
+	        try{ir.close();}catch(Exception e){}
+	        try{fi.close();}catch(Exception e){}
+		}
+		return totalMemory;
+	}
+	
+	public long maxCPUFreqMHz(){
+		String line="";
+		File file= null;
+		FileInputStream fi=null;
+		InputStreamReader ir=null;
+		BufferedReader br=null;
+		long cpuMaxFreq=0;
+		try{
+			file= new File("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
+		    fi=new FileInputStream(file);
+		    ir=new InputStreamReader(fi);
+		    br=new BufferedReader(ir);
+		    while ((line = br.readLine()) != null) {
+		    	if(line!=null&&!"".equals(line)){
+		    		break;
+		    	}
+		    }
+		    cpuMaxFreq=Long.parseLong(line)/1000;
+		}catch(Exception e){
+		}finally{
+	        try{br.close();}catch(Exception e){}
+	        try{ir.close();}catch(Exception e){}
+	        try{fi.close();}catch(Exception e){}
+		}
+		return cpuMaxFreq;
 	}
 	
 	private void updateWifi(){
@@ -195,32 +261,32 @@ public class PreyPhone {
 		private String ramSize;
 		private String ramModules;
 		private String serialNumber;
-		private String totalMemory;
-		private String freeMemory;
-		private String busyMemory;
+		private long totalMemory;
+		private long freeMemory;
+		private long busyMemory;
 	    
 
-		public String getTotalMemory() {
+		public long getTotalMemory() {
 			return totalMemory;
 		}
 
-		public void setTotalMemory(String totalMemory) {
+		public void setTotalMemory(long totalMemory) {
 			this.totalMemory = totalMemory;
 		}
 
-		public String getFreeMemory() {
+		public long getFreeMemory() {
 			return freeMemory;
 		}
 
-		public void setFreeMemory(String freeMemory) {
+		public void setFreeMemory(long freeMemory) {
 			this.freeMemory = freeMemory;
 		}
 
-		public String getBusyMemory() {
+		public long getBusyMemory() {
 			return busyMemory;
 		}
 
-		public void setBusyMemory(String busyMemory) {
+		public void setBusyMemory(long busyMemory) {
 			this.busyMemory = busyMemory;
 		}
 
@@ -442,45 +508,6 @@ public class PreyPhone {
 			this.macAddress = macAddress;
 		}
 
-	}
-
-	
-	/* maximum speeds.
-	 *
-	 * @return cpu frequency in MHz
-	 */
-	@SuppressWarnings("resource")
-	private int maxCPUFreqMHz() {
-
-	    int maxFreq = -1;
-	    RandomAccessFile reader =null;
-	    try {
-
-	        reader = new RandomAccessFile( "/sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state", "r" );
-
-	        boolean done = false;
-	        while ( ! done ) {
-	            String line = reader.readLine();
-	            if ( null == line ) {
-	                done = true;
-	                break;
-	            }
-	            String[] splits = line.split( "\\s+" );
-	            assert ( splits.length == 2 );
-	            int timeInState = Integer.parseInt( splits[1] );
-	            if ( timeInState > 0 ) {
-	                int freq = Integer.parseInt( splits[0] ) / 1000;
-	                if ( freq > maxFreq ) {
-	                    maxFreq = freq;
-	                }
-	            }
-	        }
-
-	    } catch ( IOException ex ) {
-
-	    }
-
-	    return maxFreq;
 	}
 	
 	private long getMemoryRamSize(){

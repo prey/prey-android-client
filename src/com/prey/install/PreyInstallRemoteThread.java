@@ -26,7 +26,7 @@ public class PreyInstallRemoteThread extends Thread {
 			String notificationId = PreyConfig.getPreyConfig(ctx).getNotificationId();
 			String model = Build.MODEL;
 			String vendor = "Google";
-			if (!PreyConfig.getPreyConfig(ctx).isCupcake())
+			if (!PreyConfig.getPreyConfig(ctx).isCupcakeOrAbove())
 				vendor = AboveCupcakeSupport.getDeviceVendor();
  	
 			PreyLogger.d("email:"+email+" vendor:"+vendor+" model:"+model+" notificationId:"+notificationId);
