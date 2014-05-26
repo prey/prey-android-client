@@ -13,7 +13,7 @@ import android.content.Intent;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.json.actions.Report;
-import com.prey.services.PreyKeepOnService;
+import com.prey.services.PreyDisablePowerOptionsService;
 
 public class PreyBootController extends BroadcastReceiver {
 
@@ -27,11 +27,11 @@ public class PreyBootController extends BroadcastReceiver {
 			if (interval!=null&&!"".equals(interval)){
 				Report.run(context,Integer.parseInt(interval));
 			}
-			boolean keepOn = PreyConfig.getPreyConfig(context).isKeepOn();
-			if (keepOn) {
-				context.startService(new Intent(context, PreyKeepOnService.class));
+			boolean disablePowerOptions = PreyConfig.getPreyConfig(context).isDisablePowerOptions();
+			if (disablePowerOptions) {
+				context.startService(new Intent(context, PreyDisablePowerOptionsService.class));
 			}else{
-				context.stopService(new Intent(context, PreyKeepOnService.class));
+				context.stopService(new Intent(context, PreyDisablePowerOptionsService.class));
 			}
 		} else
 			PreyLogger.e("Received unexpected intent " + intent.toString(),null);

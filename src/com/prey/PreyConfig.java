@@ -35,6 +35,7 @@ import com.prey.activities.WelcomeActivity;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyWebServices;
+import com.prey.services.PreyDisablePowerOptionsService;
 
 
 public class PreyConfig {
@@ -118,6 +119,10 @@ public class PreyConfig {
 	
 	public static final String NEXT_ALERT="NEXT_ALERT";
 	
+	
+	public static final String PREFS_DISABLE_POWER_OPTIONS="PREFS_DISABLE_POWER_OPTIONS";
+	
+	
 	private boolean sendNotificationId;
 	private String notificationId;
 
@@ -157,7 +162,7 @@ public class PreyConfig {
 	private long installationDate;
 	private int flagFeedback;
 	
-	private boolean keepOn;
+	 
 	
 	private boolean run;
 	private String simSerialNumber;
@@ -173,6 +178,8 @@ public class PreyConfig {
 	private boolean sendData;
 	
 	private boolean nextAlert; 
+	
+	private boolean disablePowerOptions;
 	
 	private Context ctx;
 
@@ -209,7 +216,7 @@ public class PreyConfig {
 
 
 		this.flagFeedback=settings.getInt(PreyConfig.FLAG_FEEDBACK, FeedbackActivity.FLAG_FEEDBACK_INIT);
-		this.keepOn=settings.getBoolean(PreyConfig.KEEP_ON, false);
+		 
 		
 		this.previousSsid=settings.getString(PreyConfig.PREVIOUS_SSID, "");
 
@@ -226,6 +233,7 @@ public class PreyConfig {
 		this.installationDate=settings.getLong(PreyConfig.INSTALLATION_DATE, new Date().getTime());
 		this.sendData=settings.getBoolean(PreyConfig.SEND_DATA, false);
 		this.nextAlert=settings.getBoolean(PreyConfig.NEXT_ALERT, false);
+		this.disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
 		saveLong(PreyConfig.INSTALLATION_DATE,installationDate);
 	}
 	
@@ -263,6 +271,16 @@ public class PreyConfig {
 	SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+			if (key.equals(PREFS_DISABLE_POWER_OPTIONS)){
+				disablePowerOptions = sharedPreferences.getBoolean(PREFS_DISABLE_POWER_OPTIONS, false);
+				if(disablePowerOptions){
+					ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
+				}else{
+					ctx.stopService(new Intent(ctx, PreyDisablePowerOptionsService.class));
+				}
+			}
+			
+			
 			PreyConfig.deleteCacheInstance();
 		}
 	};
@@ -343,6 +361,10 @@ public class PreyConfig {
 		}
 	}
 	
+	public boolean isDisablePowerOptions(){
+		return disablePowerOptions;
+	}
+	
 	public boolean isLockSet() {
 		return locked;
 	}
@@ -367,15 +389,6 @@ public class PreyConfig {
 	
 	public boolean isShouldCheckSimChange() {
 		return shouldCheckSimChange;
-	}
- 
-	public boolean isKeepOn() {
-		return keepOn;
-	}
-	
-	public void setKeepOn(boolean keepOn) {
-		this.keepOn=keepOn;
-		this.saveBoolean(PreyConfig.KEEP_ON,keepOn);
 	}
 	
 	public String getEmail() {

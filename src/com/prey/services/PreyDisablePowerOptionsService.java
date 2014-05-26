@@ -10,14 +10,14 @@ import android.os.IBinder;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.receivers.PreyKeepOnReceiver;
+import com.prey.receivers.PreyDisablePowerOptionsReceiver;
 
-public class PreyKeepOnService extends Service {
+public class PreyDisablePowerOptionsService extends Service {
 
 	BroadcastReceiver mReceiver;
 
-	public PreyKeepOnService() {
-		mReceiver = new PreyKeepOnReceiver();
+	public PreyDisablePowerOptionsService() {
+		mReceiver = new PreyDisablePowerOptionsReceiver();
 
 	}
 
@@ -36,8 +36,8 @@ public class PreyKeepOnService extends Service {
 	}
 
 	public int onStartCommand(Intent intent, int i, int j) {
-		boolean keepOn = PreyConfig.getPreyConfig(getApplicationContext()).isKeepOn();
-		if (keepOn) {
+		boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
+		if (disablePowerOptions) {
 			IntentFilter intentfilter = new IntentFilter("android.intent.action.CLOSE_SYSTEM_DIALOGS");
 			registerReceiver(mReceiver, intentfilter);
 		}

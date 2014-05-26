@@ -230,5 +230,7 @@
     <string name="feedback_form_button1">OK, send</string>
     <string name="feedback_form_button2">NO, thanks</string>
     <string name="feedback_form_send_email">Send Email</string>
+    <string name="preferences_disable_power_options_title">disable power options title</string>
+    <string name="preferences_disable_power_options_summary">disable power options summary</string>
                 
 </resources>

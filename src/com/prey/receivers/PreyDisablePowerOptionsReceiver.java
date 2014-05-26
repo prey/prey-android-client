@@ -10,15 +10,15 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.PowerManager;
 
-public class PreyKeepOnReceiver extends BroadcastReceiver {
+public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
 
-	public PreyKeepOnReceiver() {
+	public PreyDisablePowerOptionsReceiver() {
 	}
 
 	@TargetApi(Build.VERSION_CODES.ECLAIR_MR1)
 	public void onReceive(Context context, Intent intent) {
-		boolean keepOn = PreyConfig.getPreyConfig(context).isKeepOn();
-		if (keepOn) {
+		boolean disablePowerOptions = PreyConfig.getPreyConfig(context).isDisablePowerOptions();
+		if (disablePowerOptions) {
 			if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
 				boolean flag = ((KeyguardManager) context.getSystemService("keyguard")).inKeyguardRestrictedInputMode();
 				if (flag) {

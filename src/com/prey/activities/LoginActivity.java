@@ -19,7 +19,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.prey.PreyConfig;
-import com.prey.services.PreyKeepOnService;
+import com.prey.services.PreyDisablePowerOptionsService;
 
 public class LoginActivity extends PasswordActivity {
 
@@ -37,11 +37,11 @@ public class LoginActivity extends PasswordActivity {
 		nm.cancel(R.string.preyForAndroid_name);
 		startup();
 		
-		boolean keepOn = PreyConfig.getPreyConfig(getApplicationContext()).isKeepOn();
-		if (keepOn) {
-			startService(new Intent(getApplicationContext(), PreyKeepOnService.class));
+		boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
+		if (disablePowerOptions) {
+			startService(new Intent(getApplicationContext(), PreyDisablePowerOptionsService.class));
 		}else{
-			stopService(new Intent(getApplicationContext(), PreyKeepOnService.class));
+			stopService(new Intent(getApplicationContext(), PreyDisablePowerOptionsService.class));
 		}
 	}
 
@@ -67,11 +67,7 @@ public class LoginActivity extends PasswordActivity {
 			if(getPreyConfig().showFeedback()){
 				showFeedback(getApplicationContext());
 			}else{
-				if (!getPreyConfig().isCamouflageSet()){
 					showLogin();
-				}else{
-					showCamouflage();
-				}
 			}
 		}
 	}
@@ -100,13 +96,6 @@ public class LoginActivity extends PasswordActivity {
 			}
 		});
 	}
-
-	private void showCamouflage() {
-
-		setContentView(R.layout.camouflage);
-		bindPasswordControls();
-	}
-
 	 
 	private boolean isThisDeviceAlreadyRegisteredWithPrey() {
 		return getPreyConfig().isThisDeviceAlreadyRegisteredWithPrey(false);

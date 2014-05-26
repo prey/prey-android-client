@@ -203,7 +203,7 @@
         <service android:name="com.prey.services.LocationService" />
         <service android:name="com.prey.services.PreyBootService" />
         <service android:name="com.prey.services.PreyRunnerService" />
-        <service android:name="com.prey.services.PreyKeepOnService" />
+        <service android:name="com.prey.services.PreyDisablePowerOptionsService" />
         <service android:name="com.prey.beta.services.PreyBetaRunnerService" />
 
         <!-- Receivers -->
@@ -257,9 +257,10 @@
             </intent-filter>
         </receiver>
         
-        <receiver android:name="com.prey.receivers.PreyKeepOnReceiver">
+        <receiver android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.CLOSE_SYSTEM_DIALOGS" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
 

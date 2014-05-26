@@ -44,7 +44,11 @@
 
            
 
-   
+    		<CheckBoxPreference
+                android:defaultValue="true"
+                android:key="PREFS_DISABLE_POWER_OPTIONS"
+                android:title="@string/preferences_disable_power_options_title" 
+                android:summary="@string/preferences_disable_power_options_summary"/>
  
 	
 	
