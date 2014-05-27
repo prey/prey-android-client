@@ -26,7 +26,7 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
 					boolean isScreenOn = pm.isScreenOn();
 					if (isScreenOn) {
 						try {
-							Thread.sleep(200);
+							Thread.sleep(100);
 						} catch (InterruptedException e) {
 						}
 						Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
