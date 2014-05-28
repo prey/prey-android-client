@@ -106,10 +106,10 @@ public class JSONParser {
 		if ("[]".equals(json)) {
 			return null;
 		}
-		return getJSONFromTxt(ctx, json);
+		return getJSONFromText(ctx, json);
 	}
 	
-	public List<JSONObject> getJSONFromTxt(Context ctx, String json) {
+	public List<JSONObject> getJSONFromText(Context ctx, String json) {
 		if("Invalid data received".equals(json)) return null;
 		List<JSONObject> listaJson = new ArrayList<JSONObject>();
 		json="{\"prey\":"+json+"}"; 

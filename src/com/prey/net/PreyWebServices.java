@@ -411,61 +411,41 @@ public class PreyWebServices {
 	}
 
 	private String getVerifyUrl(Context ctx) throws PreyException {
-		return getDeviceUrlApiv2(ctx).concat("/verify.json");
+		return getDeviceUrl(ctx).concat("/verify.json");
 	}
 
 	private String getReportUrlJson(Context ctx) throws PreyException {
-		return getDeviceUrlApiv2(ctx).concat("/reports.json");
+		return getDeviceUrl(ctx).concat("/reports.json");
 	}
 
 	public String getFileUrlJson(Context ctx) throws PreyException {
-		return getDeviceUrlApiv2(ctx).concat("/files");
+		return getDeviceUrl(ctx).concat("/files");
 	}
 
 	public String getDataUrlJson(Context ctx) throws PreyException {
-		return getDeviceUrlApiv2(ctx).concat("/data.json");
+		return getDeviceUrl(ctx).concat("/data.json");
 	}
 
 	private String getEventsUrlJson(Context ctx) throws PreyException {
-		return getDeviceUrlApiv2(ctx).concat("/events");
+		return getDeviceUrl(ctx).concat("/events");
 	}
 
 	private String getResponseUrlJson(Context ctx) throws PreyException {
-		return getDeviceUrlApiv2(ctx).concat("/response");
+		return getDeviceUrl(ctx).concat("/response");
 	}
-	
-	private String getDeviceUrlApiv2(Context ctx) throws PreyException {
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		String deviceKey = preyConfig.getDeviceID();
-		if (deviceKey == null || deviceKey == "")
-			throw new PreyException("Device key not found on the configuration");
-		//String apiv=FileConfigReader.getInstance(ctx).getApiV1();
+
+	private String getApiUrl(Context ctx) throws PreyException {
 		String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-		String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/")
-				.concat(deviceKey);
-		return url;
+		return PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2);
 	}
 
-	public String getDeviceUrlV2(Context ctx) throws PreyException {
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		String deviceKey = preyConfig.getDeviceID();
-		if (deviceKey == null || deviceKey == "")
-			throw new PreyException("Device key not found on the configuration");
-		String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-		String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/")
-				.concat(deviceKey);
-		return url;
-	}
-
-	public String getDeviceUrl(Context ctx) throws PreyException {
+	private String getDeviceUrl(Context ctx) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		String deviceKey = preyConfig.getDeviceID();
 		if (deviceKey == null || deviceKey == "")
 			throw new PreyException("Device key not found on the configuration");
 
-		String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("devices/")
-				.concat(deviceKey);
-		return url;
+		return getApiUrl(ctx).concat("devices/").concat(deviceKey);
 	}
 
 	public HashMap<String, String> increaseData(Context ctx, HashMap<String, String> parameters) {
@@ -585,7 +565,7 @@ public class PreyWebServices {
 		StringBuilder jsonString = PreyRestHttpClient.getInstance(ctx)
 				.getStringHttpResponse(preyHttpResponse.getResponse());
 		if (jsonString != null && jsonString.length() > 0) {
-			List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(
+			List<JSONObject> jsonObjectList = new JSONParser().getJSONFromText(
 					ctx, jsonString.toString());
 			if (jsonObjectList != null && jsonObjectList.size() > 0) {
 				ActionsController.getInstance(ctx).runActionJson(ctx, jsonObjectList);
@@ -669,7 +649,7 @@ public class PreyWebServices {
 	}
 
 	public List<JSONObject> getActionsJsonToPerform(Context ctx) throws PreyException {
-		String url = getDeviceUrlApiv2(ctx).concat(".json");
+		String url = getDeviceUrl(ctx).concat(".json");
 		//PreyLogger.i("url:"+url);
 		List<JSONObject> lista = new JSONParser().getJSONFromUrl(ctx, url);
 
@@ -707,7 +687,7 @@ public class PreyWebServices {
 
 		PreyHttpResponse response = null;
 		try {
-			String url="https://panel.preyapp.com/api/v2/remote.json";
+			String url = getApiUrl(ctx).concat("remote.json");
 			response = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
 		} catch (IOException e) {
 			throw new PreyException(ctx.getText(
@@ -722,7 +702,7 @@ public class PreyWebServices {
 		PreyHttpResponse preyHttpResponse = null;
 
 		try {
-			String url = getDeviceUrlApiv2(ctx).concat("/contacts");
+			String url = getDeviceUrl(ctx).concat("/contacts");
 			PreyConfig.postUrl = null;
 
 			preyHttpResponse = PreyRestHttpClient.getInstance(ctx)
@@ -740,7 +720,7 @@ public class PreyWebServices {
 		PreyHttpResponse preyHttpResponse = null;
 
 		try {
-			String url = getDeviceUrlApiv2(ctx).concat("/browser");
+			String url = getDeviceUrl(ctx).concat("/browser");
 			PreyConfig.postUrl = null;
 
 			preyHttpResponse = PreyRestHttpClient.getInstance(ctx)
@@ -758,7 +738,7 @@ public class PreyWebServices {
 
 		try {
 			HashMap<String, String> parameters = new HashMap<String, String>();
-			String url = getDeviceUrlApiv2(ctx).concat("/contacts.json");
+			String url = getDeviceUrl(ctx).concat("/contacts.json");
 			PreyLogger.i("url:" + url);
 			preyHttpResponse = PreyRestHttpClient.getInstance(ctx)
 					.getAutentication2(url, parameters, preyConfig);
