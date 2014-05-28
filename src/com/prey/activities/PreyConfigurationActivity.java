@@ -9,14 +9,16 @@ package com.prey.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
-import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.R;
+import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.preferences.DelayedActivatedEditTextPreference;
 public class PreyConfigurationActivity extends PreferenceActivity {
 
 
@@ -31,19 +33,19 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// TODO Auto-generated method stub
-		if (!PreyStatus.getInstance().isPreyConfigurationActivityResume()){
+		if (!PreyStatus.getInstance().isPreyConfigurationActivityResume()) {
 			Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			intent.putExtra("EXIT", true);
-			try{
-			startActivity(intent);
-			}catch(Exception e){}
-			finish();
+			try {
+				startActivity(intent);
+			} catch (Exception e) { }
 			
+			finish();
 		}
-		
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
+
+		final PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
+
 		Preference p = findPreference("PREFS_ADMIN_DEVICE");
 		if (preyConfig.isFroyoOrAbove()) {
 
@@ -54,40 +56,68 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 				p.setTitle(R.string.preferences_admin_disabled_title);
 				p.setSummary(R.string.preferences_admin_disabled_summary);
 			}
-		} else
+		} else {
 			p.setEnabled(false);
-		
-		p = findPreference("PREFS_ABOUT");
-		p.setSummary("Version " + preyConfig.getPreyVersion() + " - Fork Ltd.");
-		
-		Preference pGo= findPreference("PREFS_GOTO_WEB_CONTROL_PANEL");
-		pGo.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+		}
 
+		final Preference hiddenCP = findPreference("PREFS_ADVANCED_CATEGORY");
+		final DelayedActivatedEditTextPreference pAbout = (DelayedActivatedEditTextPreference) findPreference("PREFS_ABOUT");
+		pAbout.setSummary(getString(R.string.preferences_about_summary, preyConfig.getPreyVersion()));
+		
+		// hide advanced prefs when checkbox is unticked
+		final CheckBoxPreference pCbAdvanced = (CheckBoxPreference) findPreference("PREFS_ENABLE_ADVANCED");
+		pCbAdvanced.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			// no need to listen to actual preference changes, handling click events is enough
+			
+			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				
-				String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelUrl();
-				PreyLogger.d("url control:"+url);
-				Intent internetIntent = new Intent(Intent.ACTION_VIEW);
-				internetIntent.setData(Uri.parse(url));
-				try{
-					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-					startActivity(intent);
-				}catch(Exception e){}
-				return false;
+				getPreferenceScreen().removePreference(hiddenCP);
+				pAbout.setCounter(0);
+				return true;
 			}
 		});
 		
-	} 
-	
- 
+		// show advanced settings on request
+		pAbout.setOnPreferenceActivateListener(
+				new DelayedActivatedEditTextPreference.OnPreferenceActivateListener() {
+			@Override
+			public boolean onPreferenceActivate(Preference preference) {
+				preyConfig.setAdvancedPrefs(true);
+				getPreferenceScreen().addPreference(hiddenCP);
+				pCbAdvanced.setChecked(true);
+				
+				return false;
+			}
+		});
+		if (!preyConfig.isAdvancedPrefsEnabled()) {
+			getPreferenceScreen().removePreference(hiddenCP);
+		} else {
+			pAbout.setCounter(Integer.MAX_VALUE);
+		}
+		
+		Preference pGo = findPreference("PREFS_GOTO_WEB_CONTROL_PANEL");
+		pGo.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+			public boolean onPreferenceClick(Preference preference) {
+
+				String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelUrl();
+				PreyLogger.d("url control:" + url);
+				Intent internetIntent = new Intent(Intent.ACTION_VIEW);
+				internetIntent.setData(Uri.parse(url));
+				try {
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+					startActivity(intent);
+				} catch (Exception e) { }
+				
+				return false;
+			}
+		});		
+	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
 		PreyStatus.getInstance().setPreyConfigurationActivityResume(false);
 	}
-	
-	
- 
 	
 }

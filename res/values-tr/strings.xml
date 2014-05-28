@@ -42,7 +42,7 @@
   <string name="preferences_about">Prey Android™ Uygulaması</string>
   <string name="preferences_about_category_name">Hakkında</string>
   <string name="preferences_about_message">Prey Android™ Uygulaması</string>
-  <string name="preferences_about_summary">Versiyon 0.3.73 - © Fork Ltd.</string>
+  <string name="preferences_about_summary">Versiyon %s - © Fork Ltd.</string>
   <string name="preferences_about_title">Prey Android™ Uygulaması</string>
   <string name="preferences_category_operations">Test özellikleri</string>
   <string name="preferences_category_title_other">Hesap yönetimi</string>

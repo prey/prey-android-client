@@ -199,6 +199,6 @@
     <string name="first_dialog_message">Prey kan je telefoon vinden door zijn  \n    locatie door te geven aan een controlepaneel, welke wordt geactiveerd door een sms-bericht naar keuze.\n\nHeb je je al geregistreerd op preyproject.com? \n</string>
     <string name="first_dialog_title">Welkom bij\nPrey voor Android™!</string>
     <string name="back">Terug</string>
-    <string name="preferences_about_summary">Versie 0.3.73 - © Fork Ltd.</string>
+    <string name="preferences_about_summary">Versie %s - © Fork Ltd.</string>
     <string name="app_name">Prey voor Android™</string>
 </resources>

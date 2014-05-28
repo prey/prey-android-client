@@ -40,7 +40,7 @@
   <string name="preferences_about">Prey untuk Android™</string>
   <string name="preferences_about_category_name">Tentang</string>
   <string name="preferences_about_message">Prey untuk Android™</string>
-  <string name="preferences_about_summary">Versi 0.3.73 - © Fork Ltd.</string>
+  <string name="preferences_about_summary">Versi %s - © Fork Ltd.</string>
   <string name="preferences_about_title">Prey untuk Android™</string>
   <string name="preferences_category_operations">Menguji fungsi</string>
   <string name="preferences_category_title_other">Pengurusan akaun</string>

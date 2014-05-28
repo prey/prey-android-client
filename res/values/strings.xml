@@ -179,6 +179,43 @@
     <string name="preferences_about">Prey for Android™</string>
     <string name="preferences_about_title">Prey for Android™</string>
     <string name="preferences_about_message">Prey for Android™</string>
+    <string name="preferences_about_summary">Version %s - Fork Ltd</string>
+    <!--  Advanced settings -->
+    <string name="preferences_advanced_category_name">Advanced</string>
+    <string name="preferences_enable_debugging_title">Enable debugging</string>
+    <string name="preferences_enable_debugging_summary">Prints debugging info to logcat</string>
+    <string name="preferences_enable_advanced_prefs_title">Show this category</string>
+    <string name="preferences_enable_advanced_prefs_summary">When unticked, this category is no longer shown automatically</string>
+    <string name="preferences_ccp_category_name">Control Panel</string>
+    <string name="preferences_ccp_screen_title">Control panel preferences</string>
+    <string name="preferences_ccp_screen_summary">Set the location of the Prey control panel</string>
+    <string name="preferences_ccp_enabled">Preference enabled</string>
+    <string name="preferences_ccp_already_enabled">Preference already enabled</string>
+    <plurals name="preferences_ccp_more_clicks">
+	    <item quantity="one">One more click to enable advanced settings</item>
+	    <item quantity="other">%d more clicks to enable advanced settings</item>
+    </plurals>
+    <string name="preferences_ccp_url_title">Prey url</string>
+    <string name="preferences_ccp_url_summary">Prey url</string>
+    <string name="preferences_ccp_url_dialog_title">Prey url</string>
+    <string name="preferences_ccp_url_dialog_message">Prey url</string>
+    <string name="preferences_ccp_ui_url_title">Prey UI url</string>
+    <string name="preferences_ccp_ui_url_summary">Prey UI url</string>
+    <string name="preferences_ccp_ui_url_dialog_title">Prey UI url</string>
+    <string name="preferences_ccp_ui_url_dialog_message">Prey UI url</string>
+    <string name="preferences_ccp_panel_url_title">Prey CP url</string>
+    <string name="preferences_ccp_panel_url_summary">Prey CP url</string>
+    <string name="preferences_ccp_panel_url_dialog_title">Prey CP url</string>
+    <string name="preferences_ccp_panel_url_dialog_message">Prey CP url</string>
+    <string name="preferences_ccp_gcm_category_name">Google Cloud Messaging</string>
+    <string name="preferences_ccp_gcm_key_title">GCM ID</string>
+    <string name="preferences_ccp_gcm_key_summary">GCM ID</string>
+    <string name="preferences_ccp_gcm_key_dialog_title">GCM ID</string>
+    <string name="preferences_ccp_gcm_key_dialog_message">GCM ID</string>
+    <string name="preferences_ccp_gcm_key_prefix_title">GCM prefix</string>
+    <string name="preferences_ccp_gcm_key_prefix_summary">GCM prefix</string>
+    <string name="preferences_ccp_gcm_key_prefix_dialog_title">GCM prefix</string>
+    <string name="preferences_ccp_gcm_key_prefix_dialog_message">GCM prefix</string>
     <!--  Password Validation -->
     <!-- 
     <string name="password_dialog_title">Welcome back!</string>

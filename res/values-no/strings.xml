@@ -199,6 +199,6 @@
     <string name="first_dialog_message">Prey hjelper deg å finne din telefon gjennom å rapportere dens \n    plass til et nettkontrollpanel, som aktiveres via en sms-melding du selv har valgt.\n\nHar du allerede registrert deg på preyproject.com?\n</string>
     <string name="first_dialog_title">Velkommen til\nPrey for Android™</string>
     <string name="back">Tilbaka</string>
-    <string name="preferences_about_summary">Version 0.3.73 – © Fork Ltd.</string>
+    <string name="preferences_about_summary">Version %s – © Fork Ltd.</string>
     <string name="app_name">Prey for Android™</string>
 </resources>

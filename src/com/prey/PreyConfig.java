@@ -41,7 +41,7 @@ import com.prey.services.PreyDisablePowerOptionsService;
 public class PreyConfig {
 	
 	//Set false in production
-	public static final boolean LOG_DEBUG_ENABLED = false;
+	public static boolean LOG_DEBUG_ENABLED = false;
 	
 	// Set to 1000 * 60 in production.
 	public static final long DELAY_MULTIPLIER = 1000 * 60; 
@@ -62,6 +62,16 @@ public class PreyConfig {
 
 
 	public static final String PREFS_NAME = "PREY_PREFS";
+
+	public static final String PREFS_PREY_URL = "PREY_URL";
+	public static final String PREFS_PREY_UI_URL = "PREY_UI_URL";
+	public static final String PREFS_PREY_PANEL_URL = "PREY_PANEL_URL";
+	
+	public static final String PREFS_GCM_ID = "GCM_ID";
+	public static final String PREFS_GCM_ID_PREFIX = "GCM_ID_PREFIX";
+	
+	public static final String PREFS_ENABLE_DEBUGGING = "ENABLE_DEBUGGING";
+	
 	public static final String PREFS_URL_KEY = "URL";
 	public static final String PREFS_DEVICE_ID = "DEVICE_ID";
 	public static final String PREFS_API_KEY = "API_KEY";
@@ -122,6 +132,14 @@ public class PreyConfig {
 	
 	public static final String PREFS_DISABLE_POWER_OPTIONS="PREFS_DISABLE_POWER_OPTIONS";
 	
+	public static final String PREFS_ENABLE_ADVANCED="PREFS_ENABLE_ADVANCED";
+	
+	private String preyUrl;
+	private String preyUiUrl;
+	private String preyPanelUrl;
+	
+	private String gcmId;
+	private String gcmIdPrefix;
 	
 	private boolean sendNotificationId;
 	private String notificationId;
@@ -181,10 +199,19 @@ public class PreyConfig {
 	
 	private boolean disablePowerOptions;
 	
+	private boolean enableAdvancedSettings;
+	
 	private Context ctx;
 
 	private PreyConfig(Context ctx) {
 		this.ctx = ctx;
+		
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		settings.registerOnSharedPreferenceChangeListener(listener);
+		
+		// override debug mode based on preference
+		LOG_DEBUG_ENABLED = settings.getBoolean(PREFS_ENABLE_DEBUGGING, LOG_DEBUG_ENABLED);
+		
 		this.kitKatOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 19;
 		this.jellyBeanOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 16;
 		this.iceCreamOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 15;
@@ -192,8 +219,7 @@ public class PreyConfig {
 		this.gingerbreadOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 9;
 		this.froyoOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 8;
 		this.cupcakeOrAbove = Integer.parseInt(Build.VERSION.SDK) == 3;
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-		settings.registerOnSharedPreferenceChangeListener(listener);
+		
 		this.deviceID = settings.getString(PreyConfig.PREFS_DEVICE_ID, "");
 		this.apiKey = settings.getString(PreyConfig.PREFS_API_KEY, "");
 		//this.password = settings.getString(PreyConfig.PREFS_PASSWORD, password);
@@ -234,7 +260,37 @@ public class PreyConfig {
 		this.sendData=settings.getBoolean(PreyConfig.SEND_DATA, false);
 		this.nextAlert=settings.getBoolean(PreyConfig.NEXT_ALERT, false);
 		this.disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
-		saveLong(PreyConfig.INSTALLATION_DATE,installationDate);
+		
+		this.enableAdvancedSettings = settings.getBoolean(PreyConfig.PREFS_ENABLE_ADVANCED, false);
+		
+		
+		
+		FileConfigReader fileReader = FileConfigReader.getInstance(ctx);
+		String domain = fileReader.getPreyDomain().concat("/");
+		
+		// control panel settings
+
+		preyPanelUrl = settings.getString(PREFS_PREY_PANEL_URL, null);
+		if (preyPanelUrl == null || "".equals(preyPanelUrl))
+			preyPanelUrl = HTTP.concat(fileReader.getPreyPanel()).concat(".").concat(domain);
+		
+		preyUrl = settings.getString(PREFS_PREY_URL, null);
+		if (preyUrl == null || "".equals(preyUrl))
+			preyUrl = HTTP.concat(fileReader.getPreySubdomain()).concat(".").concat(domain);
+		
+		preyUiUrl = settings.getString(PREFS_PREY_UI_URL, null);
+		if (preyUiUrl == null || "".equals(preyUiUrl))
+			preyUiUrl = HTTP.concat(fileReader.getPreyUiSubdomain()).concat(".").concat(domain);
+		
+		gcmId = settings.getString(PREFS_GCM_ID, null);
+		if (gcmId == null || "".equals(gcmId))
+			gcmId = fileReader.getGcmId();
+		
+		gcmIdPrefix = settings.getString(PREFS_GCM_ID_PREFIX, null);
+		if (gcmIdPrefix == null || "".equals(gcmIdPrefix))
+			gcmIdPrefix = fileReader.getGcmIdPrefix();
+		
+		saveLong(PreyConfig.INSTALLATION_DATE, installationDate);
 	}
 	
 	public void saveAccount(PreyAccountData accountData) {
@@ -248,7 +304,6 @@ public class PreyConfig {
 		editor.putString(PreyConfig.PREFS_IS_MISSING, Boolean.valueOf(accountData.isMissing()).toString());
 
 		editor.commit();
-		
 	}
 
 	public static synchronized PreyConfig getPreyConfig(Context ctx) {
@@ -269,14 +324,46 @@ public class PreyConfig {
 	}
 	
 	SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-		
-		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		public void onSharedPreferenceChanged(SharedPreferences settings, String key) {
+			FileConfigReader fileReader = FileConfigReader.getInstance(ctx);
+			PreyLogger.d("Setting changed: " + key);
+			
 			if (key.equals(PREFS_DISABLE_POWER_OPTIONS)){
-				disablePowerOptions = sharedPreferences.getBoolean(PREFS_DISABLE_POWER_OPTIONS, false);
+				disablePowerOptions = settings.getBoolean(PREFS_DISABLE_POWER_OPTIONS, false);
 				if(disablePowerOptions){
 					ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
-				}else{
+				} else {
 					ctx.stopService(new Intent(ctx, PreyDisablePowerOptionsService.class));
+				}
+			} else if (key.equals(PREFS_ENABLE_DEBUGGING)) {
+				LOG_DEBUG_ENABLED = settings.getBoolean(PREFS_ENABLE_DEBUGGING, LOG_DEBUG_ENABLED);
+			} else if (key.equals(PREFS_PREY_PANEL_URL)) {
+				preyPanelUrl = settings.getString(PREFS_PREY_PANEL_URL, null);
+				if (preyPanelUrl == null || "".equals(preyPanelUrl)) {
+					String domain = fileReader.getPreyDomain().concat("/");
+					preyPanelUrl = HTTP.concat(fileReader.getPreyPanel()).concat(".").concat(domain);
+				}
+			} else if (key.equals(PREFS_PREY_URL)) {
+				preyUrl = settings.getString(PREFS_PREY_URL, null);
+				if (preyUrl == null || "".equals(preyUrl)) {
+					String domain = fileReader.getPreyDomain().concat("/");
+					preyUrl = HTTP.concat(fileReader.getPreySubdomain()).concat(".").concat(domain);
+				}
+			} else if (key.equals(PREFS_PREY_UI_URL)) {
+				preyUiUrl = settings.getString(PREFS_PREY_UI_URL, null);
+				if (preyUiUrl == null || "".equals(preyUiUrl)) {
+					String domain = fileReader.getPreyDomain().concat("/");
+					preyUiUrl = HTTP.concat(fileReader.getPreyUiSubdomain()).concat(".").concat(domain);
+				}
+			} else if (key.equals(PREFS_GCM_ID)) {
+				gcmId = settings.getString(PREFS_GCM_ID, null);
+				if (gcmId == null || "".equals(gcmId)) {
+					gcmId = fileReader.getGcmId();
+				}
+			} else if (key.equals(PREFS_GCM_ID_PREFIX)) {
+				gcmIdPrefix = settings.getString(PREFS_GCM_ID_PREFIX, null);
+				if (gcmIdPrefix == null || "".equals(gcmIdPrefix)) {
+					gcmIdPrefix = fileReader.getGcmIdPrefix();
 				}
 			}
 			
@@ -302,6 +389,15 @@ public class PreyConfig {
 	public void setApiKey(String apiKey) {
 		this.apiKey = apiKey;
 		this.saveString(PreyConfig.PREFS_API_KEY, apiKey);
+	}
+	
+	public boolean isAdvancedPrefsEnabled() {
+		return enableAdvancedSettings;
+	}
+	
+	public void setAdvancedPrefs(boolean enabled) {
+		this.enableAdvancedSettings = enabled;
+		this.saveBoolean(PreyConfig.PREFS_ENABLE_ADVANCED, enabled);
 	}
 
 	public boolean isMissing() {
@@ -402,7 +498,7 @@ public class PreyConfig {
 		editor.commit();
 	}
 
-	
+	// NOTE: shouldn't be here
 	public boolean isThisDeviceAlreadyRegisteredWithPrey(boolean notifyUser) {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
 		String deviceId = settings.getString(PreyConfig.PREFS_DEVICE_ID, null);
@@ -546,9 +642,8 @@ public class PreyConfig {
 			PreyLogger.d("______________________");
 			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 			registrationIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0)); // boilerplate
-			String gcmId= FileConfigReader.getInstance(this.ctx).getGcmId();
-			//PreyLogger.i("gcmId:"+gcmId);
-			registrationIntent.putExtra("sender",gcmId);
+			//PreyLogger.i("gcmId:"+getGcmId());
+			registrationIntent.putExtra("sender", getGcmId());
 			this.ctx.startService(registrationIntent);
 		}
 	}
@@ -642,10 +737,6 @@ public class PreyConfig {
 		return FileConfigReader.getInstance(this.ctx).getPreyMinorVersion();
 	}
 	
-	public String getPreyDomain() {
-		return FileConfigReader.getInstance(this.ctx).getPreyDomain();
-	}
-	
 	public String getc2dmAction(){
 		return FileConfigReader.getInstance(this.ctx).getc2dmAction();
 	}
@@ -658,21 +749,23 @@ public class PreyConfig {
 
 	private static final String HTTP="https://";
 	
+	public String getPreyDomain() {
+		return FileConfigReader.getInstance(this.ctx).getPreyDomain();
+	}
+	
 	public String getPreyUrl() {
-		String subdomain = FileConfigReader.getInstance(this.ctx).getPreySubdomain();
-		return HTTP.concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
-		
+		PreyLogger.d("Get prey url... " + preyUrl);
+		return preyUrl;
 	}
 	
 	public String getPreyPanelUrl() {
-		String panel = FileConfigReader.getInstance(this.ctx).getPreyPanel();
-		return HTTP.concat(panel).concat(".").concat(getPreyDomain()).concat("/");
-		
+		PreyLogger.d("Get prey panel url... " + preyPanelUrl);
+		return preyPanelUrl;
 	}
 	   
 	public String getPreyUiUrl() {
-		String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain();
-		return HTTP.concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
+		PreyLogger.d("Get prey ui url... " + preyUiUrl);
+		return preyUiUrl;
 	}
 
 	public boolean askForPassword() {
@@ -703,9 +796,20 @@ public class PreyConfig {
 		this.flagFeedback=flagFeedback;
 		this.saveInt(PreyConfig.FLAG_FEEDBACK,flagFeedback);
 	}
-	 
+	
+	// NOTE: this shouldn't be here
 	public boolean showFeedback(){
 		return FeedbackActivity.showFeedback(installationDate, flagFeedback);
+	}
+	
+	public String getGcmId() {
+		PreyLogger.d("Get GCM ID... " + gcmId);
+		return gcmId;
+	}
+	
+	public String getGcmIdPrefix() {
+		PreyLogger.d("Get GCM ID prefix... " + gcmIdPrefix);
+		return gcmIdPrefix;
 	}
 	
 	public void setCamouflageSet(boolean camouflageSet){

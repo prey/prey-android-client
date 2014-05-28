@@ -40,7 +40,7 @@
   <string name="preferences_about">Prey для Android™</string>
   <string name="preferences_about_category_name">О программе</string>
   <string name="preferences_about_message">Prey для Android™</string>
-  <string name="preferences_about_summary">Версия 0.3.73 - © Fork Ltd.</string>
+  <string name="preferences_about_summary">Версия %s - © Fork Ltd.</string>
   <string name="preferences_about_title">Prey для Android™</string>
   <string name="preferences_category_operations">Функции тестирования</string>
   <string name="preferences_category_title_other">Управление учетной записью</string>

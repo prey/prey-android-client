@@ -9,4 +9,11 @@
     <declare-styleable name="ButtonPrey">
         <attr name="customFont" format="string"/>
     </declare-styleable>
+    <declare-styleable name="DelayedActivatedEditTextPref">
+        <attr format="string" name="hiddenClickHelpMsg" />
+        <attr format="string" name="hiddenClickActivateMsg" />
+        <attr format="string" name="hiddenClickAlreadyActiveMsg" />
+        <attr format="integer" name="hiddenClickHelpMsgThreshold" />
+        <attr format="integer" name="hiddenClickActivateThreshold" />
+     </declare-styleable>
 </resources>
