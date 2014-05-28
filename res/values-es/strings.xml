@@ -180,5 +180,5 @@
     <string name="feedback_form_button2">NO, gracias</string>
     <string name="feedback_form_send_email">Enviar correo</string>
     <string name="preferences_disable_power_options_title">Desactivar menú de apagado</string>
-    <string name="preferences_disable_power_options_summary">Tu dispositivo no puede ser apagado si la pantalla está bloqueada.</string>
+    <string name="preferences_disable_power_options_summary">Tu dispositivo no puede ser apagado si la pantalla está bloqueada</string>
 </resources>
