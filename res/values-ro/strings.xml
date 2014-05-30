@@ -40,7 +40,7 @@
   <string name="preferences_about">Prey pentru Android™</string>
   <string name="preferences_about_category_name">Despre</string>
   <string name="preferences_about_message">Prey pentru Android™</string>
-  <string name="preferences_about_summary">Versiunea 0.3.73 - © Fork Ltd.</string>
+  <string name="preferences_about_summary">Versiunea %s - © Fork Ltd.</string>
   <string name="preferences_about_title">Prey pentru Android™</string>
   <string name="preferences_category_operations">Funcții de testare</string>
   <string name="preferences_category_title_other">Administrarea contului</string>

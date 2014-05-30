@@ -1,0 +1,35 @@
+res/raw/config*
+
+
+# built application files
+*.apk
+*.ap_
+
+# files for the dalvik vM
+*.dex
+
+# java class files
+*.class
+
+# binaries and generated files
+bin/
+gen/
+
+# ide stuff
+.classpath
+.project
+.settings/
+
+# backup/temporary files
+*._*
+*.swp
+
+# failed patch files
+*.orig
+*.rej
+
+# os stuff
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db

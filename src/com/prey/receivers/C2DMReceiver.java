@@ -117,7 +117,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		protected Void doInBackground(Object... data) {
 			try {
 				Context ctx=(Context) data[1];
-				String registration = FileConfigReader.getInstance(ctx).getGcmIdPrefix() + (String) data[0];
+				String registration = PreyConfig.getPreyConfig(ctx).getGcmIdPrefix() + (String) data[0];
 				PreyHttpResponse response=PreyWebServices.getInstance().setPushRegistrationId(ctx, registration);
 				PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
 				PreyLogger.d("response:"+response.toString());

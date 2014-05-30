@@ -40,7 +40,7 @@
   <string name="preferences_about">Prey για Android™</string>
   <string name="preferences_about_category_name">Στοιχεία</string>
   <string name="preferences_about_message">Prey για Android™</string>
-  <string name="preferences_about_summary">Έκδοση 0.3.73 - © Fork Ltd.</string>
+  <string name="preferences_about_summary">Έκδοση %s - © Fork Ltd.</string>
   <string name="preferences_about_title">Prey για Android™</string>
   <string name="preferences_category_operations">Έλεγχος ρυθμίσεων</string>
   <string name="preferences_category_title_other">Διαχείριση λογαριασμού</string>

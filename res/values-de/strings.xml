@@ -40,7 +40,7 @@
   <string name="preferences_about">Prey für Android™</string>
   <string name="preferences_about_category_name">Über</string>
   <string name="preferences_about_message">Prey für Android™</string>
-  <string name="preferences_about_summary">Version 0.3.73 - © Fork Ltd</string>
+  <string name="preferences_about_summary">Version %s - © Fork Ltd</string>
   <string name="preferences_about_title">Prey für Android™</string>
   <string name="preferences_category_operations">Teste Funktionen</string>
   <string name="preferences_category_title_other">Konto-Verwaltung</string>

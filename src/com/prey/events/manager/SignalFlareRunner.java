@@ -32,7 +32,7 @@ public class SignalFlareRunner implements Runnable{
 				PreyLogger.d("event.getName():"+event.getName());
 				if (isValid()){
 					String jsonString = "[ {\"command\": \"get\",\"target\": \"location\",\"options\": {}}]";
-					List<JSONObject> jsonObjectList=new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
+					List<JSONObject> jsonObjectList=new JSONParser().getJSONFromText(ctx, jsonString.toString());
 					if (jsonObjectList!=null&&jsonObjectList.size()>0){
 						ActionsController.getInstance(ctx).runActionJson(ctx,jsonObjectList);
 					}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="agree">Ik gean akkoard</string>
     <string name="agreements_message2"><u>Lês Oerienkomst</u></string>
     <string name="agreements_title">Wolkom by\nPrey foar Android™!</string>
