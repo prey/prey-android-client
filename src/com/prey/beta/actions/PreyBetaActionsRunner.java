@@ -6,11 +6,13 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionsController;
+import com.prey.beta.services.PreyBetaRunnerService;
 import com.prey.exceptions.PreyException;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.managers.PreyTelephonyManager;
@@ -41,11 +43,9 @@ public class PreyBetaActionsRunner implements Runnable {
 	public void run() {
 		execute();
 	}
-	public List<HttpDataService> execute() {
-		List<HttpDataService> listData=null;
-		
-		preyConfig = PreyConfig.getPreyConfig(ctx);
-	 	if (preyConfig.isThisDeviceAlreadyRegisteredWithPrey(true)){
+	
+	public void execute() {
+	 	if (PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey(true)){
 	 		PreyTelephonyManager preyTelephony = PreyTelephonyManager.getInstance(ctx);
 			PreyConnectivityManager preyConnectivity = PreyConnectivityManager.getInstance(ctx);
 	 		boolean connection=false;
@@ -76,7 +76,7 @@ public class PreyBetaActionsRunner implements Runnable {
 			}
 			PreyLogger.d("Prey execution has finished!!");
 	 	}
-	 	return listData;
+	 	ctx.stopService(new Intent(ctx, PreyBetaRunnerService.class));
 	}
 
 	private List<JSONObject> getInstructions() throws PreyException {

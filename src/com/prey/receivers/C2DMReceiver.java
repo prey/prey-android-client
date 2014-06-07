@@ -20,7 +20,7 @@ import com.prey.FileConfigReader;
 import com.prey.PreyConfig; 
 import com.prey.PreyLogger;
 import com.prey.PreyUtils; 
-import com.prey.beta.actions.PreyBetaActionsRunner;
+import com.prey.beta.actions.PreyBetaController;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
@@ -85,9 +85,17 @@ public class C2DMReceiver extends BroadcastReceiver {
 	private void handleMessageBeta(Context context, String body,String version) {
 	    PreyLogger.i("Push notification received, waking up Prey right now!");
 		PreyLogger.i("Push message received " + body+ " version:"+version);
-		new Thread(new PreyBetaActionsRunner(context, body, version)).start();
+		startPrey(context);
 	}
 
+	private void startPrey(Context ctx){
+		try{
+			PreyBetaController.startPrey(ctx);
+		} catch(Exception e){
+			PreyLogger.e("Push execution failed to run", e);
+		}
+	}
+	
 	private void handleRegistration(Context context, Intent intent) {
 		String registration = intent.getStringExtra("registration_id");
 		if (intent.getStringExtra("error") != null) {
@@ -122,7 +130,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 				PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
 				PreyLogger.d("response:"+response.toString());
 				PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
-				new Thread(new PreyBetaActionsRunner(ctx)).start();
+				startPrey(ctx);
 			} catch (Exception e) {
 				PreyLogger.e("Failed registering to CD2M: " + e.getLocalizedMessage(), e);
 			}

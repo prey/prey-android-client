@@ -6,6 +6,10 @@
  ******************************************************************************/
 package com.prey.beta.services;
 
+import java.util.List;
+
+import org.json.JSONObject;
+
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
@@ -14,7 +18,15 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.prey.PreyConfig;
+import com.prey.PreyLogger;
 import com.prey.beta.actions.PreyBetaActionsRunnner;
+import com.prey.exceptions.PreyException;
+import com.prey.managers.PreyConnectivityManager;
+import com.prey.managers.PreyTelephonyManager;
+import com.prey.managers.PreyWifiManager;
+import com.prey.net.NetworkUtils;
+import com.prey.net.PreyWebServices;
+import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionsController;
 
 
@@ -30,9 +42,7 @@ public class PreyBetaRunnerService extends Service {
 
 	private final IBinder mBinder = new LocalBinder();
 	public static boolean running = false;
-	public static long startedAt = 0;
-	public static long interval = 0;
-	public static long pausedAt = 0;
+ 
 
 	/**
 	 * Class for clients to access. Because we know this service always runs in
@@ -49,13 +59,14 @@ public class PreyBetaRunnerService extends Service {
 		//PreyLogger.d("PreyRunnerService has been started...");
 		PreyBetaActionsRunnner exec = new PreyBetaActionsRunnner();
 		running = true;
-		startedAt = System.currentTimeMillis();
 		exec.run(PreyBetaRunnerService.this);
+ 
 	}
 
 	@Override
 	public void onDestroy() {
-		//PreyLogger.d("PreyRunnerService is going to be destroyed");
+		PreyLogger.d("********************");
+		PreyLogger.d("PreyRunnerService is going to be destroyed");
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(PreyBetaRunnerService.this);
 		preyConfig.setMissing(false);
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -70,4 +81,5 @@ public class PreyBetaRunnerService extends Service {
 		return mBinder;
 	}
 
+ 
 }
