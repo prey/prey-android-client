@@ -102,11 +102,12 @@ public class ActionsController {
          
          int size=jsonObjectList==null?-1:jsonObjectList.size();
          PreyLogger.i("runActionJson size:"+size);
-         
-         if(size>=0&&PreyConfig.getPreyConfig(ctx).isNextAlert()){
-        	 PreyConfig.getPreyConfig(ctx).setNextAlert(false);
-        	 Settings.System.putString(ctx.getContentResolver(),Settings.System.NEXT_ALARM_FORMATTED,"");
-         }
+         try{
+        	 if(size>=0&&PreyConfig.getPreyConfig(ctx).isNextAlert()){
+        		 PreyConfig.getPreyConfig(ctx).setNextAlert(false);
+        	 	Settings.System.putString(ctx.getContentResolver(),Settings.System.NEXT_ALARM_FORMATTED,"");
+        	 }
+         }catch(Exception e){} 
          
          try {
                  for(int i=0;jsonObjectList!=null&&i<jsonObjectList.size();i++){

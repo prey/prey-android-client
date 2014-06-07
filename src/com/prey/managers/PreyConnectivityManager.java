@@ -19,7 +19,6 @@ public class PreyConnectivityManager {
 	}
 
 	public boolean isConnected() {
-
 		if (connectivity.getActiveNetworkInfo() != null)
 			return connectivity.getActiveNetworkInfo().isConnected();
 		return false;
@@ -50,13 +49,21 @@ public class PreyConnectivityManager {
 	}
 	
 	public boolean isMobileAvailable(){
-		android.net.NetworkInfo mobile =connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);		 
-		return mobile.isAvailable();
+		try{
+			android.net.NetworkInfo mobile =connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);		 
+			return mobile.isAvailable();
+		}catch(Exception e){
+		    return false;	
+		}	
 	}
 	
 	public boolean isMobileConnected(){
-		android.net.NetworkInfo mobile =connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);		
-		return mobile.isConnected();
+		try{
+			android.net.NetworkInfo mobile =connectivity.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);		
+			return mobile.isConnected();
+		}catch(Exception e){
+		    return false;	
+		}
 	}
 	
 	

@@ -147,8 +147,12 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		if(camera != null) {
-    		Camera.Parameters parameters = camera.getParameters();
-    		camera.setParameters(parameters);
+			try{
+				Camera.Parameters parameters = camera.getParameters();
+				camera.setParameters(parameters);
+			}catch(Exception e){
+				
+			}
     		camera.startPreview();
     	}
 	}
