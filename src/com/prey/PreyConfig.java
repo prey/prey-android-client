@@ -122,6 +122,9 @@ public class PreyConfig {
 	
 	public static final String PREFS_DISABLE_POWER_OPTIONS="PREFS_DISABLE_POWER_OPTIONS";
 	
+	public static final String ACTIVE_TOUR="ACTIVE_TOUR";
+	public static final String ACTIVE_WIZARD="ACTIVE_WIZARD";
+	public static final String ACTIVE_MANAGER="ACTIVE_MANAGER";
 	
 	private boolean sendNotificationId;
 	private String notificationId;
@@ -181,6 +184,11 @@ public class PreyConfig {
 	
 	private boolean disablePowerOptions;
 	
+	private boolean activeTour;
+	private boolean activeWizard;
+	private boolean activeManager;
+	
+	
 	private Context ctx;
 
 	private PreyConfig(Context ctx) {
@@ -234,6 +242,12 @@ public class PreyConfig {
 		this.sendData=settings.getBoolean(PreyConfig.SEND_DATA, false);
 		this.nextAlert=settings.getBoolean(PreyConfig.NEXT_ALERT, false);
 		this.disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
+		
+		
+		this.activeTour=settings.getBoolean(PreyConfig.ACTIVE_TOUR, true);
+		this.activeWizard=settings.getBoolean(PreyConfig.ACTIVE_WIZARD, true);
+		this.activeManager=settings.getBoolean(PreyConfig.ACTIVE_MANAGER, true);
+		
 		saveLong(PreyConfig.INSTALLATION_DATE,installationDate);
 	}
 	
@@ -711,6 +725,22 @@ public class PreyConfig {
 	public void setCamouflageSet(boolean camouflageSet){
 		this.camouflageSet=camouflageSet;
 		this.saveBoolean(PreyConfig.IS_CAMOUFLAGE_SET,camouflageSet);
+	}
+	
+	
+	public void setActiveTour(boolean activeTour) {
+		this.activeTour = activeTour;
+		this.saveBoolean(PreyConfig.ACTIVE_TOUR,activeWizard);
+	}
+	
+	public void setActiveWizard(boolean activeWizard) {
+		this.activeWizard = activeWizard;
+		this.saveBoolean(PreyConfig.ACTIVE_WIZARD,activeWizard);
+	}
+	
+	public void setActiveManager(boolean activeManager) {
+		this.activeManager = activeManager;
+		this.saveBoolean(PreyConfig.ACTIVE_MANAGER,activeManager);
 	}
 	
 	public String getApiKeyBatch() {
