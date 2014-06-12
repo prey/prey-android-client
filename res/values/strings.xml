@@ -72,7 +72,7 @@
     <!-- Add device to an already created account  -->
     <string name="set_old_user_loading">Attaching device to account…\nJust a sec!</string>
     <string name="set_old_user_no_more_devices_title">Hold your horses!</string>
-    <string name="set_old_user_no_more_devices_text">It seems you\'ve run out of free slots for devices on your Prey account.\n\nPlease try removing an existing device on the Control Panel or create a new account.</string>
+    <string name="set_old_user_no_more_devices_text">Your Prey account is full. To protect this Android device delete an older one, or upgrade your account on preyproject.com/plans</string>
     <!-- Create new Prey account -->
     <string name="set_new_user_dialog_creating_popup">Creating account. Please wait…</string>
     <!-- Congratulations Dialog -->
