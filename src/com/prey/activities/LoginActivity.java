@@ -26,6 +26,7 @@ import android.widget.Button;
 
 import com.prey.PreyConfig;
 import com.prey.activities.browser.javascript.PreyJavaScriptInterface;
+import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.services.PreyDisablePowerOptionsService;
 
 public class LoginActivity extends PasswordActivity {
@@ -61,22 +62,34 @@ public class LoginActivity extends PasswordActivity {
 	}
 
 	private void startup() {
+		Context ctx=getApplicationContext();
 		if (!isThisDeviceAlreadyRegisteredWithPrey()) {
 			Intent intent =null;
 			if (!isThereBatchInstallationKey()){
-				intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-				
+				if (PreyConfig.getPreyConfig(ctx).isActiveTour()) {
+					tourBrowser();
+				} else {
+					if (PreyConfig.getPreyConfig(ctx).isActiveWizard()) {
+						warningBrowser();
+					} else {
+						readyBrowser();
+					}
+				}
 			}else{
-				intent = new Intent(LoginActivity.this, WelcomeBatchActivity.class);
+				intent = new Intent(ctx, WelcomeBatchActivity.class);
+				startActivity(intent);
+				finish();
 			}
-			startActivity(intent);
-			finish();
 		} else {
 			PreyVerify.getInstance(this);
 			if(getPreyConfig().showFeedback()){
 				showFeedback(getApplicationContext());
 			}else{
-					showLogin();
+				if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove() && !FroyoSupport.getInstance(ctx).isAdminActive()) {
+					warningBrowser();
+				} else {
+					readyBrowser();
+				}
 			}
 		}
 	}
@@ -123,15 +136,18 @@ public class LoginActivity extends PasswordActivity {
 	}
 	
 	public void readyBrowser() {
+		setContentView(R.layout.install_browser);
 		setWebView("file:///android_asset/v2/ok.html");
 
 	}
 
 	public void tourBrowser() {
+		setContentView(R.layout.install_browser);
 		setWebView("file:///android_asset/v2/index.html");
 	}
 
 	public void warningBrowser() {
+		setContentView(R.layout.install_browser);
 		setWebView("file:///android_asset/v2/error.html");
 	}
 	

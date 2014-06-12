@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,maximum-scale=1,minimum-scale=1,target-densitydpi=device-dpi" />
 
-  <title>Prey - Device protected</title>
+  <title>Prey for Android Setup</title>
   <link rel="stylesheet" href="css/normalize.css" type="text/css" />
   <link rel="stylesheet" href="css/fonts.css" type="text/css" />
   <link rel="stylesheet" href="css/styles.css" type="text/css" />
@@ -15,28 +15,25 @@
   <script src="js/libs/jquery.js"></script>
   <script src="js/libs/jquery.hammer.min.js"></script>
   <script src="js/i18n.js"></script>
-  <script src="js/actions.js"></script>
+ 
+
+  <script>
+ 
+  </script>
 </head>
 
 <body>
 
   <section id="main">
-    <article class="post">
-      <div class="flexl"></div>
-
-      <h1>Device protected.</h1>
-
-      <div class="flex"></div>
-
-      <div class="action">
-        <a class="button success" id="submitWeb" href="https://www.preyproject.com">Manage my devices</a><br/>
-        <a class="button success" id="submitWeb2" href="https://www.preyproject.com">Manage my devices</a>
-      </div>
-
-      <div class="flex"></div>
-      <div class="flexl"></div>
-    </article>
+   <form id="login" class="container pure-form pure-form-stacked" onSubmit="return false;">
+    <input name="email" type="email" placeholder="Email" />
+    <input name="password" type="password" placeholder="Password" />
+    <input id="submit" type="submit" class="pure-button notice" value="Log in" />
+  </form>
   </section>
+
+  <footer id="navigation">
+  </footer>
 
 </body>
 </html>

@@ -58,8 +58,12 @@ $(function(){
      	AndroidFunction.openPanel();
   });
 
+  $('#submitWeb2').live('click', function(e){
+    e.preventDefault();
 
-
+    if (typeof AndroidFunction != 'undefined')
+     	AndroidFunction.loginPanel();
+  });
 
 
 

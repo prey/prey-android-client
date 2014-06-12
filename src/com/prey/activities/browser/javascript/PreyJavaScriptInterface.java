@@ -6,10 +6,9 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.prey.PreyConfig;
-import com.prey.PreyController;
 import com.prey.PreyLogger;
-
 import com.prey.accounts.UserEmail;
+import com.prey.activities.browser.Login2BrowserActivity;
 import com.prey.activities.browser.LoginBrowserActivity;
 import com.prey.activities.browser.NewUserBrowserActivity;
 import com.prey.activities.browser.PrePermissionBrowserActivity;
@@ -18,6 +17,7 @@ import com.prey.activities.browser.javascript.action.LoginScriptInterface;
 import com.prey.activities.browser.javascript.action.NewUserScriptInterface;
 import com.prey.activities.browser.javascript.action.UnLockScriptInterface;
 import com.prey.analytics.PreyGoogleAnalytics; 
+import com.prey.beta.actions.PreyBetaController;
 import com.prey.util.RUtil;
  
 
@@ -46,7 +46,7 @@ public class PreyJavaScriptInterface {
 	
 	public void userRegistered(String password) {
 		try{
-			PreyController.startPrey(ctx);
+			PreyBetaController.startPrey(ctx);
 		}catch(Exception e){
 			PreyLogger.e("Error, causa:"+e.getMessage(), e);
 		}
@@ -72,6 +72,11 @@ public class PreyJavaScriptInterface {
 
 	public void goLogin() {
 		Intent intent = new Intent(ctx, LoginBrowserActivity.class);
+		ctx.startActivity(intent);
+	}
+	
+	public void loginPanel() {
+		Intent intent = new Intent(ctx, Login2BrowserActivity.class);
 		ctx.startActivity(intent);
 	}
 	
@@ -116,7 +121,7 @@ public class PreyJavaScriptInterface {
 	
 	public void preyOn(){
 	 	 
-		PreyController.startPrey(ctx);
+		PreyBetaController.startPrey(ctx);
  
 	}
 	
@@ -127,7 +132,7 @@ public class PreyJavaScriptInterface {
 	
 	
 	public void openPanel(){
-		String url = "http://beta.preyproject.com/login";
+		String url = "https://www.preyproject.com/login";
 		PreyLogger.i("openPanel:"+url);		
 		Intent i = new Intent(Intent.ACTION_VIEW);
 		i.setData(Uri.parse(url));

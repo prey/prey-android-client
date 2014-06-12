@@ -26,7 +26,7 @@ public class UnLockScriptInterface {
 	}
 	
 	public void execute(  boolean unlockPass) {
-
+/*
 		if (unlockPass) {
 			PreyLogger.i("unlockPass:" + unlockPass);
 
@@ -53,7 +53,7 @@ public class UnLockScriptInterface {
 			builder.show();
 		} else {
 			Toast.makeText(ctx, "UnLock disable:", Toast.LENGTH_SHORT).show();
-		}
+		}*/
 	}
 
 	public class SecurityOkOnClickListener implements OnClickListener {
@@ -66,8 +66,8 @@ public class UnLockScriptInterface {
 
 		public void onClick(DialogInterface dialog, int which) {
 			PreyLogger.i("text:" + userInput.getText());
-			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-			preyConfig.setUnInstallPinDigit(true, userInput.getText().toString());
+			//PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+			//preyConfig.setUnInstallPinDigit(true, userInput.getText().toString());
 		}
 
 	}
@@ -82,8 +82,8 @@ public class UnLockScriptInterface {
 
 		public void onClick(DialogInterface dialog, int which) {
 			PreyLogger.i("text:" + userInput.getText());
-			PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-			preyConfig.setUnInstallPinDigit(false, userInput.getText().toString());
+			//PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+			//preyConfig.setUnInstallPinDigit(false, userInput.getText().toString());
 
 		}
 

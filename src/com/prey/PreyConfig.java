@@ -909,4 +909,14 @@ public class PreyConfig {
 		}
 		return isOnline;
 	}
+	
+	public boolean isActiveTour() {
+		return activeTour;
+	}
+	public boolean isActiveWizard() {
+		return activeWizard;
+	}
+	public boolean isActiveManager() {
+		return activeManager;
+	}
 }
