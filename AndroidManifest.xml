@@ -35,7 +35,7 @@
  
  	<uses-feature android:name="android.hardware.microphone" android:required="false" />
  	
-    <uses-permission android:name="android.permission.RECORD_AUDIO"  />
+    <!--  <uses-permission android:name="android.permission.RECORD_AUDIO"  />-->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     
     
@@ -78,7 +78,7 @@
     <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" /> 
     
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />  
+    <!-- <uses-permission android:name="android.permission.CALL_PHONE" /> --> 
      
      
     <application
