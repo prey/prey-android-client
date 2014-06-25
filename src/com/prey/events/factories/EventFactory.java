@@ -4,8 +4,10 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
+import android.os.Bundle;
 import android.provider.Settings;
 
 import com.prey.PreyConfig;
@@ -56,15 +58,22 @@ public class EventFactory {
 			
 			int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
 			PreyLogger.d("__wifiState:"+wifiState);;
+			
+			if (!PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {
+			  Bundle extras = intent.getExtras();
+		        if (extras!=null){
+		               if("connected".equals(extras.getString(ConnectivityManager.EXTRA_REASON))){
+		            	   try{Thread.sleep(2000);}catch(Exception e){}
+		            	   PreyConfig.getPreyConfig(ctx).registerC2dm();
+		               }
+		        }
+			}
 			try{
-				if (PreyConnectivityManager.getInstance(ctx).isMobileConnected()) {
-						info.put("connected", "mobile");
-						if(!PreyConfig.getPreyConfig(ctx).isRegisterC2dm())
-							PreyConfig.getPreyConfig(ctx).registerC2dm();
-				
-				}else{
-					if (wifiState == WifiManager.WIFI_STATE_UNKNOWN) {
-						PreyConfig.getPreyConfig(ctx).setRegisterC2dm(false);
+				if (!PreyConnectivityManager.getInstance(ctx).isMobileConnected()) {
+					info.put("connected", "mobile");
+					if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
+						try{Thread.sleep(2000);}catch(Exception e){}
+						PreyConfig.getPreyConfig(ctx).registerC2dm();
 					}
 				}
 			}catch (Exception e) {
@@ -74,28 +83,21 @@ public class EventFactory {
 		if (  WIFI_STATE_CHANGED.equals(intent.getAction()) ){
 			JSONObject info=new JSONObject();
 			int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
-			PreyLogger.d("__wifiState:"+wifiState);;
+			PreyLogger.d("___wifiState:"+wifiState);;
 			try{
 				if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
 					info.put("connected", "wifi");
-					if(!PreyConfig.getPreyConfig(ctx).isRegisterC2dm())
-						PreyConfig.getPreyConfig(ctx).registerC2dm();
+					try{Thread.sleep(2000);}catch(Exception e){}
+					PreyConfig.getPreyConfig(ctx).registerC2dm();
 				}
-				if (wifiState == WifiManager.WIFI_STATE_DISABLED) {
-					if(!PreyConnectivityManager.getInstance(ctx).isMobileConnected()){
-						PreyConfig.getPreyConfig(ctx).setRegisterC2dm(false);
-					}
-				}
-				
-				 
 			}catch (Exception e) {
 			}
 			return new Event(Event.WIFI_CHANGED,info.toString());
 		}
 		if (AIRPLANE_MODE.equals(intent.getAction())){
-			if(isAirplaneModeOn(ctx)){
-				PreyConfig.getPreyConfig(ctx).setPreviousSsid("");
-				PreyConfig.getPreyConfig(ctx).setRegisterC2dm(false);
+			if(!isAirplaneModeOn(ctx)){
+				try{Thread.sleep(4000);}catch(Exception e){}
+				PreyConfig.getPreyConfig(ctx).registerC2dm();
 			}
 		}
 		/*

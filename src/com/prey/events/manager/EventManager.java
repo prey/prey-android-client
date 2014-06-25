@@ -6,13 +6,11 @@ import android.content.Context;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.beta.actions.PreyBetaActionsRunner;
 import com.prey.events.Event;
 import com.prey.events.retrieves.EventRetrieveDataBattery;
 import com.prey.events.retrieves.EventRetrieveDataPrivateIp;
 import com.prey.events.retrieves.EventRetrieveDataUptime;
 import com.prey.events.retrieves.EventRetrieveDataWifi;
-import com.prey.managers.PreyConnectivityManager;
 import com.prey.managers.PreyWifiManager;
 
 public class EventManager {
@@ -59,7 +57,7 @@ public class EventManager {
 			PreyConfig.getPreyConfig(ctx).setPreviousSsid(ssid);
 			try {
 				isConnectionExists = PreyConfig.getPreyConfig(ctx).isConnectionExists();
-				isOnline = PreyConfig.getPreyConfig(ctx).isOnline();
+				isOnline = PreyWifiManager.getInstance(ctx).isOnline();
 			} catch (Exception e) {
 
 			}
@@ -108,7 +106,7 @@ public class EventManager {
 			JSONObject jsonObjectStatus = mapData.toJSONObject();
 			PreyLogger.i("jsonObjectStatus: " + jsonObjectStatus.toString());
 			if (event != null) {
-				if (PreyConfig.getPreyConfig(ctx).isOnline()) {
+				if (PreyWifiManager.getInstance(ctx).isOnline()) {
 					String lastEvent=PreyConfig.getPreyConfig(ctx).getLastEvent();
 					if(!Event.WIFI_CHANGED.equals(event.getName()) || !event.getName().equals(lastEvent)){
 						PreyConfig.getPreyConfig(ctx).setLastEvent(event.getName());
