@@ -9,7 +9,7 @@
     package="com.prey"
     android:installLocation="internalOnly"
     android:versionCode="92"
-    android:versionName="1.1.1" >
+    android:versionName="1.1.2" >
     
     <uses-sdk
         android:minSdkVersion="4"
@@ -77,7 +77,7 @@
     
     <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" /> 
     
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <!-- <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" /> --> 
     <!-- <uses-permission android:name="android.permission.CALL_PHONE" /> --> 
      
      
@@ -248,14 +248,15 @@
                 <action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLED" />
             </intent-filter>
         </receiver>
-        
+         
         <receiver android:name="com.prey.receivers.PreyOutgoingCallReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+                <!-- <action android:name="android.intent.action.NEW_OUTGOING_CALL" /> -->
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.media.VOLUME_CHANGED_ACTION" />
             </intent-filter>
         </receiver>
+       
         
         <receiver android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver">
             <intent-filter>

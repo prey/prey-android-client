@@ -33,7 +33,6 @@ import com.prey.actions.PreyAction;
 import com.prey.activities.FeedbackActivity;
 import com.prey.activities.WelcomeActivity;
 import com.prey.managers.PreyConnectivityManager;
-import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyWebServices;
 import com.prey.services.PreyDisablePowerOptionsService;
 
@@ -111,7 +110,7 @@ public class PreyConfig {
 	public static final String SEND_NOTIFICATION_ID="SEND_NOTIFICATION_ID";
 	public static final String SIGNAL_FLARE_DATE="SIGNAL_FLARE_DATE";
 	
-	public static final String VERSION_PREY_DEFAULT="1.1.1";
+	public static final String VERSION_PREY_DEFAULT="1.1.2";
 	
 	public static final String SEND_DATA="SEND_DATA";
 	
@@ -537,7 +536,7 @@ public class PreyConfig {
 	
 	
 	public void registerC2dm(){
-		if( PreyConfig.getPreyConfig(ctx).isOnline() ){
+		//if( PreyWifiManager.getInstance(ctx).isOnline() ){
 			PreyLogger.d("______________________");
 			PreyLogger.d("______________________");
 			PreyLogger.d("___ registerC2dm _____");
@@ -550,7 +549,7 @@ public class PreyConfig {
 			//PreyLogger.i("gcmId:"+gcmId);
 			registrationIntent.putExtra("sender",gcmId);
 			this.ctx.startService(registrationIntent);
-		}
+		//}
 	}
 	
 	public void unregisterC2dm(boolean updatePrey){
@@ -859,24 +858,5 @@ public class PreyConfig {
 			isConnectionExists = true;
 		}
 		return isConnectionExists;
-	}
-	
-	public boolean isOnline() {
-		boolean isOnline = false;
-		try {
-			int i = 0;
-			// wait at most 5 seconds
-			while (!isOnline) {
-				isOnline = PreyWifiManager.getInstance(ctx).isOnline();
-				if (i < 5 && !isOnline) {
-					PreyLogger.i("Phone doesn't have internet connection now. Waiting 1 secs for it");
-					Thread.sleep(1000);
-				}
-				i++;
-			}
-		} catch (Exception e) {
-			PreyLogger.e("Error, because:" + e.getMessage(), e);
-		}
-		return isOnline;
 	}
 }
