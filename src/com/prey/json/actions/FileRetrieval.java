@@ -17,11 +17,25 @@ import android.webkit.MimeTypeMap;
 import com.prey.PreyLogger;
 import com.prey.actions.file.FilePrey;
 import com.prey.actions.observer.ActionResult;
+import com.prey.actions.retrieval.FileRetrievalClient;
 import com.prey.net.PreyWebServices;
 import com.prey.net.http.EntityFile;
 
 public class FileRetrieval {
 
+	
+	public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
+		
+		try {
+			String host = parameters.getString("host");
+			String port = parameters.getString("port");
+			FileRetrievalClient client=new FileRetrievalClient();
+			client.connect(host, port);
+		} catch (Exception e) {
+			PreyLogger.i("Error, causa:"+e.getMessage());
+		}
+		
+	}
 	public void get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		String folderParam = null;
 		try {
