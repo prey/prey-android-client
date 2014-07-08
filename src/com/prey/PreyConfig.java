@@ -120,7 +120,7 @@ public class PreyConfig {
 	
 	
 	public static final String PREFS_DISABLE_POWER_OPTIONS="PREFS_DISABLE_POWER_OPTIONS";
-	
+	public static final String LOW_BATTERY_DATE="LOW_BATTERY_DATE";
 	
 	private boolean sendNotificationId;
 	private String notificationId;
@@ -180,6 +180,8 @@ public class PreyConfig {
 	
 	private boolean disablePowerOptions;
 	
+	private long lowBatteryDate;
+	
 	private Context ctx;
 
 	private PreyConfig(Context ctx) {
@@ -195,9 +197,6 @@ public class PreyConfig {
 		settings.registerOnSharedPreferenceChangeListener(listener);
 		this.deviceID = settings.getString(PreyConfig.PREFS_DEVICE_ID, "");
 		this.apiKey = settings.getString(PreyConfig.PREFS_API_KEY, "");
-		//this.password = settings.getString(PreyConfig.PREFS_PASSWORD, password);
-		//this.smsToRun = settings.getString(PreyConfig.PREFS_SMS_RUN, "GO PREY");
-		//this.smsToStop = settings.getString(PreyConfig.PREFS_SMS_STOP, "STOP PREY");
 		this.destinationSms = settings.getString(PreyConfig.PREFS_DESTINATION_SMS, "");
 		this.missing = Boolean.valueOf(settings.getString(PreyConfig.PREFS_IS_MISSING, "false"));
 		this.email = settings.getString(PreyConfig.PREFS_EMAIL, "");
@@ -233,6 +232,7 @@ public class PreyConfig {
 		this.sendData=settings.getBoolean(PreyConfig.SEND_DATA, false);
 		this.nextAlert=settings.getBoolean(PreyConfig.NEXT_ALERT, false);
 		this.disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
+		this.lowBatteryDate=settings.getLong(PreyConfig.LOW_BATTERY_DATE, 0);
 		saveLong(PreyConfig.INSTALLATION_DATE,installationDate);
 	}
 	
@@ -805,6 +805,15 @@ public class PreyConfig {
 	public void setSignalFlareDate(long signalFlareDate){
 		this.signalFlareDate=signalFlareDate;
 		saveLong(PreyConfig.SIGNAL_FLARE_DATE, this.signalFlareDate);
+	}
+	
+	public long getLowBatteryDate(){
+		return this.lowBatteryDate;
+	}
+	
+	public void setLowBatteryDate(long lowBatteryDate){
+		this.lowBatteryDate=lowBatteryDate;
+		saveLong(PreyConfig.LOW_BATTERY_DATE, this.lowBatteryDate);
 	}
 	
 	public long getSignalFlareDate(){

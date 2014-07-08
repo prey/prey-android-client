@@ -1,5 +1,10 @@
 package com.prey.events.factories;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -108,10 +113,10 @@ public class EventFactory {
 			return new Event(Event.UN_PLUGGED);
 		}
 		*/		
-		if (ACTION_BATTERY_LOW.equals(intent.getAction()) ){
+		if (ACTION_BATTERY_LOW.equals(intent.getAction()) && isValidLowBattery(ctx)){
 			return new Event(Event.BATTERY_LOW);
 		}
-		if (BATTERY_LOW.equals(intent.getAction()) ){
+		if (BATTERY_LOW.equals(intent.getAction()) && isValidLowBattery(ctx)){
 			return new Event(Event.BATTERY_LOW);
 		}
 		if (BATTERY_OKAY.equals(intent.getAction()) ){
@@ -141,5 +146,27 @@ public class EventFactory {
 	public static boolean isAirplaneModeOn(Context context){
 		   return Settings.System.getInt(context.getContentResolver
 		                        (),Settings.System.AIRPLANE_MODE_ON, 0) != 0;
-		 }
+	}
+	
+	private static SimpleDateFormat sdf=new SimpleDateFormat("dd/MM/yy hh:mm:ss",Locale.getDefault());
+	
+	public static boolean isValidLowBattery(Context ctx) {
+		try{
+			Calendar cal=Calendar.getInstance();
+			cal.setTime(new Date());
+			cal.add(Calendar.HOUR,-3);
+			long leastThreeHours=cal.getTimeInMillis();
+			long lowBatteryDate=PreyConfig.getPreyConfig(ctx).getLowBatteryDate();
+			PreyLogger.d("lowBatteryDate :"+lowBatteryDate+" "+sdf.format(new Date(lowBatteryDate)));
+			PreyLogger.d("leastMinutes   :"+leastThreeHours+" "+sdf.format(new Date(leastThreeHours)));
+			if(lowBatteryDate==0||leastThreeHours>lowBatteryDate){
+				long now=new Date().getTime();
+				PreyConfig.getPreyConfig(ctx).setLowBatteryDate(now);
+				return true;
+			}
+			return false;
+		}catch(Exception e){
+			return false;
+		}
+	}
 }
