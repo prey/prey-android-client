@@ -15,10 +15,12 @@
         android:id="@+id/login_img_top_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="150dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitStart"
-        android:src="@drawable/top_left_logo" />
+         
+        android:layout_marginTop="20dp"
+                android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+  android:layout_gravity="center"
+        android:src="@drawable/logo_sonar2" />
 
     <ImageView
         android:id="@+id/login_img_prey_txt"
