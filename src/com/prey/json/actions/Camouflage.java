@@ -29,22 +29,7 @@ public class Camouflage extends JsonAction {
 		PackageManager pm = ctx.getPackageManager();
 		pm.setComponentEnabledSetting(componentToDisabled, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
 		
-		/*
-		 * 
-		 * Intent shortcutIntent = new Intent(ctx, LoginActivity.class);
-		 * shortcutIntent.setAction(Intent.ACTION_MAIN);
-		 * 
-		 * Intent addIntent = new Intent(); addIntent
-		 * .putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-		 * addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "HelloWorldShortcut");
-		 * 
-		 * addIntent
-		 * .setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
-		 * ctx.sendBroadcast(addIntent);
-		 */
-
-
-
+		PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_start");
 	}
 
 	public void stop(Context ctx, List<ActionResult> lista, JSONObject options) {
@@ -55,5 +40,6 @@ public class Camouflage extends JsonAction {
 		PackageManager pm = ctx.getApplicationContext().getPackageManager();
 		pm.setComponentEnabledSetting(componentToEnabled, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 
+		PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_stop");
 	}
 }

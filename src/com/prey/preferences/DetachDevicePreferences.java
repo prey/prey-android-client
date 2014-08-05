@@ -42,7 +42,7 @@ public class DetachDevicePreferences extends DialogPreference {
 		}
 	}
 
-	private class DetachDevice extends AsyncTask<Void, Void, Void> {
+	public class DetachDevice extends AsyncTask<Void, Void, Void> {
 
 		private String error = null;
 		ProgressDialog progressDialog = null;

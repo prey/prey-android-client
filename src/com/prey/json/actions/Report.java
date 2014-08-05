@@ -85,11 +85,11 @@ public class Report  {
 				if (parms>0){
 					PreyHttpResponse response=PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
 					if(response!=null){
+						PreyConfig.getPreyConfig(ctx).setLastEvent("report_send");
 						PreyLogger.d("response.getStatusLine():"+response.getStatusLine());	
 						if (200!=response.getStatusLine().getStatusCode()){
 							PreyConfig.getPreyConfig(ctx).setMissing(false);
 						}else{
-							PreyConfig.getPreyConfig(ctx).setLastEvent("report_send");
 							if (interval==0){
 								PreyConfig.getPreyConfig(ctx).setMissing(false);
 							}else{
