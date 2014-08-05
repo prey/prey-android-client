@@ -68,7 +68,12 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 			} catch (Exception e) {
 			}
 		}
-		camera.startPreview();
+		if (camera!=null){
+			try {
+				camera.startPreview();
+			} catch (Exception e) {
+			}
+		}
 		activity = this;
 	}
 	
@@ -151,10 +156,12 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 				Camera.Parameters parameters = camera.getParameters();
 				camera.setParameters(parameters);
 			}catch(Exception e){
-				
 			}
-    		camera.startPreview();
-    	}
+			try{
+				camera.startPreview();
+			}catch(Exception e){
+			}
+		}
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
