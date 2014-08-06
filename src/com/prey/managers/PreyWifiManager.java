@@ -27,19 +27,18 @@ public class PreyWifiManager {
 	}
 
 	public boolean isWifiEnabled(){
-		return wifiMgr.isWifiEnabled();
+		if(wifiMgr!=null)
+			return wifiMgr.isWifiEnabled();
+		else
+			return false;
 	}
 	
 	public void setWifiEnabled(boolean enabled){
-		wifiMgr.setWifiEnabled(enabled);
-	}
-	
-	public List<ScanResult>  lista(){
-		return  wifiMgr.getScanResults();
+		if(wifiMgr!=null)
+			wifiMgr.setWifiEnabled(enabled);
 	}
 	
 	public  boolean isOnline() {
- 
 	    ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
 	    if (netInfo != null && netInfo.isConnectedOrConnecting()) {
@@ -49,7 +48,9 @@ public class PreyWifiManager {
 	}
 	
 	public WifiInfo getConnectionInfo(){
-		return wifiMgr.getConnectionInfo();
+		if(wifiMgr!=null)
+			return wifiMgr.getConnectionInfo();
+		return null;
 	}
 	
 	public String getSSID(){

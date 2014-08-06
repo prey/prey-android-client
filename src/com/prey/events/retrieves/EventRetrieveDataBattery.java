@@ -29,6 +29,7 @@ public class EventRetrieveDataBattery {
 	private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
 	    @Override
 	    public void onReceive(Context ctx, Intent intent) {
+	    	try{
 	    	Battery battery=new BatteryInformation().makeBattery(intent);
  			ctx.unregisterReceiver(mBatInfoReceiver);
  			if (battery!=null){
@@ -39,13 +40,16 @@ public class EventRetrieveDataBattery {
  					JSONObject batteryElementJSon = new JSONObject();
  					batteryElementJSon.put("state", state);
  					batteryElementJSon.put("percentage_remaining",remaining );
- 			//		batteryElementJSon.put("time_remaining",remaining );
  					batteryJSon.put("battery_status", batteryElementJSon);
  				} catch (JSONException e) {
  				}
 				PreyLogger.d("battery: state["+state+"] remaining["+remaining+"]");
 				manager.receivesData(EventManager.BATTERY, batteryJSon);
 			} 
+	    	}catch(Exception e){
+	    		JSONObject batteryJSon = new JSONObject();
+	    		manager.receivesData(EventManager.BATTERY, batteryJSon);
+	    	}
 	    }
 	};
 }
