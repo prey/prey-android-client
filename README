@@ -1,4 +1,4 @@
-This is the *Prey* Anti-Theft Android client.
+This is the <b>Prey</b> Anti-Theft Android client.
 
 It provides a method to geolocate Android devices, take pictures, ring alarms, send text messages, lock their screens, erase removable storage drives, and also to reset the devices to factory settings, provided that the agent was running properly. 
 See the AndroidManifest.xml file for the required system permissions.
