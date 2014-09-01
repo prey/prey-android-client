@@ -52,7 +52,7 @@
     <string name="sms_deactivation">Frase desativação SMS</string>
     <string name="agreements_title">Bem vindo ao Prey para Android™!</string>
     <string name="agreements_message1">Por favor, certifique-se de ler e concordar com os Termos e Condições clicando abaixo</string>
-    <string name="agreements_message2">&amp;amp;lt;u&amp;amp;gt;Leia Acordo&amp;amp;lt;/u&amp;amp;gt;</string>
+    <string name="agreements_message2">&amp;amp;amp;lt;u&amp;amp;amp;gt;Leia Acordo&amp;amp;amp;lt;/u&amp;amp;amp;gt;</string>
     <string name="set_old_user_loading">Anexando dispositivo a conta…\nSó um segundo!</string>
     <string name="set_old_user_no_more_devices_title">Segure seus cavalos!</string>
     <string name="set_old_user_no_more_devices_text">Parece que você ficou sem slots livres para dispositivos em sua conta Prey.\n\nPor favor, tente remover um dispositivo existente no Painel de Controle ou criar uma nova conta.</string>
@@ -179,4 +179,6 @@
     <string name="feedback_form_button1">OK, envie</string>
     <string name="feedback_form_button2">NÃO, obrigado</string>
     <string name="feedback_form_send_email">enviar email</string>
+    <string name="preferences_disable_power_options_title">Desabilitar Menu de Energia</string>
+    <string name="preferences_disable_power_options_summary">Seu dispositivo não pode ser desligado se a tela estiver bloqueada</string>
 </resources>
