@@ -52,7 +52,7 @@
     <string name="sms_deactivation">SMS deaktywacyjny</string>
     <string name="agreements_title">Witaj w Prey dla systemu Android™!</string>
     <string name="agreements_message1">Prosimy dokładnie przeczytać Regulamin oraz Warunki korzystania z Prey i wyrazić zgodę klikając poniżej</string>
-    <string name="agreements_message2">&lt;u&gt;Przeczytaj Umowę&lt;/u&gt;</string>
+    <string name="agreements_message2">&amp;lt;u&amp;gt;Przeczytaj Umowę&amp;lt;/u&amp;gt;</string>
     <string name="set_old_user_loading">Urządzenie jest dołączane do twojego konta...\nJedna sekunda!</string>
     <string name="set_old_user_no_more_devices_title">Poczekaj chwilkę!</string>
     <string name="set_old_user_no_more_devices_text">Wygląda że osiągnąłeś limit urządzeń na swoim koncie Prey. Usuń istniejące urzadzenie w panelu sterowania, albo załóż nowe konto.</string>
@@ -179,4 +179,6 @@
     <string name="feedback_form_button1">Tak, wyślij.</string>
     <string name="feedback_form_button2">NIE, dziękuję</string>
     <string name="feedback_form_send_email">Wyślij email.</string>
+    <string name="preferences_disable_power_options_title">Wylacz Menu Administracyjne</string>
+    <string name="preferences_disable_power_options_summary">Twoje urządzenie nie może zostać wyłączone gdy ekran jest zablokowany</string>
 </resources>
