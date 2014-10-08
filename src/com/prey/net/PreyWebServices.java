@@ -43,6 +43,7 @@ import com.prey.PreyPhone;
 import com.prey.PreyPhone.Hardware;
 import com.prey.PreyPhone.Wifi;
 import com.prey.actions.HttpDataService;
+import com.prey.actions.location.PreyLocation;
 import com.prey.actions.observer.ActionsController;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 import com.prey.events.Event;
@@ -746,4 +747,47 @@ public class PreyWebServices {
 		 return preyHttpResponse;
 	}
 	
+	public PreyLocation getLocation(Context ctx,List<Wifi>listWifi) throws Exception{
+		PreyLocation location=null;
+		String url=googleLookup(listWifi);
+		PreyLogger.i("location url:"+url);
+		PreyHttpResponse response= PreyRestHttpClient.getInstance(ctx).get(url);
+		String responseAsString=response.getResponseAsString();
+		PreyLogger.i("location resp:"+responseAsString);
+		if (response.getStatusLine().getStatusCode()==200){
+			if (responseAsString!=null&&responseAsString.indexOf("OK")>=0){
+				location=new PreyLocation();
+				JSONObject jsnobject = new JSONObject(response.getResponseAsString());
+				String accuracy=jsnobject.getString("accuracy");
+				JSONObject jsnobjectLocation = jsnobject.getJSONObject("location");
+				String lat=jsnobjectLocation.getString("lat");
+				String lng=jsnobjectLocation.getString("lng");
+				location.setLat(Double.parseDouble(lat));
+				location.setLng(Double.parseDouble(lng));
+				location.setAccuracy(Float.parseFloat(accuracy));
+			}
+		}
+		return location;
+	}
+	
+	private String googleLookup(List<Wifi> listwifi){
+		String queryString = "https://maps.googleapis.com/maps/api/browserlocation/json?browser=firefox&sensor=true";
+		try {
+			for(int i=0;i<listwifi.size();i++){
+				String ssid=listwifi.get(i).getSsid();
+				ssid=ssid.replaceAll(" ", "%20");	
+				queryString+="&wifi=mac:";
+				queryString+=listwifi.get(i).getMacAddress();
+				queryString+="%7C";
+				queryString+="ssid:";
+				queryString+=ssid;
+				queryString+="%7C";
+				queryString+="ss:";
+				queryString+=listwifi.get(i).getSignalStrength();
+			}	
+		} catch (Exception e) {
+		}
+		return queryString;	
+	}
+
 }
