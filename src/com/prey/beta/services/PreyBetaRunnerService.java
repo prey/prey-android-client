@@ -6,9 +6,6 @@
  ******************************************************************************/
 package com.prey.beta.services;
 
-import java.util.List;
-
-import org.json.JSONObject;
 
 import android.app.NotificationManager;
 import android.app.Service;
@@ -17,16 +14,8 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.beta.actions.PreyBetaActionsRunnner;
-import com.prey.exceptions.PreyException;
-import com.prey.managers.PreyConnectivityManager;
-import com.prey.managers.PreyTelephonyManager;
-import com.prey.managers.PreyWifiManager;
-import com.prey.net.NetworkUtils;
-import com.prey.net.PreyWebServices;
-import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionsController;
 
 
@@ -56,24 +45,32 @@ public class PreyBetaRunnerService extends Service {
 
 	@Override
 	public void onCreate() {
-		//PreyLogger.d("PreyRunnerService has been started...");
-		PreyBetaActionsRunnner exec = new PreyBetaActionsRunnner();
+		super.onCreate();
+ 
+	}
+	
+	@Override
+	public void onStart(Intent intent, int startId) {
+		super.onStart(intent, startId);
+		String cmd=null;
+		try{ 
+			cmd=intent.getExtras().getString("cmd");
+		}catch(Exception e){}
+		PreyLogger.d("PreyRunnerService has been started...:"+cmd);
+		PreyBetaActionsRunnner exec = new PreyBetaActionsRunnner(cmd);
 		running = true;
 		exec.run(PreyBetaRunnerService.this);
- 
 	}
 
 	@Override
 	public void onDestroy() {
 		PreyLogger.d("********************");
 		PreyLogger.d("PreyRunnerService is going to be destroyed");
-		PreyConfig preyConfig = PreyConfig.getPreyConfig(PreyBetaRunnerService.this);
-		preyConfig.setMissing(false);
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancelAll();
 		ActionsController.getInstance(PreyBetaRunnerService.this).finishRunningJosb();
 		running = false;
-		//PreyLogger.d("PreyRunnerService has been destroyed");
+		PreyLogger.d("PreyRunnerService has been destroyed");
 	}
 
 	@Override

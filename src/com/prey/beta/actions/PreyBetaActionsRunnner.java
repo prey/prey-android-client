@@ -16,13 +16,14 @@ public class PreyBetaActionsRunnner {
 	protected boolean running = false;
 
 	Thread myActionsRunnerThread = null;
+	private String cmd;
 
-	public PreyBetaActionsRunnner() {
-
+	public PreyBetaActionsRunnner(String cmd) {
+		this.cmd=cmd;
 	}
 
 	public void run(Context ctx) {
-		this.myActionsRunnerThread = new Thread(new PreyBetaActionsRunner(ctx));
+		this.myActionsRunnerThread = new Thread(new PreyBetaActionsRunner(ctx,cmd));
 		this.myActionsRunnerThread.start();
 
 	}

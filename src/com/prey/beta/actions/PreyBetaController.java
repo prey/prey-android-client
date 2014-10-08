@@ -18,6 +18,9 @@ import com.prey.beta.services.PreyBetaRunnerService;
 public class PreyBetaController {
 
 	public static void startPrey(Context ctx) {
+		startPrey(ctx,null);
+	}
+	public static void startPrey(Context ctx,String cmd) {
 		PreyConfig config = PreyConfig.getPreyConfig(ctx);
 		if (config.isThisDeviceAlreadyRegisteredWithPrey()){
 			// Cancelling the notification of the SMS that started Prey
@@ -26,12 +29,17 @@ public class PreyBetaController {
 
 			config.setRun(true);
 			final Context context = ctx;
+			final String command=cmd;
 			new Thread(new Runnable() {
 				
 				public void run() {
 					//First need to stop a previous running instance.
 					context.stopService(new Intent(context, PreyBetaRunnerService.class));
-					context.startService(new Intent(context, PreyBetaRunnerService.class));
+					Intent intentStart= new Intent(context, PreyBetaRunnerService.class);
+					if(command!=null ){
+						intentStart.putExtra("cmd", command);
+					}
+					context.startService(intentStart);
 				}
 			}).start();
 			

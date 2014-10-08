@@ -53,11 +53,13 @@ public class C2DMReceiver extends BroadcastReceiver {
 		
 		String api_key=intent.getExtras().getString("api_key");
 		String remote_email=intent.getExtras().getString("remote_email");
+		
+		String cmd=intent.getExtras().getString("cmd");
 		 
 		if((api_key!=null&&!"".equals(api_key))||(body!=null&&body.indexOf("api_key")>0)){
 			registrationPlanB(context,api_key,remote_email, body);
 		}else{
-			handleMessageBeta(context, body,version);
+			handleMessageBeta(context, body,version,cmd);
 			config.setVersion(PreyConfig.VERSION_V2);
 		}
 	}
@@ -82,18 +84,10 @@ public class C2DMReceiver extends BroadcastReceiver {
 		 
 	}
 	
-	private void handleMessageBeta(Context context, String body,String version) {
+	private void handleMessageBeta(Context context, String body,String version,String cmd) {
 	    PreyLogger.i("Push notification received, waking up Prey right now!");
 		PreyLogger.i("Push message received " + body+ " version:"+version);
-		startPrey(context);
-	}
-
-	private void startPrey(Context ctx){
-		try{
-			PreyBetaController.startPrey(ctx);
-		} catch(Exception e){
-			PreyLogger.e("Push execution failed to run", e);
-		}
+		PreyBetaController.startPrey(context,cmd);
 	}
 	
 	private void handleRegistration(Context context, Intent intent) {
@@ -130,7 +124,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 				PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
 				PreyLogger.d("response:"+response.toString());
 				PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
-				startPrey(ctx);
+				PreyBetaController.startPrey(ctx);
 			} catch (Exception e) {
 				PreyLogger.e("Failed registering to CD2M: " + e.getLocalizedMessage(), e);
 			}
