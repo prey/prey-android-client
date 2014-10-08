@@ -21,7 +21,7 @@ public class Wipe {
 	}
 	
 	public void execute(Context ctx,List<ActionResult> lista,JSONObject parameters){
-		    boolean wipe=true;
+		    boolean wipe=false;
 	        boolean deleteSD=false;
 	        try {
 	            String sd=parameters.getString("parameter");
@@ -36,10 +36,10 @@ public class Wipe {
 	        try {
 	        	String factoryReset=parameters.getString("factory_reset");
 	        	PreyLogger.i("factoryReset:"+factoryReset);
-	        	if("on".equals(factoryReset)){
+	        	if("on".equals(factoryReset)||"y".equals(factoryReset)||"true".equals(factoryReset)){
 	        		wipe=true;
 	        	}
-	        	if("off".equals(factoryReset)){
+	        	if("off".equals(factoryReset)||"n".equals(factoryReset)||"false".equals(factoryReset)){
 	        		wipe=false;
 	        	}
 	        }catch(Exception e){
@@ -48,15 +48,16 @@ public class Wipe {
 	        try {
 	        	String wipeSim=parameters.getString("wipe_sim");
 	        	PreyLogger.i("wipeSim:"+wipeSim);
-	        	if("on".equals(wipeSim)){
+	        	if("on".equals(wipeSim)||"y".equals(wipeSim)||"true".equals(wipeSim)){
 	        		deleteSD=true;
 	        	}
-	        	if("off".equals(wipeSim)){
+	        	if("off".equals(wipeSim)||"n".equals(wipeSim)||"false".equals(wipeSim)){
 	        		deleteSD=false;
 	        	}
 	        }catch(Exception e){
                 
 	        }
+	        PreyLogger.i("wipe:"+wipe+" deleteSD:"+deleteSD);
 	        new WipeThread(ctx,wipe, deleteSD).start();
 	}
 }
