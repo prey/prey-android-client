@@ -42,9 +42,12 @@ public class LocationUtil {
 				} else {
 					location = getPreyLocationAppService(ctx);
 				}
+				if(location==null)
+					location = getDataLocationWifi(ctx);
 			} else {
 				location = getDataLocationWifi(ctx);
 			}
+			
 			data=convertData(location);
 		} catch (Exception e) {
 			PreyLogger.e("Error causa:" + e.getMessage(), e);
@@ -119,6 +122,8 @@ public class LocationUtil {
 	}
 
 	public static HttpDataService convertData(PreyLocation lastLocation) {
+		if(lastLocation==null)
+			return null;
 		HttpDataService data = new HttpDataService("location");
 		data.setList(true);
 		HashMap<String, String> parametersMap = new HashMap<String, String>();
