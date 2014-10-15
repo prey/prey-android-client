@@ -11,8 +11,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 
 import com.prey.PreyConfig;
+import com.prey.PreyEmail;
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.backwardcompatibility.FroyoSupport;
@@ -41,6 +43,11 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 			}catch(Exception e){}
 			finish();
 			
+		}
+		if(PreyEmail.getEmail(getApplicationContext())!=null){
+			PreferenceCategory mCategory = (PreferenceCategory) findPreference("PREFS_CAT_PREFS");
+			Preference p2 = findPreference(PreyConfig.PREFS_SCHEDULED);
+			mCategory.removePreference(p2);
 		}
 		
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());

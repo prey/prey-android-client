@@ -28,6 +28,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 
+
 import com.prey.actions.LockAction;
 import com.prey.actions.PreyAction;
 import com.prey.activities.FeedbackActivity;
@@ -78,6 +79,7 @@ public class PreyConfig {
 	public static final String PREFS_SIM_SERIAL_NUMBER = "PREFS_SIM_SERIAL_NUMBER";
 	public static final String PREFS_ACCOUNT_VERIFIED = "PREFS_ACCOUNT_VERIFIED";
 	public static final String PREFS_SECURITY_PROMPT_SHOWN = "PREFS_SECURITY_PROMPT_SHOWN";
+	public static final String PREFS_SCHEDULED = "PREFS_SCHEDULED";
 	public static final String ACTIVATE_DEVICE_ADMIN = "ACTIVATE_DEVICE_ADMIN";
  
 	public static final String IS_CAMOUFLAGE_SET = "PREFS_CAMOUFLAGE";
@@ -121,6 +123,9 @@ public class PreyConfig {
 	
 	public static final String PREFS_DISABLE_POWER_OPTIONS="PREFS_DISABLE_POWER_OPTIONS";
 	public static final String LOW_BATTERY_DATE="LOW_BATTERY_DATE";
+	
+	public static final String SCHEDULED="SCHEDULED";
+	public static final String MINUTE_SCHEDULED="MINUTE_SCHEDULED";
 	
 	private boolean sendNotificationId;
 	private String notificationId;
@@ -182,6 +187,9 @@ public class PreyConfig {
 	
 	private long lowBatteryDate;
 	
+	private boolean scheduled;
+	private int minuteScheduled;
+	
 	private Context ctx;
 
 	private PreyConfig(Context ctx) {
@@ -233,6 +241,10 @@ public class PreyConfig {
 		this.nextAlert=settings.getBoolean(PreyConfig.NEXT_ALERT, false);
 		this.disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
 		this.lowBatteryDate=settings.getLong(PreyConfig.LOW_BATTERY_DATE, 0);
+		
+		this.scheduled=settings.getBoolean(PreyConfig.SCHEDULED,FileConfigReader.getInstance(ctx).isScheduled());
+		this.minuteScheduled=settings.getInt(PreyConfig.MINUTE_SCHEDULED,FileConfigReader.getInstance(ctx).getMinuteScheduled());
+		
 		saveLong(PreyConfig.INSTALLATION_DATE,installationDate);
 	}
 	
@@ -277,6 +289,13 @@ public class PreyConfig {
 				}else{
 					ctx.stopService(new Intent(ctx, PreyDisablePowerOptionsService.class));
 				}
+			}
+			
+			if (key.equals(PREFS_SCHEDULED)){
+				int valor=Integer.parseInt(sharedPreferences.getString(PREFS_SCHEDULED,"0"));
+				setScheduled(valor>0);
+				setMinuteScheduled(valor);
+				PreyScheduled.getInstance(ctx).reset();
 			}
 			
 			
@@ -536,7 +555,7 @@ public class PreyConfig {
 	
 	
 	public void registerC2dm(){
-		//if( PreyWifiManager.getInstance(ctx).isOnline() ){
+		if (PreyEmail.getEmail(this.ctx) != null) {
 			PreyLogger.d("______________________");
 			PreyLogger.d("______________________");
 			PreyLogger.d("___ registerC2dm _____");
@@ -549,7 +568,7 @@ public class PreyConfig {
 			//PreyLogger.i("gcmId:"+gcmId);
 			registrationIntent.putExtra("sender",gcmId);
 			this.ctx.startService(registrationIntent);
-		//}
+		}
 	}
 	
 	public void unregisterC2dm(boolean updatePrey){
@@ -668,11 +687,6 @@ public class PreyConfig {
 		return HTTP.concat(panel).concat(".").concat(getPreyDomain()).concat("/");
 		
 	}
-	   
-	public String getPreyUiUrl() {
-		String uiSubdomain = FileConfigReader.getInstance(this.ctx).getPreyUiSubdomain();
-		return HTTP.concat(uiSubdomain).concat(".").concat(getPreyDomain()).concat("/");
-	}
 
 	public boolean askForPassword() {
 		boolean ask =  FileConfigReader.getInstance(this.ctx).isAskForPassword();
@@ -687,8 +701,6 @@ public class PreyConfig {
 	public boolean isRevokedPassword() {
 		return isRevokedPassword;
 	}
-
- 
 
 	public String getRevokedPassword() {
 		return revokedPassword;
@@ -868,4 +880,26 @@ public class PreyConfig {
 		}
 		return isConnectionExists;
 	}
+	
+	
+	public void setScheduled(boolean scheduled){
+		this.scheduled=scheduled;
+		saveBoolean(PreyConfig.SCHEDULED, scheduled);
+	}
+	
+	public boolean isScheduled(){
+		if (PreyEmail.getEmail(ctx)!=null)
+			return false;
+		return scheduled;
+	}
+	
+	public void setMinuteScheduled(int minuteScheduled){
+		this.minuteScheduled=minuteScheduled;
+		saveInt(PreyConfig.MINUTE_SCHEDULED, minuteScheduled);
+	}
+	
+	public int getMinuteScheduled(){
+		return minuteScheduled;
+	}
+ 
 }

@@ -181,4 +181,7 @@
     <string name="feedback_form_send_email">Enviar correo</string>
     <string name="preferences_disable_power_options_title">Desactivar el menú de apagado</string>
     <string name="preferences_disable_power_options_summary">Tu dispositivo no puede ser apagado si la pantalla está bloqueada</string>
+    <string name="preferences_scheduled_title">Fijar frecuenta de intervalo</string>
+    <string name="preferences_scheduled_summary">Cuán rápido Prey se ejecutará si no hay servicios de Google disponibles</string>
+    
 </resources>

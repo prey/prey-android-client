@@ -7,7 +7,7 @@
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="@string/preferences_config_title" >
+    <PreferenceCategory android:title="@string/preferences_config_title" android:key="PREFS_CAT_PREFS">
  
 
  
@@ -51,7 +51,14 @@
                 android:summary="@string/preferences_disable_power_options_summary"/>
  
 	
-	
+	      <ListPreference
+                android:key="PREFS_SCHEDULED"
+                android:title="@string/preferences_scheduled_title"
+                android:summary="@string/preferences_scheduled_summary"
+                android:entries="@array/listScheduledEntries"
+                android:entryValues="@array/listScheduledValues" />
+	      
+	      
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_about_category_name" >
         <EditTextPreference

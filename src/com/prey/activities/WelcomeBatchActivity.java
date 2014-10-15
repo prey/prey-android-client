@@ -14,6 +14,7 @@ import android.os.Bundle;
  
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
+import com.prey.PreyScheduled;
 import com.prey.R;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
@@ -71,6 +72,9 @@ public class WelcomeBatchActivity extends PreyActivity {
 				intent.putExtras(bundle);
 				startActivity(intent);
 				PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
+				if (PreyConfig.getPreyConfig(WelcomeBatchActivity.this).isScheduled()) {
+					PreyScheduled.getInstance(WelcomeBatchActivity.this);
+				}
 				finish();
 			}
 		}

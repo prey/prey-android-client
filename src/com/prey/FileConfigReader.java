@@ -104,4 +104,12 @@ public class FileConfigReader {
 	public String getEmailBatch() {
 		return properties.getProperty("email-batch");
 	}
+	
+	public boolean isScheduled() {
+		return Boolean.parseBoolean(properties.getProperty("scheduled"));
+	}
+	
+	public int getMinuteScheduled() {
+		return Integer.parseInt(properties.getProperty("minute-scheduled"));
+	}
 }
