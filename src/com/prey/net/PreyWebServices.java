@@ -104,7 +104,7 @@ public class PreyWebServices {
 		String xml;
 		try {
 			String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
-			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat(apiv2).concat("signup.json");
+			String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("signup.json");
 			//String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("users.xml");
 			response=PreyRestHttpClient.getInstance(ctx).post(url, parameters);
 			xml = response.getResponseAsString();
@@ -198,7 +198,7 @@ public class PreyWebServices {
 		PreyHttpResponse response = null;
 		try {
 			String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
-			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat(apiv2).concat("devices.json"); 
+			String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices.json"); 
 			PreyLogger.d("url:"+url);
 			response = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
 			PreyLogger.d("response:"+response.getStatusLine() +" "+ response.getResponseAsString());
@@ -225,7 +225,7 @@ public class PreyWebServices {
 		String xml;
 		try {
 			String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
-			String url=PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat(apiv2).concat("profile.xml");
+			String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.xml");
 			PreyLogger.d("url:"+url);
 			response=PreyRestHttpClient.getInstance(ctx).get(url, parameters, preyConfig, email, password);
 			xml = response.getResponseAsString(); 
@@ -318,7 +318,7 @@ public class PreyWebServices {
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		String xml;
 		try {
-			xml = PreyRestHttpClient.getInstance(ctx).get(PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("profile.xml"), parameters, preyConfig, email, password)
+			xml = PreyRestHttpClient.getInstance(ctx).get(PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("profile.xml"), parameters, preyConfig, email, password)
 					.getResponseAsString();
 		} catch (IOException e) {
 			throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
@@ -346,7 +346,7 @@ public class PreyWebServices {
 
 	public boolean forgotPassword(Context ctx) throws PreyException {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-		String URL = PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat("forgot");
+		String URL = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("forgot");
 		HashMap<String, String> parameters = new HashMap<String, String>();
 
 		parameters.put("user[email]", preyConfig.getEmail());
@@ -379,7 +379,7 @@ public class PreyWebServices {
 		if (deviceKey == null || deviceKey == "")
 			throw new PreyException("Device key not found on the configuration");
 		String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
-		return PreyConfig.getPreyConfig(ctx).getPreyUiUrl().concat(apiv2).concat("devices/").concat(deviceKey);
+		return PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey);
 	}
 	
 	
