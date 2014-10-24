@@ -181,4 +181,6 @@
     <string name="feedback_form_send_email">Invia email</string>
     <string name="preferences_disable_power_options_title">Disabilita il menù per la gestione energetica</string>
     <string name="preferences_disable_power_options_summary">Il tuo dispositivo non può essere spento se lo schermo è bloccato</string>
+    <string name="preferences_scheduled_title">Imposta intervallo di frequenza</string>
+    <string name="preferences_scheduled_summary">Quanto spesso Prey si avvierà se i servizi di Google non sono disponibili</string>
 </resources>
