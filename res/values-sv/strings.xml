@@ -65,10 +65,10 @@
     <string name="preferences_camouflage_title">Kamouflageläge</string>
     <string name="preferences_camouflage_summary">Visa en falsk inloggningsskärm</string>
     <string name="preferences_sms_run">Meddelande för sms-aktivering</string>
-    <string name="preferences_sms_run_summary">Ord eller fras som skall starta Prey</string>
+    <string name="preferences_sms_run_summary">Ord eller fras som ska starta Prey</string>
     <string name="preferences_sms_run_edittext">Skicka denna text från en annan enhet för att starta Prey</string>
     <string name="preferences_sms_stop">Meddelande för sms-inaktivering</string>
-    <string name="preferences_sms_stop_summary">Ord eller fras som skall stoppa Prey</string>
+    <string name="preferences_sms_stop_summary">Ord eller fras som ska stoppa Prey</string>
     <string name="preferences_sms_stop_edittext">Skicka denna text från en annan enhet för att stänga av Prey</string>
     <string name="preferences_lock_sim_screen_title">Aktiv SIM-identifiering</string>
     <string name="preferences_lock_sim_screen_summary">Konfigurera SIM-ändringshändelser</string>
@@ -168,7 +168,7 @@
     <string name="permission_title_h1">Ytterligare skydd</string>
     <string name="permission_body_text">Prey beviljades särskilda behörigheter för att kunna låsa din enhet och förhindra att tjuvar avinstallerar appen. Om du vill avinstallera Prey, så måste du först återkalla dessa behörigheter inifrån appen.</string>
     <string name="go_to_congratulations">Nästa</string>
-    <string name="feedback_principal_title">Är allting som det skall?</string>
+    <string name="feedback_principal_title">Är allting som det ska?</string>
     <string name="feedback_principal_message">Nu har du använt Prey ett litet tag. Kan du tänka dig att berätta för oss vad du tycker om programmet?</string>
     <string name="feedback_principal_button1">Jag älskar Prey</string>
     <string name="feedback_principal_button2">Prey behöver förbättras</string>
@@ -181,4 +181,6 @@
     <string name="feedback_form_send_email">Skicka e-post</string>
     <string name="preferences_disable_power_options_title">Inaktivera menyn för energialternativ</string>
     <string name="preferences_disable_power_options_summary">Din enhet kan inte stängas av om dess skärm är låst</string>
+    <string name="preferences_scheduled_title">Ange intervallfrekvens</string>
+    <string name="preferences_scheduled_summary">Hur ofta Prey ska köras om inga Google-tjänster finns tillgängliga</string>
 </resources>
