@@ -52,7 +52,7 @@
     <string name="sms_deactivation">Frase de desactivación SMS</string>
     <string name="agreements_title">Bienvenido a\nPrey para Android™!</string>
     <string name="agreements_message1">Por favor, asegúrate de leer y luego aceptar los términos y condiciones que se encuentran en el link de abajo</string>
-    <string name="agreements_message2">&lt;u&gt;Términos y Condiciones&lt;/u&gt;</string>
+    <string name="agreements_message2">&amp;lt;u&amp;gt;Términos y Condiciones&amp;lt;/u&amp;gt;</string>
     <string name="set_old_user_loading">Agregando equipo a la cuenta…</string>
     <string name="set_old_user_no_more_devices_title">¡Oh, caramba!</string>
     <string name="set_old_user_no_more_devices_text">Al parecer en tu cuenta Prey no quedan slots disponibles para tu equipo.\n\nIntenta eliminando algún disposito en tu cuenta Prey, o bien crea una nueva.</string>
@@ -183,5 +183,4 @@
     <string name="preferences_disable_power_options_summary">Tu dispositivo no puede ser apagado si la pantalla está bloqueada</string>
     <string name="preferences_scheduled_title">Fijar frecuenta de intervalo</string>
     <string name="preferences_scheduled_summary">Cuán rápido Prey se ejecutará si no hay servicios de Google disponibles</string>
-    
 </resources>
