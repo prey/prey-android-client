@@ -181,4 +181,6 @@
     <string name="feedback_form_send_email">Envia</string>
     <string name="preferences_disable_power_options_title">Inhabilita el menú d\'apagada</string>
     <string name="preferences_disable_power_options_summary">El dispositiu no es podrà apagar o reiniciar si la pantalla està blocada</string>
+    <string name="preferences_scheduled_title">Freqüència d\'interval</string>
+    <string name="preferences_scheduled_summary">Com funcionarà Prey si els serveis de Google no estan disponibles</string>
 </resources>
