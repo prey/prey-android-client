@@ -181,4 +181,6 @@
     <string name="feedback_form_send_email">enviar email</string>
     <string name="preferences_disable_power_options_title">Desabilitar Menu de Energia</string>
     <string name="preferences_disable_power_options_summary">Seu dispositivo não pode ser desligado se a tela estiver bloqueada</string>
+    <string name="preferences_scheduled_title">Defina o intervalo da frequência</string>
+    <string name="preferences_scheduled_summary">Com que frequência o Prey deve ser executado se nenhum serviço do Google estiver disponível</string>
 </resources>
