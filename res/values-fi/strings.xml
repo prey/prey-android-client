@@ -52,7 +52,7 @@
     <string name="sms_deactivation">Aktivoinnin poiston tekstiviesti</string>
     <string name="agreements_title">Tervetuloa Preyn\nAndroid™ -versioon!</string>
     <string name="agreements_message1">Lue ja hyväksy Preyn käyttöehdot napsauttamalla alta</string>
-    <string name="agreements_message2">&amp;amp;lt;u&amp;amp;gt;Lue käyttöehdot&amp;amp;lt;/u&amp;amp;gt;</string>
+    <string name="agreements_message2">&lt;u&gt;Lue käyttöehdot&lt;/u&gt;</string>
     <string name="set_old_user_loading">Liitetään laitetta tiliin...\nOdotapa hetki!</string>
     <string name="set_old_user_no_more_devices_title">Otetaanpa rauhallisesti!</string>
     <string name="set_old_user_no_more_devices_text">Näyttää siltä, että Prey-tilisi vapaat laitepaikat ovat lopussa.\n\nPoista olemassa oleva laite ohjauspaneelista tai luo uusi tili.</string>
@@ -179,4 +179,8 @@
     <string name="feedback_form_button1">OK, lähetä</string>
     <string name="feedback_form_button2">EI, kiitos</string>
     <string name="feedback_form_send_email">Lähetä sähköposti</string>
+    <string name="preferences_disable_power_options_title">Poista virtavalikko käytöstä</string>
+    <string name="preferences_disable_power_options_summary">Laitettasi ei voida sammuttaa, jos sen näyttö on lukittu</string>
+    <string name="preferences_scheduled_title">Aseta taajuus</string>
+    <string name="preferences_scheduled_summary">Kuinka usein Prey suoritetaan, jos Google-palveluita ei ole saatavissa</string>
 </resources>
