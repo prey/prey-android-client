@@ -14,7 +14,6 @@
         android:id="@+id/camou_captureit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:adjustViewBounds="true"
         android:baselineAlignBottom="true"
         android:padding="15dp"
@@ -26,8 +25,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingBottom="15dp"
@@ -36,7 +33,7 @@
 
         <EditText
             android:id="@+id/password_pass_txt"
-            style="@style/PreyEditText.XLarge"
+            style="@style/PreyEditText.Large"
             android:layout_width="fill_parent"
             android:hint="@string/type_your_pass"
             android:inputType="textPassword">
@@ -46,7 +43,7 @@
 
         <Button
             android:id="@+id/password_btn_login"
-            style="@style/PreyButton.XLarge.Camouflage"
+            style="@style/PreyButton.Large.Camouflage"
             android:layout_width="match_parent"
             android:text="@string/log_in" />
 

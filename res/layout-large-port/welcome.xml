@@ -5,42 +5,45 @@
   License: GPLv3
   Full license at "/LICENSE"
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_alignParentTop="true"
-    android:background="@color/screen_bg"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" 
+    android:background="@drawable/bacg_xhdpi_2x"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:weightSum="8" >
+    android:id="@+id/linear_layout_welcome"
+    >
 
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_weight="4"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/logo_sonar" />
+ 
+
+ 
+ 
+
+         <ImageView
+             android:layout_width="fill_parent"
+             android:layout_height="60dp"
+             android:layout_centerVertical="true"
+             android:layout_marginTop="120dp"
+             android:layout_marginLeft="20dp"
+             android:layout_marginRight="20dp"
+             android:src="@drawable/logo_prey_2x" />
+ 
 
     <Button
         android:id="@+id/btn_welcome_olduser"
-        style="@style/PreyButton"
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_weight="1"
-        android:text="@string/already_prey_user"
-        android:textSize="30dp" />
+        style="@style/PreyButton2.Large"
+        android:layout_above="@+id/btn_welcome_newuser"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="120dp"
+        android:text="@string/already_prey_user" />
 
     <Button
         android:id="@+id/btn_welcome_newuser"
-        style="@style/PreyButton"
-        android:layout_width="fill_parent"
-        android:layout_margin="20dp"
-        android:layout_weight="1"
+        style="@style/PreyButton2.Large"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
         android:text="@string/new_user"
-        android:textSize="30dp" />
+         /> 
 
-</LinearLayout>
+</RelativeLayout>
+ 

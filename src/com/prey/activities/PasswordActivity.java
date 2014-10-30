@@ -53,11 +53,11 @@ public class PasswordActivity extends PreyActivity {
 	}
 	
 	protected void updateLoginScreen() {
-		ImageView loginIcon = (ImageView) findViewById(R.id.login_img);
+		/*ImageView loginIcon = (ImageView) findViewById(R.id.login_img);
 		String drawableIconName = "red_button";
 		String h1 = getString(R.string.device_ready_h1);
 		String h2 = getString(R.string.device_ready_h2);
-		/*
+		
 		if (!PreyLocationManager.getInstance(getApplicationContext()).locationServicesEnabled()) {
 			drawableIconName = "grey_button";
 			h1 = getString(R.string.device_not_ready_h1);
@@ -68,11 +68,11 @@ public class PasswordActivity extends PreyActivity {
 					startActivity(myIntent);
 				}
 			});
-		}*/
+		}
 		int id = getResources().getIdentifier(drawableIconName, "drawable", getPackageName());
 		loginIcon.setImageResource(id);
 		((TextView) findViewById(R.id.login_h1_text)).setText(h1);
-		((TextView) findViewById(R.id.login_h2_text)).setText(h2);
+		((TextView) findViewById(R.id.login_h2_text)).setText(h2);*/
 	}
 	
 	protected class CheckPassword extends AsyncTask<String, Void, Void> {

@@ -65,10 +65,6 @@ public class CreateAccountActivity extends SetupActivity {
 		password.setTypeface(Typeface.DEFAULT);
 		password.setTransformationMethod(new PasswordTransformationMethod());
 		
-		password = (EditText) findViewById(R.id.new_account_repass);
-		password.setTypeface(Typeface.DEFAULT);
-		password.setTransformationMethod(new PasswordTransformationMethod());
-		
 		//To avoid setting these Imeoptions on each layout :)
 		EditText name = (EditText) findViewById(R.id.new_account_name);
 		name.setImeOptions(EditorInfo.TYPE_TEXT_FLAG_CAP_WORDS | EditorInfo.TYPE_TEXT_VARIATION_PERSON_NAME);
