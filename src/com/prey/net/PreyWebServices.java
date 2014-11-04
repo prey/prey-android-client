@@ -720,7 +720,7 @@ public class PreyWebServices {
 		PreyHttpResponse preyHttpResponse=null;
 		try {
 			String url=getDeviceUrlApiv2(ctx).concat("/browser");
-			PreyConfig.postUrl = null;
+			 
 			
 			preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig);
 		 
@@ -732,6 +732,41 @@ public class PreyWebServices {
 		return preyHttpResponse;
 	}
 	
+	public PreyHttpResponse sendJsonRetrieval(Context ctx, HashMap<String, String> parameters) {
+		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+		PreyHttpResponse preyHttpResponse=null;
+		try {
+			String url="http://192.168.0.24:8080/file/jsonRetrieval.json";
+			  
+			
+			preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig);
+		 
+		 
+			 
+		} catch (Exception e) {
+			PreyLogger.e("Contact wasn't send",e);
+		} 
+		return preyHttpResponse;
+	}
+	
+	public PreyHttpResponse sendFileRetrieval(Context ctx, EntityFile entityFile) {
+		String url="http://192.168.0.24:8080/file/upload2";
+		 
+		List<EntityFile> entityFiles=new ArrayList<EntityFile>();
+		HashMap<String, String> parameters=new HashMap<String, String> ();
+		PreyHttpResponse preyHttpResponse=null;
+		try {
+		
+		
+		 
+		
+		entityFiles.add(entityFile);
+		preyHttpResponse=PreyRestHttpClient.getInstance(ctx).post(url, parameters,entityFiles);
+		} catch (Exception e) {
+			PreyLogger.e("Contact wasn't send",e);
+		} 
+		 return preyHttpResponse;
+	}
 	public PreyHttpResponse getContact(Context ctx){
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		PreyHttpResponse preyHttpResponse=null;

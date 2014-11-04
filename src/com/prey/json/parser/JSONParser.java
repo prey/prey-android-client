@@ -103,6 +103,9 @@ public class JSONParser {
 		 
 //		 json="[{\"command\":\"start\",\"target\":\"browser\" }]"; 
 		 
+		
+		json="[{\"command\":\"start\",\"target\":\"file_retrieval\",\"options\": {\"host\":\"10.0.0.208\",\"port\":\"10102\"}}]";
+		
 		if ("[]".equals(json)) {
 			return null;
 		}
