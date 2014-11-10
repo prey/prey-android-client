@@ -9,24 +9,37 @@ package com.prey.activities;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prey.PreyAccountData;
+import com.prey.PreyConfig;
+import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.exceptions.NoMoreDevicesAllowedException;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
+import com.prey.util.KeyboardStatusDetector;
+import com.prey.util.KeyboardVisibilityListener;
 
 public class AddDeviceToAccountActivity extends SetupActivity {
 
@@ -39,6 +52,41 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_device);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		
+
+		
+		
+		KeyboardStatusDetector keyboard=new KeyboardStatusDetector();
+        
+		keyboard.registerActivity(this); //or register to an activity
+        keyboard.setVisibilityListener(new KeyboardVisibilityListener() {
+			
+			@Override
+			public void onVisibilityChanged(boolean keyboardVisible) {
+		        ImageView logoImg=(ImageView) findViewById(R.id.logo_img_add_device);
+		        TextView tituloText=(TextView) findViewById(R.id.textView_add_device);
+				if(keyboardVisible) {
+                    PreyLogger.i("key on");
+                    if(logoImg!=null)
+                    	logoImg.setVisibility(View.GONE);
+                    if(tituloText!=null)
+                    	tituloText.setVisibility(View.GONE);
+              
+                 }else {
+                	 PreyLogger.i("key off");
+                	 if(logoImg!=null)
+                		 logoImg.setVisibility(View.VISIBLE);
+                	 if(tituloText!=null)
+                     	tituloText.setVisibility(View.VISIBLE);
+                 }
+				
+			}
+		});
+		
+		RelativeLayout mainLayout = (RelativeLayout)findViewById(R.layout.add_device); 
+		InputMethodManager im = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
+		 
 
 		Button ok = (Button) findViewById(R.id.add_device_btn_ok);
 		ok.setOnClickListener(new View.OnClickListener() {
@@ -56,21 +104,35 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 			}
 		});
 		
+		final EditText newAccountName = (EditText) findViewById(R.id.new_account_name);
+		
+		
 		EditText password = (EditText) findViewById(R.id.add_device_pass);
 		password.setTypeface(Typeface.DEFAULT);
 		password.setTransformationMethod(new PasswordTransformationMethod());
 		
 		EditText email = (EditText) findViewById(R.id.add_device_email);
 		email.setImeOptions(EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+		
+		TextView forgot =(TextView)findViewById(R.id.forgot);
+		forgot.setOnClickListener(new View.OnClickListener() {
 
+			public void onClick(View v) {
+				String url=PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelUrl();
+				Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
+				startActivity(browserIntent);
+				finish();
+			}
+		});
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		// ignore orientation change
 		super.onConfigurationChanged(newConfig);
+		Toast.makeText(getApplicationContext(), "oso", Toast.LENGTH_LONG).show();
 	}
 
+	
  
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -192,5 +254,10 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 		}
 
 	}
+	
+	 
+ 
+    
+    
 
 }

@@ -12,6 +12,7 @@ import com.prey.PreyVerify;
 import com.prey.R;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class LoginActivity extends PasswordActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		// Delete notifications (in case Activity was started by one of them)
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancel(R.string.preyForAndroid_name);
@@ -74,6 +76,7 @@ public class LoginActivity extends PasswordActivity {
 
 	private void showLogin() {
 		setContentView(R.layout.login);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		updateLoginScreen();
 		Button gotoCP = (Button) findViewById(R.id.login_btn_cp);
 		Button gotoSettings = (Button) findViewById(R.id.login_btn_settings);

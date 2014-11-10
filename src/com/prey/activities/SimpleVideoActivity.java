@@ -11,6 +11,7 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 
 import android.hardware.Camera;
 
@@ -45,6 +46,7 @@ public class SimpleVideoActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_camera);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		activity = null;
 
 		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);

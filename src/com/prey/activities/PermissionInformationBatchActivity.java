@@ -7,6 +7,7 @@
 package com.prey.activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 
 import com.prey.R;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ public class PermissionInformationBatchActivity extends PreyActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		Bundle bundle = getIntent().getExtras();
 		congratsMessage = bundle.getString("message");
 		
@@ -50,7 +52,7 @@ public class PermissionInformationBatchActivity extends PreyActivity {
 	
 	private void showScreen(){
 		setContentView(R.layout.permission_information);
-
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		Button ok = (Button) findViewById(R.id.congrats_btn_ok);
 		ok.setOnClickListener(new View.OnClickListener() {
 

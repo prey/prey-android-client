@@ -7,6 +7,7 @@
 package com.prey.activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
@@ -24,25 +25,30 @@ public class WelcomeActivity extends PreyActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.welcome);
-
-		Button newUser = (Button) findViewById(R.id.btn_welcome_newuser);
-		Button oldUser = (Button) findViewById(R.id.btn_welcome_olduser);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		try{
+			Button newUser = (Button) findViewById(R.id.btn_welcome_newuser);
 		
-		newUser.setOnClickListener(new Button.OnClickListener() {
+		
+			newUser.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(WelcomeActivity.this, CreateAccountActivity.class);
 				startActivity(intent);
 				finish();
 			}
 		});
+		}catch(Exception e){}
 		
-		oldUser.setOnClickListener(new Button.OnClickListener() {
+		try{
+			Button oldUser = (Button) findViewById(R.id.btn_welcome_olduser);
+			oldUser.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(WelcomeActivity.this, AddDeviceToAccountActivity.class);
 				startActivity(intent);
 				finish();
 			}
 		});
+		}catch(Exception e){}
 	}
 
 }

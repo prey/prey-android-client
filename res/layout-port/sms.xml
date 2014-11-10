@@ -37,7 +37,7 @@
         android:gravity="center_horizontal"
         android:text="@string/your_hero_text"
         android:textColor="@color/lighter_txt"
-        android:textSize="14dp" />
+        android:textSize="14sp" />
 
     <LinearLayout
         android:id="@+id/sms_body"
@@ -51,14 +51,7 @@
         android:padding="15dp"
         android:weightSum="4" >
 
-        <ImageView
-            android:id="@+id/sms_sheriff"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/sq_sheriff" />
+ 
 
         <RelativeLayout
             android:id="@+id/sms_contact_info"
@@ -74,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/darker_txt"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -83,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/sms_contact_text"
                 android:textColor="@color/lighter_txt"
-                android:textSize="14dp" />
+                android:textSize="14sp" />
 
         </RelativeLayout>
     </LinearLayout>

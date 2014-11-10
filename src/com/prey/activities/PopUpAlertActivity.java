@@ -9,6 +9,7 @@ package com.prey.activities;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import com.prey.R;
 public class PopUpAlertActivity extends PreyActivity {
@@ -19,6 +20,7 @@ public class PopUpAlertActivity extends PreyActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			this.message = bundle.getString("alert_message");

@@ -13,35 +13,38 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView_new_account"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_height="40dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
-	    android:gravity="center"
-        android:text="@string/create_prey_account_h1" />
-     
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:background="#F0F3F7"
+        android:gravity="center"
+        android:text="@string/create_prey_account_h1"
+        android:layout_marginBottom="40dp"
+        android:textColor="#68717D" />
 
+    
+ 
     <ImageView
-        android:id="@+id/logo_img"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-                android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:id="@+id/logo_img_new_account"
         android:layout_above="@+id/new_account_name"
-        android:src="@drawable/logo_1x" />
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/brand_solid" />
+ 
 
     <EditText
         android:id="@+id/new_account_name"
         style="@style/PreyEditText"
         android:layout_above="@+id/new_account_email"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:hint="@string/your_name"
-        android:inputType="textPersonName"
+        android:inputType="text"
         android:typeface="normal" >
-
-        <requestFocus />
+		
     </EditText>
 
     <EditText
@@ -58,25 +61,24 @@
         android:hint="@string/choose_a_6_char_pass"
         android:inputType="textPassword" />
 
-
-
     <Button
         android:id="@+id/new_account_btn_ok"
         style="@style/PreyButton3"
-        android:layout_above="@+id/have_account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/have_account"
         android:text="@string/create_my_account" />
-    
+
     <TextView
         android:id="@+id/have_account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"     
-        android:layout_marginTop="20dp"   
-	    android:gravity="center"
-        android:text="@string/have_an_account" />    
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/have_an_account"
+        android:textColor="#485465" />
 
 </RelativeLayout>

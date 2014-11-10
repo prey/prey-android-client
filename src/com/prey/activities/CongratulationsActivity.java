@@ -7,6 +7,7 @@
 package com.prey.activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 
 import com.prey.PreyStatus;
 import com.prey.R;
@@ -22,6 +23,7 @@ public class CongratulationsActivity extends PreyActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	}
 	
 	@Override
@@ -38,6 +40,7 @@ public class CongratulationsActivity extends PreyActivity {
 	
 	private void showScreen(){
 		setContentView(R.layout.congratulations);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		Bundle bundle = getIntent().getExtras();
 		((TextView) findViewById(R.id.congrats_h2_text)).setText(bundle.getString("message"));
 

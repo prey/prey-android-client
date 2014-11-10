@@ -8,20 +8,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/camou_bg" >
+ >
 
-    <ImageView
-        android:id="@+id/camou_captureit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:baselineAlignBottom="true"
-        android:padding="15dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/camou_img" />
+ 
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

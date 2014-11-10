@@ -8,40 +8,35 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent" 
-    android:background="@drawable/bacg_xhdpi_2x"
+    android:background="@drawable/background"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:id="@+id/linear_layout_welcome"
     >
 
+   <ImageView
+        android:id="@+id/logo_img_prey"
+        android:layout_width="fill_parent"
+        android:layout_height="300dp"
+        android:layout_marginBottom="160dp"
+        android:layout_above="@+id/btn_welcome_olduser"
+		android:layout_alignParentRight="true"
+    	android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/brand_color" />
  
-
- 
- 
-
-         <ImageView
-             android:layout_width="fill_parent"
-             android:layout_height="60dp"
-             android:layout_centerVertical="true"
-             android:layout_marginTop="120dp"
-             android:layout_marginLeft="20dp"
-             android:layout_marginRight="20dp"
-             android:src="@drawable/logo_prey_2x" />
- 
-
     <Button
         android:id="@+id/btn_welcome_olduser"
         style="@style/PreyButton2.Large"
-        android:layout_above="@+id/btn_welcome_newuser"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="160dp"
         android:text="@string/already_prey_user" />
 
     <Button
         android:id="@+id/btn_welcome_newuser"
         style="@style/PreyButton2.Large"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="80dp"
         android:text="@string/new_user"
          /> 
 

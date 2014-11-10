@@ -21,10 +21,8 @@ public class PreyApp extends Application {
 		String deviceKey = PreyConfig.getPreyConfig(this).getDeviceID();
 		if (deviceKey != null && deviceKey != "")
 			PreyConfig.getPreyConfig(this).registerC2dm();
-
-		if (PreyConfig.getPreyConfig(this).isScheduled()) {
-			PreyScheduled.getInstance(this);
-		}
+		if (PreyConfig.getPreyConfig(this).isScheduled())
+			PreyScheduled.getInstance(this);	
 	}
 
 }

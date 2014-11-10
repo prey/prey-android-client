@@ -14,26 +14,31 @@
       >
 
      <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView_add_device"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="0dp"
         android:gravity="center"
-        android:text="@string/welcome" />
+        android:text="@string/welcome"
+        android:textSize="30sp"
+        android:textColor="#68717D"
+        android:background="#F0F3F7"
+          />
      
      
 
  
-        <ImageView
-        android:id="@+id/logo_img"
+    <ImageView
+        android:id="@+id/logo_img_add_device"
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="350dp"
         android:layout_above="@+id/add_device_email"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/logo_2x" />
+        android:layout_marginBottom="100dp"
+        android:src="@drawable/brand_solid" />
         
         
 
@@ -66,12 +71,12 @@
 
     <Button
         android:id="@+id/add_device_btn_ok"
-        style="@style/PreyButton2.Large"
+        style="@style/PreyButton3.Large"
         android:layout_above="@+id/forgot"
         android:text="@string/add_this_device" />
     
     
-            <TextView
+    <TextView
         android:id="@+id/forgot"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -80,6 +85,9 @@
         android:layout_marginBottom="40dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="@string/password_dialog_forgot_text1" />
+        android:text="@string/password_dialog_forgot_text1"
+        android:textSize="30sp"
+        android:textColor="#485465"
+         />
 
 </RelativeLayout>

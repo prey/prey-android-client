@@ -6,7 +6,7 @@ import java.util.Map;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 
@@ -16,14 +16,15 @@ import com.prey.net.PreyRestHttpClient;
 import com.prey.net.PreyWebServices;
 import com.prey.net.http.EntityFile;
 
+ 
+@SuppressLint("NewApi")
 public class PreyEmail {
 
-	
 	public static void sendDataMail(Context ctx, HttpDataService data) {
 		try {
-			if (data!=null ){
+			if (data != null) {
 				List<EntityFile> entityFiles = data.getEntityFiles();
-				if(entityFiles!=null&&entityFiles.size()>=0){ 
+				if (entityFiles != null && entityFiles.size() >= 0) {
 					String url = PreyWebServices.getInstance().getFileUrlJson(ctx);
 					PreyLogger.d("URL:" + url);
 					Map<String, String> parameters = new HashMap<String, String>();
@@ -37,28 +38,28 @@ public class PreyEmail {
 			PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
 		}
 	}
-	
-	@TargetApi(Build.VERSION_CODES.ECLAIR)
-	public static String getEmail(Context context) {
-	     AccountManager accountManager = AccountManager.get(context); 
-		 Account account = getAccount(accountManager);
 
-		    if (account == null) {
-		      return null;
-		    } else {
-		      return account.name;
-		    }
+	 
+	public static String getEmail(Context context) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+			AccountManager accountManager = AccountManager.get(context);
+			Account account = getAccount(context,accountManager);
+			if (account != null) {
+				return account.name;
+			}
+		} 
+		return null;
+		 
 	}
-	
-	@TargetApi(Build.VERSION_CODES.ECLAIR)
-	private static Account getAccount(AccountManager accountManager) {
-	    Account[] accounts = accountManager.getAccountsByType("com.google");
-	    Account account;
-	    if (accounts.length > 0) {
-	      account = accounts[0];      
-	    } else {
-	      account = null;
-	    }
-	    return account;
+
+	 
+	private static Account getAccount(Context context,AccountManager accountManager) {
+		if (PreyConfig.getPreyConfig(context).isEclairOrAbove()) {
+			Account[] accounts = accountManager.getAccountsByType("com.google");
+			if (accounts.length > 0) {
+				return accounts[0];
+			}
+		}
+		return null;
 	}
 }

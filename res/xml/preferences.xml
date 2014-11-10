@@ -7,60 +7,50 @@
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="@string/preferences_config_title" android:key="PREFS_CAT_PREFS">
- 
-
- 
- 
- 		   <Preference
+    <PreferenceCategory
+        android:key="PREFS_CAT_PREFS"
+        android:title="@string/preferences_config_title"
+        >
+        <Preference
             android:key="PREFS_GOTO_WEB_CONTROL_PANEL"
             android:summary="@string/preferences_go_to_control_panel_summary"
             android:title="@string/preferences_go_to_control_panel_title" >
-  		   </Preference>
- 
- 		   
-          	
-        	<com.prey.preferences.DeviceAdminPreference
-            	android:dialogIcon="@drawable/logo"
-            	android:key="PREFS_ADMIN_DEVICE"
-          		android:negativeButtonText="@string/no"
-          	 	android:positiveButtonText="@string/yes"
-           	 	android:summary="@string/preferences_admin_enabled_summary"
-           	 	android:title="@string/preferences_admin_enabled_title" />
- 
-          
- 
+        </Preference>
 
-        
-            <com.prey.preferences.DetachDevicePreferences
-                android:dialogIcon="@drawable/logo"
-                android:dialogMessage="@string/preferences_detach_dialog_message"
-                android:dialogTitle="@string/preferences_detach_dialog_title"
-                android:key="PREFS_DETACH"
-                android:negativeButtonText="@string/no"
-                android:positiveButtonText="@string/yes"
-                android:summary="@string/preferences_detach_summary"
-                android:title="@string/preferences_detach_title" /> 
+        <com.prey.preferences.DeviceAdminPreference
+            android:dialogIcon="@drawable/logo"
+            android:key="PREFS_ADMIN_DEVICE"
+            android:negativeButtonText="@string/no"
+            android:positiveButtonText="@string/yes"
+            android:summary="@string/preferences_admin_enabled_summary"
+            android:title="@string/preferences_admin_enabled_title" />
 
-           
+        <com.prey.preferences.DetachDevicePreferences
+            android:dialogIcon="@drawable/logo"
+            android:dialogMessage="@string/preferences_detach_dialog_message"
+            android:dialogTitle="@string/preferences_detach_dialog_title"
+            android:key="PREFS_DETACH"
+            android:negativeButtonText="@string/no"
+            android:positiveButtonText="@string/yes"
+            android:summary="@string/preferences_detach_summary"
+            android:title="@string/preferences_detach_title" />
 
-    		<CheckBoxPreference
-                android:defaultValue="false"
-                android:key="PREFS_DISABLE_POWER_OPTIONS"
-                android:title="@string/preferences_disable_power_options_title" 
-                android:summary="@string/preferences_disable_power_options_summary"/>
- 
-	
-	      <ListPreference
-                android:key="PREFS_SCHEDULED"
-                android:title="@string/preferences_scheduled_title"
-                android:summary="@string/preferences_scheduled_summary"
-                android:entries="@array/listScheduledEntries"
-                android:entryValues="@array/listScheduledValues" />
-	      
-	      
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="PREFS_DISABLE_POWER_OPTIONS"
+            android:summary="@string/preferences_disable_power_options_summary"
+            android:title="@string/preferences_disable_power_options_title" />
+
+        <ListPreference
+            android:entries="@array/listScheduledEntries"
+            android:entryValues="@array/listScheduledValues"
+            android:key="PREFS_SCHEDULED"
+            android:summary="@string/preferences_scheduled_summary"
+            android:title="@string/preferences_scheduled_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/preferences_about_category_name" >
+    <PreferenceCategory 
+        android:title="@string/preferences_about_category_name" 
+        >
         <EditTextPreference
             android:dialogIcon="@drawable/logo"
             android:dialogMessage="@string/preferences_about_message"

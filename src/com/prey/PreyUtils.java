@@ -8,7 +8,7 @@ package com.prey;
 
 import java.util.StringTokenizer;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -16,6 +16,7 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 
+ 
 public class PreyUtils {
 	
 	public static String getDeviceType(Activity act){
@@ -41,13 +42,15 @@ public class PreyUtils {
 	    }
 	}
 	
-	@TargetApi(Build.VERSION_CODES.ECLAIR)
+	 
+	@SuppressLint("NewApi")
 	public static boolean supportSMS(Context ctx){
-		//Froyo or above!!
-		TelephonyManager telephonyManager1 = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        boolean isPhone = !(telephonyManager1.getPhoneType()==TelephonyManager.PHONE_TYPE_NONE);
-        boolean featureTelephony = ctx.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
-		return isPhone && featureTelephony;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+			TelephonyManager telephonyManager1 = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
+			boolean isPhone = !(telephonyManager1.getPhoneType()==TelephonyManager.PHONE_TYPE_NONE);
+			boolean featureTelephony = ctx.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+			return isPhone && featureTelephony;
+		} return false;
 	}
 
 	public static String randomAlphaNumeric(int length){

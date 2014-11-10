@@ -11,6 +11,7 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class StatusActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.status);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		fillData();
 	}
 	

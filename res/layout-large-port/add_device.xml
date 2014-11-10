@@ -13,25 +13,28 @@
     android:background="@color/screen_bg_white" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView_add_device"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="0dp"
         android:gravity="center"
-        android:text="@string/welcome" />
+        android:text="@string/welcome"
+        android:textColor="#68717D"
+        android:background="#F0F3F7"
+        android:textSize="25sp"
+         />
 
     <ImageView
-        android:id="@+id/logo_img"
-        android:layout_width="fill_parent"
-        android:layout_height="60dp"
+        android:id="@+id/logo_img_add_device"
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
         android:layout_above="@+id/add_device_email"
-        android:gravity="center"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="80dp"
-        android:src="@drawable/logo_2x" />
+        android:src="@drawable/brand_solid" />
 
     <EditText
         android:id="@+id/add_device_email"
@@ -39,7 +42,6 @@
         android:layout_above="@+id/add_device_pass"
         android:hint="@string/your_prey_email"
         android:inputType="textEmailAddress" >
-
         <requestFocus />
     </EditText>
 
@@ -66,6 +68,9 @@
         android:layout_marginBottom="40dp"
         android:layout_marginTop="40dp"
         android:gravity="center"
-        android:text="@string/password_dialog_forgot_text1" />
+        android:text="@string/password_dialog_forgot_text1"
+        android:textColor="#485465"
+        android:textSize="25sp"
+         />
 
 </RelativeLayout>

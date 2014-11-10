@@ -11,7 +11,7 @@
     android:layout_height="fill_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:background="@drawable/bacg_xhdpi_2x"
+    android:background="@drawable/background"
 
     
     
@@ -20,22 +20,25 @@
     <ImageView
         android:id="@+id/top_right_success"
         android:layout_width="fill_parent"
-        android:layout_height="30dp"
+        android:layout_height="60dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="65dp"
-        android:src="@drawable/ico_protect_1x" />
+        android:layout_marginTop="100dp"
+        android:src="@drawable/icon_extra" />
 
     <TextView
         android:id="@+id/congrats_h1_text"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/top_right_success"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:text="@string/permission_title_h1"
         android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold"
+        android:gravity="center"
          />
 
    

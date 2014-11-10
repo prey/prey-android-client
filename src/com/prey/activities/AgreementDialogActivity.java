@@ -9,6 +9,7 @@ package com.prey.activities;
 import com.prey.R;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,7 @@ public class AgreementDialogActivity extends PreyActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.agreement);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		TextView linkToTOS = (TextView) findViewById(R.id.linkToTosText);
 		linkToTOS.setOnClickListener(new View.OnClickListener() {

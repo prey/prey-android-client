@@ -12,44 +12,34 @@
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
-        
-
-
-
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView_add_device"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_height="40dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
-	    android:gravity="center"
-        android:text="@string/welcome" />
- 
- 
- 
- 
-    <ImageView
-        android:id="@+id/logo_img"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_above="@+id/add_device_email"
-        android:src="@drawable/logo_1x" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:background="#F0F3F7"
+        android:gravity="center"
+        android:text="@string/welcome"
+        android:textColor="#68717D" />
 
- 
-   
+    <ImageView
+        android:id="@+id/logo_img_add_device"
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+        android:layout_above="@+id/add_device_email"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/brand_solid" />
 
     <EditText
         android:id="@+id/add_device_email"
         style="@style/PreyEditText"
-        android:layout_marginTop="40dp"
         android:layout_above="@+id/add_device_pass"
+        android:layout_marginTop="40dp"
         android:hint="@string/your_prey_email"
-        android:inputType="textEmailAddress">
-
-        <requestFocus />
+        android:inputType="textEmailAddress" >
+        
     </EditText>
 
     <EditText
@@ -57,8 +47,7 @@
         style="@style/PreyEditText"
         android:layout_above="@+id/add_device_btn_ok"
         android:hint="@string/your_prey_pass"
-        android:inputType="textPassword">
-
+        android:inputType="textPassword" >
     </EditText>
 
     <Button
@@ -67,18 +56,16 @@
         android:layout_above="@+id/forgot"
         android:text="@string/add_this_device" />
 
-
-    
     <TextView
         android:id="@+id/forgot"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"     
-        android:layout_marginTop="20dp"   
-	    android:gravity="center"
-        android:text="@string/password_dialog_forgot_text1" />
-    
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/password_dialog_forgot_text1"
+        android:textColor="#485465" />
 
 </RelativeLayout>

@@ -14,38 +14,38 @@
 
     
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView_new_account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
 	    android:gravity="center"
-        android:text="@string/create_prey_account_h1" />
+        android:text="@string/create_prey_account_h1"
+        android:textColor="#68717D"
+        android:background="#F0F3F7"
+         />
 
     <ImageView
-        android:id="@+id/logo_img"
-        android:layout_width="wrap_content"
+        android:id="@+id/logo_img_new_account"
+        android:layout_width="fill_parent"
         android:layout_height="80dp"
-        			android:layout_marginLeft="20dp"
-			android:layout_marginRight="20dp"
         android:layout_above="@+id/new_account_name"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/logo_1x" />
+        android:layout_marginBottom="2dp"
+        android:gravity="center_horizontal"
+        android:src="@drawable/brand_solid"
+         />
     
-     
-
     <EditText
         android:id="@+id/new_account_name"
         style="@style/PreyEditText"
-        
-        android:layout_marginTop="10dp"
+         android:layout_marginBottom="2dp"
         android:layout_above="@+id/new_account_email" 
         android:hint="@string/your_name"
         android:inputType="textPersonName"
         android:typeface="normal" >
-
         <requestFocus />
     </EditText>
     
@@ -53,7 +53,7 @@
         android:id="@+id/new_account_email"
         style="@style/PreyEditText"
         
-        android:layout_marginTop="10dp"
+         android:layout_marginBottom="2dp"
         android:layout_above="@+id/new_account_pass"
         android:hint="@string/your_email"
         android:inputType="textEmailAddress"
@@ -62,11 +62,10 @@
     <EditText
         android:id="@+id/new_account_pass"
         style="@style/PreyEditText"
-        android:layout_marginTop="10dp"
+         android:layout_marginBottom="2dp"
         android:layout_above="@+id/new_account_btn_ok"
         android:hint="@string/choose_a_6_char_pass"
         android:inputType="textPassword">
-
     </EditText>
     
  
@@ -74,20 +73,22 @@
     <Button
         android:id="@+id/new_account_btn_ok"
         style="@style/PreyButton3.Small"
-                        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:layout_above="@+id/have_account"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
         android:text="@string/create_my_account" />
     
-            <TextView
+    <TextView
         android:id="@+id/have_account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"     
-        android:layout_marginTop="20dp"   
+        android:layout_marginBottom="10dp"       
 	    android:gravity="center"
-        android:text="@string/have_an_account" />   
+        android:text="@string/have_an_account"
+        android:textColor="#485465"
+         />   
 
 </RelativeLayout>

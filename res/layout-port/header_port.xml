@@ -11,14 +11,7 @@
     android:layout_alignParentTop="true"
     android:orientation="vertical" >
 
-    <ImageView
-        android:id="@+id/login_img_top_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="100dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitStart"
-        android:src="@drawable/top_left_logo" />
+ 
 
     <ImageView
         android:id="@+id/login_img_prey_txt"
@@ -38,19 +31,13 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp" >
-
-        <ImageView
-            android:id="@+id/login_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:src="@drawable/red_button" />
+ 
 
         <TextView
             android:id="@+id/login_h1_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/login_img"
+ 
             android:paddingLeft="10dp"
             android:text="@string/device_ready_h1"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -62,11 +49,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/login_h1_text"
-            android:layout_toRightOf="@+id/login_img"
+ 
             android:paddingLeft="10dp"
             android:text="@string/device_ready_h2"
             android:textColor="@color/lighter_txt"
-            android:textSize="12dp" />
+            android:textSize="12sp" />
     </RelativeLayout>
 
 </LinearLayout>

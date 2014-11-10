@@ -13,6 +13,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,12 +23,16 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prey.PreyAccountData;
 import com.prey.PreyLogger;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
+import com.prey.util.KeyboardStatusDetector;
+import com.prey.util.KeyboardVisibilityListener;
 
 public class CreateAccountActivity extends SetupActivity {
 	private static final int ERROR = 1;
@@ -40,6 +46,33 @@ public class CreateAccountActivity extends SetupActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_account);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+		KeyboardStatusDetector keyboard = new KeyboardStatusDetector();
+
+		keyboard.registerActivity(this); // or register to an activity
+		keyboard.setVisibilityListener(new KeyboardVisibilityListener() {
+
+			@Override
+			public void onVisibilityChanged(boolean keyboardVisible) {
+				ImageView logoImg = (ImageView) findViewById(R.id.logo_img_new_account);
+				TextView tituloText = (TextView) findViewById(R.id.textView_new_account);
+				if (keyboardVisible) {
+					PreyLogger.i("key on");
+					if (logoImg != null)
+						logoImg.setVisibility(View.GONE);
+					if (tituloText != null)
+						tituloText.setVisibility(View.GONE);
+				} else {
+					PreyLogger.i("key off");
+					if (logoImg != null)
+						logoImg.setVisibility(View.VISIBLE);
+					if (tituloText != null)
+						tituloText.setVisibility(View.VISIBLE);
+				}
+
+			}
+		});
 
 		Button ok = (Button) findViewById(R.id.new_account_btn_ok);
 		ok.setOnClickListener(new View.OnClickListener() {
@@ -48,7 +81,6 @@ public class CreateAccountActivity extends SetupActivity {
 				name = ((EditText) findViewById(R.id.new_account_name)).getText().toString();
 				email = ((EditText) findViewById(R.id.new_account_email)).getText().toString();
 				password = ((EditText) findViewById(R.id.new_account_pass)).getText().toString();
-				repassword = ((EditText) findViewById(R.id.new_account_repass)).getText().toString();
 
 				if (name.equals("") || email.equals("") || password.equals(""))
 					Toast.makeText(CreateAccountActivity.this, R.string.error_all_fields_are_required, Toast.LENGTH_LONG).show();
@@ -59,21 +91,38 @@ public class CreateAccountActivity extends SetupActivity {
 				}
 			}
 		});
-		
-		//Hack to fix password hint's typeface: http://stackoverflow.com/questions/3406534/password-hint-font-in-android
+
+		// Hack to fix password hint's typeface:
+		// http://stackoverflow.com/questions/3406534/password-hint-font-in-android
 		EditText password = (EditText) findViewById(R.id.new_account_pass);
 		password.setTypeface(Typeface.DEFAULT);
 		password.setTransformationMethod(new PasswordTransformationMethod());
-		
-		//To avoid setting these Imeoptions on each layout :)
+
+		// To avoid setting these Imeoptions on each layout :)
 		EditText name = (EditText) findViewById(R.id.new_account_name);
 		name.setImeOptions(EditorInfo.TYPE_TEXT_FLAG_CAP_WORDS | EditorInfo.TYPE_TEXT_VARIATION_PERSON_NAME);
-		
+
 		EditText email = (EditText) findViewById(R.id.new_account_email);
 		email.setImeOptions(EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-		
+
+		TextView have_account = (TextView) findViewById(R.id.have_account);
+		have_account.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), AddDeviceToAccountActivity.class);
+				startActivity(intent);
+				finish();
+
+			}
+		});
+
 	}
 
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+
+	}
 
 	private class CreateAccount extends AsyncTask<String, Void, Void> {
 
@@ -91,8 +140,7 @@ public class CreateAccountActivity extends SetupActivity {
 		@Override
 		protected Void doInBackground(String... data) {
 			try {
-				PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(CreateAccountActivity.this, data[0], data[1], data[2],
-						getDeviceType());
+				PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(CreateAccountActivity.this, data[0], data[1], data[2], getDeviceType());
 				PreyLogger.d("Response creating account: " + accountData.toString());
 				getPreyConfig().saveAccount(accountData);
 			} catch (PreyException e) {
@@ -103,9 +151,9 @@ public class CreateAccountActivity extends SetupActivity {
 
 		@Override
 		protected void onPostExecute(Void unused) {
-			try{
+			try {
 				progressDialog.dismiss();
-			}catch(Exception e){
+			} catch (Exception e) {
 			}
 			if (error == null) {
 				String message = getString(R.string.new_account_congratulations_text, email);

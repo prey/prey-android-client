@@ -11,7 +11,7 @@
     android:layout_height="fill_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:background="@drawable/bacg_xhdpi_2x"
+    android:background="@drawable/background"
      >
  
 
@@ -19,10 +19,10 @@
     <ImageView
         android:id="@+id/top_right_success"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="65dp"
-        android:src="@drawable/ico_check_1x" />
+        android:layout_marginTop="120dp"
+        android:src="@drawable/icon_check" />
 
     <TextView
         android:id="@+id/congrats_h1_text"

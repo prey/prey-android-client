@@ -14,8 +14,6 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +30,6 @@ import android.telephony.TelephonyManager;
 import com.prey.actions.LockAction;
 import com.prey.actions.PreyAction;
 import com.prey.activities.FeedbackActivity;
-import com.prey.activities.WelcomeActivity;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.PreyWebServices;
 import com.prey.services.PreyDisablePowerOptionsService;
@@ -155,6 +152,7 @@ public class PreyConfig {
 	private boolean jellyBeanOrAbove;
 	private boolean iceCreamOrAbove;
 	private boolean honeycombOrAbove;
+	private boolean eclairOrAbove;
 	
 	private boolean camouflageSet;
 	
@@ -200,6 +198,7 @@ public class PreyConfig {
 		this.honeycombOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 13;
 		this.gingerbreadOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 9;
 		this.froyoOrAbove = Integer.parseInt(Build.VERSION.SDK) >= 8;
+		this.eclairOrAbove = Integer.parseInt(Build.VERSION.SDK) >=5;
 		this.cupcakeOrAbove = Integer.parseInt(Build.VERSION.SDK) == 3;
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
 		settings.registerOnSharedPreferenceChangeListener(listener);
@@ -426,7 +425,7 @@ public class PreyConfig {
 		String deviceId = settings.getString(PreyConfig.PREFS_DEVICE_ID, null);
 		
 		boolean isVerified = deviceId != null;
-		
+		/*
 		if (notifyUser && !isVerified){
 			String notificationTitle = ctx.getText(R.string.not_verified_device_title).toString();
 			NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -440,7 +439,7 @@ public class PreyConfig {
 			notification.setLatestEventInfo(ctx, ctx.getText(R.string.not_verified_device_title), notificationToShow, contentIntent);
 	
 			nm.notify(R.string.preyForAndroid_name, notification);
-		}
+		}*/
 			
 		return isVerified;
 	}
@@ -644,6 +643,9 @@ public class PreyConfig {
 	}
 	public boolean isHoneycombOrAbove() {
 		return honeycombOrAbove;
+	}
+	public boolean isEclairOrAbove() {
+		return eclairOrAbove;
 	}
 	
 	public String getPreyVersion() {
@@ -888,8 +890,14 @@ public class PreyConfig {
 	}
 	
 	public boolean isScheduled(){
-		if (PreyEmail.getEmail(ctx)!=null)
-			return false;
+		try{
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+				if (PreyEmail.getEmail(ctx)!=null)
+					return false;
+			}
+		}catch(Exception e){
+				return false;
+		}
 		return scheduled;
 	}
 	

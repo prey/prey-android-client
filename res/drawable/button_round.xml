@@ -4,7 +4,7 @@
     <item android:state_pressed="true">       
         <shape>
              <corners
-                android:radius="20dp" /><!-- 20 60 -->
+                android:radius="40dp" /><!-- 20 60 -->
              <gradient   
                
                 android:angle="270" />
@@ -25,7 +25,7 @@
     <item android:state_focused="true">       
         <shape>
              <corners
-                android:radius="20dp" /><!-- 20 60 -->
+                android:radius="40dp" /><!-- 20 60 -->
              <gradient   
                
                 android:angle="270" />
@@ -46,7 +46,7 @@
     <item>       
         <shape>
              <corners
-                android:radius="20dp" /><!-- 20 60 -->
+                android:radius="40dp" /><!-- 20 60 -->
              <gradient   
                
                 android:angle="270" />

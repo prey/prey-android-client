@@ -8,24 +8,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-   
-    android:background="@drawable/bacg_xhdpi_2x"
-  
+    android:background="@drawable/background"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-     android:id="@+id/linear_layout_welcome"
+    android:id="@+id/linear_layout_welcome"
       >
 
-     <ImageView
-         android:layout_width="wrap_content"
-         android:layout_height="100dp"
-         android:layout_alignParentLeft="true"
-         android:layout_alignParentRight="true"
+    <ImageView
+         android:id="@+id/logo_img_prey"
+         android:layout_width="fill_parent"
+         android:layout_height="350dp"
+         android:layout_marginBottom="200dp"
+         android:layout_above="@+id/btn_welcome_olduser"
          android:layout_centerVertical="true"
-         android:layout_marginTop="200dp"
-         android:layout_marginLeft="40dp"
-         android:layout_marginRight="40dp"
-         android:src="@drawable/logo_prey_2x" />
+		 android:layout_alignParentRight="true"
+    	 android:layout_alignParentLeft="true"
+         android:src="@drawable/brand_color" />
 
     <Button
         android:id="@+id/btn_welcome_olduser"

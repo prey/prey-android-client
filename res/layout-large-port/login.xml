@@ -9,40 +9,33 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_alignParentTop="true"
+    android:background="@drawable/background"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:background="@drawable/bacg_xhdpi_2x"
-      >
+    android:orientation="vertical" >
 
- 
-
-
-     	<ImageView
-             android:layout_width="fill_parent"
-             android:layout_height="60dp"
-             android:layout_centerVertical="true"
-             android:layout_marginTop="120dp"
-             android:layout_marginLeft="20dp"
-             android:layout_marginRight="20dp"
-         android:src="@drawable/logo_prey_2x" />
-
-
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="300dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="120dp"
+        android:src="@drawable/brand_color" />
 
     <Button
         android:id="@+id/login_btn_cp"
         style="@style/PreyButton2.Large"
         android:layout_width="fill_parent"
-                android:layout_above="@+id/login_btn_settings"
+        android:layout_above="@+id/login_btn_settings"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="120dp"
-        android:text="@string/login_cp"/>
+        android:text="@string/login_cp" />
 
     <Button
         android:id="@+id/login_btn_settings"
         style="@style/PreyButton2.Large"
- 		android:layout_alignParentBottom="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginBottom="40dp"
-        android:text="@string/manage_prey_settings"/>
+        android:text="@string/manage_prey_settings" />
 
 </RelativeLayout>
- 

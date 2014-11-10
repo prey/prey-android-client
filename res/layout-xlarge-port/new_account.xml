@@ -8,46 +8,44 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/screen_bg_white"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:background="@color/screen_bg_white" >
+    android:orientation="vertical" >
 
-    
-    
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView_new_account"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_height="100dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
-	    android:gravity="center"
-        android:text="@string/create_prey_account_h1" />
- 
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:background="#F0F3F7"
+        android:gravity="center"
+        android:text="@string/create_prey_account_h1"
+        android:textColor="#68717D"
+        android:textSize="30sp" />
+
     <ImageView
-        android:id="@+id/logo_img"
+        android:id="@+id/logo_img_new_account"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="350dp"
         android:layout_above="@+id/new_account_name"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/logo_1x" />
- 
-     
- 
-    
+        android:layout_marginBottom="100dp"
+        android:src="@drawable/brand_solid" />
 
     <EditText
         android:id="@+id/new_account_name"
         style="@style/PreyEditText.Large"
-        android:layout_above="@+id/new_account_email" 
+        android:layout_above="@+id/new_account_email"
         android:hint="@string/your_name"
         android:inputType="textPersonName"
         android:textAppearance="?android:attr/textAppearanceLargeInverse" >
 
         <requestFocus />
     </EditText>
-    
+
     <EditText
         android:id="@+id/new_account_email"
         style="@style/PreyEditText.Large"
@@ -55,7 +53,7 @@
         android:hint="@string/your_email"
         android:inputType="textEmailAddress"
         android:textAppearance="?android:attr/textAppearanceLargeInverse" />
-    
+
     <EditText
         android:id="@+id/new_account_pass"
         style="@style/PreyEditText.Large"
@@ -63,29 +61,27 @@
         android:hint="@string/choose_a_6_char_pass"
         android:inputType="textPassword"
         android:textAppearance="?android:attr/textAppearanceLargeInverse" >
-
     </EditText>
-    
- 
 
     <Button
         android:id="@+id/new_account_btn_ok"
         style="@style/PreyButton3.Large"
-                        android:layout_width="fill_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/have_account"
-        android:text="@string/create_my_account"      />
-    
-    
-            <TextView
+        android:text="@string/create_my_account" />
+
+    <TextView
         android:id="@+id/have_account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"     
-        android:layout_marginTop="20dp"   
-	    android:gravity="center"
-        android:text="@string/have_an_account" />   
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/have_an_account"
+        android:textColor="#485465"
+        android:textSize="30sp" />
 
 </RelativeLayout>
