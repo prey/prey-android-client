@@ -44,18 +44,17 @@ public class PreyConfig {
 	public static final long DELAY_MULTIPLIER = 1000 * 60; 
 	
 	// the minimum time interval for GPS notifications, in milliseconds (default 60000).
-	public static final long LOCATION_PROVIDERS_MIN_REFRESH_INTERVAL = 60000;
+	public static final long LOCATION_PROVIDERS_MIN_REFRESH_INTERVAL = 10000;
 	
 	// the minimum distance interval for GPS notifications, in meters (default 20)
 	public static final float LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE = 20;
 	
 	// max "age" in ms of last location (default 120000).
-	public static final float LAST_LOCATION_MAX_AGE = 120000;
+	public static final float LAST_LOCATION_MAX_AGE = 30000;
 	
 	//Amount of millisecond the app can be suspended before ask for the password. 
 	public static final long PASSWORD_PROMPT_DELAY = 5000;
 	
-//	public static final String CONTROL_PANEL_URL = "https://panel.preyproject.com/login";
 
 
 	public static final String PREFS_NAME = "PREY_PREFS";
@@ -64,7 +63,6 @@ public class PreyConfig {
 	public static final String PREFS_API_KEY = "API_KEY";
 	public static final String PREFS_LOGIN = "LOGIN";
 	public static final String PREFS_EMAIL = "EMAIL";
-	//public static final String PREFS_PASSWORD = "PASSWORD";
 	public static final String PREFS_PREY_VERSION = "PREY_VERSION";
 	public static final String PREFS_IS_MISSING = "IS_MISSING";
 	public static final String PREFS_SMS_RUN = "PREFS_SMS_RUN";
@@ -109,7 +107,7 @@ public class PreyConfig {
 	public static final String SEND_NOTIFICATION_ID="SEND_NOTIFICATION_ID";
 	public static final String SIGNAL_FLARE_DATE="SIGNAL_FLARE_DATE";
 	
-	public static final String VERSION_PREY_DEFAULT="1.1.3";
+	public static final String VERSION_PREY_DEFAULT="1.3.1";
 	
 	public static final String SEND_DATA="SEND_DATA";
 	

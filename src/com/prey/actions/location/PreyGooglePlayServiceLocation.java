@@ -11,18 +11,14 @@ import com.google.android.gms.location.LocationRequest;
 import com.prey.PreyLogger;
 
 public class PreyGooglePlayServiceLocation implements LocationListener, GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
-	/*
-	 * Define a request code to send to Google Play services This code is
-	 * returned in Activity.onActivityResult
-	 */
-	public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+ 
 	/*
 	 * Constants for location update parameters
 	 */
 	// Milliseconds per second
 	public static final int MILLISECONDS_PER_SECOND = 1000;
 	// The update interval
-	public static final int UPDATE_INTERVAL_IN_SECONDS = 30;
+	public static final int UPDATE_INTERVAL_IN_SECONDS = 10;
 	// A fast interval ceiling
 	public static final int FAST_CEILING_IN_SECONDS = 1;
 	// Update interval in milliseconds
@@ -34,7 +30,7 @@ public class PreyGooglePlayServiceLocation implements LocationListener, GooglePl
 	private Location currentLocation = null;
 
 	public void init(Context ctx) {
-		PreyLogger.i("init");
+		PreyLogger.d("init");
 		// Create a new global location parameters object
 		mLocationRequest = LocationRequest.create();
 		/*
@@ -56,7 +52,7 @@ public class PreyGooglePlayServiceLocation implements LocationListener, GooglePl
 			}
 		} catch (Exception e) {
 		}
-		PreyLogger.i("getLastLocation is null:" + (currentLocation == null));
+		PreyLogger.d("getLastLocation is null:" + (currentLocation == null));
 		return currentLocation;
 	}
 
@@ -65,7 +61,7 @@ public class PreyGooglePlayServiceLocation implements LocationListener, GooglePl
 	 */
 	@Override
 	public void onConnectionFailed(ConnectionResult connectionResult) {
-		PreyLogger.i("onConnectionFailed");
+		PreyLogger.d("onConnectionFailed");
 		/*
 		 * Google Play services can resolve some errors it detects. If the error
 		 * has a resolution, try sending an Intent to start a Google Play
@@ -73,29 +69,29 @@ public class PreyGooglePlayServiceLocation implements LocationListener, GooglePl
 		 */
 		if (connectionResult.hasResolution()) {
 			try {
-				PreyLogger.i("CONNECTION_FAILURE_RESOLUTION_REQUEST");
+				PreyLogger.d("CONNECTION_FAILURE_RESOLUTION_REQUEST");
 				/*
 				 * Thrown if Google Play services canceled the original
 				 * PendingIntent
 				 */
 			} catch (Exception e) {
-				PreyLogger.i("error:" + e.getMessage());
+				PreyLogger.d("error:" + e.getMessage());
 			}
 		} else {
-			PreyLogger.i("error:" + connectionResult.getErrorCode());
+			PreyLogger.d("error:" + connectionResult.getErrorCode());
 		}
 	}
 
 	@Override
 	public void onConnected(Bundle arg0) {
-		PreyLogger.i("onConnected");
+		PreyLogger.d("onConnected");
 		// TODO Auto-generated method stub
 		startPeriodicUpdates();
 	}
 
 	@Override
 	public void onDisconnected() {
-		PreyLogger.i("onDisconnected");
+		PreyLogger.d("onDisconnected");
 		// TODO Auto-generated method stub
 		stopPeriodicUpdates();
 	}
@@ -105,7 +101,7 @@ public class PreyGooglePlayServiceLocation implements LocationListener, GooglePl
 	 * Services
 	 */
 	public void startPeriodicUpdates() {
-		PreyLogger.i("startPeriodicUpdates");
+		PreyLogger.d("startPeriodicUpdates");
 		mLocationClient.requestLocationUpdates(mLocationRequest, this);
 	}
 
@@ -114,13 +110,13 @@ public class PreyGooglePlayServiceLocation implements LocationListener, GooglePl
 	 * Services
 	 */
 	public void stopPeriodicUpdates() {
-		PreyLogger.i("stopPeriodicUpdates");
+		PreyLogger.d("stopPeriodicUpdates");
 		mLocationClient.removeLocationUpdates(this);
 	}
 
 	@Override
 	public void onLocationChanged(Location location) {
-		PreyLogger.i("onLocationChanged is null" + (location == null));
+		PreyLogger.d("onLocationChanged is null" + (location == null));
 		// In the UI, set the latitude and longitude to the value received
 		// mLatLng.setText(LocationUtils.getLatLng(this, location));
 		this.currentLocation = location;
