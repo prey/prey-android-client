@@ -38,11 +38,11 @@ public class CheckPasswordActivity extends PasswordActivity {
 			public void onVisibilityChanged(boolean keyboardVisible) {
 		        ImageView logoImg=(ImageView) findViewById(R.id.logo_img_password);
 				if(keyboardVisible) {
-                    PreyLogger.i("key on");
+                    PreyLogger.d("key on");
                     if(logoImg!=null)
                     	logoImg.setVisibility(View.GONE);
                  }else {
-                	 PreyLogger.i("key off");
+                	 PreyLogger.d("key off");
                 	 if(logoImg!=null)
                 		 logoImg.setVisibility(View.VISIBLE);
                  }

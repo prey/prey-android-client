@@ -67,14 +67,14 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 		        ImageView logoImg=(ImageView) findViewById(R.id.logo_img_add_device);
 		        TextView tituloText=(TextView) findViewById(R.id.textView_add_device);
 				if(keyboardVisible) {
-                    PreyLogger.i("key on");
+                    PreyLogger.d("key on");
                     if(logoImg!=null)
                     	logoImg.setVisibility(View.GONE);
                     if(tituloText!=null)
                     	tituloText.setVisibility(View.GONE);
               
                  }else {
-                	 PreyLogger.i("key off");
+                	 PreyLogger.d("key off");
                 	 if(logoImg!=null)
                 		 logoImg.setVisibility(View.VISIBLE);
                 	 if(tituloText!=null)
