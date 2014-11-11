@@ -85,7 +85,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 	}
 	
 	private void handleMessageBeta(Context context, String body,String version,String cmd) {
-	    PreyLogger.i("Push notification received, waking up Prey right now!");
+	    PreyLogger.d("Push notification received, waking up Prey right now!");
 		PreyLogger.i("Push message received " + body+ " version:"+version);
 		PreyBetaController.startPrey(context,cmd);
 	}

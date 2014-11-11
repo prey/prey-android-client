@@ -22,7 +22,7 @@
         android:text="@string/choose_your_hero"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/darker_txt"
-        android:textSize="46dp"
+        android:textSize="36sp"
         android:textStyle="bold"
         android:typeface="normal" />
 
@@ -32,12 +32,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/sms_h1"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:gravity="center_horizontal"
         android:text="@string/your_hero_text"
         android:textColor="@color/lighter_txt"
-        android:textSize="30dp" />
+        android:textSize="18sp" />
 
     <LinearLayout
         android:id="@+id/sms_body"
@@ -51,14 +51,7 @@
         android:padding="15dp"
         android:weightSum="4" >
 
-        <ImageView
-            android:id="@+id/sms_sheriff"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/sq_sheriff" />
+ 
 
         <RelativeLayout
             android:id="@+id/sms_contact_info"
@@ -74,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/darker_txt"
-                android:textSize="36dp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -83,14 +76,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/sms_contact_text"
                 android:textColor="@color/lighter_txt"
-                android:textSize="30dp" />
+                android:textSize="18sp" />
 
         </RelativeLayout>
     </LinearLayout>
 
     <Button
         android:id="@+id/sms_btn_change"
-        style="@style/PreyButton.XLarge"
+        style="@style/PreyButton.Large"
         android:layout_above="@+id/sms_btn_accept"
         android:layout_alignParentBottom="false"
         android:layout_marginBottom="5dp"
@@ -98,7 +91,7 @@
 
     <Button
         android:id="@+id/sms_btn_accept"
-        style="@style/PreyButton.XLarge"
+        style="@style/PreyButton.Large"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="15dp"
         android:text="@string/accept" />

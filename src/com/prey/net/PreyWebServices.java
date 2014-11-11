@@ -738,7 +738,7 @@ public class PreyWebServices {
 		try {
 		HashMap<String, String> parameters=new HashMap<String, String> ();
 		String url=getDeviceUrlApiv2(ctx).concat("/contacts.json");
-		PreyLogger.i("url:"+url);
+		PreyLogger.d("url:"+url);
 		preyHttpResponse=PreyRestHttpClient.getInstance(ctx).getAutentication2(url, parameters, preyConfig);
 		} catch (Exception e) {
 			PreyLogger.e("Contact wasn't send",e);
@@ -750,10 +750,10 @@ public class PreyWebServices {
 	public PreyLocation getLocation(Context ctx,List<Wifi>listWifi) throws Exception{
 		PreyLocation location=null;
 		String url=googleLookup(listWifi);
-		PreyLogger.i("location url:"+url);
-		PreyHttpResponse response= PreyRestHttpClient.getInstance(ctx).get(url);
+		PreyLogger.d("location url:"+url);
+		PreyHttpResponse response= PreyRestHttpClient.getInstance(ctx).getDefault(url);
 		String responseAsString=response.getResponseAsString();
-		PreyLogger.i("location resp:"+responseAsString);
+		PreyLogger.d("location resp:"+responseAsString);
 		if (response.getStatusLine().getStatusCode()==200){
 			if (responseAsString!=null&&responseAsString.indexOf("OK")>=0){
 				location=new PreyLocation();
@@ -773,7 +773,7 @@ public class PreyWebServices {
 	private String googleLookup(List<Wifi> listwifi){
 		String queryString = "https://maps.googleapis.com/maps/api/browserlocation/json?browser=firefox&sensor=true";
 		try {
-			for(int i=0;i<listwifi.size();i++){
+			for(int i=0;listwifi!=null&&i<listwifi.size();i++){
 				String ssid=listwifi.get(i).getSsid();
 				ssid=ssid.replaceAll(" ", "%20");	
 				queryString+="&wifi=mac:";
@@ -784,6 +784,7 @@ public class PreyWebServices {
 				queryString+="%7C";
 				queryString+="ss:";
 				queryString+=listwifi.get(i).getSignalStrength();
+				
 			}	
 		} catch (Exception e) {
 		}

@@ -60,14 +60,14 @@ public class PreyRestHttpClient {
 
 	private static PreyRestHttpClient _instance = null;
 	private PreyDefaultHttpClient httpclient = null;
+	private PreyDefaultHttpClient httpclientDefault = null;
 	//private DefaultHttpClient httpclient = null;
 	private Context ctx = null;
 
 	private PreyRestHttpClient(Context ctx) {
 		this.ctx = ctx;
-		// httpclient = new DefaultHttpClient();
-		//httpclient = (DefaultHttpClient) HttpUtils.getNewHttpClient();
 		httpclient = new PreyDefaultHttpClient((DefaultHttpClient) HttpUtils.getNewHttpClient());
+		httpclientDefault= new PreyDefaultHttpClient((DefaultHttpClient) HttpUtils.getNewHttpClient());
 
 		HttpParams params = new BasicHttpParams();
 
@@ -83,8 +83,9 @@ public class PreyRestHttpClient {
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		HttpProtocolParams.setContentCharset(params, "UTF_8");
 		HttpProtocolParams.setUseExpectContinue(params, false);
+		HttpParams paramsDefault=params;
+		httpclientDefault.setParams(paramsDefault);
 		HttpProtocolParams.setUserAgent(params, getUserAgent());
-
 		httpclient.setParams(params);
 	}
 
@@ -390,10 +391,10 @@ public class PreyRestHttpClient {
 		}
 	}
 	
-	public PreyHttpResponse get(String url) throws IOException {
+	public PreyHttpResponse getDefault(String url) throws IOException {
 		HttpGet method = new HttpGet(url);
 		PreyLogger.d("Sending using 'GET' - URI: " + method.getURI());
-		HttpResponse httpResponse = httpclient.execute(method);
+		HttpResponse httpResponse = httpclientDefault.execute(method);
 		PreyHttpResponse response = new PreyHttpResponse(httpResponse);
 		//PreyLogger.d("Response from server: " + response.toString());
 		return response;

@@ -5,39 +5,41 @@
   License: GPLv3
   Full license at "/LICENSE"
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_alignParentTop="true"
-    android:background="@color/screen_bg"
+    android:background="@drawable/background"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:weightSum="8" >
+    android:id="@+id/linear_layout_welcome"
+      >
 
     <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="30dp"
-        android:layout_weight="6"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/logo_sonar" />
+         android:id="@+id/logo_img_prey"
+         android:layout_width="fill_parent"
+         android:layout_height="350dp"
+         android:layout_marginBottom="200dp"
+         android:layout_above="@+id/btn_welcome_olduser"
+         android:layout_centerVertical="true"
+		 android:layout_alignParentRight="true"
+    	 android:layout_alignParentLeft="true"
+         android:src="@drawable/brand_color" />
 
     <Button
         android:id="@+id/btn_welcome_olduser"
-        style="@style/PreyButton.XLarge"
-        android:layout_marginTop="20dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        style="@style/PreyButton2.Large"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="160dp"
         android:text="@string/already_prey_user" />
 
     <Button
         android:id="@+id/btn_welcome_newuser"
-        style="@style/PreyButton.XLarge"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        style="@style/PreyButton2.Large"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
         android:text="@string/new_user" />
 
-</LinearLayout>
+    
+
+</RelativeLayout>
+ 

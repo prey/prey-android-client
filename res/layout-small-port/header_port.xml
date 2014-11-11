@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Created by Carlos Yaconi
+  Copyright 2012 Fork Ltd. All rights reserved.
+  License: GPLv3
+  Full license at "/LICENSE"
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:orientation="vertical" >
+
+ 
+
+ 
+
+    <RelativeLayout
+        android:id="@+id/login_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp" >
+
+ 
+        <TextView
+            android:id="@+id/login_h1_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+ 
+            android:paddingLeft="10dp"
+            android:text="@string/device_ready_h1"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/darker_txt"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/login_h2_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_h1_text"
+ 
+            android:paddingLeft="10dp"
+            android:text="@string/device_ready_h2"
+            android:textColor="@color/lighter_txt"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+</LinearLayout>

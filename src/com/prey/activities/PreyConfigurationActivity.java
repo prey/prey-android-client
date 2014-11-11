@@ -7,6 +7,8 @@
 package com.prey.activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -28,6 +30,7 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
 		preyConfig.setAccountVerified();
 		addPreferencesFromResource(R.xml.preferences);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	}
 
 	@Override

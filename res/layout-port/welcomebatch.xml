@@ -15,13 +15,11 @@
     android:weightSum="8" >
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="4"
-        android:adjustViewBounds="true"
-        android:padding="15dp"
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+        android:layout_marginTop="300dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/logo_sonar" />
+        android:src="@drawable/brand_reversed" />
 
    
 

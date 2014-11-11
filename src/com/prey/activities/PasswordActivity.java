@@ -9,6 +9,7 @@ package com.prey.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.Settings;
 import android.text.method.PasswordTransformationMethod;
@@ -25,6 +26,7 @@ import com.prey.events.factories.EventFactory;
 import com.prey.events.manager.EventManagerRunner;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
+import com.prey.PreyConfig;
 import com.prey.PreyStatus;
 import com.prey.R;
 public class PasswordActivity extends PreyActivity {
@@ -50,14 +52,27 @@ public class PasswordActivity extends PreyActivity {
 		EditText password = (EditText) findViewById(R.id.password_pass_txt);
 		password.setTypeface(Typeface.DEFAULT);
 		password.setTransformationMethod(new PasswordTransformationMethod());
+		
+		TextView have_account = (TextView) findViewById(R.id.forgot);
+		have_account.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				String url=PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelUrl();
+				Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
+				startActivity(browserIntent);
+				finish();
+
+			}
+		});
+ 
 	}
 	
 	protected void updateLoginScreen() {
-		ImageView loginIcon = (ImageView) findViewById(R.id.login_img);
+		/*ImageView loginIcon = (ImageView) findViewById(R.id.login_img);
 		String drawableIconName = "red_button";
 		String h1 = getString(R.string.device_ready_h1);
 		String h2 = getString(R.string.device_ready_h2);
-		/*
+		
 		if (!PreyLocationManager.getInstance(getApplicationContext()).locationServicesEnabled()) {
 			drawableIconName = "grey_button";
 			h1 = getString(R.string.device_not_ready_h1);
@@ -68,11 +83,11 @@ public class PasswordActivity extends PreyActivity {
 					startActivity(myIntent);
 				}
 			});
-		}*/
+		}
 		int id = getResources().getIdentifier(drawableIconName, "drawable", getPackageName());
 		loginIcon.setImageResource(id);
 		((TextView) findViewById(R.id.login_h1_text)).setText(h1);
-		((TextView) findViewById(R.id.login_h2_text)).setText(h2);
+		((TextView) findViewById(R.id.login_h2_text)).setText(h2);*/
 	}
 	
 	protected class CheckPassword extends AsyncTask<String, Void, Void> {

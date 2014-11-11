@@ -6,45 +6,23 @@
   Full license at "/LICENSE"
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
-    android:layout_centerHorizontal="false"
-    android:gravity="center_horizontal"
     android:orientation="vertical" >
 
-    <ImageView
-        android:id="@+id/login_img_top_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="150dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitStart"
-        android:src="@drawable/top_left_logo" />
+ 
 
-    <ImageView
-        android:id="@+id/login_img_prey_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/prey_text" />
+ 
 
     <RelativeLayout
         android:id="@+id/login_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:padding="20dp" >
-
-        <ImageView
-            android:id="@+id/login_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:padding="10dp"
-            android:scaleType="center"
-            android:src="@drawable/red_button" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp" >
+ 
 
         <TextView
             android:id="@+id/login_h1_text"
@@ -55,7 +33,7 @@
             android:text="@string/device_ready_h1"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/darker_txt"
-            android:textSize="45dp"
+            android:textSize="30sp"
             android:textStyle="bold" />
 
         <TextView
@@ -67,7 +45,7 @@
             android:paddingLeft="10dp"
             android:text="@string/device_ready_h2"
             android:textColor="@color/lighter_txt"
-            android:textSize="30dp" />
+            android:textSize="20sp" />
     </RelativeLayout>
 
 </LinearLayout>
