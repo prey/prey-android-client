@@ -16,11 +16,41 @@
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="300dp"
+        android:layout_above="@+id/device_ready_h1_text"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginTop="120dp"
         android:src="@drawable/brand_color" />
+
+    <TextView
+        android:id="@+id/device_ready_h1_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/device_ready_h2_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/device_ready_h1"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/device_ready_h2_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/login_btn_cp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/device_ready_h2"
+        android:textColor="@color/dark_paragraph"
+        android:textSize="25sp" />
 
     <Button
         android:id="@+id/login_btn_cp"

@@ -18,8 +18,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.prey.PreyConfig;
+import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.services.PreyDisablePowerOptionsService;
 
 public class LoginActivity extends PasswordActivity {
@@ -80,6 +82,17 @@ public class LoginActivity extends PasswordActivity {
 		updateLoginScreen();
 		Button gotoCP = (Button) findViewById(R.id.login_btn_cp);
 		Button gotoSettings = (Button) findViewById(R.id.login_btn_settings);
+		
+		if (!FroyoSupport.getInstance(this).isAdminActive()){
+			String h1 = getString(R.string.device_not_ready_h1);
+			String h2 = getString(R.string.device_not_ready_h2);
+			TextView textH1=(TextView)findViewById(R.id.device_ready_h1_text);
+			TextView textH2=(TextView)findViewById(R.id.device_ready_h2_text);
+			textH1.setText(h1);
+			textH2.setText(h2);
+		}
+		
+		
 
 		gotoCP.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {

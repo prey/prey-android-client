@@ -9,20 +9,45 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_alignParentTop="true"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
     android:background="@drawable/background"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
 
-      >
-
-
-
-     <ImageView
+    <ImageView
         android:layout_width="fill_parent"
         android:layout_height="350dp"
- 		android:layout_centerVertical="true"
+        android:layout_centerVertical="true"
         android:layout_marginTop="140dp"
-         android:src="@drawable/brand_color" />
+        android:src="@drawable/brand_color" />
+
+    <TextView
+        android:id="@+id/device_ready_h1_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/device_ready_h2_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/device_ready_h1"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/device_ready_h2_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/login_btn_cp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/device_ready_h2"
+        android:textColor="@color/dark_paragraph"
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/login_btn_cp"
@@ -31,14 +56,13 @@
         android:layout_above="@+id/login_btn_settings"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="120dp"
-        android:text="@string/login_cp"/>
+        android:text="@string/login_cp" />
 
     <Button
         android:id="@+id/login_btn_settings"
         style="@style/PreyButton2.Large"
- 		android:layout_alignParentBottom="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginBottom="40dp"
-        android:text="@string/manage_prey_settings"/>
+        android:text="@string/manage_prey_settings" />
 
 </RelativeLayout>
- 

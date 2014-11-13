@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.prey.PreyLogger;
 import com.prey.R;
+import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.util.KeyboardStatusDetector;
 import com.prey.util.KeyboardVisibilityListener;
 
@@ -29,6 +30,14 @@ public class CheckPasswordActivity extends PasswordActivity {
 		updateLoginScreen();
 		bindPasswordControls();
 		
+		if (!FroyoSupport.getInstance(this).isAdminActive()){
+			String h1 = getString(R.string.device_not_ready_h1);
+			String h2 = getString(R.string.device_not_ready_h2);
+			TextView textH1=(TextView)findViewById(R.id.device_ready_h1_text);
+			TextView textH2=(TextView)findViewById(R.id.device_ready_h2_text);
+			textH1.setText(h1);
+			textH2.setText(h2);
+		}
 		KeyboardStatusDetector keyboard=new KeyboardStatusDetector();
         
 		keyboard.registerActivity(this); //or register to an activity
