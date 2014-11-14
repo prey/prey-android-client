@@ -28,7 +28,7 @@ public class HttpUtils {
 			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
 			trustStore.load(null, null);
 
-			SSLSocketFactory sf = new EasySSLSocketFactory(trustStore);
+			SSLSocketFactory sf = SSLSocketFactory.getSocketFactory();
 			sf.setHostnameVerifier(SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
 
 			HttpParams params = new BasicHttpParams();
