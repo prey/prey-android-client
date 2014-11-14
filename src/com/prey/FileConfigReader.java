@@ -112,4 +112,8 @@ public class FileConfigReader {
 	public int getMinuteScheduled() {
 		return Integer.parseInt(properties.getProperty("minute-scheduled"));
 	}
+	
+	public String getAnalyticsUA() {
+		return properties.getProperty("analytics-ua");
+	}
 }

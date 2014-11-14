@@ -539,8 +539,8 @@ public class PreyWebServices {
 			parameters.put("name", event.getName());
 			parameters.put("info", event.getInfo());
 			
-			PreyLogger.i("sendPreyHttpEvent url:"+url);
-			PreyLogger.i("name:"+event.getName()+" info:"+event.getInfo());
+			PreyLogger.d("sendPreyHttpEvent url:"+url);
+			PreyLogger.d("name:"+event.getName()+" info:"+event.getInfo());
 			
 			//Toast.makeText(ctx, "Event:"+event.getName(), Toast.LENGTH_LONG).show();
 			String status=jsonObject.toString();

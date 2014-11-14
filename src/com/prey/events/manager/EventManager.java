@@ -104,13 +104,13 @@ public class EventManager {
 	private void sendEvents() {
 		if (mapData != null) {
 			JSONObject jsonObjectStatus = mapData.toJSONObject();
-			PreyLogger.i("jsonObjectStatus: " + jsonObjectStatus.toString());
+			PreyLogger.d("jsonObjectStatus: " + jsonObjectStatus.toString());
 			if (event != null) {
 				if (PreyWifiManager.getInstance(ctx).isOnline()) {
 					String lastEvent=PreyConfig.getPreyConfig(ctx).getLastEvent();
 					if(!Event.WIFI_CHANGED.equals(event.getName()) || !event.getName().equals(lastEvent)){
 						PreyConfig.getPreyConfig(ctx).setLastEvent(event.getName());
-						PreyLogger.i("event name[" + this.event.getName() + "], info[" + this.event.getInfo() + "]");
+						PreyLogger.d("event name[" + this.event.getName() + "], info[" + this.event.getInfo() + "]");
 						new EventThread(ctx, event, jsonObjectStatus).start();
 					}
 				}

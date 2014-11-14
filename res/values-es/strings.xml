@@ -168,6 +168,9 @@
     <string name="permission_title_h1">Protección Extra</string>
     <string name="permission_body_text">Prey obtuvo permisos expeciales para poder bloquear tu dispositivo y también evitar que los ladrones lo desinstalen. Si en algún momento necesitas quitar nuestra aplicación, primero debes remover estos permisos desde Prey.</string>
     <string name="go_to_congratulations">Siguiente</string>
+    <string name="info_error_title_h1">Sin Protección Extra</string> 
+    <string name="info_error_body_text">Prey necesita de los permisos especiales para poder bloquear tu dispositivo y también evitar que los ladrones lo desintalen.</string>
+    <string name="give_permissions">Dar permisos</string>
     <string name="feedback_principal_title">Está todo bien?</string>
     <string name="feedback_principal_message">Al parecer llevas usando Prey por un buen tiempo. ¿Estarías dispuesto a darnos tu opinión?</string>
     <string name="feedback_principal_button1">Me encanta</string>

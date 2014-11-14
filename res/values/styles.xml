@@ -12,14 +12,14 @@
     </style>
     
     <style name="PreyTextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textSize">14dip</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">#333</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="PreyButton">
         <item name="android:textColor">#ffffff</item>
-        <item name="android:textSize">18dp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">48dp</item>
@@ -30,12 +30,34 @@
     </style>
 
     <style name="PreyButton.Large">
-        <item name="android:textSize">30dp</item>
+        <item name="android:textSize">30sp</item>
         <item name="android:layout_height">72dp</item>
     </style>
 
     <style name="PreyButton.XLarge">
-        <item name="android:textSize">45dp</item>
+        <item name="android:textSize">45sp</item>
+        <item name="android:layout_height">96dp</item>
+    </style>
+    
+    <style name="PreyButtonRed">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:background">@drawable/button_bg_selector_red</item>
+    </style>
+
+    <style name="PreyButtonRed.Large">
+        <item name="android:textSize">30sp</item>
+        <item name="android:layout_height">72dp</item>
+    </style>
+
+    <style name="PreyButtonRed.XLarge">
+        <item name="android:textSize">45sp</item>
         <item name="android:layout_height">96dp</item>
     </style>
 

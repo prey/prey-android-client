@@ -16,12 +16,16 @@
 <color name="fb_border_center">#888888</color>
 <color name="fb_border_end">#666666</color>
 
+<color name="fb_border_start_red">#AAAAAA</color>
+<color name="fb_border_center_red">#D00A13</color>
+<color name="fb_border_end_red">#666666</color>
+
 <color name="fb_camou_border_start">#700404</color>
 <color name="fb_camou_border_center">#700404</color>
 <color name="fb_camou_border_end">#700404</color>
 
 <color name="fb_camou_normal_start">#971C1C</color>
-<color name="fb_camou_normal_center">#D61E1E</color>
+<color name="fb_camou_normal_center">#D00A13</color>
 <color name="fb_camou_normal_end">#E83535</color>
 <!-- 
 <color name="fb_normal_start">#088F8F8F</color>
@@ -32,12 +36,24 @@
 <color name="fb_normal_center">#3A3A3A</color>
 <color name="fb_normal_end">#212121</color>
 
+<color name="fb_normal_start_red">#4C4C4C</color>
+<color name="fb_normal_center_red">#D00A13</color>
+<color name="fb_normal_end_red">#212121</color>
+
 <color name="fb_focused_start">#212121</color>
 <color name="fb_focused_center">#212121</color>
 <color name="fb_focused_end">#212121</color>
 
+<color name="fb_focused_start_red">#212121</color>
+<color name="fb_focused_center_red">#D00A13</color>
+<color name="fb_focused_end_red">#212121</color>
+
 <color name="fb_selected_start">#212121</color>
 <color name="fb_selected_center">#212121</color>
 <color name="fb_selected_end">#212121</color>
+
+<color name="fb_selected_start_red">#212121</color>
+<color name="fb_selected_center_red">#D00A13</color>
+<color name="fb_selected_end_red">#212121</color>
 
 </resources>
