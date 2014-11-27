@@ -14,11 +14,21 @@
     android:orientation="vertical" >
 
     <ImageView
+        android:id="@+id/top_prey"
+        android:layout_width="400dp"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="120dp"
+        android:gravity="center"
+        android:src="@drawable/icon_prey_reverse" />
+
+    <ImageView
         android:id="@+id/top_right_success"
-        android:layout_width="fill_parent"
-        android:layout_height="150dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="300dp"
+        android:layout_width="600dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_prey"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="140dp"
         android:src="@drawable/icon_extra" />
 
     <TextView
@@ -30,7 +40,7 @@
         android:layout_below="@+id/top_right_success"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="80dp"
         android:gravity="center"
         android:text="@string/permission_title_h1"
         android:textColor="@color/white"

@@ -45,15 +45,26 @@ public class CheckPasswordActivity extends PasswordActivity {
 			
 			@Override
 			public void onVisibilityChanged(boolean keyboardVisible) {
-		        ImageView logoImg=(ImageView) findViewById(R.id.logo_img_password);
+		        ImageView logoImgTextPrey=(ImageView) findViewById(R.id.logo_img_reversed);
+		        ImageView logoImgExtra=(ImageView) findViewById(R.id.logo_img_extra);
+		        TextView  textReady=(TextView)findViewById(R.id.device_ready_h1_text);
+		        
 				if(keyboardVisible) {
                     PreyLogger.d("key on");
-                    if(logoImg!=null)
-                    	logoImg.setVisibility(View.GONE);
+                    if(logoImgTextPrey!=null)
+                    	logoImgTextPrey.setVisibility(View.GONE);
+                    if(logoImgExtra!=null)
+                    	logoImgExtra.setVisibility(View.GONE);
+                    if(textReady!=null)
+                    	textReady.setVisibility(View.GONE);
                  }else {
                 	 PreyLogger.d("key off");
-                	 if(logoImg!=null)
-                		 logoImg.setVisibility(View.VISIBLE);
+                	 if(logoImgTextPrey!=null)
+                     	logoImgTextPrey.setVisibility(View.VISIBLE);
+                     if(logoImgExtra!=null)
+                     	logoImgExtra.setVisibility(View.VISIBLE);
+                     if(textReady!=null)
+                     	textReady.setVisibility(View.VISIBLE);
                  }
 				
 			}

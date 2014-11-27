@@ -21,7 +21,7 @@
     <string name="already_prey_user">ALREADY A PREY USER</string>
     <string name="new_user">NEW USER</string>
     <!-- Login screen -->
-    <string name="device_ready_h1">Device ready</string>
+    <string name="device_ready_h1">DEVICE READY</string>
     <string name="device_not_ready_h1">Device not ready!</string>
     <string name="device_ready_h2">Your phone is protected and waiting for the activation signal.</string>
     <string name="device_not_ready_h2">Location services are disabled for Prey. Reports will not be sent.</string>
@@ -224,7 +224,13 @@
     <!-- Permission Information --> 
     <string name="permission_title_h1">EXTRA PROTECTION</string> 
     <string name="permission_body_text">Prey was granted special permissions in order to lock your device and to prevent thieves from uninstalling it. If you ever need to remove Prey, you first have to revoke these permissions from within the app.</string>
+    <string name="no_permission_title_h1">NO EXTRA PROTECTION</string> 
+    <string name="no_permission_body_text">Prey needs special permits to be able to lock your device and also prevent thieves from uninstalling it.</string>
     <string name="go_to_congratulations">NEXT</string>
+    <string name="give_permissions">GIVE PERMISSIONS</string>
+    <!-- Disable power -->
+    <string name="disable_power_title_h1">DISABLE POWER BUTTON</string> 
+    <string name="disable_power_body_text">Your device can\'t be turned off\nif its screen is locked.\nYou can change this after from the\nPrey configuration.</string>
     <!-- Feedback -->
     <string name="feedback_principal_title">Is everything alright, dear?</string>
     <string name="feedback_principal_message">It seems you\'ve been using Prey for a while now. Would you tell us what you think about it?</string>
@@ -241,5 +247,8 @@
     <string name="preferences_disable_power_options_summary">Your device can\'t be turned off if its screen is locked</string>
     <string name="preferences_scheduled_title">Set interval frequency</string>
     <string name="preferences_scheduled_summary">How often Prey will run if no Google Services are available</string>
-                
+    <string name="back">Back</string>
+    <string name="login_to_prey">Login to Prey</string>
+    <string name="login_setting_h1_text">LOGIN TO SETTINGS</string>
+    <string name="login_setting_h2_text">For your security, type your password\nto manager Prey device settings.</string>
 </resources>

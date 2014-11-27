@@ -12,7 +12,7 @@
     <string name="updating_info_message">Actualizando información, un segundo…</string>
     <string name="already_prey_user">TENGO CUENTA EN PREY</string>
     <string name="new_user">NUEVO USUARIO</string>
-    <string name="device_ready_h1">Equipo preparado</string>
+    <string name="device_ready_h1">DISPOSITIVO LISTO</string>
     <string name="device_not_ready_h1">¡Equipo aún no listo!</string>
     <string name="device_ready_h2">Tu equipo está protegido y a la espera de la señal de activación.</string>
     <string name="device_not_ready_h2">Servicios de localización desactivados. Los reportes no serán enviados.</string>
@@ -170,7 +170,13 @@
     <string name="sms_not_sent">Hubo un problema enviando el mensaje. ¿Estás seguro que tu equipo puede enviar SMS?</string>
     <string name="permission_title_h1">PROTECCIÓN EXTRA</string>
     <string name="permission_body_text">Prey obtuvo permisos especiales para poder bloquear tu dispositivo y también evitar que los ladrones lo desinstalen. Si en algún momento necesitas quitar nuestra aplicación, primero debes remover estos permisos desde Prey.</string>
+    <string name="no_permission_title_h1">SIN PROTECCIÓN EXTRA</string>
+    <string name="no_permission_body_text">Prey necesita de los permisos especiales para poder bloquear tu dispositivo y también evitar que los ladrones lo desintalen.</string>
     <string name="go_to_congratulations">SIGUIENTE</string>
+    <string name="give_permissions">DAR PERMISOS</string>
+    <!-- Disable power -->
+    <string name="disable_power_title_h1">DESACTIVAR BOTÓN APAGADO</string> 
+    <string name="disable_power_body_text">El dispositivo no se puede apagar\nSi su pantalla está bloqueada.\nUsted puede cambiar esto\ndespués de la configuración de Prey.</string>
     <string name="feedback_principal_title">Está todo bien?</string>
     <string name="feedback_principal_message">Al parecer llevas usando Prey por un buen tiempo. ¿Estarías dispuesto a darnos tu opinión?</string>
     <string name="feedback_principal_button1">Me encanta</string>
@@ -186,4 +192,6 @@
     <string name="preferences_disable_power_options_summary">Tu dispositivo no puede ser apagado si la pantalla está bloqueada</string>
     <string name="preferences_scheduled_title">Fijar frecuenta de intervalo</string>
     <string name="preferences_scheduled_summary">Cuán rápido Prey se ejecutará si no hay servicios de Google disponibles</string>
+    <string name="login_setting_h1_text">INGRESAR A CONFIGURACIÓN</string>
+    <string name="login_setting_h2_text">Para su seguridad , escriba su contraseña, para administrador de configuración del dispositivo.</string>
 </resources>

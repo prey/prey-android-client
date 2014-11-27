@@ -13,14 +13,25 @@
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
-    <ImageView
+     <ImageView
+        android:id="@+id/logo_img_reverse"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/logo_img_extra"
+        android:layout_marginBottom="10dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/brand_color" />
+        android:src="@drawable/logo_reversed" />
+
+    <ImageView
+        android:id="@+id/logo_img_extra"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/device_ready_h1_text"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/icon_check" />
 
     <TextView
         android:id="@+id/device_ready_h1_text"

@@ -14,12 +14,21 @@
     android:orientation="vertical" >
 
     <ImageView
+        android:id="@+id/top_prey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:src="@drawable/icon_prey_reverse" />
+
+    <ImageView
         android:id="@+id/top_right_success"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_above="@+id/congrats_h1_text"
-        android:layout_marginBottom="20dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_prey"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:src="@drawable/icon_extra" />
 
@@ -27,12 +36,12 @@
         android:id="@+id/congrats_h1_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/congrats_h2_text"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/top_right_success"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/permission_title_h1"
         android:textColor="@color/white"
@@ -43,11 +52,11 @@
         android:id="@+id/congrats_h2_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/congrats_btn_ok"
+        android:layout_below="@+id/congrats_h1_text"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/permission_body_text"
         android:textColor="@color/dark_paragraph"

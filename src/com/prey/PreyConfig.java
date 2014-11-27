@@ -755,6 +755,18 @@ public class PreyConfig {
 		
 	}
 	
+	public boolean getDisablePowerOptions() {
+		return disablePowerOptions;
+	}
+
+	public void setDisablePowerOptions(boolean disablePowerOptions) {
+		this.disablePowerOptions = disablePowerOptions;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, disablePowerOptions);
+		editor.commit();
+	}
+	
 	public boolean isRun() {
 		return run;
 	}

@@ -8,22 +8,39 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/screen_bg_white"
+    android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:orientation="vertical" >
+    android:background="@color/screen_bg_white"
+    >
 
-    <TextView
+    
+      <RelativeLayout
         android:id="@+id/textView_new_account"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="0dp"
         android:background="#F0F3F7"
-        android:gravity="center"
-        android:text="@string/create_prey_account_h1"
-        android:textColor="#68717D"
-        android:textSize="30sp" />
+        android:orientation="horizontal" >
+ 		 <ImageView
+ 		     android:id="@+id/icon_back"
+            android:layout_width="wrap_content"
+           android:layout_height="70dp"
+            android:src="@drawable/icon_back" />
+ 		 
+       
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:text="@string/create_prey_account_h1"
+            android:textColor="#68717D"
+            android:textSize="30sp" />
+
+    </RelativeLayout>
+ 
 
     <ImageView
         android:id="@+id/logo_img_new_account"

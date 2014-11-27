@@ -8,6 +8,7 @@ package com.prey.activities;
 
 import android.app.NotificationManager;
 
+import com.prey.PreyStatus;
 import com.prey.PreyVerify;
 import com.prey.R;
 import android.content.Context;
@@ -40,11 +41,11 @@ public class LoginActivity extends PasswordActivity {
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancel(R.string.preyForAndroid_name);
 		startup();
-		
+
 		boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
 		if (disablePowerOptions) {
 			startService(new Intent(getApplicationContext(), PreyDisablePowerOptionsService.class));
-		}else{
+		} else {
 			stopService(new Intent(getApplicationContext(), PreyDisablePowerOptionsService.class));
 		}
 	}
@@ -57,21 +58,21 @@ public class LoginActivity extends PasswordActivity {
 
 	private void startup() {
 		if (!isThisDeviceAlreadyRegisteredWithPrey()) {
-			Intent intent =null;
-			if (!isThereBatchInstallationKey()){
+			Intent intent = null;
+			if (!isThereBatchInstallationKey()) {
 				intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-				
-			}else{
+
+			} else {
 				intent = new Intent(LoginActivity.this, WelcomeBatchActivity.class);
 			}
 			startActivity(intent);
 			finish();
 		} else {
 			PreyVerify.getInstance(this);
-			if(getPreyConfig().showFeedback()){
+			if (getPreyConfig().showFeedback()) {
 				showFeedback(getApplicationContext());
-			}else{
-					showLogin();
+			} else {
+				showLogin();
 			}
 		}
 	}
@@ -80,53 +81,59 @@ public class LoginActivity extends PasswordActivity {
 		setContentView(R.layout.login);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		updateLoginScreen();
-		Button gotoCP = (Button) findViewById(R.id.login_btn_cp);
+
 		Button gotoSettings = (Button) findViewById(R.id.login_btn_settings);
-		
-		if (!FroyoSupport.getInstance(this).isAdminActive()){
+
+		if (!FroyoSupport.getInstance(this).isAdminActive()) {
 			String h1 = getString(R.string.device_not_ready_h1);
 			String h2 = getString(R.string.device_not_ready_h2);
-			TextView textH1=(TextView)findViewById(R.id.device_ready_h1_text);
-			TextView textH2=(TextView)findViewById(R.id.device_ready_h2_text);
+			TextView textH1 = (TextView) findViewById(R.id.device_ready_h1_text);
+			TextView textH2 = (TextView) findViewById(R.id.device_ready_h2_text);
 			textH1.setText(h1);
 			textH2.setText(h2);
 		}
-		
-		
 
-		gotoCP.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				try{
-					String url=PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelUrl();
-					Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
-					startActivity(browserIntent);
-				}catch(Exception e){
+		try {
+			Button gotoCP = (Button) findViewById(R.id.login_btn_cp);
+			gotoCP.setOnClickListener(new Button.OnClickListener() {
+				public void onClick(View v) {
+					try {
+						String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelUrl();
+						Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
+						startActivity(browserIntent);
+					} catch (Exception e) {
+					}
 				}
-			}
-		});
+			});
+		} catch (Exception e) {
+		}
 
 		gotoSettings.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
-				startActivity(intent);
+				if (!PreyStatus.getInstance().isPreyConfigurationActivityResume()) {
+					Intent intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
+					startActivity(intent);
+				} else {
+					Intent intent = new Intent(LoginActivity.this, PreyConfigurationActivity.class);
+					startActivity(intent);
+				}
 			}
 		});
 	}
-	 
+
 	private boolean isThisDeviceAlreadyRegisteredWithPrey() {
 		return getPreyConfig().isThisDeviceAlreadyRegisteredWithPrey(false);
 	}
 
-	
-	private void showFeedback(Context ctx){
+	private void showFeedback(Context ctx) {
 		Intent popup = new Intent(ctx, FeedbackActivity.class);
 		popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		ctx.startActivity(popup);
 	}
-	
+
 	private boolean isThereBatchInstallationKey() {
-		String apiKeyBatch=getPreyConfig().getApiKeyBatch();
-		return (apiKeyBatch!=null&&!"".equals(apiKeyBatch));
+		String apiKeyBatch = getPreyConfig().getApiKeyBatch();
+		return (apiKeyBatch != null && !"".equals(apiKeyBatch));
 	}
 
 }

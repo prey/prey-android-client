@@ -190,7 +190,12 @@
             android:name="com.prey.activities.CongratulationsActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-             />    
+             />   
+       <activity
+            android:name="com.prey.activities.DisableButtonActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+             />
         <activity
             android:name="com.prey.activities.SimpleCameraActivity"
             android:theme="@style/Theme.Transparent" 

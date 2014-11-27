@@ -53,7 +53,7 @@ public class PasswordActivity extends PreyActivity {
 		password.setTypeface(Typeface.DEFAULT);
 		password.setTransformationMethod(new PasswordTransformationMethod());
 		
-		TextView have_account = (TextView) findViewById(R.id.forgot);
+		/*TextView have_account = (TextView) findViewById(R.id.forgot);
 		have_account.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
@@ -63,7 +63,7 @@ public class PasswordActivity extends PreyActivity {
 				finish();
 
 			}
-		});
+		});*/
  
 	}
 	

@@ -6,6 +6,8 @@
  ******************************************************************************/
 package com.prey.activities;
 
+import java.util.Locale;
+
 import android.app.AlertDialog;
 
 import com.prey.R;
@@ -24,6 +26,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,22 +58,25 @@ public class CreateAccountActivity extends SetupActivity {
 
 			@Override
 			public void onVisibilityChanged(boolean keyboardVisible) {
-				ImageView logoImg = (ImageView) findViewById(R.id.logo_img_new_account);
-				TextView tituloText = (TextView) findViewById(R.id.textView_new_account);
-				if (keyboardVisible) {
-					PreyLogger.d("key on");
-					if (logoImg != null)
-						logoImg.setVisibility(View.GONE);
-					if (tituloText != null)
-						tituloText.setVisibility(View.GONE);
-				} else {
-					PreyLogger.d("key off");
-					if (logoImg != null)
-						logoImg.setVisibility(View.VISIBLE);
-					if (tituloText != null)
-						tituloText.setVisibility(View.VISIBLE);
+				try {
+					ImageView logoImg = (ImageView) findViewById(R.id.logo_img_new_account);
+					RelativeLayout tituloText = (RelativeLayout) findViewById(R.id.textView_new_account);
+					if (keyboardVisible) {
+						PreyLogger.d("key on");
+						if (logoImg != null)
+							logoImg.setVisibility(View.GONE);
+						if (tituloText != null)
+							tituloText.setVisibility(View.GONE);
+					} else {
+						PreyLogger.d("key off");
+						if (logoImg != null)
+							logoImg.setVisibility(View.VISIBLE);
+						if (tituloText != null)
+							tituloText.setVisibility(View.VISIBLE);
+					}
+				} catch (Exception e) {
+					PreyLogger.i("error:"+e.getMessage());
 				}
-
 			}
 		});
 
@@ -113,6 +119,19 @@ public class CreateAccountActivity extends SetupActivity {
 				startActivity(intent);
 				finish();
 
+			}
+		});
+		ImageView iconBack = (ImageView) findViewById(R.id.icon_back);
+		if ("es".equals(Locale.getDefault().getLanguage())) {
+			iconBack.setImageResource(R.drawable.icon_back_es);
+		}
+		iconBack.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				Intent intent = null;
+				intent = new Intent(CreateAccountActivity.this, WelcomeActivity.class);
+				startActivity(intent);
+				finish();
 			}
 		});
 
