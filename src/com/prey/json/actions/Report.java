@@ -50,16 +50,34 @@ public class Report  {
 			PreyLogger.i("interval:"+interval);
 			PreyConfig.getPreyConfig(ctx).setIntervalReport(""+interval);
 			while(PreyConfig.getPreyConfig(ctx).isMissing()){
-				
 				JSONArray jsonArray = null;
+				List<String> listExclude=new ArrayList<String>();
+				
+				try{
+					JSONArray jsonArrayExclude=parameters.getJSONArray("exclude");
+					for (int i=0;jsonArrayExclude!=null&&i<jsonArrayExclude.length();i++){
+						String exclude=null;
+						try{
+							exclude=(String)jsonArrayExclude.get(i);
+							listExclude.add(exclude);
+							PreyLogger.d("exclude:"+exclude);
+						}catch(Exception e){}
+					}
+				}catch(Exception e){
+				}
+				
 				try{
 					jsonArray=parameters.getJSONArray("include");
 				}catch(Exception e){
 					jsonArray=new JSONArray();
-					jsonArray.put(new String("picture"));
-					jsonArray.put(new String("location"));
-					jsonArray.put(new String("access_points_list"));
+					if(!listExclude.contains("picture"))
+						jsonArray.put(new String("picture"));
+					if(!listExclude.contains("location"))
+						jsonArray.put(new String("location"));
+					if(!listExclude.contains("access_points_list"))
+						jsonArray.put(new String("access_points_list"));
 				}
+				
 				for (int i = 0; i < jsonArray.length(); i++) {
 					String nameAction = jsonArray.getString(i);
 					PreyLogger.d("nameAction:" + nameAction);

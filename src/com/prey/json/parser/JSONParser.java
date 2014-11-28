@@ -102,6 +102,8 @@ public class JSONParser {
 	//	 json="[{\"command\":\"start\",\"target\":\"contacts_restore\" }]"; 
 		 
 //		 json="[{\"command\":\"start\",\"target\":\"browser\" }]"; 
+		
+//		json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"interval\":\"2\",\"exclude\":[\"picture\",false]}}]"; 
 		 
 		if ("[]".equals(json)) {
 			return null;
