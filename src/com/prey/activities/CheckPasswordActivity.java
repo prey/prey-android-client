@@ -8,7 +8,6 @@ package com.prey.activities;
 
 import android.os.Bundle;
 import com.prey.R;
-import com.prey.analytics.PreyGoogleAnalytics;
 
 public class CheckPasswordActivity extends PasswordActivity {
 
@@ -20,9 +19,6 @@ public class CheckPasswordActivity extends PasswordActivity {
 		setContentView(R.layout.password);
 		updateLoginScreen();
 		bindPasswordControls();
-		
-		PreyGoogleAnalytics.getInstance().trackAsynchronously(getApplicationContext(), "password");
-		
 	}
 
 }

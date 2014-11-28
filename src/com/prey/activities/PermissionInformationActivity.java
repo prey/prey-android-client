@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.prey.PreyLogger;
-import com.prey.analytics.PreyGoogleAnalytics;
 import com.prey.backwardcompatibility.FroyoSupport;
 
 public class PermissionInformationActivity extends PreyActivity {
@@ -52,13 +51,11 @@ public class PermissionInformationActivity extends PreyActivity {
 	}
 
 	private void showScreen() {
-		PreyGoogleAnalytics.getInstance().trackAsynchronously(getApplicationContext(), "show");
 		if (FroyoSupport.getInstance(this).isAdminActive()) {
 			setContentView(R.layout.permission_information);
 			Button ok = (Button) findViewById(R.id.permission_next);
 			ok.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					PreyGoogleAnalytics.getInstance().trackAsynchronously(getApplicationContext(), "approved_permit");
 					Intent intent = new Intent(PermissionInformationActivity.this, CongratulationsActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString("message", congratsMessage);
@@ -80,7 +77,6 @@ public class PermissionInformationActivity extends PreyActivity {
 			Button ok = (Button) findViewById(R.id.give_permissions_next);
 			ok.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					PreyGoogleAnalytics.getInstance().trackAsynchronously(getApplicationContext(), "refused_permission");
 					Intent intent = new Intent(PermissionInformationActivity.this, CongratulationsActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString("message", congratsMessage);
