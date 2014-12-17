@@ -16,8 +16,10 @@ public class PreyApp extends Application {
 	public void onCreate() {
 		super.onCreate();
 		mLastPause = 0;
+		PreyLogger.d("__________________");
 		PreyLogger.i("Application launched!");
-
+		PreyLogger.d("__________________");
+		
 		String deviceKey = PreyConfig.getPreyConfig(this).getDeviceID();
 		if (deviceKey != null && deviceKey != "")
 			PreyConfig.getPreyConfig(this).registerC2dm();

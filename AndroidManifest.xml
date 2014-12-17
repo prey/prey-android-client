@@ -206,7 +206,8 @@
         <service android:name="com.prey.services.PreyRunnerService" />
         <service android:name="com.prey.services.PreyDisablePowerOptionsService" />
         <service android:name="com.prey.beta.services.PreyBetaRunnerService" />
-
+        <service android:name="com.prey.actions.report.ReportService" />
+        
         <!-- Receivers -->
         <receiver android:name="com.prey.receivers.SmsReceiver">
             <intent-filter android:priority="2147483647" >
@@ -278,7 +279,7 @@
                 <!-- BATTERY LOW -->   
  
                 <action android:name="android.intent.action.BATTERY_LOW" />
-                <action android:name="android.intent.action.BATTERY_OKAY" />
+                <!-- <action android:name="android.intent.action.BATTERY_OKAY" />-->
                 
                 <!-- WIFI CHANGED -->
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -287,10 +288,10 @@
                 <!-- SIM CHANGED AND  BOOT COMPLETED -->
                 <action android:name="android.intent.action.BOOT_COMPLETED" />          
                 
-                <!-- (UN)PLUGGED -->              
- 
+                <!-- (UN)PLUGGED           
                 <action android:name="android.intent.action.BATTERY_CHANGED" />
- 
+ 				-->    
+                
                 <!-- AIRPLANE -->
         		<action android:name="android.intent.action.AIRPLANE_MODE" />
         		
