@@ -6,33 +6,55 @@
   Full license at "/LICENSE"
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/screen_bg"
-    android:paddingLeft="60dp"
-    android:paddingRight="60dp" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/screen_bg_white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/add_device_title"
+    <RelativeLayout
+        android:id="@+id/textView_add_device"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="@string/log_in_to_prey_h1"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/darker_txt"
-        android:textSize="25dp"
-        android:textStyle="bold" />
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:background="#F0F3F7"
+        android:orientation="horizontal" >
+ 		 <ImageView
+ 		     android:id="@+id/icon_back"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:src="@drawable/icon_back" />
+ 		  
+       
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:text="@string/login_to_prey"
+            android:textColor="#68717D"
+            android:textSize="25sp" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/logo_img_add_device"
+        android:layout_width="wrap_content"
+        android:layout_height="280dp"
+        android:layout_above="@+id/add_device_email"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="60dp"
+        android:src="@drawable/brand_solid" />
 
     <EditText
         android:id="@+id/add_device_email"
         style="@style/PreyEditText.Large"
-        android:layout_width="fill_parent"
-        android:layout_below="@+id/add_device_title"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
+        android:layout_above="@+id/add_device_pass"
         android:hint="@string/your_prey_email"
-        android:inputType="textEmailAddress">
+        android:inputType="textEmailAddress" >
 
         <requestFocus />
     </EditText>
@@ -40,23 +62,28 @@
     <EditText
         android:id="@+id/add_device_pass"
         style="@style/PreyEditText.Large"
-        android:layout_width="fill_parent"
-        android:layout_below="@+id/add_device_email"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
+        android:layout_above="@+id/add_device_btn_ok"
         android:hint="@string/your_prey_pass"
-        android:inputType="textPassword">
-
+        android:inputType="textPassword" >
     </EditText>
 
     <Button
         android:id="@+id/add_device_btn_ok"
-        style="@style/PreyButton.Large"
-        android:layout_below="@+id/add_device_pass"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="40dp"
+        style="@style/PreyButton3.Large"
+        android:layout_above="@+id/forgot"
         android:text="@string/add_this_device" />
+
+    <TextView
+        android:id="@+id/forgot"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="@string/password_dialog_forgot_text1"
+        android:textColor="#485465"
+        android:textSize="25sp" />
 
 </RelativeLayout>

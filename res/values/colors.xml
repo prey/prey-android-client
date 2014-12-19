@@ -7,25 +7,29 @@
 -->
 <resources>
 
-<color name="screen_bg">#e1e5e4</color>
+<color name="screen_bg2">#e1e5e4</color>
+<color name="screen_bg">#1D2838</color>
+<color name="screen_bg_white">#ffffff</color>
+<color name="screen_fb">#fbfbfb</color>
+
 <color name="lighter_bg">#E8EBEA</color>
 <color name="darker_txt">#4d4d4d</color>
 <color name="lighter_txt">#808080</color>
     
-<color name="fb_border_start">#AAAAAA</color>
-<color name="fb_border_center">#888888</color>
-<color name="fb_border_end">#666666</color>
+<color name="fb_border_start">#167EA0</color>
+<color name="fb_border_center">#167EA0</color>
+<color name="fb_border_end">#167EA0</color>
 
-<color name="fb_border_start_red">#AAAAAA</color>
-<color name="fb_border_center_red">#D00A13</color>
-<color name="fb_border_end_red">#666666</color>
+<color name="fb_input_border_start">#D4D7D9</color>
+<color name="fb_input_border_center">#D4D7D9</color>
+<color name="fb_input_border_end">#D4D7D9</color>
 
 <color name="fb_camou_border_start">#700404</color>
 <color name="fb_camou_border_center">#700404</color>
 <color name="fb_camou_border_end">#700404</color>
 
 <color name="fb_camou_normal_start">#971C1C</color>
-<color name="fb_camou_normal_center">#D00A13</color>
+<color name="fb_camou_normal_center">#D61E1E</color>
 <color name="fb_camou_normal_end">#E83535</color>
 <!-- 
 <color name="fb_normal_start">#088F8F8F</color>
@@ -36,24 +40,17 @@
 <color name="fb_normal_center">#3A3A3A</color>
 <color name="fb_normal_end">#212121</color>
 
-<color name="fb_normal_start_red">#4C4C4C</color>
-<color name="fb_normal_center_red">#D00A13</color>
-<color name="fb_normal_end_red">#212121</color>
-
 <color name="fb_focused_start">#212121</color>
 <color name="fb_focused_center">#212121</color>
 <color name="fb_focused_end">#212121</color>
-
-<color name="fb_focused_start_red">#212121</color>
-<color name="fb_focused_center_red">#D00A13</color>
-<color name="fb_focused_end_red">#212121</color>
 
 <color name="fb_selected_start">#212121</color>
 <color name="fb_selected_center">#212121</color>
 <color name="fb_selected_end">#212121</color>
 
-<color name="fb_selected_start_red">#212121</color>
-<color name="fb_selected_center_red">#D00A13</color>
-<color name="fb_selected_end_red">#212121</color>
+<color name="black">#000000</color>
+<color name="white">#ffffff</color>
+<color name="dark_paragraph">#94A9B7</color>
+<color name="blackwhite">#010101</color>
 
 </resources>

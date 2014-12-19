@@ -7,6 +7,8 @@
 package com.prey.activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+
 
 import com.prey.R;
 import android.os.Bundle;
@@ -20,11 +22,12 @@ public class PermissionInformationActivity extends PreyActivity {
 
 	private static final int SECURITY_PRIVILEGES = 10;
 	private String congratsMessage;
-	private boolean first = false;
+	private boolean first= false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		Bundle bundle = getIntent().getExtras();
 		congratsMessage = bundle.getString("message");
 
@@ -33,9 +36,10 @@ public class PermissionInformationActivity extends PreyActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		PreyLogger.i("first:"+first);
 		if (getPreyConfig().isFroyoOrAbove() && !FroyoSupport.getInstance(this).isAdminActive() && !first) {
 			first = true;
-			PreyLogger.i("Is froyo or above!!");
+			//PreyLogger.i("Is froyo or above!!");
 			Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
 			startActivityForResult(intent, SECURITY_PRIVILEGES);
 		} else {
@@ -46,6 +50,7 @@ public class PermissionInformationActivity extends PreyActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		PreyLogger.i("requestCode:" + requestCode + " resultCode:" + resultCode);
 		if (requestCode == SECURITY_PRIVILEGES)
 			showScreen();
 	}
@@ -53,10 +58,12 @@ public class PermissionInformationActivity extends PreyActivity {
 	private void showScreen() {
 		if (FroyoSupport.getInstance(this).isAdminActive()) {
 			setContentView(R.layout.permission_information);
-			Button ok = (Button) findViewById(R.id.permission_next);
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			Button ok = (Button) findViewById(R.id.congrats_btn_ok);
 			ok.setOnClickListener(new View.OnClickListener() {
+
 				public void onClick(View v) {
-					Intent intent = new Intent(PermissionInformationActivity.this, CongratulationsActivity.class);
+					Intent intent = new Intent(PermissionInformationActivity.this, DisableButtonActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString("message", congratsMessage);
 					intent.putExtras(bundle);
@@ -66,26 +73,20 @@ public class PermissionInformationActivity extends PreyActivity {
 			});
 		} else {
 			setContentView(R.layout.permission_information_error);
-			Button give = (Button) findViewById(R.id.give_permissions);
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+ 
+
+			getPreyConfig().registerC2dm();
+
+			Button give = (Button) findViewById(R.id.give_permissions_button);
 			give.setOnClickListener(new View.OnClickListener() {
+
 				public void onClick(View v) {
+					first = true;
 					Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
 					startActivityForResult(intent, SECURITY_PRIVILEGES);
-					
-				}
-			});
-			Button ok = (Button) findViewById(R.id.give_permissions_next);
-			ok.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					Intent intent = new Intent(PermissionInformationActivity.this, CongratulationsActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putString("message", congratsMessage);
-					intent.putExtras(bundle);
-					startActivity(intent);
-					finish();
 				}
 			});
 		}
-		
 	}
 }

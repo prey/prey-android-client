@@ -77,7 +77,7 @@ public class PreyRestHttpClient {
 
 		// Set the default socket timeout (SO_TIMEOUT)
 		// in milliseconds which is the timeout for waiting for data.
-		int timeoutSocket = 30000;
+		int timeoutSocket = 50000;
 		HttpConnectionParams.setSoTimeout(params, timeoutSocket);
 
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);

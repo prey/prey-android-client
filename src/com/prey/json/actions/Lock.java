@@ -5,6 +5,8 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -42,6 +44,14 @@ public class Lock extends JsonAction{
 			if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {
 				PreyLogger.d("-- Unlock instruction received");
 				FroyoSupport.getInstance(ctx).changePasswordAndLock("", true);
+				WakeLock screenLock = ((PowerManager)ctx.getSystemService(Context.POWER_SERVICE)).newWakeLock(
+					     PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+					screenLock.acquire();
+
+					//later
+					screenLock.release();
+					
+					
 				PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop","lock","stopped"));
 				PreyConfig.getPreyConfig(ctx).setLastEvent("lock_stopped");
 			}

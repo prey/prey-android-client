@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 
@@ -28,7 +29,7 @@ public class BatteryLevelActivity extends Activity {
      */
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-		 
+    	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		batteryLevel();
 		showDialog(SHOW_POPUP);
     }

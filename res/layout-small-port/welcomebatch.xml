@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Created by Carlos Yaconi
+  Copyright 2012 Fork Ltd. All rights reserved.
+  License: GPLv3
+  Full license at "/LICENSE"
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_alignParentTop="true"
+    android:background="@color/screen_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:weightSum="8" >
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="200dp"
+        android:src="@drawable/brand_reversed" />
+
+</LinearLayout>

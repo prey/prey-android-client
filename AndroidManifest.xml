@@ -86,15 +86,19 @@
         android:name="com.prey.PreyApp"
         android:icon="@drawable/logo"
         android:label="@string/preyForAndroid_name"
-        android:theme="@style/PreyTheme" >
+        android:theme="@style/PreyTheme"
+        android:configChanges="keyboardHidden|orientation"
+		android:screenOrientation="portrait"
+		android:allowBackup="false" >
 
         <!-- Activities -->
         <activity
             android:name="com.prey.activities.LoginActivity"
             android:clearTaskOnLaunch="true"
-            android:configChanges="keyboardHidden"
+            android:configChanges="keyboardHidden|orientation"
             android:label="@string/preyForAndroid_name"
-            android:launchMode="singleInstance" >
+            android:launchMode="singleInstance" 
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -103,30 +107,36 @@
         </activity>
         <activity
             android:name="com.prey.activities.WelcomeActivity"
-            android:configChanges="keyboardHidden" />
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.prey.activities.WelcomeBatchActivity"
             android:configChanges="keyboardHidden" />
         <activity
             android:name="com.prey.activities.CheckPasswordActivity"
-            android:configChanges="keyboardHidden"
             android:launchMode="singleInstance"
-            android:noHistory="true" />
+            android:noHistory="true" 
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.prey.activities.PreyConfigurationActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
             android:noHistory="true"
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name="com.prey.activities.PopUpAlertActivity"
+            android:screenOrientation="portrait"
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/preyForAndroid_name"
             android:launchMode="singleTask" />
         <activity
             android:name="com.prey.activities.FeedbackActivity"
+            android:screenOrientation="portrait"
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/preyForAndroid_name"
@@ -134,6 +144,7 @@
         
         <activity
             android:name="com.prey.activities.FormFeedbackActivity"
+            android:screenOrientation="portrait"
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/preyForAndroid_name"
@@ -143,11 +154,13 @@
             android:name="com.prey.activities.CameraActivity"
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:label="@string/preyForAndroid_name"
-            android:launchMode="singleTask" />        
+            android:launchMode="singleTask" />       
         <activity
             android:name="com.prey.activities.SMSContactActivity"
-            android:configChanges="keyboardHidden" >
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="com.prey.activities.SEND_SMS_CONF" />
 
@@ -156,31 +169,47 @@
         </activity>
         <activity
             android:name="com.prey.activities.CreateAccountActivity"
-            android:configChanges="keyboardHidden" />
+            android:configChanges="keyboardHidden|orientation"
+ 			android:windowSoftInputMode="stateHidden|adjustResize"
+ 			android:screenOrientation="portrait" />
+        <activity
+            android:name="com.prey.activities.AddDeviceToAccountActivity"
+            android:configChanges="keyboardHidden|orientation"
+    		android:windowSoftInputMode="stateHidden|adjustResize"
+    		android:screenOrientation="portrait"
+ 
+             />
         <activity
             android:name="com.prey.activities.CongratulationsActivity"
-            android:configChanges="keyboardHidden" />    
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.prey.activities.DisableButtonActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+             />    
         <activity
             android:name="com.prey.activities.SimpleCameraActivity"
             android:theme="@style/Theme.Transparent" 
-            android:configChanges="keyboardHidden" />
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.prey.activities.SimpleVideoActivity"
              android:theme="@style/Theme.Transparent" 
-            android:configChanges="keyboardHidden" /> 
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" /> 
         <activity
             android:name="com.prey.activities.VideoActivity"
-             android:theme="@style/Theme.Transparent" 
-            android:configChanges="keyboardHidden" /> 
+            android:theme="@style/Theme.Transparent" 
+            android:configChanges="keyboardHidden|orientation" /> 
         <activity
             android:name="com.prey.activities.PermissionInformationActivity"
-            android:configChanges="keyboardHidden" />
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.prey.activities.PermissionInformationBatchActivity"
-            android:configChanges="keyboardHidden" />
-        <activity
-            android:name="com.prey.activities.AddDeviceToAccountActivity"
-            android:configChanges="keyboardHidden" />
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
         <!--
         <activity
             android:name="com.prey.activities.SMSContactActivity"
@@ -189,6 +218,7 @@
         <activity
             android:name="com.prey.activities.StatusActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:noHistory="true" >
             <intent-filter>
                 <action android:name="com.prey.activities.StatusActivity" />
@@ -198,7 +228,8 @@
         </activity>
         <activity
             android:name="com.prey.activities.AgreementDialogActivity"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
 
         <!-- Services -->
         <service android:name="com.prey.services.LocationService" />

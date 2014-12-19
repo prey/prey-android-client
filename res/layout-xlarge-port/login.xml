@@ -6,28 +6,76 @@
   Full license at "/LICENSE"
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/screen_bg" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_alignParentTop="true"
+    android:background="@drawable/background"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
 
-    <include layout="@layout/header_port" />
+    <ImageView
+        android:id="@+id/logo_img_reversed"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+ 
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="120dp"
+        android:src="@drawable/logo_reversed" />
+
+    <ImageView
+        android:id="@+id/logo_img_extra"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_below="@+id/logo_img_reversed"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="200dp"
+        android:src="@drawable/icon_check" />
+
+    <TextView
+        android:id="@+id/device_ready_h1_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo_img_extra"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="@string/device_ready_h1"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/device_ready_h2_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/device_ready_h1_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="@string/device_ready_h2"
+        android:textColor="@color/dark_paragraph"
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/login_btn_cp"
-        style="@style/PreyButton.XLarge"
+        style="@style/PreyButton2.Large"
+        android:layout_width="fill_parent"
         android:layout_above="@+id/login_btn_settings"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="160dp"
         android:text="@string/login_cp" />
 
     <Button
         android:id="@+id/login_btn_settings"
-        style="@style/PreyButton.XLarge"
+        style="@style/PreyButton2.Large"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="80dp"
         android:text="@string/manage_prey_settings" />
 
 </RelativeLayout>

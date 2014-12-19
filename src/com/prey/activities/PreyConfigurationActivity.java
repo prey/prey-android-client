@@ -7,6 +7,7 @@
 package com.prey.activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -28,6 +29,7 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
 		preyConfig.setAccountVerified();
 		addPreferencesFromResource(R.xml.preferences);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	}
 
 	@Override
@@ -44,10 +46,13 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 			finish();
 			
 		}
-		if(PreyEmail.getEmail(getApplicationContext())!=null){
-			PreferenceCategory mCategory = (PreferenceCategory) findPreference("PREFS_CAT_PREFS");
-			Preference p2 = findPreference(PreyConfig.PREFS_SCHEDULED);
-			mCategory.removePreference(p2);
+		try{
+			if(PreyEmail.getEmail(getApplicationContext())!=null){
+				PreferenceCategory mCategory = (PreferenceCategory) findPreference("PREFS_CAT_PREFS");
+				Preference p2 = findPreference(PreyConfig.PREFS_SCHEDULED);
+				mCategory.removePreference(p2);
+			}
+		}catch(Exception e){
 		}
 		
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());

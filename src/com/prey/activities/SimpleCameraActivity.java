@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
  
 
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.hardware.Camera;
 
@@ -32,7 +33,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.simple_camera);
-		
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		Bundle extras=getIntent().getExtras();
 		String focus=null;
 		if(extras!=null){

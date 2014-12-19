@@ -6,15 +6,22 @@
  ******************************************************************************/
 package com.prey.backwardcompatibility;
 
+
+import android.annotation.TargetApi;
+import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.receivers.PreyDeviceAdmin;
 
+@TargetApi(Build.VERSION_CODES.FROYO)
 public class FroyoSupport {
 
 	private static FroyoSupport _instance;
@@ -38,11 +45,24 @@ public class FroyoSupport {
 			if (isAdminActive()) {
 				policyManager.resetPassword(newPass,DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
 				if (lock)
-					policyManager.lockNow();
+					lockNow();
+				 
 			}
 		} catch (Exception e) {
 			PreyLogger.e("This device couldn't be locked. Honeycomb bug?", e);
 		}
+	}
+	
+	public void unlock(){
+		KeyguardManager km = (KeyguardManager) ctx.getSystemService(Context.KEYGUARD_SERVICE); 
+		final KeyguardManager.KeyguardLock kl = km .newKeyguardLock("MyKeyguardLock"); 
+		kl.disableKeyguard(); 
+
+		PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE); 
+		WakeLock wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK
+		                                 | PowerManager.ACQUIRE_CAUSES_WAKEUP
+		                                 | PowerManager.ON_AFTER_RELEASE, "MyWakeLock");
+		wakeLock.acquire();
 	}
 	
 	public void lockNow(){

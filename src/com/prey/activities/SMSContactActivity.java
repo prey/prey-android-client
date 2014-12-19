@@ -9,6 +9,7 @@ package com.prey.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -37,6 +38,7 @@ public class SMSContactActivity extends PreyActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sms);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		fillScreenInfo(getPreyConfig().getDestinationSmsName(), getPreyConfig().getDestinationSmsNumber(),null);
 		
 		View.OnClickListener launchContactPicker = new View.OnClickListener() {
@@ -48,8 +50,8 @@ public class SMSContactActivity extends PreyActivity {
 		Button change = (Button) findViewById(R.id.sms_btn_change);
 		change.setOnClickListener(launchContactPicker);
 		
-		ImageView picture = (ImageView) findViewById(R.id.sms_sheriff);
-		picture.setOnClickListener(launchContactPicker);
+		//ImageView picture = (ImageView) findViewById(R.id.sms_sheriff);
+		//picture.setOnClickListener(launchContactPicker);
 		
 		Button ok = (Button) findViewById(R.id.sms_btn_accept);
 		ok.setOnClickListener(new View.OnClickListener() {
@@ -163,10 +165,12 @@ public class SMSContactActivity extends PreyActivity {
 		((TextView) findViewById(R.id.sms_contact_text)).setText(name);
 		((TextView) findViewById(R.id.sms_contact_number)).setText(PhoneNumberUtils.formatNumber(number));
 		Bitmap b = getPreyConfig().getDestinationSmsPicture();
+	/*
 		if (b!= null)
 			((ImageView) findViewById(R.id.sms_sheriff)).setImageBitmap(b);
 		else
 			((ImageView) findViewById(R.id.sms_sheriff)).setImageResource(R.drawable.sheriff);
+			*/
 	}
 
 }

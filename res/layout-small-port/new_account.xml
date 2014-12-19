@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Created by Carlos Yaconi
+  Copyright 2012 Fork Ltd. All rights reserved.
+  License: GPLv3
+  Full license at "/LICENSE"
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:background="@color/screen_bg_white" >
+
+    
+    <RelativeLayout
+        android:id="@+id/textView_new_account"
+        android:layout_width="fill_parent"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:background="#F0F3F7"
+        android:orientation="horizontal" >
+ 		 <ImageView
+ 		     android:id="@+id/icon_back"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:src="@drawable/icon_back" />
+ 		 
+       
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:text="@string/create_prey_account_h1"
+            android:textColor="#68717D"
+              />
+
+    </RelativeLayout>
+    
+ 
+
+    <ImageView
+        android:id="@+id/logo_img_new_account"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_above="@+id/new_account_name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="2dp"
+        android:gravity="center_horizontal"
+        android:src="@drawable/brand_solid"
+         />
+    
+    <EditText
+        android:id="@+id/new_account_name"
+        style="@style/PreyEditText"
+         android:layout_marginBottom="2dp"
+        android:layout_above="@+id/new_account_email" 
+        android:hint="@string/your_name"
+        android:inputType="textPersonName"
+        android:typeface="normal" >
+        <requestFocus />
+    </EditText>
+    
+    <EditText
+        android:id="@+id/new_account_email"
+        style="@style/PreyEditText"
+        
+         android:layout_marginBottom="2dp"
+        android:layout_above="@+id/new_account_pass"
+        android:hint="@string/your_email"
+        android:inputType="textEmailAddress"
+     />
+    
+    <EditText
+        android:id="@+id/new_account_pass"
+        style="@style/PreyEditText"
+         android:layout_marginBottom="2dp"
+        android:layout_above="@+id/new_account_btn_ok"
+        android:hint="@string/choose_a_6_char_pass"
+        android:inputType="textPassword">
+    </EditText>
+    
+ 
+
+    <Button
+        android:id="@+id/new_account_btn_ok"
+        style="@style/PreyButton3.Small"
+        android:layout_above="@+id/have_account"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="@string/create_my_account" />
+    
+    <TextView
+        android:id="@+id/have_account"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"       
+	    android:gravity="center"
+        android:text="@string/have_an_account"
+        android:textColor="#485465"
+         />   
+
+</RelativeLayout>

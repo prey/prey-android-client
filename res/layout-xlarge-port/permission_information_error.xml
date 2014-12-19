@@ -9,56 +9,63 @@
     android:id="@+id/login_header"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/screen_bg" >
+    android:background="@drawable/background"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/top_prey"
+        android:layout_width="400dp"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="120dp"
+        android:gravity="center"
+        android:src="@drawable/icon_prey_reverse" />
 
     <ImageView
         android:id="@+id/top_right_success"
-        android:layout_width="wrap_content"
+        android:layout_width="600dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/top_prey"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="250dp"
-        android:layout_marginRight="250dp"
-        android:layout_marginTop="15dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/error_icon_small" />
+        android:layout_marginTop="140dp"
+        android:src="@drawable/icon_noextra" />
 
     <TextView
         android:id="@+id/congrats_h1_text"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/top_right_success"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="40dp"
-        android:text="@string/info_error_title_h1"
-        android:textColor="@color/darker_txt"
-        android:textSize="40sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="80dp"
+        android:gravity="center"
+        android:text="@string/no_permission_title_h1"
+        android:textColor="@color/white"
+        android:textSize="30sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/congrats_h2_text"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/congrats_h1_text"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="40dp"
-        android:gravity="center_vertical|center_horizontal|left"
-        android:text="@string/info_error_body_text"
-        android:textColor="@color/lighter_txt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/no_permission_body_text"
+        android:textColor="@color/dark_paragraph"
         android:textSize="30sp" />
 
     <Button
-        android:id="@+id/give_permissions"
-        style="@style/PreyButton.XLarge"
-        android:layout_above="@+id/give_permissions_next"
-        android:text="@string/give_permissions" />
-
-    <Button
-        android:id="@+id/give_permissions_next"
-        style="@style/PreyButtonRed.XLarge"
+        android:id="@+id/give_permissions_button"
+        style="@style/PreyButton2.Large"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="15dp"
-        android:text="@string/go_to_congratulations" />
+        android:layout_marginBottom="40dp"
+        android:text="@string/give_permissions" />
 
 </RelativeLayout>

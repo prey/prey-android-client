@@ -3,6 +3,7 @@ package com.prey.activities;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
@@ -32,7 +33,7 @@ public class VideoActivity extends Activity implements SurfaceHolder.Callback {
 	        recorder = new MediaRecorder();
 	        initRecorder();
 	        setContentView(R.layout.activity_video);
-
+	        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	        SurfaceView cameraView = (SurfaceView) findViewById(R.id.videoSurface);
 	        holder = cameraView.getHolder();
 	        holder.addCallback(this);
