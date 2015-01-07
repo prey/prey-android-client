@@ -35,24 +35,21 @@
  
  	<uses-feature android:name="android.hardware.microphone" android:required="false" />
  	
-    <!--  <uses-permission android:name="android.permission.RECORD_AUDIO"  />-->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     
     
+ 
     
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACTION_SHUTDOWN" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     
     <uses-permission android:name="android.permission.READ_SMS" />
-	<uses-permission android:name="android.permission.WRITE_SMS" />
-	<uses-permission android:name="android.permission.SEND_SMS" />
 	<uses-permission android:name="android.permission.RECEIVE_SMS" />
 	<uses-permission android:name="android.permission.RECEIVE_MMS" />
 	
@@ -76,8 +73,7 @@
     
     <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" /> 
     
-    <!-- <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" /> --> 
-    <!-- <uses-permission android:name="android.permission.CALL_PHONE" /> --> 
+
 
      
      
@@ -284,7 +280,6 @@
          
         <receiver android:name="com.prey.receivers.PreyOutgoingCallReceiver">
             <intent-filter>
-                <!-- <action android:name="android.intent.action.NEW_OUTGOING_CALL" /> -->
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.media.VOLUME_CHANGED_ACTION" />
             </intent-filter>
@@ -319,23 +314,16 @@
                 <!-- SIM CHANGED AND  BOOT COMPLETED -->
                 <action android:name="android.intent.action.BOOT_COMPLETED" />          
                 
-                <!-- (UN)PLUGGED           
-                <action android:name="android.intent.action.BATTERY_CHANGED" />
- 				-->    
-                
                 <!-- AIRPLANE -->
         		<action android:name="android.intent.action.AIRPLANE_MODE" />
-        		
-        		
-        		<!--
-        		<action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
-    			<action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
-    			-->
-                
     			
             </intent-filter>
         </receiver>
         
+        <receiver
+            android:name="com.prey.receivers.AlarmReceiver"
+            > 
+        </receiver>
         <!--
         <receiver android:name="com.prey.install.PreyInstallRemoteReceiver">
             <intent-filter>
