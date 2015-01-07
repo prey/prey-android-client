@@ -59,7 +59,7 @@ public class BatteryInformation {
 			battery.setTemperature(temperature);
 			battery.setVoltage(voltage);
 			battery.setCharging(charging);
-			PreyLogger.i("voltage:"+voltage+" status:"+status+" technology:"+technology+" temperature:"+voltage);
+			PreyLogger.d("voltage:"+voltage+" status:"+status+" technology:"+technology+" temperature:"+voltage);
 			
 	        arg0.unregisterReceiver(mBatInfoReceiver);
 	    }

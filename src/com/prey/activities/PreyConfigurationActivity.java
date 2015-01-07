@@ -47,10 +47,13 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 			finish();
 			
 		}
-		if(PreyEmail.getEmail(getApplicationContext())!=null){
-			PreferenceCategory mCategory = (PreferenceCategory) findPreference("PREFS_CAT_PREFS");
-			Preference p2 = findPreference(PreyConfig.PREFS_SCHEDULED);
-			mCategory.removePreference(p2);
+		try{
+			if(PreyEmail.getEmail(getApplicationContext())!=null){
+				PreferenceCategory mCategory = (PreferenceCategory) findPreference("PREFS_CAT_PREFS");
+				Preference p2 = findPreference(PreyConfig.PREFS_SCHEDULED);
+				mCategory.removePreference(p2);
+			}
+		}catch(Exception e){
 		}
 		
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());

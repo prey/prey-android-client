@@ -11,18 +11,13 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.Settings;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.prey.actions.location.PreyLocationManager;
 import com.prey.events.Event;
-import com.prey.events.factories.EventFactory;
 import com.prey.events.manager.EventManagerRunner;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;

@@ -539,8 +539,8 @@ public class PreyWebServices {
 			parameters.put("name", event.getName());
 			parameters.put("info", event.getInfo());
 			
-			PreyLogger.i("sendPreyHttpEvent url:"+url);
-			PreyLogger.i("name:"+event.getName()+" info:"+event.getInfo());
+			PreyLogger.d("sendPreyHttpEvent url:"+url);
+			PreyLogger.d("name:"+event.getName()+" info:"+event.getInfo());
 			
 			//Toast.makeText(ctx, "Event:"+event.getName(), Toast.LENGTH_LONG).show();
 			String status=jsonObject.toString();
@@ -630,7 +630,7 @@ public class PreyWebServices {
 			PreyLogger.d("report url:"+url);
 			
 			
-			if (entityFiles.size()==0)
+			if (entityFiles==null||entityFiles.size()==0)
 				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig);
 			else
 				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig,entityFiles);

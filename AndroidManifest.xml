@@ -8,8 +8,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
     android:installLocation="internalOnly"
-    android:versionCode="95"
-    android:versionName="1.2.0" >
+    android:versionCode="98"
+    android:versionName="1.2.2" >
+
     
     <uses-sdk
         android:minSdkVersion="4"
@@ -35,24 +36,21 @@
  
  	<uses-feature android:name="android.hardware.microphone" android:required="false" />
  	
-    <!--  <uses-permission android:name="android.permission.RECORD_AUDIO"  />-->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     
     
+ 
     
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACTION_SHUTDOWN" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     
     <uses-permission android:name="android.permission.READ_SMS" />
-	<uses-permission android:name="android.permission.WRITE_SMS" />
-	<uses-permission android:name="android.permission.SEND_SMS" />
 	<uses-permission android:name="android.permission.RECEIVE_SMS" />
 	<uses-permission android:name="android.permission.RECEIVE_MMS" />
 	
@@ -76,8 +74,7 @@
     
     <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" /> 
     
-    <!-- <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" /> --> 
-    <!-- <uses-permission android:name="android.permission.CALL_PHONE" /> --> 
+
 
      
      
@@ -89,8 +86,8 @@
         android:theme="@style/PreyTheme"
         android:configChanges="keyboardHidden|orientation"
 		android:screenOrientation="portrait"
-		android:allowBackup="false"
- >
+		android:allowBackup="false" >
+
 
         <!-- Activities -->
         <activity
@@ -98,7 +95,7 @@
             android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/preyForAndroid_name"
-            android:launchMode="singleInstance"
+            android:launchMode="singleInstance" 
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -120,8 +117,7 @@
             android:noHistory="true" 
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.prey.activities.PreyConfigurationActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -160,7 +156,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:label="@string/preyForAndroid_name"
-            android:launchMode="singleTask" />        
+            android:launchMode="singleTask" />       
         <activity
             android:name="com.prey.activities.SMSContactActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -175,27 +171,20 @@
             android:name="com.prey.activities.CreateAccountActivity"
             android:configChanges="keyboardHidden|orientation"
  			android:windowSoftInputMode="stateHidden|adjustResize"
- 			android:screenOrientation="portrait"
- 
-            
-            />
+ 			android:screenOrientation="portrait" />
         <activity
             android:name="com.prey.activities.AddDeviceToAccountActivity"
             android:configChanges="keyboardHidden|orientation"
     		android:windowSoftInputMode="stateHidden|adjustResize"
-    		android:screenOrientation="portrait"
- 
-             />
+    		android:screenOrientation="portrait" />
         <activity
             android:name="com.prey.activities.CongratulationsActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-             />   
+			android:screenOrientation="portrait" />   
        <activity
             android:name="com.prey.activities.DisableButtonActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-             />
+            android:screenOrientation="portrait" /> 
         <activity
             android:name="com.prey.activities.SimpleCameraActivity"
             android:theme="@style/Theme.Transparent" 
@@ -213,19 +202,11 @@
         <activity
             android:name="com.prey.activities.PermissionInformationActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.prey.activities.PermissionInformationBatchActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            />
-        
-        <!--
-        <activity
-            android:name="com.prey.activities.SMSContactActivity"
-            android:configChanges="keyboardHidden" />
-        -->
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.prey.activities.StatusActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -248,7 +229,8 @@
         <service android:name="com.prey.services.PreyRunnerService" />
         <service android:name="com.prey.services.PreyDisablePowerOptionsService" />
         <service android:name="com.prey.beta.services.PreyBetaRunnerService" />
-
+        <service android:name="com.prey.actions.report.ReportService" />
+        
         <!-- Receivers -->
         <receiver android:name="com.prey.receivers.SmsReceiver">
             <intent-filter android:priority="2147483647" >
@@ -294,7 +276,6 @@
          
         <receiver android:name="com.prey.receivers.PreyOutgoingCallReceiver">
             <intent-filter>
-                <!-- <action android:name="android.intent.action.NEW_OUTGOING_CALL" /> -->
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.media.VOLUME_CHANGED_ACTION" />
             </intent-filter>
@@ -320,7 +301,7 @@
                 <!-- BATTERY LOW -->   
  
                 <action android:name="android.intent.action.BATTERY_LOW" />
-                <action android:name="android.intent.action.BATTERY_OKAY" />
+                <!-- <action android:name="android.intent.action.BATTERY_OKAY" />-->
                 
                 <!-- WIFI CHANGED -->
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -329,23 +310,16 @@
                 <!-- SIM CHANGED AND  BOOT COMPLETED -->
                 <action android:name="android.intent.action.BOOT_COMPLETED" />          
                 
-                <!-- (UN)PLUGGED -->              
- 
-                <action android:name="android.intent.action.BATTERY_CHANGED" />
- 
                 <!-- AIRPLANE -->
         		<action android:name="android.intent.action.AIRPLANE_MODE" />
-        		
-        		
-        		<!--
-        		<action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
-    			<action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
-    			-->
-                
     			
             </intent-filter>
         </receiver>
         
+        <receiver
+            android:name="com.prey.receivers.AlarmReceiver"
+            > 
+        </receiver>
         <!--
         <receiver android:name="com.prey.install.PreyInstallRemoteReceiver">
             <intent-filter>

@@ -13,6 +13,7 @@ import android.content.Context;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyRestHttpClient;
 
 public class JSONParser {
@@ -31,19 +32,27 @@ public class JSONParser {
 
 	public List<JSONObject> getJSONFromUrl(Context ctx, String url) {
 		//PreyLogger.d("getJSONFromUrl:" + url);
-		PreyRestHttpClient preyRestHttpClient=PreyRestHttpClient.getInstance(ctx);
 		String sb=null;
 		String json=null;
+		 
+		PreyRestHttpClient preyRestHttpClient=PreyRestHttpClient.getInstance(ctx);
+		boolean connected=false;
+		if (!PreyConfig.getPreyConfig(ctx).isConnectionExists()) {
+			PreyWifiManager.getInstance(ctx).setWifiEnabled(true);
+			try {Thread.sleep(2000);} catch (Exception e) {}
+			connected=true;
+		}
 		try{
-			;
 			sb=preyRestHttpClient.getStringUrl(url,PreyConfig.getPreyConfig(ctx));
 			if (sb!=null)
 				json = sb.trim();
 		}catch(Exception e){
 			PreyLogger.e("Error, causa:" + e.getMessage(), e);
 			return null;
+		} 
+		if (connected) {
+			PreyWifiManager.getInstance(ctx).setWifiEnabled(false);
 		}
-		
 		//json = "[{\"command\":\"history\",\"target\":\"call\",\"options\":{}}]";
 	//	json = "[{\"command\":\"history\",\"target\":\"sms\",\"options\":{}}]";
 
@@ -84,15 +93,16 @@ public class JSONParser {
 		//json = "[ {\"command\": \"data\",\"target\": \"location\",\"options\": {}}]";
 		
 		// json="[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}}]"; 
-	//	 json="[{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}]"; 
+	// json="[{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}]"; 
 
-		
+		// json="[{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}]"; 
+		 //json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"interval\":\"2\"}}]"; 
 	//  json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"screenshot\",\"access_points_list\"],\"interval\":\"10\"}}]"; 
 	//  json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"access_points_list\"],\"interval\":\"10\"}}]"; 
 				
 		
 		 //json="[{\"command\":\"start\",\"target\":\"camouflage\",\"options\":null}]"; 
-		// json="[{\"command\":\"stop\",\"target\":\"camouflage\",\"options\":null}]"; 
+		// json="[{\"command\":\"stop\",\"target\":\"camouflage\",\"options\":{\"interval\":\"2\"}}}]"; 
 		
 		
 		//json="[{\"target\":\"alert\",\"command\":\"start\",\"options\":{\"alert_message\":\"This device is stolen property. Please contact testforkhq@gmail.com to arrange its safe return.\"}},{\"target\":\"lock\",\"command\":\"start\",\"options\":{\"unlock_pass\":\"oso\"}},{\"command\":\"get\",\"target\":\"location\"},{\"target\":\"network\",\"command\":\"start\"},{\"target\":\"geo\",\"command\":\"start\"}]";
@@ -102,6 +112,8 @@ public class JSONParser {
 	//	 json="[{\"command\":\"start\",\"target\":\"contacts_restore\" }]"; 
 		 
 //		 json="[{\"command\":\"start\",\"target\":\"browser\" }]"; 
+		
+//		json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"interval\":\"2\",\"exclude\":[\"picture\",false]}}]"; 
 		 
 		if ("[]".equals(json)) {
 			return null;

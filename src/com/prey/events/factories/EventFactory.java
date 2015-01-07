@@ -11,12 +11,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
-import android.os.BatteryManager;
+//import android.os.BatteryManager;
 import android.os.Bundle;
 import android.provider.Settings;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.Event;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.managers.PreyTelephonyManager;
@@ -28,12 +29,12 @@ public class EventFactory {
 	private static final String WIFI_STATE_CHANGED="android.net.wifi.WIFI_STATE_CHANGED";
 //	private static final String ACTION_POWER_CONNECTED="android.intent.action.ACTION_POWER_CONNECTED";
 //	private static final String ACTION_POWER_DISCONNECTED="android.intent.action.ACTION_POWER_DISCONNECTED";
-	private static final String ACTION_BATTERY_CHANGE="android.intent.action.ACTION_BATTERY_CHANGE";
-	private static final String ACTION_BATTERY_LOW="android.intent.action.ACTION_BATTERY_LOW";
+//	private static final String ACTION_BATTERY_CHANGE="android.intent.action.ACTION_BATTERY_CHANGE";
+//	private static final String ACTION_BATTERY_LOW="android.intent.action.ACTION_BATTERY_LOW";
 	private static final String ACTION_SHUTDOWN="android.intent.action.ACTION_SHUTDOWN";
-	private static final String BATTERY_LOW="android.intent.action.BATTERY_LOW";
-	private static final String BATTERY_OKAY="android.intent.action.BATTERY_OKAY";
-	private static final String BATTERY_CHANGED="android.intent.action.BATTERY_CHANGED";
+//	private static final String BATTERY_LOW="android.intent.action.BATTERY_LOW";
+//	private static final String BATTERY_OKAY="android.intent.action.BATTERY_OKAY";
+//	private static final String BATTERY_CHANGED="android.intent.action.BATTERY_CHANGED";
 	
 	private static final String AIRPLANE_MODE="android.intent.action.AIRPLANE_MODE";
 	
@@ -102,6 +103,7 @@ public class EventFactory {
 		if (AIRPLANE_MODE.equals(intent.getAction())){
 			if(!isAirplaneModeOn(ctx)){
 				try{Thread.sleep(4000);}catch(Exception e){}
+				PreyBetaController.startPrey(ctx);
 				PreyConfig.getPreyConfig(ctx).registerC2dm();
 			}
 		}
@@ -112,7 +114,7 @@ public class EventFactory {
 		if (ACTION_POWER_DISCONNECTED.equals(intent.getAction()) ){
 			return new Event(Event.UN_PLUGGED);
 		}
-		*/		
+			
 		if (ACTION_BATTERY_LOW.equals(intent.getAction()) && isValidLowBattery(ctx)){
 			return new Event(Event.BATTERY_LOW);
 		}
@@ -139,7 +141,7 @@ public class EventFactory {
 			}catch (Exception e) {
 			}
 			//return new Event(Event.PLUGGED,info.toString());
-		}
+		}*/
 		return null;
 	}
 	

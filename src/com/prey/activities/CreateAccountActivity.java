@@ -40,7 +40,6 @@ import com.prey.util.KeyboardVisibilityListener;
 public class CreateAccountActivity extends SetupActivity {
 	private static final int ERROR = 1;
 	private String password = null;
-	private String repassword = null;
 	private String name = null;
 	private String email = null;
 	private String error = null;
@@ -90,8 +89,6 @@ public class CreateAccountActivity extends SetupActivity {
 
 				if (name.equals("") || email.equals("") || password.equals(""))
 					Toast.makeText(CreateAccountActivity.this, R.string.error_all_fields_are_required, Toast.LENGTH_LONG).show();
-				else if (!password.equals(repassword))
-					Toast.makeText(CreateAccountActivity.this, R.string.preferences_passwords_do_not_match, Toast.LENGTH_LONG).show();
 				else {
 					new CreateAccount().execute(name, email, password);
 				}
