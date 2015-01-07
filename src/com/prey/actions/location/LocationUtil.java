@@ -72,19 +72,32 @@ public class LocationUtil {
 			play.startPeriodicUpdates();
 		} catch (Exception e) {
 		}
+		int i=0;
 		Location currentLocation = play.getLastLocation(ctx);
-		while (currentLocation == null) {
+		while (currentLocation == null&&i<3) {
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 			}
 			currentLocation = play.getLastLocation(ctx);
+			i=i+1;
+		}
+		PreyLocation preyLocation=null;
+		if(currentLocation!=null){
+			preyLocation = new PreyLocation(currentLocation);
+		}else{
+			if(currentLocation==null){
+				preyLocation = getPreyLocationAppService(ctx);
+			}
+			if(currentLocation==null){
+				preyLocation = getDataLocationWifi(ctx);
+			}
 		}
 		try {
 			play.stopPeriodicUpdates();
 		} catch (Exception e) {
 		}
-		return new PreyLocation(currentLocation);
+		return preyLocation;
 	}
 
 	public static PreyLocation getPreyLocationAppService(Context ctx) throws Exception {

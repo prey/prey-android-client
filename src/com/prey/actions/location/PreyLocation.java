@@ -21,11 +21,13 @@ public class PreyLocation {
 	}
 
 	public PreyLocation(Location loc) {
-		this.lat = loc.getLatitude();
-		this.lng = loc.getLongitude();
-		this.accuracy = loc.getAccuracy();
-		this.altitude = loc.getAltitude();
-		this.timestamp = System.currentTimeMillis();
+		if(loc!=null){
+			this.lat = loc.getLatitude();
+			this.lng = loc.getLongitude();
+			this.accuracy = loc.getAccuracy();
+			this.altitude = loc.getAltitude();
+			this.timestamp = System.currentTimeMillis();
+		}
 	}
 
 	public double getLat() {
@@ -50,7 +52,6 @@ public class PreyLocation {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "lat: " + lat + " - lng: " + lng;
 	}
 

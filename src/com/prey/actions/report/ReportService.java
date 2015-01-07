@@ -10,6 +10,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
+import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.net.http.EntityFile;
@@ -33,22 +34,10 @@ public class ReportService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		JSONArray jsonArray = new JSONArray();
 		List<String> listExclude = new ArrayList<String>();
-		// JSONObject parameters=null;
+		PreyLogger.i("start report");
 		List<HttpDataService> listData = new ArrayList<HttpDataService>();
 		Context ctx = this;
-		/*
-		 * try{ JSONArray jsonArrayExclude=parameters.getJSONArray("exclude");
-		 * for (int
-		 * i=0;jsonArrayExclude!=null&&i<jsonArrayExclude.length();i++){ String
-		 * exclude=null; try{ exclude=(String)jsonArrayExclude.get(i);
-		 * listExclude.add(exclude); PreyLogger.d("exclude:"+exclude);
-		 * }catch(Exception e){} } }catch(Exception e){ }
-		 */
-
-		/*
-		 * try{ jsonArray=parameters.getJSONArray("include"); }catch(Exception
-		 * e){
-		 */
+ 
 		jsonArray = new JSONArray();
 		if (!listExclude.contains("picture"))
 			jsonArray.put(new String("picture"));
@@ -56,7 +45,7 @@ public class ReportService extends IntentService {
 			jsonArray.put(new String("location"));
 		if (!listExclude.contains("access_points_list"))
 			jsonArray.put(new String("access_points_list"));
-		// }
+
 		try {
 			List<ActionResult> lista = new ArrayList<ActionResult>();
 			for (int i = 0; i < jsonArray.length(); i++) {
@@ -82,6 +71,12 @@ public class ReportService extends IntentService {
 				}
 			}
 		}
+		boolean connected=false;
+		if (!PreyConfig.getPreyConfig(ctx).isConnectionExists()) {
+			PreyWifiManager.getInstance(ctx).setWifiEnabled(true);
+			try {Thread.sleep(2000);} catch (Exception e) {}
+			connected=true;
+		}
 		if (PreyConfig.getPreyConfig(ctx).isConnectionExists()) {
 			if (parms > 0) {
 				PreyHttpResponse response = PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
@@ -90,12 +85,15 @@ public class ReportService extends IntentService {
 					PreyLogger.d("response.getStatusLine():" + response.getStatusLine());
 					if (200 != response.getStatusLine().getStatusCode()) {
 						PreyConfig.getPreyConfig(ctx).setMissing(false);
+						PreyConfig.getPreyConfig(ctx).setIntervalReport("");
 						ReportScheduled.getInstance(ctx).reset();
 					}
 				} 
 			}
 		}
-
+		if (connected) {
+			PreyWifiManager.getInstance(ctx).setWifiEnabled(false);
+		}
 		stopSelf();
 
 	}

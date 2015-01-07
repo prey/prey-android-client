@@ -97,7 +97,7 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 				if (email.equals("") || password.equals("")) {
 					Toast.makeText(AddDeviceToAccountActivity.this, R.string.error_all_fields_are_required, Toast.LENGTH_LONG).show();
 				} else {
-					new AddDeviceToAccount().execute(email, password, getDeviceType());
+					new AddDeviceToAccount().execute(email, password, getDeviceType(AddDeviceToAccountActivity.this));
 				}
 			}
 		});

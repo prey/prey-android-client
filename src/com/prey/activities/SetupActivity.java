@@ -6,14 +6,15 @@
  ******************************************************************************/
 package com.prey.activities;
 
+import android.content.Context;
 import android.content.Intent;
 
 import com.prey.PreyUtils;
 
 public class SetupActivity extends PreyActivity {
 
-	protected String getDeviceType() {
-		return PreyUtils.getDeviceType(this);
+	protected String getDeviceType(Context ctx) {
+		return PreyUtils.getDeviceType(ctx);
 	}
 
 	@Override

@@ -99,7 +99,7 @@ public class PictureUtil {
 		mgr.setStreamMute(streamType, false);
 		try {
 			i = 0;
-			while (SimpleCameraActivity.activity != null && SimpleCameraActivity.dataImagen == null && i < 10) {
+			while (SimpleCameraActivity.activity != null && SimpleCameraActivity.dataImagen == null && i < 5) {
 				Thread.sleep(2000);
 				i++;
 				PreyLogger.d("falta imagen[" + i + "]");

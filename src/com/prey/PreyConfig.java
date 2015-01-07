@@ -107,7 +107,7 @@ public class PreyConfig {
 	public static final String SEND_NOTIFICATION_ID="SEND_NOTIFICATION_ID";
 	public static final String SIGNAL_FLARE_DATE="SIGNAL_FLARE_DATE";
 	
-	public static final String VERSION_PREY_DEFAULT="1.2.1";
+	public static final String VERSION_PREY_DEFAULT="1.2.2";
 	
 	public static final String SEND_DATA="SEND_DATA";
 	
@@ -664,6 +664,10 @@ public class PreyConfig {
 		return FileConfigReader.getInstance(this.ctx).getPreyDomain();
 	}
 	
+	public String getPreyCampaign() {
+		return FileConfigReader.getInstance(this.ctx).getPreyCampaign();
+	}
+	
 	public String getc2dmAction(){
 		return FileConfigReader.getInstance(this.ctx).getc2dmAction();
 	}
@@ -684,8 +688,9 @@ public class PreyConfig {
 	
 	public String getPreyPanelUrl() {
 		String panel = FileConfigReader.getInstance(this.ctx).getPreyPanel();
-		return HTTP.concat(panel).concat(".").concat(getPreyDomain()).concat("/");
-		
+		String url=HTTP.concat(panel).concat(".").concat(getPreyDomain()).concat("/").concat(getPreyCampaign());
+		PreyLogger.i(url);
+		return url;
 	}
 
 	public boolean askForPassword() {

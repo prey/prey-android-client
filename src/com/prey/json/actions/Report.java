@@ -24,10 +24,7 @@ import com.prey.actions.report.ReportScheduled;
 public class Report  {
 
 	public void get(Context ctx, List<ActionResult> lista, JSONObject parameters) {
-		boolean valida=valida(ctx);
-		if (!valida){
-			return;
-		}
+		 
 		long lastReportStartDate=new Date().getTime();
 		PreyLogger.d("____lastReportStartDate:"+lastReportStartDate);
 		PreyConfig.getPreyConfig(ctx).setLastReportStartDate(lastReportStartDate);
@@ -38,6 +35,7 @@ public class Report  {
 		}catch(Exception e){
 			interval =0;
 		}
+		PreyConfig.getPreyConfig(ctx).setIntervalReport(""+interval);
 		ReportScheduled.getInstance(ctx).run(interval);
 	}
 	

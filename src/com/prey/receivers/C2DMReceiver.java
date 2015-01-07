@@ -122,7 +122,9 @@ public class C2DMReceiver extends BroadcastReceiver {
 				String registration = FileConfigReader.getInstance(ctx).getGcmIdPrefix() + (String) data[0];
 				PreyHttpResponse response=PreyWebServices.getInstance().setPushRegistrationId(ctx, registration);
 				PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
-				PreyLogger.d("response:"+response.toString());
+				if(response!=null){
+					PreyLogger.d("response:"+response.toString());
+				}
 				PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
 				PreyBetaController.startPrey(ctx);
 			} catch (Exception e) {

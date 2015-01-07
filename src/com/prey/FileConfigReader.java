@@ -41,6 +41,10 @@ public class FileConfigReader {
 		
 	}
 	
+	public String getPreyCampaign(){
+		return properties.getProperty("prey-campaign");
+	}
+	
 	public String getPreyPanel(){
 		return properties.getProperty("prey-panel");
 	}

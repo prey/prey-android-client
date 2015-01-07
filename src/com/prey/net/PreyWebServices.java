@@ -630,7 +630,7 @@ public class PreyWebServices {
 			PreyLogger.d("report url:"+url);
 			
 			
-			if (entityFiles.size()==0)
+			if (entityFiles==null||entityFiles.size()==0)
 				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig);
 			else
 				preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig,entityFiles);

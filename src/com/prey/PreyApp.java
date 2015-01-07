@@ -6,6 +6,8 @@
  ******************************************************************************/
 package com.prey;
 
+import com.prey.actions.report.ReportScheduled;
+
 import android.app.Application;
 
 public class PreyApp extends Application {
@@ -27,6 +29,13 @@ public class PreyApp extends Application {
 		if (PreyConfig.getPreyConfig(this).isScheduled()) {
 			PreyScheduled.getInstance(this);
 		}
+		
+		if (PreyConfig.getPreyConfig(this).isMissing()){
+			if(PreyConfig.getPreyConfig(this).getIntervalReport()!=null&&!"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())){
+				ReportScheduled.getInstance(this).run(Integer.parseInt(PreyConfig.getPreyConfig(this).getIntervalReport()));
+			}
+		}
+		
 	}
 
 }
