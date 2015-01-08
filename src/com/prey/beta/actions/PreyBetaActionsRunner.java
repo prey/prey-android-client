@@ -16,8 +16,6 @@ import com.prey.exceptions.PreyException;
 import com.prey.json.parser.JSONParser;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.managers.PreyTelephonyManager;
-import com.prey.managers.PreyWifiManager;
-import com.prey.net.NetworkUtils;
 import com.prey.net.PreyWebServices;
 
 public class PreyBetaActionsRunner implements Runnable {
@@ -26,8 +24,6 @@ public class PreyBetaActionsRunner implements Runnable {
 	private String body;
 	private String version;
 	private String cmd;
-
-	private final int MAXIMUM_ATTEMPTS = 5;
 
 	public PreyBetaActionsRunner(Context context, String cmd) {
 		this.ctx = context;
@@ -47,33 +43,16 @@ public class PreyBetaActionsRunner implements Runnable {
 	}
 
 	public void execute() {
-		boolean wifiOpened = false;
-		boolean mobilOpened = false;
+	 
 		if (PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey(true)) {
 			PreyTelephonyManager preyTelephony = PreyTelephonyManager.getInstance(ctx);
 			PreyConnectivityManager preyConnectivity = PreyConnectivityManager.getInstance(ctx);
 			boolean connection = false;
 			try {
 				List<JSONObject> jsonObject = null;
-				int attempt = 0;
-				while (!connection && attempt < MAXIMUM_ATTEMPTS) {
-					connection = preyTelephony.isDataConnectivityEnabled() || preyConnectivity.isConnected();
-					if (!connection) {
-						PreyLogger.d("Phone doesn't have internet connection now. Waiting 5 secs for it");
-
-						if (!PreyWifiManager.getInstance(ctx).isWifiEnabled()) {
-							PreyWifiManager.getInstance(ctx).setWifiEnabled(true);
-							wifiOpened = true;
-						}
-						if (!NetworkUtils.getNetworkUtils(ctx).isMobileDataEnabled()) {
-							NetworkUtils.getNetworkUtils(ctx).enableMobileData(true);
-							mobilOpened = true;
-						}
-
-						Thread.sleep(5000);
-					}
-					attempt = attempt + 1;
-				}
+				
+				connection = preyTelephony.isDataConnectivityEnabled() || preyConnectivity.isConnected();
+					 
 				if (connection) {
 					try {
 						if (cmd == null || "".equals(cmd)) {
@@ -95,12 +74,7 @@ public class PreyBetaActionsRunner implements Runnable {
 				PreyLogger.e("Error, because:" + e.getMessage(), e);
 			}
 			PreyLogger.d("Prey execution has finished!!");
-			if (wifiOpened) {
-				PreyWifiManager.getInstance(ctx).setWifiEnabled(false);
-			}
-			if (mobilOpened) {
-				NetworkUtils.getNetworkUtils(ctx).enableMobileData(false);
-			}
+		 
 		}
 		ctx.stopService(new Intent(ctx, PreyBetaRunnerService.class));
 	}

@@ -71,12 +71,7 @@ public class ReportService extends IntentService {
 				}
 			}
 		}
-		boolean connected=false;
-		if (!PreyConfig.getPreyConfig(ctx).isConnectionExists()) {
-			PreyWifiManager.getInstance(ctx).setWifiEnabled(true);
-			try {Thread.sleep(2000);} catch (Exception e) {}
-			connected=true;
-		}
+ 
 		if (PreyConfig.getPreyConfig(ctx).isConnectionExists()) {
 			if (parms > 0) {
 				PreyHttpResponse response = PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
@@ -91,9 +86,7 @@ public class ReportService extends IntentService {
 				} 
 			}
 		}
-		if (connected) {
-			PreyWifiManager.getInstance(ctx).setWifiEnabled(false);
-		}
+ 
 		stopSelf();
 
 	}

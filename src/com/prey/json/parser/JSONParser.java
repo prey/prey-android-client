@@ -13,7 +13,6 @@ import android.content.Context;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyRestHttpClient;
 
 public class JSONParser {
@@ -36,12 +35,6 @@ public class JSONParser {
 		String json=null;
 		 
 		PreyRestHttpClient preyRestHttpClient=PreyRestHttpClient.getInstance(ctx);
-		boolean connected=false;
-		if (!PreyConfig.getPreyConfig(ctx).isConnectionExists()) {
-			PreyWifiManager.getInstance(ctx).setWifiEnabled(true);
-			try {Thread.sleep(2000);} catch (Exception e) {}
-			connected=true;
-		}
 		try{
 			sb=preyRestHttpClient.getStringUrl(url,PreyConfig.getPreyConfig(ctx));
 			if (sb!=null)
@@ -50,9 +43,6 @@ public class JSONParser {
 			PreyLogger.e("Error, causa:" + e.getMessage(), e);
 			return null;
 		} 
-		if (connected) {
-			PreyWifiManager.getInstance(ctx).setWifiEnabled(false);
-		}
 		//json = "[{\"command\":\"history\",\"target\":\"call\",\"options\":{}}]";
 	//	json = "[{\"command\":\"history\",\"target\":\"sms\",\"options\":{}}]";
 
