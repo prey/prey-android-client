@@ -21,11 +21,12 @@
     <string name="type_your_pass">Inseriu la contrasenya</string>
     <string name="log_in">Inicia la sessió</string>
     <string name="create_prey_account_h1">Crea un compte nou</string>
+    <string name="have_an_account">Ja teniu un compte? Inicieu la sessió</string>
     <string name="your_name">Nom</string>
     <string name="your_email">Correu electrònic</string>
     <string name="choose_a_6_char_pass">Inseriu una contrasenya</string>
     <string name="repeat_your_pass">Torneu a escriure la contrasenya</string>
-    <string name="create_my_account">Crea el meu compte</string>
+    <string name="create_my_account">Crea el meu compte!</string>
     <string name="creating_account_please_wait">S\'està creant el compte...</string>
     <string name="new_account_congratulations_text">Heu instal·lat Prey satisfactòriament!\nPer finalitzar aquest procés, heu de validar l\'adreça de correu electrònic inserida al formulari, activant-la des de l\'enllaç que us hem enviat a %s.</string>
     <string name="log_in_to_prey_h1">Inicia la sessió a Prey</string>
@@ -50,6 +51,7 @@
     <string name="disabled">inhabilitat</string>
     <string name="sms_activation">Missatge SMS d\'activació</string>
     <string name="sms_deactivation">Missatge SMS de desactivació</string>
+    <string name="welcome">Us donem la benvinguda a Prey</string>
     <string name="agreements_title">Us donem la benvinguda a\nPrey per a Android™!</string>
     <string name="agreements_message1">Assegureu-vos que heu llegit i entès les condicions d\'ús de Prey</string>
     <string name="agreements_message2">&lt;u&gt;Llegiu les condicions&lt;/u&gt;</string>
@@ -88,7 +90,7 @@
     <string name="preferences_update_sim_summary">Associa la SIM actual com autoritzada</string>
     <string name="preferences_update_sim_dialog_title">Canvia la SIM autoritzada</string>
     <string name="preferences_update_sim_dialog_message">Esteu a punt de canviar la SIM autoritzada al vostre telèfon. En prémer «Sí» Prey assumirà que la SIM actual és la targeta autoritzada.\n\nVoleu continuar?</string>
-    <string name="gps_network_not_enabled">Els serveis de localització estan inhabilitats.\nHeu d\'activar-ne un com a mínim per poder ubicar el dispositiu.</string>
+    <string name="gps_network_not_enabled">Els serveis de localització estan inhabilitats.\nHeu d\'habilitar-ne un com a mínim per poder ubicar el dispositiu.</string>
     <string name="preferences_category_other_title">Configuració del compte</string>
     <string name="preferences_category_other_summary">Configura les opcions del vostre compte</string>
     <string name="preferences_password_title">Canvia la contrasenya</string>
@@ -149,6 +151,7 @@
     <string name="preferences_about">Prey per a Android™</string>
     <string name="preferences_about_title">Prey per a Android™</string>
     <string name="preferences_about_message">Prey per a Android™</string>
+    <string name="password_dialog_forgot_text1">Heu oblidat la contrasenya?</string>
     <string name="verify_your_account_first">Primer s\'ha de verificar el vostre compte d\'usuari</string>
     <string name="password_wrong">Contrasenya errònia. Torneu a provar</string>
     <string name="password_intents_exceed">Bé, és lamentable. Heu inserit una contrasenya incorrecta 3 vegades seguides!</string>
@@ -167,7 +170,12 @@
     <string name="sms_not_sent">Hi ha hagut un error en enviar el missatge. El vostre dispositiu té inserida una targeta SIM?</string>
     <string name="permission_title_h1">Protecció extra</string>
     <string name="permission_body_text">S\'han habilitat els permisos especials a Prey per blocar el dispositiu i evitar que sigui desinstal·lat per un lladre. Si necessiteu desinstal·lar Prey, heu de revocar primer els permisos des de la mateixa aplicació.</string>
+    <string name="no_permission_title_h1">SENSE PROTECCIÓ ADDICIONAL</string>
+    <string name="no_permission_body_text">Prey necessita permisos especials per poder blocar el vostre dispositiu i evitar que un lladre pugui desinstal·lar Prey.</string>
     <string name="go_to_congratulations">Endavant</string>
+    <string name="give_permissions">Facilita els permisos</string>
+    <string name="disable_power_title_h1">Inhabilita el botó d\'apagada</string>
+    <string name="disable_power_body_text">El dispositiu no es pot apagar \nsi la pantalla està blocada.\nPodeu canviar aquest comportament a la\nconfiguració de Prey.</string>
     <string name="feedback_principal_title">Està tot correcte?</string>
     <string name="feedback_principal_message">Sembla que heu emprat Prey des de fa un temps. Voleu enviar-nos la vostra opinió?</string>
     <string name="feedback_principal_button1">M\'agrada</string>
@@ -183,4 +191,8 @@
     <string name="preferences_disable_power_options_summary">El dispositiu no es podrà apagar o reiniciar si la pantalla està blocada</string>
     <string name="preferences_scheduled_title">Freqüència d\'interval</string>
     <string name="preferences_scheduled_summary">Com funcionarà Prey si els serveis de Google no estan disponibles</string>
+    <string name="back">Enrere</string>
+    <string name="login_to_prey">Inicia la sessió a Prey</string>
+    <string name="login_setting_h1_text">Inicia a la configuració</string>
+    <string name="login_setting_h2_text">Per a la vostra seguretat, inseriu les credencials\nper administrar la configuració de Prey.</string>
 </resources>
