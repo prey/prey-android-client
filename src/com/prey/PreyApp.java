@@ -25,7 +25,7 @@ public class PreyApp extends Application {
 		if (deviceKey != null && deviceKey != "")
 			PreyConfig.getPreyConfig(this).registerC2dm();
 		if (PreyConfig.getPreyConfig(this).isScheduled()) {
-			PreyScheduled.getInstance(this);
+			PreyScheduled.getInstance(this).run(PreyConfig.getPreyConfig(this).getMinuteScheduled());
 		}
 		if (PreyConfig.getPreyConfig(this).isMissing()) {
 			if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {

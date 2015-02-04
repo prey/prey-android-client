@@ -289,13 +289,18 @@ public class PreyConfig {
 			}
 			
 			if (key.equals(PREFS_SCHEDULED)){
-				int valor=Integer.parseInt(sharedPreferences.getString(PREFS_SCHEDULED,"0"));
-				setScheduled(valor>0);
-				setMinuteScheduled(valor);
-				PreyScheduled.getInstance(ctx).reset();
+				int value=Integer.parseInt(sharedPreferences.getString(PREFS_SCHEDULED,"0"));
+				int valueOld=getMinuteScheduled();
+				if(value!=valueOld){
+					setScheduled(value>0);
+					setMinuteScheduled(value);
+					if (value>0){
+						PreyScheduled.getInstance(ctx).run(value);
+					}else{
+						PreyScheduled.getInstance(ctx).reset();
+					}
+				}
 			}
-			
-			
 			PreyConfig.deleteCacheInstance();
 		}
 	};

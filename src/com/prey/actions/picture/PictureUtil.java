@@ -3,10 +3,8 @@ package com.prey.actions.picture;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.Camera;
 import android.media.AudioManager;
 
 import com.prey.PreyLogger;
@@ -18,7 +16,6 @@ import com.prey.net.http.EntityFile;
 
 public class PictureUtil {
 
-	@SuppressLint("NewApi")
 	public static HttpDataService getPicture(Context ctx) {
 		HttpDataService data = null;
 		try {
@@ -38,8 +35,8 @@ public class PictureUtil {
 			} else {
 				PreyLogger.d("dataImagen front null");
 			}
-			int numberOfCameras = Camera.getNumberOfCameras();
-			if (numberOfCameras > 1) {
+			Integer numberOfCameras = SimpleCameraActivity.getNumberOfCameras();
+			if (numberOfCameras!=null&&numberOfCameras > 1) {
 				Thread.sleep(6000);
 				byte[] backPicture = getPicture(ctx, "back");
 				if (backPicture != null) {
@@ -86,7 +83,7 @@ public class PictureUtil {
 		}
 		if (SimpleCameraActivity.activity != null) {
 			PreyLogger.d("takePicture activity no nulo");
-			SimpleCameraActivity.activity.takePicture(focus);
+			SimpleCameraActivity.activity.takePicture(ctx,focus);
 		} else {
 			PreyLogger.d("takePicture activity nulo");
 		}

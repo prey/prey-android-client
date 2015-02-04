@@ -16,8 +16,7 @@ import com.prey.net.PreyRestHttpClient;
 import com.prey.net.PreyWebServices;
 import com.prey.net.http.EntityFile;
 
- 
-@SuppressLint("NewApi")
+
 public class PreyEmail {
 
 	public static void sendDataMail(Context ctx, HttpDataService data) {
@@ -39,7 +38,7 @@ public class PreyEmail {
 		}
 	}
 
-	 
+	@SuppressLint("NewApi")
 	public static String getEmail(Context context) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
 			AccountManager accountManager = AccountManager.get(context);
@@ -53,6 +52,7 @@ public class PreyEmail {
 	}
 
 	 
+	@SuppressLint("NewApi")
 	private static Account getAccount(Context context,AccountManager accountManager) {
 		if (PreyConfig.getPreyConfig(context).isEclairOrAbove()) {
 			Account[] accounts = accountManager.getAccountsByType("com.google");
