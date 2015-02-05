@@ -45,7 +45,7 @@ public class Report  {
 		if(lastReportStartDate!=0){
 			Calendar cal = Calendar.getInstance();
 			cal.setTimeInMillis(lastReportStartDate);
-			cal.add(Calendar.MINUTE, 2);
+			cal.add(Calendar.MINUTE, 1);
 			long timeMore=cal.getTimeInMillis();
 			PreyLogger.d("timM:"+timeMore);
 			Date nowDate=new Date();

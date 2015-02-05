@@ -3,7 +3,6 @@ package com.prey.activities;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 
@@ -62,14 +61,12 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Camera getCamera(String focus) {
+		PreyLogger.d("getCamera("+focus+")");
 		Camera mCamera = null;
 		try {
-			Class noparams[] = {};
 			Class clsCamera;
-			Object obj=null;
 			clsCamera = Class.forName("android.hardware.Camera");
-			Method methodGetNumberOfCameras = clsCamera.getMethod("getNumberOfCameras", noparams);
-			Integer numberOfCamerasInt = (Integer) methodGetNumberOfCameras.invoke(obj, obj);
+			Integer numberOfCamerasInt = getNumberOfCameras();
 			if (numberOfCamerasInt != null) {
 				if ("front".equals(focus)) {
 					mCamera = getCamera(0, clsCamera);
@@ -93,10 +90,9 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 		
 		Class noparams[] = {};
 		Class clsCamera;
-		Object obj=null;
 		clsCamera = Class.forName("android.hardware.Camera");
 		Method methodGetNumberOfCameras = clsCamera.getMethod("getNumberOfCameras", noparams);
-		numberOfCamerasInt = (Integer) methodGetNumberOfCameras.invoke(obj, obj);
+		numberOfCamerasInt = (Integer) methodGetNumberOfCameras.invoke(null, null);
 		} catch (Exception e) {
 		}
 		return numberOfCamerasInt;
