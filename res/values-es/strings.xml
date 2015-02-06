@@ -14,7 +14,7 @@
     <string name="new_user">NUEVO USUARIO</string>
     <string name="device_ready_h1">DISPOSITIVO LISTO</string>
     <string name="device_not_ready_h1">¡Equipo aún no listo!</string>
-    <string name="device_ready_h2">Tu equipo está protegido y a la espera de la señal de activación.</string>
+    <string name="device_ready_h2">Tu equipo está protegido. Manéjalo desde tu Cuenta Prey.</string>
     <string name="device_not_ready_h2">Servicios de localización desactivados. Los reportes no serán enviados.</string>
     <string name="login_cp">INGRESAR A TU CUENTA</string>
     <string name="manage_prey_settings">CAMBIAR LA CONFIGURACIÓN</string>
