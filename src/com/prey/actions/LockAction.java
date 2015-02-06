@@ -32,7 +32,6 @@ public class LockAction extends PreyAction {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		if (preyConfig.isFroyoOrAbove()){
 			preyConfig.setLock(true);
-			preyConfig.setUnlockPass(getConfig().get("unlock_pass"));
 			FroyoSupport.getInstance(ctx).changePasswordAndLock(getConfig().get("unlock_pass"),true);
 		}
 	}

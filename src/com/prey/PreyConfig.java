@@ -78,7 +78,7 @@ public class PreyConfig {
 	public static final String ACTIVATE_DEVICE_ADMIN = "ACTIVATE_DEVICE_ADMIN";
  
 	public static final String IS_CAMOUFLAGE_SET = "PREFS_CAMOUFLAGE";
-	public static final String UNLOCK_PASS = "UNLOCK_PASS";
+	 
 	public static final String IS_LOCK_SET = "IS_LOCK_SET";
 	public static final String LAST_LAT = "LAST_LAT";
 	public static final String LAST_LON = "LAST_LON";
@@ -331,15 +331,6 @@ public class PreyConfig {
 	public void setMissing(boolean missing) {
 		this.missing = missing;
 		this.saveString(PreyConfig.PREFS_IS_MISSING, Boolean.valueOf(missing).toString());
-	}
-	
-	public void setUnlockPass(String unlockPass) {
-		this.saveString(PreyConfig.UNLOCK_PASS, unlockPass);
-	}
-	
-	public String getUnlockPass() {
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-		return settings.getString(PreyConfig.UNLOCK_PASS, "preyrocks");
 	}
 	
 	public void setLock(boolean locked) {
