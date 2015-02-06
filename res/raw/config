@@ -17,8 +17,8 @@ prey-panel=panel
 prey-campaign=login?utm_source=aplicacion-android&utm_medium=boton-login&utm_campaign=login-from-app
  
 #produccion
-prey-subdomain=solid
-prey-domain=preyproject.com
+prey-subdomain=subdmain
+prey-domain=domain.com
 
 api-v2=api/v2/
 
@@ -36,5 +36,5 @@ gcm-id=0000000000
 c2dm-action=message
 c2dm-message-sync=sync
 
-email-feedback=android-feedback@preyproject.com
-subject-feedback=prey android feedback
+email-feedback=mail@domain.com
+subject-feedback=Prey Android Feedback
