@@ -93,10 +93,6 @@ public class FileConfigReader {
 		return properties.getProperty("subject-feedback");
 	}
 	
-	public String getApiV1(){
-        return properties.getProperty("api-v1");
-	}
-	
 	public String getApiV2(){
         return properties.getProperty("api-v2");
 	}
@@ -117,7 +113,4 @@ public class FileConfigReader {
 		return Integer.parseInt(properties.getProperty("minute-scheduled"));
 	}
 	
-	public String getAnalyticsUA() {
-		return properties.getProperty("analytics-ua");
-	}
 }
