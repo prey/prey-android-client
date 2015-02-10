@@ -57,7 +57,7 @@
     <string name="agreements_message2">&amp;amp;amp;lt;u&amp;amp;amp;gt;Términos y Condiciones&amp;amp;amp;lt;/u&amp;amp;amp;gt;</string>
     <string name="set_old_user_loading">Agregando equipo a la cuenta…</string>
     <string name="set_old_user_no_more_devices_title">¡Oh, caramba!</string>
-    <string name="set_old_user_no_more_devices_text">Al parecer en tu cuenta Prey no quedan slots disponibles para tu equipo.\n\nIntenta eliminando algún disposito en tu cuenta Prey, o bien crea una nueva.</string>
+    <string name="set_old_user_no_more_devices_text">Al parecer en tu cuenta Prey está llena. Intenta eliminar algún disposito para poder proteger tu Android, o actualiza la cuenta mediante preyproject.com/plans.</string>
     <string name="set_new_user_dialog_creating_popup">Creando la cuenta.\nUn segundo…</string>
     <string name="congratulations_title">¡Equipo agregado!</string>
     <string name="preferences_status">Estado</string>
