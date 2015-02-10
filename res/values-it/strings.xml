@@ -14,7 +14,7 @@
     <string name="new_user">NUOVO UTENTE</string>
     <string name="device_ready_h1">Dispositivo pronto</string>
     <string name="device_not_ready_h1">Dispositivo non pronto!</string>
-    <string name="device_ready_h2">Il tuo telefono è protetto, e aspetta il segnale di attivazione.</string>
+    <string name="device_ready_h2">Il tuo telefono è protetto. Gestiscilo dal tuo account Prey.</string>
     <string name="device_not_ready_h2">I servizi di localizzazione sono disabilitati per Prey. I report non verranno inoltrati.</string>
     <string name="login_cp">ACCEDI AL PANNELLO DI CONTROLLO DI PREY</string>
     <string name="manage_prey_settings">GESTISCI LE IMPOSTAZIONI DELL\'APP</string>
@@ -57,7 +57,7 @@
     <string name="agreements_message2">&lt;u&gt;Leggi l\'Accordo&lt;/u&gt;</string>
     <string name="set_old_user_loading">Aggiunta del dispositivo...\nAttendere!</string>
     <string name="set_old_user_no_more_devices_title">Dannazione!</string>
-    <string name="set_old_user_no_more_devices_text">Sembra che siano stati aggiunti più dispositivi di quelli gratuitamente a disposizione nel tuo account Prey.\n\nProva a rimuovere uno dei dispositivi vecchi nel Pannello di Controllo, o crea un nuovo account.</string>
+    <string name="set_old_user_no_more_devices_text">Il tuo account Prey è pieno. Per proteggere questo dispositivo Android cancellane uno vecchio, o effettua l\'upgrade del tuo account su preyproject.com/plans</string>
     <string name="set_new_user_dialog_creating_popup">Creazione account. Attendere...</string>
     <string name="congratulations_title">Telefono aggiunto!</string>
     <string name="preferences_status">Stato</string>
