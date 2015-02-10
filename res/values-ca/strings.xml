@@ -57,7 +57,7 @@
     <string name="agreements_message2">&lt;u&gt;Llegiu les condicions&lt;/u&gt;</string>
     <string name="set_old_user_loading">S\'està associant el dispositiu\nal vostre compte d\'usuari...</string>
     <string name="set_old_user_no_more_devices_title">Caram!</string>
-    <string name="set_old_user_no_more_devices_text">Sembla que heu exhaurit el nombre màxim de dispositius permesos al vostre compte\n\nHeu d\'esborrar els que ja no feu servir, o crear un compte nou.</string>
+    <string name="set_old_user_no_more_devices_text">Heu exhaurit el nombre màxim de dispositius permesos. Si voleu protegir el vostre Android, suprimiu els que ja no feu servir, o actualitzeu el compte mitjançant preyproject.com/plans.</string>
     <string name="set_new_user_dialog_creating_popup">S\'està creant un compte nou...</string>
     <string name="congratulations_title">Dispositiu associat!</string>
     <string name="preferences_status">Estat</string>
