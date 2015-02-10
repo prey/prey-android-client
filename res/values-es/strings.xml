@@ -54,7 +54,7 @@
     <string name="welcome">Bienvenido a Prey</string>
     <string name="agreements_title">Bienvenido a\nPrey para Android™!</string>
     <string name="agreements_message1">Por favor, asegúrate de leer y luego aceptar los términos y condiciones que se encuentran en el link de abajo</string>
-    <string name="agreements_message2">&amp;amp;lt;u&amp;amp;gt;Términos y Condiciones&amp;amp;lt;/u&amp;amp;gt;</string>
+    <string name="agreements_message2">&amp;amp;amp;lt;u&amp;amp;amp;gt;Términos y Condiciones&amp;amp;amp;lt;/u&amp;amp;amp;gt;</string>
     <string name="set_old_user_loading">Agregando equipo a la cuenta…</string>
     <string name="set_old_user_no_more_devices_title">¡Oh, caramba!</string>
     <string name="set_old_user_no_more_devices_text">Al parecer en tu cuenta Prey no quedan slots disponibles para tu equipo.\n\nIntenta eliminando algún disposito en tu cuenta Prey, o bien crea una nueva.</string>
