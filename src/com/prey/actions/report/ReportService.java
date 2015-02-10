@@ -10,7 +10,6 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
-import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.net.http.EntityFile;
@@ -78,7 +77,7 @@ public class ReportService extends IntentService {
 				if (response != null) {
 					PreyConfig.getPreyConfig(ctx).setLastEvent("report_send");
 					PreyLogger.d("response.getStatusLine():" + response.getStatusLine());
-					if (200 != response.getStatusLine().getStatusCode()) {
+					if (409 == response.getStatusLine().getStatusCode()) {
 						PreyConfig.getPreyConfig(ctx).setMissing(false);
 						PreyConfig.getPreyConfig(ctx).setIntervalReport("");
 						ReportScheduled.getInstance(ctx).reset();
