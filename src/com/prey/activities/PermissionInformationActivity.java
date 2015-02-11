@@ -36,7 +36,7 @@ public class PermissionInformationActivity extends PreyActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		PreyLogger.i("first:"+first);
+		PreyLogger.d("first:"+first);
 		if (getPreyConfig().isFroyoOrAbove() && !FroyoSupport.getInstance(this).isAdminActive() && !first) {
 			first = true;
 			//PreyLogger.i("Is froyo or above!!");
@@ -50,7 +50,7 @@ public class PermissionInformationActivity extends PreyActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		PreyLogger.i("requestCode:" + requestCode + " resultCode:" + resultCode);
+		PreyLogger.d("requestCode:" + requestCode + " resultCode:" + resultCode);
 		if (requestCode == SECURITY_PRIVILEGES)
 			showScreen();
 	}
