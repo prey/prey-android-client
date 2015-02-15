@@ -14,7 +14,7 @@
     <string name="new_user">UUSI KÄYTTÄJÄ</string>
     <string name="device_ready_h1">LAITE VALMIS</string>
     <string name="device_not_ready_h1">Laite ei ole valmiina!</string>
-    <string name="device_ready_h2">Puhelimesi on suojattu ja odottaa aktivointisignaalia.</string>
+    <string name="device_ready_h2">Puhelimesi on nyt suojattu. Hallinnoi sitä Prey-tililtäsi.</string>
     <string name="device_not_ready_h2">Preyn sijaintipalvelut ovat otettu pois käytöstä. Raportteja ei lähetetä.</string>
     <string name="login_cp">KIRJAUDU PREY-TILILLESI</string>
     <string name="manage_prey_settings">HALLITSE SOVELLUKSEN ASETUKSIA</string>
@@ -57,7 +57,7 @@
     <string name="agreements_message2">&lt;u&gt;Lue käyttöehdot&lt;/u&gt;</string>
     <string name="set_old_user_loading">Liitetään laitetta tiliin...\nOdotapa hetki!</string>
     <string name="set_old_user_no_more_devices_title">Otetaanpa rauhallisesti!</string>
-    <string name="set_old_user_no_more_devices_text">Näyttää siltä, että Prey-tilisi vapaat laitepaikat ovat lopussa.\n\nPoista olemassa oleva laite ohjauspaneelista tai luo uusi tili.</string>
+    <string name="set_old_user_no_more_devices_text">Prey-tilisi on täynnä. Suojataksesi tätä Android-laitetta, poista jokin vanha laite tai päivitä tilisi osoitteessa preyproject.com/plans</string>
     <string name="set_new_user_dialog_creating_popup">Luodaan tiliä. Odota hetki...</string>
     <string name="congratulations_title">Laite lisätty!</string>
     <string name="preferences_status">Tila</string>
