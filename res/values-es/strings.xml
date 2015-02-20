@@ -195,4 +195,6 @@
     <string name="login_to_prey">Inicio de sesión en Prey</string>
     <string name="login_setting_h1_text">INGRESAR A CONFIGURACIÓN</string>
     <string name="login_setting_h2_text">Para su seguridad , escriba su contraseña, para administrador de configuración del dispositivo.</string>
+    <string name="error_mail_out_of_range">El largo de la dirección de correo debe estar entre %s y %s caracteres.</string>
+    <string name="error_password_out_of_range">El largo de la contraseña debe estar entre %s y %s caracteres.</string>
 </resources>
