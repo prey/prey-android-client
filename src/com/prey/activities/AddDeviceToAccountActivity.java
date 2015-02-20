@@ -12,6 +12,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -93,11 +94,19 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 				error = null;
 				final String email = ((EditText) findViewById(R.id.add_device_email)).getText().toString();
 				final String password = ((EditText) findViewById(R.id.add_device_pass)).getText().toString();
-
-				if (email.equals("") || password.equals("")) {
-					Toast.makeText(AddDeviceToAccountActivity.this, R.string.error_all_fields_are_required, Toast.LENGTH_LONG).show();
-				} else {
-					new AddDeviceToAccount().execute(email, password, getDeviceType(AddDeviceToAccountActivity.this));
+				final Context ctx=getApplicationContext();
+				if (email==null||email.equals("") || password==null|| password.equals("")) {
+					Toast.makeText(ctx, R.string.error_all_fields_are_required, Toast.LENGTH_LONG).show();
+				} else{
+					if(email.length()<6||email.length()>100){
+						Toast.makeText(ctx, ctx.getString(R.string.error_mail_out_of_range,6,100) , Toast.LENGTH_LONG).show();
+					}else{
+						if(password.length()<6||password.length()>32){
+							Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range,6,32), Toast.LENGTH_LONG).show();
+						}else{
+							new AddDeviceToAccount().execute(email, password, getDeviceType(ctx));
+						}
+					}
 				}
 			}
 		});

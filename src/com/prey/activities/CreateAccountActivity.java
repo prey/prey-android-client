@@ -13,6 +13,7 @@ import android.app.AlertDialog;
 import com.prey.R;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -86,11 +87,19 @@ public class CreateAccountActivity extends SetupActivity {
 				name = ((EditText) findViewById(R.id.new_account_name)).getText().toString();
 				email = ((EditText) findViewById(R.id.new_account_email)).getText().toString();
 				password = ((EditText) findViewById(R.id.new_account_pass)).getText().toString();
-
-				if (name.equals("") || email.equals("") || password.equals(""))
-					Toast.makeText(CreateAccountActivity.this, R.string.error_all_fields_are_required, Toast.LENGTH_LONG).show();
-				else {
-					new CreateAccount().execute(name, email, password);
+				Context ctx=getApplicationContext();
+				if (email==null||email.equals("") || password==null|| password.equals("")) {
+					Toast.makeText(ctx, R.string.error_all_fields_are_required, Toast.LENGTH_LONG).show();
+				} else{
+					if(email.length()<6||email.length()>100){
+						Toast.makeText(ctx, ctx.getString(R.string.error_mail_out_of_range,6,100) , Toast.LENGTH_LONG).show();
+					}else{
+						if(password.length()<6||password.length()>32){
+							Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range,6,32), Toast.LENGTH_LONG).show();
+						}else{
+							new CreateAccount().execute(name, email, password);
+						}
+					}
 				}
 			}
 		});

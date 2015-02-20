@@ -7,6 +7,7 @@
 package com.prey.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -35,10 +36,16 @@ public class PasswordActivity extends PreyActivity {
 
 			public void onClick(View v) {
 				final String passwordtyped = pass1.getText().toString();
+				final Context ctx=getApplicationContext();
 				if (passwordtyped.equals(""))
-					Toast.makeText(PasswordActivity.this, R.string.preferences_password_length_error, Toast.LENGTH_LONG).show();
-				else
-					new CheckPassword().execute(passwordtyped);
+					Toast.makeText(ctx, R.string.preferences_password_length_error, Toast.LENGTH_LONG).show();
+				else{
+					if(passwordtyped.length()<6||passwordtyped.length()>32){
+						Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range,6,32), Toast.LENGTH_LONG).show();
+					}else{
+						new CheckPassword().execute(passwordtyped);
+					}
+				}
 
 			}
 		});
