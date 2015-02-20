@@ -8,8 +8,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
     android:installLocation="internalOnly"
-    android:versionCode="101"
-    android:versionName="1.2.5" >
+    android:versionCode="102"
+    android:versionName="1.2.6" >
 
     
     <uses-sdk
