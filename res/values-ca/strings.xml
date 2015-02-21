@@ -168,6 +168,8 @@
     <string name="error_cant_report_forgotten_password">No es pot reportar la contrasenya oblidada. Torneu a provar més tard.</string>
     <string name="error_all_fields_are_required">Tots els camps són necessaris</string>
     <string name="sms_not_sent">Hi ha hagut un error en enviar el missatge. El vostre dispositiu té inserida una targeta SIM?</string>
+    <string name="error_mail_out_of_range">el correu electrònic ha de tenir entre %1$s i %2$s caràcters.</string>
+    <string name="error_password_out_of_range">La contrasenya ha de tenir entre %1$s i %2$s caràcters.</string>
     <string name="permission_title_h1">Protecció extra</string>
     <string name="permission_body_text">S\'han habilitat els permisos especials a Prey per blocar el dispositiu i evitar que sigui desinstal·lat per un lladre. Si necessiteu desinstal·lar Prey, heu de revocar primer els permisos des de la mateixa aplicació.</string>
     <string name="no_permission_title_h1">SENSE PROTECCIÓ ADDICIONAL</string>
