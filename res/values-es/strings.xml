@@ -54,7 +54,7 @@
     <string name="welcome">Bienvenido a Prey</string>
     <string name="agreements_title">Bienvenido a\nPrey para Android™!</string>
     <string name="agreements_message1">Por favor, asegúrate de leer y luego aceptar los términos y condiciones que se encuentran en el link de abajo</string>
-    <string name="agreements_message2">&amp;amp;amp;lt;u&amp;amp;amp;gt;Términos y Condiciones&amp;amp;amp;lt;/u&amp;amp;amp;gt;</string>
+    <string name="agreements_message2">&amp;amp;amp;amp;lt;u&amp;amp;amp;amp;gt;Términos y Condiciones&amp;amp;amp;amp;lt;/u&amp;amp;amp;amp;gt;</string>
     <string name="set_old_user_loading">Agregando equipo a la cuenta…</string>
     <string name="set_old_user_no_more_devices_title">¡Oh, caramba!</string>
     <string name="set_old_user_no_more_devices_text">Al parecer en tu cuenta Prey está llena. Intenta eliminar algún disposito para poder proteger tu Android, o actualiza la cuenta mediante preyproject.com/plans.</string>
@@ -168,6 +168,8 @@
     <string name="error_cant_report_forgotten_password">La contraseña no se pudo reportar como olvidada. Por favor inténtalo nuevamente.</string>
     <string name="error_all_fields_are_required">Todos los campos son requeridos</string>
     <string name="sms_not_sent">Hubo un problema enviando el mensaje. ¿Estás seguro que tu equipo puede enviar SMS?</string>
+    <string name="error_mail_out_of_range">El largo de la dirección de correo debe ser entre %1$s y %2$s caracteres.</string>
+    <string name="error_password_out_of_range">El largo de la contraseña debe ser entre %1$s y %2$s caracteres.</string>
     <string name="permission_title_h1">PROTECCIÓN EXTRA</string>
     <string name="permission_body_text">Prey obtuvo permisos especiales para poder bloquear tu dispositivo y también evitar que los ladrones lo desinstalen. Si en algún momento necesitas quitar nuestra aplicación, primero debes remover estos permisos desde Prey.</string>
     <string name="no_permission_title_h1">SIN PROTECCIÓN EXTRA</string>
@@ -195,6 +197,4 @@
     <string name="login_to_prey">Inicio de sesión en Prey</string>
     <string name="login_setting_h1_text">INGRESAR A CONFIGURACIÓN</string>
     <string name="login_setting_h2_text">Para su seguridad , escriba su contraseña, para administrador de configuración del dispositivo.</string>
-    <string name="error_mail_out_of_range">El largo de la dirección de correo debe ser entre %1$s y %2$s caracteres.</string>
-    <string name="error_password_out_of_range">El largo de la contraseña debe ser entre %1$s y %2$s caracteres.</string>
 </resources>
