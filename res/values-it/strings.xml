@@ -168,6 +168,8 @@
     <string name="error_cant_report_forgotten_password">Impossibile inviare la password tramite report. Riprova in seguito.</string>
     <string name="error_all_fields_are_required">Tutti i campi sono obbligatori</string>
     <string name="sms_not_sent">C\'è stato un errore nell\'invio del messaggio. Il tuo dispositivo supporta gli SMS?</string>
+    <string name="error_mail_out_of_range">La lunghezza della mail dev\'essere entro %1$s e %2$s caratteri.</string>
+    <string name="error_password_out_of_range">La lunghezza della password dev\'essere entro %1$s e %2$s caratteri.</string>
     <string name="permission_title_h1">PROTEZIONE EXTRA</string>
     <string name="permission_body_text">Prey ha ottenuto i permessi speciali per bloccare il tuo dispositivo ed evitare la disinstallazione da parte dei ladri. Se vorrai mai disinstallare Prey, prima devi revocare questi permessi dall\'applicazione stessa.</string>
     <string name="no_permission_title_h1">NESSUNA PROTEZIONE EXTRA</string>
