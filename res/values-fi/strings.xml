@@ -168,6 +168,8 @@
     <string name="error_cant_report_forgotten_password">Unohtuneen salasanan raportointi epäonnistui. Yritä myöhemmin uudelleen.</string>
     <string name="error_all_fields_are_required">Kaikki kentät vaaditaan</string>
     <string name="sms_not_sent">Viestin lähetyksessä tapahtui virhe. Tukeeko laitteesi tekstiviestien lähetystä?</string>
+    <string name="error_mail_out_of_range">Sähköpostin pitää olla %1$s - %2$s merkkiä pitkä.</string>
+    <string name="error_password_out_of_range">Salasanan pitää olla %1$s - %2$s merkkiä pitkä.</string>
     <string name="permission_title_h1">LISÄSUOJAUS</string>
     <string name="permission_body_text">Preylle annettiin erityisoikeuksia, jotta voit lukita laitteesi ja estää varkaita poistamasta sen asennusta. Jos haluat joskus poistaa Preyn, pitää sinun ensin kumota nämä oikeudet sovelluksesta.</string>
     <string name="no_permission_title_h1">EI LISÄSUOJAUSTA</string>
