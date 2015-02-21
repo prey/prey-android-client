@@ -168,6 +168,8 @@
     <string name="error_cant_report_forgotten_password">Det gick inte att rapportera bortglömt lösenord. Försök igen senare.</string>
     <string name="error_all_fields_are_required">Alla fält är obligatoriska</string>
     <string name="sms_not_sent">Det uppstod ett fel när meddelandet skulle skickas. Har din enhet stöd för sms?</string>
+    <string name="error_mail_out_of_range">E-postadressen måste vara mellan %1$s och %2$s tecken lång.</string>
+    <string name="error_password_out_of_range">Lösenordet måste vara mellan %1$s och %2$s tecken långt.</string>
     <string name="permission_title_h1">YTTERLIGARE SKYDD</string>
     <string name="permission_body_text">Prey beviljades särskilda behörigheter för att kunna låsa din enhet och förhindra att tjuvar avinstallerar appen. Om du vill avinstallera Prey, så måste du först återkalla dessa behörigheter inifrån appen.</string>
     <string name="no_permission_title_h1">INGET EXTRA SKYDD</string>
