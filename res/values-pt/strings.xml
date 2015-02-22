@@ -168,6 +168,8 @@
     <string name="error_cant_report_forgotten_password">Não é possível relatar senha esquecida. Por favor, tente novamente mais tarde.</string>
     <string name="error_all_fields_are_required">Todos os campos são obrigatório</string>
     <string name="sms_not_sent">Houve um erro ao enviar a mensagem. O seu dispositivo tem suporte a envio de mensagens SMS?</string>
+    <string name="error_mail_out_of_range">O email deve ter entre %1$s e %2$s caracteres.</string>
+    <string name="error_password_out_of_range">A senha deve ter entre %1$s e %2$s caracteres.</string>
     <string name="permission_title_h1">PROTEÇÃO EXTRA</string>
     <string name="permission_body_text">O Prey precisa de permissões especiais para travar seu dispositivo, e para prevenir que ladrões desinstalem-o. Se você precisar desinstalar o Prey, você primeiro vai ter que revogar estas permissões de dentro do aplicativo.</string>
     <string name="no_permission_title_h1">SEM PROTEÇÃO EXTRA</string>
