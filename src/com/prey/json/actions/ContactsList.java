@@ -27,7 +27,6 @@ import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 
 public class ContactsList extends JsonAction {
-
 	public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		PreyLogger.d("Ejecuting ContactsList Data.");
 		List<HttpDataService> listResult = super.get(ctx, list, parameters);
@@ -39,6 +38,7 @@ public class ContactsList extends JsonAction {
 		HttpDataService data = new HttpDataService("contacts_list");
 		HashMap<String, String> parametersMap = new HashMap<String, String>();
 		Cursor cursor = null;
+
 		try {
 			final String[] projection = null;
 			final String selection = null;
@@ -68,11 +68,14 @@ public class ContactsList extends JsonAction {
 			PreyLogger.e("Error:"+ex.getMessage(), ex);
 			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("get","contacts_list","failed",ex.getMessage()));
 		} finally {
-			cursor.close();
+			if(cursor != null) {
+				cursor.close();
+			}
 		}
+
 		data.setList(true);
 		data.addDataListAll(parametersMap);
+
 		return data;
 	}
-
 }

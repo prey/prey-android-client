@@ -8,6 +8,7 @@ package com.prey;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.Exception;
 import java.util.Properties;
 
 import android.content.Context;
@@ -24,14 +25,14 @@ public class FileConfigReader {
 			properties = new Properties();
 			InputStream is = ctx.getResources().openRawResource(R.raw.config);
 		    properties.load(is);
-		    is.close();
 		    PreyLogger.d("Config: "+properties);
-			
 		} catch (NotFoundException e) {
 		    PreyLogger.e("Config file wasn't found", e);
 	    } catch (IOException e) {
 	    	 PreyLogger.e("Couldn't read config file", e);
-	    }
+	    } finally {
+			try { is.close(); } catch (Exception e) {}
+		}
 	}
 	
 	public static FileConfigReader getInstance(Context ctx){

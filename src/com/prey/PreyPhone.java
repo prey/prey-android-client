@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.lang.Exception;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -164,6 +165,7 @@ public class PreyPhone {
 		DhcpInfo dhcpInfo= wifiMgr.getDhcpInfo();
 		wifi.setNetmask(formatterIp(dhcpInfo.netmask));
 		wifi.setGatewayIp(formatterIp(dhcpInfo.serverAddress));
+
 		if(ipAddress!=0){
 			wifi.setInterfaceType("Wireless");
 		}else{
@@ -173,23 +175,24 @@ public class PreyPhone {
 				wifi.setInterfaceType("");
 			}
 		}
+
 		wifi.setName("eth0");
 		String ssid=wifiInfo.getSSID();
-		try{
+
+		try {
 			ssid=ssid.replaceAll("\"", "");
-		}catch(Exception e){
-			
-		}
+		} catch(Exception e) {}
+
 		wifi.setSsid(ssid);
 		
 		for (int i=0;listWifi!=null&&i<  listWifi.size();i++) {
 			Wifi _wifi=listWifi.get(i);
 			ssid=_wifi.getSsid();
-			try{
+
+			try {
 				ssid=ssid.replaceAll("\"", "");
-			}catch(Exception e){
-				
-			}
+			} catch(Exception e) {}
+
 			if (ssid.equals(wifi.getSsid())){
 				wifi.setSecurity(_wifi.getSecurity());
 				wifi.setSignalStrength(_wifi.getSignalStrength());
@@ -199,10 +202,6 @@ public class PreyPhone {
 		}
 		 
 	}
-	
- 
-
-	
 
 	private String formatterIp(int ipAddress){
 		return String.format("%d.%d.%d.%d", 
@@ -211,6 +210,7 @@ public class PreyPhone {
 				(ipAddress >> 16 & 0xff),
 				(ipAddress >> 24 & 0xff));
 	}
+
 	private void updateListWifi() {
 		listWifi = new ArrayList<PreyPhone.Wifi>();
 		WifiManager wifiMgr = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
@@ -224,7 +224,6 @@ public class PreyPhone {
 			_wifi.setSignalStrength(String.valueOf(scan.level));
 			_wifi.setChannel(String.valueOf(getChannelFromFrequency(scan.frequency)));
 			listWifi.add(_wifi);
-
 		}
 	}
 
@@ -536,13 +535,11 @@ public class PreyPhone {
 				String[] data = aLine.split(":");
 				try {
 					mapData.put(data[0].trim(), data[1].trim());
-				} catch (Exception e) {
-				}
-			}
-			if (br != null) {
-				br.close();
+				} catch (Exception e) {}
 			}
 		} catch (IOException e) {
+		} finally {
+			try { br.close(); } catch (Exception e) {}
 		}
 		return mapData;
 	}
@@ -571,6 +568,7 @@ public class PreyPhone {
        HttpResponse httpResponse=null;
        InputStreamReader input=null;
        BufferedReader buffer=null;
+
        try {
         	httpClient = new DefaultHttpClient();
         	httpGet = new HttpGet("http://ifconfig.me/ip");
@@ -578,14 +576,11 @@ public class PreyPhone {
         	input=new InputStreamReader(httpResponse.getEntity().getContent());
         	buffer=new BufferedReader(input);
         	ip=buffer.readLine();
-       }catch (Exception e){
-    	   if (buffer!=null){
-    		   try {buffer.close();} catch (IOException e1) {}
-    	   }
-    	   if (input!=null){
-    		   try {input.close();} catch (IOException e1) {}
-    	   }
+       } finally {
+	       try { buffer.close(); } catch (Exception e) {}
+	       try { input.close(); } catch (Exception e) {}
        }
+
        return ip;
     }
 

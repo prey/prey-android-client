@@ -426,20 +426,22 @@ public class PreyRestHttpClient {
 			PreyLogger.e("Buffer Error, Error converting result " + e.toString(), e);
 		} finally {
 			try {
-				if(is!=null)
+				if(is!=null) {
 					is.close();
-			} catch (IOException e) {
-			}
+				}
+			} catch (IOException e) {}
+
 			try {
-				if(reader!=null)
+				if(reader!=null) {
 					reader.close();
-			} catch (IOException e) {
-			}
+				}
+			} catch (IOException e) {}
+
 			try {
-				if(input!=null)
+				if(input!=null) {
 					input.close();
-			} catch (IOException e) {
-			}
+				}
+			} catch (IOException e) {}
 		}
 		return sb;
 	}

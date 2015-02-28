@@ -11,8 +11,9 @@ import android.util.Log;
 public class PreyLogger {
 
 	public static void d(String message) {
-		if (PreyConfig.LOG_DEBUG_ENABLED)
-			Log.d(PreyConfig.TAG,message);
+		if (PreyConfig.LOG_DEBUG_ENABLED) {
+			Log.d(PreyConfig.TAG, message);
+		}
 	}
 
 	public static void i(String message) {
@@ -20,10 +21,11 @@ public class PreyLogger {
 	}
 
 	public static void e(final String message, Throwable e) {
-		if (e!=null)
+		if (e != null) {
 			Log.e(PreyConfig.TAG, message, e);
-		else
+		} else {
 			Log.e(PreyConfig.TAG, message);
+		}
 	}
 
 }

@@ -27,8 +27,6 @@ public class PushMessage {
 		} catch (JSONException e) {
 			throw new PreyException("Couldn't parse pushed json message");
 		}
-		
-		
 	}
 	
 	public String getEvent() {
@@ -49,6 +47,4 @@ public class PushMessage {
 	public void setBody(String body) {
 		this.body = body;
 	}
-	
-
 }

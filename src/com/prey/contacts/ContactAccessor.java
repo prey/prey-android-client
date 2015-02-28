@@ -59,7 +59,9 @@ public class ContactAccessor {
                 contactInfo.setPhotoId(cursor.getInt(2));
             }
         } finally {
-            cursor.close();
+	        if(cursor != null) {
+		        cursor.close();
+	        }
         }
 
         boolean modified=false;
@@ -73,8 +75,11 @@ public class ContactAccessor {
         	 }
 
         } finally {
-            cursor.close();
+	        if(cursor != null) {
+		        cursor.close();
+	        }
         }
+
         if(!modified){
         	// Load the phone number (if any).
         	cursor = contentResolver.query(Phone.CONTENT_URI,
@@ -89,26 +94,20 @@ public class ContactAccessor {
         	}
         }
         
-        
-        
-        try{
+        try {
         	contactInfo.setPicture(this.loadContactPhoto(contentResolver, contactId, contactInfo.getPhotoId()));
-        }catch(Exception e){
-        	
-        }
+        } catch (Exception e) {}
+
         return contactInfo;
     }
     
-    public Bitmap loadContactPhoto(ContentResolver cr, long  id, long photo_id) 
-    {
+    public Bitmap loadContactPhoto(ContentResolver cr, long  id, long photo_id) {
         Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, id);
         InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(cr, uri);
-        if (input != null) 
-        {
+
+        if (input != null) {
             return BitmapFactory.decodeStream(input);
-        }
-        else
-        {
+        } else {
             PreyLogger.d("first try failed to load photo");
 
         }
@@ -119,24 +118,25 @@ public class ContactAccessor {
 
         Cursor c = cr.query(photoUri, new String[] {ContactsContract.CommonDataKinds.Photo.PHOTO}, null, null, null);
 
-        try 
-        {
-            if (c.moveToFirst()) 
-                photoBytes = c.getBlob(0);
-
+        try {
+            if (c.moveToFirst()) {
+	            photoBytes = c.getBlob(0);
+            }
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-
         } finally {
+	        if (c != null) {
+		        c.close();
+	        }
+        }
 
-            c.close();
-        }           
+        if (photoBytes != null) {
+	        return BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
+        } else {
+	        PreyLogger.d("second try also failed");
+        }
 
-        if (photoBytes != null)
-            return BitmapFactory.decodeByteArray(photoBytes,0,photoBytes.length);
-        else
-        	PreyLogger.d("second try also failed");
         return null;
     }
 }
