@@ -14,7 +14,7 @@
     <string name="new_user">Usuari nou</string>
     <string name="device_ready_h1">Dispositiu preparat</string>
     <string name="device_not_ready_h1">Dispositiu no preparat!</string>
-    <string name="device_ready_h2">El dispositiu està ara protegit. Podeu administrar-ho des del compte de Prey.</string>
+    <string name="device_ready_h2">El dispositiu està ara protegit. Podeu administrar-ho des del vostre compte de Prey.</string>
     <string name="device_not_ready_h2">Els serveis de localització de Prey no estan habilitats. No s\'enviarà cap informe.</string>
     <string name="login_cp">Inicia la sessió al compte de Prey</string>
     <string name="manage_prey_settings">Administració de Prey</string>
