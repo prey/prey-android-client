@@ -252,5 +252,5 @@
     <string name="back">Back</string>
     <string name="login_to_prey">Login to Prey</string>
     <string name="login_setting_h1_text">LOGIN TO SETTINGS</string>
-    <string name="login_setting_h2_text">For your security, type your password\nto manager Prey device settings.</string>
+    <string name="login_setting_h2_text">For your security, type your password\nto manage Prey device settings.</string>
 </resources>
