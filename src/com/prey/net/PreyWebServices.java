@@ -765,6 +765,7 @@ public class PreyWebServices {
 				location.setLat(Double.parseDouble(lat));
 				location.setLng(Double.parseDouble(lng));
 				location.setAccuracy(Float.parseFloat(accuracy));
+				location.setMethod("wifi");
 			}
 		}
 		return location;

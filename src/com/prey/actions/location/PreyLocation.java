@@ -15,6 +15,7 @@ public class PreyLocation {
 	private float accuracy;
 	private double altitude;
 	private long timestamp;
+	private String method;
 
 	public PreyLocation() {
 
@@ -28,6 +29,21 @@ public class PreyLocation {
 			this.altitude = loc.getAltitude();
 			this.timestamp = System.currentTimeMillis();
 		}
+	}
+	public PreyLocation(Location loc,String method) {
+		this(loc);
+		if(loc!=null){
+			this.method = method;
+		}
+	}
+
+	
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
 	}
 
 	public double getLat() {

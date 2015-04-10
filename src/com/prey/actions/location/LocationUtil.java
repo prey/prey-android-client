@@ -26,6 +26,7 @@ public class LocationUtil {
 	public static final String LAT = "lat";
 	public static final String LNG = "lng";
 	public static final String ACC = "accuracy";
+	public static final String METHOD = "method";
 
 	public static HttpDataService dataLocation(Context ctx) {
 		HttpDataService data =null;
@@ -37,25 +38,44 @@ public class LocationUtil {
 			PreyLogger.d("net status:" + isNetworkEnabled);
 			PreyLocation location = null;
 			if (isGpsEnabled || isNetworkEnabled) {
+				String method=getMethod(isGpsEnabled,isNetworkEnabled);
 				int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(ctx);
 				if (ConnectionResult.SUCCESS == resultCode) {
-					location = getPreyLocationPlayService(ctx);
+					location = getPreyLocationPlayService(ctx,method);
 				} else {
-					location = getPreyLocationAppService(ctx);
+					location = getPreyLocationAppService(ctx,method);
 				}
-				if(location==null)
-					location = getDataLocationWifi(ctx);
-			} else {
-				location = getDataLocationWifi(ctx);
 			}
-			PreyLogger.d("locationData:" + location.getLat()+" "+location.getLng()+" "+location.getAccuracy());
-			data=convertData(location);
+			if(location==null)
+				location = getDataLocationWifi(ctx);
+			if(location!=null){
+				PreyLogger.d("locationData:" + location.getLat()+" "+location.getLng()+" "+location.getAccuracy());
+				data=convertData(location);
+			}else{
+				sendNotify(ctx,"Error");
+			}
 		} catch (Exception e) {
 			PreyLogger.e("Error causa:" + e.getMessage(), e);
-			Map<String, String> parms = UtilJson.makeMapParam("get", "location", "failed", e.getMessage());
-			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
+			sendNotify(ctx,"Error");
 		}
 		return data;
+	}
+	
+	private static String getMethod(boolean isGpsEnabled,boolean isNetworkEnabled){
+		if (isGpsEnabled && isNetworkEnabled) {
+			return "native";
+		}
+		if (isGpsEnabled) {
+			return "gps";
+		}
+		if (isNetworkEnabled) {
+			return "network";
+		}
+		return "";
+	}
+	private static void sendNotify(Context ctx,String message){
+		Map<String, String> parms = UtilJson.makeMapParam("get", "location", "failed", message);
+		PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
 	}
 
 	public static PreyLocation getDataLocationWifi(Context ctx) throws Exception {
@@ -68,8 +88,12 @@ public class LocationUtil {
 			Thread.sleep(2000);
 		}
 		List<Wifi> listWifi = preyPhone.getListWifi();
+		
 		if (disableWifi){
 			PreyWifiManager.getInstance(ctx).setWifiEnabled(false);
+		}
+		if(listWifi==null||listWifi.size()==0){
+			throw new Exception(); 
 		}
 		location = PreyWebServices.getInstance().getLocation(ctx, listWifi);
  
@@ -79,7 +103,7 @@ public class LocationUtil {
 		return location;
 	}
 
-	public static PreyLocation getPreyLocationPlayService(Context ctx) throws Exception {
+	public static PreyLocation getPreyLocationPlayService(Context ctx,String method) throws Exception {
 		PreyGooglePlayServiceLocation play = new PreyGooglePlayServiceLocation();
 		play.init(ctx);
 		try {
@@ -98,10 +122,10 @@ public class LocationUtil {
 		}
 		PreyLocation preyLocation=null;
 		if(currentLocation!=null){
-			preyLocation = new PreyLocation(currentLocation);
+			preyLocation = new PreyLocation(currentLocation,method);
 		}else{
 			if(currentLocation==null){
-				preyLocation = getPreyLocationAppService(ctx);
+				preyLocation = getPreyLocationAppService(ctx,method);
 			}
 			if(currentLocation==null){
 				preyLocation = getDataLocationWifi(ctx);
@@ -114,7 +138,7 @@ public class LocationUtil {
 		return preyLocation;
 	}
 
-	public static PreyLocation getPreyLocationAppService(Context ctx) throws Exception {
+	public static PreyLocation getPreyLocationAppService(Context ctx,String method) throws Exception {
 		PreyLocation location = null;
 		Intent intent = new Intent(ctx, LocationService.class);
 		try {
@@ -136,6 +160,7 @@ public class LocationUtil {
 					}
 					i++;
 				}
+				location.setMethod(method);
 			}
 			ctx.stopService(intent);
 		} catch (Exception e) {
@@ -157,6 +182,7 @@ public class LocationUtil {
 		parametersMap.put(LAT, Double.toString(lastLocation.getLat()));
 		parametersMap.put(LNG, Double.toString(lastLocation.getLng()));
 		parametersMap.put(ACC, Float.toString(lastLocation.getAccuracy()));
+		parametersMap.put(METHOD, lastLocation.getMethod() );
 		data.addDataListAll(parametersMap);
 		return data;
 	}
