@@ -31,11 +31,20 @@ public class Report  {
 		PreyConfig.getPreyConfig(ctx).setMissing(true);
 		int interval =0;
 		try{
+			PreyLogger.d("interval:"+ parameters.getString("interval"));
 			interval = parameters.getInt("interval");
 		}catch(Exception e){
 			interval =0;
 		}
+		String exclude="";
+		try{
+			PreyLogger.d("exclude:"+ parameters.getString("exclude"));
+			exclude= parameters.getString("exclude");
+		}catch(Exception e){
+			
+		}
 		PreyConfig.getPreyConfig(ctx).setIntervalReport(""+interval);
+		PreyConfig.getPreyConfig(ctx).setExcludeReport(exclude);
 		ReportScheduled.getInstance(ctx).run(interval);
 	}
 	

@@ -31,18 +31,21 @@ public class ReportService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		
+		String exclude=PreyConfig.getPreyConfig(getApplicationContext()).getExcludeReport();
+		
 		JSONArray jsonArray = new JSONArray();
-		List<String> listExclude = new ArrayList<String>();
-		PreyLogger.i("start report");
+	 
+ 		PreyLogger.i("start report");
 		List<HttpDataService> listData = new ArrayList<HttpDataService>();
 		Context ctx = this;
  
 		jsonArray = new JSONArray();
-		if (!listExclude.contains("picture"))
+		if (!exclude.contains("picture"))
 			jsonArray.put(new String("picture"));
-		if (!listExclude.contains("location"))
+		if (!exclude.contains("location"))
 			jsonArray.put(new String("location"));
-		if (!listExclude.contains("access_points_list"))
+		if (!exclude.contains("access_points_list"))
 			jsonArray.put(new String("access_points_list"));
 
 		try {
@@ -80,6 +83,7 @@ public class ReportService extends IntentService {
 					if (409 == response.getStatusLine().getStatusCode()) {
 						PreyConfig.getPreyConfig(ctx).setMissing(false);
 						PreyConfig.getPreyConfig(ctx).setIntervalReport("");
+						PreyConfig.getPreyConfig(ctx).setExcludeReport("");
 						ReportScheduled.getInstance(ctx).reset();
 					}
 				} 

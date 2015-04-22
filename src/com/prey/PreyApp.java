@@ -17,6 +17,7 @@ public class PreyApp extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		try{
 		mLastPause = 0;
 		PreyLogger.d("__________________");
 		PreyLogger.i("Application launched!");
@@ -32,5 +33,6 @@ public class PreyApp extends Application {
 				ReportScheduled.getInstance(this).run(Integer.parseInt(PreyConfig.getPreyConfig(this).getIntervalReport()));
 			}
 		}
+		}catch(Exception e){}
 	}
 }

@@ -102,6 +102,7 @@ public class PreyConfig {
 	public static final String SIM_SERIAL_NUMBER="SIM_SERIAL_NUMBER";
 	
 	public static final String INTERVAL_REPORT="INTERVAL_REPORT";
+	public static final String EXCLUDE_REPORT="EXCLUDE_REPORT";
  
 	public static final String NOTIFICATION_ID="NOTIFICATION_ID";
 	public static final String SEND_NOTIFICATION_ID="SEND_NOTIFICATION_ID";
@@ -134,7 +135,6 @@ public class PreyConfig {
 	private String apiKey = "";
 	private boolean missing;
 	private String email;
-	private String destinationSms;
 	 
 	private boolean shouldCheckSimChange;
  
@@ -170,6 +170,7 @@ public class PreyConfig {
 	private String version;
 
 	private String intervalReport;
+	private String excludeReport;
  
 	private boolean registerC2dm=false;
 	
@@ -202,7 +203,6 @@ public class PreyConfig {
 		settings.registerOnSharedPreferenceChangeListener(listener);
 		this.deviceID = settings.getString(PreyConfig.PREFS_DEVICE_ID, "");
 		this.apiKey = settings.getString(PreyConfig.PREFS_API_KEY, "");
-		this.destinationSms = settings.getString(PreyConfig.PREFS_DESTINATION_SMS, "");
 		this.missing = Boolean.valueOf(settings.getString(PreyConfig.PREFS_IS_MISSING, "false"));
 		this.email = settings.getString(PreyConfig.PREFS_EMAIL, "");
 		 
@@ -229,6 +229,7 @@ public class PreyConfig {
 		this.version=settings.getString(PreyConfig.VERSION, VERSION_V1);
 		this.simSerialNumber=settings.getString(PreyConfig.SIM_SERIAL_NUMBER, "");
 		this.intervalReport=settings.getString(PreyConfig.INTERVAL_REPORT, "");
+		this.excludeReport=settings.getString(PreyConfig.EXCLUDE_REPORT, "");
 		this.sendNotificationId=settings.getBoolean(PreyConfig.SEND_NOTIFICATION_ID,false);
 		
 		this.signalFlareDate=settings.getLong(PreyConfig.SIGNAL_FLARE_DATE, 0);
@@ -802,6 +803,15 @@ public class PreyConfig {
 	public void setIntervalReport(String intervalReport) {
 		this.intervalReport=intervalReport;
 		this.saveString(PreyConfig.INTERVAL_REPORT,intervalReport);
+	}
+	
+	public String getExcludeReport(){
+		return excludeReport;
+	}
+	
+	public void setExcludeReport(String excludeReport) {
+		this.excludeReport=excludeReport;
+		this.saveString(PreyConfig.EXCLUDE_REPORT,excludeReport);
 	}
 	
 	public void setNotificationId(String notificationId){
