@@ -158,6 +158,10 @@ public class PreyPhone {
 		wifi=new Wifi();
 		WifiManager wifiMgr = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
 		WifiInfo wifiInfo= wifiMgr.getConnectionInfo();
+		
+		
+		wifi.setWifiEnabled(wifiMgr.isWifiEnabled());
+		
 		int ipAddress=wifiInfo.getIpAddress();
 		wifi.setIpAddress(formatterIp(ipAddress));
 		wifi.setMacAddress(wifiInfo.getMacAddress());
@@ -411,6 +415,15 @@ public class PreyPhone {
 		private String signalStrength;
 		private String channel;
 		private String security;
+		private boolean wifiEnabled;
+		
+		public boolean isWifiEnabled() {
+			return wifiEnabled;
+		}
+
+		public void setWifiEnabled(boolean wifiEnabled) {
+			this.wifiEnabled = wifiEnabled;
+		}
 
 		public String getSsid() {
 			return ssid;

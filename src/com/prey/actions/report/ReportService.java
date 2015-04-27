@@ -47,6 +47,8 @@ public class ReportService extends IntentService {
 			jsonArray.put(new String("location"));
 		if (!exclude.contains("access_points_list"))
 			jsonArray.put(new String("access_points_list"));
+		if (!exclude.contains("active_access_point"))
+			jsonArray.put(new String("active_access_point"));
 
 		try {
 			List<ActionResult> lista = new ArrayList<ActionResult>();
