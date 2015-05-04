@@ -236,6 +236,7 @@
         <service android:name="com.prey.activities.LoadContactService" android:exported="false"/>
         <service android:name="com.prey.services.CreateAccountService" android:exported="false"/>
         <service android:name="com.prey.services.CheckPasswordService" android:exported="false"/>
+        <service android:name="com.prey.services.AddDeviceToAccountService" android:exported="false"/>
         
         <!-- Receivers -->
         <receiver android:name="com.prey.receivers.SmsReceiver">
