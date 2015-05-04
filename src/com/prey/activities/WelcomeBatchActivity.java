@@ -7,21 +7,24 @@
 package com.prey.activities;
 
  
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
- 
-import com.prey.PreyAccountData;
+
 import com.prey.PreyConfig;
 import com.prey.PreyScheduled;
 import com.prey.R;
-import com.prey.exceptions.PreyException;
-import com.prey.net.PreyWebServices;
+import com.prey.services.AddDeviceToApiKeyBatch;
 public class WelcomeBatchActivity extends PreyActivity {
 
+	public static final String KEYBATCHRECEIVER_FILTER = "WelcomeBatchActivity_RECEIVER";
+
 	private String error = null;
+	private AddDeviceToApiKeyBatchReceiver receiver;
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -39,31 +42,28 @@ public class WelcomeBatchActivity extends PreyActivity {
 	 
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (receiver != null) {
+			unregisterReceiver(receiver);
+		}
+	}
 	
 	private void installBatch() {
-		new AddDeviceToApiKeyBatch().execute(getPreyConfig().getApiKeyBatch(),getPreyConfig().getEmailBatch(), getDeviceType());
+		receiver = new AddDeviceToApiKeyBatchReceiver();
+		this.registerReceiver(receiver, new IntentFilter(KEYBATCHRECEIVER_FILTER));
+		Intent addToKeyBatch = new Intent(this, AddDeviceToApiKeyBatch.class);
+		String[] params = { getPreyConfig().getApiKeyBatch(),
+				getPreyConfig().getEmailBatch(), getDeviceType() };
+		addToKeyBatch.putExtra("params", params);
+		this.startService(addToKeyBatch);
 	}
 
-	private class AddDeviceToApiKeyBatch extends AsyncTask<String, Void, Void> {
+	private class AddDeviceToApiKeyBatchReceiver extends BroadcastReceiver {
 		@Override
-		protected void onPreExecute() {
-			
-		}
-		
-		@Override
-		protected Void doInBackground(String... data) {
-			try {
-				error = null;
-				PreyAccountData accountData =PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(WelcomeBatchActivity.this, data[0], data[1], data[2]);
-				getPreyConfig().saveAccount(accountData);
-			} catch (PreyException e) {
-				error = e.getMessage();
-			}
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute(Void unused) {
+		public void onReceive(Context receiverContext, Intent receiverIntent) {
+			error = receiverIntent.getStringExtra("error");
 			if (error == null) {
 				String message = getString(R.string.device_added_congratulations_text);
 				Bundle bundle = new Bundle();
@@ -76,7 +76,7 @@ public class WelcomeBatchActivity extends PreyActivity {
 				if (PreyConfig.getPreyConfig(WelcomeBatchActivity.this).isScheduled()) {
 					PreyScheduled.getInstance(WelcomeBatchActivity.this);
 				}
-				finish();
+				WelcomeBatchActivity.this.finish();
 			}
 		}
 	}
