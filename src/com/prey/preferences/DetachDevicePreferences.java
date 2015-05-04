@@ -7,22 +7,24 @@
 package com.prey.preferences;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.widget.Toast;
 
-import com.prey.PreyConfig;
-import com.prey.activities.LoginActivity;
-import com.prey.exceptions.PreyException;
-import com.prey.net.PreyWebServices;
 import com.prey.R;
+import com.prey.activities.LoginActivity;
+import com.prey.services.DetachDeviceService;
 public class DetachDevicePreferences extends DialogPreference {
+	public static final String DETACHDEVICE_FILTER = "DetachDevicePreferences_RECEIVER";
+
 	Context ctx = null;
+	private DetachDeviceReceiver receiver;
 
 	public DetachDevicePreferences(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -38,17 +40,28 @@ public class DetachDevicePreferences extends DialogPreference {
 	public void onClick(DialogInterface dialog, int which) {
 		super.onClick(dialog, which);
 		if (which == DialogInterface.BUTTON_POSITIVE) {
-			new DetachDevice().execute();
+			receiver = new DetachDeviceReceiver();
+			ctx.registerReceiver(receiver, new IntentFilter(DETACHDEVICE_FILTER));
+			Intent detachDevice = new Intent(ctx, DetachDeviceService.class);
+			receiver.showProgressDialog();
+			ctx.startService(detachDevice);
 		}
 	}
 
-	public class DetachDevice extends AsyncTask<Void, Void, Void> {
+	@Override
+	public void onActivityDestroy() {
+		super.onActivityDestroy();
+		if (receiver != null) {
+			ctx.unregisterReceiver(receiver);
+		}
+	}
+
+	public class DetachDeviceReceiver extends BroadcastReceiver {
 
 		private String error = null;
 		ProgressDialog progressDialog = null;
 
-		@Override
-		protected void onPreExecute() {
+		public void showProgressDialog() {
 			progressDialog = new ProgressDialog(getContext());
 			progressDialog.setMessage(getContext().getText(R.string.preferences_detach_dettaching_message).toString());
 			progressDialog.setIndeterminate(true);
@@ -57,23 +70,11 @@ public class DetachDevicePreferences extends DialogPreference {
 		}
 
 		@Override
-		protected Void doInBackground(Void... unused) {
-			try {
-				PreyConfig.getPreyConfig(getContext()).unregisterC2dm(false);
-				PreyConfig.getPreyConfig(getContext()).setSecurityPrivilegesAlreadyPrompted(false);
-				PreyWebServices.getInstance().deleteDevice(ctx);
-				PreyConfig.getPreyConfig(getContext()).wipeData();
-
-			} catch (PreyException e) {
-				e.printStackTrace();
-				error = e.getMessage();
+		public void onReceive(Context receiverContext, Intent receiverIntent) {
+			error = receiverIntent.getStringExtra("error");
+			if (progressDialog != null) {
+				progressDialog.dismiss();
 			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void unused) {
-			progressDialog.dismiss();
 			if (error != null) {
 				Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
 				showDialog(new Bundle());

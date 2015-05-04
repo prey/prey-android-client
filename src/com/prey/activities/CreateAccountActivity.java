@@ -9,17 +9,16 @@ package com.prey.activities;
 import java.util.Locale;
 
 import android.app.AlertDialog;
-
-import com.prey.R;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -31,19 +30,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.prey.PreyAccountData;
 import com.prey.PreyLogger;
-import com.prey.exceptions.PreyException;
-import com.prey.net.PreyWebServices;
+import com.prey.R;
+import com.prey.services.CreateAccountService;
 import com.prey.util.KeyboardStatusDetector;
 import com.prey.util.KeyboardVisibilityListener;
 
 public class CreateAccountActivity extends SetupActivity {
+	public static final String CREATEACCOUNT_FILTER = "CreateAccountReceiver_receiver";
+
 	private static final int ERROR = 1;
 	private String password = null;
 	private String name = null;
 	private String email = null;
 	private String error = null;
+	private CreateAccountReceiver receiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,8 @@ public class CreateAccountActivity extends SetupActivity {
 			}
 		});
 
+		receiver = new CreateAccountReceiver();
+		this.registerReceiver(receiver, new IntentFilter(CREATEACCOUNT_FILTER));
 		Button ok = (Button) findViewById(R.id.new_account_btn_ok);
 		ok.setOnClickListener(new View.OnClickListener() {
 
@@ -97,7 +100,11 @@ public class CreateAccountActivity extends SetupActivity {
 						if(password.length()<6||password.length()>32){
 							Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range,6,32), Toast.LENGTH_LONG).show();
 						}else{
-							new CreateAccount().execute(name, email, password);
+							Intent createAccount = new Intent(CreateAccountActivity.this, CreateAccountService.class);
+							receiver.showProgressDialog();
+							String[] params = { name, email, password };
+							createAccount.putExtra("params", params);
+							CreateAccountActivity.this.startService(createAccount);
 						}
 					}
 				}
@@ -144,17 +151,23 @@ public class CreateAccountActivity extends SetupActivity {
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (receiver != null)
+			unregisterReceiver(receiver);
+	}
+
+	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 
 	}
 
-	private class CreateAccount extends AsyncTask<String, Void, Void> {
+	private class CreateAccountReceiver extends BroadcastReceiver {
 
 		ProgressDialog progressDialog = null;
 
-		@Override
-		protected void onPreExecute() {
+		public void showProgressDialog() {
 			progressDialog = new ProgressDialog(CreateAccountActivity.this);
 			progressDialog.setMessage(CreateAccountActivity.this.getText(R.string.creating_account_please_wait).toString());
 			progressDialog.setIndeterminate(true);
@@ -163,21 +176,11 @@ public class CreateAccountActivity extends SetupActivity {
 		}
 
 		@Override
-		protected Void doInBackground(String... data) {
+		public void onReceive(Context receiverContext, Intent receiverIntent) {
+			error = receiverIntent.getStringExtra("error");
 			try {
-				PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(CreateAccountActivity.this, data[0], data[1], data[2], getDeviceType());
-				PreyLogger.d("Response creating account: " + accountData.toString());
-				getPreyConfig().saveAccount(accountData);
-			} catch (PreyException e) {
-				error = e.getMessage();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void unused) {
-			try {
-				progressDialog.dismiss();
+				if (progressDialog != null)
+					progressDialog.dismiss();
 			} catch (Exception e) {
 			}
 			if (error == null) {
@@ -187,7 +190,7 @@ public class CreateAccountActivity extends SetupActivity {
 				Intent intent = new Intent(CreateAccountActivity.this, PermissionInformationActivity.class);
 				intent.putExtras(bundle);
 				startActivity(intent);
-				finish();
+				CreateAccountActivity.this.finish();
 			} else
 				showDialog(ERROR);
 		}

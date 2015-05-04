@@ -7,17 +7,19 @@
 package com.prey.activities;
 
 import android.app.AlertDialog;
+import android.app.IntentService;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,8 +33,10 @@ import com.prey.sms.SMSSupport;
 import com.prey.R;
 public class SMSContactActivity extends PreyActivity {
 
+	public static final String LOADCONTACT_FILTER = "SMSContactActivity_receiver";
 	private static final int PICK_CONTACT_REQUEST = 0;
 	ContactAccessor contactAccesor = new ContactAccessor();
+	private BroadcastReceiver receiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,22 @@ public class SMSContactActivity extends PreyActivity {
 			}
 		});
 		
+		receiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context receiverContext, Intent receiverIntent) {
+				ContactInfo result = (ContactInfo) receiverIntent.getSerializableExtra("contact");
+				bindView(result);
+				showContactNowAlert();
+			}
+		};
+		registerReceiver(receiver, new IntentFilter(LOADCONTACT_FILTER));
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (receiver != null)
+			unregisterReceiver(receiver);
 	}
 	
 	@Override
@@ -126,20 +146,11 @@ public class SMSContactActivity extends PreyActivity {
 		 * up the UI thread while waiting for the query to come back, we might
 		 * get an "Application Not Responding" dialog.
 		 */
-		AsyncTask<Uri, Void, ContactInfo> task = new AsyncTask<Uri, Void, ContactInfo>() {
-
-			@Override
-			protected ContactInfo doInBackground(Uri... uris) {
-				return contactAccesor.loadContact(getContentResolver(), uris[0]);
-			}
-
-			@Override
-			protected void onPostExecute(ContactInfo result) {
-				bindView(result);
-				showContactNowAlert();
-			}
-		};
-		task.execute(contactUri);
+		Intent loadContact = new Intent(this, LoadContactService.class);
+		loadContact.putExtra("contactAccesor", contactAccesor);
+		Uri[] uris = { contactUri };
+		loadContact.putExtra("uris", uris);
+		this.startService(loadContact);
 	}
 
 	protected void bindView(ContactInfo contactInfo) {
@@ -173,4 +184,19 @@ public class SMSContactActivity extends PreyActivity {
 			*/
 	}
 
+}
+
+class LoadContactService extends IntentService {
+	public LoadContactService(String name) {
+		super(name);
+	}
+
+	public void onHandleIntent(Intent intent) {
+		ContactAccessor contactAccesor = (ContactAccessor) intent.getSerializableExtra("contactAccesor");
+		Uri[] uris = (Uri[]) intent.getParcelableArrayExtra("uris");
+		Intent resultIntent = new Intent(SMSContactActivity.LOADCONTACT_FILTER);
+		resultIntent.putExtra("contact", contactAccesor.loadContact(getContentResolver(), uris[0]));
+		sendBroadcast(resultIntent);
+		return;
+	}
 }

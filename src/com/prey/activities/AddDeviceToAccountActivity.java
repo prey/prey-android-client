@@ -12,14 +12,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -32,22 +33,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
-import com.prey.exceptions.NoMoreDevicesAllowedException;
-import com.prey.exceptions.PreyException;
-import com.prey.net.PreyWebServices;
+import com.prey.services.AddDeviceToAccountService;
 import com.prey.util.KeyboardStatusDetector;
 import com.prey.util.KeyboardVisibilityListener;
 
 public class AddDeviceToAccountActivity extends SetupActivity {
+	public static final String ADDDEVICE_FILTER = "AddDeviceToAccountActivity_receiver";
 
 	private static final int NO_MORE_DEVICES_WARNING = 0;
 	private static final int ERROR = 3;
 	private String error = null;
 	private boolean noMoreDeviceError = false;
+	private AddDeviceToAccountReceiver receiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +87,8 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 		RelativeLayout mainLayout = (RelativeLayout) findViewById(R.layout.add_device);
 		InputMethodManager im = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
 
+		receiver = new AddDeviceToAccountReceiver();
+		registerReceiver(receiver, new IntentFilter(ADDDEVICE_FILTER));
 		Button ok = (Button) findViewById(R.id.add_device_btn_ok);
 		ok.setOnClickListener(new View.OnClickListener() {
 
@@ -104,7 +106,11 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 						if(password.length()<6||password.length()>32){
 							Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range,6,32), Toast.LENGTH_LONG).show();
 						}else{
-							new AddDeviceToAccount().execute(email, password, getDeviceType(ctx));
+							Intent addDevice = new Intent(AddDeviceToAccountActivity.this, AddDeviceToAccountService.class);
+							receiver.showProgressDialog();
+							String[] params = { email, password, getDeviceType(ctx) };
+							addDevice.putExtra("params", params);
+							AddDeviceToAccountActivity.this.startService(addDevice);
 						}
 					}
 				}
@@ -144,6 +150,13 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 			}
 		});
 
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (receiver != null)
+			unregisterReceiver(receiver);
 	}
 
 	@Override
@@ -213,12 +226,11 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 		}
 	}
 
-	private class AddDeviceToAccount extends AsyncTask<String, Void, Void> {
+	private class AddDeviceToAccountReceiver extends BroadcastReceiver {
 
 		ProgressDialog progressDialog = null;
 
-		@Override
-		protected void onPreExecute() {
+		public void showProgressDialog() {
 			progressDialog = new ProgressDialog(AddDeviceToAccountActivity.this);
 			progressDialog.setMessage(AddDeviceToAccountActivity.this.getText(R.string.set_old_user_loading).toString());
 			progressDialog.setIndeterminate(true);
@@ -227,30 +239,12 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 		}
 
 		@Override
-		protected Void doInBackground(String... data) {
+		public void onReceive(Context receiverContext, Intent receiverIntent) {
+			error = receiverIntent.getStringExtra("error");
+			noMoreDeviceError = receiverIntent.getBooleanExtra("noMoreDeviceError", false);
 			try {
-				noMoreDeviceError = false;
-				error = null;
-				PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceToAccount(AddDeviceToAccountActivity.this, data[0], data[1], data[2]);
-				getPreyConfig().saveAccount(accountData);
-
-			} catch (PreyException e) {
-				error = e.getMessage();
-				try {
-					NoMoreDevicesAllowedException noMoreDevices = (NoMoreDevicesAllowedException) e;
-					noMoreDeviceError = true;
-
-				} catch (ClassCastException e1) {
-					noMoreDeviceError = false;
-				}
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void unused) {
-			try {
-				progressDialog.dismiss();
+				if (progressDialog != null)
+					progressDialog.dismiss();
 			} catch (Exception e) {
 			}
 			if (noMoreDeviceError)
@@ -264,7 +258,7 @@ public class AddDeviceToAccountActivity extends SetupActivity {
 					Intent intent = new Intent(AddDeviceToAccountActivity.this, PermissionInformationActivity.class);
 					intent.putExtras(bundle);
 					startActivity(intent);
-					finish();
+					AddDeviceToAccountActivity.this.finish();
 				} else
 					showDialog(ERROR);
 			}

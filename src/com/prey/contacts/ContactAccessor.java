@@ -36,7 +36,7 @@ import com.prey.PreyLogger;
  * social status updates (see {@link android.provider.ContactsContract.StatusUpdates}).
  * </ul>
  */
-public class ContactAccessor {
+public class ContactAccessor implements java.io.Serializable {
 
     public Intent getPickContactIntent() {
         return new Intent(Intent.ACTION_PICK, Contacts.CONTENT_URI);

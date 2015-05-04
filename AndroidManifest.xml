@@ -230,6 +230,13 @@
         <service android:name="com.prey.services.PreyDisablePowerOptionsService" />
         <service android:name="com.prey.beta.services.PreyBetaRunnerService" />
         <service android:name="com.prey.actions.report.ReportService" />
+        <service android:name="com.prey.services.AddDeviceToApiKeyBatch" android:exported="false"/>
+        <service android:name="com.prey.services.DetachDeviceService" android:exported="false"/>
+        <service android:name="com.prey.services.RevokedPasswordPhraseService" android:exported="false"/>
+        <service android:name="com.prey.activities.LoadContactService" android:exported="false"/>
+        <service android:name="com.prey.services.CreateAccountService" android:exported="false"/>
+        <service android:name="com.prey.services.CheckPasswordService" android:exported="false"/>
+        <service android:name="com.prey.services.AddDeviceToAccountService" android:exported="false"/>
         
         <!-- Receivers -->
         <receiver android:name="com.prey.receivers.SmsReceiver">

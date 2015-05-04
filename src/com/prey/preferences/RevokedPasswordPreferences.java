@@ -8,20 +8,25 @@ package com.prey.preferences;
 
  
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.preference.EditTextPreference;
 import android.util.AttributeSet;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
+import com.prey.services.RevokedPasswordPhraseService;
 
 public class RevokedPasswordPreferences extends EditTextPreference {
 	
-	
+	public static final String REVOKEDPWD_FILTER = "RevokedPasswordPreferences_receiver";
+
 	Context ctx = null;
 	private String error = null;
+	private RevokedPasswordPhraseReceiver receiver;
 	
 	public RevokedPasswordPreferences(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -45,25 +50,31 @@ public class RevokedPasswordPreferences extends EditTextPreference {
 		PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 		if (positiveResult){
 			PreyLogger.d("Activation phrase changed to:" + getText());
-			new RevokedPasswordPhraseTask(ctx).execute(getText());
+			receiver = new RevokedPasswordPhraseReceiver();
+			ctx.registerReceiver(receiver, new IntentFilter(REVOKEDPWD_FILTER));
+			receiver.showProgressDialog();
+			Intent revokedPwdPhrase = new Intent(ctx, RevokedPasswordPhraseService.class);
+			revokedPwdPhrase.putExtra("param", getText());
+			ctx.startService(revokedPwdPhrase);
 		}
 		else{
 			preyConfig.setRevokedPassword(false, "");
 		}
 	}
-	
-	
-	private class RevokedPasswordPhraseTask extends AsyncTask<String, Void, Void> {
+
+	@Override
+	public void onActivityDestroy() {
+		super.onActivityDestroy();
+		if (receiver != null) {
+			ctx.unregisterReceiver(receiver);
+		}
+	}
+
+	private class RevokedPasswordPhraseReceiver extends BroadcastReceiver {
 
 		ProgressDialog progressDialog = null;
-		private Context context = null; 
-		
-		public RevokedPasswordPhraseTask(Context context){
-			this.context = context;
-		}
 		 
-		@Override
-		protected void onPreExecute() {
+		public void showProgressDialog() {
 			
 			progressDialog = new ProgressDialog(getContext());
 			progressDialog.setMessage(getContext().getText(R.string.preferences_admin_device_setting_uninstallation_password).toString());
@@ -73,22 +84,11 @@ public class RevokedPasswordPreferences extends EditTextPreference {
 		}
 
 		@Override
-		protected Void doInBackground(String... data) {
-			try {
-				PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
-				PreyLogger.d("password [" + getText()+"]");
-				preyConfig.setRevokedPassword(true, getText());
-				
-				//PreyWebServices.getInstance().updateActivationPhrase(getContext(), getText());
-			} catch (Exception e) {
-				error = e.getMessage();
+		public void onReceive(Context receiverContext, Intent receiverIntent) {
+			error = receiverIntent.getStringExtra("error");
+			if (progressDialog != null) {
+				progressDialog.dismiss();
 			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void unused) {
-			progressDialog.dismiss();
 		}
 
 	}
