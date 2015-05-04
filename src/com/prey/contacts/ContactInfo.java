@@ -11,7 +11,7 @@ import android.graphics.Bitmap;
 /**
  * A model object containing contact data.
  */
-public class ContactInfo {
+public class ContactInfo implements java.io.Serializable {
 
     private String mDisplayName;
     private String mPhoneNumber;
