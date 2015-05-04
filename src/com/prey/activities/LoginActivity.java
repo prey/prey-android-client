@@ -56,6 +56,18 @@ public class LoginActivity extends PasswordActivity {
 		startup();
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		startup();
+	}
+	
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		startup();
+	}
+	
 	private void startup() {
 		if (!isThisDeviceAlreadyRegisteredWithPrey()) {
 			Intent intent = null;
