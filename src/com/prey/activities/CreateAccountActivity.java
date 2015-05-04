@@ -165,6 +165,7 @@ public class CreateAccountActivity extends SetupActivity {
 		@Override
 		protected Void doInBackground(String... data) {
 			try {
+				error=null;
 				PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(CreateAccountActivity.this, data[0], data[1], data[2], getDeviceType());
 				PreyLogger.d("Response creating account: " + accountData.toString());
 				getPreyConfig().saveAccount(accountData);

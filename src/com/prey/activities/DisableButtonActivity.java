@@ -31,6 +31,11 @@ public class DisableButtonActivity extends PreyActivity {
 	}
 	
 	@Override
+	public void onBackPressed() {
+		
+	}
+	
+	@Override
 	protected void onResume() {
 		super.onResume();
 

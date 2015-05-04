@@ -34,6 +34,11 @@ public class PermissionInformationActivity extends PreyActivity {
 	}
 
 	@Override
+	public void onBackPressed() {
+		
+	}
+	
+	@Override
 	protected void onResume() {
 		super.onResume();
 		PreyLogger.d("first:"+first);
