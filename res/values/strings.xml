@@ -223,6 +223,7 @@
     <string name="sms_not_sent">There was an error sending the message. Does your device have SMS support?</string>
     <string name="error_mail_out_of_range">Email length must be between %1$s and %2$s characters.</string>
     <string name="error_password_out_of_range">Password length must be between %1$s and %2$s characters.</string>
+    <string name="error_already_register">Did you already register?</string>
     <!-- Permission Information --> 
     <string name="permission_title_h1">EXTRA PROTECTION</string> 
     <string name="permission_body_text">Prey was granted special permissions in order to lock your device and to prevent thieves from uninstalling it. If you ever need to remove Prey, you first have to revoke these permissions from within the app.</string>

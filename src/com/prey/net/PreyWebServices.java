@@ -25,6 +25,7 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
  
 
@@ -101,7 +102,7 @@ public class PreyWebServices {
 
 		
 		PreyHttpResponse response=null;
-		String xml;
+		String xml="";
 		try {
 			String apiv2=FileConfigReader.getInstance(ctx).getApiV2();
 			String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("signup.json");
@@ -121,7 +122,11 @@ public class PreyWebServices {
 				
 			}
 		} else{
+			 
 			if (response!=null&&response.getStatusLine()!=null&&response.getStatusLine().getStatusCode()>299){
+				if(response.getStatusLine().getStatusCode()==422&&xml.indexOf("already")>0){
+					throw new PreyException(ctx.getString(R.string.error_already_register,""));
+				}
 				throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,"["+response.getStatusLine().getStatusCode()+"]"));
 			}else{	
 				throw new PreyException(ctx.getString(R.string.error_cant_add_this_device,""));		
