@@ -14,8 +14,8 @@ import com.prey.net.PreyWebServices;
 public class CreateAccountService extends IntentService {
 	String error;
 
-	public CreateAccountService(String name) {
-		super(name);
+	public CreateAccountService() {
+		super("CreateAccountService");
 	}
 
 	public void onHandleIntent(Intent intent) {
