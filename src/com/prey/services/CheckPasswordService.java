@@ -12,8 +12,8 @@ public class CheckPasswordService extends IntentService {
 	boolean isPasswordOk;
 	String error;
 
-	public CheckPasswordService(String name) {
-		super(name);
+	public CheckPasswordService() {
+		super("CheckPasswordService");
 	}
 
 	public void onHandleIntent(Intent intent) {
