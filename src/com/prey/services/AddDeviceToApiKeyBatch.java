@@ -12,8 +12,8 @@ import com.prey.net.PreyWebServices;
 public class AddDeviceToApiKeyBatch extends IntentService {
 	private String error;
 
-	public AddDeviceToApiKeyBatch(String name) {
-		super(name);
+	public AddDeviceToApiKeyBatch() {
+		super("AddDeviceToApiKeyBatch");
 	}
 
 	public void onHandleIntent(Intent intent) {
