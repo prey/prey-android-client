@@ -14,8 +14,8 @@ public class AddDeviceToAccountService extends IntentService {
 	String error;
 	boolean noMoreDeviceError;
 
-	public AddDeviceToAccountService(String name) {
-		super(name);
+	public AddDeviceToAccountService() {
+		super("AddDeviceToAccountService");
 	}
 
 	public void onHandleIntent(Intent intent) {
