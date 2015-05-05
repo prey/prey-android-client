@@ -187,8 +187,8 @@ public class SMSContactActivity extends PreyActivity {
 }
 
 class LoadContactService extends IntentService {
-	public LoadContactService(String name) {
-		super(name);
+	public LoadContactService() {
+		super("LoadContactService");
 	}
 
 	public void onHandleIntent(Intent intent) {
