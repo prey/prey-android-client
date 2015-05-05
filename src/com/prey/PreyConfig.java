@@ -108,7 +108,7 @@ public class PreyConfig {
 	public static final String SEND_NOTIFICATION_ID="SEND_NOTIFICATION_ID";
 	public static final String SIGNAL_FLARE_DATE="SIGNAL_FLARE_DATE";
 	
-	public static final String VERSION_PREY_DEFAULT="1.2.7";
+	public static final String VERSION_PREY_DEFAULT="1.2.8";
 	
 	public static final String SEND_DATA="SEND_DATA";
 	
