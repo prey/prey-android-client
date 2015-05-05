@@ -11,8 +11,8 @@ import com.prey.preferences.DetachDevicePreferences;
 public class DetachDeviceService extends IntentService {
 	private String error;
 
-	public DetachDeviceService(String name) {
-		super(name);
+	public DetachDeviceService() {
+		super("DetachDeviceService");
 	}
 
 	public void onHandleIntent(Intent intent) {
