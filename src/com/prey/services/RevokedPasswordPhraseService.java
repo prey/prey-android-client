@@ -10,8 +10,8 @@ import com.prey.preferences.RevokedPasswordPreferences;
 public class RevokedPasswordPhraseService extends IntentService {
 	String error;
 
-	public RevokedPasswordPhraseService(String name) {
-		super(name);
+	public RevokedPasswordPhraseService() {
+		super("RevokedPasswordPhraseService");
 	}
 
 	public void onHandleIntent(Intent intent) {
