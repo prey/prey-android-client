@@ -73,7 +73,9 @@ public class DetachDevicePreferences extends DialogPreference {
 
 		@Override
 		protected void onPostExecute(Void unused) {
+			try{
 			progressDialog.dismiss();
+			}catch(Exception e){}
 			if (error != null) {
 				Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
 				showDialog(new Bundle());

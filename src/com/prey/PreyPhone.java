@@ -156,6 +156,7 @@ public class PreyPhone {
 	
 	private void updateWifi(){
 		wifi=new Wifi();
+		try{
 		WifiManager wifiMgr = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
 		WifiInfo wifiInfo= wifiMgr.getConnectionInfo();
 		
@@ -201,7 +202,8 @@ public class PreyPhone {
 				break;
 			}
 		}
-		 
+		}catch(Exception e){
+		}
 	}
 	
  

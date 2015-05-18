@@ -78,9 +78,11 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 			PreyLogger.d("Camera failed to open facing front: " + e1.getMessage());
 			mCamera = null;
 		}
+		try {
 		if (mCamera == null) {
 			mCamera = Camera.open();
 		}
+		} catch (Exception e) {}
 		return mCamera;
 	}
 	

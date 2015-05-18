@@ -86,14 +86,14 @@ public class PreyGooglePlayServiceLocation implements LocationListener, GooglePl
 	public void onConnected(Bundle arg0) {
 		PreyLogger.d("onConnected");
 		// TODO Auto-generated method stub
-		startPeriodicUpdates();
+		try{startPeriodicUpdates();}catch(Exception e){}
 	}
 
 	@Override
 	public void onDisconnected() {
 		PreyLogger.d("onDisconnected");
 		// TODO Auto-generated method stub
-		stopPeriodicUpdates();
+		try{stopPeriodicUpdates();}catch(Exception e){}
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class PreyGooglePlayServiceLocation implements LocationListener, GooglePl
 	 */
 	public void startPeriodicUpdates() {
 		PreyLogger.d("startPeriodicUpdates");
-		mLocationClient.requestLocationUpdates(mLocationRequest, this);
+		try{mLocationClient.requestLocationUpdates(mLocationRequest, this);}catch(Exception e){}
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class PreyGooglePlayServiceLocation implements LocationListener, GooglePl
 	 */
 	public void stopPeriodicUpdates() {
 		PreyLogger.d("stopPeriodicUpdates");
-		mLocationClient.removeLocationUpdates(this);
+		try{mLocationClient.removeLocationUpdates(this);}catch(Exception e){}
 	}
 
 	@Override

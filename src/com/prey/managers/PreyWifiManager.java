@@ -48,8 +48,10 @@ public class PreyWifiManager {
 	}
 	
 	public WifiInfo getConnectionInfo(){
+		try{
 		if(wifiMgr!=null)
 			return wifiMgr.getConnectionInfo();
+		}catch(Exception e){}
 		return null;
 	}
 	

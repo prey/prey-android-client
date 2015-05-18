@@ -31,7 +31,7 @@ public class ReportService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		
+		try{
 		String exclude=PreyConfig.getPreyConfig(getApplicationContext()).getExcludeReport();
 		
 		JSONArray jsonArray = new JSONArray();
@@ -91,7 +91,8 @@ public class ReportService extends IntentService {
 				} 
 			}
 		}
- 
+		} catch (Exception e) {
+		}
 		stopSelf();
 
 	}

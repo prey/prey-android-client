@@ -549,6 +549,7 @@ public class PreyConfig {
 	
 	
 	public void registerC2dm(){
+		try{
 		if (PreyEmail.getEmail(this.ctx) != null) {
 			PreyLogger.d("______________________");
 			PreyLogger.d("______________________");
@@ -563,6 +564,7 @@ public class PreyConfig {
 			registrationIntent.putExtra("sender",gcmId);
 			this.ctx.startService(registrationIntent);
 		}
+		}catch(Exception e){}
 	}
 	
 	public void unregisterC2dm(boolean updatePrey){
