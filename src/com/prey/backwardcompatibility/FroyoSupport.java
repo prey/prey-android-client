@@ -43,7 +43,16 @@ public class FroyoSupport {
 	public void changePasswordAndLock(String newPass, boolean lock){
 	    try {
 			if (isAdminActive()) {
+				try {
+					policyManager.setPasswordMinimumLength(deviceAdmin, 0);
+					policyManager.setPasswordQuality(deviceAdmin,DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED);
+				} catch (Exception e1) {}
+				
 				boolean resultLocK=policyManager.resetPassword(newPass,DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
+				
+				if("".equals(newPass))
+					android.provider.Settings.System.putInt(ctx.getContentResolver(), android.provider.Settings.System.LOCK_PATTERN_ENABLED, 0);
+
 				PreyLogger.i("resultLocK:"+resultLocK);
 				if (lock)
 					lockNow();
