@@ -158,16 +158,6 @@
             android:label="@string/preyForAndroid_name"
             android:launchMode="singleTask" />       
         <activity
-            android:name="com.prey.activities.SMSContactActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="com.prey.activities.SEND_SMS_CONF" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name="com.prey.activities.CreateAccountActivity"
             android:configChanges="keyboardHidden|orientation"
  			android:windowSoftInputMode="stateHidden|adjustResize"
