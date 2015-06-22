@@ -66,8 +66,8 @@ public class PreyRestHttpClient {
 
 	private PreyRestHttpClient(Context ctx) {
 		this.ctx = ctx;
-		httpclient = new PreyDefaultHttpClient((DefaultHttpClient) HttpUtils.getNewHttpClient());
-		httpclientDefault= new PreyDefaultHttpClient((DefaultHttpClient) HttpUtils.getNewHttpClient());
+		httpclient = new PreyDefaultHttpClient((DefaultHttpClient) HttpUtils.getNewHttpClient(ctx));
+		httpclientDefault= new PreyDefaultHttpClient((DefaultHttpClient) HttpUtils.getNewHttpClient(ctx));
 
 		HttpParams params = new BasicHttpParams();
 

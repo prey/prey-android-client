@@ -22,15 +22,24 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
+import android.content.Context;
+
+import com.prey.PreyConfig;
+
 public class HttpUtils {
-	public static HttpClient getNewHttpClient() {
+	public static HttpClient getNewHttpClient(Context ctx) {
 		try {
 			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
 			trustStore.load(null, null);
 
-
-			SSLSocketFactory sf = SSLSocketFactory.getSocketFactory();
-			sf.setHostnameVerifier(SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
+			SSLSocketFactory sf =null;
+			if (PreyConfig.getPreyConfig(ctx).isGingerbreadOrAbove()){
+				sf = SSLSocketFactory.getSocketFactory();
+				sf.setHostnameVerifier(SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
+			}else{
+				sf = new EasySSLSocketFactory(trustStore);
+				sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+			}
 
 			HttpParams params = new BasicHttpParams();
 			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
