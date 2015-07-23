@@ -55,7 +55,7 @@ public class LocationUtil {
 				sendNotify(ctx,"Error");
 			}
 		} catch (Exception e) {
-			PreyLogger.e("Error causa:" + e.getMessage(), e);
+			//PreyLogger.e("Error causa:" + e.getMessage(), e);
 			sendNotify(ctx,"Error");
 		}
 		return data;
@@ -80,26 +80,15 @@ public class LocationUtil {
 
 	public static PreyLocation getDataLocationWifi(Context ctx) throws Exception {
 		PreyLocation location = null;
+		List<Wifi> listWifi = null;
 		PreyPhone preyPhone = new PreyPhone(ctx);
-		boolean disableWifi=false;
-		if (!PreyWifiManager.getInstance(ctx).isWifiEnabled()) {
-			disableWifi=true;
-			PreyWifiManager.getInstance(ctx).setWifiEnabled(true);
-			Thread.sleep(2000);
-		}
-		List<Wifi> listWifi = preyPhone.getListWifi();
-		
-		if (disableWifi){
-			PreyWifiManager.getInstance(ctx).setWifiEnabled(false);
+		if (PreyWifiManager.getInstance(ctx).isWifiEnabled()) {
+			listWifi = preyPhone.getListWifi();
 		}
 		if(listWifi==null||listWifi.size()==0){
 			throw new Exception(); 
 		}
 		location = PreyWebServices.getInstance().getLocation(ctx, listWifi);
- 
- 
-		
-		
 		return location;
 	}
 
