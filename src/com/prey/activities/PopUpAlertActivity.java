@@ -10,7 +10,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.widget.TextView;
+
 import com.prey.R;
 public class PopUpAlertActivity extends PreyActivity {
 
@@ -36,9 +41,23 @@ public class PopUpAlertActivity extends PreyActivity {
 		switch (id) {
 
 		case SHOW_POPUP:
-			popup = new AlertDialog.Builder(PopUpAlertActivity.this).setTitle(R.string.popup_alert_title).setMessage(this.message)
-					.setCancelable(true).create();
-
+			
+			Typeface myTypeface = Typeface.createFromAsset(getAssets(), "fonts/MagdaClean/magdaclean-regular.ttf");
+			
+			TextView start_dialog_desc = new TextView(this);
+	        start_dialog_desc.setText(this.message);
+	        start_dialog_desc.setPadding(10, 10, 10, 10);
+	        start_dialog_desc.setBackgroundResource(R.drawable.alert_v2);
+	        start_dialog_desc.setGravity(Gravity.CENTER);
+	        start_dialog_desc.setTextColor(Color.WHITE);
+	        start_dialog_desc.setTextSize(22);
+	        start_dialog_desc.setTypeface(myTypeface);
+	        
+			AlertDialog.Builder start_dialog = new AlertDialog.Builder(this);
+	        start_dialog.setView(start_dialog_desc);
+	        
+	        popup = start_dialog.create();
+			popup.setCancelable(true);
 			popup.setOnDismissListener(new DialogInterface.OnDismissListener() {
 				public void onDismiss(DialogInterface dialog) {
 					finish();
