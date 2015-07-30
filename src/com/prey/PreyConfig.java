@@ -108,7 +108,7 @@ public class PreyConfig {
 	public static final String SEND_NOTIFICATION_ID="SEND_NOTIFICATION_ID";
 	public static final String SIGNAL_FLARE_DATE="SIGNAL_FLARE_DATE";
 	
-	public static final String VERSION_PREY_DEFAULT="1.3.1";
+	public static final String VERSION_PREY_DEFAULT="1.2.9";
 	
 	public static final String SEND_DATA="SEND_DATA";
 	
@@ -692,6 +692,12 @@ public class PreyConfig {
 		return url;
 	}
 
+	public String getPreyUninstallUrl() {
+		String url = FileConfigReader.getInstance(this.ctx).getPreyUninstall();
+		PreyLogger.i(url);
+		return url;
+	}
+	
 	public boolean askForPassword() {
 		boolean ask =  FileConfigReader.getInstance(this.ctx).isAskForPassword();
 		PreyLogger.d("Ask for password?"+ask);

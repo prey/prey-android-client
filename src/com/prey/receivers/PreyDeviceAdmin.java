@@ -25,14 +25,9 @@ public class PreyDeviceAdmin extends DeviceAdminReceiver {
 
     @Override
     public CharSequence onDisableRequested(Context context, Intent intent) {
-    	/*PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
-    	if(preyConfig.isRevokedPassword()){
-    		String password=preyConfig.getRevokedPassword().trim();
-    		 PreyLogger.d("Device Admin password:["+password+"]");
-    		FroyoSupport.getInstance(context).changePasswordAndLock(password, true);
-    	}else{*/
-    		FroyoSupport.getInstance(context).lockNow();
-    	/*}*/
+ 
+    	 //	FroyoSupport.getInstance(context).lockNow();
+ 
         return context.getText(R.string.preferences_admin_enabled_dialog_message).toString();
     }
 
