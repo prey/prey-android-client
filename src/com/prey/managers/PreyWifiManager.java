@@ -1,11 +1,11 @@
 package com.prey.managers;
 
-import java.util.List;
+
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.ScanResult;
+
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
@@ -31,11 +31,6 @@ public class PreyWifiManager {
 			return wifiMgr.isWifiEnabled();
 		else
 			return false;
-	}
-	
-	public void setWifiEnabled(boolean enabled){
-		if(wifiMgr!=null)
-			wifiMgr.setWifiEnabled(enabled);
 	}
 	
 	public  boolean isOnline() {

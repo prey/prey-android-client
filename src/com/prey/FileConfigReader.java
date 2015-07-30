@@ -74,6 +74,10 @@ public class FileConfigReader {
 		return properties.getProperty("prey-subdomain");
 	}
 	
+	public String getPreyUninstall(){
+		return properties.getProperty("prey-uninstall");
+	}
+	
 	public String getPreyMinorVersion(){
 		return properties.getProperty("prey-minor-version");
 	}
