@@ -108,7 +108,7 @@ public class PreyConfig {
 	public static final String SEND_NOTIFICATION_ID="SEND_NOTIFICATION_ID";
 	public static final String SIGNAL_FLARE_DATE="SIGNAL_FLARE_DATE";
 	
-	public static final String VERSION_PREY_DEFAULT="1.3.1";
+	public static final String VERSION_PREY_DEFAULT="1.2.9";
 	
 	public static final String SEND_DATA="SEND_DATA";
 	
@@ -676,10 +676,6 @@ public class PreyConfig {
 	public String getAgreementId(){
 		return FileConfigReader.getInstance(this.ctx).getAgreementId();
 	}
-	
-	public String getPreyUninstall() {
-		return FileConfigReader.getInstance(this.ctx).getPreyUninstall();
-	}
 
 	private static final String HTTP="https://";
 	
@@ -692,12 +688,6 @@ public class PreyConfig {
 	public String getPreyPanelUrl() {
 		String panel = FileConfigReader.getInstance(this.ctx).getPreyPanel();
 		String url=HTTP.concat(panel).concat(".").concat(getPreyDomain()).concat("/").concat(getPreyCampaign());
-		PreyLogger.i(url);
-		return url;
-	}
-	
-	public String getPreyUninstallUrl() {
-		String url = FileConfigReader.getInstance(this.ctx).getPreyUninstall();
 		PreyLogger.i(url);
 		return url;
 	}
