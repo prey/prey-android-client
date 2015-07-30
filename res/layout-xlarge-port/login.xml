@@ -61,6 +61,23 @@
         android:text="@string/device_ready_h2"
         android:textColor="@color/dark_paragraph"
         android:textSize="30sp" />
+    
+    
+    <TextView
+        android:id="@+id/device_ready_uninstall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/device_ready_h2_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:text="@string/device_ready_uninstall"
+        android:textColor="@color/dark_paragraph"
+        android:onClick="onClick"
+		android:clickable="true"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/login_btn_cp"

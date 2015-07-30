@@ -15,20 +15,20 @@
 
      <ImageView
         android:id="@+id/logo_img_reverse"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/logo_img_extra"
-        android:layout_marginBottom="10dp"
+       
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="40dp"
         android:src="@drawable/logo_reversed" />
 
     <ImageView
         android:id="@+id/logo_img_extra"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/device_ready_h1_text"
-        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/logo_img_reverse"
+        android:layout_marginTop="40dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/icon_check" />
@@ -37,11 +37,11 @@
         android:id="@+id/device_ready_h1_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/device_ready_h2_text"
+        android:layout_below="@+id/logo_img_extra"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:gravity="center"
         android:text="@string/device_ready_h1"
         android:textColor="@color/white"
@@ -52,28 +52,44 @@
         android:id="@+id/device_ready_h2_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/login_btn_cp"
+        android:layout_below="@+id/device_ready_h1_text"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:gravity="center"
         android:text="@string/device_ready_h2"
         android:textColor="@color/dark_paragraph"
         android:textSize="15sp" />
+    
+    <TextView
+        android:id="@+id/device_ready_uninstall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/device_ready_h2_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:text="@string/device_ready_uninstall"
+        android:textColor="@color/dark_paragraph"
+        android:onClick="onClick"
+		android:clickable="true"
+        android:textSize="12sp" />
 
     <Button
         android:id="@+id/login_btn_cp"
         style="@style/PreyButton2.Small"
-        android:layout_above="@+id/login_btn_settings"
-        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
         android:text="@string/login_cp" />
 
     <Button
         android:id="@+id/login_btn_settings"
         style="@style/PreyButton2.Small"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/manage_prey_settings" />
 
 </RelativeLayout>

@@ -24,6 +24,7 @@
     <string name="device_ready_h1">DEVICE READY</string>
     <string name="device_not_ready_h1">Device not ready!</string>
     <string name="device_ready_h2">Your phone is now protected. Manage it from your Prey Account.</string>
+    <string name="device_ready_uninstall">How to uninstall Prey.</string>
     <string name="device_not_ready_h2">Location services are disabled for Prey. Reports will not be sent.</string>
     <string name="login_cp">LOG INTO YOUR PREY ACCOUNT</string>
     <string name="manage_prey_settings">MANAGE APP SETTINGS</string>

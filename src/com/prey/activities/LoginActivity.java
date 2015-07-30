@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.prey.PreyConfig;
 import com.prey.backwardcompatibility.FroyoSupport;
@@ -120,6 +121,25 @@ public class LoginActivity extends PasswordActivity {
 		} catch (Exception e) {
 		}
 
+		
+		try {
+			TextView uninstall = (TextView) findViewById(R.id.device_ready_uninstall);
+			uninstall.setClickable(true);
+			uninstall.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					try {
+						
+						String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyUninstallUrl();
+						Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
+						startActivity(browserIntent);
+					} catch (Exception e) {
+					}
+				}
+			});
+		} catch (Exception e) {
+		}
+		
+		
 		gotoSettings.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
 				if (!PreyStatus.getInstance().isPreyConfigurationActivityResume()) {
