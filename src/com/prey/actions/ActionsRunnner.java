@@ -22,14 +22,11 @@ public class ActionsRunnner {
 
 	Thread myActionsRunnerThread = null;
 
-	public ActionsRunnner() {
-
-	}
+	public ActionsRunnner() {}
 
 	public void run(Context ctx) {
 		this.myActionsRunnerThread = new Thread(new ActionsRunner(ctx));
 		this.myActionsRunnerThread.start();
-
 	}
 
 	class ActionsRunner implements Runnable {
@@ -39,7 +36,6 @@ public class ActionsRunnner {
 
 		public ActionsRunner(Context context) {
 			this.ctx = context;
-			
 		}
 
 		public void run() {

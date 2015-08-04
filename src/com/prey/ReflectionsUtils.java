@@ -25,22 +25,15 @@ import android.util.Log;
  * 
  */
 public class ReflectionsUtils {
-
 	private static final String ATTRIBUTE_CLASS = "className";
 
-	/**
-	 * 
-	 */
-	public ReflectionsUtils() {
-		// TODO Auto-generated constructor stub
-	}
+	public ReflectionsUtils() {}
 
 	public static Class getJSONObjectClass(JSONObject object) {
 		Class clazz = null;
 		try {
 			String className = (String) object.get(ATTRIBUTE_CLASS);
 			clazz = Class.forName(className);
-
 		} catch (JSONException e) {
 			Log.e("Reflections Utils", "Ocurrio un error al obtener la clase del JSONObject");
 		} catch (ClassNotFoundException e) {
@@ -64,15 +57,15 @@ public class ReflectionsUtils {
 	}
 
 	public static Object populateObject(JSONObject object) throws Exception {
-
 		Object newObject = ReflectionsUtils.JSONObjectToObject(object);
 		Field[] fields = newObject.getClass().getDeclaredFields();
 
 		for (int i = 0; i < fields.length; i++) {
 			Field f = fields[i];
 			String setterName = "set" + f.getName().substring(0, 1).toUpperCase() + f.getName().substring(1);
-			if (object.has(f.getName()))
+			if (object.has(f.getName())) {
 				ReflectionsUtils.setProperty(setterName, newObject, object.get(f.getName()));
+			}
 		}
 
 		return newObject;
@@ -84,6 +77,7 @@ public class ReflectionsUtils {
 			result.add(ReflectionsUtils.populateObject(((JSONObject) json.get(i))));
 
 		}
+
 		return result;
 	}
 
@@ -94,7 +88,5 @@ public class ReflectionsUtils {
 			Object[] paraneters = { value };
 			method.invoke(target, paraneters);
 		}
-
 	}
-
 }

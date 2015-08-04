@@ -23,11 +23,14 @@ public class PreyApp extends Application {
 		PreyLogger.i("Application launched!");
 		PreyLogger.d("__________________");
 		String deviceKey = PreyConfig.getPreyConfig(this).getDeviceID();
-		if (deviceKey != null && deviceKey != "")
+		if (deviceKey != null && deviceKey != "") {
 			PreyConfig.getPreyConfig(this).registerC2dm();
+		}
+
 		if (PreyConfig.getPreyConfig(this).isScheduled()) {
 			PreyScheduled.getInstance(this).run(PreyConfig.getPreyConfig(this).getMinuteScheduled());
 		}
+
 		if (PreyConfig.getPreyConfig(this).isMissing()) {
 			if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {
 				ReportScheduled.getInstance(this).run(Integer.parseInt(PreyConfig.getPreyConfig(this).getIntervalReport()));

@@ -18,10 +18,11 @@ public class PreyUtils {
 	}
 
 	public static String getDeviceType(Context ctx) {
-		if (isTablet(ctx))
+		if (isTablet(ctx)) {
 			return "Tablet";
-		else
+		} else {
 			return "Phone";
+		}
 	}
 
 	public static boolean isTablet(Context ctx) {
@@ -60,8 +61,8 @@ public class PreyUtils {
 				version = (first) ? number : version + "." + number;
 				first = false;
 			}
-		} catch (Exception e) {
-		}
+		} catch (Exception e) {}
+
 		return version;
 	}
 }

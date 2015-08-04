@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.lang.Exception;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -54,8 +55,6 @@ public class PreyConfig {
 	
 	//Amount of millisecond the app can be suspended before ask for the password. 
 	public static final long PASSWORD_PROMPT_DELAY = 5000;
-	
-
 
 	public static final String PREFS_NAME = "PREY_PREFS";
 	public static final String PREFS_URL_KEY = "URL";
@@ -524,9 +523,10 @@ public class PreyConfig {
 		     FileOutputStream out = new FileOutputStream(dest);
 		     detinationSmsPicture.compress(Bitmap.CompressFormat.PNG, 90, out);
 		     out.flush();
-		     out.close();
 		} catch (Exception e) {
 		     e.printStackTrace();
+		} finally {
+			try { out.close(); } catch(Exception e) {}
 		}
 	}
 	
@@ -535,7 +535,6 @@ public class PreyConfig {
 		File dest = new File(sd, PICTURE_FILENAME);
 		dest.delete();
 	}
-	
 
 	public void setSecurityPrivilegesAlreadyPrompted(boolean securityPrivilegesAlreadyPrompted) {
 		this.securityPrivilegesAlreadyPrompted = securityPrivilegesAlreadyPrompted;
@@ -544,9 +543,6 @@ public class PreyConfig {
 		editor.putBoolean(PreyConfig.PREFS_SECURITY_PROMPT_SHOWN, securityPrivilegesAlreadyPrompted);
 		editor.commit();
 	}
-	
-	
-	
 	
 	public void registerC2dm(){
 		try{
@@ -575,12 +571,7 @@ public class PreyConfig {
 		this.ctx.startService(unregIntent);
 		
 	}
-	
-	
 
-	
- 
-	
 	private void saveString(String key, String value){
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
 		SharedPreferences.Editor editor = settings.edit();
@@ -647,11 +638,11 @@ public class PreyConfig {
 	
 	public String getPreyVersion() {
 		String versionName=VERSION_PREY_DEFAULT;
-		try{
+		try {
 			PackageInfo pinfo =ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
 		 	versionName = pinfo.versionName;
-		}catch(Exception e){
-		}
+		} catch(Exception e) {}
+
 		return versionName;
 	}
 	
@@ -682,7 +673,6 @@ public class PreyConfig {
 	public String getPreyUrl() {
 		String subdomain = FileConfigReader.getInstance(this.ctx).getPreySubdomain();
 		return HTTP.concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
-		
 	}
 	
 	public String getPreyPanelUrl() {

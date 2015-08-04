@@ -21,7 +21,6 @@ import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
 
 public class RecentCallsList extends JsonAction {
-
 	public List<HttpDataService> report(Context ctx, List<ActionResult> list, JSONObject parameters) {
 		List<HttpDataService> listResult = super.report(ctx, list, parameters);
 		return listResult;
@@ -34,7 +33,6 @@ public class RecentCallsList extends JsonAction {
 	}
 
 	public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters) {
-
 		HttpDataService data = new HttpDataService("recent_calls_list");
 		HashMap<String, String> parametersMap = new HashMap<String, String>();
 
@@ -43,6 +41,7 @@ public class RecentCallsList extends JsonAction {
 		final String[] selectionArgs = null;
 		final String sortOrder = android.provider.CallLog.Calls.DATE + " DESC";
 		Cursor cursor = null;
+
 		try {
 			cursor = ctx.getContentResolver().query(Uri.parse("content://call_log/calls"), projection, selection, selectionArgs, sortOrder);
 			int i = 0;
@@ -67,10 +66,11 @@ public class RecentCallsList extends JsonAction {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
-			cursor.close();
+			if(cursor != null) {
+				cursor.close();
+			}
 		}
 
 		return data;
 	}
-
 }

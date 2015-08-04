@@ -27,8 +27,7 @@ public class PreyStatus {
 		return preyConfigurationActivityResume;
 	}
 
-	public void setPreyConfigurationActivityResume(
-			boolean preyConfigurationActivityResume) {
+	public void setPreyConfigurationActivityResume(boolean preyConfigurationActivityResume) {
 		this.preyConfigurationActivityResume = preyConfigurationActivityResume;
 	}
 
