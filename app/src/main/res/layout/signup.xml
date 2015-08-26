@@ -1,0 +1,179 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/bg_w"
+    android:orientation="vertical" >
+
+    
+     <TextView
+        android:id="@+id/textViewInit1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/signup_subtitle"
+        android:textColor="#000000"
+         android:textSize="10sp"
+
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
+
+          />
+     
+     <TextView
+        android:id="@+id/textViewInit2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/signup_title"
+        android:textColor="#000000"
+        android:textSize="23sp"
+        android:textStyle="bold"
+
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
+ 		android:layout_below="@+id/textViewInit1"
+
+         />
+
+
+    <TextView
+        android:id="@+id/textViewInit3"
+
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/field_name_signup"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
+        android:layout_below="@+id/textViewInit2"
+
+          />
+
+
+
+    <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+		android:inputType="text"
+        android:ems="10"
+         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/textViewInit3"
+          />
+
+    <TextView
+        android:id="@+id/textViewInit4"
+
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/field_email_signup"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
+        android:layout_below="@+id/editTextName"
+
+        />
+
+
+
+    <EditText
+        android:id="@+id/editTextEmailAddress"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/textViewInit4"
+        android:hint="@string/field_email_signup_hint"
+         />
+
+
+    <TextView
+        android:id="@+id/textViewInit5"
+
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/field_password_signup"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="5dp"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
+        android:layout_below="@+id/editTextEmailAddress"
+
+          />
+
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/textViewInit5"
+        android:hint="@string/field_password_signup_hint"
+         />
+
+    <Button
+        android:id="@+id/buttonSignup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_signup"
+
+        android:background="#3578BB"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+
+
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/editTextPassword"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
+
+         />
+
+
+    <TextView
+        android:id="@+id/linkSignup"
+
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/link_signup"
+        android:textColor="#3C77B9"
+         
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
+        android:layout_below="@+id/buttonSignup"
+        android:gravity="center"
+          />
+    
+
+</RelativeLayout>    

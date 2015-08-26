@@ -1,0 +1,185 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000000"
+    android:orientation="vertical" >
+    
+     
+
+      <TextView
+          android:id="@+id/textView1"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
+          
+          android:layout_marginLeft="10dp"
+          android:layout_marginRight="10dp"
+          android:layout_marginTop="80dp"
+          android:text="@string/protect_subtitle"
+          android:textSize="13sp"
+          android:textColor="#efeae8" />
+
+      <TextView
+          android:id="@+id/textView2"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/textView1"
+          android:layout_marginLeft="10dp"
+          android:layout_marginRight="10dp"
+          android:text="@string/protect_title"
+          android:layout_marginTop="0dp"
+          android:textColor="#fff"
+          android:textSize="23sp"
+          android:textStyle="bold" />
+
+      <TextView
+          android:id="@+id/textView3"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+           android:layout_marginLeft="10dp"
+          android:layout_marginRight="10dp"
+          android:layout_below="@+id/textView2"
+          android:text="@string/protect_body"
+          android:layout_marginTop="10dp"
+          android:textSize="10sp"
+          android:textColor="#fff" />
+    
+      <LinearLayout
+          android:id="@+id/linearLayoutSetup"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/textView3"
+          android:layout_marginLeft="10dp"
+          android:layout_marginTop="40dp"
+          android:orientation="horizontal" >
+
+          <View 
+            android:layout_width="5dp"
+ 			android:layout_height="50dp"
+ 			android:background="#273549"/>
+
+          <LinearLayout
+              android:id="@+id/linearLayout1_1"
+              android:layout_width="300dp"
+              android:layout_height="wrap_content"
+              android:orientation="vertical" >
+          	  <TextView
+          			android:id="@+id/textView1_1"
+         			android:layout_width="fill_parent"
+          			android:layout_height="wrap_content"
+          			android:layout_marginLeft="10dp"
+          			android:layout_marginRight="10dp"
+          			android:text="@string/protect_setup_subtitle"
+                    android:textSize="10sp"
+          			android:textColor="#fff"    />
+               <TextView
+		          android:id="@+id/textView1_2"
+		          android:layout_width="fill_parent"
+		          android:layout_height="wrap_content"
+                   android:layout_marginTop="0dp"
+		          android:layout_marginLeft="10dp"
+		          android:layout_marginRight="10dp"
+		          android:text="@string/protect_setup_title"
+		          android:textColor="#fff"
+		          android:textSize="18sp"
+		          android:textStyle="bold" />
+          </LinearLayout>
+          <ImageView 
+              android:id="@+id/imgViewSetup"
+	          android:layout_width="50dp"
+	          android:layout_height="50dp"
+	          android:src="@drawable/nok"  />           
+      </LinearLayout>
+      
+      
+      <LinearLayout
+          android:id="@+id/linearLayoutPrivileges"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/linearLayoutSetup"
+          android:layout_marginLeft="10dp"
+          android:layout_marginTop="20dp"
+          android:orientation="horizontal" >
+
+          <View 
+            android:layout_width="5dp"
+ 			android:layout_height="50dp"
+ 			android:background="#273549"/>
+
+          <LinearLayout
+              android:id="@+id/linearLayout2_1"
+              android:layout_width="300dp"
+              android:layout_height="wrap_content"
+              android:orientation="vertical" >
+          	  <TextView
+          			android:id="@+id/textView2_1"
+         			android:layout_width="fill_parent"
+          			android:layout_height="wrap_content"
+          			android:layout_marginLeft="10dp"
+          			android:layout_marginRight="10dp"
+          			android:text="@string/protect_privileges_subtitle"
+                    android:textSize="10sp"
+          			android:textColor="#fff"    />
+               <TextView
+		          android:id="@+id/textView2_2"
+		          android:layout_width="fill_parent"
+		          android:layout_height="wrap_content"
+                   android:layout_marginTop="0dp"
+		          android:layout_marginLeft="10dp"
+		          android:layout_marginRight="10dp"
+		          android:text="@string/protect_privileges_title"
+		          android:textColor="#fff"
+		          android:textSize="18sp"
+		          android:textStyle="bold" />
+          </LinearLayout>
+          <ImageView 
+              android:id="@+id/imgViewPrivileges"
+	          android:layout_width="50dp"
+	          android:layout_height="50dp"
+	          android:src="@drawable/nok"  />           
+      </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_above="@+id/buttonActivate"
+        android:layout_marginBottom="5dp"
+        android:text="@string/protect_body"
+        android:textSize="8sp"
+        android:textColor="#fff" />
+
+    <Button
+        android:id="@+id/buttonActivate"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="@string/button_activate"
+        android:textColor="#fff"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_above="@+id/buttonMore"
+        android:background="#2A5E93"
+         />
+
+    <Button
+        android:id="@+id/buttonMore"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="@string/button_know_more_about"
+        android:textColor="#fff"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentBottom="true"
+        android:background="#2A5E93"
+        />
+</RelativeLayout>
+    

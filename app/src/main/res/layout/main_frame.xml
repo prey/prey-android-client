@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/RelativeLayout2"   
+  android:layout_width="fill_parent" 
+  android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+
+     
+    
+    <FrameLayout 
+        android:id="@+id/protectFrame" 
+        android:layout_width="fill_parent" 
+        android:layout_height="fill_parent" >
+    </FrameLayout>
+    <FrameLayout 
+        android:id="@+id/tourFrame" 
+        android:visibility="gone"
+        android:layout_width="fill_parent" 
+        android:layout_height="fill_parent"  >
+    </FrameLayout>
+
+     
+</RelativeLayout> 

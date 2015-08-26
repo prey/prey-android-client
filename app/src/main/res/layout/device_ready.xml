@@ -1,0 +1,90 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000000"
+    android:orientation="vertical"
+     >
+
+
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="200dp"
+        android:textSize="23sp"
+        android:text="@string/device_ready_title"
+        android:textStyle="bold"
+        android:textColor="#efeae8" />
+
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/device_ready_subtitle"
+        android:textColor="#efeae8" />
+
+    <Button
+
+        android:id="@+id/buttonReady"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/textView2"
+
+        android:text="@string/device_ready_button"
+        android:textColor="#fff"
+        android:textSize="23sp"
+        android:textStyle="bold"
+
+        android:background="#2A5E93"
+
+        />
+
+
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/buttonReady"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/device_ready_settings"
+        android:textColor="#efeae8"
+        android:gravity="center"
+        />
+
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView3"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/device_ready_uninstall"
+        android:textColor="#efeae8"
+        android:gravity="center"
+        />
+
+
+
+
+
+</RelativeLayout>
