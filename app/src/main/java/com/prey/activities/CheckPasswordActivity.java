@@ -1,8 +1,11 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
 
-/**
- * Created by oso on 24-08-15.
- */
 import java.util.Locale;
 
 import android.content.Intent;
@@ -27,8 +30,6 @@ public class CheckPasswordActivity extends PasswordActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.password);
-
-
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         updateLoginScreen();
         bindPasswordControls();
@@ -48,7 +49,7 @@ public class CheckPasswordActivity extends PasswordActivity {
                 ImageView logoImgTextPrey = (ImageView) findViewById(R.id.logo_img_reversed);
                 ImageView logoImgExtra = (ImageView) findViewById(R.id.logo_img_extra);
                 TextView textReady = (TextView) findViewById(R.id.device_ready_h1_text);
-                TextView textForgotPassword= (TextView) findViewById(R.id.link_forgot_password);
+                TextView textForgotPassword = (TextView) findViewById(R.id.link_forgot_password);
                 if (keyboardVisible) {
                     PreyLogger.d("key on");
                     if (logoImgTextPrey != null)
@@ -72,10 +73,8 @@ public class CheckPasswordActivity extends PasswordActivity {
                 }
             }
         });
-
-
         try {
-            TextView textForgotPassword= (TextView) findViewById(R.id.link_forgot_password);
+            TextView textForgotPassword = (TextView) findViewById(R.id.link_forgot_password);
             textForgotPassword.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
@@ -85,18 +84,16 @@ public class CheckPasswordActivity extends PasswordActivity {
                         startActivity(browserIntent);
                     } catch (Exception e) {
                     }
-
                 }
             });
         } catch (Exception e) {
         }
         try {
-
             ImageView iconBack = (ImageView) findViewById(R.id.logo_img_reversed);
             if ("es".equals(Locale.getDefault().getLanguage())) {
                 iconBack.setImageResource(R.drawable.icon_back_es);
             }
-            RelativeLayout back=(RelativeLayout) findViewById(R.id.linear_back);
+            RelativeLayout back = (RelativeLayout) findViewById(R.id.linear_back);
             back.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
@@ -104,10 +101,8 @@ public class CheckPasswordActivity extends PasswordActivity {
                     intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
                     finish();
-
                 }
             });
-
         } catch (Exception e) {
         }
 

@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
 
 import android.content.Intent;
@@ -23,18 +29,12 @@ import com.prey.activities.frames.SignUpFrame;
 import com.prey.activities.frames.TourFrame;
 import com.prey.backwardcompatibility.FroyoSupport;
 
-/**
- * Created by oso on 19-08-15.
- */
 public class WelcomeActivity extends FragmentActivity {
-
-
 
     @Override
     public void onResume() {
-        PreyLogger.i( "onResume of WelcomeActivity");
+        PreyLogger.i("onResume of WelcomeActivity");
         super.onResume();
-        //menu();
     }
 
     @Override
@@ -45,7 +45,6 @@ public class WelcomeActivity extends FragmentActivity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        // ignore orientation change
         super.onConfigurationChanged(newConfig);
     }
 
@@ -54,9 +53,8 @@ public class WelcomeActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        try{
+        try {
             Button newUser = (Button) findViewById(R.id.btn_welcome_newuser);
-
 
             newUser.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
@@ -65,9 +63,10 @@ public class WelcomeActivity extends FragmentActivity {
                     finish();
                 }
             });
-        }catch(Exception e){}
+        } catch (Exception e) {
+        }
 
-        try{
+        try {
             Button oldUser = (Button) findViewById(R.id.btn_welcome_olduser);
             oldUser.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
@@ -76,44 +75,33 @@ public class WelcomeActivity extends FragmentActivity {
                     finish();
                 }
             });
-        }catch(Exception e){}
+        } catch (Exception e) {
+        }
     }
-
 
     protected void onCreate2(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_frame);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-
         menu();
-
-
-
-
-
     }
 
+    public void tour() {
 
-
-    public void tour(){
-
-        if (android.os.Build.VERSION.SDK_INT< Build.VERSION_CODES.GINGERBREAD){
-            TourFrame tourFrame=new TourFrame();
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
+            TourFrame tourFrame = new TourFrame();
             tourFrame.setActivity(this);
 
             FragmentTransaction localFragmentTransaction2 = getSupportFragmentManager().beginTransaction();
             localFragmentTransaction2.replace(R.id.tourFrame, tourFrame);
             localFragmentTransaction2.commitAllowingStateLoss();
 
-
-
-            FrameLayout tourFrame1=(FrameLayout)findViewById(R.id.tourFrame);
+            FrameLayout tourFrame1 = (FrameLayout) findViewById(R.id.tourFrame);
             tourFrame1.setVisibility(View.VISIBLE);
-            FrameLayout protectFrame1=(FrameLayout)findViewById(R.id.protectFrame);
+            FrameLayout protectFrame1 = (FrameLayout) findViewById(R.id.protectFrame);
             protectFrame1.setVisibility(View.GONE);
-        }else{
-            Intent intent=new Intent(getApplicationContext(),TourActivity.class);
+        } else {
+            Intent intent = new Intent(getApplicationContext(), TourActivity.class);
             Bundle b = new Bundle();
             b.putInt("id", 1);
             intent.putExtras(b);
@@ -123,9 +111,9 @@ public class WelcomeActivity extends FragmentActivity {
 
     }
 
-    public void signIn(){
+    public void signIn() {
 
-        SignInFrame signInFrame=new SignInFrame();
+        SignInFrame signInFrame = new SignInFrame();
         signInFrame.setActivity(this);
 
         FragmentTransaction localFragmentTransaction1 = getSupportFragmentManager().beginTransaction();
@@ -133,14 +121,14 @@ public class WelcomeActivity extends FragmentActivity {
         localFragmentTransaction1.replace(R.id.protectFrame, signInFrame);
         localFragmentTransaction1.commitAllowingStateLoss();
 
-        FrameLayout protectFrame1=(FrameLayout)findViewById(R.id.protectFrame);
+        FrameLayout protectFrame1 = (FrameLayout) findViewById(R.id.protectFrame);
         protectFrame1.setVisibility(View.VISIBLE);
-        FrameLayout tourFrame1=(FrameLayout)findViewById(R.id.tourFrame);
+        FrameLayout tourFrame1 = (FrameLayout) findViewById(R.id.tourFrame);
         tourFrame1.setVisibility(View.GONE);
     }
 
-    public void signUp(){
-        SignUpFrame signUpFrame=new SignUpFrame();
+    public void signUp() {
+        SignUpFrame signUpFrame = new SignUpFrame();
         signUpFrame.setActivity(this);
 
         FragmentTransaction localFragmentTransaction1 = getSupportFragmentManager().beginTransaction();
@@ -148,16 +136,16 @@ public class WelcomeActivity extends FragmentActivity {
         localFragmentTransaction1.replace(R.id.protectFrame, signUpFrame);
         localFragmentTransaction1.commitAllowingStateLoss();
 
-        FrameLayout protectFrame1=(FrameLayout)findViewById(R.id.protectFrame);
+        FrameLayout protectFrame1 = (FrameLayout) findViewById(R.id.protectFrame);
         protectFrame1.setVisibility(View.VISIBLE);
-        FrameLayout tourFrame1=(FrameLayout)findViewById(R.id.tourFrame);
+        FrameLayout tourFrame1 = (FrameLayout) findViewById(R.id.tourFrame);
         tourFrame1.setVisibility(View.GONE);
     }
 
-    public void menu(){
-        if(PreyConfig.getPreyConfig(this).getProtectReady()){
+    public void menu() {
+        if (PreyConfig.getPreyConfig(this).getProtectReady()) {
             ready();
-        }else {
+        } else {
 
             new RegisterInitTask().execute();
             MenuFrame menuFrame = new MenuFrame();
@@ -175,21 +163,17 @@ public class WelcomeActivity extends FragmentActivity {
         }
     }
 
-    public void privileges(){
-
-
-
-
-        PrivilegesErrorFrame privilegesErrorFrame=new PrivilegesErrorFrame();
+    public void privileges() {
+        PrivilegesErrorFrame privilegesErrorFrame = new PrivilegesErrorFrame();
         privilegesErrorFrame.setActivity(this);
 
         FragmentTransaction localFragmentTransaction1 = getSupportFragmentManager().beginTransaction();
         localFragmentTransaction1.replace(R.id.protectFrame, privilegesErrorFrame);
         localFragmentTransaction1.commitAllowingStateLoss();
 
-        FrameLayout protectFrame1=(FrameLayout)findViewById(R.id.protectFrame);
+        FrameLayout protectFrame1 = (FrameLayout) findViewById(R.id.protectFrame);
         protectFrame1.setVisibility(View.VISIBLE);
-        FrameLayout tourFrame1=(FrameLayout)findViewById(R.id.tourFrame);
+        FrameLayout tourFrame1 = (FrameLayout) findViewById(R.id.tourFrame);
         tourFrame1.setVisibility(View.GONE);
     }
 
@@ -199,31 +183,28 @@ public class WelcomeActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         PreyLogger.d("requestCode:" + requestCode + " resultCode:" + resultCode);
-        if (requestCode == SECURITY_PRIVILEGES){
+        if (requestCode == SECURITY_PRIVILEGES) {
             menu();
             PreyConfig.getPreyConfig(getApplicationContext()).setProtectPrivileges(true);
         }
     }
 
-    public void addPrivileges(){
+    public void addPrivileges() {
         Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
         startActivityForResult(intent, SECURITY_PRIVILEGES);
-
     }
 
-    public void ready(){
-
-        DeviceReadyFrame deviceReadyFrame=new DeviceReadyFrame();
+    public void ready() {
+        DeviceReadyFrame deviceReadyFrame = new DeviceReadyFrame();
         deviceReadyFrame.setActivity(this);
 
         FragmentTransaction localFragmentTransaction2 = getSupportFragmentManager().beginTransaction();
         localFragmentTransaction2.replace(R.id.protectFrame, deviceReadyFrame);
         localFragmentTransaction2.commitAllowingStateLoss();
 
-
-        FrameLayout protectFrame1=(FrameLayout)findViewById(R.id.protectFrame);
+        FrameLayout protectFrame1 = (FrameLayout) findViewById(R.id.protectFrame);
         protectFrame1.setVisibility(View.VISIBLE);
-        FrameLayout tourFrame1=(FrameLayout)findViewById(R.id.tourFrame);
+        FrameLayout tourFrame1 = (FrameLayout) findViewById(R.id.tourFrame);
         tourFrame1.setVisibility(View.GONE);
 
 
@@ -231,8 +212,6 @@ public class WelcomeActivity extends FragmentActivity {
 
 
     private class RegisterInitTask extends AsyncTask<String, Void, Void> {
-
-
 
         @Override
         protected void onPreExecute() {

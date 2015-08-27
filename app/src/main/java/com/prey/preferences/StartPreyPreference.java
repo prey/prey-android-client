@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Created by Carlos Yaconi
- * Copyright 2012 Fork Ltd. All rights reserved.
+ * Copyright 2015 Prey Inc. All rights reserved.
  * License: GPLv3
  * Full license at "/LICENSE"
  ******************************************************************************/
@@ -16,23 +16,23 @@ import com.prey.beta.actions.PreyBetaController;
 
 public class StartPreyPreference extends DialogPreference {
 
-	public StartPreyPreference(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		// TODO Auto-generated constructor stub
-	}
+    public StartPreyPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        // TODO Auto-generated constructor stub
+    }
 
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		super.onClick(dialog, which);
-		if (which == DialogInterface.BUTTON_POSITIVE) {
-			// String url =
-			// PreyWebServices.getInstance().getDeviceWebControlPanelUrl(getContext());
-			// Intent fakeSMS = new Intent(getContext(),SmsReceiver.class);
-			// getContext().sendBroadcast(fakeSMS);
-			//PreyBetaController.startPrey(getContext());
-			
-			PreyBetaController.startPrey(getContext());
-		}
-	}
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        super.onClick(dialog, which);
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            // String url =
+            // PreyWebServices.getInstance().getDeviceWebControlPanelUrl(getContext());
+            // Intent fakeSMS = new Intent(getContext(),SmsReceiver.class);
+            // getContext().sendBroadcast(fakeSMS);
+            //PreyBetaController.startPrey(getContext());
+
+            PreyBetaController.startPrey(getContext());
+        }
+    }
 
 }

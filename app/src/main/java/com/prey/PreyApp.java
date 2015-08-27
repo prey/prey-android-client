@@ -1,10 +1,13 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey;
 
 import android.app.Application;
 
-/**
- * Created by oso on 25-08-15.
- */
 public class PreyApp extends Application {
 
     public long mLastPause;

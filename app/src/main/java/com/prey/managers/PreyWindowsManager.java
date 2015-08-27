@@ -1,15 +1,17 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.managers;
 
-/**
- * Created by oso on 24-08-15.
- */
 import android.content.Context;
 
 import android.view.Display;
 import android.view.WindowManager;
 
 public class PreyWindowsManager {
-
 
     private static PreyWindowsManager _instance = null;
 
@@ -37,9 +39,6 @@ public class PreyWindowsManager {
     public int getHeight(){
         return height;
     }
-
-
-
 
 }
 

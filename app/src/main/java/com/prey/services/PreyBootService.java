@@ -1,14 +1,18 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.services;
 
-/**
- * Created by oso on 26-08-15.
- */
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
 import com.prey.PreyLogger;
+
 public class PreyBootService extends Service {
 
     // This is the object that receives interactions from clients

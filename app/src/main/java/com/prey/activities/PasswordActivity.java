@@ -1,13 +1,15 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
 
-/**
- * Created by oso on 24-08-15.
- */
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -19,9 +21,9 @@ import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
-import com.prey.PreyConfig;
 import com.prey.PreyStatus;
 import com.prey.R;
+
 public class PasswordActivity extends PreyActivity {
 
     int wrongPasswordIntents = 0;
@@ -33,13 +35,13 @@ public class PasswordActivity extends PreyActivity {
 
             public void onClick(View v) {
                 final String passwordtyped = pass1.getText().toString();
-                final Context ctx=getApplicationContext();
+                final Context ctx = getApplicationContext();
                 if (passwordtyped.equals(""))
                     Toast.makeText(ctx, R.string.preferences_password_length_error, Toast.LENGTH_LONG).show();
-                else{
-                    if(passwordtyped.length()<6||passwordtyped.length()>32){
-                        Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range,6,32), Toast.LENGTH_LONG).show();
-                    }else{
+                else {
+                    if (passwordtyped.length() < 6 || passwordtyped.length() > 32) {
+                        Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range, 6, 32), Toast.LENGTH_LONG).show();
+                    } else {
                         new CheckPassword().execute(passwordtyped);
                     }
                 }
@@ -51,9 +53,6 @@ public class PasswordActivity extends PreyActivity {
         EditText password = (EditText) findViewById(R.id.password_pass_txt);
         password.setTypeface(Typeface.DEFAULT);
         password.setTransformationMethod(new PasswordTransformationMethod());
-
-
-
     }
 
     protected void updateLoginScreen() {
@@ -70,13 +69,13 @@ public class PasswordActivity extends PreyActivity {
 
         @Override
         protected void onPreExecute() {
-            try{
+            try {
                 progressDialog = new ProgressDialog(PasswordActivity.this);
                 progressDialog.setMessage(PasswordActivity.this.getText(R.string.password_checking_dialog).toString());
                 progressDialog.setIndeterminate(true);
                 progressDialog.setCancelable(false);
                 progressDialog.show();
-            }catch(Exception e){
+            } catch (Exception e) {
 
             }
         }
@@ -96,11 +95,11 @@ public class PasswordActivity extends PreyActivity {
 
         @Override
         protected void onPostExecute(Void unused) {
-            try{
-                if (progressDialog.isShowing()){
+            try {
+                if (progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
             }
             if (error != null)
                 Toast.makeText(PasswordActivity.this, error, Toast.LENGTH_LONG).show();
@@ -122,11 +121,9 @@ public class PasswordActivity extends PreyActivity {
                 Intent intent = new Intent(PasswordActivity.this, PreyConfigurationActivity.class);
                 PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
                 startActivity(intent);
-                new Thread(new EventManagerRunner(PasswordActivity.this,new Event(Event.APPLICATION_OPENED))).start();
+                new Thread(new EventManagerRunner(PasswordActivity.this, new Event(Event.APPLICATION_OPENED))).start();
             }
         }
-
-
 
     }
 

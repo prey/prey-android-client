@@ -1,8 +1,11 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.receivers;
 
-/**
- * Created by oso on 25-08-15.
- */
 import com.prey.actions.report.ReportService;
 
 import android.content.BroadcastReceiver;

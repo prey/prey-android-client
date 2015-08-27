@@ -1,10 +1,13 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey;
 
-/**
- * Created by oso on 19-08-15.
- */
-
 import java.util.StringTokenizer;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;

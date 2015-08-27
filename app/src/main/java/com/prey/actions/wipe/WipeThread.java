@@ -1,8 +1,11 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.wipe;
 
-/**
- * Created by oso on 24-08-15.
- */
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.backwardcompatibility.FroyoSupport;
@@ -26,9 +29,6 @@ public class WipeThread extends Thread {
     public void run() {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","started"));
-
-
-
         try{
             if(deleteSD){
                 WipeUtil.deleteSD();
@@ -43,7 +43,6 @@ public class WipeThread extends Thread {
         }catch(Exception e){
             PreyLogger.e("Error Wipe1:"+e.getMessage(), e);
         }
-
         try{
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","stopped"));
         }catch(Exception e){

@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 25-08-15.
- */
 
 import java.util.Locale;
 
@@ -77,7 +79,7 @@ public class AddDeviceToAccountActivity extends SetupActivity {
                             tituloText.setVisibility(View.VISIBLE);
                     }
                 } catch (Exception e) {
-                    PreyLogger.i("error:"+e.getMessage());
+                    PreyLogger.i("error:" + e.getMessage());
                 }
             }
         });
@@ -92,16 +94,16 @@ public class AddDeviceToAccountActivity extends SetupActivity {
                 error = null;
                 final String email = ((EditText) findViewById(R.id.add_device_email)).getText().toString();
                 final String password = ((EditText) findViewById(R.id.add_device_pass)).getText().toString();
-                final Context ctx=getApplicationContext();
-                if (email==null||email.equals("") || password==null|| password.equals("")) {
+                final Context ctx = getApplicationContext();
+                if (email == null || email.equals("") || password == null || password.equals("")) {
                     Toast.makeText(ctx, R.string.error_all_fields_are_required, Toast.LENGTH_LONG).show();
-                } else{
-                    if(email.length()<6||email.length()>100){
-                        Toast.makeText(ctx, ctx.getString(R.string.error_mail_out_of_range,6,100) , Toast.LENGTH_LONG).show();
-                    }else{
-                        if(password.length()<6||password.length()>32){
-                            Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range,6,32), Toast.LENGTH_LONG).show();
-                        }else{
+                } else {
+                    if (email.length() < 6 || email.length() > 100) {
+                        Toast.makeText(ctx, ctx.getString(R.string.error_mail_out_of_range, 6, 100), Toast.LENGTH_LONG).show();
+                    } else {
+                        if (password.length() < 6 || password.length() > 32) {
+                            Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range, 6, 32), Toast.LENGTH_LONG).show();
+                        } else {
                             new AddDeviceToAccount().execute(email, password, getDeviceType(ctx));
                         }
                     }

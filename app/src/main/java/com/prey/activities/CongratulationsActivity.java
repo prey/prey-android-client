@@ -1,22 +1,23 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 25-08-15.
- */
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 
 import com.prey.PreyStatus;
 import com.prey.R;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-
 public class CongratulationsActivity extends PreyActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,6 @@ public class CongratulationsActivity extends PreyActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         showScreen();
     }
 
@@ -36,7 +36,7 @@ public class CongratulationsActivity extends PreyActivity {
         showScreen();
     }
 
-    private void showScreen(){
+    private void showScreen() {
         setContentView(R.layout.congratulations);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Bundle bundle = getIntent().getExtras();

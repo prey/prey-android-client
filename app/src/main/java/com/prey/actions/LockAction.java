@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import android.content.Context;
 
@@ -51,17 +53,6 @@ public class LockAction extends PreyAction {
             PreyLogger.d("-- Unlock instruction received");
             FroyoSupport.getInstance(ctx).changePasswordAndLock("",true);
         }
-//		if (PreyConfig.getPreyConfig(ctx).showLockScreen()){
-//			PreyLogger.d("Instruction to kill Lock module received");
-//			ctx.stopService(new Intent(ctx, LockMonitorService.class));
-//			PreyConfig.getPreyConfig(ctx).setShowLockScreen(false);
-//			Intent lockScreen = new Intent(ctx, LockActivity.class);
-//			lockScreen.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//			lockScreen.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//			ctx.startActivity(lockScreen);
-//		}
-
-
     }
 
     public int getPriority(){

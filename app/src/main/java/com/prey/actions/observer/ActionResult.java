@@ -1,8 +1,11 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.observer;
 
-/**
- * Created by oso on 24-08-15.
- */
 import com.prey.actions.HttpDataService;
 
 public class ActionResult {

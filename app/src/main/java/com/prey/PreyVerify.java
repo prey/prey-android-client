@@ -1,40 +1,41 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey;
 
-/**
- * Created by oso on 24-08-15.
- */
 import com.prey.net.PreyWebServices;
 
 import android.content.Context;
 
 public class PreyVerify {
 
+    private static PreyVerify instance = null;
 
-    private static PreyVerify instance=null;
-
-    private PreyVerify(Context ctx){
+    private PreyVerify(Context ctx) {
         init(ctx);
     }
 
-    public static PreyVerify getInstance(Context ctx){
-        if (instance == null){
-            instance=new PreyVerify(ctx);
+    public static PreyVerify getInstance(Context ctx) {
+        if (instance == null) {
+            instance = new PreyVerify(ctx);
         }
         return instance;
     }
 
-
-    private void init(Context ctx){
-        final Context myContext=ctx;
-        new Thread(){
+    private void init(Context ctx) {
+        final Context myContext = ctx;
+        new Thread() {
             public void run() {
                 try {
                     sleep(2000);
                 } catch (InterruptedException e) {
                 }
-                try{
+                try {
                     PreyWebServices.getInstance().verify(myContext);
-                }catch(Exception e){
+                } catch (Exception e) {
                 }
             }
         }.start();

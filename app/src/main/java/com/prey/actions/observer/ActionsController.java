@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.observer;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.provider.Settings;
 
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.PreyAction;

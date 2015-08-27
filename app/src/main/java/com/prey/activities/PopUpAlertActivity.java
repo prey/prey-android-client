@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,6 +17,7 @@ import android.view.Gravity;
 import android.widget.TextView;
 
 import com.prey.R;
+
 public class PopUpAlertActivity extends PreyActivity {
 
     private static final int SHOW_POPUP = 0;

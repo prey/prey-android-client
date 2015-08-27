@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
+
 package com.prey;
 
 import android.app.PendingIntent;
@@ -18,9 +25,6 @@ import com.prey.services.PreyRegistrationIntentService;
 
 import java.util.Date;
 
-/**
- * Created by oso on 19-08-15.
- */
 public class PreyConfig {
 
     //Set false in production

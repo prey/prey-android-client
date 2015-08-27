@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.observer;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +15,6 @@ import java.util.Random;
 
 import android.content.Context;
 
-
 import com.prey.PreyLogger;
 import com.prey.actions.PreyAction;
 import com.prey.actions.PreyExecutionWaitNotify;
@@ -23,8 +24,6 @@ import com.prey.actions.compare.CompareAction;
 /**
  * This class is a representation of a related actions needed to be run - and
  * sent as report - as a whole.
- *
- * @author Carlos
  *
  */
 public class JobsGroup {

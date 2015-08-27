@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities.javascript;
 
 import android.annotation.SuppressLint;
@@ -9,33 +15,27 @@ import com.prey.PreyConfig;
 import com.prey.activities.WelcomeActivity;
 
 public class PreyJavaScriptInterface {
-	 Context ctx;
+    private Context ctx;
 
-	private WelcomeActivity welcome;
-	public void setActivity(WelcomeActivity welcome) {
-		this.welcome = welcome;
-	}
+    private WelcomeActivity welcome;
 
-	    /** Instantiate the interface and set the context */
-	    public PreyJavaScriptInterface(Context ctx) {
-	        this.ctx = ctx;
-	    }
+    public void setActivity(WelcomeActivity welcome) {
+        this.welcome = welcome;
+    }
 
-	    /** Show a toast from the web page */
+    public PreyJavaScriptInterface(Context ctx) {
+        this.ctx = ctx;
+    }
 
-	    public void showToast(String toast) {
-	        Toast.makeText(ctx, toast, Toast.LENGTH_SHORT).show();
-	    }
+    public void showToast(String toast) {
+        Toast.makeText(ctx, toast, Toast.LENGTH_SHORT).show();
+    }
 
+    public void menu() {
+        Intent intent = new Intent(ctx, WelcomeActivity.class);
+        ctx.startActivity(intent);
 
-		public void menu(){
-
-			Intent intent  = new Intent(ctx, WelcomeActivity.class);
-			ctx.startActivity(intent);
-
-			PreyConfig.getPreyConfig(ctx).setProtectTour(true);
-			welcome.finish();
-
-
-		}
+        PreyConfig.getPreyConfig(ctx).setProtectTour(true);
+        welcome.finish();
+    }
 }

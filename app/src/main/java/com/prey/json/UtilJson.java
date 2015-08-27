@@ -1,8 +1,11 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.json;
 
-/**
- * Created by oso on 24-08-15.
- */
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UtilJson {
-
 
     public static JSONObject makeJsonResponse(String command,String target,String status){
         JSONObject json=new JSONObject();
@@ -32,7 +34,6 @@ public class UtilJson {
         return json;
     }
 
-
     public static  Map<String, String> makeMapParam(String command,String target,String status){
         Map<String, String> map=new HashMap<String, String>();
         map.put("command", command);
@@ -40,7 +41,6 @@ public class UtilJson {
         map.put("status", status);
         return map;
     }
-
 
     public static  Map<String, String> makeMapParam(String command,String target,String status,String reason){
         Map<String, String> map=makeMapParam(command, target, status);

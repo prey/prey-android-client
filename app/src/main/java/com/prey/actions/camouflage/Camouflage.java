@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.camouflage;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import java.util.List;
 
@@ -21,26 +23,26 @@ import android.content.pm.PackageManager;
 public class Camouflage {
 
     public static void hide(Context ctx, List<ActionResult> lista, JSONObject parameters) {
-        PreyLogger.i("hide start");
+        PreyLogger.i("started hide");
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "camouflage", "started"));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(true);
 
         ComponentName componentToDisabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
         PackageManager pm = ctx.getPackageManager();
         pm.setComponentEnabledSetting(componentToDisabled, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-        PreyLogger.i("hide stop");
+        PreyLogger.i("stopped hide");
         PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_hide");
     }
 
     public static void unhide(Context ctx, List<ActionResult> lista, JSONObject options) {
-        PreyLogger.i("unhide start");
+        PreyLogger.i("started unhide");
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "camouflage", "stopped"));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(false);
 
         ComponentName componentToEnabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
         PackageManager pm = ctx.getApplicationContext().getPackageManager();
         pm.setComponentEnabledSetting(componentToEnabled, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-        PreyLogger.i("unhide stop");
+        PreyLogger.i("stopped unhide");
         PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_unhide");
     }
 }

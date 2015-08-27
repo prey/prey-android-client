@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
 
 import android.app.Activity;
@@ -9,9 +15,6 @@ import android.widget.Button;
 
 import com.prey.R;
 
-/**
- * Created by oso on 20-08-15.
- */
 public class TourActivity extends Activity {
 
     @Override

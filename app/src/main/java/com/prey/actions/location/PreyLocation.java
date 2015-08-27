@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.location;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import android.location.Location;
 
@@ -20,7 +22,7 @@ public class PreyLocation {
     }
 
     public PreyLocation(Location loc) {
-        if(loc!=null){
+        if (loc != null) {
             this.lat = loc.getLatitude();
             this.lng = loc.getLongitude();
             this.accuracy = loc.getAccuracy();
@@ -28,9 +30,10 @@ public class PreyLocation {
             this.timestamp = System.currentTimeMillis();
         }
     }
-    public PreyLocation(Location loc,String method) {
+
+    public PreyLocation(Location loc, String method) {
         this(loc);
-        if(loc!=null){
+        if (loc != null) {
             this.method = method;
         }
     }

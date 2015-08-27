@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.util;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 public class StringUtil {
 
@@ -15,41 +17,38 @@ public class StringUtil {
         return myString;
     }
 
-
-    public static boolean isTextBoolean(String texto){
-        boolean out=false;
-        if (texto!=null){
-            texto=texto.toLowerCase().trim();
-            if ("true".equals(texto)||"false".equals(texto)){
+    public static boolean isTextBoolean(String texto) {
+        boolean out = false;
+        if (texto != null) {
+            texto = texto.toLowerCase().trim();
+            if ("true".equals(texto) || "false".equals(texto)) {
                 return true;
             }
         }
         return out;
     }
 
-    public static boolean isTextInteger(String texto){
-        boolean out=false;
-        if (texto!=null){
-            texto=texto.toLowerCase().trim();
-            try{
+    public static boolean isTextInteger(String texto) {
+        boolean out = false;
+        if (texto != null) {
+            texto = texto.toLowerCase().trim();
+            try {
                 Integer.parseInt(texto);
                 return true;
-            }catch(Exception e){
+            } catch (Exception e) {
                 return false;
             }
         }
         return out;
     }
 
-    public static String classFormat(String myString){
-        StringBuffer out=new StringBuffer();
-        String[] array=myString.split("_");
-        for(int i=0;array!=null&&i<array.length;i++){
+    public static String classFormat(String myString) {
+        StringBuffer out = new StringBuffer();
+        String[] array = myString.split("_");
+        for (int i = 0; array != null && i < array.length; i++) {
             out.append(firstCharUpper(array[i]));
         }
         return out.toString();
     }
-
-
 
 }

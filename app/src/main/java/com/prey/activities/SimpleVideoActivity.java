@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 25-08-15.
- */
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,21 +61,16 @@ public class SimpleVideoActivity extends Activity implements
         mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
         try {
-
-            Context ctx=getApplicationContext();
+            Context ctx = getApplicationContext();
             PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
             if (preyConfig.isGingerbreadOrAbove()) {
                 mServiceCamera = getCameraGingerbreadOrAbove(ctx);
             } else {
                 mServiceCamera = getCamera(ctx);
             }
-
-
         } catch (Exception e) {
             PreyLogger.e("Error open camera:" + e.getMessage(), e);
-
         }
-
         activity = this;
 
     }
@@ -215,7 +212,6 @@ public class SimpleVideoActivity extends Activity implements
     }
 
 
-
     @SuppressWarnings("rawtypes")
     private Camera getCameraGingerbreadOrAbove(Context ctx) {
         PreyLogger.d("getCameraGingerbreadOrAbove");
@@ -230,12 +226,11 @@ public class SimpleVideoActivity extends Activity implements
 
             //	android.hardware.Camera.CameraInfo cameraInfo = new
             //	 android.hardware.Camera.CameraInfo();
-            if ( numberOfCamerasInt != null){
-                if (numberOfCamerasInt==1){
-                    mCamera=getCamera(0,clsCamera);
-                }
-                else{
-                    mCamera=getCamera(1,clsCamera);
+            if (numberOfCamerasInt != null) {
+                if (numberOfCamerasInt == 1) {
+                    mCamera = getCamera(0, clsCamera);
+                } else {
+                    mCamera = getCamera(1, clsCamera);
                 }
             }
         } catch (Exception e1) {
@@ -250,13 +245,13 @@ public class SimpleVideoActivity extends Activity implements
     }
 
     @SuppressWarnings("rawtypes")
-    private Camera getCamera(int idx,Class clsCamera) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, ClassNotFoundException{
-        Camera mCamera=null;
+    private Camera getCamera(int idx, Class clsCamera) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+        Camera mCamera = null;
         try {
             Class[] param = new Class[1];
             param[0] = Integer.TYPE;
             Method methodOpen = clsCamera.getMethod("open", param);
-            Integer[] input = { Integer.valueOf(idx) };
+            Integer[] input = {Integer.valueOf(idx)};
             mCamera = (Camera) methodOpen.invoke(null, input);
             PreyLogger.d("Camera.open(camIdx)");
             // mCamera = Camera.open(camIdx);

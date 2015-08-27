@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Created by Carlos Yaconi
- * Copyright 2012 Fork Ltd. All rights reserved.
+ * Copyright 2015 Prey Inc. All rights reserved.
  * License: GPLv3
  * Full license at "/LICENSE"
  ******************************************************************************/
@@ -16,17 +16,17 @@ import com.prey.PreyLogger;
 
 public class StopPreyPreference extends DialogPreference {
 
-	public StopPreyPreference(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public StopPreyPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		super.onClick(dialog, which);
-		PreyLogger.d("Stopping Prey");
-		/*if (which == DialogInterface.BUTTON_POSITIVE) {
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        super.onClick(dialog, which);
+        PreyLogger.d("Stopping Prey");
+        /*if (which == DialogInterface.BUTTON_POSITIVE) {
 			PreyController.stopPrey(getContext());
 		}*/
-	}
+    }
 
 }

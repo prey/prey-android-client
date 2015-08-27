@@ -1,8 +1,11 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.alert;
 
-/**
- * Created by oso on 24-08-15.
- */
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
@@ -13,20 +16,20 @@ import com.prey.net.PreyWebServices;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 
 public class AlertThread extends Thread {
 
     private Context ctx;
     private String description;
 
-    public AlertThread(Context ctx,String description) {
+    public AlertThread(Context ctx, String description) {
         this.ctx = ctx;
         this.description = description;
     }
 
     public void run() {
         try {
+            PreyLogger.d("started alert");
             String title = "title";
             Bundle bundle = new Bundle();
             bundle.putString("title_message", title);
@@ -41,7 +44,7 @@ public class AlertThread extends Thread {
 
             PreyConfig.getPreyConfig(ctx).setNextAlert(true);
 
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","alert","started"));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "started"));
             try {
                 int i = 0;
                 while (!PreyStatus.getInstance().isPreyPopUpOnclick() && i < 10) {
@@ -50,14 +53,12 @@ public class AlertThread extends Thread {
                 }
             } catch (InterruptedException e) {
             }
-
-
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","alert","stopped"));
-
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "stopped"));
             PreyConfig.getPreyConfig(ctx).setLastEvent("alert_started");
+            PreyLogger.d("stopped alert");
         } catch (Exception e) {
-            PreyLogger.e("Error, causa:" + e.getMessage(), e);
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","alert","failed",e.getMessage()));
+            PreyLogger.e("failed alert: " + e.getMessage(), e);
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "failed", e.getMessage()));
         }
     }
 

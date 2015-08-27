@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import android.content.Context;
 
@@ -30,11 +32,10 @@ public class WipeAction extends PreyAction {
 
     @Override
     public void execute(ActionJob actionJob, Context ctx) throws PreyException {
-        PreyLogger.i("Ejecuting WipeAction Action");
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 
         String formatSim = getConfig().get("format_sim");
-        PreyLogger.i("format_sim:"+formatSim);
+        PreyLogger.d("format_sim:"+formatSim);
         try {
             if ("y".equals(formatSim)) {
                 WipeUtil.deleteSD();
@@ -48,9 +49,8 @@ public class WipeAction extends PreyAction {
                 FroyoSupport.getInstance(ctx).wipe();
             }
         } catch (Exception e) {
-            PreyLogger.e("Error Wipe1:" + e.getMessage(), e);
+            PreyLogger.e("Error:" + e.getMessage(), e);
         }
-        PreyLogger.i("Ejecuting WipeAction Action[Finish]");
 
     }
 

@@ -1,13 +1,17 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
 
-/**
- * Created by oso on 24-08-15.
- */
 import android.app.NotificationManager;
 
 import com.prey.PreyStatus;
 import com.prey.PreyVerify;
 import com.prey.R;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -17,7 +21,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.prey.PreyConfig;
 import com.prey.backwardcompatibility.FroyoSupport;
@@ -27,7 +30,6 @@ public class LoginActivity extends PasswordActivity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        // ignore orientation change
         super.onConfigurationChanged(newConfig);
     }
 

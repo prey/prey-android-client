@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.services;
-
-/**
- * Created by oso on 25-08-15.
- */
 
 import android.app.Service;
 import android.content.Context;
@@ -24,9 +26,6 @@ import com.prey.actions.location.PreyLocationManager;
  * This service is intented to be running while Prey is active. While
  * running, it will be updating the last location available in PreyConfig
  * persitent storage
- *
- * @author Carlos Yaconi H.
- *
  */
 public class LocationService extends Service {
 
@@ -71,14 +70,13 @@ public class LocationService extends Service {
         }
 
 
-
         PreyLogger.d("LocationService has been started...");
     }
 
     @Override
     public void onDestroy() {
         //PreyLogger.d("Location Serviceis going to be stopped");
-        if (androidLocationManager != null){
+        if (androidLocationManager != null) {
             androidLocationManager.removeUpdates(gpsLocationListener);
             androidLocationManager.removeUpdates(networkLocationListener);
         }
@@ -95,13 +93,13 @@ public class LocationService extends Service {
     }
 
     private void setNewLocation(Location newLocation) {
-        PreyLogger.d("["+newLocation.getProvider() +"] Fix found!. Accuracy: [" + newLocation.getAccuracy()+"]");
+        PreyLogger.d("[" + newLocation.getProvider() + "] Fix found!. Accuracy: [" + newLocation.getAccuracy() + "]");
 
-        if (lastRegisteredLocation == null){
+        if (lastRegisteredLocation == null) {
             //PreyLogger.d("-----> First fix. Set as last location!");
             lastRegisteredLocation = newLocation;
         } else {
-            if (newLocation.getTime() - lastRegisteredLocation.getTime()  > PreyConfig.LAST_LOCATION_MAX_AGE) {
+            if (newLocation.getTime() - lastRegisteredLocation.getTime() > PreyConfig.LAST_LOCATION_MAX_AGE) {
                 //Last registered fix was set more that 2 minutes ago. It's older so must be updated!
                 //PreyLogger.d("-----> Old fix has expired (older than 2 minutes). Setting new fix as last location!");
                 lastRegisteredLocation = newLocation;

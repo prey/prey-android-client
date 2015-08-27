@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +16,7 @@ import android.content.res.Resources.NotFoundException;
 public class FileConfigReader {
 
     private static FileConfigReader _instance = null;
-    Properties properties;
+    private Properties properties;
 
     private FileConfigReader(Context ctx) {
         try {
@@ -23,7 +25,7 @@ public class FileConfigReader {
             InputStream is = ctx.getResources().openRawResource(R.raw.config);
             properties.load(is);
             is.close();
-            PreyLogger.d("Config: "+properties);
+            PreyLogger.d("Config: " + properties);
 
         } catch (NotFoundException e) {
             PreyLogger.e("Config file wasn't found", e);
@@ -32,70 +34,74 @@ public class FileConfigReader {
         }
     }
 
-    public static FileConfigReader getInstance(Context ctx){
+    public static FileConfigReader getInstance(Context ctx) {
         if (_instance == null)
             _instance = new FileConfigReader(ctx);
         return _instance;
 
     }
 
-    public String getPreyCampaign(){
+    public String getPreyCampaign() {
         return properties.getProperty("prey-campaign");
     }
 
-    public String getPreyPanel(){
+    public String getPreyPanel() {
         return properties.getProperty("prey-panel");
     }
 
-    public String getAgreementId(){
+    public String getAgreementId() {
         return properties.getProperty("agreement-id");
     }
-    public String getGcmId(){
+
+    public String getGcmId() {
         return properties.getProperty("gcm-id");
     }
-    public String getGcmIdPrefix(){
+
+    public String getGcmIdPrefix() {
         return properties.getProperty("gcm-id-prefix");
     }
 
-    public String getc2dmAction(){
+    public String getc2dmAction() {
         return properties.getProperty("c2dm-action");
     }
-    public String getc2dmMessageSync(){
+
+    public String getc2dmMessageSync() {
         return properties.getProperty("c2dm-message-sync");
     }
 
-    public String getPreyDomain(){
+    public String getPreyDomain() {
         return properties.getProperty("prey-domain");
     }
 
-    public String getPreySubdomain(){
+    public String getPreySubdomain() {
         return properties.getProperty("prey-subdomain");
     }
 
-    public String getPreyUninstall(){
+    public String getPreyUninstall() {
         return properties.getProperty("prey-uninstall");
     }
 
-    public String getPreyMinorVersion(){
+    public String getPreyMinorVersion() {
         return properties.getProperty("prey-minor-version");
     }
 
     public boolean isAskForPassword() {
         return Boolean.parseBoolean(properties.getProperty("ask-for-password"));
     }
+
     public boolean isLogEnabled() {
         return Boolean.parseBoolean(properties.getProperty("log-enabled"));
     }
 
-    public String getEmailFeedback(){
+    public String getEmailFeedback() {
         return properties.getProperty("email-feedback");
     }
 
-    public String getSubjectFeedback(){
+    public String getSubjectFeedback() {
         return properties.getProperty("subject-feedback");
     }
 
-    public String getApiV2(){
+    public String getApiV2() {
         return properties.getProperty("api-v2");
     }
 

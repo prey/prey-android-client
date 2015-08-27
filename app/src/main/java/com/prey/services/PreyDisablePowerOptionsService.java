@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.services;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import android.annotation.TargetApi;
 import android.app.Service;
@@ -34,7 +36,7 @@ public class PreyDisablePowerOptionsService extends Service {
         try {
             unregisterReceiver(mReceiver);
         } catch (IllegalArgumentException e) {
-            PreyLogger.e("Error, cause:"+e.getMessage(),e);
+            PreyLogger.e("Error, cause:" + e.getMessage(), e);
         }
         stopForeground(true);
     }

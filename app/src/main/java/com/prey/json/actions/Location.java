@@ -1,25 +1,23 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.json.actions;
 
-/**
- * Created by oso on 25-08-15.
- */
-
 import java.util.List;
-
 
 import org.json.JSONObject;
 
 import android.content.Context;
 
 import com.prey.PreyLogger;
-
 import com.prey.actions.HttpDataService;
 import com.prey.actions.location.LocationThread;
 import com.prey.actions.location.LocationUtil;
-
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
-
 
 public class Location extends JsonAction{
 
@@ -27,7 +25,6 @@ public class Location extends JsonAction{
 
     public List<HttpDataService> report(Context ctx, List<ActionResult> list, JSONObject parameters) {
         List<HttpDataService> listResult=super.report(ctx, list, parameters);
-        PreyLogger.d("Ejecuting Location reports. DONE!");
         return listResult;
     }
 
@@ -43,7 +40,7 @@ public class Location extends JsonAction{
         return listResult;
     }
 
-    public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters){
+    public HttpDataService run(Context ctx, List<ActionResult> list, JSONObject parameters){
         HttpDataService data = LocationUtil.dataLocation(ctx);
         return data;
     }
@@ -61,7 +58,6 @@ public class Location extends JsonAction{
                     PreyLogger.e("Error, causa:" + e1.getMessage(), e1);
                 }
             }
-
             try {
                 if (phoneNumber != null && !"".equals(phoneNumber)) {
                     new LocationThread(ctx, phoneNumber).start();

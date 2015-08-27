@@ -1,8 +1,11 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.json.actions;
 
-/**
- * Created by oso on 24-08-15.
- */
 import java.util.List;
 
 import org.json.JSONObject;
@@ -15,28 +18,27 @@ import com.prey.actions.alarm.AlarmThread;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
 
+public class Alarm extends JsonAction {
 
-public class Alarm extends JsonAction{
-
-    public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters){
+    public HttpDataService run(Context ctx, List<ActionResult> list, JSONObject parameters) {
         return null;
     }
 
-    public void start(Context ctx,List<ActionResult> lista,JSONObject parameters){
-        String sound=null;
+    public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
+        String sound = null;
         try {
             sound = parameters.getString("sound");
         } catch (Exception e) {
         }
-        new AlarmThread(ctx,sound).start();
+        new AlarmThread(ctx, sound).start();
     }
 
-    public void stop(Context ctx, List<ActionResult> lista, JSONObject options) {
+    public void stop(Context ctx, List<ActionResult> list, JSONObject options) {
         PreyStatus.getInstance().setAlarmStop();
     }
 
-    public void sms(Context ctx,List<ActionResult> lista,JSONObject parameters){
-        this.start(ctx,lista,parameters);
+    public void sms(Context ctx, List<ActionResult> list, JSONObject parameters) {
+        this.start(ctx, list, parameters);
     }
 
 }

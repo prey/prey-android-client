@@ -1,16 +1,16 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 25-08-15.
- */
 
 import java.io.IOException;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.hardware.Camera;
-import android.hardware.Camera.Parameters;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,15 +19,14 @@ import android.view.SurfaceView;
 
 import com.prey.PreyLogger;
 import com.prey.R;
-import com.prey.activities.VideoActivity;
 
 public class VideoActivity extends Activity implements SurfaceHolder.Callback {
 
-    MediaRecorder recorder;
-    SurfaceHolder holder;
-    boolean recording = false;
-    public static String filePath = Environment.getExternalStorageDirectory().getPath() + "/yerp.mp4" ;
-    public static Camera camera=null;
+    private MediaRecorder recorder;
+    private SurfaceHolder holder;
+    private boolean recording = false;
+    public static String filePath = Environment.getExternalStorageDirectory().getPath() + "/yerp.mp4";
+    public static Camera camera = null;
     public static VideoActivity activity = null;
 
     @Override
@@ -42,13 +41,9 @@ public class VideoActivity extends Activity implements SurfaceHolder.Callback {
         holder = cameraView.getHolder();
         holder.addCallback(this);
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        activity=this;
-
-
-
+        activity = this;
 
     }
-
 
 
     private void initRecorder() {
@@ -81,14 +76,15 @@ public class VideoActivity extends Activity implements SurfaceHolder.Callback {
         }
     }
 
-    public void start( ) {
+    public void start() {
 
         prepareRecorder();
         recording = true;
         recorder.start();
 
     }
-    public void stop( ) {
+
+    public void stop() {
         PreyLogger.i("stop");
         recorder.stop();
         recording = false;
@@ -98,7 +94,6 @@ public class VideoActivity extends Activity implements SurfaceHolder.Callback {
 
 
     }
-
 
 
     public void surfaceCreated(SurfaceHolder holder) {

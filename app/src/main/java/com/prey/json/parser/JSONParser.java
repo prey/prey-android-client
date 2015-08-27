@@ -1,13 +1,13 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.json.parser;
-
-/**
- * Created by oso on 24-08-15.
- */
-
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;

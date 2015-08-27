@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities.frames;
 
 import android.os.Bundle;
@@ -10,24 +16,13 @@ import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.activities.WelcomeActivity;
 
-/**
- * Created by oso on 19-08-15.
- */
 public class DeviceReadyFrame  extends Fragment {
 
-
     private WelcomeActivity welcome;
-
-
-
-
-
-
 
     public void setActivity(WelcomeActivity welcome) {
         this.welcome = welcome;
     }
-
 
     @Override
     public void onResume() {
@@ -43,7 +38,6 @@ public class DeviceReadyFrame  extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Defines the xml file for the fragment
         View view = inflater.inflate(R.layout.device_ready, container, false);
         return view;
     }

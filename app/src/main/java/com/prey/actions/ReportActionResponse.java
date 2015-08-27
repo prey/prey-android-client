@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import java.util.HashMap;
 
@@ -18,9 +20,8 @@ public class ReportActionResponse {
     private String postUrl;
 
     public void addAction(String actionName, String active) {
-        //boolean isActive = Boolean.valueOf(active);
+
         PreyAction action = PreyAction.getActionFromName(actionName);
-        // if (isActive && action != null)
         if (action != null)
             this.actionsToPerform.put(actionName, action);
     }

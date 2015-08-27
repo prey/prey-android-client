@@ -1,10 +1,10 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 25-08-15.
- */
-
-import java.util.UUID;
 
 import org.apache.http.protocol.HTTP;
 
@@ -53,7 +53,6 @@ public class FormFeedbackActivity extends PreyActivity {
                 alert.setView(textEntryView);
 
 
-
                 final EditText input = (EditText) textEntryView.findViewById(R.id.feedback_form_field_comment);
 
                 alert.setPositiveButton(R.string.feedback_form_button2, new DialogInterface.OnClickListener() {
@@ -68,15 +67,15 @@ public class FormFeedbackActivity extends PreyActivity {
 
                     public void onClick(DialogInterface dialog, int id) {
                         if (input != null) {
-                            Context ctx=getApplicationContext();
-                            String emailFeedback=FileConfigReader.getInstance(getApplicationContext()).getEmailFeedback();
-                            StringBuffer subject=new StringBuffer();
+                            Context ctx = getApplicationContext();
+                            String emailFeedback = FileConfigReader.getInstance(getApplicationContext()).getEmailFeedback();
+                            StringBuffer subject = new StringBuffer();
                             subject.append(FileConfigReader.getInstance(ctx).getSubjectFeedback()).append(" ");
                             subject.append(PreyUtils.randomAlphaNumeric(7).toUpperCase());
                             Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                             intent.setType(HTTP.PLAIN_TEXT_TYPE);
-                            intent.putExtra(Intent.EXTRA_EMAIL,  new String[]{emailFeedback});
-                            intent.putExtra(Intent.EXTRA_SUBJECT, subject.toString() );
+                            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{emailFeedback});
+                            intent.putExtra(Intent.EXTRA_SUBJECT, subject.toString());
                             intent.putExtra(Intent.EXTRA_TEXT, input.getText().toString());
                             Intent chooser = Intent.createChooser(intent, ctx.getText(R.string.feedback_form_send_email));
                             startActivity(chooser);

@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import java.util.Iterator;
 import java.util.Map;
@@ -30,7 +32,6 @@ public class PopUpAlertAction extends PreyAction {
 
     @Override
     public void execute(ActionJob actionJob, Context ctx) {
-        // Resolver como obtener el texto que viene en la configuraci�n
         Bundle bundle = new Bundle();
         for (Iterator<Map.Entry<String, String>> it = getConfig().entrySet().iterator(); it.hasNext();) {
             Map.Entry<String, String> entry = it.next();

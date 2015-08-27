@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Created by Carlos Yaconi
- * Copyright 2012 Fork Ltd. All rights reserved.
+ * Copyright 2015 Prey Inc. All rights reserved.
  * License: GPLv3
  * Full license at "/LICENSE"
  ******************************************************************************/
@@ -21,69 +21,71 @@ import com.prey.activities.LoginActivity;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 import com.prey.R;
+
 public class DetachDevicePreferences extends DialogPreference {
-	Context ctx = null;
+    Context ctx = null;
 
-	public DetachDevicePreferences(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		this.ctx = context;
-	}
+    public DetachDevicePreferences(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.ctx = context;
+    }
 
-	public DetachDevicePreferences(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		this.ctx = context;
-	}
+    public DetachDevicePreferences(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.ctx = context;
+    }
 
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		super.onClick(dialog, which);
-		if (which == DialogInterface.BUTTON_POSITIVE) {
-			new DetachDevice().execute();
-		}
-	}
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        super.onClick(dialog, which);
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            new DetachDevice().execute();
+        }
+    }
 
-	public class DetachDevice extends AsyncTask<Void, Void, Void> {
+    public class DetachDevice extends AsyncTask<Void, Void, Void> {
 
-		private String error = null;
-		ProgressDialog progressDialog = null;
+        private String error = null;
+        ProgressDialog progressDialog = null;
 
-		@Override
-		protected void onPreExecute() {
-			progressDialog = new ProgressDialog(getContext());
-			progressDialog.setMessage(getContext().getText(R.string.preferences_detach_dettaching_message).toString());
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(false);
-			progressDialog.show();
-		}
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(getContext());
+            progressDialog.setMessage(getContext().getText(R.string.preferences_detach_dettaching_message).toString());
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
 
-		@Override
-		protected Void doInBackground(Void... unused) {
-			try {
-				PreyConfig.getPreyConfig(getContext()).unregisterC2dm(false);
-				PreyConfig.getPreyConfig(getContext()).setSecurityPrivilegesAlreadyPrompted(false);
-				PreyWebServices.getInstance().deleteDevice(ctx);
-				PreyConfig.getPreyConfig(getContext()).wipeData();
+        @Override
+        protected Void doInBackground(Void... unused) {
+            try {
+                PreyConfig.getPreyConfig(getContext()).unregisterC2dm(false);
+                PreyConfig.getPreyConfig(getContext()).setSecurityPrivilegesAlreadyPrompted(false);
+                PreyWebServices.getInstance().deleteDevice(ctx);
+                PreyConfig.getPreyConfig(getContext()).wipeData();
 
-			} catch (PreyException e) {
-				e.printStackTrace();
-				error = e.getMessage();
-			}
-			return null;
-		}
+            } catch (PreyException e) {
+                e.printStackTrace();
+                error = e.getMessage();
+            }
+            return null;
+        }
 
-		@Override
-		protected void onPostExecute(Void unused) {
-			try{
-			progressDialog.dismiss();
-			}catch(Exception e){}
-			if (error != null) {
-				Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
-				showDialog(new Bundle());
-			} else {
-				Intent welcome = new Intent(getContext(), LoginActivity.class);
-				getContext().startActivity(welcome);
-			}
-		}
+        @Override
+        protected void onPostExecute(Void unused) {
+            try {
+                progressDialog.dismiss();
+            } catch (Exception e) {
+            }
+            if (error != null) {
+                Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+                showDialog(new Bundle());
+            } else {
+                Intent welcome = new Intent(getContext(), LoginActivity.class);
+                getContext().startActivity(welcome);
+            }
+        }
 
-	}
+    }
 }

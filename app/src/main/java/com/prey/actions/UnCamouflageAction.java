@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import java.util.List;
 
@@ -10,7 +12,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.prey.PreyLogger;
 import com.prey.actions.camouflage.Camouflage;
 import com.prey.actions.observer.ActionJob;
 import com.prey.actions.observer.ActionResult;
@@ -33,13 +34,10 @@ public class UnCamouflageAction extends PreyAction {
 
     @Override
     public void execute(ActionJob actionJob, Context ctx) throws PreyException {
-        PreyLogger.i("Ejecuting UnCamouflageAction Action");
         List<ActionResult> lista=null;
         JSONObject parameters=null;
         Camouflage.unhide(ctx, lista, parameters);
-        PreyLogger.i("Ejecuting UnCamouflageAction Action[Finish]");
     }
-
 
     @Override
     public boolean isSyncAction() {
@@ -50,8 +48,6 @@ public class UnCamouflageAction extends PreyAction {
     public int getPriority() {
         return UN_CAMOUFLAGE_PRIORITY;
     }
-
-
 
 }
 

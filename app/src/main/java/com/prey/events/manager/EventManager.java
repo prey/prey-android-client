@@ -1,8 +1,11 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.events.manager;
 
-/**
- * Created by oso on 24-08-15.
- */
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -36,27 +39,22 @@ public class EventManager {
         boolean isConnectionExists = false;
         boolean isOnline = false;
 
-        String ssid=PreyWifiManager.getInstance(ctx).getSSID();
+        String ssid = PreyWifiManager.getInstance(ctx).getSSID();
 
+        String previousSsid = PreyConfig.getPreyConfig(ctx).getPreviousSsid();
 
-
-        String previousSsid=PreyConfig.getPreyConfig(ctx).getPreviousSsid();
-
-        boolean validation=true;
-        if (Event.WIFI_CHANGED.equals(event.getName())){
-            if (ssid!=null&&!"".equals(ssid)&&!ssid.equals(previousSsid)&&!"<unknown ssid>".equals(ssid)&&!"0x".equals(ssid)){
-                validation=true;
-            }else{
-                validation=false;
+        boolean validation = true;
+        if (Event.WIFI_CHANGED.equals(event.getName())) {
+            if (ssid != null && !"".equals(ssid) && !ssid.equals(previousSsid) && !"<unknown ssid>".equals(ssid) && !"0x".equals(ssid)) {
+                validation = true;
+            } else {
+                validation = false;
             }
         }
 
-
-
-
-        if (validation){
-            PreyLogger.i("name:"+event.getName()+" info:"+event.getInfo()+" ssid["+ssid+"] previousSsid["+previousSsid+"]");
-            PreyLogger.i("change PreviousSsid:"+ssid);
+        if (validation) {
+            PreyLogger.i("name:" + event.getName() + " info:" + event.getInfo() + " ssid[" + ssid + "] previousSsid[" + previousSsid + "]");
+            PreyLogger.i("change PreviousSsid:" + ssid);
             PreyConfig.getPreyConfig(ctx).setPreviousSsid(ssid);
             try {
                 isConnectionExists = PreyConfig.getPreyConfig(ctx).isConnectionExists();
@@ -93,10 +91,6 @@ public class EventManager {
 
     }
 
-
-
-
-
     public void receivesData(String key, JSONObject data) {
         mapData.put(key, data);
         if (mapData.isCompleteData()) {
@@ -110,8 +104,8 @@ public class EventManager {
             PreyLogger.d("jsonObjectStatus: " + jsonObjectStatus.toString());
             if (event != null) {
                 if (PreyWifiManager.getInstance(ctx).isOnline()) {
-                    String lastEvent=PreyConfig.getPreyConfig(ctx).getLastEvent();
-                    if(!Event.WIFI_CHANGED.equals(event.getName()) || !event.getName().equals(lastEvent)){
+                    String lastEvent = PreyConfig.getPreyConfig(ctx).getLastEvent();
+                    if (!Event.WIFI_CHANGED.equals(event.getName()) || !event.getName().equals(lastEvent)) {
                         PreyConfig.getPreyConfig(ctx).setLastEvent(event.getName());
                         PreyLogger.d("event name[" + this.event.getName() + "], info[" + this.event.getInfo() + "]");
                         new EventThread(ctx, event, jsonObjectStatus).start();
@@ -120,7 +114,6 @@ public class EventManager {
             }
         }
     }
-
 
     private boolean isThisDeviceAlreadyRegisteredWithPrey(Context ctx) {
         return PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey();

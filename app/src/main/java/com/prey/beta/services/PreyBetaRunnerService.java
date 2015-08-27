@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.beta.services;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import android.app.NotificationManager;
 import android.app.Service;
@@ -14,7 +16,6 @@ import android.os.IBinder;
 import com.prey.PreyLogger;
 import com.prey.beta.actions.PreyBetaActionsRunnner;
 import com.prey.actions.observer.ActionsController;
-
 
 /**
  * This class wraps Prey execution as a services, allowing the OS to kill it and
@@ -28,7 +29,6 @@ public class PreyBetaRunnerService extends Service {
 
     private final IBinder mBinder = new LocalBinder();
     public static boolean running = false;
-
 
     /**
      * Class for clients to access. Because we know this service always runs in

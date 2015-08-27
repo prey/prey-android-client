@@ -1,14 +1,16 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 25-08-15.
- */
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 
-
 import com.prey.R;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +22,7 @@ public class PermissionInformationActivity extends PreyActivity {
 
     private static final int SECURITY_PRIVILEGES = 10;
     private String congratsMessage;
-    private boolean first= false;
+    private boolean first = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +30,6 @@ public class PermissionInformationActivity extends PreyActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Bundle bundle = getIntent().getExtras();
         congratsMessage = bundle.getString("message");
-
     }
 
     @Override
@@ -39,10 +40,9 @@ public class PermissionInformationActivity extends PreyActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        PreyLogger.d("first:"+first);
+        PreyLogger.d("first:" + first);
         if (getPreyConfig().isFroyoOrAbove() && !FroyoSupport.getInstance(this).isAdminActive() && !first) {
             first = true;
-            //PreyLogger.i("Is froyo or above!!");
             Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
             startActivityForResult(intent, SECURITY_PRIVILEGES);
         } else {

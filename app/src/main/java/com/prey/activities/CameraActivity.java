@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 25-08-15.
- */
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,7 +16,7 @@ import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.actions.PreyStatus;
 
-public class CameraActivity  extends PreyActivity {
+public class CameraActivity extends PreyActivity {
 
     private static final int SHOW_POPUP = 0;
     private String message = null;

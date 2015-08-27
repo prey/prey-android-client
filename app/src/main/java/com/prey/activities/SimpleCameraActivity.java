@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -47,7 +49,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
         } else {
             focus = "front";
         }
-        camera=getCamera(focus);
+        camera = getCamera(focus);
         if (camera != null) {
             try {
                 camera.startPreview();
@@ -63,9 +65,9 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
         activity = this;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private Camera getCamera(String focus) {
-        PreyLogger.d("getCamera("+focus+")");
+        PreyLogger.d("getCamera(" + focus + ")");
         Camera mCamera = null;
         try {
             Class clsCamera;
@@ -86,13 +88,14 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
             if (mCamera == null) {
                 mCamera = Camera.open();
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         return mCamera;
     }
 
-    public static  Integer getNumberOfCameras(){
-        Integer numberOfCamerasInt =null;
-        try{
+    public static Integer getNumberOfCameras() {
+        Integer numberOfCamerasInt = null;
+        try {
 
             Class noparams[] = {};
             Class clsCamera;
@@ -104,14 +107,14 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
         return numberOfCamerasInt;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private Camera getCamera(int idx, Class clsCamera) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
         Camera mCamera = null;
         try {
             Class[] param = new Class[1];
             param[0] = Integer.TYPE;
             Method methodOpen = clsCamera.getMethod("open", param);
-            Integer[] input = { Integer.valueOf(idx) };
+            Integer[] input = {Integer.valueOf(idx)};
             mCamera = (Camera) methodOpen.invoke(null, input);
             PreyLogger.d("Camera.open(camIdx)");
             // mCamera = Camera.open(camIdx);
@@ -122,8 +125,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
     }
 
 
-
-    public void takePicture(Context ctx,String focus) {
+    public void takePicture(Context ctx, String focus) {
         try {
             if (camera != null) {
                 Camera.Parameters parameters = camera.getParameters();
@@ -146,13 +148,13 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
                         parameters.set("rotation", 0);
                     }
                 }
-                if(PreyConfig.getPreyConfig(ctx).isEclairOrAbove()){
-                    parameters=setParameters1(parameters);
+                if (PreyConfig.getPreyConfig(ctx).isEclairOrAbove()) {
+                    parameters = setParameters1(parameters);
                 }
                 // parameters.setFocusMode(Parameters.FOCUS_MODE_AUTO);
                 parameters.set("iso", 400);
-                if(PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()){
-                    parameters=setParameters2(parameters);
+                if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {
+                    parameters = setParameters2(parameters);
                 }
 
                 camera.setParameters(parameters);
@@ -172,7 +174,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
     }
 
     @TargetApi(5)
-    private Camera.Parameters setParameters1(Camera.Parameters parameters){
+    private Camera.Parameters setParameters1(Camera.Parameters parameters) {
         parameters.setFlashMode(Parameters.FLASH_MODE_OFF);
         parameters.setWhiteBalance(Parameters.WHITE_BALANCE_AUTO);
         parameters.setSceneMode(Parameters.SCENE_MODE_AUTO);
@@ -180,7 +182,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
     }
 
     @TargetApi(8)
-    private Camera.Parameters setParameters2(Camera.Parameters parameters){
+    private Camera.Parameters setParameters2(Camera.Parameters parameters) {
         parameters.setExposureCompensation(parameters.getMaxExposureCompensation());
         return parameters;
     }

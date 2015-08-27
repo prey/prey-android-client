@@ -1,10 +1,12 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.alarm;
 
-/**
- * Created by oso on 24-08-15.
- */
 import android.content.Context;
-
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
@@ -20,27 +22,25 @@ public class AlarmThread extends Thread {
     private Context ctx;
     private String sound;
 
-    public AlarmThread(Context ctx,String sound) {
+    public AlarmThread(Context ctx, String sound) {
         this.ctx = ctx;
-        this.sound=sound;
+        this.sound = sound;
     }
 
     public void run() {
-        PreyLogger.d("Ejecuting Alarm Action");
-        MediaPlayer mp =null;
-        boolean start=false;
+        PreyLogger.d("started alarm");
+        MediaPlayer mp = null;
+        boolean start = false;
         try {
             PreyStatus.getInstance().setAlarmStart();
             final AudioManager audio = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
             int max = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
             final int setVolFlags = AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE | AudioManager.FLAG_VIBRATE;
-            PreyLogger.d("volumenInicial:"+max);
             audio.setStreamVolume(AudioManager.STREAM_MUSIC, max, setVolFlags);
 
-
-            if("alarm".equals(sound))
+            if ("alarm".equals(sound))
                 mp = MediaPlayer.create(ctx, R.raw.alarm);
-            else if("ring".equals(sound))
+            else if ("ring".equals(sound))
                 mp = MediaPlayer.create(ctx, R.raw.ring);
             else if ("modem".equals(sound))
                 mp = MediaPlayer.create(ctx, R.raw.modem);
@@ -48,12 +48,12 @@ public class AlarmThread extends Thread {
                 mp = MediaPlayer.create(ctx, R.raw.siren);
 
             mp.start();
-            Mp3OnCompletionListener mp3Listener=new Mp3OnCompletionListener();
+            Mp3OnCompletionListener mp3Listener = new Mp3OnCompletionListener();
             mp.setOnCompletionListener(mp3Listener);
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","started"));
-            start=true;
-            int i=0;
-            while(PreyStatus.getInstance().isAlarmStart()&& i<40 ){
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alarm", "started"));
+            start = true;
+            int i = 0;
+            while (PreyStatus.getInstance().isAlarmStart() && i < 40) {
                 sleep(1000);
                 i++;
             }
@@ -62,24 +62,23 @@ public class AlarmThread extends Thread {
             PreyConfig.getPreyConfig(ctx).setLastEvent("alarm_finished");
 
         } catch (Exception e) {
-            PreyLogger.i("Error executing Mp3PlayerAction " + e.getMessage());
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","failed",e.getMessage()));
-        }finally{
-            if(mp!=null)
+            PreyLogger.i("failed alarm: " + e.getMessage());
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alarm", "failed", e.getMessage()));
+        } finally {
+            if (mp != null)
                 mp.release();
         }
-        if (start){
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,UtilJson.makeMapParam("start","alarm","stopped"));
+        if (start) {
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alarm", "stopped"));
         }
-        PreyLogger.d("Ejecuting Mp3PlayerAction Action[Finish]");
+        PreyLogger.d("stopped alarm");
     }
 
-    class Mp3OnCompletionListener implements MediaPlayer.OnCompletionListener{
-
+    class Mp3OnCompletionListener implements MediaPlayer.OnCompletionListener {
 
         public void onCompletion(MediaPlayer mp) {
-            PreyLogger.d("Stop Playing MP3. Mp3PlayerAction Action. DONE!");
             mp.stop();
+            PreyLogger.d("stop alarm");
             PreyStatus.getInstance().setAlarmStop();
         }
     }

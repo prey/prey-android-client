@@ -1,15 +1,15 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.battery;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import java.util.HashMap;
 
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
-
-
 
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
@@ -19,11 +19,9 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Build;
 
-
-
 public class BatteryInformation {
 
-    public Battery battery=null;
+    public Battery battery = null;
 
     private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
         @TargetApi(Build.VERSION_CODES.ECLAIR)
@@ -55,7 +53,7 @@ public class BatteryInformation {
             battery.setTemperature(temperature);
             battery.setVoltage(voltage);
             battery.setCharging(charging);
-            PreyLogger.d("voltage:"+voltage+" status:"+status+" technology:"+technology+" temperature:"+voltage);
+            PreyLogger.d("voltage:" + voltage + " status:" + status + " technology:" + technology + " temperature:" + voltage);
 
             arg0.unregisterReceiver(mBatInfoReceiver);
         }
@@ -63,18 +61,16 @@ public class BatteryInformation {
     };
 
 
-    public HttpDataService getInformation (Context ctx) {
+    public HttpDataService getInformation(Context ctx) {
 
-        battery=null;
+        battery = null;
 
-
-        //ctx.getApplicationContext().registerReceiver(batteryInfoReceiver,	new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
         ctx.getApplicationContext().registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
         try {
             int i = 0;
-            while (battery == null && i <10) {
+            while (battery == null && i < 10) {
                 Thread.sleep(1000);
                 i++;
             }
@@ -82,13 +78,13 @@ public class BatteryInformation {
             PreyLogger.d("Error, causa:" + e.getMessage());
         }
 
-        HttpDataService data =null;
+        HttpDataService data = null;
 
 
-        if (battery!=null){
+        if (battery != null) {
             data = new HttpDataService("battery_status");
             HashMap<String, String> parametersMap = new HashMap<String, String>();
-            parametersMap.put("state", battery.isCharging()?"charging":"discharging");
+            parametersMap.put("state", battery.isCharging() ? "charging" : "discharging");
             parametersMap.put("remaining", Double.toString(battery.getLevel()));
             data.getDataList().putAll(parametersMap);
             data.setList(true);
@@ -133,7 +129,7 @@ public class BatteryInformation {
     };
 
     @TargetApi(Build.VERSION_CODES.ECLAIR)
-    public Battery makeBattery(Intent intent){
+    public Battery makeBattery(Intent intent) {
         int health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, 0);
         int iconSmall = intent.getIntExtra(BatteryManager.EXTRA_ICON_SMALL, 0);
         int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);

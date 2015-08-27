@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.picture;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -27,7 +29,7 @@ public class PictureUtil {
             data = new HttpDataService(CameraAction.DATA_ID);
             data.setList(true);
             if (frontPicture != null) {
-                PreyLogger.d("dataImagen front data length=" + frontPicture.length);
+                PreyLogger.d("front data length=" + frontPicture.length);
                 InputStream file = new ByteArrayInputStream(frontPicture);
                 EntityFile entityFile = new EntityFile();
                 entityFile.setFile(file);
@@ -36,15 +38,13 @@ public class PictureUtil {
                 entityFile.setType("picture");
                 entityFile.setLength(frontPicture.length);
                 data.addEntityFile(entityFile);
-            } else {
-                PreyLogger.d("dataImagen front null");
             }
             Integer numberOfCameras = SimpleCameraActivity.getNumberOfCameras();
             if (numberOfCameras!=null&&numberOfCameras > 1) {
                 Thread.sleep(6000);
                 byte[] backPicture = getPicture(ctx, "back");
                 if (backPicture != null) {
-                    PreyLogger.d("dataImagen back data length=" + backPicture.length);
+                    PreyLogger.d("back data length=" + backPicture.length);
                     InputStream file = new ByteArrayInputStream(backPicture);
                     EntityFile entityFile = new EntityFile();
                     entityFile.setFile(file);
@@ -53,12 +53,10 @@ public class PictureUtil {
                     entityFile.setType("screenshot");
                     entityFile.setLength(backPicture.length);
                     data.addEntityFile(entityFile);
-                } else {
-                    PreyLogger.i("dataImagen back null");
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
+            PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
         }
         return data;
     }
@@ -82,14 +80,10 @@ public class PictureUtil {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
             }
-            PreyLogger.d("esperando antes take picture[" + i + "]");
             i++;
         }
         if (SimpleCameraActivity.activity != null) {
-            PreyLogger.d("takePicture activity no nulo");
             SimpleCameraActivity.activity.takePicture(ctx,focus);
-        } else {
-            PreyLogger.d("takePicture activity nulo");
         }
         try {
             Thread.sleep(4000);
@@ -103,10 +97,9 @@ public class PictureUtil {
             while (SimpleCameraActivity.activity != null && SimpleCameraActivity.dataImagen == null && i < 5) {
                 Thread.sleep(2000);
                 i++;
-                PreyLogger.d("falta imagen[" + i + "]");
             }
         } catch (InterruptedException e) {
-            PreyLogger.i("Error, causa:" + e.getMessage());
+            PreyLogger.i("Error:" + e.getMessage());
         }
         byte[] out=null;
         if (SimpleCameraActivity.activity != null) {

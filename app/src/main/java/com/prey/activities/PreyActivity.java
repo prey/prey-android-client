@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
 
 import android.app.Activity;
@@ -8,20 +14,14 @@ import android.view.Window;
 import com.prey.PreyConfig;
 import com.prey.PreyUtils;
 
-/**
- * Created by oso on 24-08-15.
- */
 public class PreyActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
     }
-
 
     @Override
     protected void onResume() {
@@ -33,7 +33,7 @@ public class PreyActivity extends Activity {
         super.onDestroy();
     }
 
-    protected PreyConfig getPreyConfig(){
+    protected PreyConfig getPreyConfig() {
         return PreyConfig.getPreyConfig(PreyActivity.this);
     }
 

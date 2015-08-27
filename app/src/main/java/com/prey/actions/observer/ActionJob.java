@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.observer;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import java.util.Random;
 
@@ -12,13 +14,6 @@ import com.prey.PreyLogger;
 import com.prey.actions.PreyAction;
 import com.prey.exceptions.PreyException;
 
-/**
- * Class that represent the abstraction of a PreyAction execution. This class
- * implements <code>Runnable</code> so its started on its own Thread.
- *
- * @author Carlos
- *
- */
 public class ActionJob implements Runnable {
 
     private long id;

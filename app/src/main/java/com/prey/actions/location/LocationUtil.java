@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.location;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,8 +15,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.prey.PreyLogger;
 import com.prey.PreyPhone;
 import com.prey.PreyPhone.Wifi;
@@ -60,7 +60,6 @@ public class LocationUtil {
                 sendNotify(ctx,"Error");
             }
         } catch (Exception e) {
-            //PreyLogger.e("Error causa:" + e.getMessage(), e);
             sendNotify(ctx,"Error");
         }
         return data;
@@ -122,7 +121,6 @@ public class LocationUtil {
                 preyLocation = getDataLocationWifi(ctx);
             }
         }
-
         return preyLocation;
     }
 
@@ -152,7 +150,6 @@ public class LocationUtil {
             }
             ctx.stopService(intent);
         } catch (Exception e) {
-            PreyLogger.e("Error causa:" + e.getMessage(), e);
             Map<String, String> parms = UtilJson.makeMapParam("get", "location", "failed", e.getMessage());
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
         } finally {

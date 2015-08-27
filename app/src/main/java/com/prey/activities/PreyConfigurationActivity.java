@@ -1,12 +1,13 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -19,8 +20,8 @@ import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.R;
-public class PreyConfigurationActivity extends PreferenceActivity {
 
+public class PreyConfigurationActivity extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,23 +36,24 @@ public class PreyConfigurationActivity extends PreferenceActivity {
     protected void onResume() {
         super.onResume();
         // TODO Auto-generated method stub
-        if (!PreyStatus.getInstance().isPreyConfigurationActivityResume()){
+        if (!PreyStatus.getInstance().isPreyConfigurationActivityResume()) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
-            try{
+            try {
                 startActivity(intent);
-            }catch(Exception e){}
+            } catch (Exception e) {
+            }
             finish();
 
         }
-        try{
-            if(PreyEmail.getEmail(getApplicationContext())!=null){
+        try {
+            if (PreyEmail.getEmail(getApplicationContext()) != null) {
                 PreferenceCategory mCategory = (PreferenceCategory) findPreference("PREFS_CAT_PREFS");
                 Preference p2 = findPreference(PreyConfig.PREFS_SCHEDULED);
                 mCategory.removePreference(p2);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
         }
 
         PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
@@ -71,19 +73,20 @@ public class PreyConfigurationActivity extends PreferenceActivity {
         p = findPreference("PREFS_ABOUT");
         p.setSummary("Version " + preyConfig.getPreyVersion() + " - Fork Ltd.");
 
-        Preference pGo= findPreference("PREFS_GOTO_WEB_CONTROL_PANEL");
+        Preference pGo = findPreference("PREFS_GOTO_WEB_CONTROL_PANEL");
         pGo.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
             public boolean onPreferenceClick(Preference preference) {
 
                 String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelUrl();
-                PreyLogger.d("url control:"+url);
+                PreyLogger.d("url control:" + url);
                 Intent internetIntent = new Intent(Intent.ACTION_VIEW);
                 internetIntent.setData(Uri.parse(url));
-                try{
+                try {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(intent);
-                }catch(Exception e){}
+                } catch (Exception e) {
+                }
                 return false;
             }
         });
@@ -91,14 +94,11 @@ public class PreyConfigurationActivity extends PreferenceActivity {
     }
 
 
-
     @Override
     protected void onPause() {
         super.onPause();
         PreyStatus.getInstance().setPreyConfigurationActivityResume(false);
     }
-
-
 
 
 }

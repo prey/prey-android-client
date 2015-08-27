@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Created by Carlos Yaconi
- * Copyright 2012 Fork Ltd. All rights reserved.
+ * Copyright 2015 Prey Inc. All rights reserved.
  * License: GPLv3
  * Full license at "/LICENSE"
  ******************************************************************************/
@@ -23,38 +23,37 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
 import android.content.Context;
-import android.os.Build;
 
 import com.prey.PreyConfig;
 
 public class HttpUtils {
-	public static HttpClient getNewHttpClient(Context ctx) {
-		try {
-			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-			trustStore.load(null, null);
+    public static HttpClient getNewHttpClient(Context ctx) {
+        try {
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            trustStore.load(null, null);
 
-			SSLSocketFactory sf =null;
-			if (PreyConfig.getPreyConfig(ctx).isGingerbreadOrAbove()){
-				sf = SSLSocketFactory.getSocketFactory();
-				sf.setHostnameVerifier(SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
-			}else{
-				sf = new EasySSLSocketFactory(trustStore);
-				sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-			}
+            SSLSocketFactory sf = null;
+            if (PreyConfig.getPreyConfig(ctx).isGingerbreadOrAbove()) {
+                sf = SSLSocketFactory.getSocketFactory();
+                sf.setHostnameVerifier(SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
+            } else {
+                sf = new EasySSLSocketFactory(trustStore);
+                sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            }
 
-			HttpParams params = new BasicHttpParams();
-			HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-			HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+            HttpParams params = new BasicHttpParams();
+            HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+            HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
 
-			SchemeRegistry registry = new SchemeRegistry();
-			registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-			registry.register(new Scheme("https", sf, 443));
+            SchemeRegistry registry = new SchemeRegistry();
+            registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+            registry.register(new Scheme("https", sf, 443));
 
-			ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
+            ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
 
-			return new DefaultHttpClient(ccm, params);
-		} catch (Exception e) {
-			return new DefaultHttpClient();
-		}
-	}
+            return new DefaultHttpClient(ccm, params);
+        } catch (Exception e) {
+            return new DefaultHttpClient();
+        }
+    }
 }

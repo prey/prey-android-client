@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.json.actions;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,21 +21,18 @@ import com.prey.json.JsonAction;
 
 public class Wifi extends JsonAction {
 
-    public static String SSID="ssid";
+    public static String SSID = "ssid";
 
     @Override
     public HttpDataService run(Context ctx, List<ActionResult> lista, JSONObject parameters) {
         HttpDataService data = new HttpDataService("wifi");
         try {
-
             data.setList(true);
 
             PreyPhone phone = new PreyPhone(ctx);
             com.prey.PreyPhone.Wifi wifiPhone = phone.getWifi();
 
             HashMap<String, String> parametersMap = new HashMap<String, String>();
-
-
 
             parametersMap.put(SSID, wifiPhone.getSsid());
             parametersMap.put("mac_address", wifiPhone.getMacAddress());

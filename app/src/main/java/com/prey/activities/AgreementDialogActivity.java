@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 25-08-15.
- */
 
 import com.prey.R;
 
@@ -17,7 +19,7 @@ import android.widget.TextView;
 public class AgreementDialogActivity extends PreyActivity {
 
     protected static final int INSTRUCTIONS_SENT = 0;
-    int wrongPasswordIntents = 0;
+    private int wrongPasswordIntents = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

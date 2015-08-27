@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 25-08-15.
- */
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,11 +16,11 @@ import android.os.Bundle;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.prey.PreyConfig;
 import com.prey.PreyStatus;
 import com.prey.actions.location.PreyLocationManager;
 import com.prey.services.PreyRunnerService;
 import com.prey.R;
+
 public class StatusActivity extends Activity {
 
     @Override
@@ -31,14 +33,14 @@ public class StatusActivity extends Activity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         Intent intent = new Intent(StatusActivity.this, PreyConfigurationActivity.class);
         PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
         startActivity(intent);
     }
 
-    private void fillData(){
-        TableLayout table = (TableLayout)findViewById(R.id.status_table);
+    private void fillData() {
+        TableLayout table = (TableLayout) findViewById(R.id.status_table);
         boolean isRunning = PreyRunnerService.running;
         String running = isRunning ? getString(R.string.running) : getString(R.string.stopped);
         String runningSince = "-";

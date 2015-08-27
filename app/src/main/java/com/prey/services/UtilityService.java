@@ -1,22 +1,18 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.services;
 
-/**
- * Created by oso on 25-08-15.
- */
-
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.location.Location;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -25,13 +21,9 @@ import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-
-
 import java.util.concurrent.TimeUnit;
 
-
 import static com.google.android.gms.location.LocationServices.FusedLocationApi;
-
 
 /**
  * A utility IntentService, used for a variety of asynchronous background
@@ -43,7 +35,6 @@ public class UtilityService extends IntentService {
 
     private static final String ACTION_LOCATION_UPDATED = "location_updated";
     private static final String ACTION_REQUEST_LOCATION = "request_location";
-
 
 
     /*
@@ -60,19 +51,16 @@ public class UtilityService extends IntentService {
     // A fast ceiling of update intervals, used when the app is visible
     public static final long FAST_INTERVAL_CEILING_IN_MILLISECONDS = MILLISECONDS_PER_SECOND * FAST_CEILING_IN_SECONDS;
     private LocationRequest mLocationRequest;
+
     public static IntentFilter getLocationUpdatedIntentFilter() {
         return new IntentFilter(UtilityService.ACTION_LOCATION_UPDATED);
     }
-
-
 
     public static void requestLocation(Context context) {
         Intent intent = new Intent(context, UtilityService.class);
         intent.setAction(UtilityService.ACTION_REQUEST_LOCATION);
         context.startService(intent);
     }
-
-
 
     public UtilityService() {
         super(TAG);
@@ -87,8 +75,6 @@ public class UtilityService extends IntentService {
             locationUpdated(intent);
         }
     }
-
-
 
     public static final int GOOGLE_API_CLIENT_TIMEOUT_S = 10; // 10 seconds
     public static final String GOOGLE_API_CLIENT_ERROR_MSG =
@@ -107,7 +93,7 @@ public class UtilityService extends IntentService {
         // It's OK to use blockingConnect() here as we are running in an
         // IntentService that executes work on a separate (background) thread.
         ConnectionResult connectionResult = googleApiClient.blockingConnect(
-                 GOOGLE_API_CLIENT_TIMEOUT_S, TimeUnit.SECONDS);
+                GOOGLE_API_CLIENT_TIMEOUT_S, TimeUnit.SECONDS);
 
         if (connectionResult.isSuccess() && googleApiClient.isConnected()) {
 
@@ -131,10 +117,9 @@ public class UtilityService extends IntentService {
                     PendingIntent.getService(this, 0, locationUpdatedIntent, 0));
 
 
-
             googleApiClient.disconnect();
         } else {
-            Log.e(TAG, String.format( GOOGLE_API_CLIENT_ERROR_MSG,
+            Log.e(TAG, String.format(GOOGLE_API_CLIENT_ERROR_MSG,
                     connectionResult.getErrorCode()));
         }
     }
@@ -153,7 +138,7 @@ public class UtilityService extends IntentService {
     }
 
 
-    public Location getLastLocation(){
+    public Location getLastLocation() {
         return null;
     }
 

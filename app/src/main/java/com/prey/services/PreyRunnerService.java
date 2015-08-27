@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.services;
-
-/**
- * Created by oso on 25-08-15.
- */
 
 import android.app.NotificationManager;
 import android.app.Service;
@@ -21,9 +23,6 @@ import com.prey.net.PreyWebServices;
  * This class wraps Prey execution as a services, allowing the OS to kill it and
  * starting it again in case of low resources. This way we ensure Prey will be
  * running until explicity stop it.
- *
- * @author Carlos Yaconi H.
- *
  */
 public class PreyRunnerService extends Service {
 

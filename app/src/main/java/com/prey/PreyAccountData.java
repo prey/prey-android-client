@@ -1,15 +1,16 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey;
-
-/**
- * Created by oso on 24-08-15.
- */
 
 public class PreyAccountData {
 
     private String apiKey;
     private String deviceId;
     private String name;
-    //private String login;
     private String password;
     private String email;
     private String refererId;
@@ -31,14 +32,6 @@ public class PreyAccountData {
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
-
-//	public String getLogin() {
-//		return login;
-//	}
-//
-//	public void setLogin(String login) {
-//		this.login = login;
-//	}
 
     public String getPassword() {
         return password;

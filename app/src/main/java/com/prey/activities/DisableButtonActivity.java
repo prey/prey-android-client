@@ -1,8 +1,10 @@
+/*******************************************************************************
+ * Created by Carlos Yaconi
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 25-08-15.
- */
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -16,8 +18,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-
-
 
 public class DisableButtonActivity extends PreyActivity {
 
@@ -45,20 +45,20 @@ public class DisableButtonActivity extends PreyActivity {
         showScreen();
     }
 
-    private void showScreen(){
+    private void showScreen() {
         setContentView(R.layout.disable_power);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
-        final CheckBox disable=(CheckBox)findViewById(R.id.disable_checkbox);
+        final CheckBox disable = (CheckBox) findViewById(R.id.disable_checkbox);
         disable.setOnClickListener(new View.OnClickListener() {
 
 
             public void onClick(View v) {
                 PreyConfig.getPreyConfig(getApplicationContext()).setDisablePowerOptions(disable.isChecked());
-                if(disable.isChecked()){
+                if (disable.isChecked()) {
                     getApplicationContext().startService(new Intent(getApplicationContext(), PreyDisablePowerOptionsService.class));
-                }else{
+                } else {
                     getApplicationContext().stopService(new Intent(getApplicationContext(), PreyDisablePowerOptionsService.class));
                 }
 

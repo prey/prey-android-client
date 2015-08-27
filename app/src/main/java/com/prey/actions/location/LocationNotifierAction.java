@@ -1,17 +1,16 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.location;
 
-/**
- * Created by oso on 24-08-15.
- */
-
 import java.util.HashMap;
-import java.util.Map;
 
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 
-import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.PreyAction;
@@ -27,7 +26,6 @@ public class LocationNotifierAction extends PreyAction {
     private String lng;
 
     public LocationNotifierAction() {
-        PreyLogger.d("Ejecuting LocationNotifierAction Action");
         data = new HttpDataService(LocationNotifierAction.DATA_ID);
         data.setList(true);
     }
@@ -66,7 +64,6 @@ public class LocationNotifierAction extends PreyAction {
     @Override
     public void execute(ActionJob actionJob, Context ctx) throws PreyException {
         HttpDataService data = LocationUtil.dataLocation(ctx);
-        PreyLogger.d("Ejecuting LocationNotifierAction Action. DONE!");
         ActionResult result = new ActionResult();
         result.setDataToSend(data);
         actionJob.finish(result);

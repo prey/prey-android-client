@@ -1,17 +1,19 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.activities;
-
-/**
- * Created by oso on 25-08-15.
- */
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 
 import com.prey.R;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
 
 import com.prey.PreyLogger;
 import com.prey.backwardcompatibility.FroyoSupport;
@@ -27,13 +29,12 @@ public class PermissionInformationBatchActivity extends PreyActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Bundle bundle = getIntent().getExtras();
         congratsMessage = bundle.getString("message");
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (getPreyConfig().isFroyoOrAbove() && !FroyoSupport.getInstance(this).isAdminActive()){
+        if (getPreyConfig().isFroyoOrAbove() && !FroyoSupport.getInstance(this).isAdminActive()) {
             PreyLogger.i("Is froyo or above!!");
             Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
             startActivityForResult(intent, SECURITY_PRIVILEGES);
@@ -48,7 +49,7 @@ public class PermissionInformationBatchActivity extends PreyActivity {
             showScreen();
     }
 
-    private void showScreen(){
+    private void showScreen() {
         setContentView(R.layout.permission_information);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Button ok = (Button) findViewById(R.id.congrats_btn_ok);
