@@ -29,10 +29,11 @@ public class CheckPasswordActivity extends PasswordActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.password);
+        setContentView(R.layout.password2);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         updateLoginScreen();
         bindPasswordControls();
+        /*
         if (!FroyoSupport.getInstance(this).isAdminActive()) {
             String h1 = getString(R.string.device_not_ready_h1);
             String h2 = getString(R.string.device_not_ready_h2);
@@ -40,7 +41,8 @@ public class CheckPasswordActivity extends PasswordActivity {
             TextView textH2 = (TextView) findViewById(R.id.device_ready_h2_text);
             textH1.setText(h1);
             textH2.setText(h2);
-        }
+        }*/
+        /*
         KeyboardStatusDetector keyboard = new KeyboardStatusDetector();
         keyboard.registerActivity(this); // or register to an activity
         keyboard.setVisibilityListener(new KeyboardVisibilityListener() {
@@ -72,7 +74,7 @@ public class CheckPasswordActivity extends PasswordActivity {
                         textForgotPassword.setVisibility(View.VISIBLE);
                 }
             }
-        });
+        });*/
         try {
             TextView textForgotPassword = (TextView) findViewById(R.id.link_forgot_password);
             textForgotPassword.setOnClickListener(new View.OnClickListener() {
@@ -88,24 +90,16 @@ public class CheckPasswordActivity extends PasswordActivity {
             });
         } catch (Exception e) {
         }
-        try {
-            ImageView iconBack = (ImageView) findViewById(R.id.logo_img_reversed);
-            if ("es".equals(Locale.getDefault().getLanguage())) {
-                iconBack.setImageResource(R.drawable.icon_back_es);
-            }
-            RelativeLayout back = (RelativeLayout) findViewById(R.id.linear_back);
-            back.setOnClickListener(new View.OnClickListener() {
 
-                public void onClick(View v) {
-                    Intent intent = null;
-                    intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            });
-        } catch (Exception e) {
-        }
 
+    }
+
+    public void onBackPressed() {
+
+        Intent intent = null;
+        intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }

@@ -19,6 +19,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ public class LoginActivity extends PasswordActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // Delete notifications (in case Activity was started by one of them)
         NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -69,16 +71,9 @@ public class LoginActivity extends PasswordActivity {
     }
 
     private void startup() {
+        Intent intent = null;
         if (!isThisDeviceAlreadyRegisteredWithPrey()) {
-            Intent intent = null;
-            if (!isThereBatchInstallationKey()) {
-                intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-
-            } else {
-                intent = new Intent(LoginActivity.this, WelcomeBatchActivity.class);
-            }
-            startActivity(intent);
-            finish();
+            showLogin();
         } else {
             PreyVerify.getInstance(this);
             if (getPreyConfig().showFeedback()) {
@@ -90,67 +85,15 @@ public class LoginActivity extends PasswordActivity {
     }
 
     private void showLogin() {
-        setContentView(R.layout.login);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        updateLoginScreen();
+        Intent intent = null;
 
-        Button gotoSettings = (Button) findViewById(R.id.login_btn_settings);
+            intent = new Intent(LoginActivity.this, WelcomeActivity.class);
 
-        if (!FroyoSupport.getInstance(this).isAdminActive()) {
-            String h1 = getString(R.string.device_not_ready_h1);
-            String h2 = getString(R.string.device_not_ready_h2);
-            TextView textH1 = (TextView) findViewById(R.id.device_ready_h1_text);
-            TextView textH2 = (TextView) findViewById(R.id.device_ready_h2_text);
-            textH1.setText(h1);
-            textH2.setText(h2);
-        }
-
-        try {
-            Button gotoCP = (Button) findViewById(R.id.login_btn_cp);
-            gotoCP.setOnClickListener(new Button.OnClickListener() {
-                public void onClick(View v) {
-                    try {
-                        String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelUrl();
-                        Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
-                        startActivity(browserIntent);
-                    } catch (Exception e) {
-                    }
-                }
-            });
-        } catch (Exception e) {
-        }
-
-
-        try {
-            TextView uninstall = (TextView) findViewById(R.id.device_ready_uninstall);
-            uninstall.setClickable(true);
-            uninstall.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    try {
-
-                        String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyUninstallUrl();
-                        Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
-                        startActivity(browserIntent);
-                    } catch (Exception e) {
-                    }
-                }
-            });
-        } catch (Exception e) {
-        }
-
-
-        gotoSettings.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                if (!PreyStatus.getInstance().isPreyConfigurationActivityResume()) {
-                    Intent intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(LoginActivity.this, PreyConfigurationActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
+        startActivity(intent);
+        finish();
     }
+
+
 
     private boolean isThisDeviceAlreadyRegisteredWithPrey() {
         return getPreyConfig().isThisDeviceAlreadyRegisteredWithPrey(false);

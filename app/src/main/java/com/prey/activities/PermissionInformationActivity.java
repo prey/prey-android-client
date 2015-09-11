@@ -9,13 +9,19 @@ package com.prey.activities;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 
+import com.prey.PreyConfig;
 import com.prey.R;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Button;
 
 import com.prey.PreyLogger;
+import com.prey.activities.javascript.WebAppInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
 
 public class PermissionInformationActivity extends PreyActivity {
@@ -27,6 +33,7 @@ public class PermissionInformationActivity extends PreyActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Bundle bundle = getIntent().getExtras();
         congratsMessage = bundle.getString("message");
@@ -60,36 +67,40 @@ public class PermissionInformationActivity extends PreyActivity {
 
     private void showScreen() {
         if (FroyoSupport.getInstance(this).isAdminActive()) {
-            setContentView(R.layout.permission_information);
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            Button ok = (Button) findViewById(R.id.congrats_btn_ok);
-            ok.setOnClickListener(new View.OnClickListener() {
 
-                public void onClick(View v) {
-                    Intent intent = new Intent(PermissionInformationActivity.this, DisableButtonActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("message", congratsMessage);
-                    intent.putExtras(bundle);
+                    Intent intent = new Intent(PermissionInformationActivity.this, WelcomeActivity.class);
+
                     startActivity(intent);
-                    finish();
-                }
-            });
+                    PreyConfig.getPreyConfig(PermissionInformationActivity.this).setProtectReady(true);
+
         } else {
-            setContentView(R.layout.permission_information_error);
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
+
+                WebView myWebView = (WebView) findViewById(R.id.install_browser);
+                myWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
+                WebSettings webSettings = myWebView.getSettings();
+                webSettings.setJavaScriptEnabled(true);
+                myWebView.loadUrl("file:///android_asset/www/permission.html");
+
+            }else {
 
 
-            getPreyConfig().registerC2dm();
+                setContentView(R.layout.permission_information_error2);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-            Button give = (Button) findViewById(R.id.give_permissions_button);
-            give.setOnClickListener(new View.OnClickListener() {
 
-                public void onClick(View v) {
-                    first = true;
-                    Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
-                    startActivityForResult(intent, SECURITY_PRIVILEGES);
-                }
-            });
+                getPreyConfig().registerC2dm();
+
+                Button give = (Button) findViewById(R.id.buttonActivate);
+                give.setOnClickListener(new View.OnClickListener() {
+
+                    public void onClick(View v) {
+                        first = true;
+                        Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
+                        startActivityForResult(intent, SECURITY_PRIVILEGES);
+                    }
+                });
+            }
         }
     }
 }

@@ -59,16 +59,18 @@ public class DetachDevicePreferences extends DialogPreference {
 
         @Override
         protected Void doInBackground(Void... unused) {
-            try {
-                PreyConfig.getPreyConfig(getContext()).unregisterC2dm(false);
-                PreyConfig.getPreyConfig(getContext()).setSecurityPrivilegesAlreadyPrompted(false);
-                PreyWebServices.getInstance().deleteDevice(ctx);
-                PreyConfig.getPreyConfig(getContext()).wipeData();
+            try {PreyConfig.getPreyConfig(getContext()).unregisterC2dm(false); } catch (Exception e) { error = e.getMessage();}
+            try {   PreyConfig.getPreyConfig(getContext()).setSecurityPrivilegesAlreadyPrompted(false);} catch (Exception e) {}
 
-            } catch (PreyException e) {
-                e.printStackTrace();
-                error = e.getMessage();
-            }
+
+            try {   PreyConfig.getPreyConfig(getContext()).setProtectAccount(false);} catch (Exception e) {error = e.getMessage();}
+            try {   PreyConfig.getPreyConfig(getContext()).setProtectPrivileges(false);} catch (Exception e) {error = e.getMessage();}
+            try {   PreyConfig.getPreyConfig(getContext()).setProtectTour(false);} catch (Exception e) {error = e.getMessage();}
+            try {   PreyConfig.getPreyConfig(getContext()).setProtectReady(false);} catch (Exception e) {error = e.getMessage();}
+            try {  PreyWebServices.getInstance().deleteDevice(ctx);} catch (Exception e) {error = e.getMessage();}
+            try {    PreyConfig.getPreyConfig(getContext()).wipeData();} catch (Exception e) {error = e.getMessage();}
+
+
             return null;
         }
 

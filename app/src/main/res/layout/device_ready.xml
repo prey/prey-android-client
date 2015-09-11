@@ -2,10 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#000000"
+    android:background="#1E2938"
     android:orientation="vertical"
      >
 
+
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="300dp"
+        android:orientation="vertical"
+        android:gravity="right"
+        android:weightSum="1"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/linearLayout3"
+        android:layout_alignEnd="@+id/linearLayout3">
+
+        <ImageView
+            android:id="@+id/imgViewPrey2"
+            android:src="@drawable/shield_on5"
+            android:layout_width="201dp"
+            android:layout_height="311dp"
+
+            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/textView2" />
+    </LinearLayout>
 
 
     <TextView
@@ -13,13 +35,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-
+        android:layout_above="@+id/textView2"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="200dp"
-        android:textSize="23sp"
-        android:text="@string/device_ready_title"
+        android:layout_marginBottom="0dp"
+        android:textSize="11sp"
+        android:text="@string/protect_title_1"
         android:textStyle="bold"
+        android:fontFamily="MagdaCleanMono"
         android:textColor="#efeae8" />
 
 
@@ -28,63 +51,197 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView1"
+        android:layout_above="@+id/linearLayout1"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/device_ready_subtitle"
-        android:textColor="#efeae8" />
-
-    <Button
-
-        android:id="@+id/buttonReady"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="40dp"
-        android:layout_below="@+id/textView2"
-
-        android:text="@string/device_ready_button"
-        android:textColor="#fff"
-        android:textSize="23sp"
+        android:layout_marginBottom="50dp"
+        android:text="@string/protect_title_2"
+        android:textSize="26sp"
         android:textStyle="bold"
-
-        android:background="#2A5E93"
-
-        />
+        android:fontFamily="MagdaCleanMono"
+        android:textColor="#23b37f" />
 
 
-
-    <TextView
-        android:id="@+id/textView3"
+    <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/buttonReady"
+        android:layout_above="@+id/linearLayout2"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/device_ready_settings"
-        android:textColor="#efeae8"
-        android:gravity="center"
-        />
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:src="@drawable/iso_mono_b"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+             />
+
+        <LinearLayout
+            android:id="@+id/linearLayout1_1"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            <TextView
+                android:id="@+id/textView1_1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/protect_button_title_1"
+                android:textSize="15sp"
+                android:fontFamily="inherit"
+                android:textColor="#efeae8"    />
+            <TextView
+                android:id="@+id/textView1_2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/protect_button_subtitle_1"
+                android:textColor="#dacfca"
+
+                android:fontFamily="Avenir Next LT Pro"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/imgViewPreyAccount"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/isok2"  />
+    </LinearLayout>
+
+
+
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="100dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:src="@drawable/icon_cog"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2_1"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            <TextView
+                android:id="@+id/textView2_1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/protect_button_title_2"
+                android:textSize="15sp"
+                android:fontFamily="inherit"
+                android:textColor="#efeae8"    />
+            <TextView
+                android:id="@+id/textView2_2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/protect_button_subtitle_2"
+                android:textColor="#dacfca"
+
+                android:fontFamily="Avenir Next LT Pro"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/imgViewSetup"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/isok2"  />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:background="#d19d23"
+        android:visibility="visible"
+        android:layout_alignParentBottom="true"
+        >
+        <ImageView
+            android:src="@drawable/icon_info"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            />
+
+        <LinearLayout
+            android:id="@+id/linearLayout3_1"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            <TextView
+                android:id="@+id/textView3_1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/protect_title_3"
+                android:textSize="15sp"
+                android:fontFamily="inherit"
+                android:textColor="#1e2938"    />
+            <TextView
+                android:id="@+id/textView3_2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/protect_title_4"
+                android:textColor="#1e2938"
+                android:textSize="20sp"
+                android:fontFamily="inherit"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <ImageView
+            android:src="@drawable/black_close"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            />
+    </LinearLayout>
 
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView3"
+        android:layout_marginBottom="20dp"
+        android:text="@string/protect_title_5"
+        android:fontFamily="MagdaCleanMono"
+        android:textColor="#3578bb"
+        android:textSize="20sp"
+        android:gravity="left"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/device_ready_uninstall"
-        android:textColor="#efeae8"
-        android:gravity="center"
-        />
-
-
-
-
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
+
+

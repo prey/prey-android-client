@@ -95,7 +95,7 @@ public class PreyConfig {
     public static final String DEVICE_ID = "DEVICE_ID";
 
     public static final String SIM_SERIAL_NUMBER = "SIM_SERIAL_NUMBER";
-    public static final String VERSION_PREY_DEFAULT="1.3.1";
+    public static final String VERSION_PREY_DEFAULT="1.4.1";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -408,11 +408,15 @@ public class PreyConfig {
     }
 
     public void unregisterC2dm(boolean updatePrey){
-        if (updatePrey)
-            PreyWebServices.getInstance().setPushRegistrationId(ctx, "");
-        Intent unregIntent = new Intent("com.google.android.c2dm.intent.UNREGISTER");
-        unregIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0));
-        this.ctx.startService(unregIntent);
+        try {
+            if (updatePrey)
+                PreyWebServices.getInstance().setPushRegistrationId(ctx, "");
+            Intent unregIntent = new Intent("com.google.android.c2dm.intent.UNREGISTER");
+            unregIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0));
+            this.ctx.startService(unregIntent);
+        }catch(Exception e){
+
+        }
 
     }
 

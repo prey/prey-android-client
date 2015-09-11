@@ -6,6 +6,28 @@
 
 
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:orientation="vertical"
+        android:gravity="right"
+        android:weightSum="1"
+        android:layout_alignParentTop="true"
+         >
+
+        <ImageView
+            android:id="@+id/close_tour1"
+            android:src="@drawable/white_close"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+
+          />
+    </LinearLayout>
+
+
+
+
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="fill_parent"
@@ -18,7 +40,7 @@
         android:textSize="23sp"
         android:text="@string/tour_01_title"
         android:textStyle="bold"
-        android:textColor="#000000" />
+        android:textColor="#fff" />
 
 
     <TextView
@@ -31,7 +53,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="20dp"
         android:text="@string/tour_01_subtitle"
-        android:textColor="#000000" />
+        android:textColor="#fff" />
 
     <Button
 

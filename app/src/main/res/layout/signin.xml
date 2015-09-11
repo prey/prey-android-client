@@ -11,12 +11,12 @@
         android:layout_height="wrap_content"
         android:text="@string/signin_subtitle"
         android:textColor="#000000"
-         android:textSize="10sp"
-
+        android:textSize="10sp"
+        android:fontFamily="MagdaCleanMono"
         android:layout_marginTop="40dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-
+        android:layout_above="@+id/textViewInit2"
 
           />
      
@@ -28,34 +28,18 @@
         android:textColor="#000000"
         android:textSize="23sp"
         android:textStyle="bold"
-
+         android:fontFamily="Avenir Next LT Pro"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
 
- 		android:layout_below="@+id/textViewInit1"
+ 		android:layout_above="@+id/editTextEmailAddress"
 
           />
 
 
     
-    <TextView
-        android:id="@+id/textViewInit4"
 
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/field_email_signin"
-        android:textColor="#000000"
-        android:textSize="20sp"
-
-
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-
-        android:layout_below="@+id/textViewInit2"
-
-          />
 
 
 
@@ -68,29 +52,14 @@
          android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
-        android:layout_below="@+id/textViewInit4"
+        android:layout_above="@+id/editTextPassword"
         android:layout_alignParentRight="true"
-        android:hint="@string/field_email_signin_hint"
+
+        android:hint="@string/field_email_signin"
         />
 
 
-    <TextView
-        android:id="@+id/textViewInit5"
 
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/field_password_signin"
-        android:textColor="#000000"
-        android:textSize="20sp"
-
-        android:layout_marginTop="5dp"
-
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-
-        android:layout_below="@+id/editTextEmailAddress"
-
-          />
 
 
     <EditText
@@ -99,9 +68,9 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-         android:layout_marginLeft="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
-        android:layout_below="@+id/textViewInit5"
+        android:layout_above="@+id/buttonSignin"
         android:layout_alignRight="@+id/editTextEmailAddress"
         android:hint="@string/field_password_signin_hint"
         />
@@ -109,20 +78,20 @@
     <Button
         android:id="@+id/buttonSignin"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="@string/button_signin"
 
         android:background="#3578BB"
         android:textColor="#FFFFFF"
-        android:textSize="18sp"
+        android:textSize="16sp"
 		android:textStyle="bold"
+        android:fontFamily="Avenir Next LT Pro"
 
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/editTextPassword"
+        android:layout_above="@+id/linkSignin"
 
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-
+        android:layout_marginBottom="10dp"
 
          />
 
@@ -136,14 +105,14 @@
         android:textColor="#3C77B9"
          
         android:textStyle="bold"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
 
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-
-        android:layout_below="@+id/buttonSignin"
-        android:gravity="center"
-          />
+        android:gravity="left"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 
 

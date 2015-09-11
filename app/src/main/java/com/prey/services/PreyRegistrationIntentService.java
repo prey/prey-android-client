@@ -21,6 +21,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.beta.actions.PreyBetaController;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 
@@ -36,7 +37,7 @@ public class PreyRegistrationIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
+        //OSOSOSOSOS
         try {
             PreyLogger.i("[START register_for_gcm]");
             InstanceID instanceID = InstanceID.getInstance(this);
@@ -71,7 +72,7 @@ public class PreyRegistrationIntentService extends IntentService {
                     PreyLogger.d("response:" + response.toString());
                 }
                 PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
-                // PreyBetaController.startPrey(ctx);
+                PreyBetaController.startPrey(ctx);
             } catch (Exception e) {
                 PreyLogger.e("Failed registering to CD2M: " + e.getLocalizedMessage(), e);
             }

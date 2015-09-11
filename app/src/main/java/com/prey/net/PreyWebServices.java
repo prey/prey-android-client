@@ -247,7 +247,7 @@ public class PreyWebServices {
     }
 
     public PreyAccountData registerNewDeviceToAccount(Context ctx, String email, String password, String deviceType) throws PreyException {
-        PreyLogger.d("email:" + email + " password:" + password);
+        PreyLogger.d("ws email:" + email + " password:" + password);
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         HashMap<String, String> parameters = new HashMap<String, String>();
         PreyHttpResponse response = null;

@@ -71,7 +71,7 @@ public class PreyConfigurationActivity extends PreferenceActivity {
             p.setEnabled(false);
 
         p = findPreference("PREFS_ABOUT");
-        p.setSummary("Version " + preyConfig.getPreyVersion() + " - Fork Ltd.");
+        p.setSummary("Version " + preyConfig.getPreyVersion() + " - Prey Inc.");
 
         Preference pGo = findPreference("PREFS_GOTO_WEB_CONTROL_PANEL");
         pGo.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

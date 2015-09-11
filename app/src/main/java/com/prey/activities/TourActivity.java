@@ -12,7 +12,9 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
+import com.prey.PreyConfig;
 import com.prey.R;
 
 public class TourActivity extends Activity {
@@ -50,18 +52,40 @@ public class TourActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent=null;
-                if (id==5){
+                if (id==6){
+                    PreyConfig.getPreyConfig(getApplication()).setProtectTour(true);
                     intent=new Intent(getApplicationContext(),WelcomeActivity.class);
                 }else{
                     intent=new Intent(getApplicationContext(),TourActivity.class);
                 }
                 Bundle b = new Bundle();
-                b.putInt("id", id+1);
+                b.putInt("id", id + 1);
                 intent.putExtras(b);
                 startActivity(intent);
                 finish();
             }
         });
+
+
+        try{
+            ImageView close=(ImageView)findViewById(R.id.close_tour1);
+            close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PreyConfig.getPreyConfig(getApplication()).setProtectTour(true);
+                    Intent intent=new Intent(getApplicationContext(),WelcomeActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+
+            });
+        }catch(Exception e){
+
+        }
+
+
+
 
 
 

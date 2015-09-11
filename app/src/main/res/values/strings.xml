@@ -6,22 +6,35 @@
     <string name="action_settings">Settings</string>
 
 
-    <string name="protect_subtitle">WE ARE ALMOST THERE</string>
-    <string name="protect_title">ACTIVATE PREY</string>
-    <string name="protect_body">In order for Prey to work in this device follow this steps</string>
-
-    <string name="protect_setup_subtitle">CREATE OR LOG IN AT YOUR</string>
-    <string name="protect_setup_title">PREY ACCOUNT TO LINK DEVICE</string>
-
-    <string name="protect_privileges_subtitle">GIVE PREY SOME PRIVILEGES</string>
-    <string name="protect_privileges_title">TAP TO ACTIVATE</string>
-
-    <string name="protect_steps">In order to continue you must complete the setup</string>
-    <string name="button_know_more_about">KNOW MORE ABOUT</string>
-    <string name="button_activate">ACTIVATE</string>
+    <string name="menu_title_1">current device status</string>
+    <string name="menu_title_2">NOT PROTECT, YET.</string>
+    <string name="menu_title_3">WE ARE ALMOST THERE</string>
+    <string name="menu_title_4">Administration privileges needed</string>
+    <string name="menu_title_5">They’ll allow Prey to protect your phone and help you control it if it ever gets lost or stolen. Your information and privacy are safe with us.</string>
+    <string name="menu_button_1">ACTIVATE PROTECTION</string>
 
 
-    <string name="signup_subtitle">PREY ACCOUNT</string>
+    <string name="permission_error_title_1">current device status</string>
+    <string name="permission_error_title_2">NOT PROTECTED.</string>
+    <string name="permission_error_title_3">Prey need these special privileges to lock your device and also to prevent thieves from uninstalling it</string>
+    <string name="permission_error_button_1">ACTIVATE PROTECTION</string>
+
+
+
+    <string name="protect_title_1">current device status</string>
+    <string name="protect_title_2">PROTECTED</string>
+    <string name="protect_title_3">Take the tour</string>
+    <string name="protect_title_4">What can Prey do for you...</string>
+    <string name="protect_title_5">How to uninstall Prey</string>
+    <string name="protect_button_title_1">REMOTE CONTROL FROM YOUR</string>
+    <string name="protect_button_subtitle_1">PREY ACCOUNT</string>
+    <string name="protect_button_title_2">CONFIGURE</string>
+    <string name="protect_button_subtitle_2">PREY SETTINGS</string>
+
+
+
+
+    <string name="signup_subtitle">prey account</string>
     <string name="signup_title">SIGN UP</string>
     <string name="field_name_signup">username</string>
     <string name="field_email_signup">email</string>
@@ -32,7 +45,7 @@
     <string name="link_signup">already have an account?</string>
 
 
-    <string name="signin_subtitle">PREY ACCOUNT</string>
+    <string name="signin_subtitle">prey account</string>
     <string name="signin_title">SIGN IN</string>
     <string name="field_email_signin">email</string>
     <string name="field_email_signin_hint">\@</string>
@@ -45,6 +58,8 @@
 
 
 
+    <string name="protect_privileges_subtitle">dd</string>
+    <string name="protect_privileges_title">d</string>
 
 
     <string name="protect_done">DONE</string>
@@ -57,28 +72,38 @@
 
 
 
-    <string name="tour_01_title">Never worry about theft</string>
-    <string name="tour_01_subtitle">Getting your phone or tablet stolen sucks, but <b>you can</b> help it. Prey lets you keep an eye over them and helps you recover them if ever lost or stolen.</string>
+    <string name="tour_01_title">DOWNLOAD PREY ON THE DEVICES YOU WANT TO PROTECT.</string>
+    <string name="tour_01_subtitle">It works on all major operating systems, so it lets you keep track and trigger actions on all your devices from your Prey account.</string>
     <string name="tour_01_button">NEXT</string>
 
-    <string name="tour_02_title">NOT JUST GEOLOCATION</string>
-    <string name="tour_02_subtitle">Once remotely triggered from your Prey account, your mobile will gather and send detailed evidence including a picture of who\’s using it. Until that, Prey will sleep silently.</string>
+    <string name="tour_02_title">GEOLOCATION AND SO MUCH MORE</string>
+    <string name="tour_02_subtitle">Once remotely triggered from your Prey account, your device will gather and deliver detailed evidence back to you, including a picture of who\'s using it — often the crucial piece of data that police officers need to take action.</string>
     <string name="tour_02_button">NEXT</string>
 
 
-    <string name="tour_03_title">AS TOUGH AS IT GETS</string>
-    <string name="tour_03_subtitle">When theft happens, time is always against you. That\'s why every single thing Prey does is battle-hardened and made to work under the hardest conditions. This also means consuming the least possible amount of battery, always.</string>
+    <string name="tour_03_title">PREVENT UNAUTHORIZED ACCESS</string>
+    <string name="tour_03_subtitle">Use Prey to fully lock down your devices and delete your stored passwords, to ensure that no one will have access to your private stuff. All this while consuming minimal battery life.</string>
     <string name="tour_03_button">NEXT</string>
 
-    <string name="tour_04_title">DON\’T TAKE OUR WORD FOR IT</string>
-    <string name="tour_04_subtitle">I\’m euphoric and laughing with excitement that this actually worked.</string>
+    <string name="tour_04_title">PRIVACY COMES FIRST</string>
+    <string name="tour_04_subtitle">Sensitive data is gathered only when you request it, and is for your eyes only ‐ nothing is sent without your permission. You can always check our source code if you want to make sure.</string>
     <string name="tour_04_button">NEXT</string>
 
 
-    <string name="tour_05_title">IT\’S FREE AND THERE ARE NO TRICKS</string>
-    <string name="tour_05_subtitle">Really. We do offer paid plans but you can stay on the free plan for as long as you like. You can protect up to three devices and some features will be missing that\’s all.</string>
-    <string name="tour_05_button">NOW YOU\'RE IN CONTROL</string>
+    <string name="tour_05_title">DON\’T TAKE OUR WORD FOR IT</string>
+    <string name="tour_05_subtitle">I\’m euphoric and laughing with excitement that this actually worked.</string>
+    <string name="tour_05_button">NEXT</string>
 
+
+    <string name="tour_06_title">FREE WITH NO GIMMICKS, PLANS FOR EXTENDED PROTECTION</string>
+    <string name="tour_06_subtitle">Prey is completely free of charge for as long as you want to. We also have some great plans with extra features!</string>
+    <string name="tour_06_button">NOW YOU\'RE IN CONTROL</string>
+
+
+    <string name="password_subtitle">For your safety, enter your password, to manage device settings.</string>
+    <string name="password_button">SIGN IN</string>
+    <string name="password_forgot">Forgot password?</string>
+    <string name="password_hint">Type in your password</string>
     <string name="gcm_defaultSenderId">578864628893</string>
 
 

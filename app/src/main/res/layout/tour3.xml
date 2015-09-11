@@ -1,11 +1,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/onb_03"
+    android:background="#1E2938"
     android:orientation="vertical">
 
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:orientation="vertical"
+        android:gravity="right"
+        android:weightSum="1"
+        android:layout_alignParentTop="true"
+        >
 
+        <ImageView
+            android:id="@+id/close_tour1"
+            android:src="@drawable/white_close"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+
+            />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/shield_on"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
     <TextView
         android:id="@+id/textView1"
         android:layout_width="fill_parent"
