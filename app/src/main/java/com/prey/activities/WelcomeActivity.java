@@ -62,7 +62,7 @@ public class WelcomeActivity extends FragmentActivity {
         } else {
             new RegisterInitTask().execute();
             Intent intent = null;
-            if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO) {
+            if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 intent=new Intent(getApplicationContext(), WebViewInitActivity.class);
             }else{
                 intent=new Intent(getApplicationContext(), MenuActivity.class);
@@ -74,7 +74,7 @@ public class WelcomeActivity extends FragmentActivity {
 
     public void ready() {
         Intent intent = null;
-        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO) {
+        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             intent = new Intent(getApplicationContext(), WebViewReadyActivity.class);
         }else{
             intent = new Intent(getApplicationContext(), DeviceReadyActivity.class);
