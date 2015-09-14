@@ -17,10 +17,12 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +33,8 @@ import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
+import com.prey.util.KeyboardStatusDetector;
+import com.prey.util.KeyboardVisibilityListener;
 
 public class SignUpActivity extends Activity {
 
@@ -67,6 +71,42 @@ public class SignUpActivity extends Activity {
         final EditText emailText=((EditText)findViewById(R.id.editTextEmailAddress));
         final EditText passwordText=((EditText)findViewById(R.id.editTextPassword));
 
+
+        final TextView linkSignup = (TextView) findViewById(R.id.linkSignup);
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+
+
+        final int halfHeight=metrics.heightPixels/3;
+        KeyboardStatusDetector keyboard = new KeyboardStatusDetector();
+
+        keyboard.registerActivity(this); // or register to an activity
+        keyboard.setVisibilityListener(new KeyboardVisibilityListener() {
+
+            @Override
+            public void onVisibilityChanged(boolean keyboardVisible) {
+                try {
+
+
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) linkSignup.getLayoutParams();
+                    if (keyboardVisible) {
+                        PreyLogger.d("key on");
+
+                        params.setMargins(10, 0, 10, halfHeight);
+                    } else {
+                        PreyLogger.d("key off");
+
+                        params.setMargins(10, 0, 10, 20);
+                    }
+                    linkSignup.setLayoutParams(params);
+                } catch (Exception e) {
+                    PreyLogger.i("error:" + e.getMessage());
+                }
+            }
+        });
+
         Button button = (Button) findViewById(R.id.buttonSignup);
         button.setOnClickListener(new View.OnClickListener() {
 
@@ -93,7 +133,7 @@ public class SignUpActivity extends Activity {
             }
         });
 
-        TextView linkSignup = (TextView) findViewById(R.id.linkSignup);
+
         linkSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -19,12 +19,13 @@ import com.prey.R;
 
 public class TourActivity extends Activity {
 
+    private int id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle b = getIntent().getExtras();
-        final int id = b.getInt("id");
+        id = b.getInt("id");
 
         switch (id){
             case 2:
@@ -89,5 +90,20 @@ public class TourActivity extends Activity {
 
 
 
+    }
+
+    public void onBackPressed() {
+        Intent intent=null;
+        if (id>1){
+            intent=new Intent(getApplicationContext(),TourActivity.class);
+            Bundle b = new Bundle();
+            b.putInt("id", id-1);
+            intent.putExtras(b);
+        }else{
+
+            intent=new Intent(getApplicationContext(),WelcomeActivity.class);
+        }
+        startActivity(intent);
+        finish();
     }
 }

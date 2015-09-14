@@ -79,27 +79,14 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-<!--
-        <activity
-            android:name="com.prey.activities.MainActivity"
-            android:clearTaskOnLaunch="true"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="@string/preyForAndroid_name"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
--->
         <activity
             android:name="com.prey.activities.LoginActivity"
             android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/preyForAndroid_name"
+
             android:launchMode="singleInstance"
+            android:noHistory="true"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -112,45 +99,53 @@
         <activity
             android:name="com.prey.activities.WebViewInitActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name="com.prey.activities.WebViewReadyActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
             android:screenOrientation="portrait" />
 
 
         <activity
             android:name="com.prey.activities.MenuActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
             android:screenOrientation="portrait" />
 
 
         <activity
             android:name="com.prey.activities.SignInActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name="com.prey.activities.SignUpActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
             android:screenOrientation="portrait" />
 
 
         <activity
             android:name="com.prey.activities.DeviceReadyActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name="com.prey.activities.TourActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
             android:screenOrientation="portrait" />
 
 
         <activity
             android:name="com.prey.activities.WelcomeActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
             android:screenOrientation="portrait" />
 
 
@@ -175,14 +170,12 @@
             android:screenOrientation="portrait"
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/preyForAndroid_name"
             android:launchMode="singleTask" />
         <activity
             android:name="com.prey.activities.FeedbackActivity"
             android:screenOrientation="portrait"
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/preyForAndroid_name"
             android:launchMode="singleTask" />
 
         <activity
@@ -190,7 +183,6 @@
             android:screenOrientation="portrait"
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/preyForAndroid_name"
             android:launchMode="singleTask" />
 
         <activity
@@ -198,7 +190,6 @@
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:label="@string/preyForAndroid_name"
             android:launchMode="singleTask" />
         <activity
             android:name="com.prey.activities.SimpleCameraActivity"
@@ -218,17 +209,6 @@
             android:name="com.prey.activities.PermissionInformationActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="com.prey.activities.StatusActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:noHistory="true" >
-            <intent-filter>
-                <action android:name="com.prey.activities.StatusActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
 
         <receiver

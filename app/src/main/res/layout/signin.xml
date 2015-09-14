@@ -2,7 +2,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/bg_w"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:id="@+id/relativeLayout1"
+    >
 
     
      <TextView
@@ -72,7 +74,7 @@
         android:layout_marginTop="5dp"
         android:layout_above="@+id/buttonSignin"
         android:layout_alignRight="@+id/editTextEmailAddress"
-        android:hint="@string/field_password_signin_hint"
+        android:hint="@string/field_password_signin"
         />
 
     <Button
@@ -111,11 +113,9 @@
         android:layout_marginRight="10dp"
         android:gravity="left"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+         />
 
 
 
-    
 
-</RelativeLayout>    
+</RelativeLayout>

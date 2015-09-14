@@ -75,22 +75,14 @@ public class PermissionInformationActivity extends PreyActivity {
 
         } else {
             if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
-
                 WebView myWebView = (WebView) findViewById(R.id.install_browser);
                 myWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
                 WebSettings webSettings = myWebView.getSettings();
                 webSettings.setJavaScriptEnabled(true);
                 myWebView.loadUrl("file:///android_asset/www/permission.html");
-
             }else {
-
-
                 setContentView(R.layout.permission_information_error2);
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-
-                getPreyConfig().registerC2dm();
-
                 Button give = (Button) findViewById(R.id.buttonActivate);
                 give.setOnClickListener(new View.OnClickListener() {
 
@@ -101,6 +93,8 @@ public class PermissionInformationActivity extends PreyActivity {
                     }
                 });
             }
+
+           PreyConfig.getPreyConfig(this).registerC2dm();
         }
     }
 }

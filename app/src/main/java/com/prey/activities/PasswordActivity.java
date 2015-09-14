@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.prey.PreyLogger;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
 import com.prey.exceptions.PreyException;
@@ -84,6 +85,7 @@ public class PasswordActivity extends PreyActivity {
         protected Void doInBackground(String... password) {
             try {
                 String email = getPreyConfig().getEmail();
+                PreyLogger.d("email:"+email+"password[0]:"+password[0]);
                 isPasswordOk = PreyWebServices.getInstance().checkPassword(PasswordActivity.this, email, password[0]);
 
 
@@ -104,10 +106,7 @@ public class PasswordActivity extends PreyActivity {
             if (error != null)
                 Toast.makeText(PasswordActivity.this, error, Toast.LENGTH_LONG).show();
             else if (!isPasswordOk) {
-                boolean isAccountVerified = getPreyConfig().isAccountVerified();
-                if (!isAccountVerified)
-                    Toast.makeText(PasswordActivity.this, R.string.verify_your_account_first, Toast.LENGTH_LONG).show();
-                else {
+
                     wrongPasswordIntents++;
                     if (wrongPasswordIntents == 3) {
                         Toast.makeText(PasswordActivity.this, R.string.password_intents_exceed, Toast.LENGTH_LONG).show();
@@ -116,7 +115,7 @@ public class PasswordActivity extends PreyActivity {
                     } else {
                         Toast.makeText(PasswordActivity.this, R.string.password_wrong, Toast.LENGTH_SHORT).show();
                     }
-                }
+
             } else {
                 Intent intent = new Intent(PasswordActivity.this, PreyConfigurationActivity.class);
                 PreyStatus.getInstance().setPreyConfigurationActivityResume(true);

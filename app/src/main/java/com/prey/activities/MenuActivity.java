@@ -62,5 +62,8 @@ public class MenuActivity extends Activity {
 
     }
 
+    public void onBackPressed() {
+
+    }
 
 }

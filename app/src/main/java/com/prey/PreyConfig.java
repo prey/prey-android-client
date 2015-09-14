@@ -389,7 +389,10 @@ public class PreyConfig {
                 this.ctx.startService(registrationIntent);
                 */
             }
-        }catch(Exception e){}
+        }catch(Exception e){
+            PreyLogger.e("Error :"+e.getMessage(),e);
+
+        }
     }
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 

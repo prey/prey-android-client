@@ -192,7 +192,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayout3_1"
-            android:layout_width="320dp"
+            android:layout_width="380dp"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
             <TextView

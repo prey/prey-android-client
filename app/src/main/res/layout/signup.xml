@@ -83,7 +83,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
         android:layout_above="@+id/buttonSignup"
-        android:hint="@string/field_password_signup_hint"
+        android:hint="@string/field_password_signup"
          />
 
     <Button
@@ -118,14 +118,11 @@
         android:textStyle="bold"
         android:layout_marginBottom="20dp"
 
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginRight="10dp"
-
-
         android:gravity="left"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+
           />
     
 

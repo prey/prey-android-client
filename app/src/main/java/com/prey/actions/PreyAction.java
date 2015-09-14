@@ -42,7 +42,6 @@ public abstract class PreyAction {
         if (preyActions == null) {
             HashMap<String, PreyAction> actions = new HashMap<String, PreyAction>();
             actions.put(LocationNotifierAction.DATA_ID, new LocationNotifierAction());
-            actions.put(CallLogsNotifierAction.DATA_ID, new CallLogsNotifierAction());
             actions.put(RingtonePlayerAction.DATA_ID, new RingtonePlayerAction());
             actions.put(Mp3PlayerAction.DATA_ID, new Mp3PlayerAction());
             actions.put(PopUpAlertAction.DATA_ID, new PopUpAlertAction());

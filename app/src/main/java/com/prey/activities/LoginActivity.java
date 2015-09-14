@@ -41,7 +41,7 @@ public class LoginActivity extends PasswordActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // Delete notifications (in case Activity was started by one of them)
         NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.cancel(R.string.preyForAndroid_name);
+        nm.cancel(R.string.app_name);
         startup();
 
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
