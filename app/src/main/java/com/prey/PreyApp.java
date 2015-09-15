@@ -8,6 +8,8 @@ package com.prey;
 
 import android.app.Application;
 
+import java.util.Locale;
+
 public class PreyApp extends Application {
 
     public long mLastPause;
@@ -23,6 +25,8 @@ public class PreyApp extends Application {
             String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
             if (deviceKey != null && deviceKey != "")
                 PreyConfig.getPreyConfig(this).registerC2dm();
+
+
 
         }catch(Exception e){}
     }

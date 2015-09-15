@@ -24,6 +24,7 @@ import com.prey.net.PreyWebServices;
 import com.prey.services.PreyRegistrationIntentService;
 
 import java.util.Date;
+import java.util.Locale;
 
 public class PreyConfig {
 
@@ -371,7 +372,8 @@ public class PreyConfig {
                 PreyLogger.d("______________________");
                 PreyLogger.d("______________________");
 
-
+                PreyLogger.i("es:" + Locale.getDefault().getDisplayLanguage());
+                PreyLogger.i("es:" + Locale.getDefault().getLanguage());
                 //if (checkPlayServices()) {
                     // Start IntentService to register this application with GCM.
 

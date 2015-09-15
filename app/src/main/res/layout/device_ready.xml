@@ -192,7 +192,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayout3_1"
-            android:layout_width="320dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
             <TextView
@@ -242,7 +242,7 @@
         android:text="@string/protect_title_5"
         android:fontFamily="MagdaCleanMono"
         android:textColor="#3578bb"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:gravity="left"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"

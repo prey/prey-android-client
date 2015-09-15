@@ -24,6 +24,8 @@ import com.prey.PreyLogger;
 import com.prey.activities.javascript.WebAppInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
 
+import java.util.Locale;
+
 public class PermissionInformationActivity extends PreyActivity {
 
     private static final int SECURITY_PRIVILEGES = 10;
@@ -74,12 +76,15 @@ public class PermissionInformationActivity extends PreyActivity {
                     PreyConfig.getPreyConfig(PermissionInformationActivity.this).setProtectReady(true);
 
         } else {
-            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 WebView myWebView = (WebView) findViewById(R.id.install_browser);
                 myWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
                 WebSettings webSettings = myWebView.getSettings();
                 webSettings.setJavaScriptEnabled(true);
-                myWebView.loadUrl("file:///android_asset/www/permission.html");
+                String idioma="";
+                if("es".equals(Locale.getDefault().getLanguage()))
+                    idioma="_es";
+                myWebView.loadUrl("file:///android_asset/www/permission"+idioma+".html");
             }else {
                 setContentView(R.layout.permission_information_error2);
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

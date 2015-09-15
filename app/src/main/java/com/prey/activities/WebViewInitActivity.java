@@ -29,6 +29,8 @@ import com.prey.exceptions.NoMoreDevicesAllowedException;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 
+import java.util.Locale;
+
 public class WebViewInitActivity extends Activity {
 
     private String error = null;
@@ -66,7 +68,10 @@ public class WebViewInitActivity extends Activity {
         myWebView.addJavascriptInterface(webInterface, "Android");
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        myWebView.loadUrl("file:///android_asset/www/init.html");
+        String idioma="";
+        if("es".equals(Locale.getDefault().getLanguage()))
+            idioma="_es";
+        myWebView.loadUrl("file:///android_asset/www/init"+idioma+".html");
     }
 
     public void onBackPressed() {

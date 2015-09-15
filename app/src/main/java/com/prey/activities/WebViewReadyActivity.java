@@ -28,6 +28,8 @@ import com.prey.events.manager.EventManagerRunner;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 
+import java.util.Locale;
+
 public class WebViewReadyActivity extends Activity {
 
     private int wrongPasswordIntents = 0;
@@ -72,11 +74,13 @@ public class WebViewReadyActivity extends Activity {
         myWebView.addJavascriptInterface(webInterface, "Android");
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-
+        String idioma="";
+        if("es".equals(Locale.getDefault().getLanguage()))
+            idioma="_es";
         if(PreyConfig.getPreyConfig(this).getProtectTour())
-            myWebView.loadUrl("file:///android_asset/www/ready2.html");
+            myWebView.loadUrl("file:///android_asset/www/ready2"+idioma+".html");
         else
-            myWebView.loadUrl("file:///android_asset/www/ready.html");
+            myWebView.loadUrl("file:///android_asset/www/ready"+idioma+".html");
     }
 
     public void onBackPressed() {

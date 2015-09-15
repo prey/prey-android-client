@@ -3,71 +3,71 @@
 
 
 
-    <string name="menu_title_1">estado actual del dispositivo</string>
-    <string name="menu_title_2">NO PROTEGIDO, TODAVÍA.</string>
-    <string name="menu_title_3">ESTAMOS CASI</string>
-    <string name="menu_title_4">Privilegios de administración necesarios</string>
-    <string name="menu_title_5">Ellos permiten a Prey proteger su teléfono y le ayudan a controlar si es que alguna vez se pierde o es robado. Su información y la privacidad son seguros con nosotros.</string>
+    <string name="menu_title_1">Estado de tu dispositivo</string>
+    <string name="menu_title_2">SIN PROTECCIÓN, AÚN.</string>
+    <string name="menu_title_3">ESTAMOS CASI LISTOS</string>
+    <string name="menu_title_4">Se necesitan permisos de Administrador</string>
+    <string name="menu_title_5">Estos permisos permitirán a Prey proteger tu teléfono y ayudarte a controlarlo si se llega a perder o te lo roban. Tu información y privacidad están a salvo con nosotros.</string>
     <string name="menu_button_1">ACTIVAR PROTECCIÓN</string>
 
-    <string name="signin_subtitle">cuenta prey</string>
+    <string name="signin_subtitle">cuenta Prey</string>
     <string name="signin_title">INGRESAR</string>
-    <string name="field_email_signin">email</string>
-    <string name="field_password_signin">password</string>
-    <string name="button_signin">ACCESO A MI CUENTA</string>
-    <string name="link_signin">¿No tienes una cuenta?</string>
+    <string name="field_email_signin">correo</string>
+    <string name="field_password_signin">contraseña</string>
+    <string name="button_signin">INGRESAR A MI CUENTA</string>
+    <string name="link_signin">¿No tienes cuenta aún?</string>
 
-    <string name="signup_subtitle">cuenta prey</string>
-    <string name="signup_title">INSCRIBIR</string>
-    <string name="field_name_signup">username</string>
-    <string name="field_email_signup">email</string>
-    <string name="field_password_signup">password</string>
-    <string name="button_signup">CREAR MI CUENTA NUEVA</string>
+    <string name="signup_subtitle">cuenta Prey</string>
+    <string name="signup_title">REGÍSTRATE</string>
+    <string name="field_name_signup">usuario</string>
+    <string name="field_email_signup">correo</string>
+    <string name="field_password_signup">contraseña</string>
+    <string name="button_signup">CREAR MI NUEVA CUENTA</string>
     <string name="link_signup">¿Ya tienes una cuenta?</string>
 
-    <string name="permission_error_title_1">estado actual del dispositivo</string>
-    <string name="permission_error_title_2">NO PROTEGIDA.</string>
-    <string name="permission_error_title_3">Prey necesitan estos privilegios especiales para bloquear el dispositivo y evitar que los ladrones desinstalarlo</string>
+    <string name="permission_error_title_1">Estado de tu dispositivo</string>
+    <string name="permission_error_title_2">DESPROTEGIDO.</string>
+    <string name="permission_error_title_3">Prey necesita privilegios especiales para bloquear tu dispositivo y evitar que los ladrones puedan desinstalarlo.</string>
     <string name="permission_error_button_1">ACTIVAR PROTECCIÓN</string>
 
-    <string name="protect_title_1">estado actual del dispositivo</string>
+    <string name="protect_title_1">Estado de tu dispositivo</string>
     <string name="protect_title_2">PROTEGIDO</string>
-    <string name="protect_button_title_1">CONTROL REMOTO DE SU</string>
-    <string name="protect_button_subtitle_1">CUENTA PREY</string>
+    <string name="protect_button_title_1">CONTROLAR REMOTAMENTE</string>
+    <string name="protect_button_subtitle_1">EL EQUIPO DESDE TU CUENTA PREY</string>
     <string name="protect_button_title_2">CONFIGURAR</string>
-    <string name="protect_button_subtitle_2">AJUSTES PREY</string>
-    <string name="protect_title_3">Tomar el tour</string>
-    <string name="protect_title_4">¿Qué puede hacer prey para usted?</string>
-    <string name="protect_title_5">Cómo desinstalar Prey</string>
+    <string name="protect_button_subtitle_2">PREY</string>
+    <string name="protect_title_3">Ve el tour</string>
+    <string name="protect_title_4">¿Qué puede hacer Prey por tí? </string>
+    <string name="protect_title_5">¿Cómo desinstalar Prey?</string>
 
-    <string name="password_subtitle">Para su seguridad, introduzca su contraseña, para gestionar la configuración del dispositivo.</string>
+    <string name="password_subtitle">Por tu seguridad, escribe tu contraseña, para entrar a la configuración de tu equipo.</string>
     <string name="password_button">INGRESAR</string>
-    <string name="password_forgot">¿Se te olvidó tu contraseña?</string>
+    <string name="password_forgot">¿Olvidaste tu contraseña?</string>
     <string name="password_hint">Escriba su contraseña</string>
 
-    <string name="tour_01_title">DESCARGAR PREY EN LOS DISPOSITIVOS desea proteger.</string>
-    <string name="tour_01_subtitle">Funciona en todos los principales sistemas operativos, por lo que le permite realizar un seguimiento y desencadenar acciones en todos los dispositivos de su cuenta de Prey.</string>
+    <string name="tour_01_title">DESCARGA PREY EN LOS DISPOSITIVOS QUE DESEES PROTEGER.</string>
+    <string name="tour_01_subtitle">Funciona en todos los grandes sistemas operativos para permitirte seguir su rastro y activar funciones en todos tus dispositivos desde tu cuenta Prey.</string>
     <string name="tour_01_button">SIGUIENTE</string>
 
-    <string name="tour_02_title">GEOLOCALIZACIÓN Y MUCHO MÁS</string>
-    <string name="tour_02_subtitle">Una vez disparado de forma remota desde su cuenta de presa, el dispositivo será recoger y entregar pruebas detalladas de nuevo a usted, incluyendo una imagen de que está utilizando es - a menudo la pieza fundamental de los datos que los agentes de policía deben tomar medidas.</string>
+    <string name="tour_02_title">UBICACIÓN Y MUCHO MÁS</string>
+    <string name="tour_02_subtitle">Una vez activado remotamente desde tu cuenta Prey, tu dispositivo reunirá y te enviará evidencia detallada, incluyendo una foto de quien lo está usando - muchas veces, información crucial que la policía necesita para entrar en acción.</string>
     <string name="tour_02_button">SIGUIENTE</string>
 
-    <string name="tour_03_title">EVITAR ACCESOS NO AUTORIZADOS</string>
-    <string name="tour_03_subtitle">Utilice presa para bloquear a fondo sus dispositivos y borrar las contraseñas almacenadas, para asegurarse de que nadie tendrá acceso a tus cosas privadas. Todo ello mientras se consume la vida mínima de la batería.</string>
+    <string name="tour_03_title">EVITAR ACCESO DESAUTORIZADO</string>
+    <string name="tour_03_subtitle">Usa Prey para bloquear completamente tus dispositivos y eliminar contraseñas guardadas, para asegurarte de que nadie pueda ver tus cosas personales. Todo esto, consumiendo el mínimo de batería.</string>
     <string name="tour_03_button">SIGUIENTE</string>
 
-    <string name="tour_04_title">PRIVACIDAD ES LO PRIMERO</string>
-    <string name="tour_04_subtitle">Datos sensibles solamente se recopila cuando usted lo solicite, y es sólo para sus ojos - nada se envía sin su permiso. Siempre puede comprobar nuestro código fuente si usted quiere asegurarse de que.</string>
+    <string name="tour_04_title">LA PRIVACIDAD PRIMERO</string>
+    <string name="tour_04_subtitle">La información sensible solo es recolectada cuando lo pidas, y es solo para tus ojos - nada es enviado sin tu permiso. Cuando quieras, puedes revisar nuestro código fuente para asegurarte de esto.</string>
     <string name="tour_04_button">SIGUIENTE</string>
 
-    <string name="tour_05_title">No tome nuestra palabra para ella</string>
-    <string name="tour_05_subtitle">Estoy eufórico y riendo con entusiasmo que este efectivamente trabajadas.</string>
+    <string name="tour_05_title">NO TOMES SOLO NUESTRA PALABRA</string>
+    <string name="tour_05_subtitle">Estoy eufórico y riendo de emoción porque realmente funcionó.</string>
     <string name="tour_05_button">SIGUIENTE</string>
 
-    <string name="tour_06_title">GRATIS SIN TRUCOS, PLANES PARA LA PROTECCIÓN AMPLIADA</string>
-    <string name="tour_06_subtitle">Prey es totalmente gratuita durante todo el tiempo que desee. También tenemos algunos grandes planes con características adicionales!</string>
-    <string name="tour_06_button">Ahora usted está en control</string>
+    <string name="tour_06_title">GRATIS Y SIN TRUCO, PLANES PARA PROTECCIÓN MÁS COMPLETA</string>
+    <string name="tour_06_subtitle">Prey es completamente gratis mientras tú quieras. ¡También tenemos planes con más características!</string>
+    <string name="tour_06_button">AHORA, TÚ TIENES EL CONTROL</string>
 
     <string name="yes">Sí</string>
     <string name="no">No</string>
