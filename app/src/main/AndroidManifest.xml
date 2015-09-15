@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.prey"
+    android:installLocation="internalOnly"
+    android:versionCode="107"
+    android:versionName="1.4.1" >
+
+
+    <uses-sdk
+        android:minSdkVersion="4"
+        android:targetSdkVersion="19" />
+
+
+    <uses-feature android:name="android.hardware.location.network" android:required="true" />
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+    <uses-feature android:name="android.hardware.location" android:required="true" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.flash" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.front" android:required="false"/>
+
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+
+
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACTION_SHUTDOWN" />
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+
+    <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
+
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- GCM requires a Google account. -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <!-- This app has permission to register and receive message -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission android:name="com.prey.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.prey.permission.C2D_MESSAGE" />
+
+
+    <!-- This app has permission to camera -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+
+    <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" />
+
+
+
+
+
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <application
+        android:name="com.prey.PreyApp"
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+
+
+        <activity
+            android:name="com.prey.activities.LoginActivity"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="keyboardHidden|orientation"
+
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name="com.prey.activities.WebViewInitActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.prey.activities.WebViewReadyActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name="com.prey.activities.MenuActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name="com.prey.activities.SignInActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.prey.activities.SignUpActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name="com.prey.activities.DeviceReadyActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.prey.activities.TourActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name="com.prey.activities.WelcomeActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name="com.prey.activities.CheckPasswordActivity"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.prey.activities.PreyConfigurationActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        />
+        <activity
+            android:name="com.prey.activities.PopUpAlertActivity"
+            android:screenOrientation="portrait"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask" />
+        <activity
+            android:name="com.prey.activities.FeedbackActivity"
+            android:screenOrientation="portrait"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask" />
+
+        <activity
+            android:name="com.prey.activities.FormFeedbackActivity"
+            android:screenOrientation="portrait"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask" />
+
+        <activity
+            android:name="com.prey.activities.CameraActivity"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask" />
+        <activity
+            android:name="com.prey.activities.SimpleCameraActivity"
+            android:theme="@style/Theme.Transparent"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.prey.activities.SimpleVideoActivity"
+            android:theme="@style/Theme.Transparent"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.prey.activities.VideoActivity"
+            android:theme="@style/Theme.Transparent"
+            android:configChanges="keyboardHidden|orientation" />
+        <activity
+            android:name="com.prey.activities.PermissionInformationActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+
+
+        <receiver
+            android:name="com.prey.receivers.PreyBootController"
+            android:enabled="true"
+            android:exported="false"
+            android:label="PreyBootController" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+
+        <receiver
+            android:name="com.prey.events.receivers.EventReceiver"  >
+            <intent-filter android:priority="20000">
+
+                <!-- TURNED ON/OFF -->
+
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+
+                <!-- BATTERY LOW -->
+
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <!-- <action android:name="android.intent.action.BATTERY_OKAY" />-->
+
+                <!-- WIFI CHANGED -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+
+                <!-- SIM CHANGED AND  BOOT COMPLETED -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <!-- AIRPLANE -->
+                <action android:name="android.intent.action.AIRPLANE_MODE" />
+
+            </intent-filter>
+        </receiver>
+
+
+
+        <receiver
+            android:name="com.prey.receivers.AlarmReportReceiver"
+            >
+        </receiver>
+        <receiver
+            android:name="com.prey.receivers.AlarmScheduledReceiver"
+            >
+        </receiver>
+
+        <receiver android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.CLOSE_SYSTEM_DIALOGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+
+        <receiver
+            android:name="com.prey.receivers.PreyDeviceAdmin"
+            android:description="@string/device_admin_description"
+            android:label="@string/device_admin_label"
+            android:permission="android.permission.BIND_DEVICE_ADMIN" >
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/security_policies" />
+
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+                <action android:name="android.app.action.ACTION_PASSWORD_SUCCEEDED" />
+                <action android:name="android.app.action.ACTION_PASSWORD_CHANGED" />
+                <action android:name="android.app.action.ACTION_PASSWORD_FAILED" />
+                <action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLE_REQUESTED" />
+                <action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLED" />
+            </intent-filter>
+        </receiver>
+
+
+
+
+
+
+
+        <!-- Only C2DM servers can send messages for the app. If permission is not set - any other app can generate it -->
+        <receiver android:name="com.prey.receivers.C2DMReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
+
+            <!-- Receive the actual message -->
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.prey" />
+            </intent-filter>
+            <!-- Receive the registration id -->
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="com.prey" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Services -->
+        <service android:name="com.prey.services.LocationService" />
+        <service android:name="com.prey.services.PreyBootService" />
+        <service android:name="com.prey.services.PreyRunnerService" />
+        <service android:name="com.prey.services.PreyDisablePowerOptionsService" />
+        <service android:name="com.prey.beta.services.PreyBetaRunnerService" />
+        <service android:name="com.prey.actions.report.ReportService" />
+
+    </application>
+
+</manifest>

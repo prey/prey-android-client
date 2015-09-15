@@ -1,0 +1,10 @@
+{
+  "name": "perkins",
+  "version": "4.0.0-beta",
+  "description": "Design & Develop the web Faster",
+  "main": "app.less",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/carloselias/perkins.git"
+  }
+}

@@ -1,0 +1,121 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/bg_w"
+    android:orientation="vertical"
+    android:id="@+id/relativeLayout1"
+    >
+
+    
+     <TextView
+        android:id="@+id/textViewInit1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/signin_subtitle"
+        android:textColor="#000000"
+        android:textSize="10sp"
+        android:fontFamily="MagdaCleanMono"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_above="@+id/textViewInit2"
+
+          />
+     
+     <TextView
+        android:id="@+id/textViewInit2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/signin_title"
+        android:textColor="#000000"
+        android:textSize="23sp"
+        android:textStyle="bold"
+         android:fontFamily="Avenir Next LT Pro"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
+ 		android:layout_above="@+id/editTextEmailAddress"
+
+          />
+
+
+    
+
+
+
+
+    <EditText
+        android:id="@+id/editTextEmailAddress"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_above="@+id/editTextPassword"
+        android:layout_alignParentRight="true"
+
+        android:hint="@string/field_email_signin"
+        />
+
+
+
+
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_above="@+id/buttonSignin"
+        android:layout_alignRight="@+id/editTextEmailAddress"
+        android:hint="@string/field_password_signin"
+        />
+
+    <Button
+        android:id="@+id/buttonSignin"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:text="@string/button_signin"
+
+        android:background="#3578BB"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+		android:textStyle="bold"
+        android:fontFamily="Avenir Next LT Pro"
+
+        android:layout_above="@+id/linkSignin"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+
+         />
+
+
+    <TextView
+        android:id="@+id/linkSignin"
+
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/link_signin"
+        android:textColor="#3C77B9"
+         
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="left"
+        android:layout_alignParentBottom="true"
+         />
+
+
+
+
+</RelativeLayout>
