@@ -173,6 +173,7 @@ public class SignUpActivity extends Activity {
                 PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(getApplication(), data[0], data[1], data[2], PreyUtils.getDeviceType(getApplication()));
                 PreyLogger.d("Response creating account: " + accountData.toString());
                 PreyConfig.getPreyConfig(getApplication()).saveAccount(accountData);
+                PreyConfig.getPreyConfig(getApplication()).registerC2dm();
             } catch (PreyException e) {
                 error = e.getMessage();
             }

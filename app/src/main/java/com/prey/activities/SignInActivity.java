@@ -251,7 +251,7 @@ public class SignInActivity extends Activity {
                 error = null;
                 PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceToAccount(SignInActivity.this, data[0], data[1], data[2]);
                 PreyConfig.getPreyConfig(getApplicationContext()).saveAccount(accountData);
-
+                PreyConfig.getPreyConfig(getApplication()).registerC2dm();
             } catch (PreyException e) {
                 error = e.getMessage();
                 try {
