@@ -8,6 +8,8 @@ package com.prey;
 
 import android.app.Application;
 
+import com.prey.actions.report.ReportScheduled;
+
 import java.util.Locale;
 
 public class PreyApp extends Application {
@@ -27,7 +29,11 @@ public class PreyApp extends Application {
                 PreyConfig.getPreyConfig(this).registerC2dm();
 
 
-
+            if (PreyConfig.getPreyConfig(this).isMissing()) {
+                if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {
+                    ReportScheduled.getInstance(this).run(Integer.parseInt(PreyConfig.getPreyConfig(this).getIntervalReport()));
+                }
+            }
         }catch(Exception e){}
     }
 }

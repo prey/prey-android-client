@@ -372,24 +372,15 @@ public class PreyConfig {
                 PreyLogger.d("______________________");
                 PreyLogger.d("______________________");
 
-                PreyLogger.i("es:" + Locale.getDefault().getDisplayLanguage());
-                PreyLogger.i("es:" + Locale.getDefault().getLanguage());
-                //if (checkPlayServices()) {
-                    // Start IntentService to register this application with GCM.
 
-                    PreyLogger.i("starservice RegistrationIntentService");
-                    Intent intent = new Intent(ctx, PreyRegistrationIntentService.class);
-                    ctx.startService(intent);
-                //}
 
-    /*
                 Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
                 registrationIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0)); // boilerplate
                 String gcmId= FileConfigReader.getInstance(this.ctx).getGcmId();
                 //PreyLogger.i("gcmId:"+gcmId);
                 registrationIntent.putExtra("sender",gcmId);
                 this.ctx.startService(registrationIntent);
-                */
+
             }
         }catch(Exception e){
             PreyLogger.e("Error :"+e.getMessage(),e);

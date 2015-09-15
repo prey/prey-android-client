@@ -50,6 +50,7 @@ public class LoginActivity extends PasswordActivity {
         } else {
             stopService(new Intent(getApplicationContext(), PreyDisablePowerOptionsService.class));
         }
+
     }
 
     @Override
@@ -72,23 +73,18 @@ public class LoginActivity extends PasswordActivity {
 
     private void startup() {
         Intent intent = null;
-        if (!isThisDeviceAlreadyRegisteredWithPrey()) {
-            showLogin();
-        } else {
+        if (isThisDeviceAlreadyRegisteredWithPrey()) {
             PreyVerify.getInstance(this);
-            if (getPreyConfig().showFeedback()) {
-                showFeedback(getApplicationContext());
-            } else {
-                showLogin();
-            }
         }
+        showLogin();
+        String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
+        if (deviceKey != null && deviceKey != "")
+            PreyConfig.getPreyConfig(this).registerC2dm();
     }
 
     private void showLogin() {
         Intent intent = null;
-
-            intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-
+        intent = new Intent(LoginActivity.this, WelcomeActivity.class);
         startActivity(intent);
         finish();
     }

@@ -58,6 +58,8 @@ public class WebViewReadyActivity extends Activity {
         this.setContentView(R.layout.activity_webview);
         PreyLogger.i("onCreate of WebViewReadyActivity");
 
+
+
     }
 
     private void init(){

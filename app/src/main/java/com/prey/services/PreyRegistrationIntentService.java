@@ -27,7 +27,7 @@ import com.prey.net.PreyWebServices;
 
 public class PreyRegistrationIntentService extends IntentService {
 
-    public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
+
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
 
     public PreyRegistrationIntentService() {
@@ -37,7 +37,7 @@ public class PreyRegistrationIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        //OSOSOSOSOS
+
         try {
             PreyLogger.i("[START register_for_gcm]");
             InstanceID instanceID = InstanceID.getInstance(this);
@@ -49,7 +49,7 @@ public class PreyRegistrationIntentService extends IntentService {
 
         } catch (Exception e) {
             PreyLogger.e("Failed to complete token refresh", e);
-            sharedPreferences.edit().putBoolean(SENT_TOKEN_TO_SERVER, false).apply();
+
         }
         Intent registrationComplete = new Intent(REGISTRATION_COMPLETE);
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);

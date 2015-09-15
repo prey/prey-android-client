@@ -51,9 +51,7 @@ public class DeviceReadyActivity extends Activity {
         this.setContentView(R.layout.device_ready);
         PreyLogger.i("onCreate of DeviceReadyActivity");
 
-        String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
-        if (deviceKey != null && deviceKey != "")
-            PreyConfig.getPreyConfig(this).registerC2dm();
+
 
         LinearLayout linearLayout1=(LinearLayout)findViewById(R.id.linearLayout1);
         linearLayout1.setOnClickListener(new View.OnClickListener() {
