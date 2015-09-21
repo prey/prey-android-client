@@ -114,7 +114,7 @@
 
 
         <activity
-            android:name="com.prey.activities.MenuActivity"
+            android:name=".activities.InitActivity"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
             android:screenOrientation="portrait" />
@@ -140,11 +140,35 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.prey.activities.TourActivity"
+            android:name=".activities.TourActivity1"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".activities.TourActivity2"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.TourActivity3"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.TourActivity4"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.TourActivity5"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.TourActivity6"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.prey.activities.WelcomeActivity"
@@ -173,6 +197,7 @@
             android:name="com.prey.activities.PopUpAlertActivity"
             android:screenOrientation="portrait"
             android:clearTaskOnLaunch="true"
+            android:noHistory = "true"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask" />
         <activity
@@ -310,6 +335,43 @@
                 <category android:name="com.prey" />
             </intent-filter>
         </receiver>
+
+
+        <!-- [START gcm_receiver] -->
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="gcm.play.android.samples.com.gcmquickstart" />
+            </intent-filter>
+        </receiver>
+        <!-- [END gcm_receiver] -->
+
+        <!-- [START gcm_listener] -->
+        <service
+            android:name="com.prey.services.PreyGcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <!-- [END gcm_listener] -->
+        <!-- [START instanceId_listener] -->
+        <service
+            android:name="com.prey.services.PreyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+        <!-- [END instanceId_listener] -->
+        <service
+            android:name="com.prey.services.PreyRegistrationIntentService"
+            android:exported="false">
+        </service>
+
 
         <!-- Services -->
         <service android:name="com.prey.services.LocationService" />

@@ -8,25 +8,29 @@
 
 
     <ImageView
-        android:id="@+id/imgViewPrey"
-
-        android:layout_marginTop="30dp"
-        android:src="@drawable/prey_logo_b_mono2"
-        android:layout_width="120dp"
-        android:layout_height="30dp" />
-
-
-    <ImageView
         android:id="@+id/imgViewPrey2"
-
-        android:src="@drawable/shield"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-
+        android:src="@drawable/native_unprotected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+
+
+    <ImageView
+        android:id="@+id/imgViewPrey"
+
+        android:src="@drawable/prey_logo_b_mono2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        />
+
 
     <TextView
         android:id="@+id/textView1"

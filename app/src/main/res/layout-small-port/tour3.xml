@@ -1,0 +1,95 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#1e2938"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+
+        android:layout_alignParentTop="true"
+        >
+
+        <ImageView
+
+            android:src="@drawable/onb_03"
+            android:layout_width="205dp"
+            android:layout_height="205dp"
+
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:orientation="vertical"
+        android:gravity="right"
+        android:weightSum="1"
+        android:layout_alignParentTop="true"
+        >
+
+        <ImageView
+            android:id="@+id/close_tour1"
+            android:src="@drawable/white_close"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+
+            />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/textView2"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:textSize="19sp"
+        android:lineSpacingMultiplier="0.8"
+        android:text="@string/tour_03_title"
+        android:textStyle="bold"
+        android:textColor="#fff" />
+
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/buttontour01"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:textSize="17sp"
+        android:lineSpacingMultiplier="0.9"
+        android:text="@string/tour_03_subtitle"
+        android:textColor="#fff" />
+
+    <Button
+
+        android:id="@+id/buttontour01"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+
+
+        android:text="@string/tour_03_button"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:textStyle="bold"
+
+        android:background="#2A5E93"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+         />
+
+</RelativeLayout>

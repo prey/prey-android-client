@@ -21,7 +21,7 @@
 
         <ImageView
             android:id="@+id/imgViewPrey2"
-            android:src="@drawable/shield_on5"
+            android:src="@drawable/native_protected"
             android:layout_width="201dp"
             android:layout_height="311dp"
 
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
             <TextView
-                android:id="@+id/textView1_1"
+                android:id="@+id/textView3_1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -94,7 +94,7 @@
                 android:fontFamily="inherit"
                 android:textColor="#efeae8"    />
             <TextView
-                android:id="@+id/textView1_2"
+                android:id="@+id/textView3_2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
@@ -142,7 +142,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
             <TextView
-                android:id="@+id/textView2_1"
+                android:id="@+id/textView4_1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -152,7 +152,7 @@
                 android:fontFamily="inherit"
                 android:textColor="#efeae8"    />
             <TextView
-                android:id="@+id/textView2_2"
+                android:id="@+id/textView4_2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
@@ -178,7 +178,8 @@
         android:id="@+id/linearLayout3"
         android:layout_width="fill_parent"
         android:layout_height="60dp"
-        android:layout_marginBottom="10dp"
+
+
         android:orientation="horizontal"
         android:background="#d19d23"
         android:visibility="visible"
@@ -188,25 +189,27 @@
             android:src="@drawable/icon_info"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
             />
 
         <LinearLayout
             android:id="@+id/linearLayout3_1"
-            android:layout_width="300dp"
+            android:layout_width="260dp"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
             <TextView
-                android:id="@+id/textView3_1"
+                android:id="@+id/textView5_1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/protect_title_3"
                 android:textSize="15sp"
                 android:fontFamily="inherit"
                 android:textColor="#1e2938"    />
             <TextView
-                android:id="@+id/textView3_2"
+                android:id="@+id/textView5_2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
@@ -228,14 +231,15 @@
                 android:src="@drawable/black_close"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_gravity="right" />
         </LinearLayout>
     </LinearLayout>
 
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textView6"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"

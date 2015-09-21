@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="@string/signup_subtitle"
         android:textColor="#000000"
-         android:textSize="10sp"
+         android:textSize="14sp"
          android:fontFamily="MagdaCleanMono"
         android:layout_marginTop="40dp"
         android:layout_marginLeft="10dp"

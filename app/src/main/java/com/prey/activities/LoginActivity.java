@@ -77,9 +77,7 @@ public class LoginActivity extends PasswordActivity {
             PreyVerify.getInstance(this);
         }
         showLogin();
-        String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
-        if (deviceKey != null && deviceKey != "")
-            PreyConfig.getPreyConfig(this).registerC2dm();
+
     }
 
     private void showLogin() {

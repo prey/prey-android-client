@@ -363,29 +363,53 @@ public class PreyConfig {
 
 
     public void registerC2dm(){
-        try{
+        boolean error=false;
+
             if (PreyEmail.getEmail(this.ctx) != null) {
-                PreyLogger.d("______________________");
-                PreyLogger.d("______________________");
-                PreyLogger.d("___ registerC2dm _____");
-                PreyLogger.d("______________________");
-                PreyLogger.d("______________________");
-                PreyLogger.d("______________________");
+                String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
+                if (deviceId != null && !"".equals(deviceId)) {
+                    try {
+
+                        PreyLogger.d("______________________");
+                        PreyLogger.d("___ registerC2dm _____");
 
 
+                        Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+                        registrationIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0)); // boilerplate
+                        String gcmId = FileConfigReader.getInstance(this.ctx).getGcmId();
 
-                Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-                registrationIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0)); // boilerplate
-                String gcmId= FileConfigReader.getInstance(this.ctx).getGcmId();
-                //PreyLogger.i("gcmId:"+gcmId);
-                registrationIntent.putExtra("sender",gcmId);
-                this.ctx.startService(registrationIntent);
+                        registrationIntent.putExtra("sender", gcmId);
+                        this.ctx.startService(registrationIntent);
+                        PreyLogger.d("______________________");
 
+                    } catch (Exception e) {
+                        error = true;
+
+                    }
+
+                    if (error) {
+                        try {
+                            if (PreyEmail.getEmail(this.ctx) != null) {
+                                PreyLogger.d("______________________");
+                                PreyLogger.d("___ registerC2dm  2_____");
+
+
+                                PreyLogger.i("starservice RegistrationIntentService");
+                                Intent intent = new Intent(ctx, PreyRegistrationIntentService.class);
+                                ctx.startService(intent);
+
+
+                                PreyLogger.d("______________________");
+                            }
+                        } catch (Exception e) {
+                            PreyLogger.e("Error :" + e.getMessage(), e);
+
+                        }
+                    }
+                }
             }
-        }catch(Exception e){
-            PreyLogger.e("Error :"+e.getMessage(),e);
 
-        }
+
     }
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 

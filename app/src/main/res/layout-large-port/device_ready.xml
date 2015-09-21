@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="300dp"
+        android:layout_height="295dp"
         android:orientation="vertical"
         android:gravity="right"
         android:weightSum="1"
@@ -21,9 +21,9 @@
 
         <ImageView
             android:id="@+id/imgViewPrey2"
-            android:src="@drawable/shield_on5"
-            android:layout_width="201dp"
-            android:layout_height="311dp"
+            android:src="@drawable/native_protected"
+            android:layout_width="194dp"
+            android:layout_height="295dp"
 
             android:layout_alignParentTop="true"
             android:layout_alignBottom="@+id/textView2" />
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
             <TextView
-                android:id="@+id/textView1_1"
+                android:id="@+id/textView3_1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -94,7 +94,7 @@
                 android:fontFamily="inherit"
                 android:textColor="#efeae8"    />
             <TextView
-                android:id="@+id/textView1_2"
+                android:id="@+id/textView3_2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
@@ -142,7 +142,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
             <TextView
-                android:id="@+id/textView2_1"
+                android:id="@+id/textView4_1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -152,7 +152,7 @@
                 android:fontFamily="inherit"
                 android:textColor="#efeae8"    />
             <TextView
-                android:id="@+id/textView2_2"
+                android:id="@+id/textView4_2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
@@ -196,7 +196,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
             <TextView
-                android:id="@+id/textView3_1"
+                android:id="@+id/textView5_1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -206,7 +206,7 @@
                 android:fontFamily="inherit"
                 android:textColor="#1e2938"    />
             <TextView
-                android:id="@+id/textView3_2"
+                android:id="@+id/textView5_2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
@@ -235,7 +235,7 @@
 
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textView6"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"

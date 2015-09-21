@@ -1,8 +1,28 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/onb_03"
+    android:background="#ffffff"
     android:orientation="vertical">
+
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="left"
+
+        android:layout_alignParentTop="true"
+        >
+
+        <ImageView
+
+            android:src="@drawable/onb_02"
+            android:layout_width="245dp"
+            android:layout_height="245dp"
+
+            />
+    </LinearLayout>
 
 
     <LinearLayout
@@ -36,7 +56,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="20dp"
-        android:textSize="23sp"
+        android:textSize="19sp"
+        android:lineSpacingMultiplier="0.8"
         android:text="@string/tour_02_title"
         android:textStyle="bold"
         android:textColor="#000000" />
@@ -51,6 +72,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="20dp"
+        android:textSize="17sp"
+        android:lineSpacingMultiplier="0.9"
         android:text="@string/tour_02_subtitle"
         android:textColor="#000000" />
 
@@ -63,7 +86,7 @@
 
         android:text="@string/tour_02_button"
         android:textColor="#fff"
-        android:textSize="23sp"
+        android:textSize="20sp"
         android:textStyle="bold"
 
         android:background="#2A5E93"

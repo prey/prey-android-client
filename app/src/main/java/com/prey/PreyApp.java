@@ -34,6 +34,8 @@ public class PreyApp extends Application {
                     ReportScheduled.getInstance(this).run(Integer.parseInt(PreyConfig.getPreyConfig(this).getIntervalReport()));
                 }
             }
+
+
         }catch(Exception e){}
     }
 }

@@ -47,6 +47,7 @@ public class JSONParser {
             PreyLogger.e("Error, causa:" + e.getMessage(), e);
             return null;
         }
+        PreyLogger.i("cmd:"+sb);
         //json = "[{\"command\":\"history\",\"target\":\"call\",\"options\":{}}]";
         //	json = "[{\"command\":\"history\",\"target\":\"sms\",\"options\":{}}]";
 

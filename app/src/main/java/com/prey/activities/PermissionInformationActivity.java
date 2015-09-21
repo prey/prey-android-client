@@ -12,6 +12,7 @@ import android.content.pm.ActivityInfo;
 import com.prey.PreyConfig;
 import com.prey.R;
 
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.prey.PreyLogger;
 import com.prey.activities.javascript.WebAppInterface;
@@ -68,39 +70,48 @@ public class PermissionInformationActivity extends PreyActivity {
     }
 
     private void showScreen() {
-        if (FroyoSupport.getInstance(this).isAdminActive()) {
 
-                    Intent intent = new Intent(PermissionInformationActivity.this, WelcomeActivity.class);
 
-                    startActivity(intent);
-                    PreyConfig.getPreyConfig(PermissionInformationActivity.this).setProtectReady(true);
 
-        } else {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                WebView myWebView = (WebView) findViewById(R.id.install_browser);
-                myWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
-                WebSettings webSettings = myWebView.getSettings();
-                webSettings.setJavaScriptEnabled(true);
-                String idioma="";
-                if("es".equals(Locale.getDefault().getLanguage()))
-                    idioma="_es";
-                myWebView.loadUrl("file:///android_asset/www/permission"+idioma+".html");
-            }else {
+            if (FroyoSupport.getInstance(this).isAdminActive()) {
+                Intent intent = new Intent(PermissionInformationActivity.this, WelcomeActivity.class);
+                startActivity(intent);
+                PreyConfig.getPreyConfig(PermissionInformationActivity.this).setProtectReady(true);
+
+                finish();
+            } else {
                 setContentView(R.layout.permission_information_error2);
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                Button give = (Button) findViewById(R.id.buttonActivate);
-                give.setOnClickListener(new View.OnClickListener() {
-
+                Button buttonActivate = (Button) findViewById(R.id.buttonActivate);
+                buttonActivate.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         first = true;
                         Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
                         startActivityForResult(intent, SECURITY_PRIVILEGES);
                     }
                 });
+
+
+                Typeface titilliumWebRegular = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+                Typeface titilliumWebBold = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Bold.ttf");
+                Typeface magdacleanmonoRegular = Typeface.createFromAsset(getAssets(), "fonts/MagdaClean/magdacleanmono-regular.ttf");
+
+
+                TextView textView1 = (TextView) findViewById(R.id.textView1);
+                TextView textView2 = (TextView) findViewById(R.id.textView2);
+                TextView textView3 = (TextView) findViewById(R.id.textView3);
+
+
+                textView1.setTypeface(magdacleanmonoRegular);
+                textView2.setTypeface(magdacleanmonoRegular);
+                textView3.setTypeface(titilliumWebRegular);
+
+
+                buttonActivate.setTypeface(titilliumWebBold);
+
+
             }
 
-           PreyConfig.getPreyConfig(this).registerC2dm();
-        }
     }
 }
 

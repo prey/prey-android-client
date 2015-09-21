@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -70,9 +71,28 @@ public class SignUpActivity extends Activity {
         final EditText nameText=((EditText)findViewById(R.id.editTextName));
         final EditText emailText=((EditText)findViewById(R.id.editTextEmailAddress));
         final EditText passwordText=((EditText)findViewById(R.id.editTextPassword));
-
+        Button buttonSignup = (Button) findViewById(R.id.buttonSignup);
 
         final TextView linkSignup = (TextView) findViewById(R.id.linkSignup);
+
+
+
+        Typeface magdacleanmonoRegular = Typeface.createFromAsset(getAssets(), "fonts/MagdaClean/magdacleanmono-regular.ttf");
+        Typeface titilliumWebBold = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Bold.ttf");
+
+        TextView textViewInit1=(TextView)findViewById(R.id.textViewInit1);
+        TextView textViewInit2=(TextView)findViewById(R.id.textViewInit2);
+        textViewInit1.setTypeface(magdacleanmonoRegular);
+        textViewInit2.setTypeface(titilliumWebBold);
+
+
+
+        linkSignup.setTypeface(titilliumWebBold);
+        buttonSignup.setTypeface(titilliumWebBold);
+
+        nameText.setTypeface(magdacleanmonoRegular);
+        emailText.setTypeface(magdacleanmonoRegular);
+        passwordText.setTypeface(magdacleanmonoRegular);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -94,11 +114,11 @@ public class SignUpActivity extends Activity {
                     if (keyboardVisible) {
                         PreyLogger.d("key on");
 
-                        params.setMargins(10, 0, 10, halfHeight);
+                        params.setMargins(20, 0, 20, halfHeight);
                     } else {
                         PreyLogger.d("key off");
 
-                        params.setMargins(10, 0, 10, 20);
+                        params.setMargins(20, 0, 20, 20);
                     }
                     linkSignup.setLayoutParams(params);
                 } catch (Exception e) {
@@ -107,8 +127,8 @@ public class SignUpActivity extends Activity {
             }
         });
 
-        Button button = (Button) findViewById(R.id.buttonSignup);
-        button.setOnClickListener(new View.OnClickListener() {
+
+        buttonSignup.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -147,7 +167,7 @@ public class SignUpActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+        Intent intent = new Intent(getApplicationContext(), InitActivity.class);
         startActivity(intent);
         finish();
     }

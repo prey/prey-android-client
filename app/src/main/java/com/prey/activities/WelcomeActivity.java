@@ -13,14 +13,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.view.Window;
-import android.widget.FrameLayout;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.R;
+import com.prey.PreyVerify;
 import com.prey.backwardcompatibility.FroyoSupport;
 
 public class WelcomeActivity extends FragmentActivity {
@@ -70,23 +67,21 @@ public class WelcomeActivity extends FragmentActivity {
         } else {
             new RegisterInitTask().execute();
             Intent intent = null;
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                intent=new Intent(getApplicationContext(), WebViewInitActivity.class);
-            }else{
-                intent=new Intent(getApplicationContext(), MenuActivity.class);
-            }
+
+                intent=new Intent(getApplicationContext(), InitActivity.class);
+
             startActivity(intent);
             finish();
         }
     }
 
     public void ready() {
+        PreyVerify.getInstance(this);
+        PreyConfig.getPreyConfig(this).registerC2dm();
         Intent intent = null;
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            intent = new Intent(getApplicationContext(), WebViewReadyActivity.class);
-        }else{
+
             intent = new Intent(getApplicationContext(), DeviceReadyActivity.class);
-        }
+
         startActivity(intent);
         finish();
     }

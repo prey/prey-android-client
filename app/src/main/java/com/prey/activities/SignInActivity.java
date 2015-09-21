@@ -15,15 +15,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,6 +73,8 @@ public class SignInActivity extends Activity {
         this.setContentView(R.layout.signin);
         PreyLogger.i("onCreate of SignInActivity");
 
+        Button buttonSignin = (Button) findViewById(R.id.buttonSignin);
+
 
         final EditText emailText=((EditText)findViewById(R.id.editTextEmailAddress));
         final EditText passwordText=((EditText)findViewById(R.id.editTextPassword));
@@ -90,6 +91,21 @@ public class SignInActivity extends Activity {
         final TextView linkSignin=(TextView)findViewById(R.id.linkSignin);
 
 
+        Typeface magdacleanmonoRegular = Typeface.createFromAsset(getAssets(), "fonts/MagdaClean/magdacleanmono-regular.ttf");
+        Typeface titilliumWebBold = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Bold.ttf");
+
+        TextView textViewInit1=(TextView)findViewById(R.id.textViewInit1);
+        TextView textViewInit2=(TextView)findViewById(R.id.textViewInit2);
+        EditText editTextEmailAddress=(EditText)findViewById(R.id.editTextEmailAddress);
+        EditText editTextPassword=(EditText)findViewById(R.id.editTextPassword);
+
+        textViewInit1.setTypeface(magdacleanmonoRegular);
+        textViewInit2.setTypeface(titilliumWebBold);
+        buttonSignin.setTypeface(titilliumWebBold);
+
+        linkSignin.setTypeface(titilliumWebBold);
+        editTextEmailAddress.setTypeface(magdacleanmonoRegular);
+        editTextPassword.setTypeface(magdacleanmonoRegular);
 
 
         KeyboardStatusDetector keyboard = new KeyboardStatusDetector();
@@ -106,11 +122,11 @@ public class SignInActivity extends Activity {
                     if (keyboardVisible) {
                         PreyLogger.d("key on");
 
-                        params.setMargins(10,0,10,halfHeight);
+                        params.setMargins(20,0,20,halfHeight);
                     } else {
                         PreyLogger.d("key off");
 
-                        params.setMargins(10,0,10,20);
+                        params.setMargins(20,0,20,20);
                     }
                     linkSignin.setLayoutParams(params);
                 } catch (Exception e) {
@@ -121,8 +137,8 @@ public class SignInActivity extends Activity {
 
 
 
-        Button button = (Button) findViewById(R.id.buttonSignin);
-        button.setOnClickListener(new View.OnClickListener() {
+
+        buttonSignin.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -165,7 +181,7 @@ public class SignInActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+        Intent intent = new Intent(getApplicationContext(), InitActivity.class);
         startActivity(intent);
         finish();
     }

@@ -56,6 +56,7 @@ public class PreyRegistrationIntentService extends IntentService {
     }
 
     private void sendRegistrationToServer(String token) {
+        PreyLogger.i("token:"+token);
         new UpdateCD2MId().execute(token, getApplicationContext());
     }
 
@@ -66,6 +67,7 @@ public class PreyRegistrationIntentService extends IntentService {
             try {
                 Context ctx = (Context) data[1];
                 String registration = FileConfigReader.getInstance(ctx).getGcmIdPrefix() + (String) data[0];
+                PreyLogger.i("registration:"+registration);
                 PreyHttpResponse response = PreyWebServices.getInstance().setPushRegistrationId(ctx, registration);
                 PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
                 if (response != null) {

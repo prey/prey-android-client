@@ -8,8 +8,8 @@ android {
         applicationId "com.prey"
         minSdkVersion 9
         targetSdkVersion 22
-        versionCode 108
-        versionName '1.4.2'
+        versionCode 110
+        versionName '1.4.4'
     }
     buildTypes {
         release {
