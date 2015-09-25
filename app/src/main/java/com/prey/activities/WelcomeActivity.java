@@ -65,11 +65,7 @@ public class WelcomeActivity extends FragmentActivity {
         if (PreyConfig.getPreyConfig(this).getProtectReady()) {
             ready();
         } else {
-            new RegisterInitTask().execute();
-            Intent intent = null;
-
-                intent=new Intent(getApplicationContext(), InitActivity.class);
-
+            Intent intent = new Intent(getApplicationContext(), InitActivity.class);
             startActivity(intent);
             finish();
         }
@@ -108,31 +104,5 @@ public class WelcomeActivity extends FragmentActivity {
 
 
 
-    private class RegisterInitTask extends AsyncTask<String, Void, Void> {
 
-        @Override
-        protected void onPreExecute() {
-
-        }
-
-        @Override
-        protected Void doInBackground(String... data) {
-           /*
-            try {
-               PreyWebServices.getInstance().registerInit(getApplicationContext());
-
-
-            } catch (Exception e) {
-                PreyLogger.e("Error, causa:"+e.getMessage(),e);
-            }
-            */
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void unused) {
-
-        }
-
-    }
 }

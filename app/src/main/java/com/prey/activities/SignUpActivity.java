@@ -17,6 +17,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -145,7 +146,10 @@ public class SignUpActivity extends Activity {
                         if (password.length() < 6 || password.length() > 32) {
                             Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range, 6, 32), Toast.LENGTH_LONG).show();
                         } else {
-                            new CreateAccount().execute(name, email, password);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                                new CreateAccount().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, name, email, password);
+                            else
+                                new CreateAccount().execute(name, email, password);
                         }
                     }
                 }

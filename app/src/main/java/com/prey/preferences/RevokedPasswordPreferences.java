@@ -10,6 +10,7 @@ package com.prey.preferences;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.EditTextPreference;
 import android.util.AttributeSet;
 
@@ -45,7 +46,10 @@ public class RevokedPasswordPreferences extends EditTextPreference {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         if (positiveResult) {
             PreyLogger.d("Activation phrase changed to:" + getText());
-            new RevokedPasswordPhraseTask(ctx).execute(getText());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                new RevokedPasswordPhraseTask(ctx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getText());
+            else
+                new RevokedPasswordPhraseTask(ctx).execute(getText());
         } else {
             preyConfig.setRevokedPassword(false, "");
         }

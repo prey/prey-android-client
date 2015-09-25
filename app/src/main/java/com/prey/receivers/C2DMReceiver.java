@@ -15,6 +15,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 
 import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
@@ -104,7 +105,12 @@ public class C2DMReceiver extends BroadcastReceiver {
             PreyConfig.getPreyConfig(context).setNotificationId("");
         } else if (registration != null) {
             //PreyLogger.d("Registration id: " + registration);
-            new UpdateCD2MId().execute(registration, context);
+            if(PreyConfig.getPreyConfig(context).getDeviceId()!=null&&!"".equals(PreyConfig.getPreyConfig(context).getDeviceId())) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                    new UpdateCD2MId().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, registration, context);
+                else
+                    new UpdateCD2MId().execute(registration, context);
+            }
 
             // Send the registration ID to the 3rd party site that is sending
             // the messages.

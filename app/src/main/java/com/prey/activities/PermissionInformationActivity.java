@@ -13,20 +13,14 @@ import com.prey.PreyConfig;
 import com.prey.R;
 
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.prey.PreyLogger;
-import com.prey.activities.javascript.WebAppInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
-
-import java.util.Locale;
 
 public class PermissionInformationActivity extends PreyActivity {
 

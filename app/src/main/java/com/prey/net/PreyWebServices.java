@@ -445,7 +445,6 @@ public class PreyWebServices {
         String deviceKey = preyConfig.getDeviceId();
         if (deviceKey == null || deviceKey == "")
             throw new PreyException("Device key not found on the configuration");
-        //String apiv=FileConfigReader.getInstance(ctx).getApiV1();
         String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
         String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey);
         return url;

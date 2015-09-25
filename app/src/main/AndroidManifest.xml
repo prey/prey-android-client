@@ -101,19 +101,6 @@
 
 
         <activity
-            android:name="com.prey.activities.WebViewInitActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="com.prey.activities.WebViewReadyActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-
-
-        <activity
             android:name=".activities.InitActivity"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"

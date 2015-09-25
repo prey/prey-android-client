@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
@@ -43,7 +44,10 @@ public class PasswordActivity extends PreyActivity {
                     if (passwordtyped.length() < 6 || passwordtyped.length() > 32) {
                         Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range, 6, 32), Toast.LENGTH_LONG).show();
                     } else {
-                        new CheckPassword().execute(passwordtyped);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                            new CheckPassword().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,passwordtyped);
+                        else
+                            new CheckPassword().execute(passwordtyped);
                     }
                 }
 

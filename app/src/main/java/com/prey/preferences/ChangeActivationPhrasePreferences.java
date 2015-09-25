@@ -9,6 +9,7 @@ package com.prey.preferences;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.EditTextPreference;
 import android.util.AttributeSet;
 
@@ -43,7 +44,10 @@ public class ChangeActivationPhrasePreferences extends EditTextPreference {
         super.onDialogClosed(positiveResult);
         if (positiveResult) {
             PreyLogger.d("Activation phrase changed to:" + getText());
-            new ChangeActivationPhraseTask().execute(getText());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                new ChangeActivationPhraseTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getText());
+            else
+                new ChangeActivationPhraseTask().execute(getText());
 
         }
     }

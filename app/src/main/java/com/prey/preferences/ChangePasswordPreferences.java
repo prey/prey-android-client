@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
@@ -52,7 +53,10 @@ public class ChangePasswordPreferences extends DialogPreference {
                 Toast.makeText(getContext(), R.string.preferences_password_length_error, Toast.LENGTH_LONG).show();
                 showDialog(new Bundle());
             } else if (password.equals(repassword)) {
-                new ChangePassword().execute(old_password, password);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                    new ChangePassword().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,old_password, password);
+                else
+                    new ChangePassword().execute(old_password, password);
             } else {
                 Toast.makeText(getContext(), R.string.preferences_passwords_do_not_match, Toast.LENGTH_LONG).show();
                 showDialog(new Bundle());
