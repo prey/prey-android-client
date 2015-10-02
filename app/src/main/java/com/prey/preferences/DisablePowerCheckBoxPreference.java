@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.preferences;
 
 import android.content.Context;
@@ -12,9 +18,6 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.services.PreyDisablePowerOptionsService;
 
-/**
- * Created by oso on 02-10-15.
- */
 public class DisablePowerCheckBoxPreference extends CheckBoxPreference {
     public DisablePowerCheckBoxPreference(Context context) { super(context); }
     public DisablePowerCheckBoxPreference(Context context, AttributeSet attrs) { super(context, attrs); }
