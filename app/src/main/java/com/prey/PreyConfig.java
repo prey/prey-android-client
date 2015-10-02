@@ -21,6 +21,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.prey.activities.FeedbackActivity;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.PreyWebServices;
+import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyRegistrationIntentService;
 
 import java.util.Date;
@@ -114,6 +115,8 @@ public class PreyConfig {
     private int minuteScheduled;
     private boolean runOnce;
 
+    private boolean disablePowerOptions;
+
 
     private PreyConfig(Context ctx) {
         this.ctx = ctx;
@@ -125,6 +128,8 @@ public class PreyConfig {
 
         this.scheduled=getBoolean(PreyConfig.SCHEDULED, FileConfigReader.getInstance(ctx).isScheduled());
         this.minuteScheduled=getInt(PreyConfig.MINUTE_SCHEDULED, FileConfigReader.getInstance(ctx).getMinuteScheduled());
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+        this.disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
 
     }
 
@@ -138,6 +143,9 @@ public class PreyConfig {
         return cachedInstance;
     }
 
+    private static void deleteCacheInstance() {
+        cachedInstance = null;
+    }
 
     private void saveString(String key, String value){
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -182,7 +190,7 @@ public class PreyConfig {
         editor.commit();
     }
 
-    private long getLong(String key,long defaultValue){
+    private long getLong(String key, long defaultValue){
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         return settings.getLong(key, defaultValue);
     }
@@ -256,7 +264,7 @@ public class PreyConfig {
         return versionName;
     }
 
-    public String getEventKey(){
+    public String getEventKey() {
         return getString(PreyConfig.EVENT_KEY,null);
     }
 
@@ -270,6 +278,10 @@ public class PreyConfig {
 
     public boolean isGingerbreadOrAbove() {
         return android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.GINGERBREAD;
+    }
+
+    public boolean isIceCreamSandwichOrAbove() {
+        return android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1;
     }
 
     public boolean isEclairOrAbove(){
@@ -538,7 +550,7 @@ public class PreyConfig {
     }
 
     public void setEmail(String email){
-        saveString(PreyConfig.EMAIL,email);
+        saveString(PreyConfig.EMAIL, email);
     }
 
     public void setAccountVerified() {
@@ -575,17 +587,7 @@ public class PreyConfig {
         PreyLogger.d("SIM Serial number stored: " + this.getSimSerialNumber());
     }
 
-    public boolean isScheduled(){
-        try{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-                if (PreyEmail.getEmail(ctx)!=null)
-                    return false;
-            }
-        }catch(Exception e){
-            return false;
-        }
-        return scheduled;
-    }
+
 
 
     public boolean isMissing() {
@@ -614,7 +616,7 @@ public class PreyConfig {
 
 
 
-    public void setRevokedPassword(boolean isRevokedPassword,String revokedPassword) {
+    public void setRevokedPassword(boolean isRevokedPassword, String revokedPassword) {
 
         saveBoolean(PreyConfig.IS_REVOKED_PASSWORD, isRevokedPassword);
         saveString(PreyConfig.REVOKED_PASSWORD, revokedPassword);
@@ -654,7 +656,7 @@ public class PreyConfig {
     }
 
     public void setExcludeReport(String excludeReport) {
-        saveString(PreyConfig.EXCLUDE_REPORT,excludeReport);
+        saveString(PreyConfig.EXCLUDE_REPORT, excludeReport);
     }
 
     public void setLastReportStartDate(long lastReportStartDate){
@@ -671,5 +673,38 @@ public class PreyConfig {
 
     public long getSignalFlareDate(){
         return getLong(PreyConfig.SIGNAL_FLARE_DATE,0);
+    }
+
+
+
+
+
+    public void setScheduled(boolean scheduled){
+        this.scheduled=scheduled;
+        saveBoolean(PreyConfig.SCHEDULED, scheduled);
+    }
+
+
+
+
+    public boolean isScheduled(){
+        try{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
+                if (PreyEmail.getEmail(ctx)!=null)
+                    return false;
+            }
+        }catch(Exception e){
+            return false;
+        }
+        return scheduled;
+    }
+
+    public void setMinuteScheduled(int minuteScheduled){
+        this.minuteScheduled=minuteScheduled;
+        saveInt(PreyConfig.MINUTE_SCHEDULED, minuteScheduled);
+    }
+
+    public int getMinuteScheduled(){
+        return minuteScheduled;
     }
 }

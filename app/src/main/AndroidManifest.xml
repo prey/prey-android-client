@@ -264,16 +264,9 @@
             </intent-filter>
         </receiver>
 
-
-
-        <receiver
-            android:name="com.prey.receivers.AlarmReportReceiver"
-            >
-        </receiver>
-        <receiver
-            android:name="com.prey.receivers.AlarmScheduledReceiver"
-            >
-        </receiver>
+        <receiver android:name="com.prey.receivers.AlarmReportReceiver" />
+        <receiver android:name="com.prey.receivers.AlarmScheduledReceiver" />
+        <receiver android:name="com.prey.receivers.AlarmDisablePowerReceiver" />
 
         <receiver android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver">
             <intent-filter>

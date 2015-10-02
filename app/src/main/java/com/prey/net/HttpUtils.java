@@ -33,7 +33,7 @@ public class HttpUtils {
             trustStore.load(null, null);
 
             SSLSocketFactory sf = null;
-            if (PreyConfig.getPreyConfig(ctx).isGingerbreadOrAbove()) {
+            if (PreyConfig.getPreyConfig(ctx).isIceCreamSandwichOrAbove()) {
                 sf = SSLSocketFactory.getSocketFactory();
                 sf.setHostnameVerifier(SSLSocketFactory.STRICT_HOSTNAME_VERIFIER);
             } else {
