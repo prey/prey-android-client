@@ -8,6 +8,7 @@ package com.prey.activities;
 
 import android.app.NotificationManager;
 
+import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.PreyVerify;
 import com.prey.R;
@@ -73,11 +74,15 @@ public class LoginActivity extends PasswordActivity {
 
     private void startup() {
         Intent intent = null;
+        boolean ready=PreyConfig.getPreyConfig(this).getProtectReady();
         if (isThisDeviceAlreadyRegisteredWithPrey()) {
             PreyVerify.getInstance(this);
         }
-        showLogin();
-
+        if (isThereBatchInstallationKey()&&!ready) {
+                showLoginBatch();
+        } else {
+                showLogin();
+        }
     }
 
     private void showLogin() {
@@ -87,6 +92,13 @@ public class LoginActivity extends PasswordActivity {
         finish();
     }
 
+
+    private void showLoginBatch() {
+        Intent intent = null;
+        intent = new Intent(LoginActivity.this, WelcomeBatchActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
 
     private boolean isThisDeviceAlreadyRegisteredWithPrey() {

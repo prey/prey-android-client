@@ -319,7 +319,8 @@ public class PreyConfig {
 
     public boolean isThisDeviceAlreadyRegisteredWithPrey(boolean notifyUser) {
         String deviceId = getString(PreyConfig.DEVICE_ID, null);
-        boolean isVerified = deviceId != null;
+        PreyLogger.d("deviceId:"+deviceId);
+        boolean isVerified = (deviceId != null && !"".equals(deviceId));
         return isVerified;
     }
 

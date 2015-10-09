@@ -163,6 +163,11 @@
             android:noHistory="true"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name="com.prey.activities.WelcomeBatchActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.prey.activities.CheckPasswordActivity"
