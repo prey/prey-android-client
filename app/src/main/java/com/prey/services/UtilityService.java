@@ -20,6 +20,8 @@ import com.google.android.gms.location.FusedLocationProviderApi;
 
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.prey.PreyConfig;
+import com.prey.PreyLogger;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +32,7 @@ import static com.google.android.gms.location.LocationServices.FusedLocationApi;
  * operations that do not necessarily need to be tied to a UI.
  */
 public class UtilityService extends IntentService {
-    private static final String TAG = UtilityService.class.getSimpleName();
+
 
 
     private static final String ACTION_LOCATION_UPDATED = "location_updated";
@@ -63,7 +65,7 @@ public class UtilityService extends IntentService {
     }
 
     public UtilityService() {
-        super(TAG);
+        super(PreyConfig.TAG);
     }
 
     @Override
@@ -85,7 +87,7 @@ public class UtilityService extends IntentService {
      * Called when a location update is requested
      */
     private void requestLocationInternal() {
-        Log.v(TAG, ACTION_REQUEST_LOCATION);
+        PreyLogger.d(ACTION_REQUEST_LOCATION);
         GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .build();
@@ -119,7 +121,7 @@ public class UtilityService extends IntentService {
 
             googleApiClient.disconnect();
         } else {
-            Log.e(TAG, String.format(GOOGLE_API_CLIENT_ERROR_MSG,
+            PreyLogger.i(String.format(GOOGLE_API_CLIENT_ERROR_MSG,
                     connectionResult.getErrorCode()));
         }
     }

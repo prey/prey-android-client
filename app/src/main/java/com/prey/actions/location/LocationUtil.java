@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.prey.PreyLogger;
 import com.prey.PreyPhone;
 import com.prey.PreyPhone.Wifi;
@@ -43,13 +45,13 @@ public class LocationUtil {
             PreyLocation location = null;
             if (isGpsEnabled || isNetworkEnabled) {
                 String method=getMethod(isGpsEnabled,isNetworkEnabled);
-                /*
+
                 int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(ctx);
                 if (ConnectionResult.SUCCESS == resultCode) {
-                    location = getPreyLocationPlayService(ctx,method);
-                } else {*/
+                    location = getPreyLocationPlayService(ctx, method);
+                } else {
                     location = getPreyLocationAppService(ctx,method);
-               // }
+                }
             }
             if(location==null)
                 location = getDataLocationWifi(ctx);
@@ -102,7 +104,7 @@ public class LocationUtil {
 
         int i=0;
         Location currentLocation = play.getLastLocation(ctx);
-        while (currentLocation == null&&i<3) {
+        while (currentLocation == null&&i<5) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
