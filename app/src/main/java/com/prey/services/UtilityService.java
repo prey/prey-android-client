@@ -130,7 +130,7 @@ public class UtilityService extends IntentService {
      * Called when the location has been updated
      */
     private void locationUpdated(Intent intent) {
-        Log.v(TAG, ACTION_LOCATION_UPDATED);
+        PreyLogger.d( ACTION_LOCATION_UPDATED);
 
         // Extra new location
         Location location =

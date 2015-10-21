@@ -91,6 +91,22 @@ public class PreyDefaultHttpClient {
         return response;
     }
 
+    public HttpResponse executeNotRestries(HttpPost httpPost) throws ClientProtocolException, IOException {
+        HttpResponse response = null;
+        try {
+            PreyLogger.d("[0]ini post:" + httpPost.getURI());
+            response = client.execute(httpPost);
+            if (response != null)
+                PreyLogger.d("[0]post:" + httpPost.getURI() + "{" + response.getStatusLine().getStatusCode() + "}");
+        } catch (ConnectTimeoutException e) {
+            PreyLogger.d("[0]post ConnectTimeoutException:");
+        } catch (SocketTimeoutException e) {
+            PreyLogger.d("[0]post SocketTimeoutException:");
+        } catch (SSLException e) {
+            PreyLogger.d("[0]post SSLException:");
+        }
+        return response;
+    }
     public HttpResponse execute(HttpPost httpPost) throws ClientProtocolException, IOException {
         HttpResponse response = null;
         int count = 0;

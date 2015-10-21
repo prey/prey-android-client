@@ -209,14 +209,16 @@ public class PreyRestHttpClient {
         for (int i = 0; i < entityFiles.size(); i++) {
             EntityFile entityFile = entityFiles.get(i);
             boolean isLast = ((i + 1) == entityFiles.size() ? true : false);
-//			PreyLogger.d("["+i+"]type:"+entityFile.getType()+" name:"+entityFile.getName()+ " File:" + entityFile.getFile() + " MimeType:" + entityFile.getMimeType()+" isLast:"+isLast);
             entity.addPart(entityFile.getType(), entityFile.getName(), entityFile.getFile(), entityFile.getMimeType(), isLast);
         }
-
+        
         method.setEntity(entity);
         PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
         httpclient.setRedirectHandler(new NotRedirectHandler());
-        HttpResponse httpResponse = httpclient.execute(method);
+        HttpResponse httpResponse = httpclient.executeNotRestries(method);
+        if(httpResponse==null){
+            return postAutentication(url,params,preyConfig);
+        }
         PreyHttpResponse response = new PreyHttpResponse(httpResponse);
         //PreyLogger.d("Response from server: " + response.toString());
         return response;
