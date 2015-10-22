@@ -8,6 +8,11 @@ package com.prey.net;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLException;
 
@@ -39,7 +44,6 @@ public class PreyDefaultHttpClient {
 
     private int MAX_RETRIES = 4;
     private int STATUS_CODE_503 = 503;
-
 
     public PreyDefaultHttpClient(DefaultHttpClient client) {
         this.client = client;
@@ -91,21 +95,44 @@ public class PreyDefaultHttpClient {
         return response;
     }
 
-    public HttpResponse executeNotRestries(HttpPost httpPost) throws ClientProtocolException, IOException {
+    public HttpResponse executeTimeOut(HttpPost httpPost,int timeout) throws ClientProtocolException, IOException {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<HttpResponse> future = executor.submit(new ClientExecuteHttpTask(httpPost));
         HttpResponse response = null;
         try {
-            PreyLogger.d("[0]ini post:" + httpPost.getURI());
-            response = client.execute(httpPost);
-            if (response != null)
-                PreyLogger.d("[0]post:" + httpPost.getURI() + "{" + response.getStatusLine().getStatusCode() + "}");
-        } catch (ConnectTimeoutException e) {
-            PreyLogger.d("[0]post ConnectTimeoutException:");
-        } catch (SocketTimeoutException e) {
-            PreyLogger.d("[0]post SocketTimeoutException:");
-        } catch (SSLException e) {
-            PreyLogger.d("[0]post SSLException:");
+            response=future.get(timeout, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            PreyLogger.d("[-] exception ClientExecuteHttpTas post");
+            future.cancel(true);
+            httpPost.abort();
         }
         return response;
+    }
+
+    class ClientExecuteHttpTask implements Callable<HttpResponse> {
+
+        private HttpPost httpPost;
+        public  ClientExecuteHttpTask(HttpPost httpPost){
+            this.httpPost=httpPost;
+        }
+
+        @Override
+        public HttpResponse call() throws Exception {
+            HttpResponse response = null;
+            try {
+                PreyLogger.d("[-] ini ClientExecuteHttpTas post:" + httpPost.getURI());
+                response = client.execute(httpPost);
+                if (response != null)
+                    PreyLogger.d("[-] fin ClientExecuteHttpTas post:" + httpPost.getURI() + "{" + response.getStatusLine().getStatusCode() + "}");
+            } catch (ConnectTimeoutException e) {
+                PreyLogger.d("[-]post ConnectTimeoutException:");
+            } catch (SocketTimeoutException e) {
+                PreyLogger.d("[-]post SocketTimeoutException:");
+            } catch (SSLException e) {
+                PreyLogger.d("[-]post SSLException:");
+            }
+            return response;
+        }
     }
     public HttpResponse execute(HttpPost httpPost) throws ClientProtocolException, IOException {
         HttpResponse response = null;

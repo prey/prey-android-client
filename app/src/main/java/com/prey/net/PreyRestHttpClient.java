@@ -211,11 +211,12 @@ public class PreyRestHttpClient {
             boolean isLast = ((i + 1) == entityFiles.size() ? true : false);
             entity.addPart(entityFile.getType(), entityFile.getName(), entityFile.getFile(), entityFile.getMimeType(), isLast);
         }
-        
+
         method.setEntity(entity);
         PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
         httpclient.setRedirectHandler(new NotRedirectHandler());
-        HttpResponse httpResponse = httpclient.executeNotRestries(method);
+        int timeoutReport=PreyConfig.getPreyConfig(ctx).getTimeoutReport();
+        HttpResponse httpResponse = httpclient.executeTimeOut(method,timeoutReport);
         if(httpResponse==null){
             return postAutentication(url,params,preyConfig);
         }

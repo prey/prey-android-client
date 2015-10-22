@@ -90,6 +90,7 @@ public class PreyConfig {
     public static final String INTERVAL_REPORT="INTERVAL_REPORT";
     public static final String EXCLUDE_REPORT="EXCLUDE_REPORT";
     public static final String LAST_REPORT_START_DATE="LAST_REPORT_START_DATE";
+    public static final String TIMEOUT_REPORT="TIMEOUT_REPORT";
 
     public static final String SIGNAL_FLARE_DATE="SIGNAL_FLARE_DATE";
 
@@ -113,6 +114,7 @@ public class PreyConfig {
 
     private boolean scheduled;
     private int minuteScheduled;
+    private int timeoutReport;
     private boolean runOnce;
 
     private boolean disablePowerOptions;
@@ -128,6 +130,7 @@ public class PreyConfig {
 
         this.scheduled=getBoolean(PreyConfig.SCHEDULED, FileConfigReader.getInstance(ctx).isScheduled());
         this.minuteScheduled=getInt(PreyConfig.MINUTE_SCHEDULED, FileConfigReader.getInstance(ctx).getMinuteScheduled());
+        this.timeoutReport=getInt(PreyConfig.TIMEOUT_REPORT, FileConfigReader.getInstance(ctx).getTimeoutReport());
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         this.disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
 
@@ -707,5 +710,9 @@ public class PreyConfig {
 
     public int getMinuteScheduled(){
         return minuteScheduled;
+    }
+
+    public int getTimeoutReport(){
+        return timeoutReport;
     }
 }

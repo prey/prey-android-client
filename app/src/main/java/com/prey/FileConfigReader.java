@@ -121,5 +121,9 @@ public class FileConfigReader {
         return Integer.parseInt(properties.getProperty("minute-scheduled"));
     }
 
+    public int getTimeoutReport() {
+        return Integer.parseInt(properties.getProperty("timeout-report"));
+    }
+
 }
 
