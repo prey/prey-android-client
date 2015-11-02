@@ -57,14 +57,14 @@ public class LocationService extends Service {
         LocationProvider networkProvider = androidLocationManager.getProvider(LocationManager.NETWORK_PROVIDER);
 
         if (gpsLocationProvider != null && androidLocationManager.isProviderEnabled(gpsLocationProvider.getName())) {
-            androidLocationManager.requestLocationUpdates(gpsLocationProvider.getName(), PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_INTERVAL, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE,
+            androidLocationManager.requestLocationUpdates(gpsLocationProvider.getName(), PreyConfig.UPDATE_INTERVAL, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE,
                     gpsLocationListener);
             PreyLogger.d("GPS Location provider has been started.");
         }
 
         // 4x faster refreshing rate since this provider doesn't consume much battery.
         if (networkProvider != null && androidLocationManager.isProviderEnabled(networkProvider.getName())) {
-            androidLocationManager.requestLocationUpdates(networkProvider.getName(), PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_INTERVAL / 4, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE,
+            androidLocationManager.requestLocationUpdates(networkProvider.getName(), PreyConfig.UPDATE_INTERVAL / 4, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE,
                     networkLocationListener);
             PreyLogger.d("NETWORK Location provider has been started.");
         }

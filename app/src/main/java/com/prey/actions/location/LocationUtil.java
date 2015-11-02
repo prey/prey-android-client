@@ -45,13 +45,21 @@ public class LocationUtil {
             PreyLocation location = null;
             if (isGpsEnabled || isNetworkEnabled) {
                 String method=getMethod(isGpsEnabled,isNetworkEnabled);
-
+                PreyLocation locationPlay=null;
                 int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(ctx);
                 if (ConnectionResult.SUCCESS == resultCode) {
-                    location = getPreyLocationPlayService(ctx, method);
-                } else {
-                    location = getPreyLocationAppService(ctx,method);
+                    locationPlay = getPreyLocationPlayService(ctx, method);
+                    PreyLogger.d("locationPlay:" + locationPlay.getLat()+" "+locationPlay.getLng()+" "+locationPlay.getAccuracy());
+
                 }
+                location = getPreyLocationAppService(ctx,method);
+                PreyLogger.d("location: " + location.getLat()+" "+location.getLng()+" "+location.getAccuracy());
+                if (locationPlay!=null&&location!=null&&locationPlay.getAccuracy()<location.getAccuracy()){
+                    location=locationPlay;
+                    PreyLogger.d("distance: "+locationPlay.getLocation().distanceTo(location.getLocation()));
+                }
+
+
             }
             if(location==null)
                 location = getDataLocationWifi(ctx);

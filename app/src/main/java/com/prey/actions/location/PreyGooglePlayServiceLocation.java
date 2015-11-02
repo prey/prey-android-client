@@ -20,6 +20,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 
 
@@ -29,15 +30,6 @@ import java.util.concurrent.TimeUnit;
 
 public class PreyGooglePlayServiceLocation implements
         ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
-
-
-
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-
-    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-
-
 
     protected GoogleApiClient mGoogleApiClient;
     protected LocationRequest mLocationRequest;
@@ -86,13 +78,15 @@ public class PreyGooglePlayServiceLocation implements
     }
 
     protected void createLocationRequest() {
+
         mLocationRequest = new LocationRequest();
 
-        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setInterval(PreyConfig.UPDATE_INTERVAL);
 
-        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setFastestInterval(PreyConfig.FASTEST_INTERVAL);
 
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setPriority(PreyConfig.LOCATION_PRIORITY);
+
     }
 
     @Override

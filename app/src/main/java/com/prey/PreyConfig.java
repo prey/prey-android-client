@@ -18,6 +18,7 @@ import android.telephony.TelephonyManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationRequest;
 import com.prey.activities.FeedbackActivity;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.PreyWebServices;
@@ -36,20 +37,24 @@ public class PreyConfig {
 
     public static final String TAG = "PREY";
 
+    // Milliseconds per second
+    private static final int MILLISECONDS_PER_SECOND = 1000;
 
     // Set to 1000 * 60 in production.
-    public static final long DELAY_MULTIPLIER = 1000 * 60;
+    public static final long DELAY_MULTIPLIER = 60 * 1000;
 
     // the minimum time interval for GPS notifications, in milliseconds (default 60000).
-    public static final long LOCATION_PROVIDERS_MIN_REFRESH_INTERVAL = 10000;
+    public static final long UPDATE_INTERVAL = 60 * MILLISECONDS_PER_SECOND;
 
     // the minimum distance interval for GPS notifications, in meters (default 20)
     public static final float LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE = 20;
 
     // max "age" in ms of last location (default 120000).
-    public static final float LAST_LOCATION_MAX_AGE = 30000;
+    public static final long LAST_LOCATION_MAX_AGE = 30 * MILLISECONDS_PER_SECOND;
 
+    public static final int LOCATION_PRIORITY = LocationRequest.PRIORITY_HIGH_ACCURACY;
 
+    public static final long FASTEST_INTERVAL  =  40 * MILLISECONDS_PER_SECOND;
 
     public static final String PROTECT_ACCOUNT="PROTECT_ACCOUNT";
     public static final String PROTECT_PRIVILEGES="PROTECT_PRIVILEGES";
@@ -98,7 +103,7 @@ public class PreyConfig {
     public static final String DEVICE_ID = "DEVICE_ID";
 
     public static final String SIM_SERIAL_NUMBER = "SIM_SERIAL_NUMBER";
-    public static final String VERSION_PREY_DEFAULT="1.4.1";
+    public static final String VERSION_PREY_DEFAULT="1.4.7";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
