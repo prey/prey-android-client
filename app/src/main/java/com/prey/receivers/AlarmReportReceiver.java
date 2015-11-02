@@ -6,18 +6,36 @@
  ******************************************************************************/
 package com.prey.receivers;
 
+import com.prey.PreyConfig;
+import com.prey.PreyLogger;
 import com.prey.actions.report.ReportService;
 
+import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 public class AlarmReportReceiver extends BroadcastReceiver {
 
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent intent2 = new Intent(context, ReportService.class);
-        context.startService(intent2);
+        try {
+            PreyLogger.i("______________________________");
+            PreyLogger.i("______________________________");
+            PreyLogger.i("----------AlarmReportReceiver onReceive");
+
+            Intent intent2 = new Intent(context, ReportService.class);
+            context.startService(intent2);
+        }catch(Exception e){
+            PreyLogger.i("_______AlarmReportReceiver error:"+e.getMessage());
+        }
+
+
     }
+
 
 }

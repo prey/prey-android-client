@@ -13,11 +13,13 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.observer.ActionResult;
 import com.prey.actions.report.ReportScheduled;
+import com.prey.actions.report.ReportService;
 
 public class Report {
 
@@ -43,7 +45,17 @@ public class Report {
         }
         PreyConfig.getPreyConfig(ctx).setIntervalReport("" + interval);
         PreyConfig.getPreyConfig(ctx).setExcludeReport(exclude);
-        ReportScheduled.getInstance(ctx).run(interval);
+
+
+
+        Intent intent2 = new Intent(ctx, ReportService.class);
+        PreyLogger.d("________startService ReportService");
+
+        ctx.startService(intent2);
+
+        PreyLogger.d("________start ReportScheduled");
+        ReportScheduled.getInstance(ctx).run();
+
     }
 
     public boolean valida(Context ctx) {

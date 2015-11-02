@@ -31,7 +31,7 @@ public class PreyApp extends Application {
 
             if (PreyConfig.getPreyConfig(this).isMissing()) {
                 if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {
-                    ReportScheduled.getInstance(this).run(Integer.parseInt(PreyConfig.getPreyConfig(this).getIntervalReport()));
+                    ReportScheduled.getInstance(this).run();
                 }
             }
 
