@@ -48,18 +48,8 @@ public class LocationUtil {
                 PreyLocation locationPlay=null;
                 int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(ctx);
                 if (ConnectionResult.SUCCESS == resultCode) {
-                    locationPlay = getPreyLocationPlayService(ctx, method);
-                    PreyLogger.d("locationPlay:" + locationPlay.getLat()+" "+locationPlay.getLng()+" "+locationPlay.getAccuracy());
-
+                    location = getPreyLocationPlayService(ctx, method);
                 }
-                location = getPreyLocationAppService(ctx,method);
-                PreyLogger.d("location: " + location.getLat()+" "+location.getLng()+" "+location.getAccuracy());
-                if (locationPlay!=null&&location!=null&&locationPlay.getAccuracy()<location.getAccuracy()){
-                    location=locationPlay;
-                    PreyLogger.d("distance: "+locationPlay.getLocation().distanceTo(location.getLocation()));
-                }
-
-
             }
             if(location==null)
                 location = getDataLocationWifi(ctx);
@@ -106,13 +96,19 @@ public class LocationUtil {
         return location;
     }
 
-    public static PreyLocation getPreyLocationPlayService(Context ctx,String method) throws Exception {
-        PreyGooglePlayServiceLocation play = new PreyGooglePlayServiceLocation();
-        play.init(ctx);
+    public static PreyLocation getPreyLocationPlayService(final Context ctx,String method) throws Exception {
+        final PreyGooglePlayServiceLocation play = new PreyGooglePlayServiceLocation();
+        new Thread( new Runnable() {
+            @Override
+            public void run() {
+                play.init(ctx);
+            }
+        }).start();
+
 
         int i=0;
-        Location currentLocation = play.getLastLocation(ctx);
-        while (currentLocation == null&&i<5) {
+        Location currentLocation = null;
+        while (currentLocation == null&&i<6) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {

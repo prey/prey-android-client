@@ -56,6 +56,9 @@ public class PreyConfig {
 
     public static final long FASTEST_INTERVAL  =  40 * MILLISECONDS_PER_SECOND;
 
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10 * MILLISECONDS_PER_SECOND;
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =  UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+
     public static final String PROTECT_ACCOUNT="PROTECT_ACCOUNT";
     public static final String PROTECT_PRIVILEGES="PROTECT_PRIVILEGES";
     public static final String PROTECT_TOUR="PROTECT_TOUR";
