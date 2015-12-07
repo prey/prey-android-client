@@ -216,14 +216,32 @@ public class PreyRestHttpClient {
         PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
         httpclient.setRedirectHandler(new NotRedirectHandler());
         int timeoutReport=PreyConfig.getPreyConfig(ctx).getTimeoutReport();
-        HttpResponse httpResponse = httpclient.executeTimeOut(method,timeoutReport);
+        HttpResponse httpResponse = httpclient.executeTimeOut(method, timeoutReport);
         if(httpResponse==null){
-            return postAutentication(url,params,preyConfig);
+            return postAutenticationTimeout(url, params, preyConfig);
         }
         PreyHttpResponse response = new PreyHttpResponse(httpResponse);
         //PreyLogger.d("Response from server: " + response.toString());
         return response;
     }
+
+    public PreyHttpResponse postAutenticationTimeout(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
+        HttpPost method = new HttpPost(url);
+
+        method.setHeader("Accept", "*/*");
+        method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
+        method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
+
+        int timeoutReport=PreyConfig.getPreyConfig(ctx).getTimeoutReport();
+        // method.setParams(getHttpParamsFromMap(params));
+        PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+        httpclient.setRedirectHandler(new NotRedirectHandler());
+        HttpResponse httpResponse = httpclient.executeTimeOut(method, timeoutReport);
+        PreyHttpResponse response = new PreyHttpResponse(httpResponse);
+        //PreyLogger.d("Response from server: " + response.toString());
+        return response;
+    }
+
 
     public PreyHttpResponse postStatusAutentication(String url, String status, Map<String, String> params, PreyConfig preyConfig) throws IOException {
         HttpPost method = new HttpPost(url);
@@ -258,6 +276,8 @@ public class PreyRestHttpClient {
         //PreyLogger.d("Response from server: " + response.toString());
         return response;
     }
+
+
 
     public PreyHttpResponse getAutentication(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
         HttpPost method = new HttpPost(url);

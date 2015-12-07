@@ -658,7 +658,7 @@ public class PreyWebServices {
 
 
             if (entityFiles == null || entityFiles.size() == 0)
-                preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig);
+                preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutenticationTimeout(url, parameters, preyConfig);
             else
                 preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig, entityFiles);
             PreyLogger.i("Report sent: " + preyHttpResponse.getResponseAsString());
