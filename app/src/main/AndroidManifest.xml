@@ -366,6 +366,7 @@
         <service android:name="com.prey.services.PreyDisablePowerOptionsService" />
         <service android:name="com.prey.beta.services.PreyBetaRunnerService" />
         <service android:name="com.prey.actions.report.ReportService" />
+        <service android:name="com.prey.actions.geofences.GeofenceIntentService" />
 
     </application>
 
