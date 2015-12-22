@@ -280,12 +280,13 @@ public class PreyRestHttpClient {
 
 
     public PreyHttpResponse getAutentication(String url, Map<String, String> params, PreyConfig preyConfig) throws IOException {
-        HttpPost method = new HttpPost(url);
-
-        method.setHeader("Accept", "*/*");
+        HttpGet method = null;
         if (params != null) {
-            method.setEntity(new UrlEncodedFormEntity(getHttpParamsFromMap(params), HTTP.UTF_8));
+            method = new HttpGet(url + URLEncodedUtils.format(getHttpParamsFromMap(params), "UTF-8"));
+        } else {
+            method = new HttpGet(url);
         }
+        method.setHeader("Accept", "*/*");
         PreyLogger.i("apikey:" + preyConfig.getApiKey());
         method.addHeader("Authorization", "Basic " + getCredentials(preyConfig.getApiKey(), "X"));
 
