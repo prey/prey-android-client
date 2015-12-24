@@ -1,17 +1,8 @@
-/*******************************************************************************
- * Created by Orlando Aliaga
- * Copyright 2015 Prey Inc. All rights reserved.
- * License: GPLv3
- * Full license at "/LICENSE"
- ******************************************************************************/
 package com.prey.activities;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,42 +15,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.prey.PreyAccountData;
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyUtils;
 import com.prey.R;
+import com.prey.exceptions.NoMoreDevicesAllowedException;
+import com.prey.exceptions.PreyException;
+import com.prey.net.PreyWebServices;
 
-public class InitActivity extends FragmentActivity {
+/**
+ * Created by oso on 23-12-15.
+ */
+public class HomeActivity extends FragmentActivity {
 
 
     ViewPager mViewPager;
     OnboardingPagerAdapter onboardingPagerAdapter;
 
-    @Override
-    public void onResume() {
-        PreyLogger.d("onResume of InitActivity");
-        super.onResume();
-        new MovePageTask().execute();
-    }
 
-    @Override
-    public void onPause() {
-        PreyLogger.d("onPause of InitActivity");
-        super.onPause();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        this.setContentView(R.layout.home);
-        PreyLogger.i("onCreate of MenuActivity");
+
+        setContentView(R.layout.home);
 
         onboardingPagerAdapter=new OnboardingPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -75,6 +58,7 @@ public class InitActivity extends FragmentActivity {
                 finish();
 
 
+
             }
         });
         TextView textView=(TextView)findViewById(R.id.linkHome);
@@ -88,15 +72,14 @@ public class InitActivity extends FragmentActivity {
             }
         });
 
-
-
-          Typeface titilliumWebBold = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Bold.ttf");
-
-
-
-        buttonHome.setTypeface(titilliumWebBold);
-
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new MovePageTask().execute();
+    }
+
 
     private class MovePageTask extends AsyncTask<String, Void, Void> {
 
@@ -118,10 +101,10 @@ public class InitActivity extends FragmentActivity {
         protected void onPostExecute(Void unused) {
             int page=onboardingPagerAdapter.page;
             PreyLogger.i("page:" + page);
-            if(page!=5){
-                new MovePageTask().execute();
+            if(page==6){
+                page=0;
             }
-
+            new MovePageTask().execute();
             mViewPager.setCurrentItem(page);
 
         }

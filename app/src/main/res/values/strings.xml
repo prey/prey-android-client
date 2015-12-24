@@ -162,5 +162,13 @@
     <string name="geofence_transition_exited">Exited</string>
     <string name="unknown_geofence_transition">Unknown Transition</string>
 
+    <string name="home_button">REGÍSTRATE</string>
+    <string name="home_subtitle">¿Ya tienes una cuenta? <b>Iniciar sesión</b></string>
 
+    <string name="home_text_1">Ashley uses Prey on all her devices: her Macbook, her Android phone and her iPad. But one day, she was at the wrong place at the wrong time and someone stole her computer.</string>
+    <string name="home_text_2">You suck, Steve. Get a real job</string>
+    <string name="home_text_3">Losing a device means losing precious data, memories, information and some realley expensive equipment</string>
+    <string name="home_text_4">Smile, Steve. Prey is actively taking your picture, gathering screenshots and monitoring your location, while sending reports to Ashley</string>
+    <string name="home_text_5">Good thing Ashley has PREY activated! She just got the reports from her stolen device, so now the police has accurate intel to work with</string>
+    <string name="home_text_6">With the detailed reports on the missing device (even silent snapshots from the thief) Ashley had more worries, she got her device back</string>
 </resources>
