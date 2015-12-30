@@ -161,13 +161,48 @@
 
 
 
-    <string name="home_text_0">Ashley utiliza PREY en todos sus dispositivos: su Macbook, su teléfono y tablet Android. Pero un día, ella estaba en el lugar equivocado en el momento equivocado y alguien le robó su tablet.</string>
-    <string name="home_text_1">Conozca a Steve, él roba objetos desatendidos.</string>
-    <string name="home_text_2">La pérdida de un dispositivo significa perder datos preciosos, los recuerdos, la información y equipos muy caros.</string>
-    <string name="home_text_3">Sin él saberlo, Prey está capturando en silencio fotos, ubicación, y el envío de los propietarios legítimos informes completos.\n Nashley también puede utilizar Prey para bloquear de forma remota su dispositivo hacia abajo y limpie sus datos sensibles.</string>
-    <string name="home_text_4">Lo bueno es que Ashley ha activado PREY! Ella acaba de recibir los informes de su equipo robado, por lo que ahora la policía tiene pruebas precisas.</string>
-    <string name="home_text_5">Con los informes detallados sobre el dispositivo que falta, Ashley tenía más preocupaciones, ella consiguió su dispositivo de nuevo.</string>
-    <string name="home_text_6">No espere a que suceda lo peor para tomar medidas. <b>Proteja este dispositivo con PREY ahora!</b></string>
+    <string name="home_text_0">Ashley usa Prey en todos sus dispositivos: su Macbook, su teléfono y su tablet Android. Un día, estando en el lugar y momento equivocado, alguien robó su tablet.</string>
+    <string name="home_text_1">Saluden a Steve, suele robar objetos cuando ve la oportunidad.</string>
+    <string name="home_text_2">Perder un dispositivo significa también perder datos, recuerdos y un equipo bastante caro.</string>
+    <string name="home_text_3">Sin que Steve lo sepa, Prey está silenciosamente tomando fotos, registrando la ubicación y enviándole a la dueña del equipo reportes con la información.\nAshley también puede usar Prey para bloquear su dispositivo remotamente y borrar datos sensibles.</string>
+    <string name="home_text_4">Lo bueno es que Ashley tiene Prey activado. Ya recibió los reportes de su tablet robada y la policía tiene evidencia sólida para atrapar al ladrón.</string>
+    <string name="home_text_5">Con el trabajo de Prey y la policía, Ashley pudo recuperar su dispositivo.</string>
+    <string name="home_text_6">No esperes a que pase lo peor para actuar.\n<b>Regístrate, ingresa tus datos y configura Prey en tu teléfono.</b></string>
+
+
+
+    <!-- preferece -->
+    <string name="preference_pin">Prey PIN</string>
+    <string name="preference_pin_summary">Es un código de 4 dígitos requerido para bloquear al existir un cambio de SIM y para usar los comandos SMS</string>
+
+    <string name="preference_sms">Comandos SMS</string>
+    <string name="preference_sms_summary">Permite ejecutar acciones en tu dispositivo de forma remota, enviando instrucciones a través de un mensaje de texto</string>
+
+
+    <string name="preference_pin_updating_dialog">PIN Actualizando</string>
+    <string name="preference_pin_successfully_changed">PIN cambiado correctamente</string>
+    <string name="preference_pin_removed">PIN eliminado</string>
+
+    <!-- preferece sms-->
+    <string name="preference_sms_category_title">SMS</string>
+    <string name="preference_sms_checkbox_title">Activar comandos SMS</string>
+    <string name="preference_sms_checkbox_summary">Envía un mensaje de texto a tu teléfono con el comando que necesites y la acción se activará en tu dispositivo</string>
+    <string name="preference_sms_category_available">Los comandos disponibles</string>
+    <string name="preference_sms_command_location">prey PIN location phone_number</string>
+    <string name="preference_sms_command_location_summary">Envía la geolocalización del dispositivo por SMS a phone_number</string>
+    <string name="preference_sms_command_lock">prey PIN lock lock_PIN</string>
+    <string name="preference_sms_command_lock_summary">Bloquea la pantalla del dispositivo hasta que se ingrese la clave lock_PIN</string>
+    <string name="preference_sms_command_unlock">prey PIN unlock</string>
+    <string name="preference_sms_command_unlock_summary">Desbloquea la pantalla del dispositivo, útil al olvidar una contraseña</string>
+    <string name="preference_sms_command_alarm">prey PIN alarm</string>
+    <string name="preference_sms_command_alarm_summary">Hará sonar una alarma</string>
+    <string name="preference_sms_command_alert">prey PIN alert some_text</string>
+    <string name="preference_sms_command_alert_summary">Mostrará some_text como notificación del sistema</string>
+    <string name="preference_sms_command_wipe">prey PIN wipe</string>
+    <string name="preference_sms_command_wipe_summary">Borrará todos los datos del dispositivo: un “restablecimiento de fábrica”. Útil para proteger información privada, pero puede eliminar Prey. Usar con precaución!</string>
+
+
+
 
 
 </resources>

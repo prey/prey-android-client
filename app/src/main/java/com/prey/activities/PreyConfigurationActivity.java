@@ -58,17 +58,20 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 
         PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
         Preference p = findPreference("PREFS_ADMIN_DEVICE");
-        if (preyConfig.isFroyoOrAbove()) {
+        try {
+            if (preyConfig.isFroyoOrAbove()) {
 
-            if (FroyoSupport.getInstance(getApplicationContext()).isAdminActive()) {
-                p.setTitle(R.string.preferences_admin_enabled_title);
-                p.setSummary(R.string.preferences_admin_enabled_summary);
-            } else {
-                p.setTitle(R.string.preferences_admin_disabled_title);
-                p.setSummary(R.string.preferences_admin_disabled_summary);
-            }
-        } else
-            p.setEnabled(false);
+                if (FroyoSupport.getInstance(getApplicationContext()).isAdminActive()) {
+                    p.setTitle(R.string.preferences_admin_enabled_title);
+                    p.setSummary(R.string.preferences_admin_enabled_summary);
+                } else {
+                    p.setTitle(R.string.preferences_admin_disabled_title);
+                    p.setSummary(R.string.preferences_admin_disabled_summary);
+                }
+            } else
+                p.setEnabled(false);
+        }catch(Exception e){
+        }
 
         p = findPreference("PREFS_ABOUT");
         p.setSummary("Version " + preyConfig.getPreyVersion() + " - Prey Inc.");
@@ -91,13 +94,41 @@ public class PreyConfigurationActivity extends PreferenceActivity {
             }
         });
 
+
+        Preference pSMS= findPreference("PREFS_SMS");
+        pSMS.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+            public boolean onPreferenceClick(Preference preference) {
+
+                Intent intent = new Intent(getApplicationContext(), PreyConfigurationSMSActivity.class);
+                startActivity(intent);
+
+                return false;
+            }
+        });
+
+        try {
+
+            if (preyConfig.getPinNumber()<0) {
+
+                pSMS.setEnabled(false);
+
+
+            }else{
+
+                pSMS.setEnabled(true);
+            }
+        } catch (Exception e) {
+        }
+        PreyStatus.getInstance().setPreyConfigurationActivityResume(false);
+
+
     }
 
 
     @Override
     protected void onPause() {
         super.onPause();
-        PreyStatus.getInstance().setPreyConfigurationActivityResume(false);
     }
 
 

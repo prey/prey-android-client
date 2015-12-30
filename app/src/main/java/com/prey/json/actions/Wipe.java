@@ -19,7 +19,7 @@ import com.prey.actions.wipe.WipeThread;
 public class Wipe {
 
     public void sms(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        execute(ctx, list, parameters);
+        //execute(ctx, list, parameters);
     }
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {

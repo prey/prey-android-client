@@ -187,6 +187,15 @@
             android:theme="@android:style/Theme.NoTitleBar" />
         />
         <activity
+            android:name="com.prey.activities.PreyConfigurationSMSActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        />
+        <activity
             android:name="com.prey.activities.PopUpAlertActivity"
             android:screenOrientation="portrait"
             android:clearTaskOnLaunch="true"
@@ -301,11 +310,11 @@
             </intent-filter>
         </receiver>
 
-
-
-
-
-
+        <receiver android:name="com.prey.receivers.SmsReceiver">
+            <intent-filter android:priority="2147483647" >
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
 
         <!-- Only C2DM servers can send messages for the app. If permission is not set - any other app can generate it -->
         <receiver android:name="com.prey.receivers.C2DMReceiver" android:permission="com.google.android.c2dm.permission.SEND" >

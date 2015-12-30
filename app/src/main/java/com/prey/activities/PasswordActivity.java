@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
@@ -91,8 +92,10 @@ public class PasswordActivity extends PreyActivity {
                 String email = getPreyConfig().getEmail();
                 PreyLogger.d("email:"+email+"password[0]:"+password[0]);
                 isPasswordOk = PreyWebServices.getInstance().checkPassword(PasswordActivity.this, email, password[0]);
-
-
+                if(isPasswordOk)
+                    PreyWebServices.getInstance().sendEvent(getApplication(), PreyConfig.ANDROID_LOGIN_SETTINGS);
+                else
+                    PreyWebServices.getInstance().sendEvent(getApplication(), PreyConfig.ANDROID_FAILED_LOGIN_SETTINGS);
             } catch (PreyException e) {
                 error = e.getMessage();
             }

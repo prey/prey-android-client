@@ -38,15 +38,21 @@ public class PreyApp extends Application {
                 }
             }
 
-            PreyLogger.i("InstallationDate:"+PreyConfig.getPreyConfig(this).getInstallationDate());
+            PreyLogger.d("InstallationDate:" + PreyConfig.getPreyConfig(this).getInstallationDate());
             if(PreyConfig.getPreyConfig(this).getInstallationDate()==0) {
                 PreyConfig.getPreyConfig(this).setInstallationDate(new Date().getTime());
                 PreyWebServices.getInstance().sendEvent(this, PreyConfig.ANDROID_INIT);
             }
 
             String sessionId = PreyUtils.randomAlphaNumeric(16);
-            PreyLogger.i("#######sessionId:"+sessionId);
+            PreyLogger.d("#######sessionId:" + sessionId);
             PreyConfig.getPreyConfig(this).setSessionId(sessionId);
+            String PreyVersion=PreyConfig.getPreyConfig(this).getPreyVersion();
+            String preferencePreyVersion=PreyConfig.getPreyConfig(this).getPreferencePreyVersion();     ;
+            if(PreyVersion.equals(preferencePreyVersion)) {
+                PreyConfig.getPreyConfig(this).setPreferencePreyVersion(PreyVersion);
+                PreyWebServices.getInstance().sendEvent(this, PreyConfig.ANDROID_VERSION_UPDATED);
+            }
 
         }catch(Exception e){}
     }

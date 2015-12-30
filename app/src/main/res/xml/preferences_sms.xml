@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Created by Carlos Yaconi
+  Copyright 2012 Fork Ltd. All rights reserved.
+  License: GPLv3
+  Full license at "/LICENSE"
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="PREFS_APP"
+        android:title="@string/preference_sms_category_title">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="PREFS_SMS_COMMAND"
+            android:summary="@string/preference_sms_checkbox_summary"
+            android:title="@string/preference_sms_checkbox_title"></CheckBoxPreference>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="PREFS_APP"
+        android:title="@string/preference_sms_category_available">
+        <Preference
+            android:key="prey_sms_location"
+            android:summary="@string/preference_sms_command_location_summary"
+            android:title="@string/preference_sms_command_location"></Preference>
+        <Preference
+            android:key="prey_sms_lock"
+            android:summary="@string/preference_sms_command_lock_summary"
+            android:title="@string/preference_sms_command_lock"></Preference>
+        <Preference
+            android:key="prey_sms_unlock"
+            android:summary="@string/preference_sms_command_unlock_summary"
+            android:title="@string/preference_sms_command_unlock"></Preference>
+        <Preference
+            android:key="prey_sms_alarm"
+            android:summary="@string/preference_sms_command_alarm_summary"
+            android:title="@string/preference_sms_command_alarm"></Preference>
+        <Preference
+            android:key="prey_sms_alert"
+            android:summary="@string/preference_sms_command_alert_summary"
+            android:title="@string/preference_sms_command_alert"></Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

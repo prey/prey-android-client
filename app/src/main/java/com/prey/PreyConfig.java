@@ -101,6 +101,8 @@ public class PreyConfig {
     public static final String SIGNAL_FLARE_DATE="SIGNAL_FLARE_DATE";
     public static final String SESSION_ID="SIGNAL_FLARE_DATE";
 
+    public static final String PIN_NUMBER="PIN_NUMBER";
+    public static final String SMS_COMMAND="SMS_COMMAND";
 
     public static final int ANDROID_INIT = 2000;
     public static final int ANDROID_SIGN_UP = 2001;
@@ -108,7 +110,11 @@ public class PreyConfig {
     public static final int ANDROID_TOUR_COMPLETED = 2003;
     public static final int ANDROID_PRIVILEGES_GIVEN = 2004;
     public static final int ANDROID_SIGN_IN = 2005;
+    public static final int ANDROID_LOGIN_SETTINGS = 2007;
+    public static final int ANDROID_FAILED_LOGIN_SETTINGS = 2008;
+    public static final int ANDROID_VERSION_UPDATED = 2009;
 
+    public static final String PREFERENCE_PREY_VERSION="PREFERENCE_PREY_VERSION";
     public static final String API_KEY="API_KEY";
     public static final String DEVICE_ID = "DEVICE_ID";
 
@@ -478,7 +484,7 @@ public class PreyConfig {
     }
 
     public boolean isLockSet() {
-        return getBoolean(PreyConfig.IS_LOCK_SET,false);
+        return getBoolean(PreyConfig.IS_LOCK_SET, false);
     }
 
     public void setNextAlert(boolean nextAlert){
@@ -486,7 +492,7 @@ public class PreyConfig {
     }
 
     public boolean isNextAlert() {
-        return getBoolean(PreyConfig.NEXT_ALERT,false);
+        return getBoolean(PreyConfig.NEXT_ALERT, false);
     }
 
     public void setCamouflageSet(boolean camouflageSet){
@@ -499,7 +505,7 @@ public class PreyConfig {
 
     public String getPreyPanelUrl() {
         String panel = FileConfigReader.getInstance(this.ctx).getPreyPanel();
-        String url=HTTP.concat(panel).concat(".").concat(getPreyDomain()).concat("/").concat(getPreyCampaign());
+        String url= HTTP.concat(panel).concat(".").concat(getPreyDomain()).concat("/").concat(getPreyCampaign());
         PreyLogger.i(url);
         return url;
     }
@@ -696,7 +702,7 @@ public class PreyConfig {
     }
 
     public long getSignalFlareDate(){
-        return getLong(PreyConfig.SIGNAL_FLARE_DATE,0);
+        return getLong(PreyConfig.SIGNAL_FLARE_DATE, 0);
     }
 
     public void setScheduled(boolean scheduled){
@@ -736,4 +742,29 @@ public class PreyConfig {
     public void setSessionId(String sessionId) {
         saveString(PreyConfig.SESSION_ID, sessionId);
     }
+
+    public void setPinNumber(int pin){
+        saveInt(PreyConfig.PIN_NUMBER, pin);
+    }
+
+    public int getPinNumber(){
+        return getInt(PreyConfig.PIN_NUMBER,-1);
+    }
+
+    public void setSmsCommand(boolean smsCommand){
+        saveBoolean(PreyConfig.SMS_COMMAND, smsCommand);
+    }
+
+    public boolean isSmsCommand(){
+        return getBoolean(PreyConfig.SMS_COMMAND, false);
+    }
+
+    public String getPreferencePreyVersion(){
+        return getString(PreyConfig.PREFERENCE_PREY_VERSION, "");
+    }
+
+    public void setPreferencePreyVersion(String preferencePreyVersion) {
+        saveString(PreyConfig.PREFERENCE_PREY_VERSION, preferencePreyVersion);
+    }
+
 }
