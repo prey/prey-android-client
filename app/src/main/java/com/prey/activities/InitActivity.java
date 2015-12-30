@@ -6,13 +6,10 @@
  ******************************************************************************/
 package com.prey.activities;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,14 +17,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.prey.PreyLogger;
 import com.prey.R;
+
+import java.util.logging.Logger;
 
 public class InitActivity extends FragmentActivity {
 
@@ -39,7 +41,7 @@ public class InitActivity extends FragmentActivity {
     public void onResume() {
         PreyLogger.d("onResume of InitActivity");
         super.onResume();
-        new MovePageTask().execute();
+
     }
 
     @Override
@@ -61,15 +63,14 @@ public class InitActivity extends FragmentActivity {
         this.setContentView(R.layout.home);
         PreyLogger.i("onCreate of MenuActivity");
 
-        onboardingPagerAdapter=new OnboardingPagerAdapter(getSupportFragmentManager());
+        onboardingPagerAdapter = new OnboardingPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(onboardingPagerAdapter);
 
-        Button buttonHome=(Button)findViewById(R.id.buttonHome);
+        Button buttonHome = (Button) findViewById(R.id.buttonHome);
         buttonHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
                 startActivity(intent);
                 finish();
@@ -77,61 +78,76 @@ public class InitActivity extends FragmentActivity {
 
             }
         });
-        TextView textView=(TextView)findViewById(R.id.linkHome);
+        TextView textView = (TextView) findViewById(R.id.linkHome);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
 
-
-
-          Typeface titilliumWebBold = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Bold.ttf");
-
-
-
+        Typeface titilliumWebBold = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Bold.ttf");
         buttonHome.setTypeface(titilliumWebBold);
 
-    }
 
-    private class MovePageTask extends AsyncTask<String, Void, Void> {
+        final LinearLayout larr=(LinearLayout)findViewById(R.id.larr);
+        final LinearLayout rarr=(LinearLayout)findViewById(R.id.rarr);
+        larr.setVisibility(View.GONE);
+        larr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        ProgressDialog progressDialog = null;
+                int currentItem = mViewPager.getCurrentItem();
+                larr.setVisibility(View.VISIBLE);
+                rarr.setVisibility(View.VISIBLE);
+                if (currentItem == 0) {
+                    larr.setVisibility(View.GONE);
+                }
 
-        @Override
-        protected void onPreExecute() {
-
-        }
-
-        @Override
-        protected Void doInBackground(String... data) {
-            PreyLogger.i("Esperar 10");
-            try{Thread.sleep(10000);}catch (Exception e){}
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void unused) {
-            int page=onboardingPagerAdapter.page;
-            PreyLogger.i("page:" + page);
-            if(page!=5){
-                new MovePageTask().execute();
+                mViewPager.setCurrentItem(currentItem - 1);
             }
+        });
 
-            mViewPager.setCurrentItem(page);
+        rarr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        }
+                int currentItem = mViewPager.getCurrentItem();
+                larr.setVisibility(View.VISIBLE);
+                rarr.setVisibility(View.VISIBLE);
+                if (currentItem == 5) {
+                    rarr.setVisibility(View.GONE);
+                }
 
+                mViewPager.setCurrentItem(currentItem + 1);
+            }
+        });
+
+        mViewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                int currentItem = mViewPager.getCurrentItem();
+                larr.setVisibility(View.VISIBLE);
+                rarr.setVisibility(View.VISIBLE);
+                PreyLogger.i("currentItem:" + currentItem);
+                if (currentItem == 0) {
+                    larr.setVisibility(View.GONE);
+                }
+                if (currentItem == 5) {
+                    rarr.setVisibility(View.GONE);
+                }
+
+                return false;
+            }
+        });
     }
 
 
-    @Override
-    public void onBackPressed(){
-        mViewPager.setCurrentItem(3);
+    public void movePage(int page) {
+        mViewPager.setCurrentItem(page);
     }
 
 
@@ -141,33 +157,34 @@ public class InitActivity extends FragmentActivity {
             super(fm);
         }
 
-        public int page=0;
+        public int page = 0;
 
         @Override
         public Fragment getItem(int i) {
-            PreyLogger.i("getItem:" + i);
-            page=i;
+
+            page = i;
             Fragment fragment = null;
-            if (i==0) {
+            if (i == 0) {
+                fragment = new DemoObjectFragment0();
+            }
+            if (i == 1) {
                 fragment = new DemoObjectFragment1();
             }
-            if (i==1) {
+            if (i == 2) {
                 fragment = new DemoObjectFragment2();
             }
-            if (i==2) {
+            if (i == 3) {
                 fragment = new DemoObjectFragment3();
             }
-            if (i==3) {
+            if (i == 4) {
                 fragment = new DemoObjectFragment4();
             }
-            if (i==4) {
+            if (i == 5) {
                 fragment = new DemoObjectFragment5();
             }
-            if (i==5) {
+            if (i == 6) {
                 fragment = new DemoObjectFragment6();
             }
-
-
 
 
             return fragment;
@@ -175,8 +192,29 @@ public class InitActivity extends FragmentActivity {
 
         @Override
         public int getCount() {
-            // For this contrived example, we have a 100-object collection.
-            return 6;
+
+            return 7;
+        }
+    }
+
+
+    public static class DemoObjectFragment0 extends Fragment {
+
+
+        public ViewPager mViewPager;
+
+        public void setViewPager(ViewPager mViewPager) {
+            this.mViewPager = mViewPager;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.frame_home0, container, false);
+            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+            textView1.setTypeface(titilliumWebRegular);
+            return rootView;
         }
     }
 
@@ -188,7 +226,9 @@ public class InitActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.frame_home1, container, false);
-
+            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+            textView1.setTypeface(titilliumWebRegular);
             return rootView;
         }
     }
@@ -199,7 +239,9 @@ public class InitActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.frame_home2, container, false);
-
+            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+            textView1.setTypeface(titilliumWebRegular);
             return rootView;
         }
     }
@@ -211,7 +253,9 @@ public class InitActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.frame_home3, container, false);
-
+            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+            textView1.setTypeface(titilliumWebRegular);
             return rootView;
         }
     }
@@ -223,7 +267,9 @@ public class InitActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.frame_home4, container, false);
-
+            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+            textView1.setTypeface(titilliumWebRegular);
             return rootView;
         }
     }
@@ -234,7 +280,9 @@ public class InitActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.frame_home5, container, false);
-
+            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+            textView1.setTypeface(titilliumWebRegular);
             return rootView;
         }
     }
@@ -245,7 +293,9 @@ public class InitActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.frame_home6, container, false);
-
+            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+            textView1.setTypeface(titilliumWebRegular);
             return rootView;
         }
     }

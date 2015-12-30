@@ -5,13 +5,12 @@
 
     android:clickable="true">
 
-    <ImageView
-        android:layout_marginTop="-80dp"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/new_on_01"
-        />
-
+<ImageView
+    android:layout_marginTop="-80dp"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:src="@drawable/new_on_00"
+    />
 
 
     <TextView
@@ -23,12 +22,11 @@
         android:paddingBottom="10dp"
         android:textSize="17sp"
         android:lineSpacingMultiplier="0.8"
-        android:text="@string/home_text_1"
+        android:text="@string/home_text_0"
         android:textStyle="bold"
         android:textColor="#fff"
 
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
-
 </RelativeLayout>

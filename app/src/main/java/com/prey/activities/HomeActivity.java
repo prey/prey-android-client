@@ -15,17 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.prey.PreyAccountData;
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.PreyUtils;
 import com.prey.R;
-import com.prey.exceptions.NoMoreDevicesAllowedException;
-import com.prey.exceptions.PreyException;
-import com.prey.net.PreyWebServices;
 
 /**
  * Created by oso on 23-12-15.
@@ -77,7 +70,7 @@ public class HomeActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        new MovePageTask().execute();
+
     }
 
 
@@ -104,7 +97,7 @@ public class HomeActivity extends FragmentActivity {
             if(page==6){
                 page=0;
             }
-            new MovePageTask().execute();
+
             mViewPager.setCurrentItem(page);
 
         }
@@ -114,7 +107,7 @@ public class HomeActivity extends FragmentActivity {
 
     @Override
     public void onBackPressed(){
-        mViewPager.setCurrentItem(3);
+
     }
 
 
@@ -132,25 +125,26 @@ public class HomeActivity extends FragmentActivity {
             page=i;
             Fragment fragment = null;
             if (i==0) {
-                fragment = new DemoObjectFragment1();
+                fragment = new DemoObjectFragment0();
             }
             if (i==1) {
-                fragment = new DemoObjectFragment2();
+                fragment = new DemoObjectFragment1();
             }
             if (i==2) {
-                fragment = new DemoObjectFragment3();
+                fragment = new DemoObjectFragment2();
             }
             if (i==3) {
-                fragment = new DemoObjectFragment4();
+                fragment = new DemoObjectFragment3();
             }
             if (i==4) {
-                fragment = new DemoObjectFragment5();
+                fragment = new DemoObjectFragment4();
             }
             if (i==5) {
+                fragment = new DemoObjectFragment5();
+            }
+            if (i==6) {
                 fragment = new DemoObjectFragment6();
             }
-
-
 
 
             return fragment;
@@ -158,11 +152,21 @@ public class HomeActivity extends FragmentActivity {
 
         @Override
         public int getCount() {
-            // For this contrived example, we have a 100-object collection.
-            return 6;
+            return 7;
         }
     }
 
+    public static class DemoObjectFragment0 extends Fragment {
+
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.frame_home0, container, false);
+
+            return rootView;
+        }
+    }
 
     public static class DemoObjectFragment1 extends Fragment {
 

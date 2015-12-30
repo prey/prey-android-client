@@ -68,8 +68,6 @@ public class PreyConfig {
     public static final String PREFS_SECURITY_PROMPT_SHOWN = "PREFS_SECURITY_PROMPT_SHOWN";
     public static final String PREFS_IS_MISSING="PREFS_IS_MISSING";
 
-    public static final String EVENT_KEY="EVENT_KEY";
-    public static final String EVENT_SEQUENTIAL="EVENT_SEQUENTIAL";
     public static final String PREFS_DISABLE_POWER_OPTIONS="PREFS_DISABLE_POWER_OPTIONS";
     public static final String IS_LOCK_SET="IS_LOCK_SET";
     public static final String NEXT_ALERT="NEXT_ALERT";
@@ -101,6 +99,15 @@ public class PreyConfig {
     public static final String TIMEOUT_REPORT="TIMEOUT_REPORT";
 
     public static final String SIGNAL_FLARE_DATE="SIGNAL_FLARE_DATE";
+    public static final String SESSION_ID="SIGNAL_FLARE_DATE";
+
+
+    public static final int ANDROID_INIT = 2000;
+    public static final int ANDROID_SIGN_UP = 2001;
+    public static final int ANDROID_TOUR_SCREEN = 2002;
+    public static final int ANDROID_TOUR_COMPLETED = 2003;
+    public static final int ANDROID_PRIVILEGES_GIVEN = 2004;
+    public static final int ANDROID_SIGN_IN = 2005;
 
     public static final String API_KEY="API_KEY";
     public static final String DEVICE_ID = "DEVICE_ID";
@@ -132,9 +139,7 @@ public class PreyConfig {
         this.ctx = ctx;
 
 
-        if(getLong(PreyConfig.INSTALLATION_DATE,0)==0) {
-            saveLong(PreyConfig.INSTALLATION_DATE, new Date().getTime());
-        }
+
 
         this.scheduled=getBoolean(PreyConfig.SCHEDULED, FileConfigReader.getInstance(ctx).isScheduled());
         this.minuteScheduled=getInt(PreyConfig.MINUTE_SCHEDULED, FileConfigReader.getInstance(ctx).getMinuteScheduled());
@@ -275,14 +280,6 @@ public class PreyConfig {
         return versionName;
     }
 
-    public String getEventKey() {
-        return getString(PreyConfig.EVENT_KEY,null);
-    }
-
-    public void setEventKey(String eventKey){
-        saveString(PreyConfig.EVENT_KEY, eventKey);
-    }
-
     public boolean isFroyoOrAbove() {
         return android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.FROYO;
     }
@@ -343,7 +340,7 @@ public class PreyConfig {
     public boolean isSimChanged() {
         TelephonyManager telephonyManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
         String simSerial=telephonyManager.getSimSerialNumber();
-        PreyLogger.i("simSerial:"+simSerial+" actual:"+getSimSerialNumber());
+        PreyLogger.i("simSerial:" + simSerial + " actual:" + getSimSerialNumber());
         if (getSimSerialNumber()==null||"".equals(getSimSerialNumber())){
             if(simSerial!=null&&!"".equals(simSerial)){
                 this.setSimSerialNumber(simSerial);
@@ -607,7 +604,7 @@ public class PreyConfig {
     }
 
     public void setMissing(boolean missing) {
-        saveBoolean(PreyConfig.PREFS_IS_MISSING,missing);
+        saveBoolean(PreyConfig.PREFS_IS_MISSING, missing);
     }
 
     public boolean isRunOnce() {
@@ -619,10 +616,17 @@ public class PreyConfig {
     }
 
     public void wipeData() {
+
+        long installationDate=getLong(PreyConfig.INSTALLATION_DATE, 0);
+
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         SharedPreferences.Editor editor = settings.edit();
         editor.clear();
         editor.commit();
+
+        if(installationDate>0) {
+            saveLong(PreyConfig.INSTALLATION_DATE, installationDate);
+        }
     }
 
 
@@ -679,6 +683,14 @@ public class PreyConfig {
         return getLong(PreyConfig.LAST_REPORT_START_DATE, 0);
     }
 
+    public void setInstallationDate(long installationDate){
+        saveLong(PreyConfig.INSTALLATION_DATE, installationDate);
+    }
+
+    public long getInstallationDate(){
+        return getLong(PreyConfig.INSTALLATION_DATE, 0);
+    }
+
     public void setSignalFlareDate(long signalFlareDate){
         saveLong(PreyConfig.SIGNAL_FLARE_DATE, signalFlareDate);
     }
@@ -687,17 +699,10 @@ public class PreyConfig {
         return getLong(PreyConfig.SIGNAL_FLARE_DATE,0);
     }
 
-
-
-
-
     public void setScheduled(boolean scheduled){
         this.scheduled=scheduled;
         saveBoolean(PreyConfig.SCHEDULED, scheduled);
     }
-
-
-
 
     public boolean isScheduled(){
         try{
@@ -722,5 +727,13 @@ public class PreyConfig {
 
     public int getTimeoutReport(){
         return timeoutReport;
+    }
+
+    public String getSessionId(){
+        return getString(PreyConfig.SESSION_ID, "");
+    }
+
+    public void setSessionId(String sessionId) {
+        saveString(PreyConfig.SESSION_ID, sessionId);
     }
 }

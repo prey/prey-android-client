@@ -155,5 +155,19 @@
     <string name="updating_info_message">Actualizando información, un segundo…</string>
 
 
+    <string name="home_button">REGÍSTRATE</string>
+    <string name="home_subtitle">¿Ya tienes una cuenta? <u>Iniciar sesión</u></string>
+
+
+
+
+    <string name="home_text_0">Ashley utiliza PREY en todos sus dispositivos: su Macbook, su teléfono y tablet Android. Pero un día, ella estaba en el lugar equivocado en el momento equivocado y alguien le robó su tablet.</string>
+    <string name="home_text_1">Conozca a Steve, él roba objetos desatendidos.</string>
+    <string name="home_text_2">La pérdida de un dispositivo significa perder datos preciosos, los recuerdos, la información y equipos muy caros.</string>
+    <string name="home_text_3">Sin él saberlo, Prey está capturando en silencio fotos, ubicación, y el envío de los propietarios legítimos informes completos.\n Nashley también puede utilizar Prey para bloquear de forma remota su dispositivo hacia abajo y limpie sus datos sensibles.</string>
+    <string name="home_text_4">Lo bueno es que Ashley ha activado PREY! Ella acaba de recibir los informes de su equipo robado, por lo que ahora la policía tiene pruebas precisas.</string>
+    <string name="home_text_5">Con los informes detallados sobre el dispositivo que falta, Ashley tenía más preocupaciones, ella consiguió su dispositivo de nuevo.</string>
+    <string name="home_text_6">No espere a que suceda lo peor para tomar medidas. <b>Proteja este dispositivo con PREY ahora!</b></string>
+
 
 </resources>

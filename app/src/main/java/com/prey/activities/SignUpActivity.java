@@ -194,10 +194,11 @@ public class SignUpActivity extends Activity {
         protected Void doInBackground(String... data) {
             try {
                 error = null;
-                PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(getApplication(), data[0], data[1], data[2], PreyUtils.getDeviceType(getApplication()));
+                PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(getApplicationContext(), data[0], data[1], data[2], PreyUtils.getDeviceType(getApplication()));
                 PreyLogger.d("Response creating account: " + accountData.toString());
-                PreyConfig.getPreyConfig(getApplication()).saveAccount(accountData);
-                PreyConfig.getPreyConfig(getApplication()).registerC2dm();
+                PreyConfig.getPreyConfig(getApplicationContext()).saveAccount(accountData);
+                PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
+                PreyWebServices.getInstance().sendEvent(getApplication(),PreyConfig.ANDROID_SIGN_UP);
             } catch (PreyException e) {
                 error = e.getMessage();
             }
