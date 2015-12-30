@@ -172,22 +172,30 @@
 
 
     <!-- preferece -->
-    <string name="preference_pin">Prey PIN</string>
-    <string name="preference_pin_summary">Es un código de 4 dígitos requerido para bloquear al existir un cambio de SIM y para usar los comandos SMS</string>
+    <string name="preference_pin">PIN Prey</string>
+    <string name="preference_pin_summary">Es un código de 4 dígitos requerido para usar los comandos SMS, que te permite ejecutar acciones en tu dispositivo de forma remota, enviando instrucciones a través de un mensaje de texto</string>
+    <string name="preference_pin_summary_subtitle">Es tu código personal de seguridad 4 dígitos requerido para usar los comandos SMS</string>
+    <string name="preference_pin_dialog_title">Configura tu PIN de seguridad Prey</string>
+
+    <string name="preference_pin_updating_dialog">Actualizando PIN Prey</string>
+    <string name="preference_pin_successfully_changed">PIN Prey actualizado correctamente</string>
+    <string name="preference_pin_removed">PIN Prey fue eliminado</string>
+
+
 
     <string name="preference_sms">Comandos SMS</string>
     <string name="preference_sms_summary">Permite ejecutar acciones en tu dispositivo de forma remota, enviando instrucciones a través de un mensaje de texto</string>
 
 
-    <string name="preference_pin_updating_dialog">PIN Actualizando</string>
-    <string name="preference_pin_successfully_changed">PIN cambiado correctamente</string>
-    <string name="preference_pin_removed">PIN eliminado</string>
+
+
+
 
     <!-- preferece sms-->
     <string name="preference_sms_category_title">SMS</string>
     <string name="preference_sms_checkbox_title">Activar comandos SMS</string>
     <string name="preference_sms_checkbox_summary">Envía un mensaje de texto a tu teléfono con el comando que necesites y la acción se activará en tu dispositivo</string>
-    <string name="preference_sms_category_available">Los comandos disponibles</string>
+    <string name="preference_sms_category_available">Comandos disponibles</string>
     <string name="preference_sms_command_location">prey PIN location phone_number</string>
     <string name="preference_sms_command_location_summary">Envía la geolocalización del dispositivo por SMS a phone_number</string>
     <string name="preference_sms_command_lock">prey PIN lock lock_PIN</string>

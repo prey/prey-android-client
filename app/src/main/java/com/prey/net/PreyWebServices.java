@@ -813,7 +813,7 @@ public class PreyWebServices {
                 String time = "" + new Date().getTime();
                 try {
                     String page = "https://clients1.preyproject.com/events/log";
-                    PreyLogger.i("URL:"+page);
+                    PreyLogger.d("URL:"+page);
                     JSONObject jsonParam = new JSONObject();
                     jsonParam.put("enum", id);
 
@@ -837,7 +837,7 @@ public class PreyWebServices {
 
                     jsonParam.put("properties",properties);
 
-                    PreyLogger.i("__________jsonParam:"+jsonParam.toString());
+                    PreyLogger.d("__________jsonParam:"+jsonParam.toString());
 
                     PreyRestHttpClient.getInstance(ctx).postJson(page, jsonParam);
                 } catch (Exception e) {

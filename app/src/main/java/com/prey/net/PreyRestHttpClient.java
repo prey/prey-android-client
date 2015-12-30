@@ -480,7 +480,7 @@ public class PreyRestHttpClient {
         int httpResult = -1;
         try {
             URL url = new URL(page);
-            PreyLogger.i("_________________page:" + page);
+            PreyLogger.d("_________________page:" + page);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod(REQUEST_METHOD_POST);
@@ -490,12 +490,12 @@ public class PreyRestHttpClient {
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.addRequestProperty("Origin", "android:com.prey");
             urlConnection.connect();
-            PreyLogger.i("jsonParam.toString():" + jsonParam.toString());
+            PreyLogger.d("jsonParam.toString():" + jsonParam.toString());
             OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
             out.write(jsonParam.toString());
             out.close();
             httpResult = urlConnection.getResponseCode();
-            PreyLogger.i("httpResult:"+httpResult);
+            PreyLogger.d("httpResult:"+httpResult);
         } catch (Exception e) {
             PreyLogger.e(" error:" + e.getMessage(), e);
         } finally {

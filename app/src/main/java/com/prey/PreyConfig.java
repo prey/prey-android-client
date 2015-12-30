@@ -113,6 +113,8 @@ public class PreyConfig {
     public static final int ANDROID_LOGIN_SETTINGS = 2007;
     public static final int ANDROID_FAILED_LOGIN_SETTINGS = 2008;
     public static final int ANDROID_VERSION_UPDATED = 2009;
+    public static final int ANDROID_ONBOARDING_INIT = 2010;
+    public static final int ANDROID_ONBOARDING_COMPLETED = 2011;
 
     public static final String PREFERENCE_PREY_VERSION="PREFERENCE_PREY_VERSION";
     public static final String API_KEY="API_KEY";

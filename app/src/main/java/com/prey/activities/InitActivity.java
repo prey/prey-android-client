@@ -6,10 +6,13 @@
  ******************************************************************************/
 package com.prey.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -26,8 +29,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.prey.PreyAccountData;
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyUtils;
 import com.prey.R;
+import com.prey.exceptions.NoMoreDevicesAllowedException;
+import com.prey.exceptions.PreyException;
+import com.prey.net.PreyWebServices;
 
 import java.util.logging.Logger;
 
@@ -117,8 +126,9 @@ public class InitActivity extends FragmentActivity {
                 int currentItem = mViewPager.getCurrentItem();
                 larr.setVisibility(View.VISIBLE);
                 rarr.setVisibility(View.VISIBLE);
-                if (currentItem == 5) {
+                if (currentItem >= 5) {
                     rarr.setVisibility(View.GONE);
+                    onboardingCompleted();
                 }
 
                 mViewPager.setCurrentItem(currentItem + 1);
@@ -136,15 +146,33 @@ public class InitActivity extends FragmentActivity {
                 if (currentItem == 0) {
                     larr.setVisibility(View.GONE);
                 }
-                if (currentItem == 5) {
+                if (currentItem  >=5) {
                     rarr.setVisibility(View.GONE);
+                    onboardingCompleted();
                 }
 
                 return false;
             }
         });
+
+
+        onboardingInit();
+
     }
 
+    public void onboardingInit(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            new OnboardingInitTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else
+            new OnboardingInitTask().execute();
+    }
+
+    public void onboardingCompleted(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            new OnboardingCompletedTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else
+            new OnboardingCompletedTask().execute();
+    }
 
     public void movePage(int page) {
         mViewPager.setCurrentItem(page);
@@ -166,6 +194,8 @@ public class InitActivity extends FragmentActivity {
             Fragment fragment = null;
             if (i == 0) {
                 fragment = new DemoObjectFragment0();
+
+
             }
             if (i == 1) {
                 fragment = new DemoObjectFragment1();
@@ -214,6 +244,9 @@ public class InitActivity extends FragmentActivity {
             Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
             TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
             textView1.setTypeface(titilliumWebRegular);
+
+
+
             return rootView;
         }
     }
@@ -300,4 +333,45 @@ public class InitActivity extends FragmentActivity {
         }
     }
 
+
+
+    private class OnboardingInitTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected Void doInBackground(String... data) {
+            PreyWebServices.getInstance().sendEvent(getApplication(), PreyConfig.ANDROID_ONBOARDING_INIT);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+
+        }
+
+    }
+
+    private class OnboardingCompletedTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected Void doInBackground(String... data) {
+            PreyWebServices.getInstance().sendEvent(getApplication(), PreyConfig.ANDROID_ONBOARDING_COMPLETED);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+
+        }
+
+    }
 }

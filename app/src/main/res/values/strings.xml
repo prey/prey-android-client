@@ -178,12 +178,17 @@
 
 
     <!-- preferece -->
-    <string name="preference_pin">PIN Prey</string>
-    <string name="preference_pin_summary">It is a 4 digit code required to use the SMS commands enable you to perform actions on your device remotely by sending instructions via a text message</string>
-    <string name="preference_pin_dialog_title">PIN</string>
-    <string name="preference_pin_updating_dialog">Updating PIN</string>
-    <string name="preference_pin_successfully_changed">successfully PIN</string>
-    <string name="preference_pin_removed">removed PIN</string>
+    <string name="preference_pin">Prey security PIN</string>
+    <string name="preference_pin_summary">It is a four digit code required to use the SMS commands enable you to perform actions on your device remotely by sending instructions via a text message</string>
+    <string name="preference_pin_summary_subtitle">This is your personal four digit code required to use the SMS commands</string>
+    <string name="preference_pin_dialog_title">Set you Prey security PIN</string>
+
+
+
+
+    <string name="preference_pin_updating_dialog">Updating Prey PIN</string>
+    <string name="preference_pin_successfully_changed">Prey PIN set successfully</string>
+    <string name="preference_pin_removed">Prey PIN removed successfully</string>
 
 
     <string name="preference_sms">SMS commands</string>
@@ -200,17 +205,17 @@
     <string name="preference_sms_checkbox_summary">Send a text message to your phone with the command you need and action is activated on your device</string>
     <string name="preference_sms_category_available">Available commands</string>
     <string name="preference_sms_command_location">prey PIN location phone_number</string>
-    <string name="preference_sms_command_location_summary">will return the device’s geolocation via SMS to phone_number</string>
+    <string name="preference_sms_command_location_summary">Will return the device’s geolocation via SMS to phone_number</string>
     <string name="preference_sms_command_lock">prey PIN lock lock_PIN</string>
-    <string name="preference_sms_command_lock_summary">will lock the device’s screen until lock_PIN is entered.</string>
+    <string name="preference_sms_command_lock_summary">Will lock the device’s screen until lock_PIN is entered.</string>
     <string name="preference_sms_command_unlock">prey PIN unlock</string>
-    <string name="preference_sms_command_unlock_summary">will force unlock your device’s screen. It’s perfect for forgotten passwords!</string>
+    <string name="preference_sms_command_unlock_summary">Will force unlock your device’s screen. It’s perfect for forgotten passwords!</string>
     <string name="preference_sms_command_alarm">prey PIN alarm</string>
-    <string name="preference_sms_command_alarm_summary">will sound an alarm</string>
+    <string name="preference_sms_command_alarm_summary">Will sound an alarm</string>
     <string name="preference_sms_command_alert">prey PIN alert some_text</string>
-    <string name="preference_sms_command_alert_summary">will show some_text as a system notification</string>
+    <string name="preference_sms_command_alert_summary">Will show some_text as a system notification</string>
     <string name="preference_sms_command_wipe">prey PIN wipe</string>
-    <string name="preference_sms_command_wipe_summary">will erase all your data from your phone, performing a “factory reset”. This is specially useful to protect your private information, but could render Prey useless. Use with caution!</string>
+    <string name="preference_sms_command_wipe_summary">Will erase all your data from your phone, performing a “factory reset”. This is specially useful to protect your private information, but could render Prey useless. Use with caution!</string>
 
 
 

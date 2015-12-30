@@ -19,9 +19,10 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/preference_pin"
+                android:text="@string/preference_pin_summary_subtitle"
                 android:layout_marginLeft="20dip"
                 android:layout_marginRight="20dip"
+                android:paddingBottom="5dp"
                 android:gravity="left" android:textAppearance="?android:attr/textAppearanceMedium" android:layout_marginTop="10dp"/>
             <EditText android:id="@+id/pin_edit"
                 android:maxLines="1"
