@@ -163,4 +163,16 @@
     <string name="unknown_geofence_transition">Unknown Transition</string>
 
 
+    <string name="home_button">SIGN UP</string>
+    <string name="home_subtitle">Do you already have an account? <u>Log in</u></string>
+
+
+
+    <string name="home_text_0">Ashley uses Prey on all her devices: her Macbook, her Android phone and her iPad. But one day, she was at the wrong place at the wrong time and someone stole her tablet.</string>
+    <string name="home_text_1">Meet Steve, he steals objects left unattended.</string>
+    <string name="home_text_2">Losing a device means losing precious data, memories, information and some really expensive equipment.</string>
+    <string name="home_text_3">Without him knowing it, Prey is silently capturing pictures, location, and sending the legitimate owner complete reports.\nAshley can also use Prey to remotely lock her device down and wipe her sensitive data.</string>
+    <string name="home_text_4">Good thing Ashley has PREY activated! She just got the reports from her stolen device, so now the police has accurate evidence to work with.</string>
+    <string name="home_text_5">With the detailed reports on the missing device, Ashley had more worries, she got her device back.</string>
+    <string name="home_text_6">Don\'t wait for the worst to happen to take action. <b>Protect this device with Prey now!</b></string>
 </resources>

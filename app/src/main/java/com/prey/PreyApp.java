@@ -9,7 +9,9 @@ package com.prey;
 import android.app.Application;
 
 import com.prey.actions.report.ReportScheduled;
+import com.prey.net.PreyWebServices;
 
+import java.util.Date;
 import java.util.Locale;
 
 public class PreyApp extends Application {
@@ -24,10 +26,11 @@ public class PreyApp extends Application {
             PreyLogger.d("__________________");
             PreyLogger.i("Application launched!");
             PreyLogger.d("__________________");
-            String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
-            if (deviceKey != null && deviceKey != "")
-                PreyConfig.getPreyConfig(this).registerC2dm();
 
+            String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
+            if (deviceKey != null && deviceKey != "") {
+                PreyConfig.getPreyConfig(this).registerC2dm();
+            }
 
             if (PreyConfig.getPreyConfig(this).isMissing()) {
                 if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {
@@ -35,6 +38,15 @@ public class PreyApp extends Application {
                 }
             }
 
+            PreyLogger.i("InstallationDate:"+PreyConfig.getPreyConfig(this).getInstallationDate());
+            if(PreyConfig.getPreyConfig(this).getInstallationDate()==0) {
+                PreyConfig.getPreyConfig(this).setInstallationDate(new Date().getTime());
+                PreyWebServices.getInstance().sendEvent(this, PreyConfig.ANDROID_INIT);
+            }
+
+            String sessionId = PreyUtils.randomAlphaNumeric(16);
+            PreyLogger.i("#######sessionId:"+sessionId);
+            PreyConfig.getPreyConfig(this).setSessionId(sessionId);
 
         }catch(Exception e){}
     }

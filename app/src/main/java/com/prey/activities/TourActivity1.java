@@ -7,9 +7,12 @@
 package com.prey.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -17,8 +20,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
+import com.prey.PreyLogger;
+import com.prey.PreyUtils;
 import com.prey.R;
+import com.prey.exceptions.PreyException;
+import com.prey.net.PreyWebServices;
 
 public class TourActivity1 extends Activity {
 
@@ -76,6 +84,11 @@ public class TourActivity1 extends Activity {
 
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            new TourInitTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else
+            new TourInitTask().execute();
+
 
     }
 
@@ -86,5 +99,31 @@ public class TourActivity1 extends Activity {
 
         startActivity(intent);
         finish();
+    }
+
+    private class TourInitTask extends AsyncTask<String, Void, Void> {
+
+        ProgressDialog progressDialog = null;
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected Void doInBackground(String... data) {
+            try {
+
+                PreyWebServices.getInstance().sendEvent(getApplication(),PreyConfig.ANDROID_TOUR_SCREEN);
+            } catch (Exception e) {
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+
+        }
     }
 }

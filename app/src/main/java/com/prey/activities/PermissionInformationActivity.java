@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.prey.PreyLogger;
 import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.net.PreyWebServices;
 
 public class PermissionInformationActivity extends PreyActivity {
 
@@ -82,6 +83,7 @@ public class PermissionInformationActivity extends PreyActivity {
                         first = true;
                         Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
                         startActivityForResult(intent, SECURITY_PRIVILEGES);
+                        PreyWebServices.getInstance().sendEvent(getApplicationContext(), PreyConfig.ANDROID_PRIVILEGES_GIVEN);
                     }
                 });
 

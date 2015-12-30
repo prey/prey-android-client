@@ -27,6 +27,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -66,39 +67,7 @@ public class PreyWebServices {
         return _instance;
     }
 
-    final int ANDROID_INIT = 1001;
-    final int ANDROID_ACCOUNT_CREATED = 1002;
-    final int ANDROID_IDENTIFIER_TO_KEY = 1003;
-    final int ANDROID_TOUR_COMPLETED = 1004;
-    final int ANDROID_PRIVILEGES_GIVEN = 1005;
 
-    public void registerInit(Context ctx) {
-        String eventKey = PreyConfig.getPreyConfig(ctx).getEventKey();
-        if (eventKey == null) {
-            eventKey = PreyUtils.randomAlphaNumeric(16);
-            PreyConfig.getPreyConfig(ctx).setEventKey(eventKey);
-        }
-
-        String time = "" + new Date().getTime();
-
-        String url = "http://clients1.preyhq.com";
-        Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("s", eventKey);
-        parameters.put("d", time);
-        parameters.put("t", "" + ANDROID_INIT);
-        try {
-            PreyLogger.i("url:" + url);
-            PreyLogger.i("s:" + eventKey);
-            PreyLogger.i("d:" + time);
-            PreyLogger.i("t:" + ANDROID_INIT);
-            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
-            PreyLogger.i(response.getResponseAsString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
 
 
     /**
@@ -829,5 +798,54 @@ public class PreyWebServices {
         PreyLogger.i("cmd:" + sb);
         return sb;
     }
+
+    public void sendEvent(final Context ctx,final int id  ) {
+        new Thread() {
+            public void run() {
+
+
+                PreyPhone phone=new PreyPhone(ctx);
+                String serialNumber=phone.getHardware().getSerialNumber();
+
+                String version=PreyConfig.getPreyConfig(ctx).getPreyVersion();
+                String sid=PreyConfig.getPreyConfig(ctx).getSessionId();
+
+                String time = "" + new Date().getTime();
+                try {
+                    String page = "https://clients1.preyproject.com/events/log";
+                    PreyLogger.i("URL:"+page);
+                    JSONObject jsonParam = new JSONObject();
+                    jsonParam.put("enum", id);
+
+                    JSONArray properties=new JSONArray();
+
+                    JSONObject jsonSid = new JSONObject();
+                    jsonSid.put("name", "sid");
+                    jsonSid.put("value", sid);
+                    properties.put(jsonSid);
+
+                    JSONObject jsonSerial = new JSONObject();
+                    jsonSerial.put("name", "sn");
+                    jsonSerial.put("value", serialNumber);
+                    properties.put(jsonSerial);
+
+
+                    JSONObject jsonVersion = new JSONObject();
+                    jsonVersion.put("name", "version");
+                    jsonVersion.put("value", version);
+                    properties.put(jsonVersion);
+
+                    jsonParam.put("properties",properties);
+
+                    PreyLogger.i("__________jsonParam:"+jsonParam.toString());
+
+                    PreyRestHttpClient.getInstance(ctx).postJson(page, jsonParam);
+                } catch (Exception e) {
+                    PreyLogger.e("Error:" + e.getMessage(), e);
+                }
+            }
+        }.start();
+    }
+
 }
 

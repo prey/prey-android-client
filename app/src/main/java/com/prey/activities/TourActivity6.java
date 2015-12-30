@@ -7,9 +7,12 @@
 package com.prey.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 
 import com.prey.PreyConfig;
 import com.prey.R;
+import com.prey.net.PreyWebServices;
 
 public class TourActivity6 extends Activity {
 
@@ -78,6 +82,11 @@ public class TourActivity6 extends Activity {
 
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            new TourFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else
+            new TourFinishTask().execute();
+
 
     }
 
@@ -91,5 +100,25 @@ public class TourActivity6 extends Activity {
 
         startActivity(intent);
         finish();
+    }
+
+    private class TourFinishTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Void doInBackground(String... data) {
+            try {
+                PreyWebServices.getInstance().sendEvent(getApplication(),PreyConfig.ANDROID_TOUR_COMPLETED);
+            } catch (Exception e) {
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+        }
     }
 }

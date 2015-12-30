@@ -10,7 +10,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,6 +42,8 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 
@@ -461,6 +467,44 @@ public class PreyRestHttpClient {
         }
         return sb;
     }
+
+
+    private static final String REQUEST_METHOD_POST="POST";
+    private static final boolean USE_CACHES=false;
+    private static final int CONNECT_TIMEOUT=30000;
+    private static final int READ_TIMEOUT=30000;
+
+
+    public int postJson(String page, JSONObject jsonParam) {
+        HttpURLConnection urlConnection = null;
+        int httpResult = -1;
+        try {
+            URL url = new URL(page);
+            PreyLogger.i("_________________page:" + page);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod(REQUEST_METHOD_POST);
+            urlConnection.setUseCaches(USE_CACHES);
+            urlConnection.setConnectTimeout(CONNECT_TIMEOUT);
+            urlConnection.setReadTimeout(READ_TIMEOUT);
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.addRequestProperty("Origin", "android:com.prey");
+            urlConnection.connect();
+            PreyLogger.i("jsonParam.toString():" + jsonParam.toString());
+            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+            out.write(jsonParam.toString());
+            out.close();
+            httpResult = urlConnection.getResponseCode();
+            PreyLogger.i("httpResult:"+httpResult);
+        } catch (Exception e) {
+            PreyLogger.e(" error:" + e.getMessage(), e);
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        return httpResult;
+    }
+
 }
 
 final class NotRedirectHandler implements RedirectHandler {

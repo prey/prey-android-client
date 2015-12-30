@@ -1,0 +1,110 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000"
+    android:orientation="vertical"
+    android:clickable="true">
+
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/prey_logo_b_mono2"
+
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/imageView" />
+
+
+
+
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="fill_parent"
+        android:layout_marginTop="50dp"
+
+        android:layout_marginBottom="100dp"
+        android:layout_height="match_parent" />
+
+
+    <LinearLayout
+        android:id="@+id/larr"
+        android:layout_width="50dp"
+        android:layout_height="400dp"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:gravity="left">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="150dp"
+            android:src="@drawable/larr"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/rarr"
+        android:layout_width="50dp"
+        android:layout_height="400dp"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+         >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="150dp"
+            android:src="@drawable/rarr"
+            />
+    </LinearLayout>
+
+
+
+
+
+    <Button
+        android:id="@+id/buttonHome"
+
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:text="@string/home_button"
+        android:textColor="#fff"
+        android:fontFamily="Avenir Next LT Pro"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="#2A5E93"
+        />
+
+
+
+    <TextView
+        android:id="@+id/linkHome"
+
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/home_subtitle"
+        android:textColor="#fff"
+
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        />
+
+
+</RelativeLayout>
