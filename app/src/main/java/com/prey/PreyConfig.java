@@ -121,7 +121,7 @@ public class PreyConfig {
     public static final String DEVICE_ID = "DEVICE_ID";
 
     public static final String SIM_SERIAL_NUMBER = "SIM_SERIAL_NUMBER";
-    public static final String VERSION_PREY_DEFAULT="1.4.7";
+    public static final String VERSION_PREY_DEFAULT="1.5.2";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
