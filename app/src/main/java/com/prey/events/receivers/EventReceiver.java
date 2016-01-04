@@ -22,7 +22,7 @@ public class EventReceiver extends BroadcastReceiver {
 
         Event event = EventFactory.getEvent(context, intent);
         new Thread(new EventManagerRunner(context, event)).start();
-        new Thread(new SignalFlareRunner(context, event)).start();
+
     }
 
 }

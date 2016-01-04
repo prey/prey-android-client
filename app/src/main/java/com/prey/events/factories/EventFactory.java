@@ -34,6 +34,7 @@ public class EventFactory {
     private static final String WIFI_STATE_CHANGED = "android.net.wifi.WIFI_STATE_CHANGED";
     private static final String ACTION_SHUTDOWN = "android.intent.action.ACTION_SHUTDOWN";
     private static final String AIRPLANE_MODE = "android.intent.action.AIRPLANE_MODE";
+    private static final String BATTERY_LOW = "android.intent.action.BATTERY_LOW";
 
     public static Event getEvent(Context ctx, Intent intent) {
         String message = "getEvent[" + intent.getAction() + "]";
@@ -52,6 +53,9 @@ public class EventFactory {
         }
         if (ACTION_SHUTDOWN.equals(intent.getAction())) {
             return new Event(Event.TURNED_OFF);
+        }
+        if (BATTERY_LOW.equals(intent.getAction())){
+            return new Event(Event.BATTERY_LOW);
         }
         if (CONNECTIVITY_CHANGE.equals(intent.getAction())) {
             JSONObject info = new JSONObject();
@@ -130,7 +134,7 @@ public class EventFactory {
         try {
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
-            cal.add(Calendar.HOUR, -3);
+            cal.add(Calendar.MINUTE, -1);
             long leastThreeHours = cal.getTimeInMillis();
             long lowBatteryDate = PreyConfig.getPreyConfig(ctx).getLowBatteryDate();
             PreyLogger.d("lowBatteryDate :" + lowBatteryDate + " " + sdf.format(new Date(lowBatteryDate)));

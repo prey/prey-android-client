@@ -103,6 +103,7 @@ public class PreyConfig {
 
     public static final String PIN_NUMBER="PIN_NUMBER";
     public static final String SMS_COMMAND="SMS_COMMAND";
+    public static final String PREFERENCE_SIGNALFLARE="PREFERENCE_SIGNALFLARE";
 
     public static final int ANDROID_INIT = 2000;
     public static final int ANDROID_SIGN_UP = 2001;
@@ -769,4 +770,11 @@ public class PreyConfig {
         saveString(PreyConfig.PREFERENCE_PREY_VERSION, preferencePreyVersion);
     }
 
+    public void setSignalFlare(boolean signalFlare) {
+        saveBoolean(PreyConfig.PREFERENCE_SIGNALFLARE, signalFlare);
+    }
+
+    public boolean isSignalFlare() {
+        return getBoolean(PreyConfig.PREFERENCE_SIGNALFLARE, false);
+    }
 }

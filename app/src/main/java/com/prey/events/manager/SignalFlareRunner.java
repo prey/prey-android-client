@@ -25,35 +25,29 @@ import com.prey.json.parser.JSONParser;
 public class SignalFlareRunner implements Runnable {
 
     private Context ctx = null;
-    private Event event;
 
-    public SignalFlareRunner(Context ctx, Event event) {
+
+    public SignalFlareRunner(Context ctx) {
         this.ctx = ctx;
-        this.event = event;
     }
 
     public void run() {
+        PreyLogger.d("SignalFlareRunner");
+        PreyLogger.d("SignalFlareRunner");
+        PreyLogger.d("SignalFlareRunner");
         try {
-            if (event != null) {
-                if (Event.BATTERY_LOW.equals(event.getName())) {
-                    PreyLogger.d("event.getName():" + event.getName());
-                    if (isValid()) {
-                        String jsonString = "[ {\"command\": \"get\",\"target\": \"location\",\"options\": {}}]";
-                        List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
-                        if (jsonObjectList != null && jsonObjectList.size() > 0) {
-                            ActionsController.getInstance(ctx).runActionJson(ctx, jsonObjectList);
-                        }
-                    }
-                }
+            String jsonString = "[ {\"command\": \"get\",\"target\": \"signalflare\",\"options\": {}}]";
+            List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
+            if (jsonObjectList != null && jsonObjectList.size() > 0) {
+                ActionsController.getInstance(ctx).runActionJson(ctx, jsonObjectList);
             }
         } catch (Exception e) {
-
         }
     }
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy hh:mm:ss", Locale.getDefault());
+    private static  SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy hh:mm:ss", Locale.getDefault());
 
-    public boolean isValid() {
+    public static boolean isValid(Context ctx) {
         try {
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
@@ -62,6 +56,7 @@ public class SignalFlareRunner implements Runnable {
             long signalFlareDate = PreyConfig.getPreyConfig(ctx).getSignalFlareDate();
             PreyLogger.d("signalFlareDate :" + signalFlareDate + " " + sdf.format(new Date(signalFlareDate)));
             PreyLogger.d("leastSixHours   :" + leastSixHours + " " + sdf.format(new Date(leastSixHours)));
+            PreyLogger.d("diff:"+(leastSixHours-signalFlareDate));
             if (signalFlareDate == 0 || leastSixHours > signalFlareDate) {
                 long now = new Date().getTime();
                 PreyConfig.getPreyConfig(ctx).setSignalFlareDate(now);
