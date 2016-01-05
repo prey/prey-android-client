@@ -218,6 +218,8 @@
     <string name="preference_sms_command_wipe_summary">Will erase all your data from your phone, performing a “factory reset”. This is specially useful to protect your private information, but could render Prey useless. Use with caution!</string>
 
 
-
+    <!-- Signal Flare  -->
+    <string name="preferences_signal_flare_options_title">Activate Signal Flare</string>
+    <string name="preferences_signal_flare_options_summary">Gets the location of your device when the battery low</string>
 
 </resources>

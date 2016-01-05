@@ -105,11 +105,26 @@ public class EventManager {
             if (event != null) {
                 if (PreyWifiManager.getInstance(ctx).isOnline()) {
                     String lastEvent = PreyConfig.getPreyConfig(ctx).getLastEvent();
+                    PreyLogger.d("lastEvent:"+lastEvent);
+                    if (Event.BATTERY_LOW.equals(event.getName())) {
+                        if(PreyConfig.getPreyConfig(ctx).isSignalFlare()) {
+                            PreyLogger.d("SignalFlareRunner.isValid(ctx):"+SignalFlareRunner.isValid(ctx));
+                            if (SignalFlareRunner.isValid(ctx)) {
+                                new Thread(new SignalFlareRunner(ctx)).start();
+                                try{
+                                    jsonObjectStatus.put("signalFlare",true);
+                                }catch(Exception e){}
+                            }
+                        }
+                    }
+
                     if (!Event.WIFI_CHANGED.equals(event.getName()) || !event.getName().equals(lastEvent)) {
                         PreyConfig.getPreyConfig(ctx).setLastEvent(event.getName());
                         PreyLogger.d("event name[" + this.event.getName() + "], info[" + this.event.getInfo() + "]");
                         new EventThread(ctx, event, jsonObjectStatus).start();
                     }
+
+
                 }
             }
         }
