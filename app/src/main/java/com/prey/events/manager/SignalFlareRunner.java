@@ -51,7 +51,7 @@ public class SignalFlareRunner implements Runnable {
         try {
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
-            cal.add(Calendar.HOUR, -24);
+            cal.add(Calendar.HOUR, -3);
             long leastSixHours = cal.getTimeInMillis();
             long signalFlareDate = PreyConfig.getPreyConfig(ctx).getSignalFlareDate();
             PreyLogger.d("signalFlareDate :" + signalFlareDate + " " + sdf.format(new Date(signalFlareDate)));

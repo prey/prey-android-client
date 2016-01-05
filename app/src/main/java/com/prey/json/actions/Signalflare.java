@@ -26,7 +26,7 @@ public class Signalflare extends JsonAction {
 
     public HttpDataService run(Context ctx, List<ActionResult> list, JSONObject parameters){
         HttpDataService data = LocationUtil.dataLocation(ctx);
-        data.setKey("signalflare");
+        data.setKey("signal_flare");
         return data;
     }
 }
