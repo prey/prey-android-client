@@ -20,7 +20,7 @@
             android:src="@drawable/onb_04"
             android:layout_width="585dp"
             android:layout_height="595dp"
-
+            android:layout_gravity="center_horizontal"
             />
     </LinearLayout>
 
