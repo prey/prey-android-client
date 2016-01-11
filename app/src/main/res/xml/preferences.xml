@@ -49,12 +49,6 @@
             />
 
 
-        <com.prey.preferences.SignalFlareCheckBoxPreference
-            android:defaultValue="false"
-            android:key="PREFS_SIGNALFLARE_OPTIONS"
-            android:summary="@string/preferences_signal_flare_options_summary"
-            android:title="@string/preferences_signal_flare_options_title" />
-
         <ListPreference
             android:entries="@array/listScheduledEntries"
             android:entryValues="@array/listScheduledValues"

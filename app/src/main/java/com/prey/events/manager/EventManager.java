@@ -107,12 +107,12 @@ public class EventManager {
                     String lastEvent = PreyConfig.getPreyConfig(ctx).getLastEvent();
                     PreyLogger.d("lastEvent:"+lastEvent);
                     if (Event.BATTERY_LOW.equals(event.getName())) {
-                        if(PreyConfig.getPreyConfig(ctx).isSignalFlare()) {
-                            PreyLogger.d("SignalFlareRunner.isValid(ctx):"+SignalFlareRunner.isValid(ctx));
-                            if (SignalFlareRunner.isValid(ctx)) {
-                                new Thread(new SignalFlareRunner(ctx)).start();
+                        if(PreyConfig.getPreyConfig(ctx).isLocationLowBattery()) {
+                            PreyLogger.d("LocationLowBatteryRunner.isValid(ctx):"+ LocationLowBatteryRunner.isValid(ctx));
+                            if (LocationLowBatteryRunner.isValid(ctx)) {
+                                new Thread(new LocationLowBatteryRunner(ctx)).start();
                                 try{
-                                    jsonObjectStatus.put("signalFlare",true);
+                                    jsonObjectStatus.put("locationLowBattery",true);
                                 }catch(Exception e){}
                             }
                         }

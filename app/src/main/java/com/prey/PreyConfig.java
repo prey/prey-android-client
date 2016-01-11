@@ -98,12 +98,12 @@ public class PreyConfig {
     public static final String LAST_REPORT_START_DATE="LAST_REPORT_START_DATE";
     public static final String TIMEOUT_REPORT="TIMEOUT_REPORT";
 
-    public static final String SIGNAL_FLARE_DATE="SIGNAL_FLARE_DATE";
-    public static final String SESSION_ID="SIGNAL_FLARE_DATE";
+    public static final String LOCATION_LOW_BATTERY_DATE="LOCATION_LOW_BATTERY_DATE";
+    public static final String SESSION_ID="SESSION_ID";
 
     public static final String PIN_NUMBER="PIN_NUMBER";
     public static final String SMS_COMMAND="SMS_COMMAND";
-    public static final String PREFERENCE_SIGNALFLARE="PREFERENCE_SIGNALFLARE";
+    public static final String PREFERENCE_LOCATION_LOW_BATTERY="PREFERENCE_LOCATION_LOW_BATTERY";
 
     public static final int ANDROID_INIT = 2000;
     public static final int ANDROID_SIGN_UP = 2001;
@@ -700,12 +700,12 @@ public class PreyConfig {
         return getLong(PreyConfig.INSTALLATION_DATE, 0);
     }
 
-    public void setSignalFlareDate(long signalFlareDate){
-        saveLong(PreyConfig.SIGNAL_FLARE_DATE, signalFlareDate);
+    public void setLocationLowBatteryDate(long locationLowBatteryDate){
+        saveLong(PreyConfig.LOCATION_LOW_BATTERY_DATE, locationLowBatteryDate);
     }
 
-    public long getSignalFlareDate(){
-        return getLong(PreyConfig.SIGNAL_FLARE_DATE, 0);
+    public long getLocationLowBatteryDate(){
+        return getLong(PreyConfig.LOCATION_LOW_BATTERY_DATE, 0);
     }
 
     public void setScheduled(boolean scheduled){
@@ -770,11 +770,15 @@ public class PreyConfig {
         saveString(PreyConfig.PREFERENCE_PREY_VERSION, preferencePreyVersion);
     }
 
-    public void setSignalFlare(boolean signalFlare) {
-        saveBoolean(PreyConfig.PREFERENCE_SIGNALFLARE, signalFlare);
+    public void setLocationLowBattery(boolean locationLowBattery) {
+        saveBoolean(PreyConfig.PREFERENCE_LOCATION_LOW_BATTERY, locationLowBattery);
     }
 
-    public boolean isSignalFlare() {
-        return getBoolean(PreyConfig.PREFERENCE_SIGNALFLARE, false);
+    public boolean isLocationLowBattery() {
+        return getBoolean(PreyConfig.PREFERENCE_LOCATION_LOW_BATTERY, false);
+    }
+
+    public int getGeofenceMaximumAccuracy(){
+        return FileConfigReader.getInstance(this.ctx).getGeofenceMaximumAccuracy();
     }
 }
