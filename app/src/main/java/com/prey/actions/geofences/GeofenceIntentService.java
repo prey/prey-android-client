@@ -7,13 +7,18 @@
 package com.prey.actions.geofences;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.R;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.location.LocationUtil;
 import com.prey.events.Event;
@@ -39,12 +44,16 @@ public class GeofenceIntentService extends IntentService {
                 onError(event.getErrorCode());
             } else {
                 int transition = event.getGeofenceTransition();
+                event.getTriggeringLocation().getLongitude();
+                event.getTriggeringLocation().getLatitude();
+                event.getTriggeringLocation().getAccuracy();
+
                 PreyLogger.d("***************transition:" + transition);
-                HttpDataService location = LocationUtil.dataLocation(this);
+
                 if (transition == Geofence.GEOFENCE_TRANSITION_ENTER || transition == Geofence.GEOFENCE_TRANSITION_DWELL || transition == Geofence.GEOFENCE_TRANSITION_EXIT) {
                     List<String> geofenceIds = new ArrayList<>();
                     List<Geofence> triggeringGeofences = event.getTriggeringGeofences();
-                    notifyGeofenceTransition(getApplicationContext(), transition, triggeringGeofences, location);
+                    notifyGeofenceTransition(getApplicationContext(), transition, triggeringGeofences, event.getTriggeringLocation());
                 }
             }
         }
@@ -53,7 +62,7 @@ public class GeofenceIntentService extends IntentService {
     private void notifyGeofenceTransition(
             Context context,
             int geofenceTransition,
-            List<Geofence> triggeringGeofences, HttpDataService location) {
+            List<Geofence> triggeringGeofences, Location location) {
         PreyLogger.d("notifyGeofenceTransition");
         ArrayList triggeringGeofencesIdsList = new ArrayList();
         for (Geofence geofence : triggeringGeofences) {
@@ -67,13 +76,18 @@ public class GeofenceIntentService extends IntentService {
                     event.setName("geofencing_out");
                 JSONObject info = new JSONObject();
                 info.put("id", Integer.parseInt(geofence.getRequestId()));
-                info.put("lat", location.getDataList().get(LocationUtil.LAT));
-                info.put("lng", location.getDataList().get(LocationUtil.LNG));
-                info.put("accuracy", location.getDataList().get(LocationUtil.ACC));
-                info.put("method", location.getDataList().get(LocationUtil.METHOD));
+                info.put("lat", location.getLatitude());
+                info.put("lng", location.getLongitude());
+                info.put("accuracy", location.getAccuracy());
+                info.put("method", "native");
                 event.setInfo(info.toString());
                 JSONObject jsonObjectStatus = new JSONObject();
-                new EventThread(this, event, jsonObjectStatus).start();
+                int geofenceMaximumAccuracy=PreyConfig.getPreyConfig(context).getGeofenceMaximumAccuracy();
+                if(location.getAccuracy()<=geofenceMaximumAccuracy) {
+                    new EventThread(this, event, jsonObjectStatus).start();
+                }else{
+                    PreyLogger.d("MaximumAccuracy:"+location.getAccuracy());
+                }
             } catch (Exception e) {
                 PreyLogger.e("notifyGeofenceTransition error:" + e.getMessage(), e);
             }

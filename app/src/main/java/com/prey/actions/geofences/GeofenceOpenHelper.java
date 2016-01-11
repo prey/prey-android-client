@@ -104,6 +104,14 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
         database.close();
     }
 
+    public void deleteAllGeofence() {
+        SQLiteDatabase database = this.getWritableDatabase();
+        String deleteQuery = "DELETE FROM  " + GEOFENCE_TABLE_NAME ;
+        PreyLogger.d("query" + deleteQuery);
+        database.execSQL(deleteQuery);
+        database.close();
+    }
+
     public List<GeofenceDto> getAllGeofences() {
         List<GeofenceDto> list = new ArrayList<GeofenceDto>();
         String selectQuery = "SELECT  * FROM " + GEOFENCE_TABLE_NAME;

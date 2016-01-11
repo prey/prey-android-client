@@ -125,5 +125,9 @@ public class FileConfigReader {
         return Integer.parseInt(properties.getProperty("timeout-report"));
     }
 
+    public int getGeofenceMaximumAccuracy() {
+        return Integer.parseInt(properties.getProperty("geofence-maximum-accuracy"));
+    }
+
 }
 

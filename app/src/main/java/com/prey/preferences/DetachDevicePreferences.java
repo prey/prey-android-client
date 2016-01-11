@@ -18,6 +18,8 @@ import android.util.AttributeSet;
 import android.widget.Toast;
 
 import com.prey.PreyConfig;
+import com.prey.actions.geofences.GeofenceController;
+import com.prey.actions.geofences.GeofenceDataSource;
 import com.prey.activities.LoginActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.exceptions.PreyException;
@@ -80,6 +82,9 @@ public class DetachDevicePreferences extends DialogPreference {
                 }
             } catch (Exception e) {}
 
+            try {
+                GeofenceController.getInstance().deleteAllZones(ctx);
+            } catch (Exception e) {}
 
             try {  PreyWebServices.getInstance().deleteDevice(ctx);} catch (Exception e) {error = e.getMessage();}
             try {    PreyConfig.getPreyConfig(getContext()).wipeData();} catch (Exception e) {error = e.getMessage();}

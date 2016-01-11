@@ -8,6 +8,7 @@ package com.prey;
 
 import android.app.Application;
 
+import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.report.ReportScheduled;
 import com.prey.net.PreyWebServices;
 
@@ -52,6 +53,16 @@ public class PreyApp extends Application {
             if(PreyVersion.equals(preferencePreyVersion)) {
                 PreyConfig.getPreyConfig(this).setPreferencePreyVersion(PreyVersion);
                 PreyWebServices.getInstance().sendEvent(this, PreyConfig.ANDROID_VERSION_UPDATED);
+            }
+
+
+            if (deviceKey != null && deviceKey != "") {
+                PreyConfig.getPreyConfig(this).registerC2dm();
+                new Thread() {
+                    public void run() {
+                        GeofenceController.getInstance().init(getApplicationContext());
+                    }
+                }.start();
             }
 
         }catch(Exception e){}

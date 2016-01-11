@@ -93,6 +93,17 @@ public class GeofenceController {
         }
     }
 
+    public void deleteAllZones(Context ctx){
+        List<String> removeList = new ArrayList<String>();
+        for (int i = 0; listBD != null && i < listBD.size(); i++) {
+            GeofenceDto geo = listBD.get(i);
+            dataSource.deleteGeofence(geo.getId());
+            removeList.add(geo.getId());
+        }
+        if (removeList != null && removeList.size() > 0) {
+            LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, removeList);
+        }
+    }
 
     public void sendNotify(final Context ctx, final Map<String, String> params) {
         new Thread() {
@@ -134,7 +145,7 @@ public class GeofenceController {
         PreyLogger.d("infoAdd:" + infoExtra);
 
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL);
         builder.addGeofences(mGeofenceList);
         GeofencingRequest geofencingRequest = builder.build();
         if (mGoogleApiClient.isConnected()) {
@@ -209,7 +220,7 @@ public class GeofenceController {
             final String extraInfo = info;
             PreyLogger.d("info:" + extraInfo);
             GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-            builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+            builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL);
             builder.addGeofences(mGeofenceList);
             GeofencingRequest geofencingRequest = builder.build();
             if (mGoogleApiClient.isConnected()) {
@@ -228,7 +239,6 @@ public class GeofenceController {
                             PreyLogger.d("*********************connectionAddListener  status :" + status);
                             if (status.isSuccess()) {
                                 PreyLogger.d("********saveGeofence");
-                                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "started", extraInfo));
                             } else {
                                 PreyLogger.d("*********************Registering geofence failed: " + status.getStatusMessage() + " : " + status.getStatusCode());
                                 sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "status:" + status.isSuccess()));

@@ -45,4 +45,8 @@ public class GeofenceDataSource {
         return dbHelper.getGeofence(id);
     }
 
+    public void deleteAllGeofence() {
+        dbHelper.deleteAllGeofence();
+    }
+
 }
