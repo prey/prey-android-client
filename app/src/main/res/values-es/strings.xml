@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-
+    <string name="app_name">Prey</string>
 
 
     <string name="menu_title_1">estado de tu dispositivo</string>
@@ -99,6 +99,8 @@
     <string name="preferences_detach_dialog_title">Se removerá tu equipo</string>
     <string name="preferences_detach_dialog_message">Se va a eliminar este equipo del Panel de Control. Esto además eliminará todos los reportes almacenados para este equipo.\n\n¿Estás seguro?</string>
     <string name="preferences_detach_dettaching_message">Removiendo el equipo.\nUn segundo…</string>
+    <string name="preferences_admin_disabled_dialog_title">Permisos adicionales</string>
+     <string name="preferences_admin_disabled_dialog_message">Está a punto de conceder Prey privilegios de seguridad especial, que le permitirá bloquear de forma remota el dispositivo.\nHaga clic en Sí para continuar.</string>
     <string name="preferences_disable_power_options_title">Desactivar el menú de apagado</string>
     <string name="preferences_disable_power_options_summary">Tu dispositivo no puede ser apagado si la pantalla está bloqueada</string>
     <string name="preferences_scheduled_title">Fijar frecuenta de intervalo</string>
@@ -112,9 +114,6 @@
     <string name="preferences_admin_disabled_summary">Evita la desinstalación de Prey</string>
     <string name="preferences_admin_enabled_dialog_title">Atención</string>
     <string name="preferences_admin_enabled_dialog_message">Al aceptar se eliminarán los permisos de administración de Prey en este dispositivo. Sin estos permisos, no será posible bloquearlo de forma remota.\n\n¿Estás seguro?</string>
-    <string name="preferences_password_title">Cambiar contraseña</string>
-    <string name="preferences_password_summary">Define tu nueva contraseña de administración</string>
-    <string name="preferences_password_dialog_title">Por favor ingresa\ntu nueva contraseña</string>
     <string name="preferences_passwords_do_not_match">Las contraseñas no coinciden</string>
     <string name="preferences_passwords_updating_dialog">Actualizando tu cuenta Prey.\nUn segundo…</string>
     <string name="preferences_passwords_successfully_changed">Tu contraseña fue cambiada exitosamente</string>
@@ -154,6 +153,15 @@
 
     <string name="updating_info_message">Actualizando información, un segundo…</string>
 
+
+    <string name="geofence_not_available">Servicio Geofence no está disponible ahora</string>
+    <string name="geofence_too_many_geofences">Su aplicación ha registrado demasiados geofences</string>
+    <string name="geofence_too_many_pending_intents">Usted ha proporcionado demasiados PendingIntents</string>
+    <string name="unknown_geofence_error">Error desconocido: el servicio Geofence no está disponible ahora</string>
+
+    <string name="geofence_transition_entered">Entró</string>
+    <string name="geofence_transition_exited">Salió</string>
+    <string name="unknown_geofence_transition">Desconocido Transición</string>
 
     <string name="home_button">REGÍSTRATE</string>
     <string name="home_subtitle">¿Ya tienes una cuenta? <u>Iniciar sesión</u></string>
@@ -212,5 +220,8 @@
 
 
 
+    <!-- Location Low Battery  -->
+    <string name="preferences_location_low_battery_options_title">Activar ubicación con batería baja</string>
+    <string name="preferences_location_low_battery_options_summary">Obtiene la ubicación de su dispositivo cuando la batería se encuentra baja</string>
 
 </resources>

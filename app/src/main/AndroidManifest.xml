@@ -294,7 +294,7 @@
 
         <receiver
             android:name="com.prey.receivers.PreyDeviceAdmin"
-            android:description="@string/device_admin_description"
+
             android:label="@string/device_admin_label"
             android:permission="android.permission.BIND_DEVICE_ADMIN" >
             <meta-data
