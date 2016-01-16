@@ -677,7 +677,7 @@ public class PreyConfig {
     }
 
     public String getExcludeReport(){
-        return getString(PreyConfig.INTERVAL_REPORT,"");
+        return getString(PreyConfig.EXCLUDE_REPORT,"");
     }
 
     public void setExcludeReport(String excludeReport) {
