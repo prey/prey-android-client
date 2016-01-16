@@ -4,13 +4,13 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.0'
-    useLibrary  'org.apache.http.legacy'
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.prey"
         minSdkVersion 9
         targetSdkVersion 23
-        versionCode 122
-        versionName '1.5.8'
+        versionCode 117
+        versionName '1.5.3'
     }
     buildTypes {
         release {
