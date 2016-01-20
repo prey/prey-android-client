@@ -56,10 +56,22 @@ public class WelcomeBatchActivity extends FragmentActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.welcomebatch);
 
+        menu();
         installBatch();
+
 
     }
 
+    public void menu() {
+        PreyLogger.i("menu ready:" + PreyConfig.getPreyConfig(this).getProtectReady());
+
+        String email = PreyConfig.getPreyConfig(this).getEmail();
+        if (email == null || "".equals(email)) {
+            PreyConfig.getPreyConfig(this).setProtectReady(false);
+            PreyConfig.getPreyConfig(this).setProtectAccount(false);
+            PreyConfig.getPreyConfig(this).setProtectTour(false);
+        }
+    }
 
     private void installBatch() {
         error=null;
