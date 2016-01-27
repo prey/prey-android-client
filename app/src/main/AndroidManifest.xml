@@ -126,7 +126,12 @@
             android:name="com.prey.activities.DeviceReadyActivity"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light" />
+
+
+
+
 
         <activity
             android:name=".activities.TourActivity1"

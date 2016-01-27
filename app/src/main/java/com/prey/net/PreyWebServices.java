@@ -173,9 +173,10 @@ public class PreyWebServices {
 
         String model = Build.MODEL;
         String vendor = "Google";
-        if (!PreyConfig.getPreyConfig(ctx).isCupcakeOrAbove())
+        try {
             vendor = AboveCupcakeSupport.getDeviceVendor();
-
+        }catch(Exception e){
+        }
         HashMap<String, String> parameters = new HashMap<String, String>();
         parameters.put("api_key", api_key);
         parameters.put("title", vendor + " " + model);
@@ -190,7 +191,7 @@ public class PreyWebServices {
         parameters = increaseData(ctx, parameters);
         TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
         //String imsi = mTelephonyMgr.getSubscriberId();
-        String imei = mTelephonyMgr.getDeviceId();
+        String imei = new PreyPhone(ctx).getHardware().getAndroidDeviceId();
         parameters.put("physical_address", imei);
 
         PreyHttpResponse response = null;
@@ -494,6 +495,12 @@ public class PreyWebServices {
         }
 
 
+        parameters.put( "hardware_attributes[uuid]", hardware.getUuid());
+        parameters.put( "hardware_attributes[serial_number]", hardware.getSerialNumber());
+
+
+
+
         //	parameters.put("notification_id", preyConfig.getNotificationId());
 
 
@@ -605,7 +612,7 @@ public class PreyWebServices {
     public PreyHttpResponse sendPreyHttpReport(Context ctx, List<HttpDataService> dataToSend) {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 
-        Map<String, String> parameters = new HashMap<String, String>();
+        HashMap<String, String> parameters = new HashMap<String, String>();
         List<EntityFile> entityFiles = new ArrayList<EntityFile>();
         for (HttpDataService httpDataService : dataToSend) {
             if (httpDataService != null) {
@@ -615,9 +622,6 @@ public class PreyWebServices {
                 }
             }
         }
-
-        //parameters.put("api_key", preyConfig.getApiKey());
-
 
         PreyHttpResponse preyHttpResponse = null;
         try {

@@ -13,15 +13,21 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPermission;
+import com.prey.R;
+import com.prey.activities.DeviceReadyActivity;
 import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.Event;
 import com.prey.managers.PreyConnectivityManager;
@@ -40,6 +46,7 @@ public class EventFactory {
         String message = "getEvent[" + intent.getAction() + "]";
         PreyLogger.d(message);
         if (BOOT_COMPLETED.equals(intent.getAction())) {
+            notification(ctx);
             if (PreyConfig.getPreyConfig(ctx).isSimChanged()) {
                 JSONObject info = new JSONObject();
                 try {
@@ -111,6 +118,7 @@ public class EventFactory {
         }
         if (AIRPLANE_MODE.equals(intent.getAction())) {
             if (!isAirplaneModeOn(ctx)) {
+                notification(ctx);
                 try {
                     Thread.sleep(4000);
                 } catch (Exception e) {
@@ -147,6 +155,39 @@ public class EventFactory {
             return false;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+
+    public static void notification(Context ctx){
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PreyLogger.i("7________");
+            if (PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey(false)) {
+                PreyConfig.getPreyConfig(ctx).setCanAccessCamara(PreyPermission.canAccessCamera(ctx));
+                PreyConfig.getPreyConfig(ctx).setCanAccessCoarseLocation(PreyPermission.canAccessCoarseLocation(ctx));
+                PreyConfig.getPreyConfig(ctx).setCanAccessFineLocation(PreyPermission.canAccessFineLocation(ctx));
+                PreyConfig.getPreyConfig(ctx).setCanAccessReadPhoneState(PreyPermission.canAccessReadPhoneState(ctx));
+                if (!PreyPermission.canAccessCamera(ctx) || !PreyPermission.canAccessCoarseLocation(ctx) || !PreyPermission.canAccessFineLocation(ctx)|| !PreyPermission.canAccessReadPhoneState(ctx)) {
+                    Intent intent3 = new Intent(ctx, DeviceReadyActivity.class);
+                    intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(
+                            ctx,
+                            0,
+                            intent3,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
+                    NotificationManager nManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+                    android.support.v4.app.NotificationCompat.Builder mBuilder =
+                            new android.support.v4.app.NotificationCompat.Builder(ctx)
+                                    .setSmallIcon(R.drawable.logo)
+                                    .setContentTitle(ctx.getResources().getString(R.string.warning_notification_title))
+                                    .setContentText(ctx.getResources().getString(R.string.warning_notification_body));
+                    mBuilder.setContentIntent(pendingIntent);
+                    mBuilder.setAutoCancel(true);
+                    nManager.notify(PreyConfig.TAG,PreyConfig.NOTIFY_ANDROID_6, mBuilder.build());
+                }
+            }
+            PreyLogger.i("8________");
         }
     }
 }

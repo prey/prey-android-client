@@ -9,15 +9,16 @@ package com.prey.managers;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 
+import com.prey.PreyPhone;
+
 public class PreyTelephonyManager {
 
-    private String simSerialNumber=null;
-    private TelephonyManager telephony=null;
+
+    private Context ctx;
     private static PreyTelephonyManager _instance = null;
 
     private PreyTelephonyManager(Context ctx) {
-        telephony = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        simSerialNumber=telephony.getSimSerialNumber();
+        this.ctx=ctx;
     }
 
     public static PreyTelephonyManager getInstance(Context ctx) {
@@ -27,11 +28,11 @@ public class PreyTelephonyManager {
     }
 
     public boolean isDataConnectivityEnabled(){
-        return telephony.getDataState()==TelephonyManager.DATA_CONNECTED;
+        return new PreyPhone(ctx).getDataState()==TelephonyManager.DATA_CONNECTED;
     }
 
     public int getSimState(){
-        return telephony.getSimState();
+        return new PreyPhone(ctx).getSimState();
     }
 
     public boolean isSimStateAbsent(){
@@ -42,15 +43,9 @@ public class PreyTelephonyManager {
         return getSimState()==TelephonyManager.SIM_STATE_READY;
     }
 
-    public String getSimSerialNumber(){
-        return simSerialNumber;
-    }
-    public void setSimSerialNumber(String simSerialNumber){
-        this.simSerialNumber=simSerialNumber;
-    }
 
     public String getLine1Number(){
-        return telephony.getLine1Number();
+        return new PreyPhone(ctx).getLine1Number();
 
     }
 

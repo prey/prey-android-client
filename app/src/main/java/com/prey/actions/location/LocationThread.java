@@ -11,7 +11,11 @@ import java.util.Map;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsManager;
 
 public class LocationThread extends Thread {
@@ -38,8 +42,11 @@ public class LocationThread extends Thread {
     }
 
     private void sendSMS(String phoneNumber, String message) {
-        SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(phoneNumber, null, message, null, null);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+                || (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED )) {
+            SmsManager sms = SmsManager.getDefault();
+            sms.sendTextMessage(phoneNumber, null, message, null, null);
+        }
 
     }
 

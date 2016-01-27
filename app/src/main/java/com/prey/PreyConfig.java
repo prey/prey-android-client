@@ -7,13 +7,16 @@
 
 package com.prey;
 
+import android.*;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.content.PermissionChecker;
 import android.telephony.TelephonyManager;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -52,7 +55,7 @@ public class PreyConfig {
     // max "age" in ms of last location (default 120000).
     public static final long LAST_LOCATION_MAX_AGE = 30 * MILLISECONDS_PER_SECOND;
 
-    public static final int LOCATION_PRIORITY = LocationRequest.PRIORITY_HIGH_ACCURACY;
+    public static final int LOCATION_PRIORITY_HIGHT = LocationRequest.PRIORITY_HIGH_ACCURACY;
 
     public static final long FASTEST_INTERVAL  =  40 * MILLISECONDS_PER_SECOND;
 
@@ -123,6 +126,14 @@ public class PreyConfig {
 
     public static final String SIM_SERIAL_NUMBER = "SIM_SERIAL_NUMBER";
     public static final String VERSION_PREY_DEFAULT="1.5.2";
+
+    public static final String CAN_ACCESS_FINE_LOCATION = "CAN_ACCESS_FINE_LOCATION";
+    public static final String CAN_ACCESS_COARSE_LOCATION = "CAN_ACCESS_COARSE_LOCATION";
+    public static final String CAN_ACCESS_CAMARA = "CAN_ACCESS_CAMARA";
+    public static final String CAN_ACCESS_READ_PHONE_STATE = "CAN_ACCESS_READ_PHONE_STATE";
+
+
+    public static final int NOTIFY_ANDROID_6 = 6;
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -254,16 +265,50 @@ public class PreyConfig {
     }
 
 
+
+    public void setCanAccessFineLocation(boolean canAccessFineLocation) {
+        this.saveBoolean(PreyConfig.CAN_ACCESS_FINE_LOCATION, canAccessFineLocation);
+    }
+
+    public boolean canAccessFineLocation() {
+        return getBoolean(PreyConfig.CAN_ACCESS_FINE_LOCATION, false);
+    }
+
+    public void setCanAccessCoarseLocation(boolean canAccessCoarseLocation) {
+        this.saveBoolean(PreyConfig.CAN_ACCESS_COARSE_LOCATION, canAccessCoarseLocation);
+    }
+
+    public boolean canAccessCoarseLocation() {
+        return getBoolean(PreyConfig.CAN_ACCESS_COARSE_LOCATION, false);
+    }
+
+    public void setCanAccessCamara(boolean canAccessCamara) {
+        this.saveBoolean(PreyConfig.CAN_ACCESS_CAMARA, canAccessCamara);
+    }
+
+    public boolean canAccessCamara() {
+        return getBoolean(PreyConfig.CAN_ACCESS_CAMARA, false);
+    }
+
+    public void setCanAccessReadPhoneState(boolean canAccessReadPhoneState) {
+        this.saveBoolean(PreyConfig.CAN_ACCESS_READ_PHONE_STATE, canAccessReadPhoneState);
+    }
+
+    public boolean canAccessReadPhoneState() {
+        return getBoolean(PreyConfig.CAN_ACCESS_READ_PHONE_STATE, false);
+    }
+
+
     public String getApiKey(){
         return getString(PreyConfig.API_KEY, null);
     }
 
     public void setApiKey(String apikey){
-        this.saveString(PreyConfig.API_KEY,apikey);
+        this.saveString(PreyConfig.API_KEY, apikey);
     }
 
     public String getDeviceId(){
-        return getString(PreyConfig.DEVICE_ID,null);
+        return getString(PreyConfig.DEVICE_ID, null);
     }
 
     public void setDeviceId(String deviceId){
@@ -290,23 +335,27 @@ public class PreyConfig {
     }
 
     public boolean isFroyoOrAbove() {
-        return android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.FROYO;
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
     }
 
     public boolean isGingerbreadOrAbove() {
-        return android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.GINGERBREAD;
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
     }
 
     public boolean isIceCreamSandwichOrAbove() {
-        return android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1;
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1;
     }
 
     public boolean isEclairOrAbove(){
-        return android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.ECLAIR;
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR;
     }
 
     public boolean isCupcakeOrAbove() {
-        return android.os.Build.VERSION.SDK_INT> Build.VERSION_CODES.CUPCAKE;
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE;
+    }
+
+    public boolean isMarshmallowOrAbove() {
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
     public String getLastEvent() {
@@ -347,8 +396,8 @@ public class PreyConfig {
     }
 
     public boolean isSimChanged() {
-        TelephonyManager telephonyManager = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        String simSerial=telephonyManager.getSimSerialNumber();
+
+        String simSerial=new PreyPhone(ctx).getSimSerialNumber();
         PreyLogger.i("simSerial:" + simSerial + " actual:" + getSimSerialNumber());
         if (getSimSerialNumber()==null||"".equals(getSimSerialNumber())){
             if(simSerial!=null&&!"".equals(simSerial)){
@@ -395,8 +444,11 @@ public class PreyConfig {
     public void registerC2dm(){
         boolean error=false;
 
-            if (PreyEmail.getEmail(this.ctx) != null) {
+        PreyLogger.i("c2dm:"+PreyEmail.getEmail(this.ctx));
+
+//            if (PreyEmail.getEmail(this.ctx) != null) {
                 String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
+                PreyLogger.i("deviceId:"+deviceId);
                 if (deviceId != null && !"".equals(deviceId)) {
                     try {
 
@@ -419,7 +471,7 @@ public class PreyConfig {
 
                     if (error) {
                         try {
-                            if (PreyEmail.getEmail(this.ctx) != null) {
+                       //     if (PreyEmail.getEmail(this.ctx) != null) {
                                 PreyLogger.d("______________________");
                                 PreyLogger.d("___ registerC2dm  2_____");
 
@@ -430,14 +482,14 @@ public class PreyConfig {
 
 
                                 PreyLogger.d("______________________");
-                            }
+                         //   }
                         } catch (Exception e) {
                             PreyLogger.e("Error :" + e.getMessage(), e);
 
                         }
                     }
                 }
-            }
+  //          }
 
 
     }
@@ -567,7 +619,7 @@ public class PreyConfig {
         return getString(PreyConfig.EMAIL, "");
     }
 
-    public void setEmail(String email){
+    public void setEmail(String email) {
         saveString(PreyConfig.EMAIL, email);
     }
 
@@ -577,7 +629,7 @@ public class PreyConfig {
 
 
     public boolean isSendData(){
-        return getBoolean(PreyConfig.SEND_DATA,false);
+        return getBoolean(PreyConfig.SEND_DATA, false);
     }
 
     public void setSendData(boolean sendData) {
@@ -596,17 +648,13 @@ public class PreyConfig {
     }
 
     public void saveSimInformation() {
-        TelephonyManager telephonyManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        String simSerial=telephonyManager.getSimSerialNumber();
+        String simSerial=new PreyPhone(ctx).getSimSerialNumber();
         if (simSerial !=null){
             this.setSimSerialNumber(simSerial);
         }
         this.saveString(PreyConfig.PREFS_SIM_SERIAL_NUMBER, this.getSimSerialNumber());
         PreyLogger.d("SIM Serial number stored: " + this.getSimSerialNumber());
     }
-
-
-
 
     public boolean isMissing() {
         return getBoolean(PreyConfig.PREFS_IS_MISSING, false);
@@ -750,11 +798,11 @@ public class PreyConfig {
         saveInt(PreyConfig.PIN_NUMBER, pin);
     }
 
-    public int getPinNumber(){
-        return getInt(PreyConfig.PIN_NUMBER,-1);
+    public int getPinNumber() {
+        return getInt(PreyConfig.PIN_NUMBER, -1);
     }
 
-    public void setSmsCommand(boolean smsCommand){
+    public void setSmsCommand(boolean smsCommand) {
         saveBoolean(PreyConfig.SMS_COMMAND, smsCommand);
     }
 
@@ -781,4 +829,7 @@ public class PreyConfig {
     public int getGeofenceMaximumAccuracy(){
         return FileConfigReader.getInstance(this.ctx).getGeofenceMaximumAccuracy();
     }
+
+
+
 }

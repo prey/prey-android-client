@@ -63,8 +63,7 @@ public class PreyBetaRunnerService extends Service {
     public void onDestroy() {
         PreyLogger.d("********************");
         PreyLogger.d("PreyRunnerService is going to be destroyed");
-        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.cancelAll();
+
         ActionsController.getInstance(PreyBetaRunnerService.this).finishRunningJosb();
         running = false;
         PreyLogger.d("PreyRunnerService has been destroyed");

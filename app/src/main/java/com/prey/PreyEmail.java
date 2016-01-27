@@ -50,7 +50,12 @@ public class PreyEmail {
             Account account = getAccount(context,accountManager);
             if (account != null) {
                 return account.name;
+            }else{
+                PreyLogger.i("account nulo");
             }
+
+        }else{
+            PreyLogger.i("sdk menor");
         }
         return null;
 
@@ -63,7 +68,11 @@ public class PreyEmail {
             Account[] accounts = accountManager.getAccountsByType("com.google");
             if (accounts.length > 0) {
                 return accounts[0];
+            }else{
+                PreyLogger.i("account length 0");
             }
+        }else {
+            PreyLogger.i("account bajo eckair");
         }
         return null;
     }

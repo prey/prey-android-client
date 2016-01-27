@@ -218,10 +218,17 @@
     <string name="preference_sms_command_wipe_summary">Borrará todos los datos del dispositivo: un “restablecimiento de fábrica”. Útil para proteger información privada, pero puede eliminar Prey. Usar con precaución!</string>
 
 
-
-
     <!-- Location Low Battery  -->
     <string name="preferences_location_low_battery_options_title">Activar ubicación con batería baja</string>
     <string name="preferences_location_low_battery_options_summary">Obtiene la ubicación de su dispositivo cuando la batería se encuentra baja</string>
 
+    <!-- Warning Alert  -->
+    <string name="warning_notification_title">¡Atención!Prey necesita permisos</string>
+    <string name="warning_notification_body">Toca aquí para otorgar permisos </string>
+
+    <string name="warning_title">¡Atención! Prey necesita permisos</string>
+    <string name="warning_body">Prey necesita nuevos permisos en la versión de Android 6.0 para generar reportes, que incluyen permisos de cámara, ubicación y estado del dispositivo.</string>
+
+    <string name="warning_re_approve">Otorgar</string>
+    <string name="warning_close">Cerrar</string>
 </resources>

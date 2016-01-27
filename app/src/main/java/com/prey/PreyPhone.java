@@ -26,16 +26,20 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.prey.managers.PreyConnectivityManager;
 
+import android.*;
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.DhcpInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Debug;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 
 public class PreyPhone {
@@ -66,6 +70,7 @@ public class PreyPhone {
         Map<String, String> mapData = getProcessorData();
         hardware = new Hardware();
         hardware.setUuid(getUuid());
+        hardware.setAndroidDeviceId(getAndroidDeviceId());
         hardware.setBiosVendor(Build.MANUFACTURER);
         hardware.setBiosVersion(mapData.get("Revision"));
         hardware.setMbVendor(Build.MANUFACTURER);
@@ -237,18 +242,23 @@ public class PreyPhone {
 
     private void updateListWifi() {
         listWifi = new ArrayList<PreyPhone.Wifi>();
-        WifiManager wifiMgr = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
-        List<ScanResult> listScanResults = wifiMgr.getScanResults();
-        for (int i = 0; listScanResults != null && i < listScanResults.size(); i++) {
-            ScanResult scan = listScanResults.get(i);
-            Wifi _wifi = new Wifi();
-            _wifi.setSsid(scan.SSID);
-            _wifi.setMacAddress(scan.BSSID);
-            _wifi.setSecurity(scan.capabilities);
-            _wifi.setSignalStrength(String.valueOf(scan.level));
-            _wifi.setChannel(String.valueOf(getChannelFromFrequency(scan.frequency)));
-            listWifi.add(_wifi);
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+                || (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            WifiManager wifiMgr = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
+            List<ScanResult> listScanResults = wifiMgr.getScanResults();
+            for (int i = 0; listScanResults != null && i < listScanResults.size(); i++) {
+                ScanResult scan = listScanResults.get(i);
+                Wifi _wifi = new Wifi();
+                _wifi.setSsid(scan.SSID);
+                _wifi.setMacAddress(scan.BSSID);
+                _wifi.setSecurity(scan.capabilities);
+                _wifi.setSignalStrength(String.valueOf(scan.level));
+                _wifi.setChannel(String.valueOf(getChannelFromFrequency(scan.frequency)));
+                listWifi.add(_wifi);
+
+            }
         }
     }
 
@@ -288,7 +298,7 @@ public class PreyPhone {
         private long totalMemory;
         private long freeMemory;
         private long busyMemory;
-
+        private String androidDeviceId;
 
         public long getTotalMemory() {
             return totalMemory;
@@ -417,6 +427,10 @@ public class PreyPhone {
         public void setCpuCores(String cpuCores) {
             this.cpuCores = cpuCores;
         }
+
+        public void setAndroidDeviceId(String androidDeviceId) { this.androidDeviceId = androidDeviceId; }
+
+        public String getAndroidDeviceId() { return androidDeviceId; }
 
     }
 
@@ -586,11 +600,9 @@ public class PreyPhone {
     }
 
     private String getSerialNumber() {
-        PreyConfig config = PreyConfig.getPreyConfig(ctx);
-        if (config.isFroyoOrAbove()) {
-            TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-            return tManager.getDeviceId();
-        } else {
+        try{
+            return getUuid();
+        } catch(Exception e) {
             return "";
         }
     }
@@ -627,10 +639,113 @@ public class PreyPhone {
         return ip;
     }
 
-    private String getUuid() {
+    private static final int REQUEST_READ_PHONE_STATE_PERMISSION = 225;
+
+
+
+    private String getAndroidDeviceId() {
+        return android.provider.Settings.Secure.getString(ctx.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+    }
+
+
+    public int getSimState(){
         TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        String uuid = tManager.getDeviceId();
+        int simState =-1;
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                    simState = tManager.getSimState();
+                }else{
+                    PreyLogger.i("___________ask for permission getSimState READ_PHONE_STATE");
+                }
+            }else {
+                simState = tManager.getSimState();
+            }
+        }catch (Exception e){
+            PreyLogger.e("Error getSimSerialNumber:"+e.getMessage(),e);
+        }
+        return simState;
+    }
+
+
+    private String getUuid() {
+        String uuid="";
+        TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                    uuid=tManager.getDeviceId();
+                }else{
+                    PreyLogger.i("___________ask for permission getDeviceId READ_PHONE_STATE");
+                }
+            }else {
+                uuid = tManager.getDeviceId();
+            }
+        }catch (Exception e){
+            PreyLogger.e("Error getUuid:"+e.getMessage(),e);
+        }
+        PreyLogger.d("uuid["+uuid+"]");
         return uuid;
+    }
+
+    public String getSimSerialNumber(){
+        TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
+        String simSerialNumber ="";
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                    simSerialNumber = tManager.getSimSerialNumber();
+                }else{
+                    PreyLogger.i("___________ask for permission getSimSerialNumber READ_PHONE_STATE");
+                }
+            }else {
+                simSerialNumber = tManager.getSimSerialNumber();
+            }
+        }catch (Exception e){
+            PreyLogger.e("Error getSimSerialNumber:"+e.getMessage(),e);
+        }
+        PreyLogger.d("simSerialNumber["+simSerialNumber+"]");
+        return simSerialNumber;
+    }
+
+
+    public int getDataState(){
+        TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
+        int dataState =-1;
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                    dataState = tManager.getDataState();
+                }else{
+                    PreyLogger.i("___________ask for permission getDataState READ_PHONE_STATE");
+                }
+            }else {
+                dataState = tManager.getDataState();
+            }
+        }catch (Exception e){
+            PreyLogger.e("Error getDataState:"+e.getMessage(),e);
+        }
+        return dataState;
+    }
+
+
+    public String getLine1Number(){
+        TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
+        String line1Number ="";
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                    line1Number = tManager.getLine1Number();
+                }else{
+                    PreyLogger.i("___________ask for permission getLine1Number READ_PHONE_STATE");
+                }
+            }else {
+                line1Number = tManager.getLine1Number();
+            }
+        }catch (Exception e){
+            PreyLogger.e("Error getDataState:"+e.getMessage(),e);
+        }
+        return line1Number;
     }
 
 

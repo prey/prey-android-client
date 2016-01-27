@@ -10,10 +10,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -43,13 +47,20 @@ public class LocationUtil {
             PreyLogger.d("gps status:" + isGpsEnabled);
             PreyLogger.d("net status:" + isNetworkEnabled);
             PreyLocation location = null;
-            if (isGpsEnabled || isNetworkEnabled) {
-                String method=getMethod(isGpsEnabled,isNetworkEnabled);
-                PreyLocation locationPlay=null;
-                int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(ctx);
-                if (ConnectionResult.SUCCESS == resultCode) {
-                    location = getPreyLocationPlayService(ctx, method);
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+                    || (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+                if (isGpsEnabled || isNetworkEnabled) {
+                    String method = getMethod(isGpsEnabled, isNetworkEnabled);
+                    PreyLocation locationPlay = null;
+                    int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(ctx);
+                    if (ConnectionResult.SUCCESS == resultCode) {
+                        location = getPreyLocationPlayService(ctx, method);
+                    }
                 }
+            }else{
+                PreyLogger.d("ask for permission location");
             }
             if(location==null)
                 location = getDataLocationWifi(ctx);

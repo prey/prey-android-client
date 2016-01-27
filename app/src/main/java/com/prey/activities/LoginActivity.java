@@ -6,26 +6,16 @@
  ******************************************************************************/
 package com.prey.activities;
 
-import android.app.NotificationManager;
-
-import com.prey.PreyLogger;
-import com.prey.PreyStatus;
 import com.prey.PreyVerify;
-import com.prey.R;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.prey.PreyConfig;
-import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.services.PreyDisablePowerOptionsService;
 
 public class LoginActivity extends PasswordActivity {
@@ -41,9 +31,10 @@ public class LoginActivity extends PasswordActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // Delete notifications (in case Activity was started by one of them)
-        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.cancel(R.string.app_name);
+
         startup();
+
+
 
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
         if (disablePowerOptions) {

@@ -6,11 +6,14 @@
  ******************************************************************************/
 package com.prey.beta.actions;
 
+import android.Manifest;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.PermissionChecker;
 
 import com.prey.PreyConfig;
+import com.prey.PreyPermission;
 import com.prey.beta.services.PreyBetaRunnerService;
 
 public class PreyBetaController {
@@ -23,8 +26,11 @@ public class PreyBetaController {
         PreyConfig config = PreyConfig.getPreyConfig(ctx);
         if (config.isThisDeviceAlreadyRegisteredWithPrey()) {
             // Cancelling the notification of the SMS that started Prey
-            NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-            nm.cancelAll();
+
+            PreyConfig.getPreyConfig(ctx).setCanAccessCamara(PreyPermission.canAccessCamera(ctx));
+            PreyConfig.getPreyConfig(ctx).setCanAccessCoarseLocation(PreyPermission.canAccessCoarseLocation(ctx));
+            PreyConfig.getPreyConfig(ctx).setCanAccessFineLocation(PreyPermission.canAccessFineLocation(ctx));
+            PreyConfig.getPreyConfig(ctx).setCanAccessReadPhoneState(PreyPermission.canAccessReadPhoneState(ctx));
 
             config.setRun(true);
             final Context context = ctx;
@@ -48,6 +54,8 @@ public class PreyBetaController {
     public static void stopPrey(Context ctx) {
         ctx.stopService(new Intent(ctx, PreyBetaRunnerService.class));
     }
+
+
 
 }
 

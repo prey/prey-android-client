@@ -9,9 +9,13 @@ package com.prey.actions.picture;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
@@ -25,34 +29,39 @@ public class PictureUtil {
     public static HttpDataService getPicture(Context ctx) {
         HttpDataService data = null;
         try {
-            byte[] frontPicture = getPicture(ctx, "front");
-            data = new HttpDataService(CameraAction.DATA_ID);
-            data.setList(true);
-            if (frontPicture != null) {
-                PreyLogger.d("front data length=" + frontPicture.length);
-                InputStream file = new ByteArrayInputStream(frontPicture);
-                EntityFile entityFile = new EntityFile();
-                entityFile.setFile(file);
-                entityFile.setMimeType("image/png");
-                entityFile.setName("picture.jpg");
-                entityFile.setType("picture");
-                entityFile.setLength(frontPicture.length);
-                data.addEntityFile(entityFile);
-            }
-            Integer numberOfCameras = SimpleCameraActivity.getNumberOfCameras();
-            if (numberOfCameras!=null&&numberOfCameras > 1) {
-                Thread.sleep(6000);
-                byte[] backPicture = getPicture(ctx, "back");
-                if (backPicture != null) {
-                    PreyLogger.d("back data length=" + backPicture.length);
-                    InputStream file = new ByteArrayInputStream(backPicture);
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+                    || ActivityCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                byte[] frontPicture = getPicture(ctx, "front");
+                data = new HttpDataService(CameraAction.DATA_ID);
+                data.setList(true);
+                if (frontPicture != null) {
+                    PreyLogger.d("front data length=" + frontPicture.length);
+                    InputStream file = new ByteArrayInputStream(frontPicture);
                     EntityFile entityFile = new EntityFile();
                     entityFile.setFile(file);
                     entityFile.setMimeType("image/png");
-                    entityFile.setName("screenshot.jpg");
-                    entityFile.setType("screenshot");
-                    entityFile.setLength(backPicture.length);
+                    entityFile.setName("picture.jpg");
+                    entityFile.setType("picture");
+                    entityFile.setLength(frontPicture.length);
                     data.addEntityFile(entityFile);
+                }
+                Integer numberOfCameras = SimpleCameraActivity.getNumberOfCameras();
+                if (numberOfCameras != null && numberOfCameras > 1) {
+                    Thread.sleep(6000);
+                    byte[] backPicture = getPicture(ctx, "back");
+                    if (backPicture != null) {
+                        PreyLogger.d("back data length=" + backPicture.length);
+                        InputStream file = new ByteArrayInputStream(backPicture);
+                        EntityFile entityFile = new EntityFile();
+                        entityFile.setFile(file);
+                        entityFile.setMimeType("image/png");
+                        entityFile.setName("screenshot.jpg");
+                        entityFile.setType("screenshot");
+                        entityFile.setLength(backPicture.length);
+                        data.addEntityFile(entityFile);
+                    }
                 }
             }
         } catch (Exception e) {

@@ -6,10 +6,14 @@
  ******************************************************************************/
 package com.prey.actions.location;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.v4.app.ActivityCompat;
 
 
 import com.google.android.gms.common.ConnectionResult;
@@ -43,10 +47,10 @@ public class PreyGooglePlayServiceLocation implements
     private Context ctx;
 
     public void init(Context ctx) {
-        this.ctx=ctx;
+        this.ctx = ctx;
         PreyLogger.d("init");
-        mCurrentLocation=null;
-        mLastUpdateTime=null;
+        mCurrentLocation = null;
+        mLastUpdateTime = null;
         mRequestingLocationUpdates = false;
         buildGoogleApiClient();
     }
@@ -74,7 +78,7 @@ public class PreyGooglePlayServiceLocation implements
         if (connectionResult.isSuccess() && mGoogleApiClient.isConnected()) {
             createLocationRequest();
             startLocationUpdates();
-        } else{
+        } else {
             PreyLogger.i(String.format(GOOGLE_API_CLIENT_ERROR_MSG,
                     connectionResult.getErrorCode()));
         }
@@ -88,7 +92,7 @@ public class PreyGooglePlayServiceLocation implements
 
         mLocationRequest.setFastestInterval(PreyConfig.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
 
-        mLocationRequest.setPriority(PreyConfig.LOCATION_PRIORITY);
+        mLocationRequest.setPriority(PreyConfig.LOCATION_PRIORITY_HIGHT);
 
     }
 
@@ -101,12 +105,11 @@ public class PreyGooglePlayServiceLocation implements
     public void onLocationChanged(Location location) {
         PreyLogger.d("onLocationChanged");
         mCurrentLocation = location;
-        if(location!=null) {
+        if (location != null) {
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
             PreyLogger.d("latitude:" + location.getLatitude() + " longitude:" + location.getLongitude() + " accuracy:" + location.getAccuracy());
             stopLocationUpdates();
         }
-
 
 
     }
@@ -121,21 +124,25 @@ public class PreyGooglePlayServiceLocation implements
         mGoogleApiClient.connect();
     }
 
-
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         PreyLogger.d("Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
     protected void startLocationUpdates() {
-        try {
-            Looper.prepare();
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mGoogleApiClient, mLocationRequest, this);
-            Looper.loop();
-        }catch (Exception e){
-            PreyLogger.d("Error startLocationUpdates: "+e.getMessage());
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+                || (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            try {
+                Looper.prepare();
+                LocationServices.FusedLocationApi.requestLocationUpdates(
+                        mGoogleApiClient, mLocationRequest, this);
+                Looper.loop();
+            }catch (Exception e){
+                    PreyLogger.d("Error startLocationUpdates: "+e.getMessage());
+            }
         }
+
     }
 
 

@@ -6,10 +6,14 @@
  ******************************************************************************/
 package com.prey.actions.geofences;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -93,7 +97,7 @@ public class GeofenceController {
         }
     }
 
-    public void deleteAllZones(Context ctx){
+    public void deleteAllZones(Context ctx) {
         List<String> removeList = new ArrayList<String>();
         for (int i = 0; listBD != null && i < listBD.size(); i++) {
             GeofenceDto geo = listBD.get(i);
@@ -153,28 +157,32 @@ public class GeofenceController {
             try {
                 Intent intent = new Intent(ctx, GeofenceIntentService.class);
                 PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                PendingResult<Status> result = LocationServices.GeofencingApi.addGeofences(
-                        mGoogleApiClient,
-                        geofencingRequest,
-                        pendingIntent
-                );
-                result.setResultCallback(new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        PreyLogger.d("*********************connectionAddListener  status");
-                        if (status.isSuccess()) {
-                            PreyLogger.d("********saveGeofence");
-                            sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "started", infoExtra));
-                            GeofenceDataSource dataSource = new GeofenceDataSource(ctx);
-                            for (int i = 0; listToBdAdd != null && i < listToBdAdd.size(); i++) {
-                                dataSource.createGeofence(listToBdAdd.get(i));
+                if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    PendingResult<Status> result = LocationServices.GeofencingApi.addGeofences(
+                            mGoogleApiClient,
+                            geofencingRequest,
+                            pendingIntent
+                    );
+                    result.setResultCallback(new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+                            PreyLogger.d("*********************connectionAddListener  status");
+                            if (status.isSuccess()) {
+                                PreyLogger.d("********saveGeofence");
+                                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "started", infoExtra));
+                                GeofenceDataSource dataSource = new GeofenceDataSource(ctx);
+                                for (int i = 0; listToBdAdd != null && i < listToBdAdd.size(); i++) {
+                                    dataSource.createGeofence(listToBdAdd.get(i));
+                                }
+                            } else {
+                                PreyLogger.d("*********************Registering geofence failed: " + status.getStatusMessage() + " : " + status.getStatusCode());
+                                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "status:" + status.isSuccess()));
                             }
-                        } else {
-                            PreyLogger.d("*********************Registering geofence failed: " + status.getStatusMessage() + " : " + status.getStatusCode());
-                            sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "status:" + status.isSuccess()));
                         }
-                    }
-                });
+                    });
+                }
+
+
             } catch (Exception e) {
                 PreyLogger.e("error ---->isConnected:" + e.getMessage(), e);
                 sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "error:" + e.getMessage()));
@@ -226,25 +234,27 @@ public class GeofenceController {
             if (mGoogleApiClient.isConnected()) {
                 PreyLogger.d("---->isConnected");
                 try {
-                    Intent intent = new Intent(ctx, GeofenceIntentService.class);
-                    PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    PendingResult<Status> result = LocationServices.GeofencingApi.addGeofences(
-                            mGoogleApiClient,
-                            geofencingRequest,
-                            pendingIntent
-                    );
-                    result.setResultCallback(new ResultCallback<Status>() {
-                        @Override
-                        public void onResult(Status status) {
-                            PreyLogger.d("*********************connectionAddListener  status :" + status);
-                            if (status.isSuccess()) {
-                                PreyLogger.d("********saveGeofence");
-                            } else {
-                                PreyLogger.d("*********************Registering geofence failed: " + status.getStatusMessage() + " : " + status.getStatusCode());
-                                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "status:" + status.isSuccess()));
+                    if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        Intent intent = new Intent(ctx, GeofenceIntentService.class);
+                        PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        PendingResult<Status> result = LocationServices.GeofencingApi.addGeofences(
+                                mGoogleApiClient,
+                                geofencingRequest,
+                                pendingIntent
+                        );
+                        result.setResultCallback(new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(Status status) {
+                                PreyLogger.d("*********************connectionAddListener  status :" + status);
+                                if (status.isSuccess()) {
+                                    PreyLogger.d("********saveGeofence");
+                                } else {
+                                    PreyLogger.d("*********************Registering geofence failed: " + status.getStatusMessage() + " : " + status.getStatusCode());
+                                    sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "status:" + status.isSuccess()));
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 } catch (Exception e) {
                     PreyLogger.e("error ---->isConnected:" + e.getMessage(), e);
                     sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "error:" + e.getMessage()));

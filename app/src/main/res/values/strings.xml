@@ -222,4 +222,13 @@
     <string name="preferences_location_low_battery_options_title">Activate Location Low Battery</string>
     <string name="preferences_location_low_battery_options_summary">Gets the location of your device when the battery low</string>
 
+
+    <!-- Warning Alert  -->
+    <string name="warning_notification_title">Warning!Prey needs permissions</string>
+    <string name="warning_notification_body">Tap to provide permissions.</string>
+    <string name="warning_title">Warning! Provide new permissions for Prey</string>
+    <string name="warning_body">You need to provide Prey some new permission in this Android version for it to generate reports, that include camera, location and device status access.</string>
+    <string name="warning_re_approve">Approve</string>
+    <string name="warning_close">Close</string>
+
 </resources>

@@ -1,6 +1,9 @@
 <resources>
 
-    <style name="AppTheme" parent="android:Theme.Light" />
+    <style name="AppTheme" parent="@android:style/Theme.Light">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 
     <style name="PreyTheme" parent="@android:style/Theme.Black">
         <item name="android:background">@null</item>
