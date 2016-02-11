@@ -6,6 +6,7 @@
  ******************************************************************************/
 package com.prey.net;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -849,6 +850,17 @@ public class PreyWebServices {
                 }
             }
         }.start();
+    }
+
+
+    public void postJsonAutentication(final Context ctx,JSONObject json  ) throws PreyException{
+        String url = getDeviceUrlApiv2(ctx).concat("/data.json");
+        PreyRestHttpClient.getInstance(ctx).postJsonAutentication(ctx, url, json);
+    }
+
+    public int uploadFile(Context ctx, File file,String uploadID)  throws PreyException{
+        String url = PreyConfig.getPreyConfig(ctx).getPreyUrl()+"upload/upload?uploadID="+uploadID;
+        return PreyRestHttpClient.getInstance(ctx).uploadFile(ctx,url,file);
     }
 
 }

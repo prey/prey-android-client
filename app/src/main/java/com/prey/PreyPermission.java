@@ -70,4 +70,12 @@ public class PreyPermission {
         PreyLogger.d("canAccessReadSms:"+canAccessReadSms);
         return canAccessReadSms;
     }
+
+    public static boolean canAccessReadExternalStorage(Context ctx) {
+        boolean canAccessReadExternalStorage= PermissionChecker
+                .checkSelfPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                PermissionChecker.PERMISSION_GRANTED;
+        PreyLogger.d("canAccessReadExternalStorage:"+canAccessReadExternalStorage);
+        return canAccessReadExternalStorage;
+    }
 }
