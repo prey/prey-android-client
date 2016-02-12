@@ -135,6 +135,8 @@ public class PreyConfig {
 
     public static final int NOTIFY_ANDROID_6 = 6;
 
+    public static final String SENT_UUID_SERIAL_NUMBER = "SENT_UUID_SERIAL_NUMBER";
+
     private boolean securityPrivilegesAlreadyPrompted;
 
     private Context ctx;
@@ -836,6 +838,12 @@ public class PreyConfig {
         return FileConfigReader.getInstance(this.ctx).getGeofenceMaximumAccuracy();
     }
 
+    public boolean isSentUuidSerialNumber() {
+        return getBoolean(PreyConfig.SENT_UUID_SERIAL_NUMBER, false);
+    }
 
+    public void setSentUuidSerialNumber(boolean sentUuidSerialNumber){
+        saveBoolean(PreyConfig.SENT_UUID_SERIAL_NUMBER, sentUuidSerialNumber);
+    }
 
 }

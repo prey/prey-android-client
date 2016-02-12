@@ -495,10 +495,11 @@ public class PreyWebServices {
             parameters.put("hardware_attributes[ram_size]", "" + hardware.getTotalMemory());
         }
 
-
-        parameters.put( "hardware_attributes[uuid]", hardware.getUuid());
-        parameters.put( "hardware_attributes[serial_number]", hardware.getSerialNumber());
-
+        if(!"".equals(hardware.getUuid())&&!PreyConfig.getPreyConfig(ctx).isSentUuidSerialNumber()) {
+            parameters.put("hardware_attributes[uuid]", hardware.getUuid());
+            parameters.put("hardware_attributes[serial_number]", hardware.getSerialNumber());
+            PreyConfig.getPreyConfig(ctx).setSentUuidSerialNumber(true);
+        }
 
 
 
