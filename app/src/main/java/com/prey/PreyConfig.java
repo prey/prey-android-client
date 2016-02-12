@@ -131,7 +131,7 @@ public class PreyConfig {
     public static final String CAN_ACCESS_COARSE_LOCATION = "CAN_ACCESS_COARSE_LOCATION";
     public static final String CAN_ACCESS_CAMARA = "CAN_ACCESS_CAMARA";
     public static final String CAN_ACCESS_READ_PHONE_STATE = "CAN_ACCESS_READ_PHONE_STATE";
-
+    public static final String CAN_ACCESS_EXTERNAL_STORAGE= "CAN_ACCESS_EXTERNAL_STORAGE";
 
     public static final int NOTIFY_ANDROID_6 = 6;
 
@@ -298,6 +298,13 @@ public class PreyConfig {
         return getBoolean(PreyConfig.CAN_ACCESS_READ_PHONE_STATE, false);
     }
 
+    public void setCanAccessExternalStorage(boolean canAccessExternalStorage) {
+        this.saveBoolean(PreyConfig.CAN_ACCESS_EXTERNAL_STORAGE, canAccessExternalStorage);
+    }
+
+    public boolean canAccessExternalStorage() {
+        return getBoolean(PreyConfig.CAN_ACCESS_EXTERNAL_STORAGE, false);
+    }
 
     public String getApiKey(){
         return getString(PreyConfig.API_KEY, null);
@@ -322,7 +329,6 @@ public class PreyConfig {
         editor.putBoolean(PreyConfig.PREFS_SECURITY_PROMPT_SHOWN, securityPrivilegesAlreadyPrompted);
         editor.commit();
     }
-
 
     public String getPreyVersion() {
         String versionName=VERSION_PREY_DEFAULT;

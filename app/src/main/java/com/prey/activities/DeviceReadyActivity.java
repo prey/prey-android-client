@@ -173,7 +173,8 @@ public class DeviceReadyActivity extends AppCompatActivity
             PreyConfig.getPreyConfig(this).setCanAccessFineLocation(PreyPermission.canAccessFineLocation(this));
             PreyConfig.getPreyConfig(this).setCanAccessReadPhoneState(PreyPermission.canAccessReadPhoneState(this));
 
-            if(!PreyPermission.canAccessFineLocation(this)||!PreyPermission.canAccessCoarseLocation(this)||!PreyPermission.canAccessCamera(this)|| !PreyPermission.canAccessReadPhoneState(this)){
+            if(!PreyPermission.canAccessFineLocation(this)||!PreyPermission.canAccessCoarseLocation(this)||!PreyPermission.canAccessCamera(this)
+                    || !PreyPermission.canAccessReadPhoneState(this)|| !PreyPermission.canAccessReadExternalStorage(this)){
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -254,15 +255,15 @@ public class DeviceReadyActivity extends AppCompatActivity
                         PackageManager.PERMISSION_GRANTED){
                     PreyConfig.getPreyConfig(getApplicationContext()).setCanAccessReadPhoneState(true);
                 }
+                if (grantResults[4] ==
+                        PackageManager.PERMISSION_GRANTED){
+                    PreyConfig.getPreyConfig(getApplicationContext()).setCanAccessExternalStorage(true);
+                }
                 return;
             }
         }
 
-
     }
-
-
-
 
     private static final int REQUEST_PERMISSIONS = 1;
 
@@ -270,10 +271,8 @@ public class DeviceReadyActivity extends AppCompatActivity
             Manifest.permission.CAMERA,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.READ_PHONE_STATE
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
     };
-
-
-
 
 }
