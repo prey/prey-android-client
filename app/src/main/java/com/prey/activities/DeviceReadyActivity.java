@@ -257,17 +257,13 @@ public class DeviceReadyActivity extends AppCompatActivity
                 }
                 if (grantResults[4] ==
                         PackageManager.PERMISSION_GRANTED){
-                   // PreyConfig.getPreyConfig(getApplicationContext()).setCanAccessReadPhoneState(true);
+                    PreyConfig.getPreyConfig(getApplicationContext()).setCanAccessExternalStorage(true);
                 }
                 return;
             }
         }
 
-
     }
-
-
-
 
     private static final int REQUEST_PERMISSIONS = 1;
 
@@ -278,8 +274,5 @@ public class DeviceReadyActivity extends AppCompatActivity
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
-
-
-
 
 }

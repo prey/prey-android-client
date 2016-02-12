@@ -8,7 +8,6 @@ package com.prey.net;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,7 +15,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -47,7 +45,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -68,8 +65,12 @@ public class PreyRestHttpClient {
     private static PreyRestHttpClient _instance = null;
     private PreyDefaultHttpClient httpclient = null;
     private PreyDefaultHttpClient httpclientDefault = null;
-    //private DefaultHttpClient httpclient = null;
     private Context ctx = null;
+
+    private static final String REQUEST_METHOD_POST="POST";
+    private static final boolean USE_CACHES=false;
+    private static final int CONNECT_TIMEOUT=30000;
+    private static final int READ_TIMEOUT=30000;
 
     private PreyRestHttpClient(Context ctx) {
         this.ctx = ctx;
@@ -475,19 +476,12 @@ public class PreyRestHttpClient {
         return sb;
     }
 
-
-    private static final String REQUEST_METHOD_POST="POST";
-    private static final boolean USE_CACHES=false;
-    private static final int CONNECT_TIMEOUT=30000;
-    private static final int READ_TIMEOUT=30000;
-
-
     public int postJson(String page, JSONObject jsonParam) {
         HttpURLConnection urlConnection = null;
         int httpResult = -1;
         try {
             URL url = new URL(page);
-            PreyLogger.d("_________________page:" + page);
+            PreyLogger.d("postJson page:" + page);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setDoOutput(true);
             urlConnection.setRequestMethod(REQUEST_METHOD_POST);
@@ -502,9 +496,9 @@ public class PreyRestHttpClient {
             out.write(jsonParam.toString());
             out.close();
             httpResult = urlConnection.getResponseCode();
-            PreyLogger.d("httpResult postJson:"+httpResult);
+            PreyLogger.d("postJson responseCode:"+httpResult);
         } catch (Exception e) {
-            PreyLogger.e(" error:" + e.getMessage(), e);
+            PreyLogger.e("postJson error:" + e.getMessage(), e);
         } finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
@@ -512,60 +506,40 @@ public class PreyRestHttpClient {
         return httpResult;
     }
 
-
-    public int postJsonAutentication(Context ctx,String page, JSONObject jsonParam) {
-        HttpURLConnection urlConnection = null;
-        int httpResult = -1;
+    public void postJsonAutentication(Context ctx,String page, JSONObject jsonParam) {
+        HttpsURLConnection connection = null;
         try {
             String apikey=PreyConfig.getPreyConfig(ctx).getApiKey();
-
-            page="http://control.preyproject.com/api/v2/devices/060fcc/data.json";
-
-
-            //page="http://521dcf3f.ngrok.io/api/v2/devices/86d6cd/data.json";
-            //apikey="116423fc012c";
             URL url = new URL(page);
-            PreyLogger.d("_________________page:" + page);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod(REQUEST_METHOD_POST);
-            urlConnection.setUseCaches(USE_CACHES);
-            urlConnection.setConnectTimeout(CONNECT_TIMEOUT);
-            urlConnection.setReadTimeout(READ_TIMEOUT);
-
-
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-            urlConnection.addRequestProperty("Origin", "android:com.prey");
-             urlConnection.addRequestProperty("Authorization", "Basic " + getCredentials(apikey, "X"));
-
-            //urlConnection.setSSLSocketFactory(getSocketFactory());
-
+            PreyLogger.d("postJsonAutentication page:" + page);
+            connection = (HttpsURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod(REQUEST_METHOD_POST);
+            connection.setConnectTimeout(CONNECT_TIMEOUT);
+            connection.setReadTimeout(READ_TIMEOUT);
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.addRequestProperty("Authorization", "Basic " + getCredentials(apikey, "X"));
+            connection.addRequestProperty("User-Agent", getUserAgent());
             String json=jsonParam.toString();
-            PreyLogger.d("jsonParam.toString():" + json);
-
-
-
-            OutputStreamWriter out = new   OutputStreamWriter(urlConnection.getOutputStream());
+            OutputStreamWriter out = new   OutputStreamWriter(connection.getOutputStream());
             out.write(json);
             out.close();
-            String msj=urlConnection.getResponseMessage();
-            httpResult=urlConnection.getResponseCode();
-            PreyLogger.d("httpResult postJson auten:"+httpResult+" msj:"+msj);
+            String responseMessage = connection.getResponseMessage();
+            int responseCode = connection.getResponseCode();
+            PreyLogger.d("postJsonAutentication responseCode:"+responseCode+" responseMessage:"+responseMessage);
         } catch (Exception e) {
-            PreyLogger.e(" error:" + e.getMessage(), e);
+            PreyLogger.e("postJsonAutentication error:" + e.getMessage(), e);
         } finally {
-            if (urlConnection != null)
-                urlConnection.disconnect();
+            if (connection != null)
+                connection.disconnect();
         }
-        return httpResult;
     }
 
-
-    public int uploadFile(Context ctx,String page, File file){
-        int responseCode=0;
+    public void uploadFile(Context ctx,String page, File file){
         HttpURLConnection connection = null;
-        OutputStream os = null;
-        DataInputStream is = null;
+        OutputStream output = null;
+        InputStream input =null;
+        FileInputStream fileInput=null;
         PreyLogger.d("page:"+page+" upload:"+file.getName());
         try {
             URL url=new URL(page);
@@ -575,52 +549,44 @@ public class PreyRestHttpClient {
             connection.setRequestProperty("Content-Length", "" + file.length());
             connection.addRequestProperty("Origin", "android:com.prey");
             connection.addRequestProperty("Content-Type", "application/octet-stream");
-
-            // connection.setSSLSocketFactory(getSocketFactory());
-
-            OutputStream output = connection.getOutputStream();
-
-            InputStream input = new BufferedInputStream(new FileInputStream(file));
-
+            connection.addRequestProperty("User-Agent", getUserAgent());
+            output = connection.getOutputStream();
+            fileInput=new FileInputStream(file);
+            input = new BufferedInputStream(fileInput);
             byte[] buffer = new byte[4096];
             int length;
             while ((length = input.read(buffer)) > 0) {
                 output.write(buffer, 0, length);
             }
             output.flush();
-
-            responseCode=connection.getResponseCode();
-
-            PreyLogger.d("respondeCode uploadFile:"+responseCode);
-
-
-
-
-
-
-        } catch (Exception e1) {
-            PreyLogger.e("error upload:"+e1.getMessage(),e1);
+            String responseMessage = connection.getResponseMessage();
+            int responseCode = connection.getResponseCode();
+            PreyLogger.d("uploadFile responseCode:"+responseCode+" responseMessage:"+responseMessage);
+        } catch (Exception e) {
+            PreyLogger.e("error upload:"+e.getMessage(),e);
         } finally {
             try {
-                if(os != null) {
-                    os.close();
+                if(input != null) {
+                    input.close();
                 }
             } catch (IOException e) {
-
             }
             try {
-                if(is != null) {
-                    is.close();
+                if(fileInput != null) {
+                    fileInput.close();
                 }
             } catch (IOException e) {
-
+            }
+            try {
+                if(output != null) {
+                    output.close();
+                }
+            } catch (IOException e) {
             }
             if(connection != null) {
                 connection.disconnect();
             }
         }
-
-        return responseCode;
     }
 }
 
