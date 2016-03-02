@@ -45,7 +45,11 @@ public class PreyScheduled {
             alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * interval, alarmIntent);
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * interval, alarmIntent);
+            } else {
+                alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * interval, alarmIntent);
+            }
             PreyLogger.i("_____________start scheduled [" + minute + "] alarmIntent");
         }
     }

@@ -21,10 +21,9 @@ import android.os.SystemClock;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.receivers.AlarmDisablePowerReceiver;
-import com.prey.receivers.AlarmReportReceiver;
 import com.prey.receivers.PreyDisablePowerOptionsReceiver;
 
-import java.util.Calendar;
+
 
 public class PreyDisablePowerOptionsService extends Service {
 
@@ -82,7 +81,10 @@ public class PreyDisablePowerOptionsService extends Service {
         Intent intent = new Intent(getApplicationContext(), AlarmDisablePowerReceiver.class);
         PendingIntent alarmDisablePower = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
         AlarmManager alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        alarmMgr.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 10000L, alarmDisablePower);
-
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            alarmMgr.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 10000L, alarmDisablePower);
+        }else{
+            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 10000L, alarmDisablePower);
+        }
     }
 }
