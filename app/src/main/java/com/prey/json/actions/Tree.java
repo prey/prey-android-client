@@ -85,6 +85,7 @@ public class Tree {
                     json.put("mimetype", mime.getMimeTypeFromExtension(extension));
                     json.put("size", child.length());
                     json.put("isFile", true);
+                    json.put("hidden", false);
                     array.put(json);
                 }
             }
