@@ -10,73 +10,65 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
+import java.net.HttpURLConnection;
 
 import com.prey.PreyLogger;
 
 public class PreyHttpResponse {
 
-    private StatusLine statusLine;
+    private int statusCode;
     private String responseAsString;
-    private HttpResponse response;
+    private HttpURLConnection response;
 
-    // public PreyHttpResponse(HttpMethod method){
-    // this.statusLine = method.getStatusLine();
-    //
-    // try {
-    // this.responseAsString =
-    // convertStreamToString(method.getResponseBodyAsStream());
-    // } catch (IOException e) {
-    // Log.d(
-    // "Can't receive body stream from http connection, setting response string as ''");
-    // this.responseAsString = "";
-    // }
-    // }
 
-    public PreyHttpResponse(HttpResponse response) {
-        this.response = response;
+    public PreyHttpResponse(HttpURLConnection connection) {
+
         try {
-            if (response != null) {
-                this.statusLine = response.getStatusLine();
-                this.responseAsString = convertStreamToString(response.getEntity().getContent());
-            } else {
-                this.responseAsString = "";
-            }
+                this.response=connection;
+                this.statusCode = connection.getResponseCode();
+                this.responseAsString = convertStreamToString(connection.getInputStream());
+             PreyLogger.d("responseAsString:"+responseAsString);
         } catch (IOException e) {
             PreyLogger.d("Can't receive body stream from http connection, setting response string as ''");
             this.responseAsString = "";
         }
     }
 
-    public PreyHttpResponse(InputStream responseStream, StatusLine statusLine) {
-        this.statusLine = statusLine;
-        this.responseAsString = convertStreamToString(responseStream);
+    public PreyHttpResponse(int  statusCode,String responseAsString) {
+
+        try {
+            this.response=null;
+            this.statusCode = statusCode;
+            this.responseAsString = responseAsString;
+            PreyLogger.d("responseAsString:"+responseAsString);
+        } catch (Exception e) {
+            PreyLogger.d("Can't receive body stream from http connection, setting response string as ''");
+            this.responseAsString = "";
+        }
     }
+
 
     private String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
+        String out=null;
         try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            String line;
+            StringBuffer response = new StringBuffer();
+            while ((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            rd.close();
+            out=response.toString();
+        }catch(Exception e){
+
         }
-        return sb.toString();
+        return out;
+
     }
 
-    public StatusLine getStatusLine() {
-        return statusLine;
+    public int getStatusCode() {
+        return statusCode;
     }
 
     public String getResponseAsString() {
@@ -85,16 +77,16 @@ public class PreyHttpResponse {
 
     @Override
     public String toString() {
-        if(statusLine!=null)
-            return statusLine.toString() + " " + responseAsString;
-        return responseAsString;
+
+        return statusCode + " " + responseAsString;
+
     }
 
-    public HttpResponse getResponse() {
+    public HttpURLConnection getResponse() {
         return response;
     }
 
-    public void setResponse(HttpResponse response) {
+    public void setResponse(HttpURLConnection response) {
         this.response = response;
     }
 

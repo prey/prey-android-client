@@ -35,11 +35,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Random;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.message.BasicHeader;
 
-public class SimpleMultipartEntity implements HttpEntity {
+
+public class SimpleMultipartEntity   {
     private final static char[] MULTIPART_CHARS = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
     private String boundary = null;
@@ -143,8 +141,8 @@ public class SimpleMultipartEntity implements HttpEntity {
     }
 
  
-    public Header getContentType() {
-        return new BasicHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
+    public String getContentType() {
+        return   "multipart/form-data; boundary=" + boundary;
     }
 
  
@@ -168,9 +166,7 @@ public class SimpleMultipartEntity implements HttpEntity {
     }
 
   
-    public Header getContentEncoding() {
-        return null;
-    }
+
 
  
     public void consumeContent() throws IOException,

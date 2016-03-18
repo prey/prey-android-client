@@ -90,15 +90,15 @@ public class SimpleVideoActivity extends Activity implements
             entityFile.setName("video.mp4");
             entityFile.setType("video");
             Map<String, String> parameters = new HashMap<String, String>();
-            String URL = PreyWebServices.getInstance().getFileUrlJson(ctx);
+            String uri = PreyWebServices.getInstance().getFileUrlJson(ctx);
             List<EntityFile> entityFiles = new ArrayList<EntityFile>();
             entityFiles.add(entityFile);
             PreyHttpResponse preyHttpResponse = null;
             preyHttpResponse = PreyRestHttpClient
                     .getInstance(ctx)
-                    .postAutentication(URL, parameters, preyConfig, entityFiles);
+                    .postAutentication(uri, parameters, entityFiles);
             ;
-            PreyLogger.i("status line:" + preyHttpResponse.getStatusLine());
+            PreyLogger.i("status line:" + preyHttpResponse.getStatusCode());
         } catch (Exception e) {
             PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
         }

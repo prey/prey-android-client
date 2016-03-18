@@ -6,7 +6,7 @@
  ******************************************************************************/
 package com.prey.activities;
 
-import org.apache.http.protocol.HTTP;
+
 
 import com.prey.FileConfigReader;
 import com.prey.PreyUtils;
@@ -73,7 +73,7 @@ public class FormFeedbackActivity extends PreyActivity {
                             subject.append(FileConfigReader.getInstance(ctx).getSubjectFeedback()).append(" ");
                             subject.append(PreyUtils.randomAlphaNumeric(7).toUpperCase());
                             Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                            intent.setType(HTTP.PLAIN_TEXT_TYPE);
+                            intent.setType("text/plain");
                             intent.putExtra(Intent.EXTRA_EMAIL, new String[]{emailFeedback});
                             intent.putExtra(Intent.EXTRA_SUBJECT, subject.toString());
                             intent.putExtra(Intent.EXTRA_TEXT, input.getText().toString());
