@@ -393,7 +393,6 @@ public class PreyConfig {
 
     public boolean isThisDeviceAlreadyRegisteredWithPrey(boolean notifyUser) {
         String deviceId = getString(PreyConfig.DEVICE_ID, null);
-        PreyLogger.d("deviceId:"+deviceId);
         boolean isVerified = (deviceId != null && !"".equals(deviceId));
         return isVerified;
     }
@@ -452,9 +451,9 @@ public class PreyConfig {
     public void registerC2dm(){
         boolean error=false;
 
-        PreyLogger.i("c2dm:"+PreyEmail.getEmail(this.ctx));
 
-//            if (PreyEmail.getEmail(this.ctx) != null) {
+
+
                 String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
                 PreyLogger.i("deviceId:"+deviceId);
                 if (deviceId != null && !"".equals(deviceId)) {
@@ -479,7 +478,7 @@ public class PreyConfig {
 
                     if (error) {
                         try {
-                       //     if (PreyEmail.getEmail(this.ctx) != null) {
+
                                 PreyLogger.d("______________________");
                                 PreyLogger.d("___ registerC2dm  2_____");
 
@@ -490,14 +489,14 @@ public class PreyConfig {
 
 
                                 PreyLogger.d("______________________");
-                         //   }
+
                         } catch (Exception e) {
                             PreyLogger.e("Error :" + e.getMessage(), e);
 
                         }
                     }
                 }
-  //          }
+
 
 
     }

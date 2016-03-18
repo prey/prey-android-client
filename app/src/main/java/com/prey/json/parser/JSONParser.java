@@ -17,6 +17,7 @@ import android.content.Context;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyRestHttpClient;
 
 public class JSONParser {
@@ -33,14 +34,15 @@ public class JSONParser {
 
     }
 
-    public List<JSONObject> getJSONFromUrl(Context ctx, String url) {
-        //PreyLogger.d("getJSONFromUrl:" + url);
+    public List<JSONObject> getJSONFromUrl(Context ctx, String uri) {
+        PreyLogger.d("getJSONFromUrl:" + uri);
         String sb=null;
         String json=null;
 
-        PreyRestHttpClient preyRestHttpClient=PreyRestHttpClient.getInstance(ctx);
+
         try{
-            sb=preyRestHttpClient.getStringUrl(url,PreyConfig.getPreyConfig(ctx));
+            PreyHttpResponse response=PreyRestHttpClient.getInstance(ctx).get(uri,null);
+            try{sb=response.getResponseAsString();}catch(Exception e){}
             if (sb!=null)
                 json = sb.trim();
         }catch(Exception e){

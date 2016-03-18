@@ -73,7 +73,7 @@ public class WelcomeActivity extends FragmentActivity {
 
     public void ready() {
         PreyVerify.getInstance(this);
-        PreyConfig.getPreyConfig(this).registerC2dm();
+
         Intent intent = null;
 
             intent = new Intent(getApplicationContext(), DeviceReadyActivity.class);

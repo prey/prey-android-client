@@ -89,9 +89,9 @@ public class PasswordActivity extends PreyActivity {
         @Override
         protected Void doInBackground(String... password) {
             try {
-                String email = getPreyConfig().getEmail();
-                PreyLogger.d("email:"+email+"password[0]:"+password[0]);
-                isPasswordOk = PreyWebServices.getInstance().checkPassword(PasswordActivity.this, email, password[0]);
+                String apikey = getPreyConfig().getApiKey();
+                PreyLogger.d("apikey:"+apikey+" password[0]:"+password[0]);
+                isPasswordOk = PreyWebServices.getInstance().checkPassword(PasswordActivity.this, apikey, password[0]);
                 if(isPasswordOk)
                     PreyWebServices.getInstance().sendEvent(getApplication(), PreyConfig.ANDROID_LOGIN_SETTINGS);
                 else

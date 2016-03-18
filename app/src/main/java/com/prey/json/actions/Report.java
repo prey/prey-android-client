@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -58,6 +59,15 @@ public class Report {
 
     }
 
+
+    public void stop(Context ctx, List<ActionResult> list, JSONObject parameters) {
+        PreyLogger.d("________stop Report");
+        ReportScheduled.getInstance(ctx).reset();
+        PreyConfig.getPreyConfig(ctx).setMissing(false);
+        PreyConfig.getPreyConfig(ctx).setIntervalReport("");
+        PreyConfig.getPreyConfig(ctx).setExcludeReport("");
+
+    }
     public boolean valida(Context ctx) {
         long lastReportStartDate = PreyConfig.getPreyConfig(ctx).getLastReportStartDate();
         PreyLogger.d("last:" + lastReportStartDate);

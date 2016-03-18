@@ -6,18 +6,12 @@
  ******************************************************************************/
 package com.prey;
 
-import android.Manifest;
 import android.app.Application;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.support.v4.content.PermissionChecker;
 
+import com.prey.actions.fileretrieval.FileretrievalService;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.report.ReportScheduled;
-import com.prey.activities.DeviceReadyActivity;
 import com.prey.net.PreyWebServices;
 
 import java.util.Date;
@@ -36,14 +30,7 @@ public class PreyApp extends Application {
             PreyLogger.d("__________________");
 
             String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
-            if (deviceKey != null && deviceKey != "") {
-                PreyConfig.getPreyConfig(this).registerC2dm();
-            }
-            if (PreyConfig.getPreyConfig(this).isMissing()) {
-                if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {
-                    ReportScheduled.getInstance(this).run();
-                }
-            }
+
             PreyLogger.d("InstallationDate:" + PreyConfig.getPreyConfig(this).getInstallationDate());
             if (PreyConfig.getPreyConfig(this).getInstallationDate() == 0) {
                 PreyConfig.getPreyConfig(this).setInstallationDate(new Date().getTime());
@@ -65,6 +52,13 @@ public class PreyApp extends Application {
                         GeofenceController.getInstance().init(getApplicationContext());
                     }
                 }.start();
+                Intent intentFile = new Intent(this, FileretrievalService.class);
+                this.startService(intentFile);
+                if (PreyConfig.getPreyConfig(this).isMissing()) {
+                    if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {
+                        ReportScheduled.getInstance(this).run();
+                    }
+                }
             }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);

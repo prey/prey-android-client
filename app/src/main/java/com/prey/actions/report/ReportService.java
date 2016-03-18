@@ -67,11 +67,13 @@ public class ReportService extends IntentService {
 			try {
 				List<ActionResult> lista = new ArrayList<ActionResult>();
 				for (int i = 0; i < jsonArray.length(); i++) {
-					String nameAction = jsonArray.getString(i);
-					PreyLogger.d("nameAction:" + nameAction);
-					String methodAction = "report";
-					JSONObject parametersAction = null;
-					listData = ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction, listData);
+					if(PreyConfig.getPreyConfig(ctx).isMissing()) {
+						String nameAction = jsonArray.getString(i);
+						PreyLogger.d("nameAction:" + nameAction);
+						String methodAction = "report";
+						JSONObject parametersAction = null;
+						listData = ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction, listData);
+					}
 				}
 			} catch (Exception e) {
 			}
@@ -90,18 +92,20 @@ public class ReportService extends IntentService {
 				}
 			}
 
-			if (PreyConfig.getPreyConfig(ctx).isConnectionExists()) {
-				if (parms > 0) {
-					PreyHttpResponse response = PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
-					if (response != null) {
-						PreyConfig.getPreyConfig(ctx).setLastEvent("report_send");
-						PreyLogger.d("response.getStatusLine():" + response.getStatusLine());
-						if (409 == response.getStatusLine().getStatusCode()) {
-							ReportScheduled.getInstance(ctx).reset();
-							PreyConfig.getPreyConfig(ctx).setMissing(false);
-							PreyConfig.getPreyConfig(ctx).setIntervalReport("");
-							PreyConfig.getPreyConfig(ctx).setExcludeReport("");
+			if(PreyConfig.getPreyConfig(ctx).isMissing()) {
+				if (PreyConfig.getPreyConfig(ctx).isConnectionExists()) {
+					if (parms > 0) {
+						PreyHttpResponse response = PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
+						if (response != null) {
+							PreyConfig.getPreyConfig(ctx).setLastEvent("report_send");
+							PreyLogger.d("response.getStatusCode():" + response.getStatusCode());
+							if (409 == response.getStatusCode()) {
+								ReportScheduled.getInstance(ctx).reset();
+								PreyConfig.getPreyConfig(ctx).setMissing(false);
+								PreyConfig.getPreyConfig(ctx).setIntervalReport("");
+								PreyConfig.getPreyConfig(ctx).setExcludeReport("");
 
+							}
 						}
 					}
 				}
