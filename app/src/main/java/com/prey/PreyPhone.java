@@ -20,11 +20,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+
 
 import com.prey.managers.PreyConnectivityManager;
+import com.prey.net.PreyWebServices;
 
 import android.*;
 import android.Manifest;
@@ -610,31 +609,9 @@ public class PreyPhone {
 
     public String getIPAddress() {
         String ip = "";
-        DefaultHttpClient httpClient = null;
-        HttpGet httpGet = null;
-        HttpResponse httpResponse = null;
-        InputStreamReader input = null;
-        BufferedReader buffer = null;
         try {
-            httpClient = new DefaultHttpClient();
-            httpGet = new HttpGet("http://ifconfig.me/ip");
-            httpResponse = httpClient.execute(httpGet);
-            input = new InputStreamReader(httpResponse.getEntity().getContent());
-            buffer = new BufferedReader(input);
-            ip = buffer.readLine();
+            ip = PreyWebServices.getInstance().getIPAddress(ctx);
         } catch (Exception e) {
-            if (buffer != null) {
-                try {
-                    buffer.close();
-                } catch (IOException e1) {
-                }
-            }
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e1) {
-                }
-            }
         }
         return ip;
     }
@@ -655,8 +632,6 @@ public class PreyPhone {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                     simState = tManager.getSimState();
-                }else{
-                    PreyLogger.i("___________ask for permission getSimState READ_PHONE_STATE");
                 }
             }else {
                 simState = tManager.getSimState();
@@ -675,8 +650,6 @@ public class PreyPhone {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                     uuid=tManager.getDeviceId();
-                }else{
-                    PreyLogger.i("___________ask for permission getDeviceId READ_PHONE_STATE");
                 }
             }else {
                 uuid = tManager.getDeviceId();
@@ -684,7 +657,6 @@ public class PreyPhone {
         }catch (Exception e){
             PreyLogger.e("Error getUuid:"+e.getMessage(),e);
         }
-        PreyLogger.d("uuid["+uuid+"]");
         return uuid;
     }
 
@@ -695,8 +667,6 @@ public class PreyPhone {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                     simSerialNumber = tManager.getSimSerialNumber();
-                }else{
-                    PreyLogger.i("___________ask for permission getSimSerialNumber READ_PHONE_STATE");
                 }
             }else {
                 simSerialNumber = tManager.getSimSerialNumber();
@@ -716,8 +686,6 @@ public class PreyPhone {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                     dataState = tManager.getDataState();
-                }else{
-                    PreyLogger.i("___________ask for permission getDataState READ_PHONE_STATE");
                 }
             }else {
                 dataState = tManager.getDataState();
@@ -736,8 +704,6 @@ public class PreyPhone {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                     line1Number = tManager.getLine1Number();
-                }else{
-                    PreyLogger.i("___________ask for permission getLine1Number READ_PHONE_STATE");
                 }
             }else {
                 line1Number = tManager.getLine1Number();

@@ -34,8 +34,8 @@ public class PreyEmail {
                     Map<String, String> parameters = new HashMap<String, String>();
                     PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
                     PreyHttpResponse preyHttpResponse = null;
-                    preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, preyConfig, entityFiles);
-                    PreyLogger.i("status line:" + preyHttpResponse.getStatusLine());
+                    preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, entityFiles);
+                    PreyLogger.i("status line:" + preyHttpResponse.getStatusCode());
                 }
             }
         } catch (Exception e) {

@@ -112,7 +112,7 @@ public class WelcomeBatchActivity extends FragmentActivity {
                 Intent intent = new Intent(WelcomeBatchActivity.this, PermissionInformationActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
-                PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
+
                 finish();
             }
         }

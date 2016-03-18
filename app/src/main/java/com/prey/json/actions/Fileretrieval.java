@@ -10,6 +10,9 @@ import android.content.Context;
 import android.os.Environment;
 
 import com.prey.PreyLogger;
+import com.prey.actions.fileretrieval.FileretrievalDatasource;
+import com.prey.actions.fileretrieval.FileretrievalDto;
+import com.prey.actions.fileretrieval.FileretrievalOpenHelper;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
@@ -22,6 +25,7 @@ import java.util.List;
 public class Fileretrieval {
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
+        int responseCode=0;
         try {
             PreyLogger.d("Fileretrieval started");
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "fileretrieval", "started"));
@@ -31,7 +35,18 @@ public class Fileretrieval {
                 throw new Exception("file_id null");
             }
             File file=new File(Environment.getExternalStorageDirectory()+"/"+path);
-            PreyWebServices.getInstance().uploadFile(ctx, file, fileId);
+            FileretrievalDto fileDto=new FileretrievalDto();
+            fileDto.setFileId(fileId);
+            fileDto.setPath(path);
+            fileDto.setSize(file.length());
+            fileDto.setStatus(0);
+            FileretrievalDatasource datasource=new FileretrievalDatasource(ctx);
+            datasource.createGeofence(fileDto);
+            responseCode=PreyWebServices.getInstance().uploadFile(ctx, file, fileId,0);
+            PreyLogger.i("responseCode:"+responseCode);
+            if(responseCode==200||responseCode==201) {
+                datasource.deleteFileretrieval(fileId);
+            }
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "fileretrieval", "stopped"));
             PreyLogger.d("Fileretrieval stopped");
         }catch(Exception e){

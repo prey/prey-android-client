@@ -27,6 +27,8 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.R;
+import com.prey.actions.fileretrieval.FileretrievalService;
+import com.prey.actions.report.ReportService;
 import com.prey.activities.DeviceReadyActivity;
 import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.Event;
@@ -66,33 +68,32 @@ public class EventFactory {
         }
         if (CONNECTIVITY_CHANGE.equals(intent.getAction())) {
             JSONObject info = new JSONObject();
-
             int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
             PreyLogger.d("__wifiState:" + wifiState);
-            ;
-
-            if (!PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {
-                Bundle extras = intent.getExtras();
-                if (extras != null) {
-                    if ("connected".equals(extras.getString(ConnectivityManager.EXTRA_REASON))) {
-                        try {
-                            Thread.sleep(2000);
-                        } catch (Exception e) {
+            try {
+                boolean connected=false;
+                if (!PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {
+                    Bundle extras = intent.getExtras();
+                    if (extras != null) {
+                        if ("connected".equals(extras.getString(ConnectivityManager.EXTRA_REASON))) {
+                            connected=true;
                         }
-                        PreyConfig.getPreyConfig(ctx).registerC2dm();
                     }
                 }
-            }
-            try {
                 if (!PreyConnectivityManager.getInstance(ctx).isMobileConnected()) {
                     info.put("connected", "mobile");
                     if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
-                        try {
-                            Thread.sleep(2000);
-                        } catch (Exception e) {
-                        }
-                        PreyConfig.getPreyConfig(ctx).registerC2dm();
+                        connected=true;
                     }
+                }
+                if(connected){
+                    try {
+                        Thread.sleep(4000);
+                    } catch (Exception e) {
+                    }
+                    PreyConfig.getPreyConfig(ctx).registerC2dm();
+                    Intent intentFile = new Intent(ctx, FileretrievalService.class);
+                    ctx.startService(intentFile);
                 }
             } catch (Exception e) {
             }
@@ -102,7 +103,7 @@ public class EventFactory {
             JSONObject info = new JSONObject();
             int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
             PreyLogger.d("___wifiState:" + wifiState);
-            ;
+
             try {
                 if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
                     info.put("connected", "wifi");
@@ -111,6 +112,8 @@ public class EventFactory {
                     } catch (Exception e) {
                     }
                     PreyConfig.getPreyConfig(ctx).registerC2dm();
+                    Intent intentFile = new Intent(ctx, FileretrievalService.class);
+                    ctx.startService(intentFile);
                 }
             } catch (Exception e) {
             }
@@ -119,12 +122,27 @@ public class EventFactory {
         if (AIRPLANE_MODE.equals(intent.getAction())) {
             if (!isAirplaneModeOn(ctx)) {
                 notification(ctx);
-                try {
-                    Thread.sleep(4000);
-                } catch (Exception e) {
+                boolean connected=false;
+                if (!PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {
+                    Bundle extras = intent.getExtras();
+                    if (extras != null) {
+                        if ("connected".equals(extras.getString(ConnectivityManager.EXTRA_REASON))) {
+                            connected=true;
+                        }
+                    }
                 }
-                PreyBetaController.startPrey(ctx);
-                PreyConfig.getPreyConfig(ctx).registerC2dm();
+                if (!PreyConnectivityManager.getInstance(ctx).isMobileConnected()) {
+                    int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
+                    if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
+                        connected=true;
+                    }
+                }
+                if(connected) {
+                    PreyBetaController.startPrey(ctx);
+                    PreyConfig.getPreyConfig(ctx).registerC2dm();
+                    Intent intentFile = new Intent(ctx, FileretrievalService.class);
+                    ctx.startService(intentFile);
+                }
             }
         }
 
@@ -161,7 +179,6 @@ public class EventFactory {
 
     public static void notification(Context ctx){
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PreyLogger.i("7________");
             if (PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey(false)) {
                 PreyConfig.getPreyConfig(ctx).setCanAccessCamara(PreyPermission.canAccessCamera(ctx));
                 PreyConfig.getPreyConfig(ctx).setCanAccessCoarseLocation(PreyPermission.canAccessCoarseLocation(ctx));
@@ -187,7 +204,6 @@ public class EventFactory {
                     nManager.notify(PreyConfig.TAG,PreyConfig.NOTIFY_ANDROID_6, mBuilder.build());
                 }
             }
-            PreyLogger.i("8________");
         }
     }
 }

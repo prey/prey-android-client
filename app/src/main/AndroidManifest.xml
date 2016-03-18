@@ -378,6 +378,7 @@
         <service android:name="com.prey.beta.services.PreyBetaRunnerService" />
         <service android:name="com.prey.actions.report.ReportService" />
         <service android:name="com.prey.actions.geofences.GeofenceIntentService" />
+        <service android:name="com.prey.actions.fileretrieval.FileretrievalService" />
 
     </application>
 

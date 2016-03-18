@@ -16,7 +16,7 @@ public class PreyPermission {
         boolean canAccessFineLocation=(PermissionChecker
                 .checkSelfPermission(ctx, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PermissionChecker.PERMISSION_GRANTED  );
-        PreyLogger.d("canAccessFineLocation:" + canAccessFineLocation);
+        //PreyLogger.d("canAccessFineLocation:" + canAccessFineLocation);
         return canAccessFineLocation;
     }
 
@@ -24,7 +24,7 @@ public class PreyPermission {
         boolean canAccessCoarseLocation= PermissionChecker
                 .checkSelfPermission(ctx, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
                 PermissionChecker.PERMISSION_GRANTED;
-        PreyLogger.d("canAccessCoarseLocation:"+canAccessCoarseLocation);
+        //PreyLogger.d("canAccessCoarseLocation:"+canAccessCoarseLocation);
         return canAccessCoarseLocation;
     }
 
@@ -34,7 +34,7 @@ public class PreyPermission {
         boolean canAccessCamera= PermissionChecker
                 .checkSelfPermission(ctx, android.Manifest.permission.CAMERA) ==
                 PermissionChecker.PERMISSION_GRANTED;
-        PreyLogger.d("canAccessCamera:"+canAccessCamera);
+        //PreyLogger.d("canAccessCamera:"+canAccessCamera);
         return canAccessCamera;
     }
 
@@ -43,7 +43,7 @@ public class PreyPermission {
         boolean canAccessReadPhoneState= PermissionChecker
                 .checkSelfPermission(ctx, Manifest.permission.READ_PHONE_STATE) ==
                 PermissionChecker.PERMISSION_GRANTED;
-        PreyLogger.d("canAccessReadPhoneState:"+canAccessReadPhoneState);
+        //PreyLogger.d("canAccessReadPhoneState:"+canAccessReadPhoneState);
         return canAccessReadPhoneState;
     }
 
@@ -51,7 +51,7 @@ public class PreyPermission {
         boolean canAccessSendSms= PermissionChecker
                 .checkSelfPermission(ctx, Manifest.permission.SEND_SMS) ==
                 PermissionChecker.PERMISSION_GRANTED;
-        PreyLogger.d("canAccessSendSms:"+canAccessSendSms);
+        //PreyLogger.d("canAccessSendSms:"+canAccessSendSms);
         return canAccessSendSms;
     }
 
@@ -59,7 +59,7 @@ public class PreyPermission {
         boolean canAccessReceiveSms= PermissionChecker
                 .checkSelfPermission(ctx, Manifest.permission.RECEIVE_SMS) ==
                 PermissionChecker.PERMISSION_GRANTED;
-        PreyLogger.d("canAccessReceiveSms:"+canAccessReceiveSms);
+        //PreyLogger.d("canAccessReceiveSms:"+canAccessReceiveSms);
         return canAccessReceiveSms;
     }
 
@@ -67,7 +67,7 @@ public class PreyPermission {
         boolean canAccessReadSms= PermissionChecker
                 .checkSelfPermission(ctx, Manifest.permission.READ_SMS) ==
                 PermissionChecker.PERMISSION_GRANTED;
-        PreyLogger.d("canAccessReadSms:"+canAccessReadSms);
+        //PreyLogger.d("canAccessReadSms:"+canAccessReadSms);
         return canAccessReadSms;
     }
 
@@ -75,7 +75,7 @@ public class PreyPermission {
         boolean canAccessReadExternalStorage= PermissionChecker
                 .checkSelfPermission(ctx, Manifest.permission.READ_EXTERNAL_STORAGE) ==
                 PermissionChecker.PERMISSION_GRANTED;
-        PreyLogger.d("canAccessReadExternalStorage:"+canAccessReadExternalStorage);
+        //PreyLogger.d("canAccessReadExternalStorage:"+canAccessReadExternalStorage);
         return canAccessReadExternalStorage;
     }
 }

@@ -234,14 +234,14 @@ public class DeviceReadyActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-         PreyLogger.i("_______onRequestPermissionsResult_______requestCode:" + requestCode + " permissions:" + permissions.toString() + " grantResults:" + grantResults.toString());
+        // PreyLogger.i("_______onRequestPermissionsResult_______requestCode:" + requestCode + " permissions:" + permissions.toString() + " grantResults:" + grantResults.toString());
 
         switch (requestCode) {
             case REQUEST_PERMISSIONS: {
                 if (grantResults[0] ==
                         PackageManager.PERMISSION_GRANTED){
                      PreyConfig.getPreyConfig(getApplicationContext()).setCanAccessCamara(true);
-                    PreyLogger.i("______setCanAccessCamara");
+                    //PreyLogger.i("______setCanAccessCamara");
                 }
                 if (grantResults[1] ==
                         PackageManager.PERMISSION_GRANTED){
