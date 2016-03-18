@@ -23,6 +23,7 @@ import com.prey.actions.geofences.GeofenceDataSource;
 import com.prey.activities.LoginActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.exceptions.PreyException;
+import com.prey.json.actions.Detach;
 import com.prey.net.PreyWebServices;
 import com.prey.R;
 
@@ -66,30 +67,7 @@ public class DetachDevicePreferences extends DialogPreference {
 
         @Override
         protected Void doInBackground(Void... unused) {
-            try {PreyConfig.getPreyConfig(getContext()).unregisterC2dm(false); } catch (Exception e) { error = e.getMessage();}
-            try {   PreyConfig.getPreyConfig(getContext()).setSecurityPrivilegesAlreadyPrompted(false);} catch (Exception e) {}
-
-
-            try {   PreyConfig.getPreyConfig(getContext()).setProtectAccount(false);} catch (Exception e) {error = e.getMessage();}
-            try {   PreyConfig.getPreyConfig(getContext()).setProtectPrivileges(false);} catch (Exception e) {error = e.getMessage();}
-            try {   PreyConfig.getPreyConfig(getContext()).setProtectTour(false);} catch (Exception e) {error = e.getMessage();}
-            try {   PreyConfig.getPreyConfig(getContext()).setProtectReady(false);} catch (Exception e) {error = e.getMessage();}
-
-            try {
-                FroyoSupport fSupport = FroyoSupport.getInstance(ctx);
-                if (fSupport.isAdminActive()) {
-                    fSupport.removeAdminPrivileges();
-                }
-            } catch (Exception e) {}
-
-            try {
-                GeofenceController.getInstance().deleteAllZones(ctx);
-            } catch (Exception e) {}
-
-            try {  PreyWebServices.getInstance().deleteDevice(ctx);} catch (Exception e) {error = e.getMessage();}
-            try {    PreyConfig.getPreyConfig(getContext()).wipeData();} catch (Exception e) {error = e.getMessage();}
-
-
+            error= Detach.detachDevice(getContext());
             return null;
         }
 
