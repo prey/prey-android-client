@@ -57,12 +57,12 @@ public class UtilConnection {
     }
 
     private static String getAuthorization(PreyConfig preyConfig) {
-        PreyLogger.i("getAuthorization:("+preyConfig.getApiKey()+",X)");
+        PreyLogger.d("getAuthorization:("+preyConfig.getApiKey()+",X)");
         return "Basic " + getCredentials(preyConfig.getApiKey(), "X");
     }
 
     private static String getAuthorization(String user,String pass) {
-        PreyLogger.i("getAuthorization:("+user+","+pass+")");
+        PreyLogger.d("getAuthorization:("+user+","+pass+")");
         return "Basic " + getCredentials(user, pass);
     }
 
@@ -103,7 +103,7 @@ public class UtilConnection {
         HttpsURLConnection connection=null;
         int retry = 0;
         boolean delay=false;
-        PreyLogger.i("uri:"+uri);
+        PreyLogger.d("uri:"+uri);
         SimpleMultipartEntity multiple=new SimpleMultipartEntity();
         do {
             if (delay) {
@@ -246,7 +246,7 @@ public class UtilConnection {
             connection.addRequestProperty("User-Agent",getUserAgent(preyConfig));
             connection.addRequestProperty("Origin", "android:com.prey");
             connection.connect();
-            PreyLogger.i("jsonParam.toString():" + jsonParam.toString());
+            PreyLogger.d("jsonParam.toString():" + jsonParam.toString());
             OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
             out.write(jsonParam.toString());
             out.close();

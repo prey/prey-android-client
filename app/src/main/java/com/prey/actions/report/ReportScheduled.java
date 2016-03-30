@@ -46,7 +46,7 @@ public class ReportScheduled {
 		  try {
 			  int minute = Integer.parseInt(PreyConfig.getPreyConfig(context).getIntervalReport());
 
-			  PreyLogger.i("----------ReportScheduled start minute:"+ minute);
+			  PreyLogger.d("----------ReportScheduled start minute:"+ minute);
 
 
 			  Intent intent = new Intent(context, AlarmReportReceiver.class);
@@ -57,10 +57,10 @@ public class ReportScheduled {
 
 
 			  if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
-				  PreyLogger.i("----------setRepeating");
+				  PreyLogger.d("----------setRepeating");
 				  alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+(1000 * 60 * minute), 1000 * 60 * minute, pendingIntent);
 			  } else {
-				  PreyLogger.i("----------setInexactRepeating");
+				  PreyLogger.d("----------setInexactRepeating");
 				  alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * 60 * minute), 1000 * 60 * minute, pendingIntent);
 			  }
 			  //alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,0,2*60*1000, pendingIntent);
@@ -71,9 +71,9 @@ public class ReportScheduled {
 			  //alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * interval,alarmIntent);
 
 
-			  PreyLogger.i("----------start report [" + minute + "] ReportScheduled");
+			  PreyLogger.d("----------start report [" + minute + "] ReportScheduled");
 		  }catch(Exception e){
-			  PreyLogger.i("----------Error ReportScheduled :"+e.getMessage());
+			  PreyLogger.d("----------Error ReportScheduled :"+e.getMessage());
 		  }
 
 	}

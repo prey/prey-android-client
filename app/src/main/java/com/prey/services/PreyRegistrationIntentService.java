@@ -40,11 +40,11 @@ public class PreyRegistrationIntentService extends IntentService {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         try {
-            PreyLogger.i("[START register_for_gcm]");
+            PreyLogger.d("[START register_for_gcm]");
             InstanceID instanceID = InstanceID.getInstance(this);
             String token = instanceID.getToken(FileConfigReader.getInstance(this).getGcmId(),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-            PreyLogger.i("GCM Registration Token: " + token);
+            PreyLogger.d("GCM Registration Token: " + token);
 
             sendRegistrationToServer(token);
 

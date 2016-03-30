@@ -24,14 +24,14 @@ public class AlarmReportReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
-            PreyLogger.i("______________________________");
-            PreyLogger.i("______________________________");
-            PreyLogger.i("----------AlarmReportReceiver onReceive");
+            PreyLogger.d("______________________________");
+            PreyLogger.d("______________________________");
+            PreyLogger.d("----------AlarmReportReceiver onReceive");
 
             Intent intent2 = new Intent(context, ReportService.class);
             context.startService(intent2);
         }catch(Exception e){
-            PreyLogger.i("_______AlarmReportReceiver error:"+e.getMessage());
+            PreyLogger.d("_______AlarmReportReceiver error:"+e.getMessage());
         }
 
 

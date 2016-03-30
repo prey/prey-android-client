@@ -50,13 +50,13 @@ public class PreyScheduled {
             } else {
                 alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * interval, alarmIntent);
             }
-            PreyLogger.i("_____________start scheduled [" + minute + "] alarmIntent");
+            PreyLogger.d("_____________start scheduled [" + minute + "] alarmIntent");
         }
     }
 
     public void reset() {
         if (alarmMgr != null) {
-            PreyLogger.i("_________________shutdown scheduled [" + minute + "]alarmIntent");
+            PreyLogger.d("_________________shutdown scheduled [" + minute + "]alarmIntent");
             alarmMgr.cancel(alarmIntent);
         }
     }

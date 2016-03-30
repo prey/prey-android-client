@@ -66,7 +66,7 @@ public class DeviceReadyActivity extends AppCompatActivity
 
         setContentView(R.layout.device_ready);
 
-        PreyLogger.i("onCreate of DeviceReadyActivity");
+        PreyLogger.d("onCreate of DeviceReadyActivity");
 
         TextView textView6=(TextView) findViewById(R.id.textView6);
         final Typeface titilliumWebRegular = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
