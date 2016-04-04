@@ -137,7 +137,7 @@ public class JSONParser {
                 listaJson.add(explrObject);
             }
         }catch(Exception e){
-            PreyLogger.e("error in parser:"+e.getMessage(), e);
+            //PreyLogger.e("error in parser:"+e.getMessage(), e);
         }
         return listaJson;
     }
@@ -217,4 +217,3 @@ public class JSONParser {
         return json;
     }
 }
-

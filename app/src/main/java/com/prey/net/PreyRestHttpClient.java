@@ -113,6 +113,12 @@ public class PreyRestHttpClient {
         return response;
     }
 
+    public PreyHttpResponse get(String url, Map<String, String> params, String user, String pass,String content) throws Exception {
+        PreyHttpResponse response=UtilConnection.connectionGetAuthorization(PreyConfig.getPreyConfig(ctx),url,params,content,user,pass);
+
+        PreyLogger.d("Response from server: " + (response==null?"":response.toString()));
+        return response;
+    }
 
     public PreyHttpResponse delete(String url, Map<String, String> params) throws Exception {
         PreyHttpResponse response=UtilConnection.connectionDeleteAuthorization(PreyConfig.getPreyConfig(ctx),url,params,CONTENT_TYPE_URL_ENCODED);

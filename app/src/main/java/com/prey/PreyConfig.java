@@ -28,6 +28,7 @@ import com.prey.net.PreyWebServices;
 import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyRegistrationIntentService;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -39,6 +40,8 @@ public class PreyConfig {
     private static PreyConfig cachedInstance = null;
 
     public static final String TAG = "PREY";
+
+    private static final String HTTP="https://";
 
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
@@ -108,6 +111,8 @@ public class PreyConfig {
     public static final String SMS_COMMAND="SMS_COMMAND";
     public static final String PREFERENCE_LOCATION_LOW_BATTERY="PREFERENCE_LOCATION_LOW_BATTERY";
 
+    public static final String TOKEN_JWT="TOKEN_JWT";
+
     public static final int ANDROID_INIT = 2000;
     public static final int ANDROID_SIGN_UP = 2001;
     public static final int ANDROID_TOUR_SCREEN = 2002;
@@ -132,6 +137,8 @@ public class PreyConfig {
     public static final String CAN_ACCESS_CAMARA = "CAN_ACCESS_CAMARA";
     public static final String CAN_ACCESS_READ_PHONE_STATE = "CAN_ACCESS_READ_PHONE_STATE";
     public static final String CAN_ACCESS_EXTERNAL_STORAGE= "CAN_ACCESS_EXTERNAL_STORAGE";
+
+    public static final String TIME_PASSWORD_OK = "TIME_PASSWORD_OK";
 
     public static final int NOTIFY_ANDROID_6 = 6;
 
@@ -454,48 +461,48 @@ public class PreyConfig {
 
 
 
-                String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
-                PreyLogger.i("deviceId:"+deviceId);
-                if (deviceId != null && !"".equals(deviceId)) {
-                    try {
+        String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
+        PreyLogger.i("deviceId:"+deviceId);
+        if (deviceId != null && !"".equals(deviceId)) {
+            try {
 
-                        PreyLogger.d("______________________");
-                        PreyLogger.d("___ registerC2dm _____");
-
-
-                        Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-                        registrationIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0)); // boilerplate
-                        String gcmId = FileConfigReader.getInstance(this.ctx).getGcmId();
-
-                        registrationIntent.putExtra("sender", gcmId);
-                        this.ctx.startService(registrationIntent);
-                        PreyLogger.d("______________________");
-
-                    } catch (Exception e) {
-                        error = true;
-
-                    }
-
-                    if (error) {
-                        try {
-
-                                PreyLogger.d("______________________");
-                                PreyLogger.d("___ registerC2dm  2_____");
+                PreyLogger.d("______________________");
+                PreyLogger.d("___ registerC2dm _____");
 
 
-                                PreyLogger.i("starservice RegistrationIntentService");
-                                Intent intent = new Intent(ctx, PreyRegistrationIntentService.class);
-                                ctx.startService(intent);
+                Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+                registrationIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0)); // boilerplate
+                String gcmId = FileConfigReader.getInstance(this.ctx).getGcmId();
+
+                registrationIntent.putExtra("sender", gcmId);
+                this.ctx.startService(registrationIntent);
+                PreyLogger.d("______________________");
+
+            } catch (Exception e) {
+                error = true;
+
+            }
+
+            if (error) {
+                try {
+
+                    PreyLogger.d("______________________");
+                    PreyLogger.d("___ registerC2dm  2_____");
 
 
-                                PreyLogger.d("______________________");
+                    PreyLogger.i("starservice RegistrationIntentService");
+                    Intent intent = new Intent(ctx, PreyRegistrationIntentService.class);
+                    ctx.startService(intent);
 
-                        } catch (Exception e) {
-                            PreyLogger.e("Error :" + e.getMessage(), e);
 
-                        }
-                    }
+                    PreyLogger.d("______________________");
+
+                } catch (Exception e) {
+                    PreyLogger.e("Error :" + e.getMessage(), e);
+
                 }
+            }
+        }
 
 
 
@@ -572,7 +579,12 @@ public class PreyConfig {
         return url;
     }
 
-    private static final String HTTP="https://";
+    public String getPreyPanelJwt() {
+        String panel = FileConfigReader.getInstance(this.ctx).getPreyPanel();
+        String url= HTTP.concat(panel).concat(".").concat(getPreyDomain()).concat("/").concat(getPreyJwt());
+        PreyLogger.i(url);
+        return url;
+    }
 
     public String getPreyUrl() {
         String subdomain = FileConfigReader.getInstance(this.ctx).getPreySubdomain();
@@ -588,6 +600,9 @@ public class PreyConfig {
         return FileConfigReader.getInstance(this.ctx).getPreyCampaign();
     }
 
+    public String getPreyJwt() {
+        return FileConfigReader.getInstance(this.ctx).getPreyJwt();
+    }
     public String getPreyUninstallUrl() {
         String url = FileConfigReader.getInstance(this.ctx).getPreyUninstall();
         PreyLogger.i(url);
@@ -640,7 +655,7 @@ public class PreyConfig {
     }
 
     public void setSendData(boolean sendData) {
-         saveBoolean(PreyConfig.SEND_DATA, sendData);
+        saveBoolean(PreyConfig.SEND_DATA, sendData);
     }
 
     public void saveAccount(PreyAccountData accountData) {
@@ -845,4 +860,28 @@ public class PreyConfig {
         saveBoolean(PreyConfig.SENT_UUID_SERIAL_NUMBER, sentUuidSerialNumber);
     }
 
+    public String getTokenJwt(){
+        return getString(PreyConfig.TOKEN_JWT, "");
+    }
+
+    public void setTokenJwt(String tokenJwt) {
+        saveString(PreyConfig.TOKEN_JWT, tokenJwt);
+    }
+
+    public void setTimePasswordOk(){
+        Calendar cal= Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.HOUR,1);
+        saveLong(TIME_PASSWORD_OK,cal.getTimeInMillis());
+    }
+
+    public boolean isTimePasswordOk(){
+        long timePasswordOk=getLong(TIME_PASSWORD_OK,0);
+        long timeNow=new Date().getTime();
+        if (timeNow<timePasswordOk){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

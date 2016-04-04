@@ -53,7 +53,7 @@ public class WelcomeActivity extends FragmentActivity {
 
 
     public void menu() {
-        PreyLogger.i("menu ready:"+PreyConfig.getPreyConfig(this).getProtectReady());
+        PreyLogger.i("menu ready");
 
         String email = PreyConfig.getPreyConfig(this).getEmail();
         if(email==null||"".equals(email)){
@@ -76,7 +76,7 @@ public class WelcomeActivity extends FragmentActivity {
 
         Intent intent = null;
 
-            intent = new Intent(getApplicationContext(), DeviceReadyActivity.class);
+            intent = new Intent(getApplicationContext(), CheckPasswordActivity.class);
 
         startActivity(intent);
         finish();

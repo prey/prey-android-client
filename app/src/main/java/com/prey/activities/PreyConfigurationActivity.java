@@ -23,6 +23,16 @@ import com.prey.R;
 
 public class PreyConfigurationActivity extends PreferenceActivity {
 
+    public void onBackPressed(){
+        Intent intent = null;
+
+        intent = new Intent(getApplication(), DeviceReadyActivity.class);
+
+        startActivity(intent);
+        finish();
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

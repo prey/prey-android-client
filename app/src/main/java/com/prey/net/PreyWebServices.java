@@ -200,7 +200,7 @@ public class PreyWebServices {
         try {
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.xml");
-            PreyLogger.d("url:" + url);
+            PreyLogger.d("_____url:" + url);
             response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, email, password);
             xml = response.getResponseAsString();
             PreyLogger.d("xml:" + xml);
@@ -283,25 +283,45 @@ public class PreyWebServices {
         return response;
     }
 
-    public boolean checkPassword(Context ctx, String email, String password) throws PreyException {
-        String xml = this.checkPassword(email, password, ctx);
+    public boolean checkPassword(Context ctx, String apikey, String password) throws PreyException {
+        String xml = this.checkPassword(apikey, password, ctx);
         return xml.contains("<key");
     }
 
-    public String checkPassword(String email, String password, Context ctx) throws PreyException {
+    public String checkPassword(String apikey, String password, Context ctx) throws PreyException {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         HashMap<String, String> parameters = new HashMap<String, String>();
-        String xml;
+        String xml=null;
+
         try {
             String uri=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("profile.xml");
-            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).get(uri, parameters, email, password);
+            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).get(uri, parameters, apikey, password);
             xml=response.getResponseAsString();
         } catch (Exception e) {
             throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
         }
+        try {
+            PreyLogger.d("____[token]_________________apikey:"+apikey+" password:"+password);
+            String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
+            String uri2=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("get_token.json");
+            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).get(uri2, parameters, apikey, password,"application/json");
+            if(response!=null) {
+                JSONObject jsnobject = new JSONObject(response.getResponseAsString());
+                String tokenJwt = jsnobject.getString("token");
+                PreyLogger.d("tokenJwt:" + tokenJwt);
+                PreyConfig.getPreyConfig(ctx).setTokenJwt(tokenJwt);
+            }else{
+                PreyLogger.d("token: nulo");
+            }
 
+        } catch (Exception e) {
+
+        }
+        PreyLogger.d("____[token]_________________xml:"+xml);
         return xml;
     }
+
+
 
     public String deleteDevice(Context ctx) throws PreyException {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
@@ -853,4 +873,3 @@ public class PreyWebServices {
     }
 
 }
-

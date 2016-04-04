@@ -8,6 +8,7 @@ package com.prey.activities;
 
 import com.prey.PreyVerify;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -18,7 +19,7 @@ import android.view.Window;
 import com.prey.PreyConfig;
 import com.prey.services.PreyDisablePowerOptionsService;
 
-public class LoginActivity extends PasswordActivity {
+public class LoginActivity extends Activity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -93,7 +94,7 @@ public class LoginActivity extends PasswordActivity {
 
 
     private boolean isThisDeviceAlreadyRegisteredWithPrey() {
-        return getPreyConfig().isThisDeviceAlreadyRegisteredWithPrey(false);
+        return PreyConfig.getPreyConfig(LoginActivity.this).isThisDeviceAlreadyRegisteredWithPrey(false);
     }
 
     private void showFeedback(Context ctx) {
@@ -103,7 +104,7 @@ public class LoginActivity extends PasswordActivity {
     }
 
     private boolean isThereBatchInstallationKey() {
-        String apiKeyBatch = getPreyConfig().getApiKeyBatch();
+        String apiKeyBatch = PreyConfig.getPreyConfig(LoginActivity.this).getApiKeyBatch();
         return (apiKeyBatch != null && !"".equals(apiKeyBatch));
     }
 

@@ -73,7 +73,7 @@ public class TourActivity1 extends Activity {
                 @Override
                 public void onClick(View v) {
                     PreyConfig.getPreyConfig(getApplication()).setProtectTour(true);
-                    Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), CheckPasswordActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -95,7 +95,7 @@ public class TourActivity1 extends Activity {
     public void onBackPressed() {
         Intent intent = null;
 
-        intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+        intent = new Intent(getApplicationContext(), CheckPasswordActivity.class);
 
         startActivity(intent);
         finish();

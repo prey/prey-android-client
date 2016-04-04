@@ -129,5 +129,7 @@ public class FileConfigReader {
         return Integer.parseInt(properties.getProperty("geofence-maximum-accuracy"));
     }
 
+    public String getPreyJwt() {
+        return properties.getProperty("prey-jwt");
+    }
 }
-
