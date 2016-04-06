@@ -14,14 +14,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -52,7 +56,7 @@ import com.prey.net.PreyWebServices;
 import com.prey.util.KeyboardStatusDetector;
 import com.prey.util.KeyboardVisibilityListener;
 
-public class CheckPasswordActivity extends Activity implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class CheckPasswordActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     int wrongPasswordIntents = 0;
 
@@ -61,11 +65,12 @@ public class CheckPasswordActivity extends Activity implements ActivityCompat.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-
         setContentView(R.layout.password2);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         bindPasswordControls();
         TextView device_ready_h2_text=(TextView)findViewById(R.id.device_ready_h2_text);
         final  TextView textForgotPassword = (TextView) findViewById(R.id.link_forgot_password);
@@ -158,16 +163,18 @@ public class CheckPasswordActivity extends Activity implements ActivityCompat.On
             }
         }
 
+        boolean showLocation=false;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            boolean canAccessFineLocation=PreyPermission.canAccessFineLocation(this);
+            boolean canAccessCoarseLocation=PreyPermission.canAccessCoarseLocation(this);
+            boolean canAccessCamera=PreyPermission.canAccessCamera(this);
+            boolean canAccessReadPhoneState=PreyPermission.canAccessReadPhoneState(this);
+            boolean canAccessReadExternalStorage=PreyPermission.canAccessReadExternalStorage(this);
 
-            PreyConfig.getPreyConfig(this).setCanAccessCamara(PreyPermission.canAccessCamera(this));
-            PreyConfig.getPreyConfig(this).setCanAccessCoarseLocation(PreyPermission.canAccessCoarseLocation(this));
-            PreyConfig.getPreyConfig(this).setCanAccessFineLocation(PreyPermission.canAccessFineLocation(this));
-            PreyConfig.getPreyConfig(this).setCanAccessReadPhoneState(PreyPermission.canAccessReadPhoneState(this));
 
-            if(!PreyPermission.canAccessFineLocation(this)||!PreyPermission.canAccessCoarseLocation(this)||!PreyPermission.canAccessCamera(this)
-                    || !PreyPermission.canAccessReadPhoneState(this)|| !PreyPermission.canAccessReadExternalStorage(this)){
+            if(!canAccessFineLocation||!canAccessCoarseLocation||!canAccessCamera
+                    || !canAccessReadPhoneState|| !canAccessReadExternalStorage){
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -195,6 +202,7 @@ public class CheckPasswordActivity extends Activity implements ActivityCompat.On
                 button_ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        PreyLogger.d("askForPermission");
                         askForPermission();
                         alertDialog.dismiss();
 
@@ -204,18 +212,70 @@ public class CheckPasswordActivity extends Activity implements ActivityCompat.On
                 button_close.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        PreyLogger.d("close ask");
 
                         alertDialog.dismiss();
                     }
                 });
 
 
+
                 alertDialog.show();
+                showLocation=false;
+
+            }else{
+                showLocation=true;
             }
 
 
+        }else{
+            showLocation=true;
         }
+        if(showLocation) {
+            LocationManager mlocManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+            boolean isGpsEnabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            boolean isNetworkEnabled = mlocManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            if (isGpsEnabled || isNetworkEnabled) {
+                PreyLogger.d("isGpsEnabled || isNetworkEnabled");
+
+            } else {
+                PreyLogger.d("no gps ni red");
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                final AlertDialog alertDialog = builder.create();
+                TextView textview = new TextView(this);
+                textview.setText(getString(R.string.location_settings));
+                textview.setMaxLines(10);
+                textview.setTextSize(18F);
+                textview.setPadding(20, 0, 20, 20);
+                textview.setTextColor(Color.BLACK);
+                builder.setView(textview);
+                builder.setPositiveButton(getString(R.string.go_to_settings), new DialogInterface.OnClickListener() {
+
+
+                    public void onClick(DialogInterface dialoginterface, int i) {
+                        dialoginterface.dismiss();
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, 0);
+                        return;
+
+                    }
+
+
+                });
+                builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+
+
+                    public void onClick(DialogInterface dialoginterface, int i) {
+                        dialoginterface.dismiss();
+                    }
+
+
+                });
+                builder.create().show();
+            }
+        }
+
     }
 
 
@@ -313,6 +373,7 @@ public class CheckPasswordActivity extends Activity implements ActivityCompat.On
                 Intent intent = new Intent(CheckPasswordActivity.this, DeviceReadyActivity.class);
                 PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
                 startActivity(intent);
+                finish();
                 new Thread(new EventManagerRunner(CheckPasswordActivity.this, new Event(Event.APPLICATION_OPENED))).start();
             }
         }
@@ -325,32 +386,46 @@ public class CheckPasswordActivity extends Activity implements ActivityCompat.On
         ActivityCompat.requestPermissions(CheckPasswordActivity.this, INITIAL_PERMS, REQUEST_PERMISSIONS);
     }
 
+    public void reset(){
+        PreyLogger.i("reset");
+        Intent intent = new Intent(CheckPasswordActivity.this, CheckPasswordActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PreyLogger.i("_______onRequestPermissionsResult_______requestCode:" + requestCode + " permissions:" + permissions.toString() + " grantResults:" + grantResults.toString());
+        PreyLogger.d("_______onRequestPermissionsResult_______requestCode:" + requestCode + " permissions:" + permissions.toString() + " grantResults:" + grantResults.toString());
 
         switch (requestCode) {
             case REQUEST_PERMISSIONS: {
                 if (grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    PreyLogger.i("setCanAccessCamara");
                     PreyConfig.getPreyConfig(getApplicationContext()).setCanAccessCamara(true);
                 }
                 if (grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                    PreyLogger.i("setCanAccessFineLocation");
                     PreyConfig.getPreyConfig(getApplicationContext()).setCanAccessFineLocation(true);
                 }
                 if (grantResults[2] == PackageManager.PERMISSION_GRANTED){
+                    PreyLogger.i("setCanAccessCoarseLocation");
                     PreyConfig.getPreyConfig(getApplicationContext()).setCanAccessCoarseLocation(true);
                 }
                 if (grantResults[3] ==  PackageManager.PERMISSION_GRANTED){
+                    PreyLogger.i("setCanAccessReadPhoneState");
                     PreyConfig.getPreyConfig(getApplicationContext()).setCanAccessReadPhoneState(true);
                 }
                 if (grantResults[4] ==  PackageManager.PERMISSION_GRANTED){
+                    PreyLogger.i("setCanAccessExternalStorage");
                     PreyConfig.getPreyConfig(getApplicationContext()).setCanAccessExternalStorage(true);
                 }
+                onResume();
                 return;
+
             }
         }
+
 
     }
 

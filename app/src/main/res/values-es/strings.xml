@@ -231,4 +231,7 @@
 
     <string name="warning_re_approve">Otorgar</string>
     <string name="warning_close">Cerrar</string>
+
+    <string name="location_settings">Es necesario que actives todas las fuentes de ubicación en \"Ajustes  Ubicación\" para poder obtener su ubicación</string>
+    <string name="go_to_settings">Ir a ajustes</string>
 </resources>

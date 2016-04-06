@@ -231,4 +231,8 @@
     <string name="warning_re_approve">Approve</string>
     <string name="warning_close">Close</string>
 
+
+    <string name="location_settings">You need to activate all location sources \"Settings Location\" to get your location</string>
+    <string name="go_to_settings">Go to Settings</string>
+
 </resources>
