@@ -234,4 +234,13 @@
 
     <string name="location_settings">Es necesario que actives todas las fuentes de ubicación en \"Ajustes  Ubicación\" para poder obtener su ubicación</string>
     <string name="go_to_settings">Ir a ajustes</string>
+
+
+    <string name="error">Error</string>
+    <string name="new_version_available">Existe una nueva versión disponible. ¿Deseas descargarla ahora?</string>
+    <string name="accept">Aceptar</string>
+    <string name="download">Descargar</string>
+    <string name="ccontinue">Continuar</string>
+    <string name="information">Información</string>
+
 </resources>

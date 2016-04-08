@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -55,17 +56,23 @@ import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 import com.prey.util.KeyboardStatusDetector;
 import com.prey.util.KeyboardVisibilityListener;
+import com.prey.util.Version;
 
 public class CheckPasswordActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     int wrongPasswordIntents = 0;
 
+    CheckPasswordActivity activity=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.password2);
+
+        VersionTask versionTask=new VersionTask();
+        versionTask.execute();
+        activity=this;
     }
 
     @Override
@@ -439,5 +446,75 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
+    public String getVersionName() {
+        String versionName =null;
+        try{
+            PackageManager manager = this.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
+            versionName = info.versionName;
+        }catch(Exception e){
+        }
+        return versionName;
+    }
 
+    public class VersionTask extends AsyncTask<Object, Void, Void> {
+
+
+
+
+        private String googlePlayVersion="";
+        @Override
+        protected void onPreExecute() {
+            googlePlayVersion="";
+        }
+
+        @Override
+        protected Void doInBackground(Object... inputObj) {
+            PreyLogger.d("VersionTask doInBackground");
+            googlePlayVersion= PreyWebServices.getInstance().googlePlayVersion(getApplicationContext());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            PreyLogger.d("VersionTask onPostExecute");
+            if(googlePlayVersion!=null){
+                String versionName=getVersionName();
+                PreyLogger.d("googlePlayVersion:"+googlePlayVersion+" versionName:"+versionName);
+                Version versionGoggle = new Version(googlePlayVersion);
+                Version versionPackage = new Version(versionName);
+
+                if (versionGoggle.compareTo(versionPackage)==1) {
+                    String title = getResources().getString(R.string.information);
+                    String ccontinue = getString(R.string.ccontinue);
+                    String download = getString(R.string.download);
+                    String message = getResources().getString(R.string.new_version_available);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    final AlertDialog dialog = builder.create();
+                    dialog.setTitle(title);
+                    dialog.setMessage(message);
+                    dialog.setCancelable(false);
+                    dialog.setButton(-1, ccontinue, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.setButton(-2,download, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try{
+                                String uri = PreyConfig.getPreyConfig(getApplicationContext()).getPreyGooglePlay();
+                                startActivity(new Intent("android.intent.action.VIEW", Uri.parse(uri)));
+                            }catch(Exception e){
+                                PreyLogger.e("Error en onclick:"+e.getMessage(),e);
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                }
+            }
+        }
+    }
 }

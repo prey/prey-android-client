@@ -872,4 +872,18 @@ public class PreyWebServices {
         return dto;
     }
 
+    public String googlePlayVersion(Context ctx) {
+        try {
+            String uri = PreyConfig.getPreyConfig(ctx).getPreyGooglePlay();
+            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).get(uri, null);
+            String responseAsString = response.getResponseAsString();
+            int po = responseAsString.indexOf("softwareVersion\">");
+            responseAsString = responseAsString.substring(po + 17);
+            po = responseAsString.indexOf("</");
+            responseAsString=responseAsString.substring(0, po);
+            return responseAsString.trim();
+        }catch(Exception e){
+            return null;
+        }
+    }
 }

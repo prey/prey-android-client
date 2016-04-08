@@ -603,6 +603,10 @@ public class PreyConfig {
     public String getPreyJwt() {
         return FileConfigReader.getInstance(this.ctx).getPreyJwt();
     }
+
+    public String getPreyGooglePlay() {
+        return FileConfigReader.getInstance(this.ctx).getPreyGooglePlay();
+    }
     public String getPreyUninstallUrl() {
         String url = FileConfigReader.getInstance(this.ctx).getPreyUninstall();
         PreyLogger.i(url);

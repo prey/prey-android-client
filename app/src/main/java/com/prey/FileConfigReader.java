@@ -132,4 +132,8 @@ public class FileConfigReader {
     public String getPreyJwt() {
         return properties.getProperty("prey-jwt");
     }
+
+    public String getPreyGooglePlay(){
+        return properties.getProperty("prey-google-play");
+    }
 }
