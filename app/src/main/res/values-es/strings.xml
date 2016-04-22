@@ -243,4 +243,18 @@
     <string name="ccontinue">Continuar</string>
     <string name="information">Información</string>
 
+
+    <!-- barcode -->
+    <string name="permission_camera_rationale">Se necesita acceso a la cámara para la detección</string>
+    <string name="no_camera_permission">Esta aplicación no se puede ejecutar porque no tiene el permiso de la cámara. La aplicación se cerrará ahora.</string>
+    <string name="low_storage_error">Dependencias de detección de rostros no se pueden descargar debido a un almacenamiento dispositivo de baja</string>
+    <string name="title_activity_main">Lector de código de barras</string>
+    <string name="barcode_header">Hacer clic &quot;Lector de código de barra&quot;Para leer un código de barras</string>
+    <string name="read_barcode">Leer código de barras</string>
+    <string name="auto_focus">El enfoque automático</string>
+    <string name="use_flash">El uso de flash</string>
+    <string name="barcode_success">Código de barras leído correctamente</string>
+    <string name="barcode_failure">No código de barras capturada</string>
+    <string name="barcode_error">"Error al leer el código de barras: %1$s"</string>
+
 </resources>
