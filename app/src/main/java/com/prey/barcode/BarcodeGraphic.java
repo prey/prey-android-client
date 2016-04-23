@@ -1,18 +1,20 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2016 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.barcode;
 
-        import android.graphics.Canvas;
-        import android.graphics.Color;
-        import android.graphics.Paint;
-        import android.graphics.RectF;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+
+import com.google.android.gms.vision.barcode.Barcode;
+import com.prey.barcode.ui.camera.GraphicOverlay;
 
 
-        import com.google.android.gms.vision.barcode.Barcode;
-        import com.prey.barcode.ui.camera.GraphicOverlay;
-
-/**
- * Graphic instance for rendering barcode position, size, and ID within an associated graphic
- * overlay view.
- */
 public class BarcodeGraphic extends GraphicOverlay.Graphic {
 
     private int mId;
@@ -57,18 +59,13 @@ public class BarcodeGraphic extends GraphicOverlay.Graphic {
         return mBarcode;
     }
 
-    /**
-     * Updates the barcode instance from the detection of the most recent frame.  Invalidates the
-     * relevant portions of the overlay to trigger a redraw.
-     */
+
     void updateItem(Barcode barcode) {
         mBarcode = barcode;
         postInvalidate();
     }
 
-    /**
-     * Draws the barcode annotations for position, size, and raw value on the supplied canvas.
-     */
+
     @Override
     public void draw(Canvas canvas) {
         Barcode barcode = mBarcode;
@@ -76,7 +73,6 @@ public class BarcodeGraphic extends GraphicOverlay.Graphic {
             return;
         }
 
-        // Draws the bounding box around the barcode.
         RectF rect = new RectF(barcode.getBoundingBox());
         rect.left = translateX(rect.left);
         rect.top = translateY(rect.top);
@@ -84,7 +80,6 @@ public class BarcodeGraphic extends GraphicOverlay.Graphic {
         rect.bottom = translateY(rect.bottom);
         canvas.drawRect(rect, mRectPaint);
 
-        // Draws a label at the bottom of the barcode indicate the barcode value that was detected.
         canvas.drawText(barcode.rawValue, rect.left, rect.bottom, mTextPaint);
     }
 }

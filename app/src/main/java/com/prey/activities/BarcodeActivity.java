@@ -14,7 +14,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -27,27 +26,26 @@ import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.barcode.BarcodeCaptureActivity;
-import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 
-public class BarcodeActivity  extends Activity implements View.OnClickListener {
+public class BarcodeActivity extends Activity implements View.OnClickListener {
 
-    // use a compound button so either checkbox or switch widgets work.
+
     private CompoundButton autoFocus;
     private CompoundButton useFlash;
     private TextView statusMessage;
     private TextView barcodeValue;
 
     private static final int RC_BARCODE_CAPTURE = 9001;
-    private static final String TAG = "PREY";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode);
 
-        statusMessage = (TextView)findViewById(R.id.status_message);
-        barcodeValue = (TextView)findViewById(R.id.barcode_value);
+        statusMessage = (TextView) findViewById(R.id.status_message);
+        barcodeValue = (TextView) findViewById(R.id.barcode_value);
 
         autoFocus = (CompoundButton) findViewById(R.id.auto_focus);
         useFlash = (CompoundButton) findViewById(R.id.use_flash);
@@ -55,15 +53,11 @@ public class BarcodeActivity  extends Activity implements View.OnClickListener {
         findViewById(R.id.read_barcode).setOnClickListener(this);
     }
 
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
-     */
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.read_barcode) {
-            // launch barcode activity.
+
             Intent intent = new Intent(this, BarcodeCaptureActivity.class);
             intent.putExtra(BarcodeCaptureActivity.AutoFocus, autoFocus.isChecked());
             intent.putExtra(BarcodeCaptureActivity.UseFlash, useFlash.isChecked());
@@ -73,28 +67,7 @@ public class BarcodeActivity  extends Activity implements View.OnClickListener {
 
     }
 
-    /**
-     * Called when an activity you launched exits, giving you the requestCode
-     * you started it with, the resultCode it returned, and any additional
-     * data from it.  The <var>resultCode</var> will be
-     * {@link #RESULT_CANCELED} if the activity explicitly returned that,
-     * didn't return any result, or crashed during its operation.
-     * <p/>
-     * <p>You will receive this call immediately before onResume() when your
-     * activity is re-starting.
-     * <p/>
-     *
-     * @param requestCode The integer request code originally supplied to
-     *                    startActivityForResult(), allowing you to identify who this
-     *                    result came from.
-     * @param resultCode  The integer result code returned by the child activity
-     *                    through its setResult().
-     * @param data        An Intent, which can return result data to the caller
-     *                    (various data can be attached to Intent "extras").
-     * @see #startActivityForResult
-     * @see #createPendingResult
-     * @see #setResult(int)
-     */
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_BARCODE_CAPTURE) {
@@ -103,25 +76,25 @@ public class BarcodeActivity  extends Activity implements View.OnClickListener {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     statusMessage.setText(R.string.barcode_success);
                     barcodeValue.setText(barcode.displayValue);
-                    String barcodeValue=barcode.displayValue;
-                    Log.d(TAG, "Barcode read: " + barcodeValue);
+                    String barcodeValue = barcode.displayValue;
+                    PreyLogger.d("Barcode read: " + barcodeValue);
 
-                    if(barcodeValue.indexOf("prey")>=0){
+                    if (barcodeValue.indexOf("prey") >= 0) {
 
-                        barcodeValue=barcodeValue.substring(5);
+                        barcodeValue = barcodeValue.substring(5);
                         String[] pairs = barcodeValue.split("&");
-                        String apikey="";
-                        String mail="batch@preyproject.com";
+                        String apikey = "";
+                        String mail = "batch@preyproject.com";
                         for (String pair : pairs) {
                             String[] llave = pair.split("=");
-                            PreyLogger.i("key["+llave[0]+"]"+llave[1]);
-                            if(llave[0].equals("api_key")){
-                                apikey=llave[1];
+                            PreyLogger.i("key[" + llave[0] + "]" + llave[1]);
+                            if (llave[0].equals("api_key")) {
+                                apikey = llave[1];
                             }
 
                         }
-                        if(!"".equals(apikey) ){
-                            new AddDeviceToApiKeyBatch().execute(apikey, mail,PreyUtils.getDeviceType(this));
+                        if (!"".equals(apikey)) {
+                            new AddDeviceToApiKeyBatch().execute(apikey, mail, PreyUtils.getDeviceType(this));
                         }
 
 
@@ -129,19 +102,18 @@ public class BarcodeActivity  extends Activity implements View.OnClickListener {
 
                 } else {
                     statusMessage.setText(R.string.barcode_failure);
-                    Log.d(TAG, "No barcode captured, intent data is null");
+                    PreyLogger.d("No barcode captured, intent data is null");
                 }
             } else {
                 statusMessage.setText(String.format(getString(R.string.barcode_error),
                         CommonStatusCodes.getStatusCodeString(resultCode)));
             }
-        }
-        else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-    String error=null;
+    String error = null;
 
     private static final int NO_MORE_DEVICES_WARNING = 0;
     private static final int ERROR = 3;
@@ -158,13 +130,13 @@ public class BarcodeActivity  extends Activity implements View.OnClickListener {
         protected Void doInBackground(String... data) {
             try {
                 error = null;
-                Context ctx=getApplicationContext();
+                Context ctx = getApplicationContext();
 
-                PreyLogger.i("apikey:"+data[0]+" mail:"+data[1]+" device:"+data[2]);
+                PreyLogger.i("apikey:" + data[0] + " mail:" + data[1] + " device:" + data[2]);
 
-               // if(!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
+                // if(!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
                 PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, data[0], data[1], data[2]);
-                if(accountData!=null){
+                if (accountData != null) {
                     PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
                     PreyConfig.getPreyConfig(getApplicationContext()).saveAccount(accountData);
                     PreyConfig.getPreyConfig(getApplication()).registerC2dm();
@@ -179,7 +151,7 @@ public class BarcodeActivity  extends Activity implements View.OnClickListener {
 
         @Override
         protected void onPostExecute(Void unused) {
-            PreyLogger.i("error["+error+"]");
+            PreyLogger.i("error[" + error + "]");
             if (error == null) {
                 String message = getString(R.string.device_added_congratulations_text);
                 Bundle bundle = new Bundle();
@@ -192,13 +164,11 @@ public class BarcodeActivity  extends Activity implements View.OnClickListener {
                 finish();
 
 
-
-            }else{
+            } else {
                 showDialog(ERROR);
             }
         }
     }
-
 
 
     @Override
