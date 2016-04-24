@@ -109,8 +109,7 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".barcodereader.BarcodeCaptureActivity"
+        <activity android:name=".barcodereader.BarcodeCaptureActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" />
 

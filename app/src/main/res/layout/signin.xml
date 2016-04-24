@@ -59,6 +59,7 @@
 
         android:hint="@string/field_email_signin"
         android:textColorHint="#9D9C96"
+        android:textColor="#000"
         />
 
 
@@ -77,6 +78,7 @@
         android:layout_alignRight="@+id/editTextEmailAddress"
         android:hint="@string/field_password_signin"
         android:textColorHint="#9D9C96"
+        android:textColor="#000"
         />
 
     <Button

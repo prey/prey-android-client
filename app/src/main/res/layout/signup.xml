@@ -54,6 +54,7 @@
         android:layout_above="@+id/editTextEmailAddress"
         android:hint="@string/field_name_signup"
         android:textColorHint="#9D9C96"
+        android:textColor="#000"
           />
 
 
@@ -70,6 +71,7 @@
         android:layout_above="@+id/editTextPassword"
         android:hint="@string/field_email_signup"
         android:textColorHint="#9D9C96"
+        android:textColor="#000"
          />
 
 
@@ -87,6 +89,7 @@
         android:layout_above="@+id/buttonSignup"
         android:hint="@string/field_password_signup"
         android:textColorHint="#9D9C96"
+        android:textColor="#000"
          />
 
     <Button
@@ -119,14 +122,13 @@
         android:textColor="#3C77B9"
          
         android:textStyle="bold"
-        android:layout_marginBottom="20dp"
 
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="10dp"
         android:gravity="left"
-        android:layout_alignParentBottom="true"
 
-          />
+
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/buttonSignup"
+        android:layout_alignEnd="@+id/buttonSignup" />
     
 
 </RelativeLayout>    
