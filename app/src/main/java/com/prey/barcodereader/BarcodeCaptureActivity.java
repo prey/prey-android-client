@@ -106,8 +106,8 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        Snackbar.make(mGraphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
-                Snackbar.LENGTH_LONG)
+        Snackbar.make(mGraphicOverlay, getResources().getText(R.string.barcode_find_your_QR),
+                Snackbar.LENGTH_INDEFINITE)
                 .show();
     }
 
