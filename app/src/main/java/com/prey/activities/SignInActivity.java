@@ -24,10 +24,12 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.prey.barcodereader.BarcodeActivity;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -175,6 +177,17 @@ public class SignInActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
+        ImageView imageViewQr=(ImageView)findViewById(R.id.imageViewQR);
+        imageViewQr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), BarcodeActivity.class);
                 startActivity(intent);
                 finish();
             }

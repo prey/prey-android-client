@@ -174,14 +174,18 @@ public class PreyWebServices {
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices.json");
             PreyLogger.d("url:" + url);
             response = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
-            PreyLogger.d("response:" + response.getStatusCode() + " " + response.getResponseAsString());
-            // No more devices allowed
+            if (response == null) {
+                throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, "[" + -1 + "]"));
+            } else {
+                PreyLogger.d("response:" + response.getStatusCode() + " " + response.getResponseAsString());
+                // No more devices allowed
 
-            if ((response.getStatusCode() == 302) || (response.getStatusCode() == 422) || (response.getStatusCode() == 403)) {
-                throw new NoMoreDevicesAllowedException(ctx.getText(R.string.set_old_user_no_more_devices_text).toString());
-            }
-            if (response.getStatusCode() > 299) {
-                throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, "[" + response.getStatusCode() + "]"));
+                if ((response.getStatusCode() == 302) || (response.getStatusCode() == 422) || (response.getStatusCode() == 403)) {
+                    throw new NoMoreDevicesAllowedException(ctx.getText(R.string.set_old_user_no_more_devices_text).toString());
+                }
+                if (response.getStatusCode() > 299) {
+                    throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, "[" + response.getStatusCode() + "]"));
+                }
             }
         } catch (Exception e) {
             PreyLogger.e("error:"+e.getMessage(),e);
@@ -259,11 +263,15 @@ public class PreyWebServices {
             } catch (Exception e) {
             }
         }
-        PreyAccountData newAccount = new PreyAccountData();
-        newAccount.setApiKey(apiKey);
-        newAccount.setDeviceId(deviceId);
-        newAccount.setEmail(email);
-        newAccount.setPassword("");
+        PreyLogger.i("deviceId:"+deviceId);
+        PreyAccountData newAccount =null;
+        if (deviceId!=null&&!"".equals(deviceId)) {
+            newAccount = new PreyAccountData();
+            newAccount.setApiKey(apiKey);
+            newAccount.setDeviceId(deviceId);
+            newAccount.setEmail(email);
+            newAccount.setPassword("");
+        }
         return newAccount;
 
     }

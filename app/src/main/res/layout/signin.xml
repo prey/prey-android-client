@@ -15,7 +15,7 @@
         android:textColor="#000000"
         android:textSize="14sp"
         android:fontFamily="MagdaCleanMono"
-        android:layout_marginTop="40dp"
+
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_above="@+id/textViewInit2"
@@ -58,6 +58,8 @@
         android:layout_alignParentRight="true"
 
         android:hint="@string/field_email_signin"
+        android:textColorHint="#9D9C96"
+        android:textColor="#000"
         />
 
 
@@ -75,6 +77,8 @@
         android:layout_above="@+id/buttonSignin"
         android:layout_alignRight="@+id/editTextEmailAddress"
         android:hint="@string/field_password_signin"
+        android:textColorHint="#9D9C96"
+        android:textColor="#000"
         />
 
     <Button
@@ -115,7 +119,16 @@
         android:layout_alignParentBottom="true"
          />
 
-
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="70dp"
+        android:id="@+id/imageViewQR"
+        android:src="@drawable/qr_scan_code"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>

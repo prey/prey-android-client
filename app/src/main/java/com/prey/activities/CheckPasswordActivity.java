@@ -67,7 +67,8 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getSupportActionBar().hide();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.password2);
 
         VersionTask versionTask=new VersionTask();
@@ -472,6 +473,7 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
         protected Void doInBackground(Object... inputObj) {
             PreyLogger.d("VersionTask doInBackground");
             googlePlayVersion= PreyWebServices.getInstance().googlePlayVersion(getApplicationContext());
+            PreyConfig.getPreyConfig(getApplication()).registerC2dm();
             return null;
         }
 
@@ -517,4 +519,6 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
             }
         }
     }
+
+
 }
