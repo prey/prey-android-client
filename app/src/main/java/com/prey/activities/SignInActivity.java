@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.prey.barcodereader.BarcodeActivity;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;

@@ -89,11 +89,11 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
 
+
         <activity
             android:name="com.prey.activities.LoginActivity"
             android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation"
-
             android:launchMode="singleInstance"
             android:noHistory="true"
             android:screenOrientation="portrait" >
@@ -103,6 +103,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".barcodereader.BarcodeActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".barcodereader.BarcodeCaptureActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activities.PanelWebActivity"
@@ -124,18 +134,6 @@
 
         <activity
             android:name="com.prey.activities.SignUpActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="com.prey.activities.BarcodeActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="com.prey.barcode.BarcodeCaptureActivity"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
             android:screenOrientation="portrait" />

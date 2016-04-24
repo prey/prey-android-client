@@ -1,11 +1,19 @@
-/*******************************************************************************
- * Created by Orlando Aliaga
- * Copyright 2016 Prey Inc. All rights reserved.
- * License: GPLv3
- * Full license at "/LICENSE"
- ******************************************************************************/
-package com.prey.barcode.ui.camera;
-
+/*
+ * Copyright (C) The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.prey.barcodereader.ui.camera;
 
 import android.Manifest;
 import android.content.Context;
@@ -18,11 +26,11 @@ import android.view.SurfaceView;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
-import com.prey.PreyLogger;
 
 import java.io.IOException;
 
 public class CameraSourcePreview extends ViewGroup {
+    private static final String TAG = "PREY";
 
     private Context mContext;
     private SurfaceView mSurfaceView;
@@ -85,6 +93,8 @@ public class CameraSourcePreview extends ViewGroup {
                 int min = Math.min(size.getWidth(), size.getHeight());
                 int max = Math.max(size.getWidth(), size.getHeight());
                 if (isPortraitMode()) {
+                    // Swap width and height sizes when in portrait, since it will be rotated by
+                    // 90 degrees
                     mOverlay.setCameraInfo(min, max, mCameraSource.getCameraFacing());
                 } else {
                     mOverlay.setCameraInfo(max, min, mCameraSource.getCameraFacing());
@@ -102,9 +112,9 @@ public class CameraSourcePreview extends ViewGroup {
             try {
                 startIfReady();
             } catch (SecurityException se) {
-                PreyLogger.e("Do not have permission to start the camera", se);
+                Log.e(TAG,"Do not have permission to start the camera", se);
             } catch (IOException e) {
-                PreyLogger.e("Could not start camera source.", e);
+                Log.e(TAG, "Could not start camera source.", e);
             }
         }
 
@@ -130,8 +140,10 @@ public class CameraSourcePreview extends ViewGroup {
             }
         }
 
+        // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
         if (isPortraitMode()) {
             int tmp = width;
+            //noinspection SuspiciousNameCombination
             width = height;
             height = tmp;
         }
@@ -139,13 +151,14 @@ public class CameraSourcePreview extends ViewGroup {
         final int layoutWidth = right - left;
         final int layoutHeight = bottom - top;
 
+        // Computes height and width for potentially doing fit width.
         int childWidth = layoutWidth;
-        int childHeight = (int) (((float) layoutWidth / (float) width) * height);
+        int childHeight = (int)(((float) layoutWidth / (float) width) * height);
 
         // If height is too tall using fit width, does fit height instead.
         if (childHeight > layoutHeight) {
             childHeight = layoutHeight;
-            childWidth = (int) (((float) layoutHeight / (float) height) * width);
+            childWidth = (int)(((float) layoutHeight / (float) height) * width);
         }
 
         for (int i = 0; i < getChildCount(); ++i) {
@@ -155,9 +168,9 @@ public class CameraSourcePreview extends ViewGroup {
         try {
             startIfReady();
         } catch (SecurityException se) {
-            PreyLogger.e("Do not have permission to start the camera", se);
+            Log.e(TAG,"Do not have permission to start the camera", se);
         } catch (IOException e) {
-            PreyLogger.e("Could not start camera source.", e);
+            Log.e(TAG, "Could not start camera source.", e);
         }
     }
 
@@ -170,7 +183,7 @@ public class CameraSourcePreview extends ViewGroup {
             return true;
         }
 
-        PreyLogger.d("isPortraitMode returning false by default");
+        Log.d(TAG, "isPortraitMode returning false by default");
         return false;
     }
 }
