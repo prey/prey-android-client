@@ -23,6 +23,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
@@ -79,6 +80,10 @@ public class GeofenceController {
             if (!mapWeb.containsKey(geo.getId())) {
                 PreyLogger.d("remove id:" + geo.getId());
                 dataSource.deleteGeofence(geo.getId());
+                String lastEvent=PreyConfig.getPreyConfig(ctx).getLastEvent();
+                if(lastEvent!=null&&lastEvent.indexOf( geo.getId())>=0) {
+                    PreyConfig.getPreyConfig(ctx).setLastEventGeo("");
+                }
                 removeList.add(geo.getId());
             }
         }
@@ -102,6 +107,10 @@ public class GeofenceController {
         for (int i = 0; listBD != null && i < listBD.size(); i++) {
             GeofenceDto geo = listBD.get(i);
             dataSource.deleteGeofence(geo.getId());
+            String lastEvent=PreyConfig.getPreyConfig(ctx).getLastEvent();
+            if(lastEvent!=null&&lastEvent.indexOf( geo.getId())>=0) {
+                PreyConfig.getPreyConfig(ctx).setLastEventGeo("");
+            }
             removeList.add(geo.getId());
         }
         if (removeList != null && removeList.size() > 0) {
@@ -149,7 +158,7 @@ public class GeofenceController {
         PreyLogger.d("infoAdd:" + infoExtra);
 
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL);
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
         builder.addGeofences(mGeofenceList);
         GeofencingRequest geofencingRequest = builder.build();
         if (mGoogleApiClient.isConnected()) {
@@ -198,11 +207,10 @@ public class GeofenceController {
 
     public void init(final Context ctx) {
         PreyLogger.d("_GeofenceController__init");
-        GeofenceDataSource dataSource = null;
         GoogleApiClient mGoogleApiClient = null;
         try {
             mGoogleApiClient = connectGoogleApiClient(ctx);
-            dataSource = new GeofenceDataSource(ctx);
+            GeofenceDataSource dataSource = new GeofenceDataSource(ctx);
             List<GeofenceDto> listBD = dataSource.getAllGeofences();
             List<com.google.android.gms.location.Geofence> mGeofenceList = new ArrayList<Geofence>();
             final List<GeofenceDto> listToBdAdd = new ArrayList<GeofenceDto>();
@@ -228,7 +236,7 @@ public class GeofenceController {
             final String extraInfo = info;
             PreyLogger.d("info:" + extraInfo);
             GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-            builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL);
+            builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
             builder.addGeofences(mGeofenceList);
             GeofencingRequest geofencingRequest = builder.build();
             if (mGoogleApiClient.isConnected()) {

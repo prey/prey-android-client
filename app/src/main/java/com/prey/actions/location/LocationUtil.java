@@ -44,8 +44,10 @@ public class LocationUtil {
             LocationManager mlocManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
             boolean isGpsEnabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             boolean isNetworkEnabled = mlocManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            boolean isWifiEnabled=PreyWifiManager.getInstance(ctx).isWifiEnabled();
             PreyLogger.d("gps status:" + isGpsEnabled);
             PreyLogger.d("net status:" + isNetworkEnabled);
+            PreyLogger.d("wifi status:" + isWifiEnabled);
             PreyLocation location = null;
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
@@ -62,13 +64,13 @@ public class LocationUtil {
             }else{
                 PreyLogger.d("ask for permission location");
             }
-            if(location==null)
+            if(location==null && isWifiEnabled)
                 location = getDataLocationWifi(ctx);
             if(location!=null){
                 PreyLogger.d("locationData:" + location.getLat()+" "+location.getLng()+" "+location.getAccuracy());
                 data=convertData(location);
             }else{
-                sendNotify(ctx,"Error");
+                sendNotify(ctx,"Error","failed");
             }
         } catch (Exception e) {
             sendNotify(ctx,"Error");
@@ -90,6 +92,11 @@ public class LocationUtil {
     }
     private static void sendNotify(Context ctx,String message){
         Map<String, String> parms = UtilJson.makeMapParam("get", "location", "failed", message);
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
+    }
+
+    private static void sendNotify(Context ctx,String message,String status){
+        Map<String, String> parms = UtilJson.makeMapParam("get", "location", status, message);
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
     }
 
@@ -189,5 +196,12 @@ public class LocationUtil {
         return data;
     }
 
+    public static PreyLocation dataPreyLocation(Context ctx) {
+        HttpDataService data=dataLocation(ctx);
+        PreyLocation location=new PreyLocation();
+        location.setLat(Double.parseDouble(data.getDataList().get(LAT)));
+        location.setLng(Double.parseDouble(data.getDataList().get(LNG)));
+        location.setAccuracy(Float.parseFloat(data.getDataList().get(ACC)));
+        return location;
+    }
 }
-
