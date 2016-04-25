@@ -144,6 +144,8 @@ public class PreyConfig {
 
     public static final String SENT_UUID_SERIAL_NUMBER = "SENT_UUID_SERIAL_NUMBER";
 
+    public static final String LAST_EVENT_GEO = "LAST_EVENT_GEO";
+
     private boolean securityPrivilegesAlreadyPrompted;
 
     private Context ctx;
@@ -887,5 +889,14 @@ public class PreyConfig {
         } else {
             return false;
         }
+    }
+
+    public String getLastEventGeo(){
+        return getString(PreyConfig.LAST_EVENT_GEO, "");
+    }
+
+    public void setLastEventGeo(String lastEventGeo) {
+        PreyLogger.d("lastEventGeo["+lastEventGeo+"]");
+        saveString(PreyConfig.LAST_EVENT_GEO, lastEventGeo);
     }
 }
