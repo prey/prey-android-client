@@ -29,6 +29,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.activities.PermissionInformationActivity;
+import com.prey.activities.SignInActivity;
 import com.prey.net.PreyWebServices;
 
 public class BarcodeActivity extends Activity   {
@@ -79,6 +80,14 @@ public class BarcodeActivity extends Activity   {
                 startActivityForResult(intent, RC_BARCODE_CAPTURE);
             }
         });
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override

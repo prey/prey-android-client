@@ -76,10 +76,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
 
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
-
-        Snackbar.make(mGraphicOverlay, getResources().getText(R.string.barcode_find_your_QR),
-                Snackbar.LENGTH_INDEFINITE)
-                .show();
+        
     }
 
     private void requestCameraPermission() {
@@ -123,7 +120,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
         Context context = getApplicationContext();
 
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).build();
-        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay);
+        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay,this);
         barcodeDetector.setProcessor(
                 new MultiProcessor.Builder<>(barcodeFactory).build());
 
@@ -234,8 +231,11 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
         BarcodeGraphic graphic = mGraphicOverlay.getFirstGraphic();
         Barcode barcode = null;
         if (graphic != null) {
+
             barcode = graphic.getBarcode();
+
             if (barcode != null) {
+                PreyLogger.d("displayValue:"+barcode.displayValue);
                 Intent data = new Intent();
                 data.putExtra(BarcodeObject, barcode);
                 setResult(CommonStatusCodes.SUCCESS, data);
@@ -249,6 +249,22 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
             PreyLogger.d("no barcode detected");
         }
         return barcode != null;
+    }
+
+    public void updateBarcode(Barcode barcode) {
+
+        if (barcode != null) {
+
+
+                PreyLogger.d("displayValue:"+barcode.displayValue);
+                Intent data = new Intent();
+                data.putExtra(BarcodeObject, barcode);
+                setResult(CommonStatusCodes.SUCCESS, data);
+                finish();
+
+
+        }
+
     }
 
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {

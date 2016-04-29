@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
+import com.prey.PreyLogger;
 import com.prey.barcodereader.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.barcode.Barcode;
 
@@ -70,7 +71,9 @@ public class BarcodeGraphic extends GraphicOverlay.Graphic {
         rect.right = translateX(rect.right);
         rect.bottom = translateY(rect.bottom);
         canvas.drawRect(rect, mRectPaint);
-
-        canvas.drawText(barcode.rawValue, rect.left, rect.bottom, mTextPaint);
+        String barcodeValue=barcode.rawValue;
+        if (barcodeValue.contains("prey"))
+            barcodeValue="";
+        canvas.drawText(barcodeValue, rect.left, rect.bottom, mTextPaint);
     }
 }

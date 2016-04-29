@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/topLayout"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true">
+
+    android:keepScreenOn="true"
+    android:weightSum="1">
+
 
   <com.prey.barcodereader.ui.camera.CameraSourcePreview
       android:id="@+id/preview"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
+      android:layout_height="match_parent"
+
+       >
 
     <com.prey.barcodereader.ui.camera.GraphicOverlay
         android:id="@+id/graphicOverlay"
@@ -20,4 +25,21 @@
 
   </com.prey.barcodereader.ui.camera.CameraSourcePreview>
 
-</LinearLayout>
+
+
+  <TextView
+      android:layout_width="fill_parent"
+      android:layout_height="80dp"
+      android:text="@string/barcode_find_your_QR"
+      android:id="@+id/textView"
+      android:layout_alignParentBottom="true"
+      android:layout_centerHorizontal="true"
+
+      android:background="#3578BC"
+      android:textColor="#fff"
+      android:textSize="16sp"
+      android:textAlignment="center"
+      android:paddingTop="20dp"
+      />
+
+</RelativeLayout>

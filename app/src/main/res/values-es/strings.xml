@@ -256,7 +256,7 @@
     <string name="barcode_success">Código de barras leído correctamente</string>
     <string name="barcode_failure">No código de barras capturada</string>
     <string name="barcode_error">"Error al leer el código de barras: %1$s"</string>
-    <string name="barcode_find_your_QR">Ir a panel.preyproject.com/qr para encontrar su código QR</string>
+    <string name="barcode_find_your_QR">Visita panel.preyproject.com/qr\n en tu computador y escanea el código QR</string>
 
 
 </resources>
