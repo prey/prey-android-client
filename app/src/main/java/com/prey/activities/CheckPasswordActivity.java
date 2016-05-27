@@ -284,6 +284,7 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
             }
         }
 
+        PreyConfig.getPreyConfig(this).registerC2dm();
     }
 
 
