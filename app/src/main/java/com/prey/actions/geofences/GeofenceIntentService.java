@@ -89,7 +89,7 @@ public class GeofenceIntentService extends IntentService {
                         int i=0;
                         PreyLocation locationNow =null;
                         do {
-                            locationNow = LocationUtil.dataPreyLocation(context);
+                            locationNow = LocationUtil.dataPreyLocation(context,null);
                             i=i+1;
                         }while (i<3 &&locationNow.getAccuracy() > geofenceMaximumAccuracy);
 

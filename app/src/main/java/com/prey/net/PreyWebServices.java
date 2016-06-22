@@ -554,11 +554,13 @@ public class PreyWebServices {
             //Toast.makeText(ctx, "Event:"+event.getName(), Toast.LENGTH_LONG).show();
             String status = jsonObject.toString();
             PreyHttpResponse preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters);
-
-
+            String messageId=null;
+            try{
+                messageId=preyHttpResponse.getMapHeaderFields().get("X-Prey-Message-Id").get(0);
+            }catch(Exception e1){}
             String jsonString = preyHttpResponse.getResponseAsString();
             if (jsonString != null && jsonString.length() > 0) {
-                List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
+                List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString(),messageId);
                 if (jsonObjectList != null && jsonObjectList.size() > 0) {
                     ActionsController.getInstance(ctx).runActionJson(ctx, jsonObjectList);
                 }

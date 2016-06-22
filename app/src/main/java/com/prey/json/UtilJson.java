@@ -44,7 +44,15 @@ public class UtilJson {
 
     public static  Map<String, String> makeMapParam(String command,String target,String status,String reason){
         Map<String, String> map=makeMapParam(command, target, status);
-        map.put("reason", reason);
+        if(reason!=null)
+            map.put("reason", reason);
+        return map;
+    }
+
+    public static  Map<String, String> makeMapParam(String command,String target,String status,String reason,String messageId){
+        Map<String, String> map=makeMapParam(command, target, status,reason);
+        if(messageId!=null)
+            map.put("Correlation-Id", messageId);
         return map;
     }
 }

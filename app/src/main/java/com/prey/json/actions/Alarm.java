@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.prey.PreyConfig;
 import com.prey.PreyStatus;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.alarm.AlarmThread;
@@ -30,7 +31,12 @@ public class Alarm extends JsonAction {
             sound = parameters.getString("sound");
         } catch (Exception e) {
         }
-        new AlarmThread(ctx, sound).start();
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+        } catch (Exception e) {
+        }
+        new AlarmThread(ctx, sound,messageId).start();
     }
 
     public void stop(Context ctx, List<ActionResult> list, JSONObject options) {

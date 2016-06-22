@@ -216,8 +216,10 @@ public class UtilConnection {
             }
             PreyLogger.i(sb.toString());
         }
+        Map<String, List<String>> mapHeaderFields=connection.getHeaderFields();
+
         connection.disconnect();
-        return new PreyHttpResponse(responseCode,sb.toString());
+        return new PreyHttpResponse(responseCode,sb.toString(),mapHeaderFields);
     }
     
     public static HttpURLConnection connectionPostJson(PreyConfig preyConfig,String uri, JSONObject jsonParam) {

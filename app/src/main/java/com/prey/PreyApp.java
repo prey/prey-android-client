@@ -49,7 +49,7 @@ public class PreyApp extends Application {
                 PreyConfig.getPreyConfig(this).registerC2dm();
                 new Thread() {
                     public void run() {
-                        GeofenceController.getInstance().init(getApplicationContext());
+                        GeofenceController.getInstance().init(getApplicationContext(),null);
                     }
                 }.start();
                 Intent intentFile = new Intent(this, FileretrievalService.class);

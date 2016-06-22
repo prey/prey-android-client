@@ -9,6 +9,7 @@ package com.prey.json.actions;
 import android.content.Context;
 import android.os.Environment;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.fileretrieval.FileretrievalDatasource;
 import com.prey.actions.fileretrieval.FileretrievalDto;
@@ -26,9 +27,14 @@ public class Fileretrieval {
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
         int responseCode=0;
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+        } catch (Exception e) {
+        }
         try {
             PreyLogger.d("Fileretrieval started");
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "fileretrieval", "started"));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "fileretrieval", "started",null,messageId));
             String path = parameters.getString("path");
             String fileId = parameters.getString("file_id");
             if(fileId==null||"".equals(fileId)||"null".equals(fileId)){
@@ -47,10 +53,10 @@ public class Fileretrieval {
             if(responseCode==200||responseCode==201) {
                 datasource.deleteFileretrieval(fileId);
             }
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "fileretrieval", "stopped"));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "fileretrieval", "stopped",null,messageId));
             PreyLogger.d("Fileretrieval stopped");
         }catch(Exception e){
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "fileretrieval", "failed", e.getMessage()));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "fileretrieval", "failed", e.getMessage(),messageId));
             PreyLogger.d("Fileretrieval failed:"+e.getMessage());
         }
     }

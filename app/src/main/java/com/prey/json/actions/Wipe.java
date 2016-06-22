@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.observer.ActionResult;
 import com.prey.actions.wipe.WipeThread;
@@ -39,6 +40,11 @@ public class Wipe {
         } catch (Exception e) {
 
         }
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+        } catch (Exception e) {
+        }
         try {
             String factoryReset = parameters.getString("factory_reset");
             PreyLogger.i("factoryReset:" + factoryReset);
@@ -64,7 +70,7 @@ public class Wipe {
 
         }
         PreyLogger.i("wipe:" + wipe + " deleteSD:" + deleteSD);
-        new WipeThread(ctx, wipe, deleteSD).start();
+        new WipeThread(ctx, wipe, deleteSD, messageId).start();
     }
 }
 

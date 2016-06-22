@@ -86,7 +86,7 @@ public class PreyBetaActionsRunner implements Runnable {
     }
 
     private static List<JSONObject> getInstructionsNewThread(Context ctx, String cmd) throws PreyException {
-        List<JSONObject> jsonObject = new JSONParser().getJSONFromTxt(ctx, "[" + cmd + "]");
+        List<JSONObject> jsonObject = new JSONParser().getJSONFromTxt(ctx, "[" + cmd + "]",null);
         final Context context = ctx;
         new Thread(new Runnable() {
             public void run() {

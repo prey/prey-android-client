@@ -21,10 +21,12 @@ public class AlertThread extends Thread {
 
     private Context ctx;
     private String description;
+    private String messageId;
 
-    public AlertThread(Context ctx, String description) {
+    public AlertThread(Context ctx, String description, String messageId) {
         this.ctx = ctx;
         this.description = description;
+        this.messageId = messageId;
     }
 
     public void run() {
@@ -44,7 +46,7 @@ public class AlertThread extends Thread {
 
             PreyConfig.getPreyConfig(ctx).setNextAlert(true);
 
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "started"));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "started",null,messageId));
             try {
                 int i = 0;
                 while (!PreyStatus.getInstance().isPreyPopUpOnclick() && i < 10) {
@@ -53,12 +55,12 @@ public class AlertThread extends Thread {
                 }
             } catch (InterruptedException e) {
             }
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "stopped"));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "stopped",null,messageId));
             PreyConfig.getPreyConfig(ctx).setLastEvent("alert_started");
             PreyLogger.d("stopped alert");
         } catch (Exception e) {
             PreyLogger.e("failed alert: " + e.getMessage(), e);
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "failed", e.getMessage()));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "failed", e.getMessage(),messageId));
         }
     }
 

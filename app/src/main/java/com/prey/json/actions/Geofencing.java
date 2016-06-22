@@ -8,6 +8,7 @@ package com.prey.json.actions;
 
 import android.content.Context;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.observer.ActionResult;
@@ -20,12 +21,22 @@ public class Geofencing {
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
         PreyLogger.d("starting Geofencing");
-        GeofenceController.getInstance().run(ctx);
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+        } catch (Exception e) {
+        }
+        GeofenceController.getInstance().run(ctx,messageId);
     }
 
     public void stop(Context ctx, List<ActionResult> list, JSONObject parameters) {
         PreyLogger.d("stop Geofencing");
-        GeofenceController.getInstance().run(ctx);
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+        } catch (Exception e) {
+        }
+        GeofenceController.getInstance().run(ctx,messageId);
     }
 
 }

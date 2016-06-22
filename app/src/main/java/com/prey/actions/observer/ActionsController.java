@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.PreyAction;
@@ -113,6 +114,13 @@ public class ActionsController {
                 }catch(JSONException e){
 
                 }
+                if (parametersAction==null){
+                    parametersAction=new JSONObject();
+                }
+                try {
+                    String messageId = jsonObject.getString(PreyConfig.MESSAGE_ID);
+                    parametersAction.put(PreyConfig.MESSAGE_ID, messageId);
+                }catch (Exception e){}
                 PreyLogger.d("nameAction:"+nameAction+" methodAction:"+methodAction);
 
                 List<ActionResult> lista = new ArrayList<ActionResult>();

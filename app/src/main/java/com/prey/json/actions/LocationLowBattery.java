@@ -25,7 +25,7 @@ public class LocationLowBattery extends JsonAction {
 
 
     public HttpDataService run(Context ctx, List<ActionResult> list, JSONObject parameters){
-        HttpDataService data = LocationUtil.dataLocation(ctx);
+        HttpDataService data = LocationUtil.dataLocation(ctx,null);
         data.setKey("location_low_battery");
         return data;
     }

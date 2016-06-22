@@ -24,7 +24,12 @@ public class Camouflage {
 
     public static void hide(Context ctx, List<ActionResult> lista, JSONObject parameters) {
         PreyLogger.i("started hide");
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "camouflage", "started"));
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+        } catch (Exception e) {
+        }
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "camouflage", "started",null,messageId));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(true);
 
         ComponentName componentToDisabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
@@ -34,9 +39,14 @@ public class Camouflage {
         PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_hide");
     }
 
-    public static void unhide(Context ctx, List<ActionResult> lista, JSONObject options) {
+    public static void unhide(Context ctx, List<ActionResult> lista, JSONObject parameters) {
         PreyLogger.i("started unhide");
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "camouflage", "stopped"));
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+        } catch (Exception e) {
+        }
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "camouflage", "stopped",null,messageId));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(false);
 
         ComponentName componentToEnabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
