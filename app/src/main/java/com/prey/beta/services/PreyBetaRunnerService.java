@@ -53,7 +53,7 @@ public class PreyBetaRunnerService extends Service {
         try{
             cmd=intent.getExtras().getString("cmd");
         }catch(Exception e){}
-        PreyLogger.d("PreyRunnerService has been started...:"+cmd);
+        PreyLogger.d("PreyRunnerService has been started cmd:"+cmd);
         PreyBetaActionsRunnner exec = new PreyBetaActionsRunnner(cmd);
         running = true;
         exec.run(PreyBetaRunnerService.this);

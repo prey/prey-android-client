@@ -22,7 +22,6 @@ public class PreyBetaActionsRunnner {
     public void run(Context ctx) {
         this.myActionsRunnerThread = new Thread(new PreyBetaActionsRunner(ctx, cmd));
         this.myActionsRunnerThread.start();
-
     }
 
 }

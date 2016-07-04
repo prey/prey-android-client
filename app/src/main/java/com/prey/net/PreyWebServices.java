@@ -896,4 +896,8 @@ public class PreyWebServices {
             return null;
         }
     }
+
+    public void messageReceivedTask(Context ctx, String messageId) {
+        PreyLogger.i("Message Received messageId:"+messageId);
+    }
 }
