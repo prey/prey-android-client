@@ -45,9 +45,6 @@ public class JSONParser {
             try{sb=response.getResponseAsString();}catch(Exception e){}
             if (sb!=null)
                 json = sb.trim();
-            try{
-                messageId=response.getMapHeaderFields().get("X-Prey-Message-Id").get(0);
-            }catch(Exception e1){}
         }catch(Exception e){
             PreyLogger.e("Error, causa:" + e.getMessage(), e);
             return null;
@@ -122,10 +119,10 @@ public class JSONParser {
         if ("[]".equals(json)) {
             return null;
         }
-        return getJSONFromTxt(ctx, json, messageId);
+        return getJSONFromTxt(ctx, json);
     }
 
-    public List<JSONObject> getJSONFromTxt(Context ctx, String json,String messageId) {
+    public List<JSONObject> getJSONFromTxt(Context ctx, String json) {
         if("Invalid data received".equals(json)) return null;
         List<JSONObject> listaJson = new ArrayList<JSONObject>();
         json="{\"prey\":"+json+"}";
@@ -137,8 +134,6 @@ public class JSONParser {
                 String jsonCommand= jsonArray.get(i).toString();
                 JSONObject explrObject =new JSONObject(jsonCommand);
                 PreyLogger.i(explrObject.toString());
-                if (messageId!=null)
-                    explrObject.put(PreyConfig.MESSAGE_ID,messageId);
                 listaJson.add(explrObject);
             }
         }catch(Exception e){

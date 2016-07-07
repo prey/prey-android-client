@@ -23,6 +23,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.beta.actions.PreyBetaController;
 import com.prey.exceptions.PreyException;
+import com.prey.json.UtilJson;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 
@@ -88,7 +89,7 @@ public class C2DMReceiver extends BroadcastReceiver {
         protected Void doInBackground(Object... data) {
             Context ctx=(Context) data[0];
             String messageId =(String) data[1];
-            PreyWebServices.getInstance().messageReceivedTask(ctx,messageId);
+            PreyWebServices.getInstance().messageBridge(ctx, messageId,"RECEIVED");
             return null;
         }
     }

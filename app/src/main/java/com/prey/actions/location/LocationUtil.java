@@ -70,7 +70,7 @@ public class LocationUtil {
                 PreyLogger.d("locationData:" + location.getLat()+" "+location.getLng()+" "+location.getAccuracy());
                 data=convertData(location);
             }else{
-                sendNotify(ctx,"Error","failed",messageId);
+                sendNotify(ctx,"Error","failed");
             }
         } catch (Exception e) {
             sendNotify(ctx,"Error",messageId);
@@ -90,13 +90,13 @@ public class LocationUtil {
         }
         return "";
     }
-    private static void sendNotify(Context ctx,String message, String messageId){
-        Map<String, String> parms = UtilJson.makeMapParam("get", "location", "failed", message,messageId);
+    private static void sendNotify(Context ctx,String message){
+        Map<String, String> parms = UtilJson.makeMapParam("get", "location", "failed", message);
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
     }
 
-    private static void sendNotify(Context ctx,String message,String status, String messageId){
-        Map<String, String> parms = UtilJson.makeMapParam("get", "location", status, message,messageId);
+    private static void sendNotify(Context ctx,String message,String status){
+        Map<String, String> parms = UtilJson.makeMapParam("get", "location", status, message);
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
     }
 
@@ -174,7 +174,7 @@ public class LocationUtil {
             }
             ctx.stopService(intent);
         } catch (Exception e) {
-            Map<String, String> parms = UtilJson.makeMapParam("get", "location", "failed", e.getMessage(),messageId);
+            Map<String, String> parms = UtilJson.makeMapParam("get", "location", "failed", e.getMessage());
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
         } finally {
             ctx.stopService(intent);

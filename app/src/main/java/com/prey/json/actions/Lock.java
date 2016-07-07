@@ -41,7 +41,7 @@ public class Lock extends JsonAction {
 
         } catch (Exception e) {
             PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage(),messageId));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage()));
         }
     }
 
@@ -61,7 +61,7 @@ public class Lock extends JsonAction {
             //later
             screenLock.release();
 
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "lock", "stopped",null,messageId));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "lock", "stopped",null));
             PreyConfig.getPreyConfig(ctx).setLastEvent("lock_stopped");
         }
     }
@@ -73,7 +73,7 @@ public class Lock extends JsonAction {
 
         } catch (Exception e) {
             PreyLogger.i("Error causa:" + e.getMessage());
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage(),null));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage()));
         }
     }
 
@@ -82,7 +82,7 @@ public class Lock extends JsonAction {
 
             PreyConfig.getPreyConfig(ctx).setLock(true);
             FroyoSupport.getInstance(ctx).changePasswordAndLock(unlock, true);
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "started",null,messageId));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "started",null));
             PreyConfig.getPreyConfig(ctx).setLastEvent("lock_started");
         }
     }

@@ -550,17 +550,12 @@ public class PreyWebServices {
 
             PreyLogger.d("sendPreyHttpEvent url:" + url);
             PreyLogger.d("name:" + event.getName() + " info:" + event.getInfo());
-
-            //Toast.makeText(ctx, "Event:"+event.getName(), Toast.LENGTH_LONG).show();
+            PreyLogger.d("status:" + jsonObject.toString());
             String status = jsonObject.toString();
             PreyHttpResponse preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters);
-            String messageId=null;
-            try{
-                messageId=preyHttpResponse.getMapHeaderFields().get("X-Prey-Message-Id").get(0);
-            }catch(Exception e1){}
             String jsonString = preyHttpResponse.getResponseAsString();
             if (jsonString != null && jsonString.length() > 0) {
-                List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString(),messageId);
+                List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
                 if (jsonObjectList != null && jsonObjectList.size() > 0) {
                     ActionsController.getInstance(ctx).runActionJson(ctx, jsonObjectList);
                 }
@@ -897,7 +892,16 @@ public class PreyWebServices {
         }
     }
 
-    public void messageReceivedTask(Context ctx, String messageId) {
-        PreyLogger.i("Message Received messageId:"+messageId);
+    public void messageBridge(Context ctx, String messageId,String status) {
+        try {
+            PreyLogger.i("Message Bridge messageId:" + messageId);
+            String url = getEventsUrlJson(ctx) + ".json";
+            Map<String, String> parameters = new HashMap<String, String>();
+            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).connectionPostAuthorizationCorrelationId(url,status,parameters,messageId);
+        } catch (Exception e) {
+            PreyLogger.i("message:" + e.getMessage());
+        }
     }
+
+
 }

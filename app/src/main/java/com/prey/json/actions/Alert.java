@@ -61,7 +61,7 @@ public class Alert extends JsonAction {
             }
         } catch (Exception e) {
             PreyLogger.e("Error, causa:" + e.getMessage(), e);
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "failed", e.getMessage(),null));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "failed", e.getMessage()));
         }
     }
 }

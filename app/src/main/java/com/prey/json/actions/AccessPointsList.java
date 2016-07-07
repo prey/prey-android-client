@@ -61,7 +61,7 @@ public class AccessPointsList extends JsonAction {
             }
         } catch (Exception e) {
             PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get", "access_points_list", "failed", e.getMessage(),messageId));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get", "access_points_list", "failed", e.getMessage()));
         }
         return dataWifi;
     }

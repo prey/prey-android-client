@@ -50,7 +50,7 @@ public class GeofenceController {
         return INSTANCE;
     }
 
-    public void run(final Context ctx,String messageId) {
+    public void run(final Context ctx) {
         try {
             mGoogleApiClient = connectGoogleApiClient(ctx);
             dataSource = new GeofenceDataSource(ctx);
@@ -58,8 +58,8 @@ public class GeofenceController {
             mapBD = convertMap(listBD);
             listWeb = GeofecenceParse.getJSONFromUrl(ctx);
             mapWeb = convertMap(listWeb);
-            deleteZones(ctx,messageId);
-            addZones(ctx,messageId);
+            deleteZones(ctx);
+            addZones(ctx);
         } catch (Exception e) {
         }
     }
@@ -73,7 +73,7 @@ public class GeofenceController {
         return map;
     }
 
-    private void deleteZones(final Context ctx,String messageId) {
+    private void deleteZones(final Context ctx) {
         List<String> removeList = new ArrayList<String>();
         for (int i = 0; listBD != null && i < listBD.size(); i++) {
             GeofenceDto geo = listBD.get(i);
@@ -98,7 +98,7 @@ public class GeofenceController {
             }
             infoDelete += "]";
             PreyLogger.d("infoDelete:" + infoDelete);
-            sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "stopped", infoDelete,messageId));
+            sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "stopped", infoDelete));
         }
     }
 
@@ -127,7 +127,7 @@ public class GeofenceController {
     }
 
 
-    private void addZones(final Context ctx,final String messageId) {
+    private void addZones(final Context ctx) {
         List<com.google.android.gms.location.Geofence> mGeofenceList = new ArrayList<Geofence>();
         final List<GeofenceDto> listToBdAdd = new ArrayList<GeofenceDto>();
         String infoAdd = "[";
@@ -178,14 +178,14 @@ public class GeofenceController {
                             PreyLogger.d("*********************connectionAddListener  status");
                             if (status.isSuccess()) {
                                 PreyLogger.d("********saveGeofence");
-                                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "started", infoExtra,messageId));
+                                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "started", infoExtra));
                                 GeofenceDataSource dataSource = new GeofenceDataSource(ctx);
                                 for (int i = 0; listToBdAdd != null && i < listToBdAdd.size(); i++) {
                                     dataSource.createGeofence(listToBdAdd.get(i));
                                 }
                             } else {
                                 PreyLogger.d("*********************Registering geofence failed: " + status.getStatusMessage() + " : " + status.getStatusCode());
-                                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "status:" + status.isSuccess(),messageId));
+                                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "status:" + status.isSuccess()));
                             }
                         }
                     });
@@ -194,11 +194,11 @@ public class GeofenceController {
 
             } catch (Exception e) {
                 PreyLogger.e("error ---->isConnected:" + e.getMessage(), e);
-                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "error:" + e.getMessage(),messageId));
+                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "error:" + e.getMessage()));
             }
         } else {
             PreyLogger.d("not connect mGoogleApiClient 3");
-            sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "not connect mGoogleApiClient",messageId));
+            sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "not connect mGoogleApiClient"));
         }
     }
 
@@ -258,18 +258,18 @@ public class GeofenceController {
                                     PreyLogger.d("********saveGeofence");
                                 } else {
                                     PreyLogger.d("*********************Registering geofence failed: " + status.getStatusMessage() + " : " + status.getStatusCode());
-                                    sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "status:" + status.isSuccess(),messageId));
+                                    sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "status:" + status.isSuccess()));
                                 }
                             }
                         });
                     }
                 } catch (Exception e) {
                     PreyLogger.e("error ---->isConnected:" + e.getMessage(), e);
-                    sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "error:" + e.getMessage(),messageId));
+                    sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "error:" + e.getMessage()));
                 }
             } else {
                 PreyLogger.d("not connect mGoogleApiClient 3");
-                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "not connect mGoogleApiClient",messageId));
+                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "not connect mGoogleApiClient"));
             }
         } catch (Exception e) {
         }
