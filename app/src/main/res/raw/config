@@ -1,0 +1,27 @@
+#App parameters
+ask-for-password=false
+prey-minor-version=80
+prey-answers=www
+prey-support=www
+prey-panel=www
+prey-jwt=www
+prey-campaign=www
+prey-google-play=https://play.google.com/store/apps/details?id=com.prey
+prey-subdomain=www
+prey-domain=preyproject.com
+api-v1=api/v1/
+api-v2=api/v2/
+scheduled=false
+minute-scheduled=5
+timeout-report=60
+api-key-batch=
+email-batch=
+gcm-id-prefix=GCM__
+gcm-id=000000000000
+c2dm-action=message
+c2dm-message-sync=sync
+email-feedback=android-feedback@preyproject.com
+subject-feedback=prey android feedback
+analytics-ua=UA-0000000-9
+prey-uninstall=https://preyproject.com/help/content/uninstalling-prey
+geofence-maximum-accuracy=500
