@@ -29,7 +29,7 @@ public class Camouflage {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
         } catch (Exception e) {
         }
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "camouflage", "started",null,messageId));
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "camouflage", "started",null));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(true);
 
         ComponentName componentToDisabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
@@ -46,7 +46,7 @@ public class Camouflage {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
         } catch (Exception e) {
         }
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "camouflage", "stopped",null,messageId));
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "camouflage", "stopped",null));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(false);
 
         ComponentName componentToEnabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");

@@ -49,7 +49,19 @@ public class C2DMReceiver extends BroadcastReceiver {
             String key = ite.next();
             PreyLogger.d("___[" + key + "]" + intent.getExtras().getString(key));
         }
-        String messageId=intent.getExtras().getString(PreyConfig.MESSAGE_ID);
+
+        String jsonGcmBody=intent.getExtras().getString(PreyConfig.GCM_NOTIFICATION_BODY);
+
+        String messageId=null;
+        try {
+            JSONObject jsnobject = new JSONObject(jsonGcmBody);
+
+            messageId = jsnobject.getString(PreyConfig.MESSAGE_ID);
+            PreyLogger.i("messageId:"+messageId);
+        }catch (Exception e){
+
+        }
+
         PreyBetaController.startPrey(context);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             new MessageReceivedTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context, messageId);

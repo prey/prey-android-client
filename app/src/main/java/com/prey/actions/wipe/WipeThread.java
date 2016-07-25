@@ -30,7 +30,7 @@ public class WipeThread extends Thread {
 
     public void run() {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","started",null,messageId));
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","started",null));
         try{
             if(deleteSD){
                 WipeUtil.deleteSD();
@@ -46,9 +46,9 @@ public class WipeThread extends Thread {
             PreyLogger.e("Error Wipe1:"+e.getMessage(), e);
         }
         try{
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","stopped",null,messageId));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","stopped",null));
         }catch(Exception e){
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","failed",e.getMessage(),messageId));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","failed",e.getMessage()));
             PreyLogger.e("Error Wipe2:"+e.getMessage(), e);
         }
     }

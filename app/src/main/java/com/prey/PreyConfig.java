@@ -146,7 +146,13 @@ public class PreyConfig {
 
     public static final String LAST_EVENT_GEO = "LAST_EVENT_GEO";
 
-    public static final String MESSAGE_ID="Message_Id";
+    public static final String MESSAGE_ID="message_id";
+
+    public static final String GCM_NOTIFICATION_BODY="gcm.notification.body";
+
+
+
+
     private boolean securityPrivilegesAlreadyPrompted;
 
     private Context ctx;

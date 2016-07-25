@@ -26,7 +26,7 @@ public class Geofencing {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
         } catch (Exception e) {
         }
-        GeofenceController.getInstance().run(ctx,messageId);
+        GeofenceController.getInstance().run(ctx);
     }
 
     public void stop(Context ctx, List<ActionResult> list, JSONObject parameters) {
@@ -36,7 +36,7 @@ public class Geofencing {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
         } catch (Exception e) {
         }
-        GeofenceController.getInstance().run(ctx,messageId);
+        GeofenceController.getInstance().run(ctx);
     }
 
 }

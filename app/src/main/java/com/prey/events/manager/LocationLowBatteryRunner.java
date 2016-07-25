@@ -37,7 +37,7 @@ public class LocationLowBatteryRunner implements Runnable {
         PreyLogger.d("LocationLowBatteryRunner");
         try {
             String jsonString = "[ {\"command\": \"get\",\"target\": \"location_low_battery\",\"options\": {}}]";
-            List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString(),null);
+            List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
             if (jsonObjectList != null && jsonObjectList.size() > 0) {
                 ActionsController.getInstance(ctx).runActionJson(ctx, jsonObjectList);
             }
