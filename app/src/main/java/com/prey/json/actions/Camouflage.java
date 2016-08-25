@@ -33,7 +33,7 @@ public class Camouflage extends JsonAction {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
         } catch (Exception e) {
         }
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "camouflage", "started",null));
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "camouflage", "started",null));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(true);
 
         ComponentName componentToDisabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");

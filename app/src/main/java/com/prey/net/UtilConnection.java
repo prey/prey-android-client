@@ -103,7 +103,7 @@ public class UtilConnection {
     private static final PreyHttpResponse connection(PreyConfig preyConfig,String uri, Map<String, String> params,String requestMethod,String contentType,String authorization,String status,List<EntityFile> entityFiles,String correlationId) throws Exception {
         PreyHttpResponse response=null;
         URL url = new URL(uri);
-        HttpsURLConnection connection=null;
+        HttpURLConnection connection=null;
         int retry = 0;
         boolean delay=false;
         PreyLogger.d("uri:"+uri);
@@ -112,8 +112,11 @@ public class UtilConnection {
             if (delay) {
                 Thread.sleep(RETRY_DELAY_MS);
             }
-
-            connection = (HttpsURLConnection)url.openConnection();
+            if (uri.indexOf("https:")>=0) {
+                connection = (HttpsURLConnection) url.openConnection();
+            }else{
+                connection = (HttpURLConnection) url.openConnection();
+            }
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             connection.setRequestMethod(requestMethod);
             connection.setRequestProperty("Accept", "*/*");
@@ -125,12 +128,18 @@ public class UtilConnection {
             }
             if (status!=null) {
                 connection.addRequestProperty("X-Prey-Status", status);
+                PreyLogger.i("X-Prey-Status:"+status);
             }
 
             if (correlationId!=null) {
                 connection.addRequestProperty("X-Prey-Correlation-ID", correlationId);
+                PreyLogger.i("X-Prey-Correlation-ID:"+correlationId);
                 String deviceId=preyConfig.getDeviceId();
                 connection.addRequestProperty("X-Prey-Device-ID", deviceId);
+                PreyLogger.i("X-Prey-Device-ID:"+deviceId);
+                connection.addRequestProperty("X-Prey-State", status);
+                PreyLogger.i("X-Prey-State:"+status);
+
             }
 
 
@@ -164,7 +173,8 @@ public class UtilConnection {
                 multiple.writeTo(os);
             }
             int responseCode=connection.getResponseCode();
-           // String responseMessage = connection.getResponseMessage();
+            String responseMessage = connection.getResponseMessage();
+            PreyLogger.i("responseCode:"+responseCode+" responseMessage:"+responseMessage+" uri:"+uri);
             switch (responseCode) {
                 case HttpURLConnection.HTTP_CREATED:
                     PreyLogger.i(uri + " **CREATED**");
@@ -211,7 +221,7 @@ public class UtilConnection {
         return response;
     }
 
-    private static PreyHttpResponse convertPreyHttpResponse(int responseCode,HttpsURLConnection connection)throws Exception {
+    private static PreyHttpResponse convertPreyHttpResponse(int responseCode,HttpURLConnection connection)throws Exception {
         StringBuffer sb = new StringBuffer();
         if(responseCode==200||responseCode==201) {
             InputStream input = connection.getInputStream();

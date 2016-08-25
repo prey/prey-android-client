@@ -39,6 +39,11 @@ public class EventManager {
         boolean isConnectionExists = false;
         boolean isOnline = false;
 
+
+
+        PreyConfig.getPreyConfig(ctx).registerC2dm();
+
+
         String ssid = PreyWifiManager.getInstance(ctx).getSSID();
 
         String previousSsid = PreyConfig.getPreyConfig(ctx).getPreviousSsid();

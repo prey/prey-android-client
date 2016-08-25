@@ -178,7 +178,7 @@ public class GeofenceController {
                             PreyLogger.d("*********************connectionAddListener  status");
                             if (status.isSuccess()) {
                                 PreyLogger.d("********saveGeofence");
-                                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "started", infoExtra));
+                                sendNotify(ctx,UtilJson.makeMapParam("start", "geofencing", "started", infoExtra));
                                 GeofenceDataSource dataSource = new GeofenceDataSource(ctx);
                                 for (int i = 0; listToBdAdd != null && i < listToBdAdd.size(); i++) {
                                     dataSource.createGeofence(listToBdAdd.get(i));

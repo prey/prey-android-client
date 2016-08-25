@@ -121,7 +121,7 @@ public class ActionsController {
                     String messageId = jsonObject.getString(PreyConfig.MESSAGE_ID);
                     parametersAction.put(PreyConfig.MESSAGE_ID, messageId);
                 }catch (Exception e){}
-                PreyLogger.d("nameAction:"+nameAction+" methodAction:"+methodAction);
+                PreyLogger.d("nameAction:"+nameAction+" methodAction:"+methodAction+" parametersAction:"+parametersAction);
 
                 List<ActionResult> lista = new ArrayList<ActionResult>();
                 listData=ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction,listData);

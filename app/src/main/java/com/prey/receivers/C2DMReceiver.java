@@ -50,23 +50,7 @@ public class C2DMReceiver extends BroadcastReceiver {
             PreyLogger.d("___[" + key + "]" + intent.getExtras().getString(key));
         }
 
-        String jsonGcmBody=intent.getExtras().getString(PreyConfig.GCM_NOTIFICATION_BODY);
-
-        String messageId=null;
-        try {
-            JSONObject jsnobject = new JSONObject(jsonGcmBody);
-
-            messageId = jsnobject.getString(PreyConfig.MESSAGE_ID);
-            PreyLogger.i("messageId:"+messageId);
-        }catch (Exception e){
-
-        }
-
         PreyBetaController.startPrey(context);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            new MessageReceivedTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context, messageId);
-        else
-            new MessageReceivedTask().execute(context, messageId);
     }
 
 
@@ -96,15 +80,6 @@ public class C2DMReceiver extends BroadcastReceiver {
         }
     }
 
-    private class MessageReceivedTask extends AsyncTask<Object, Void, Void> {
-        @Override
-        protected Void doInBackground(Object... data) {
-            Context ctx=(Context) data[0];
-            String messageId =(String) data[1];
-            PreyWebServices.getInstance().messageBridge(ctx, messageId,"RECEIVED");
-            return null;
-        }
-    }
 
     private class UpdateCD2MId extends AsyncTask<Object, Void, Void> {
 
