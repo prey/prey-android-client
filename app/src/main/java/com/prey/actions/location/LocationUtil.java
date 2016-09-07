@@ -45,9 +45,7 @@ public class LocationUtil {
             boolean isGpsEnabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             boolean isNetworkEnabled = mlocManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
             boolean isWifiEnabled=PreyWifiManager.getInstance(ctx).isWifiEnabled();
-            PreyLogger.d("gps status:" + isGpsEnabled);
-            PreyLogger.d("net status:" + isNetworkEnabled);
-            PreyLogger.d("wifi status:" + isWifiEnabled);
+            PreyLogger.d("status gps:" + isGpsEnabled + " net:" + isNetworkEnabled + " wifi:" + isWifiEnabled);
             PreyLocation location = null;
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M

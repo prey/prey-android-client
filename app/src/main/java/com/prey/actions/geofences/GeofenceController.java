@@ -23,6 +23,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.json.UtilJson;
@@ -137,6 +138,7 @@ public class GeofenceController {
                 listToBdAdd.add(geo);
                 PreyLogger.d("__[START]___________id:" + geo.name + " lat:" + geo.latitude + " long:" + geo.longitude + " ra:" + geo.radius + " expires:" + geo.expires);
                 int transitionTypes = com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER |
+                        com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_DWELL |
                         com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT;
 
                 mGeofenceList.add(new com.google.android.gms.location.Geofence.Builder()
@@ -144,6 +146,7 @@ public class GeofenceController {
                         .setCircularRegion(geo.latitude, geo.longitude, geo.radius)
                         .setExpirationDuration(Geofence.NEVER_EXPIRE)
                         .setTransitionTypes(transitionTypes)
+                        .setLoiteringDelay(FileConfigReader.getInstance(ctx).getGeofenceLoiteringDelay())
                         .build());
 
                 infoAdd += geo.id;
@@ -220,12 +223,14 @@ public class GeofenceController {
                 listToBdAdd.add(geo);
                 PreyLogger.d("__[START]___________id:" + geo.name + " lat:" + geo.latitude + " long:" + geo.longitude + " ra:" + geo.radius + " expires:" + geo.expires);
                 int transitionTypes = com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER |
+                        com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_DWELL |
                         com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT;
                 mGeofenceList.add(new com.google.android.gms.location.Geofence.Builder()
                         .setRequestId(geo.id)
                         .setCircularRegion(geo.latitude, geo.longitude, geo.radius)
                         .setExpirationDuration(Geofence.NEVER_EXPIRE)
                         .setTransitionTypes(transitionTypes)
+                        .setLoiteringDelay(FileConfigReader.getInstance(ctx).getGeofenceLoiteringDelay())
                         .build());
                 info += geo.id;
                 if (i + 1 < listBD.size()) {

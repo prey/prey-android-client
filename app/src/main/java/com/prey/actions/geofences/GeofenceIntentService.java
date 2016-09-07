@@ -38,7 +38,7 @@ public class GeofenceIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        PreyLogger.d("***************onHandleIntent");
+
         GeofencingEvent event = GeofencingEvent.fromIntent(intent);
         if (event != null) {
             if (event.hasError()) {
@@ -49,7 +49,7 @@ public class GeofenceIntentService extends IntentService {
                 event.getTriggeringLocation().getLatitude();
                 event.getTriggeringLocation().getAccuracy();
 
-                PreyLogger.d("***************transition:" + transition);
+
 
                 if (transition == Geofence.GEOFENCE_TRANSITION_ENTER || transition == Geofence.GEOFENCE_TRANSITION_DWELL || transition == Geofence.GEOFENCE_TRANSITION_EXIT) {
                     List<String> geofenceIds = new ArrayList<>();
@@ -60,11 +60,14 @@ public class GeofenceIntentService extends IntentService {
         }
     }
 
+    private static final String GEOFENCING_OUT="geofencing_out";
+    private static final String GEOFENCING_IN="geofencing_in";
+
     private void notifyGeofenceTransition(
             Context context,
             int geofenceTransition,
             List<Geofence> triggeringGeofences, Location location) {
-        PreyLogger.d("notifyGeofenceTransition");
+        PreyLogger.d("notifyGeofenceTransition  lat:"+location.getLatitude()+" lng:"+location.getLongitude()+" acc:"+location.getAccuracy());
 
         for (Geofence geofence : triggeringGeofences) {
             String requestId=geofence.getRequestId();
@@ -73,54 +76,63 @@ public class GeofenceIntentService extends IntentService {
                 Event event = new Event();
                 String eventGeofenceTransition="";
                 if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
-                    eventGeofenceTransition="geofencing_in";
+                    eventGeofenceTransition=GEOFENCING_IN;
                 } else {
-                    eventGeofenceTransition="geofencing_out";
+                    eventGeofenceTransition=GEOFENCING_OUT;
                 }
                 event.setName(eventGeofenceTransition);
+                PreyLogger.d("event:"+eventGeofenceTransition);
                 JSONObject jsonObjectStatus = new JSONObject();
                 int geofenceMaximumAccuracy=PreyConfig.getPreyConfig(context).getGeofenceMaximumAccuracy();
+                PreyLogger.d("geofenceMaximumAccuracy:"+geofenceMaximumAccuracy);
                 String newEventGeo=eventGeofenceTransition+"_"+requestId;
                 String lastEventGeo=PreyConfig.getPreyConfig(context).getLastEventGeo();
 
                 PreyLogger.d("newEventGeo:"+newEventGeo+" lastEventGeo:"+lastEventGeo);
                 if(!newEventGeo.equals(lastEventGeo)) {
-                    if (location.getAccuracy() > geofenceMaximumAccuracy) {
-                        int i=0;
-                        PreyLocation locationNow =null;
-                        do {
-                            locationNow = LocationUtil.dataPreyLocation(context);
-                            i=i+1;
-                        }while (i<3 &&locationNow.getAccuracy() > geofenceMaximumAccuracy);
+                    int i=0;
+                    PreyLocation locationNow =null;
+                    do {
+                        locationNow = LocationUtil.dataPreyLocation(context);
+                        PreyLogger.d("locationNow lat:"+locationNow.getLat()+" lng:"+locationNow.getLng()+" acc:"+locationNow.getAccuracy());
+                        Thread.sleep(1000);
+                        i=i+1;
+                    }while (i<5 &&locationNow.getAccuracy() > geofenceMaximumAccuracy);
 
-                        PreyLogger.d("locationNow:" + locationNow.toString());
+                    if(locationNow!=null) {
                         GeofenceDataSource dataSource = new GeofenceDataSource(context);
                         GeofenceDto geo = dataSource.getGeofences(geofence.getRequestId());
                         double distance = distance(geo, locationNow);
                         PreyLogger.d("geofenceMaximumAccuracy distance:" + distance + " geo.getRadius()" + geo.getRadius());
-                        if (distance > geo.getRadius()) {
-                            PreyLogger.d("geofenceMaximumAccuracy distance is greater ");
+                        if (GEOFENCING_IN.equals(eventGeofenceTransition)) {
+                            if (distance >= geo.getRadius()) {
+                                PreyLogger.d("geofenceMaximumAccuracy distance is greater ");
+                            } else {
+                                JSONObject info = new JSONObject();
+                                info.put("id", Integer.parseInt(requestId));
+                                info.put("lat", locationNow.getLat());
+                                info.put("lng", locationNow.getLng());
+                                info.put("accuracy", locationNow.getAccuracy());
+                                info.put("method", locationNow.getMethod());
+                                event.setInfo(info.toString());
+                                new EventThread(this, event, jsonObjectStatus).start();
+                                PreyConfig.getPreyConfig(context).setLastEventGeo(newEventGeo);
+                            }
                         } else {
-                            JSONObject info = new JSONObject();
-                            info.put("id", Integer.parseInt(requestId));
-                            info.put("lat", locationNow.getLat());
-                            info.put("lng", locationNow.getLng());
-                            info.put("accuracy", locationNow.getAccuracy());
-                            info.put("method", locationNow.getMethod());
-                            event.setInfo(info.toString());
-                            new EventThread(this, event, jsonObjectStatus).start();
-                            PreyConfig.getPreyConfig(context).setLastEventGeo(newEventGeo);
+                            if (distance <= geo.getRadius()) {
+                                PreyLogger.d("geofenceMaximumAccuracy distance is less ");
+                            } else {
+                                JSONObject info = new JSONObject();
+                                info.put("id", Integer.parseInt(requestId));
+                                info.put("lat", locationNow.getLat());
+                                info.put("lng", locationNow.getLng());
+                                info.put("accuracy", locationNow.getAccuracy());
+                                info.put("method", locationNow.getMethod());
+                                event.setInfo(info.toString());
+                                new EventThread(this, event, jsonObjectStatus).start();
+                                PreyConfig.getPreyConfig(context).setLastEventGeo(newEventGeo);
+                            }
                         }
-                    } else {
-                        JSONObject info = new JSONObject();
-                        info.put("id", Integer.parseInt(requestId));
-                        info.put("lat", location.getLatitude());
-                        info.put("lng", location.getLongitude());
-                        info.put("accuracy", location.getAccuracy());
-                        info.put("method", "native");
-                        event.setInfo(info.toString());
-                        new EventThread(this, event, jsonObjectStatus).start();
-                        PreyConfig.getPreyConfig(context).setLastEventGeo(newEventGeo);
                     }
                 }
             } catch (Exception e) {

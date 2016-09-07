@@ -65,7 +65,6 @@ public class PreyGooglePlayServiceLocation implements
             "Failed to connect to GoogleApiClient (error code = %d)";
 
     protected synchronized void buildGoogleApiClient() {
-        PreyLogger.d("Building GoogleApiClient");
         mGoogleApiClient = new GoogleApiClient.Builder(ctx)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
