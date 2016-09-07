@@ -61,12 +61,11 @@ public class PreyBetaRunnerService extends Service {
 
     @Override
     public void onDestroy() {
-        PreyLogger.d("********************");
-        PreyLogger.d("PreyRunnerService is going to be destroyed");
+
 
         ActionsController.getInstance(PreyBetaRunnerService.this).finishRunningJosb();
         running = false;
-        PreyLogger.d("PreyRunnerService has been destroyed");
+
     }
 
     @Override

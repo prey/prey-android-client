@@ -136,4 +136,10 @@ public class FileConfigReader {
     public String getPreyGooglePlay(){
         return properties.getProperty("prey-google-play");
     }
+
+    public int getGeofenceLoiteringDelay() {
+        return Integer.parseInt(properties.getProperty("geofence-loitering-delay"));
+    }
+
+
 }
