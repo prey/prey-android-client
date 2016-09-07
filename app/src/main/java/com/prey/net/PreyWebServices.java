@@ -550,12 +550,9 @@ public class PreyWebServices {
 
             PreyLogger.d("sendPreyHttpEvent url:" + url);
             PreyLogger.d("name:" + event.getName() + " info:" + event.getInfo());
-
-            //Toast.makeText(ctx, "Event:"+event.getName(), Toast.LENGTH_LONG).show();
+            PreyLogger.d("status:" + jsonObject.toString());
             String status = jsonObject.toString();
             PreyHttpResponse preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters);
-
-
             String jsonString = preyHttpResponse.getResponseAsString();
             if (jsonString != null && jsonString.length() > 0) {
                 List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
@@ -581,6 +578,24 @@ public class PreyWebServices {
             String url = getResponseUrlJson(ctx);
             PreyConfig.postUrl = null;
             PreyHttpResponse httpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, params);
+            response = httpResponse.toString();
+            PreyLogger.d("Notify Action Result sent: " + response);
+        } catch (Exception e) {
+            //PreyLogger.e("Notify Action Result wasn't send",e);
+        }
+        return response;
+    }
+
+    public String sendNotifyActionResultPreyHttp(Context ctx, String correlationId, Map<String, String> params) {
+        return sendNotifyActionResultPreyHttp(ctx,null,correlationId,params);
+    }
+    public String sendNotifyActionResultPreyHttp(Context ctx, String status,String correlationId, Map<String, String> params) {
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+        String response = null;
+        try {
+            String url = getResponseUrlJson(ctx);
+            PreyConfig.postUrl = null;
+            PreyHttpResponse httpResponse = PreyRestHttpClient.getInstance(ctx).postAutenticationCorrelationId(url, status,correlationId,params);
             response = httpResponse.toString();
             PreyLogger.d("Notify Action Result sent: " + response);
         } catch (Exception e) {
@@ -888,10 +903,11 @@ public class PreyWebServices {
             int po = responseAsString.indexOf("softwareVersion\">");
             responseAsString = responseAsString.substring(po + 17);
             po = responseAsString.indexOf("</");
-            responseAsString=responseAsString.substring(0, po);
+            responseAsString = responseAsString.substring(0, po);
             return responseAsString.trim();
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
+
 }

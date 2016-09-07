@@ -67,40 +67,43 @@ public class UtilConnection {
     }
 
     public static final PreyHttpResponse connectionPut(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType) throws Exception {
-        return connection(preyConfig,uri,params,REQUEST_METHOD_PUT,contentType,null,null,null);
+        return connection(preyConfig,uri,params,REQUEST_METHOD_PUT,contentType,null,null,null,null);
     }
     public static final PreyHttpResponse connectionGet(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType) throws Exception {
-        return connection(preyConfig,uri,params,REQUEST_METHOD_GET,contentType,null,null,null);
+        return connection(preyConfig,uri,params,REQUEST_METHOD_GET,contentType,null,null,null,null);
     }
     public static final PreyHttpResponse connectionGetAuthorization(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType) throws Exception {
-        return connection(preyConfig,uri,params,REQUEST_METHOD_GET,contentType,getAuthorization(preyConfig),null,null);
+        return connection(preyConfig,uri,params,REQUEST_METHOD_GET,contentType,getAuthorization(preyConfig),null,null,null);
     }
     public static final PreyHttpResponse connectionGetAuthorization(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType,String user,String pass) throws Exception {
-        return connection(preyConfig,uri,params,REQUEST_METHOD_GET,null, getAuthorization(user, pass),null,null);
+        return connection(preyConfig,uri,params,REQUEST_METHOD_GET,null, getAuthorization(user, pass),null,null,null);
     }
     public static final PreyHttpResponse connectionDelete(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType) throws Exception {
-        return connection(preyConfig,uri,params,REQUEST_METHOD_DELETE,contentType,null,null,null);
+        return connection(preyConfig,uri,params,REQUEST_METHOD_DELETE,contentType,null,null,null,null);
     }
     public static final PreyHttpResponse connectionDeleteAuthorization(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType) throws Exception {
-        return connection(preyConfig,uri,params,REQUEST_METHOD_DELETE,contentType,getAuthorization(preyConfig),null,null);
+        return connection(preyConfig,uri,params,REQUEST_METHOD_DELETE,contentType,getAuthorization(preyConfig),null,null,null);
     }
     public static final PreyHttpResponse connectionPost(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType) throws Exception {
-        return connection(preyConfig,uri,params,REQUEST_METHOD_POST,contentType,null,null,null);
+        return connection(preyConfig,uri,params,REQUEST_METHOD_POST,contentType,null,null,null,null);
     }
     public static final PreyHttpResponse connectionPostAuthorization(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType) throws Exception {
-        return connection(preyConfig,uri,params,REQUEST_METHOD_POST,contentType,getAuthorization(preyConfig),null,null);
+        return connection(preyConfig,uri,params,REQUEST_METHOD_POST,contentType,getAuthorization(preyConfig),null,null,null);
     }
     public static final PreyHttpResponse connectionPostAuthorization(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType,List<EntityFile> entityFiles) throws Exception {
-        return connection(preyConfig, uri, params, REQUEST_METHOD_POST, contentType,getAuthorization(preyConfig), null,entityFiles);
+        return connection(preyConfig, uri, params, REQUEST_METHOD_POST, contentType,getAuthorization(preyConfig), null,entityFiles,null);
     }
     public static final PreyHttpResponse connectionPostAuthorizationStatus(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType,String status) throws Exception {
-        return connection(preyConfig,uri,params,REQUEST_METHOD_POST,contentType,getAuthorization(preyConfig),status,null);
+        return connection(preyConfig,uri,params,REQUEST_METHOD_POST,contentType,getAuthorization(preyConfig),status,null,null);
+    }
+    public static final PreyHttpResponse connectionPostAuthorizationCorrelationId(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType,String status,String correlationId) throws Exception {
+        return connection(preyConfig,uri,params,REQUEST_METHOD_POST,contentType,getAuthorization(preyConfig),status,null,correlationId);
     }
 
-    private static final PreyHttpResponse connection(PreyConfig preyConfig,String uri, Map<String, String> params,String requestMethod,String contentType,String authorization,String status,List<EntityFile> entityFiles) throws Exception {
+    private static final PreyHttpResponse connection(PreyConfig preyConfig,String uri, Map<String, String> params,String requestMethod,String contentType,String authorization,String status,List<EntityFile> entityFiles,String correlationId) throws Exception {
         PreyHttpResponse response=null;
         URL url = new URL(uri);
-        HttpsURLConnection connection=null;
+        HttpURLConnection connection=null;
         int retry = 0;
         boolean delay=false;
         PreyLogger.d("uri:"+uri);
@@ -109,21 +112,38 @@ public class UtilConnection {
             if (delay) {
                 Thread.sleep(RETRY_DELAY_MS);
             }
-
-            connection = (HttpsURLConnection)url.openConnection();
+            if (uri.indexOf("https:")>=0) {
+                connection = (HttpsURLConnection) url.openConnection();
+            }else{
+                connection = (HttpURLConnection) url.openConnection();
+            }
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             connection.setRequestMethod(requestMethod);
-            if(contentType!=null) {
-                connection.setRequestProperty("Content-Type", contentType);
-            }
             connection.setRequestProperty("Accept", "*/*");
+            if(contentType!=null) {
+                connection.addRequestProperty("Content-Type", contentType);
+            }
             if (authorization!=null) {
-                connection.setRequestProperty("Authorization", authorization);
+                connection.addRequestProperty("Authorization", authorization);
             }
             if (status!=null) {
                 connection.addRequestProperty("X-Prey-Status", status);
+                PreyLogger.i("X-Prey-Status:"+status);
             }
-            connection.setRequestProperty("User-Agent", getUserAgent(preyConfig));
+
+            if (correlationId!=null) {
+                connection.addRequestProperty("X-Prey-Correlation-ID", correlationId);
+                PreyLogger.i("X-Prey-Correlation-ID:"+correlationId);
+                String deviceId=preyConfig.getDeviceId();
+                connection.addRequestProperty("X-Prey-Device-ID", deviceId);
+                PreyLogger.i("X-Prey-Device-ID:"+deviceId);
+                connection.addRequestProperty("X-Prey-State", status);
+                PreyLogger.i("X-Prey-State:"+status);
+
+            }
+
+
+            connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
             if (entityFiles==null&&(params!=null&&params.size()>0)){
                 OutputStream os = connection.getOutputStream();
                 DataOutputStream dos = new DataOutputStream( os );
@@ -153,7 +173,8 @@ public class UtilConnection {
                 multiple.writeTo(os);
             }
             int responseCode=connection.getResponseCode();
-           // String responseMessage = connection.getResponseMessage();
+            String responseMessage = connection.getResponseMessage();
+            PreyLogger.i("responseCode:"+responseCode+" responseMessage:"+responseMessage+" uri:"+uri);
             switch (responseCode) {
                 case HttpURLConnection.HTTP_CREATED:
                     PreyLogger.i(uri + " **CREATED**");
@@ -200,7 +221,7 @@ public class UtilConnection {
         return response;
     }
 
-    private static PreyHttpResponse convertPreyHttpResponse(int responseCode,HttpsURLConnection connection)throws Exception {
+    private static PreyHttpResponse convertPreyHttpResponse(int responseCode,HttpURLConnection connection)throws Exception {
         StringBuffer sb = new StringBuffer();
         if(responseCode==200||responseCode==201) {
             InputStream input = connection.getInputStream();
@@ -216,8 +237,10 @@ public class UtilConnection {
             }
             PreyLogger.i(sb.toString());
         }
+        Map<String, List<String>> mapHeaderFields=connection.getHeaderFields();
+
         connection.disconnect();
-        return new PreyHttpResponse(responseCode,sb.toString());
+        return new PreyHttpResponse(responseCode,sb.toString(),mapHeaderFields);
     }
     
     public static HttpURLConnection connectionPostJson(PreyConfig preyConfig,String uri, JSONObject jsonParam) {

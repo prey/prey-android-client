@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPhone;
 import com.prey.PreyPhone.Wifi;
@@ -37,6 +38,11 @@ public class AccessPointsList extends JsonAction {
 
     public HttpDataService run(Context ctx, List<ActionResult> list, JSONObject parameters) {
         HttpDataService dataWifi = new HttpDataService("access_points_list");
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+        } catch (Exception e) {
+        }
         try {
             if (PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {
                 HashMap<String, String> parametersMapWifi = new HashMap<String, String>();

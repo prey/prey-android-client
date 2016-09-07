@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.location.LocationThread;
@@ -41,7 +42,13 @@ public class Location extends JsonAction{
     }
 
     public HttpDataService run(Context ctx, List<ActionResult> list, JSONObject parameters){
-        HttpDataService data = LocationUtil.dataLocation(ctx);
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            PreyLogger.d("messageId:"+messageId);
+        } catch (Exception e) {
+        }
+        HttpDataService data = LocationUtil.dataLocation(ctx,messageId);
         return data;
     }
 

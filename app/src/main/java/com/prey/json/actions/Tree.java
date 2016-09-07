@@ -10,6 +10,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.webkit.MimeTypeMap;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.UtilJson;
@@ -24,9 +25,14 @@ import java.util.List;
 public class Tree {
 
     public void get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+        } catch (Exception e) {
+        }
         try{
             PreyLogger.d("Tree started");
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get", "tree", "started"));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "tree", "started",null));
             int depth = 0;
             try {
                 depth=Integer.parseInt(parameters.getString("depth"));
@@ -42,10 +48,10 @@ public class Tree {
             JSONObject jsonTree = new JSONObject();
             jsonTree.put("tree", array.toString());
             PreyWebServices.getInstance().sendTree(ctx, jsonTree);
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get", "tree", "stopped"));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get", "tree", "stopped",null));
             PreyLogger.d("Tree stopped");
         } catch (Exception e) {
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get", "tree", "failed", e.getMessage()));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "tree", "failed", e.getMessage()));
             PreyLogger.d("Tree failed:"+e.getMessage());
         }
     }

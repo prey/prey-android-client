@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.alert.AlertThread;
@@ -32,7 +33,7 @@ public class Alert extends JsonAction {
             alert = parameters.getString("parameter");
         } catch (Exception e) {
         }
-        startAlert(ctx, alert);
+        startAlert(ctx, alert,null);
     }
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
@@ -45,13 +46,19 @@ public class Alert extends JsonAction {
             } catch (Exception e2) {
             }
         }
-        startAlert(ctx, alert);
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            PreyLogger.d("messageId:"+messageId);
+        } catch (Exception e) {
+        }
+        startAlert(ctx, alert,messageId);
     }
 
-    public void startAlert(Context ctx, String alert) {
+    public void startAlert(Context ctx, String alert, String messageId) {
         try {
             if (alert != null && !"".equals(alert)) {
-                new AlertThread(ctx, alert).start();
+                new AlertThread(ctx, alert, messageId).start();
             }
         } catch (Exception e) {
             PreyLogger.e("Error, causa:" + e.getMessage(), e);

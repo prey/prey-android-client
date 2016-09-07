@@ -86,11 +86,16 @@ public class PreyRestHttpClient {
     public PreyHttpResponse postStatusAutentication(String url, String status, Map<String, String> params) throws Exception {
         PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
         PreyHttpResponse response=UtilConnection.connectionPostAuthorizationStatus(PreyConfig.getPreyConfig(ctx),url,params,CONTENT_TYPE_URL_ENCODED,status);
-
         PreyLogger.d("Response from server: " + (response==null?"":response.toString()));
         return response;
     }
 
+    public PreyHttpResponse postAutenticationCorrelationId(String url, String status, String correlation,Map<String, String> params) throws Exception {
+        PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+        PreyHttpResponse response=UtilConnection.connectionPostAuthorizationCorrelationId(PreyConfig.getPreyConfig(ctx),url,params,CONTENT_TYPE_URL_ENCODED,status,correlation);
+        PreyLogger.d("Response from server: " + (response==null?"":response.toString()));
+        return response;
+    }
 
     public PreyHttpResponse get(String url, Map<String, String> params) throws Exception {
         PreyHttpResponse response=UtilConnection.connectionGet(PreyConfig.getPreyConfig(ctx),url,params,CONTENT_TYPE_URL_ENCODED);
@@ -171,7 +176,13 @@ public class PreyRestHttpClient {
     }
 
 
+    public PreyHttpResponse connectionPostAuthorizationCorrelationId(String url, String status, Map<String, String> params,String correlationId) throws Exception {
+        PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString()+" status:"+status+" correlationId:"+correlationId);
+        PreyHttpResponse response=UtilConnection.connectionPostAuthorizationCorrelationId(PreyConfig.getPreyConfig(ctx),url,params,CONTENT_TYPE_URL_ENCODED,status,correlationId);
 
+        PreyLogger.d("Response from server: " + (response==null?"":response.toString()));
+        return response;
+    }
 
 
 }

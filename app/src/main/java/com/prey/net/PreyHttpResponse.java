@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.util.List;
+import java.util.Map;
 
 import com.prey.PreyLogger;
 
@@ -19,7 +21,7 @@ public class PreyHttpResponse {
     private int statusCode;
     private String responseAsString;
     private HttpURLConnection response;
-
+    private Map<String, List<String>> mapHeaderFields;
 
     public PreyHttpResponse(HttpURLConnection connection) {
 
@@ -46,6 +48,22 @@ public class PreyHttpResponse {
             this.responseAsString = "";
         }
     }
+
+
+    public PreyHttpResponse(int  statusCode,String responseAsString,Map<String, List<String>> mapHeaderFields) {
+
+        try {
+            this.response=null;
+            this.statusCode = statusCode;
+            this.responseAsString = responseAsString;
+            this.mapHeaderFields = mapHeaderFields;
+            PreyLogger.d("responseAsString:"+responseAsString);
+        } catch (Exception e) {
+            PreyLogger.d("Can't receive body stream from http connection, setting response string as ''");
+            this.responseAsString = "";
+        }
+    }
+
 
 
     private String convertStreamToString(InputStream is) {
@@ -88,6 +106,10 @@ public class PreyHttpResponse {
 
     public void setResponse(HttpURLConnection response) {
         this.response = response;
+    }
+
+    public Map<String, List<String>> getMapHeaderFields() {
+        return mapHeaderFields;
     }
 
 }

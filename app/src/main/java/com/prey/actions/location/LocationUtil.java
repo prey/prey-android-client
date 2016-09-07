@@ -38,7 +38,7 @@ public class LocationUtil {
     public static final String ACC = "accuracy";
     public static final String METHOD = "method";
 
-    public static HttpDataService dataLocation(Context ctx) {
+    public static HttpDataService dataLocation(Context ctx,String messageId) {
         HttpDataService data =null;
         try {
             LocationManager mlocManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
@@ -56,7 +56,7 @@ public class LocationUtil {
                     PreyLocation locationPlay = null;
                     int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(ctx);
                     if (ConnectionResult.SUCCESS == resultCode) {
-                        location = getPreyLocationPlayService(ctx, method);
+                        location = getPreyLocationPlayService(ctx, method,messageId);
                     }
                 }
             }else{
@@ -71,7 +71,7 @@ public class LocationUtil {
                 sendNotify(ctx,"Error","failed");
             }
         } catch (Exception e) {
-            sendNotify(ctx,"Error");
+            sendNotify(ctx,"Error",messageId);
         }
         return data;
     }
@@ -112,7 +112,7 @@ public class LocationUtil {
         return location;
     }
 
-    public static PreyLocation getPreyLocationPlayService(final Context ctx,String method) throws Exception {
+    public static PreyLocation getPreyLocationPlayService(final Context ctx,String method,String messageId) throws Exception {
         final PreyGooglePlayServiceLocation play = new PreyGooglePlayServiceLocation();
         new Thread( new Runnable() {
             @Override
@@ -137,7 +137,7 @@ public class LocationUtil {
             preyLocation = new PreyLocation(currentLocation,method);
         }else{
             if(currentLocation==null){
-                preyLocation = getPreyLocationAppService(ctx,method);
+                preyLocation = getPreyLocationAppService(ctx,method,messageId);
             }
             if(currentLocation==null){
                 preyLocation = getDataLocationWifi(ctx);
@@ -146,7 +146,7 @@ public class LocationUtil {
         return preyLocation;
     }
 
-    public static PreyLocation getPreyLocationAppService(Context ctx,String method) throws Exception {
+    public static PreyLocation getPreyLocationAppService(Context ctx,String method,String messageId) throws Exception {
         PreyLocation location = null;
         Intent intent = new Intent(ctx, LocationService.class);
         try {
@@ -194,8 +194,8 @@ public class LocationUtil {
         return data;
     }
 
-    public static PreyLocation dataPreyLocation(Context ctx) {
-        HttpDataService data=dataLocation(ctx);
+    public static PreyLocation dataPreyLocation(Context ctx,String messageId) {
+        HttpDataService data=dataLocation(ctx,messageId);
         PreyLocation location=new PreyLocation();
         location.setLat(Double.parseDouble(data.getDataList().get(LAT)));
         location.setLng(Double.parseDouble(data.getDataList().get(LNG)));
