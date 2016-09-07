@@ -24,6 +24,7 @@ public class Geofencing {
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
         GeofenceController.getInstance().run(ctx);

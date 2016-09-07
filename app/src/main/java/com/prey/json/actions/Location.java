@@ -45,6 +45,7 @@ public class Location extends JsonAction{
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
         HttpDataService data = LocationUtil.dataLocation(ctx,messageId);

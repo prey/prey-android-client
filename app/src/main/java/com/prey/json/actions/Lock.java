@@ -33,6 +33,7 @@ public class Lock extends JsonAction {
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
         try {
@@ -49,6 +50,7 @@ public class Lock extends JsonAction {
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
         if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {
@@ -82,7 +84,7 @@ public class Lock extends JsonAction {
 
             PreyConfig.getPreyConfig(ctx).setLock(true);
             FroyoSupport.getInstance(ctx).changePasswordAndLock(unlock, true);
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "lock", "started",null));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId, UtilJson.makeMapParam("start", "lock", "started",null));
             PreyConfig.getPreyConfig(ctx).setLastEvent("lock_started");
         }
     }

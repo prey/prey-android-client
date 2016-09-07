@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 
 import com.prey.PreyConfig;
+import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
@@ -31,9 +32,10 @@ public class Camouflage extends JsonAction {
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "camouflage", "started",null));
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "camouflage", "started",null));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(true);
 
         ComponentName componentToDisabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
@@ -47,9 +49,10 @@ public class Camouflage extends JsonAction {
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "camouflage", "stopped",null));
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("stop", "camouflage", "stopped",null));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(false);
 
         ComponentName componentToEnabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");

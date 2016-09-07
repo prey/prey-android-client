@@ -30,11 +30,12 @@ public class Fileretrieval {
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
         try {
             PreyLogger.d("Fileretrieval started");
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "fileretrieval", "started",null));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "fileretrieval", "started",null));
             String path = parameters.getString("path");
             String fileId = parameters.getString("file_id");
             if(fileId==null||"".equals(fileId)||"null".equals(fileId)){
