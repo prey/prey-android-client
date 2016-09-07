@@ -44,6 +44,8 @@ public class EventFactory {
     private static final String ACTION_SHUTDOWN = "android.intent.action.ACTION_SHUTDOWN";
     private static final String AIRPLANE_MODE = "android.intent.action.AIRPLANE_MODE";
     private static final String BATTERY_LOW = "android.intent.action.BATTERY_LOW";
+    private static final String POWER_CONNECTED = "android.intent.action.ACTION_POWER_CONNECTED";
+    private static final String POWER_DISCONNECTED = "android.intent.action.ACTION_POWER_DISCONNECTED";
 
     public static Event getEvent(Context ctx, Intent intent) {
         String message = "getEvent[" + intent.getAction() + "]";
@@ -66,6 +68,10 @@ public class EventFactory {
         }
         if (BATTERY_LOW.equals(intent.getAction())){
             return new Event(Event.BATTERY_LOW);
+        }
+
+        if (CONNECTIVITY_CHANGE.equals(intent.getAction())){
+            PreyConfig.getPreyConfig(ctx).registerC2dm();
         }
         if (CONNECTIVITY_CHANGE.equals(intent.getAction())) {
             JSONObject info = new JSONObject();

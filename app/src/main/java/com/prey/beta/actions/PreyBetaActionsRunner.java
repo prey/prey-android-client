@@ -27,21 +27,13 @@ import com.prey.net.PreyWebServices;
 public class PreyBetaActionsRunner implements Runnable {
 
     private Context ctx;
-    private String body;
-    private String version;
+
     private String cmd;
+    private String messageId;
 
     public PreyBetaActionsRunner(Context context, String cmd) {
         this.ctx = context;
-        this.body = "";
-        this.version = "";
         this.cmd = cmd;
-    }
-
-    public PreyBetaActionsRunner(Context context, String body, String version) {
-        this.ctx = context;
-        this.body = body;
-        this.version = version;
     }
 
     public void run() {
@@ -68,7 +60,6 @@ public class PreyBetaActionsRunner implements Runnable {
                         }
                     } catch (Exception e) {
                     }
-                    PreyLogger.d("version:" + version + " body:" + body);
                     if (jsonObject == null || jsonObject.size() == 0) {
                         PreyLogger.d("nothing");
                     } else {

@@ -23,6 +23,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.beta.actions.PreyBetaController;
 import com.prey.exceptions.PreyException;
+import com.prey.json.UtilJson;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 
@@ -44,52 +45,17 @@ public class C2DMReceiver extends BroadcastReceiver {
 
         Set<String> set=intent.getExtras().keySet();
         Iterator<String> ite=set.iterator();
-        while(ite.hasNext()){
-            String key=ite.next();
-            PreyLogger.d("___["+key+"]"+intent.getExtras().getString(key));
+        while(ite.hasNext()) {
+            String key = ite.next();
+            PreyLogger.d("___[" + key + "]" + intent.getExtras().getString(key));
         }
 
-        String body = intent.getExtras().getString("body");
-        String version = intent.getExtras().getString("version");
-
-        String api_key=intent.getExtras().getString("api_key");
-        String remote_email=intent.getExtras().getString("remote_email");
-
-        String cmd=intent.getExtras().getString("cmd");
-
-        if((api_key!=null&&!"".equals(api_key))||(body!=null&&body.indexOf("api_key")>0)){
-            registrationPlanB(context,api_key,remote_email, body);
-        }else{
-            handleMessageBeta(context, body,version,cmd);
-
-        }
+        PreyBetaController.startPrey(context);
     }
 
-    private void registrationPlanB(Context context, String apiKey, String remoteEmail,String pushedMessage){
-        if(apiKey==null){
-            try{
-                JSONObject jsnobject = new JSONObject(pushedMessage);
-                apiKey=jsnobject.getString("api_key");
-                remoteEmail=jsnobject.getString("remote_email");
-            }catch(Exception e){
 
-            }
-        }
-        if(apiKey!=null){
-            try {
-                PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(context, apiKey, remoteEmail, PreyUtils.getDeviceType(context));
-            } catch (PreyException e) {
-                PreyLogger.e("Error, causa:"+e.getMessage(), e);
-            }
-        }
 
-    }
 
-    private void handleMessageBeta(Context context, String body,String version,String cmd) {
-        PreyLogger.d("Push notification received, waking up Prey right now!");
-        PreyLogger.i("Push message received " + body+ " version:"+version);
-        PreyBetaController.startPrey(context,cmd);
-    }
 
     private void handleRegistration(Context context, Intent intent) {
         String registration = intent.getStringExtra("registration_id");
@@ -111,13 +77,9 @@ public class C2DMReceiver extends BroadcastReceiver {
                 else
                     new UpdateCD2MId().execute(registration, context);
             }
-
-            // Send the registration ID to the 3rd party site that is sending
-            // the messages.
-            // This should be done in a separate thread.
-            // When done, remember that all registration is done.
         }
     }
+
 
     private class UpdateCD2MId extends AsyncTask<Object, Void, Void> {
 

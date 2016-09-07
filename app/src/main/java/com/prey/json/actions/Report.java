@@ -44,6 +44,12 @@ public class Report {
         } catch (Exception e) {
 
         }
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            PreyLogger.d("messageId:"+messageId);
+        } catch (Exception e) {
+        }
         PreyConfig.getPreyConfig(ctx).setIntervalReport("" + interval);
         PreyConfig.getPreyConfig(ctx).setExcludeReport(exclude);
 
@@ -62,6 +68,12 @@ public class Report {
 
     public void stop(Context ctx, List<ActionResult> list, JSONObject parameters) {
         PreyLogger.d("________stop Report");
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            PreyLogger.d("messageId:"+messageId);
+        } catch (Exception e) {
+        }
         ReportScheduled.getInstance(ctx).reset();
         PreyConfig.getPreyConfig(ctx).setMissing(false);
         PreyConfig.getPreyConfig(ctx).setIntervalReport("");
