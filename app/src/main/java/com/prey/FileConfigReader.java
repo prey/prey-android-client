@@ -141,5 +141,8 @@ public class FileConfigReader {
         return Integer.parseInt(properties.getProperty("geofence-loitering-delay"));
     }
 
+    public String getPreyEventsLogs() {
+        return properties.getProperty("prey-events-logs");
+    }
 
 }

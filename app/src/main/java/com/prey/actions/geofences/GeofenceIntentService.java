@@ -97,8 +97,10 @@ public class GeofenceIntentService extends IntentService {
                         PreyLogger.d("locationNow lat:"+locationNow.getLat()+" lng:"+locationNow.getLng()+" acc:"+locationNow.getAccuracy());
                         Thread.sleep(1000);
                         i=i+1;
-                    }while (i<5 &&locationNow.getAccuracy() > geofenceMaximumAccuracy);
-
+                    }while (i<10 &&locationNow.getAccuracy() > geofenceMaximumAccuracy);
+                    if(locationNow.getAccuracy() > geofenceMaximumAccuracy){
+                        locationNow=null;
+                    }
                     if(locationNow!=null) {
                         GeofenceDataSource dataSource = new GeofenceDataSource(context);
                         GeofenceDto geo = dataSource.getGeofences(geofence.getRequestId());
@@ -154,7 +156,7 @@ public class GeofenceIntentService extends IntentService {
         locEnd.setLatitude(end.getLat());
         locEnd.setLongitude(end.getLng());
 
-        return locStart.distanceTo(locEnd);
+        return Math.round(locStart.distanceTo(locEnd));
     }
 
 }

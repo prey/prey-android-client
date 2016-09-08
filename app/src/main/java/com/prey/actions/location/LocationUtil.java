@@ -188,7 +188,7 @@ public class LocationUtil {
         HashMap<String, String> parametersMap = new HashMap<String, String>();
         parametersMap.put(LAT, Double.toString(lastLocation.getLat()));
         parametersMap.put(LNG, Double.toString(lastLocation.getLng()));
-        parametersMap.put(ACC, Float.toString(lastLocation.getAccuracy()));
+        parametersMap.put(ACC, Float.toString(Math.round(lastLocation.getAccuracy())));
         parametersMap.put(METHOD, lastLocation.getMethod() );
         data.addDataListAll(parametersMap);
         return data;

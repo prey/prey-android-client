@@ -819,7 +819,7 @@ public class PreyWebServices {
 
                 String time = "" + new Date().getTime();
                 try {
-                    String page = "https://clients1.preyproject.com/events/log";
+                    String page = FileConfigReader.getInstance(ctx).getPreyEventsLogs();;
                     PreyLogger.d("URL:"+page);
                     JSONObject jsonParam = new JSONObject();
                     jsonParam.put("enum", id);
