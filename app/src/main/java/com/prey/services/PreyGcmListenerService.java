@@ -54,7 +54,7 @@ public class PreyGcmListenerService extends GcmListenerService {
 
     private void handleMessageBeta(Context context, String body, String version, String cmd) {
         PreyLogger.d("Push notification received, waking up Prey right now!");
-        PreyLogger.i("Push message received " + body + " version:" + version);
+        PreyLogger.d("Push message received " + body + " version:" + version);
         PreyBetaController.startPrey(context, cmd);
     }
 

@@ -6,6 +6,7 @@
  ******************************************************************************/
 package com.prey.activities;
 
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -15,6 +16,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 
 import android.hardware.Camera.Parameters;
@@ -208,7 +211,8 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 
     PictureCallback jpegCallback = new PictureCallback() {
         public void onPictureTaken(byte[] data, Camera camera) {
-            dataImagen = data;
+
+            dataImagen = resizeImage(data);
         }
     };
 
@@ -252,5 +256,17 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
         }
     }
 
+    private static final int PHOTO_HEIGHT=1024;
+    private static final int PHOTO_WIDTH=768;
+
+    byte[] resizeImage(byte[] input) {
+        Bitmap original = BitmapFactory.decodeByteArray(input , 0, input.length);
+        Bitmap resized = Bitmap.createScaledBitmap(original, PHOTO_WIDTH, PHOTO_HEIGHT, true);
+
+        ByteArrayOutputStream blob = new ByteArrayOutputStream();
+        resized.compress(Bitmap.CompressFormat.JPEG, 100, blob);
+
+        return blob.toByteArray();
+    }
 }
 

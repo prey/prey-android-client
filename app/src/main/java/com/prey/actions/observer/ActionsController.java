@@ -100,7 +100,7 @@ public class ActionsController {
         List<HttpDataService> listData=new ArrayList<HttpDataService>();
 
         int size=jsonObjectList==null?-1:jsonObjectList.size();
-        PreyLogger.i("runActionJson size:"+size);
+        PreyLogger.d("runActionJson size:"+size);
 
         try {
             for(int i=0;jsonObjectList!=null&&i<jsonObjectList.size();i++){

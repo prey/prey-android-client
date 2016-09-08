@@ -802,7 +802,7 @@ public class PreyWebServices {
             PreyLogger.e("Error, causa:" + e.getMessage(), e);
             return null;
         }
-        PreyLogger.i("cmd:" + sb);
+        PreyLogger.d("cmd:" + sb);
         return sb;
     }
 
