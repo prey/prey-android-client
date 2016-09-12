@@ -153,9 +153,16 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
 
             linearLayoutTour.setVisibility(View.VISIBLE);
             textViewUninstall.setVisibility(View.GONE);
+
+
             try {
 
-                linearLayoutTour.setOnClickListener(new View.OnClickListener() {
+
+                LinearLayout linearLayout3_1 = (LinearLayout) findViewById(R.id.linearLayout3_1);
+
+
+
+                linearLayout3_1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getApplication(), TourActivity1.class);
@@ -165,6 +172,17 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
                         startActivity(intent);
                         finish();
                     }
+                });
+
+                LinearLayout linearLayout3_2 = (LinearLayout) findViewById(R.id.linearLayout3_2);
+                linearLayout3_2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PreyConfig.getPreyConfig(getApplication()).setProtectTour(true);
+                        onResume();
+                    }
+
+
                 });
             }catch (Exception e){
 
