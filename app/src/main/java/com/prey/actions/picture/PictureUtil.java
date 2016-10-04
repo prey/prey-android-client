@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
 import com.prey.PreyLogger;
@@ -64,6 +65,14 @@ public class PictureUtil {
                     }
                 }
             }
+            Intent intent2 = new Intent(ctx, SimpleCameraActivity.class);
+            intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Bundle myKillerBundle = new Bundle();
+            myKillerBundle.putInt("kill",1);
+            intent2.putExtras(myKillerBundle);
+            ctx.startActivity(intent2);
+
+
         } catch (Exception e) {
             PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
         }

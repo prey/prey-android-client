@@ -46,6 +46,13 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
         setContentView(R.layout.simple_camera);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Bundle extras = getIntent().getExtras();
+
+        if(extras.getInt("kill")==1){
+            PreyLogger.i("Kill");
+            finish();
+        }
+
+
         String focus = null;
         if (extras != null) {
             focus = extras.getString("focus");
