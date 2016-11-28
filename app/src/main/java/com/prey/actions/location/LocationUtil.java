@@ -21,6 +21,7 @@ import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.prey.FileConfigReader;
 import com.prey.PreyLogger;
 import com.prey.PreyPhone;
 import com.prey.PreyPhone.Wifi;
@@ -120,18 +121,22 @@ public class LocationUtil {
                 play.init(ctx);
             }
         }).start();
-
-
         int i=0;
         Location currentLocation = null;
-        while (currentLocation == null&&i<6) {
+        boolean condition=false;
+        do  {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
             }
             currentLocation = play.getLastLocation(ctx);
+            if (currentLocation == null) {
+                condition = (i < 6);
+            }else {
+                condition = (currentLocation.getAccuracy() > FileConfigReader.getInstance(ctx).getLocationLoopAccuracy() && i < 4);
+            }
             i=i+1;
-        }
+        }while(condition);
         PreyLocation preyLocation=null;
         if(currentLocation!=null){
             preyLocation = new PreyLocation(currentLocation,method);

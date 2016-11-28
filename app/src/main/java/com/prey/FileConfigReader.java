@@ -145,4 +145,7 @@ public class FileConfigReader {
         return properties.getProperty("prey-events-logs");
     }
 
+    public int getLocationLoopAccuracy() {
+        return Integer.parseInt(properties.getProperty("location-loop-accuracy"));
+    }
 }
