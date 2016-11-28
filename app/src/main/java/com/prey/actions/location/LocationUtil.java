@@ -6,6 +6,7 @@
  ******************************************************************************/
 package com.prey.actions.location;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,6 +125,8 @@ public class LocationUtil {
         int i=0;
         Location currentLocation = null;
         boolean condition=false;
+        PreyLocation preyLocation=null;
+        float accuracy=Float.MAX_VALUE;
         do  {
             try {
                 Thread.sleep(2000);
@@ -134,21 +137,30 @@ public class LocationUtil {
                 condition = (i < 6);
             }else {
                 condition = (currentLocation.getAccuracy() > FileConfigReader.getInstance(ctx).getLocationLoopAccuracy() && i < 4);
+                if(currentLocation!=null){
+                    preyLocation = new PreyLocation(currentLocation,method);
+                }else{
+                    if(currentLocation==null){
+                        preyLocation = getPreyLocationAppService(ctx,method,messageId);
+                    }
+                    if(currentLocation==null){
+                        preyLocation = getDataLocationWifi(ctx);
+                    }
+                }
+
+                if(currentLocation!=null&&accuracy>preyLocation.getAccuracy()) {
+                    accuracy = currentLocation.getAccuracy();
+                    HttpDataService data = convertData(preyLocation);
+                    ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
+                    dataToBeSent.add(data);
+                    PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
+                }
             }
+
             i=i+1;
         }while(condition);
-        PreyLocation preyLocation=null;
-        if(currentLocation!=null){
-            preyLocation = new PreyLocation(currentLocation,method);
-        }else{
-            if(currentLocation==null){
-                preyLocation = getPreyLocationAppService(ctx,method,messageId);
-            }
-            if(currentLocation==null){
-                preyLocation = getDataLocationWifi(ctx);
-            }
-        }
-        return preyLocation;
+
+        return null;
     }
 
     public static PreyLocation getPreyLocationAppService(Context ctx,String method,String messageId) throws Exception {
