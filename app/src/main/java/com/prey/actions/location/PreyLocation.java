@@ -71,7 +71,7 @@ public class PreyLocation {
 
     @Override
     public String toString() {
-        return "lat: " + lat + " - lng: " + lng + " - acc: "+accuracy;
+        return "lat: " + lat + " - lng: " + lng + " - acc: "+accuracy + " - method: " + method;
     }
 
     public boolean isValid() {

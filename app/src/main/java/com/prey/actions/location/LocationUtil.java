@@ -62,10 +62,9 @@ public class LocationUtil {
                     }
                 }
             }else{
-                PreyLogger.d("ask for permission location");
+                if(location==null && isWifiEnabled)
+                    location = getDataLocationWifi(ctx);
             }
-            if(location==null && isWifiEnabled)
-                location = getDataLocationWifi(ctx);
             if(location!=null){
                 PreyLogger.d("locationData:" + location.getLat()+" "+location.getLng()+" "+location.getAccuracy());
                 data=convertData(location);
@@ -136,31 +135,31 @@ public class LocationUtil {
             if (currentLocation == null) {
                 condition = (i < 6);
             }else {
-                condition = (currentLocation.getAccuracy() > FileConfigReader.getInstance(ctx).getLocationLoopAccuracy() && i < 4);
-                if(currentLocation!=null){
-                    preyLocation = new PreyLocation(currentLocation,method);
-                }else{
-                    if(currentLocation==null){
-                        preyLocation = getPreyLocationAppService(ctx,method,messageId);
-                    }
-                    if(currentLocation==null){
-                        preyLocation = getDataLocationWifi(ctx);
-                    }
-                }
-
-                if(currentLocation!=null&&accuracy>preyLocation.getAccuracy()) {
-                    accuracy = currentLocation.getAccuracy();
-                    HttpDataService data = convertData(preyLocation);
-                    ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
-                    dataToBeSent.add(data);
-                    PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
-                }
+                condition = (currentLocation.getAccuracy() > FileConfigReader.getInstance(ctx).getLocationLoopAccuracy() && i < 5);
+                preyLocation = new PreyLocation(currentLocation,method);
+                PreyLogger.d("["+i+"]"+preyLocation);
+                accuracy=sendLocation(ctx,accuracy,currentLocation,preyLocation);
             }
 
             i=i+1;
         }while(condition);
+        preyLocation = getDataLocationWifi(ctx);
+        PreyLogger.d("["+i+"]"+preyLocation);
+        sendLocation(ctx,accuracy,currentLocation,preyLocation);
+
 
         return null;
+    }
+
+    private static float sendLocation(Context ctx,float accuracy,Location currentLocation,PreyLocation preyLocation){
+        if(preyLocation!=null&&currentLocation!=null&&accuracy>preyLocation.getAccuracy()) {
+            accuracy = preyLocation.getAccuracy();
+            HttpDataService data = convertData(preyLocation);
+            ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
+            dataToBeSent.add(data);
+            PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
+        }
+        return accuracy;
     }
 
     public static PreyLocation getPreyLocationAppService(Context ctx,String method,String messageId) throws Exception {
