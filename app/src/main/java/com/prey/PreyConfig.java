@@ -468,7 +468,7 @@ public class PreyConfig {
 
 
         String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
-        PreyLogger.i("deviceId:"+deviceId);
+        PreyLogger.d("deviceId:"+deviceId);
         if (deviceId != null && !"".equals(deviceId)) {
             try {
 
@@ -496,7 +496,7 @@ public class PreyConfig {
                     PreyLogger.d("___ registerC2dm  2_____");
 
 
-                    PreyLogger.i("starservice RegistrationIntentService");
+                    PreyLogger.d("starservice RegistrationIntentService");
                     Intent intent = new Intent(ctx, PreyRegistrationIntentService.class);
                     ctx.startService(intent);
 

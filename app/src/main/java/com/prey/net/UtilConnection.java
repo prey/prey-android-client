@@ -177,40 +177,40 @@ public class UtilConnection {
             PreyLogger.i("responseCode:"+responseCode+" responseMessage:"+responseMessage+" uri:"+uri);
             switch (responseCode) {
                 case HttpURLConnection.HTTP_CREATED:
-                    PreyLogger.i(uri + " **CREATED**");
+                    PreyLogger.d(uri + " **CREATED**");
                     return convertPreyHttpResponse(responseCode,connection);
                 case HttpURLConnection.HTTP_OK:
-                    PreyLogger.i(uri + " **OK**");
+                    PreyLogger.d(uri + " **OK**");
                     return convertPreyHttpResponse(responseCode,connection);
                 case HttpURLConnection.HTTP_CONFLICT:
-                    PreyLogger.i(uri + " **CONFLICT**");
+                    PreyLogger.d(uri + " **CONFLICT**");
                     return convertPreyHttpResponse(responseCode,connection);
                 case HttpURLConnection.HTTP_FORBIDDEN:
-                    PreyLogger.i(uri + " **FORBIDDEN**");
+                    PreyLogger.d(uri + " **FORBIDDEN**");
                     return convertPreyHttpResponse(responseCode,connection);
                 case HttpURLConnection.HTTP_MOVED_TEMP:
-                    PreyLogger.i(uri + " **MOVED_TEMP**");
+                    PreyLogger.d(uri + " **MOVED_TEMP**");
                     return convertPreyHttpResponse(responseCode,connection);
                 case 422:
-                    PreyLogger.i(uri + " **422**");
+                    PreyLogger.d(uri + " **422**");
                     return convertPreyHttpResponse(responseCode,connection);
                 case HttpURLConnection.HTTP_BAD_GATEWAY:
-                    PreyLogger.i(uri + " **BAD_GATEWAY**");
+                    PreyLogger.d(uri + " **BAD_GATEWAY**");
                     return convertPreyHttpResponse(responseCode,connection);
                 case HttpURLConnection.HTTP_INTERNAL_ERROR:
-                    PreyLogger.i(uri + " **INTERNAL_ERROR**");
+                    PreyLogger.d(uri + " **INTERNAL_ERROR**");
                     return convertPreyHttpResponse(responseCode,connection);
                 case HttpURLConnection.HTTP_NOT_FOUND:
-                    PreyLogger.i(uri + " **NOT_FOUND**");
+                    PreyLogger.d(uri + " **NOT_FOUND**");
                     return convertPreyHttpResponse(responseCode,connection);
                 case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
-                    PreyLogger.i(uri + " **gateway timeout**");
+                    PreyLogger.d(uri + " **gateway timeout**");
                     break;
                 case HttpURLConnection.HTTP_UNAVAILABLE:
-                    PreyLogger.i(uri + "**unavailable**");
+                    PreyLogger.d(uri + "**unavailable**");
                     break;
                 default:
-                    PreyLogger.i(uri + " **unknown response code**.");
+                    PreyLogger.d(uri + " **unknown response code**.");
                     break;
             }
             connection.disconnect();
@@ -235,7 +235,7 @@ public class UtilConnection {
                 }
                 in.close();
             }
-            PreyLogger.i(sb.toString());
+            PreyLogger.d(sb.toString());
         }
         Map<String, List<String>> mapHeaderFields=connection.getHeaderFields();
 

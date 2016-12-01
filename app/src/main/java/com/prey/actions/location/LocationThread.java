@@ -30,7 +30,7 @@ public class LocationThread extends Thread {
 
     public void run() {
         PreyLogger.i("run location thread");
-        HttpDataService data = LocationUtil.dataLocation(ctx,null);
+        HttpDataService data = LocationUtil.dataLocation(ctx,null,false);
         Map<String, String> parametersMap = data.getDataList();
         if (phoneNumber != null && !"".equals(phoneNumber)) {
             String lat = parametersMap.get("lat");

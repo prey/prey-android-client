@@ -482,7 +482,6 @@ public class PreyWebServices {
 
     public PreyHttpResponse sendPreyHttpData(Context ctx, ArrayList<HttpDataService> dataToSend) {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-
         Map<String, String> parameters = new HashMap<String, String>();
         List<EntityFile> entityFiles = new ArrayList<EntityFile>();
         for (HttpDataService httpDataService : dataToSend) {
@@ -493,37 +492,31 @@ public class PreyWebServices {
                 }
             }
         }
-        Hardware hardware = new PreyPhone(ctx).getHardware();
-        if (!PreyConfig.getPreyConfig(ctx).isSendData() && hardware.getTotalMemory() > 0) {
-            PreyConfig.getPreyConfig(ctx).setSendData(true);
-            parameters.put("hardware_attributes[ram_size]", "" + hardware.getTotalMemory());
-        }
-
-        if(!"".equals(hardware.getUuid())&&!PreyConfig.getPreyConfig(ctx).isSentUuidSerialNumber()) {
-            parameters.put("hardware_attributes[uuid]", hardware.getUuid());
-            parameters.put("hardware_attributes[serial_number]", hardware.getSerialNumber());
-            PreyConfig.getPreyConfig(ctx).setSentUuidSerialNumber(true);
-        }
-
-
-
-        //	parameters.put("notification_id", preyConfig.getNotificationId());
-
-
         PreyHttpResponse preyHttpResponse = null;
-        try {
-            String url = getDataUrlJson(ctx);
-            PreyLogger.d("URL:" + url);
-            PreyConfig.postUrl = null;
-
-
-            if (entityFiles==null||entityFiles.size() == 0)
-                preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
-            else
-                preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, entityFiles);
-            PreyLogger.d("Data sent_: " + (preyHttpResponse==null?"":preyHttpResponse.getResponseAsString()));
-        } catch (Exception e) {
-            PreyLogger.e("Data wasn't send", e);
+        if(parameters.size()>0||entityFiles.size()>0) {
+            Hardware hardware = new PreyPhone(ctx).getHardware();
+            if (!PreyConfig.getPreyConfig(ctx).isSendData() && hardware.getTotalMemory() > 0) {
+                PreyConfig.getPreyConfig(ctx).setSendData(true);
+                parameters.put("hardware_attributes[ram_size]", "" + hardware.getTotalMemory());
+            }
+            if (!"".equals(hardware.getUuid()) && !PreyConfig.getPreyConfig(ctx).isSentUuidSerialNumber()) {
+                parameters.put("hardware_attributes[uuid]", hardware.getUuid());
+                parameters.put("hardware_attributes[serial_number]", hardware.getSerialNumber());
+                PreyConfig.getPreyConfig(ctx).setSentUuidSerialNumber(true);
+            }
+            try {
+                String url = getDataUrlJson(ctx);
+                PreyLogger.d("URL:" + url);
+                PreyConfig.postUrl = null;
+                if (entityFiles.size() == 0){
+                    preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
+                }else {
+                    preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, entityFiles);
+                }
+                PreyLogger.d("Data sent_: " + (preyHttpResponse==null?"":preyHttpResponse.getResponseAsString()));
+            } catch (Exception e) {
+                PreyLogger.e("Data wasn't send", e);
+            }
         }
         return preyHttpResponse;
     }

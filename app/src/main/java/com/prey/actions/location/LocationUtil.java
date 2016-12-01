@@ -40,7 +40,7 @@ public class LocationUtil {
     public static final String ACC = "accuracy";
     public static final String METHOD = "method";
 
-    public static HttpDataService dataLocation(Context ctx,String messageId) {
+    public static HttpDataService dataLocation(Context ctx,String messageId,boolean asynchronous) {
         HttpDataService data =null;
         try {
             LocationManager mlocManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
@@ -49,27 +49,29 @@ public class LocationUtil {
             boolean isWifiEnabled=PreyWifiManager.getInstance(ctx).isWifiEnabled();
             PreyLogger.d("status gps:" + isGpsEnabled + " net:" + isNetworkEnabled + " wifi:" + isWifiEnabled);
             PreyLocation location = null;
-
+            String method = getMethod(isGpsEnabled, isNetworkEnabled);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
                     || (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     || ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
                 if (isGpsEnabled || isNetworkEnabled) {
-                    String method = getMethod(isGpsEnabled, isNetworkEnabled);
-                    PreyLocation locationPlay = null;
                     int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(ctx);
                     if (ConnectionResult.SUCCESS == resultCode) {
-                        location = getPreyLocationPlayService(ctx, method,messageId);
+                        location = getPreyLocationPlayService(ctx, method,messageId,asynchronous);
                     }
                 }
             }else{
-                if(location==null && isWifiEnabled)
-                    location = getDataLocationWifi(ctx);
+                if(location==null ) {
+                    location=getPreyLocationAppService(ctx,method,messageId);
+                    if (location==null && isWifiEnabled)
+                        location = getDataLocationWifi(ctx);
+                }
             }
             if(location!=null){
                 PreyLogger.d("locationData:" + location.getLat()+" "+location.getLng()+" "+location.getAccuracy());
                 data=convertData(location);
             }else{
-                sendNotify(ctx,"Error","failed");
+                if(!asynchronous)
+                    sendNotify(ctx,"Error","failed");
             }
         } catch (Exception e) {
             sendNotify(ctx,"Error",messageId);
@@ -113,7 +115,7 @@ public class LocationUtil {
         return location;
     }
 
-    public static PreyLocation getPreyLocationPlayService(final Context ctx,String method,String messageId) throws Exception {
+    public static PreyLocation getPreyLocationPlayService(final Context ctx,String method,String messageId,boolean asynchronous) throws Exception {
         final PreyGooglePlayServiceLocation play = new PreyGooglePlayServiceLocation();
         new Thread( new Runnable() {
             @Override
@@ -121,33 +123,33 @@ public class LocationUtil {
                 play.init(ctx);
             }
         }).start();
-        int i=0;
         Location currentLocation = null;
-        boolean condition=false;
         PreyLocation preyLocation=null;
-        float accuracy=Float.MAX_VALUE;
-        do  {
+        float accuracy = Float.MAX_VALUE;
+        for (int i = 0; i < 5; i++) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
             }
             currentLocation = play.getLastLocation(ctx);
-            if (currentLocation == null) {
-                condition = (i < 6);
-            }else {
-                condition = (currentLocation.getAccuracy() > FileConfigReader.getInstance(ctx).getLocationLoopAccuracy() && i < 5);
-                preyLocation = new PreyLocation(currentLocation,method);
-                PreyLogger.d("["+i+"]"+preyLocation);
-                accuracy=sendLocation(ctx,accuracy,currentLocation,preyLocation);
+            if (currentLocation != null) {
+                preyLocation = new PreyLocation(currentLocation, method);
             }
-
-            i=i+1;
-        }while(condition);
-        preyLocation = getDataLocationWifi(ctx);
-        PreyLogger.d("["+i+"]"+preyLocation);
-        sendLocation(ctx,accuracy,currentLocation,preyLocation);
-
-
+            if (asynchronous) {
+                accuracy = sendLocation(ctx, accuracy, currentLocation, preyLocation);
+            } else {
+                if (preyLocation != null) {
+                    return preyLocation;
+                }
+            }
+        }
+        try {
+            if(asynchronous){
+                preyLocation = getDataLocationWifi(ctx);
+                sendLocation(ctx, accuracy, currentLocation, preyLocation);
+            }
+        }catch (Exception e){
+        }
         return null;
     }
 
@@ -211,7 +213,7 @@ public class LocationUtil {
     }
 
     public static PreyLocation dataPreyLocation(Context ctx,String messageId) {
-        HttpDataService data=dataLocation(ctx,messageId);
+        HttpDataService data=dataLocation(ctx,messageId,false);
         PreyLocation location=new PreyLocation();
         location.setLat(Double.parseDouble(data.getDataList().get(LAT)));
         location.setLng(Double.parseDouble(data.getDataList().get(LNG)));
