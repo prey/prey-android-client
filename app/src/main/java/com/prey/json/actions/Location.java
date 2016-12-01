@@ -6,6 +6,7 @@
  ******************************************************************************/
 package com.prey.json.actions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -19,24 +20,36 @@ import com.prey.actions.location.LocationThread;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
+import com.prey.net.PreyWebServices;
 
 public class Location extends JsonAction{
 
     public static final String DATA_ID = "geo";
 
     public List<HttpDataService> report(Context ctx, List<ActionResult> list, JSONObject parameters) {
+        PreyLogger.d("Ejecuting Location Report.");
         List<HttpDataService> listResult=super.report(ctx, list, parameters);
         return listResult;
     }
 
     public  List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("Ejecuting Location Data.");
-        List<HttpDataService> listResult=super.get(ctx, list, parameters);
-        return listResult;
+        PreyLogger.d("Ejecuting Location Get.");
+        String messageId = null;
+        try {
+            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            PreyLogger.d("messageId:"+messageId);
+        } catch (Exception e) {
+        }
+        PreyLogger.i(this.getClass().getName());
+        HttpDataService data = LocationUtil.dataLocation(ctx,messageId,true);
+        ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
+        dataToBeSent.add(data);
+        PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
+        return dataToBeSent;
     }
 
     public  List<HttpDataService> start(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("Ejecuting Location Data.");
+        PreyLogger.d("Ejecuting Location Start.");
         List<HttpDataService> listResult=super.get(ctx, list, parameters);
         return listResult;
     }
@@ -48,7 +61,7 @@ public class Location extends JsonAction{
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
-        HttpDataService data = LocationUtil.dataLocation(ctx,messageId);
+        HttpDataService data = LocationUtil.dataLocation(ctx,messageId,false);
         return data;
     }
 

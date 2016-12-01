@@ -63,7 +63,7 @@ public class LocationNotifierAction extends PreyAction {
 
     @Override
     public void execute(ActionJob actionJob, Context ctx) throws PreyException {
-        HttpDataService data = LocationUtil.dataLocation(ctx,null);
+        HttpDataService data = LocationUtil.dataLocation(ctx,null,false);
         ActionResult result = new ActionResult();
         result.setDataToSend(data);
         actionJob.finish(result);

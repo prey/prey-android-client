@@ -1,27 +1,54 @@
-#App parameters
+#main config
 ask-for-password=false
 prey-minor-version=80
-prey-answers=www
-prey-support=www
-prey-panel=www
-prey-jwt=www
-prey-campaign=www
+prey-answers=answers
+prey-support=support
+prey-panel=panel
+prey-jwt=session
+prey-campaign=login?utm_source=aplicacion-android&utm_medium=boton-login&utm_campaign=login-from-app&embeddable=true
 prey-google-play=https://play.google.com/store/apps/details?id=com.prey
-prey-subdomain=www
+prey-events-logs=https://clients1.preyproject.com/events/log
+
+#production
+prey-subdomain=solid
 prey-domain=preyproject.com
+#staging
+#prey-subdomain=control
+#prey-domain=preyhq.com
+
 api-v1=api/v1/
 api-v2=api/v2/
+
 scheduled=false
 minute-scheduled=5
+
 timeout-report=60
+
 api-key-batch=
 email-batch=
+
+#gcm
 gcm-id-prefix=GCM__
-gcm-id=000000000000
+#prod
+gcm-id=578864628893
+
+#oso
+#gcm-id=272815493416
+#gcm-id=407976907204
+
+
 c2dm-action=message
 c2dm-message-sync=sync
+
 email-feedback=android-feedback@preyproject.com
 subject-feedback=prey android feedback
-analytics-ua=UA-0000000-9
+
+analytics-ua=UA-8743344-9
+
 prey-uninstall=https://preyproject.com/help/content/uninstalling-prey
-geofence-maximum-accuracy=500
+
+#300 meters
+geofence-maximum-accuracy=300
+
+#two minutes
+geofence-loitering-delay=120000
