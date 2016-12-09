@@ -52,3 +52,6 @@ geofence-maximum-accuracy=300
 
 #two minutes
 geofence-loitering-delay=120000
+
+#100 meters
+distance-location=100
