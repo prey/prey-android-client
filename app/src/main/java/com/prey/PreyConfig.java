@@ -862,6 +862,10 @@ public class PreyConfig {
         return FileConfigReader.getInstance(this.ctx).getGeofenceMaximumAccuracy();
     }
 
+    public int getDistanceLocation(){
+        return FileConfigReader.getInstance(this.ctx).getDistanceLocation();
+    }
+
     public boolean isSentUuidSerialNumber() {
         return getBoolean(PreyConfig.SENT_UUID_SERIAL_NUMBER, false);
     }

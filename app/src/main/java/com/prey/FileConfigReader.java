@@ -145,4 +145,8 @@ public class FileConfigReader {
         return properties.getProperty("prey-events-logs");
     }
 
+    public int getDistanceLocation() {
+        return Integer.parseInt(properties.getProperty("distance-location"));
+    }
+
 }

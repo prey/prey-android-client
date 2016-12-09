@@ -56,7 +56,6 @@ public class PreyGooglePlayServiceLocation implements
     }
 
     public Location getLastLocation(Context ctx) {
-        PreyLogger.d("getLastLocation is null:" + (mCurrentLocation == null));
         return mCurrentLocation;
     }
 
