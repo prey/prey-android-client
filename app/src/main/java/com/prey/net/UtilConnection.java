@@ -38,7 +38,7 @@ public class UtilConnection {
 
     private static int RETRIES = 4;
 
-    private static int RETRY_DELAY_MS =1000;
+    private static int[] ARRAY_RETRY_DELAY_MS =new int[]{1,2,3,4};
 
     private static final String REQUEST_METHOD_PUT="PUT";
     private static final String REQUEST_METHOD_POST="POST";
@@ -110,7 +110,7 @@ public class UtilConnection {
         SimpleMultipartEntity multiple=new SimpleMultipartEntity();
         do {
             if (delay) {
-                Thread.sleep(RETRY_DELAY_MS);
+                Thread.sleep(ARRAY_RETRY_DELAY_MS[retry]*1000);
             }
             if (uri.indexOf("https:")>=0) {
                 connection = (HttpsURLConnection) url.openConnection();

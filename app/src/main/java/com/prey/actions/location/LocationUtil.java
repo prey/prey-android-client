@@ -136,7 +136,8 @@ public class LocationUtil {
         return preyLocation;
     }
 
-    private final static int MAXIMUM_OF_ATTEMPTS=10;
+    private final static int MAXIMUM_OF_ATTEMPTS=9;
+    private final static int []SLEEP_OF_ATTEMPTS=new int[]{2,2,2,3,3,3,4,4,4};
 
     private static PreyLocation getPreyLocationPlayService(final Context ctx, String method, boolean asynchronous, PreyLocation preyLocationOld) throws Exception {
         PreyLocation preyLocation = null;
@@ -153,7 +154,7 @@ public class LocationUtil {
             int i = 0;
             while (i < MAXIMUM_OF_ATTEMPTS) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(SLEEP_OF_ATTEMPTS[i]*1000);
                 } catch (InterruptedException e) {
                 }
                 currentLocation = play.getLastLocation(ctx);
@@ -183,7 +184,7 @@ public class LocationUtil {
             int i = 0;
             while (i < MAXIMUM_OF_ATTEMPTS) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(SLEEP_OF_ATTEMPTS[i]*1000);
                 } catch (InterruptedException e) {
                 }
                 PreyLocation location = PreyLocationManager.getInstance(ctx).getLastLocation();
