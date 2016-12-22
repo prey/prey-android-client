@@ -33,7 +33,7 @@ public class Tree {
         try{
             PreyLogger.d("Tree started");
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "tree", "started",null));
-            int depth = 0;
+            int depth = 1;
             try {
                 depth=Integer.parseInt(parameters.getString("depth"));
             }catch(Exception e){
@@ -44,7 +44,7 @@ public class Tree {
             }
             String    pathBase = Environment.getExternalStorageDirectory().toString();
             File dir = new File(pathBase+path);
-            JSONArray array = getFilesRecursiveJSON(pathBase, dir, depth);
+            JSONArray array = getFilesRecursiveJSON(pathBase, dir, depth-1);
             JSONObject jsonTree = new JSONObject();
             jsonTree.put("tree", array.toString());
             PreyWebServices.getInstance().sendTree(ctx, jsonTree);
