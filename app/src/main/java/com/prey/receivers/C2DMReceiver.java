@@ -9,6 +9,7 @@ package com.prey.receivers;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.BroadcastReceiver;
@@ -47,15 +48,27 @@ public class C2DMReceiver extends BroadcastReceiver {
         Iterator<String> ite=set.iterator();
         while(ite.hasNext()) {
             String key = ite.next();
-            PreyLogger.d("___[" + key + "]" + intent.getExtras().getString(key));
+            PreyLogger.d("___[" + key + "]" + intent.getExtras().get(key));
         }
 
-        PreyBetaController.startPrey(context);
+        String cmd=null;
+        try {
+            if(intent.getExtras().containsKey("cmd")) {
+                String gcmCmd = intent.getExtras().getString("cmd");
+                if (gcmCmd != null & gcmCmd.length() > 0) {
+                    gcmCmd = "{" + gcmCmd + "}";
+                    JSONObject jsnobject = new JSONObject(gcmCmd);
+                    if (jsnobject != null) {
+                        JSONArray jsonArray = jsnobject.getJSONArray("instruction");
+                        cmd = jsonArray.get(0).toString();
+                        PreyLogger.d("___cmd:" + cmd);
+                    }
+                }
+            }
+        } catch(Exception e){
+        }
+        PreyBetaController.startPrey(context,cmd);
     }
-
-
-
-
 
     private void handleRegistration(Context context, Intent intent) {
         String registration = intent.getStringExtra("registration_id");
@@ -70,7 +83,7 @@ public class C2DMReceiver extends BroadcastReceiver {
             PreyConfig.getPreyConfig(context).setRegisterC2dm(false);
             PreyConfig.getPreyConfig(context).setNotificationId("");
         } else if (registration != null) {
-            //PreyLogger.d("Registration id: " + registration);
+            PreyLogger.d("Registration id: " + registration);
             if(PreyConfig.getPreyConfig(context).getDeviceId()!=null&&!"".equals(PreyConfig.getPreyConfig(context).getDeviceId())) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
                     new UpdateCD2MId().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, registration, context);
