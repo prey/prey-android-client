@@ -19,7 +19,7 @@
 
     <string name="signup_subtitle">cuenta Prey</string>
     <string name="signup_title">REGÍSTRATE</string>
-    <string name="field_name_signup">usuario</string>
+    <string name="field_name_signup">tu nombre</string>
     <string name="field_email_signup">correo</string>
     <string name="field_password_signup">contraseña</string>
     <string name="button_signup">CREAR MI NUEVA CUENTA</string>
