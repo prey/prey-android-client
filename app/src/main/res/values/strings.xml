@@ -2,7 +2,7 @@
     <string name="app_name">Prey</string>
 
     <string name="menu_title_1">current device status</string>
-    <string name="menu_title_2">NOT PROTECTED, YET.</string>
+    <string name="menu_title_2">NOT PROTECTED YET.</string>
     <string name="menu_title_3">WE ARE ALMOST THERE</string>
     <string name="menu_title_4">Administration privileges needed</string>
     <string name="menu_title_5">They’ll allow Prey to protect your phone and help you control it if it ever gets lost or stolen. Your information and privacy are safe with us.</string>
@@ -17,7 +17,7 @@
 
     <string name="signup_subtitle">prey account</string>
     <string name="signup_title">SIGN UP</string>
-    <string name="field_name_signup">username</string>
+    <string name="field_name_signup">your name</string>
     <string name="field_email_signup">email</string>
     <string name="field_password_signup">password</string>
     <string name="button_signup">CREATE MY NEW ACCOUNT</string>
