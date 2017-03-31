@@ -105,6 +105,11 @@ public class ActionsController {
         try {
             for(int i=0;jsonObjectList!=null&&i<jsonObjectList.size();i++){
                 JSONObject jsonObject=jsonObjectList.get(i);
+                try {
+                    jsonObject = jsonObject.getJSONObject("cmd");
+                }catch(Exception e){
+
+                }
                 PreyLogger.d("jsonObject:"+jsonObject);
                 String nameAction = jsonObject.getString("target");
                 String methodAction = jsonObject.getString("command");

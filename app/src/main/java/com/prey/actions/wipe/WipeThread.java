@@ -34,22 +34,23 @@ public class WipeThread extends Thread {
         try{
             if(deleteSD){
                 WipeUtil.deleteSD();
+                if(!wipe){
+                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","stopped",null));
+                }
             }
         }catch(Exception e){
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","failed",e.getMessage()));
+            PreyLogger.e("Error Wipe:"+e.getMessage(), e);
         }
         try{
             if (wipe&&preyConfig.isFroyoOrAbove()){
                 PreyLogger.d("Wiping the device!!");
+                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","stopped",null));
                 FroyoSupport.getInstance(ctx).wipe();
             }
         }catch(Exception e){
-            PreyLogger.e("Error Wipe1:"+e.getMessage(), e);
-        }
-        try{
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","stopped",null));
-        }catch(Exception e){
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","failed",e.getMessage()));
-            PreyLogger.e("Error Wipe2:"+e.getMessage(), e);
+            PreyLogger.e("Error Wipe:"+e.getMessage(), e);
         }
     }
 
