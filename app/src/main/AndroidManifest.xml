@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
     android:installLocation="internalOnly"
-    android:versionCode="127"
-    android:versionName="1.6.8" >
+    android:versionCode="128"
+    android:versionName="1.6.9" >
 
 
 
