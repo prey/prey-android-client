@@ -318,7 +318,7 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
                     Toast.makeText(ctx, R.string.preferences_password_length_error, Toast.LENGTH_LONG).show();
                 else {
                     if (passwordtyped.length() < 6 || passwordtyped.length() > 32) {
-                        Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range, 6, 32), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range, "6", "32"), Toast.LENGTH_LONG).show();
                     } else {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
                             new CheckPassword().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,passwordtyped);
