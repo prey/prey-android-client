@@ -11,15 +11,19 @@ import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.net.http.EntityFile;
 import com.prey.net.http.SimpleMultipartEntity;
+import com.prey.net.offline.OfflineDatasource;
+import com.prey.net.offline.OfflineDto;
 
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,6 +33,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -57,12 +66,12 @@ public class UtilConnection {
     }
 
     private static String getAuthorization(PreyConfig preyConfig) {
-        PreyLogger.d("getAuthorization:("+preyConfig.getApiKey()+",X)");
+        //PreyLogger.d("getAuthorization:("+preyConfig.getApiKey()+",X)");
         return "Basic " + getCredentials(preyConfig.getApiKey(), "X");
     }
 
     private static String getAuthorization(String user,String pass) {
-        PreyLogger.d("getAuthorization:("+user+","+pass+")");
+        //PreyLogger.d("getAuthorization:("+user+","+pass+")");
         return "Basic " + getCredentials(user, pass);
     }
 
@@ -100,125 +109,273 @@ public class UtilConnection {
         return connection(preyConfig,uri,params,REQUEST_METHOD_POST,contentType,getAuthorization(preyConfig),status,null,correlationId);
     }
 
-    private static final PreyHttpResponse connection(PreyConfig preyConfig,String uri, Map<String, String> params,String requestMethod,String contentType,String authorization,String status,List<EntityFile> entityFiles,String correlationId) throws Exception {
+    public static final PreyHttpResponse connection(PreyConfig preyConfig,String uri, Map<String, String> params,String requestMethod,String contentType,String authorization,String status,List<EntityFile> entityFiles,String correlationId) throws Exception {
         PreyHttpResponse response=null;
         URL url = new URL(uri);
         HttpURLConnection connection=null;
         int retry = 0;
         boolean delay=false;
-        PreyLogger.d("uri:"+uri);
+        //PreyLogger.d("uri:"+uri);
+        if(params!=null){
+            Iterator<String> ite=params.keySet().iterator();
+            while (ite.hasNext()){
+                String key=ite.next();
+                PreyLogger.i("["+key+"]:"+params.get(key));
+            }
+        }
         SimpleMultipartEntity multiple=new SimpleMultipartEntity();
-        do {
-            if (delay) {
-                Thread.sleep(ARRAY_RETRY_DELAY_MS[retry]*1000);
-            }
-            if (uri.indexOf("https:")>=0) {
-                connection = (HttpsURLConnection) url.openConnection();
-            }else{
-                connection = (HttpURLConnection) url.openConnection();
-            }
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            connection.setRequestMethod(requestMethod);
-            connection.setRequestProperty("Accept", "*/*");
-            if(contentType!=null) {
-                connection.addRequestProperty("Content-Type", contentType);
-            }
-            if (authorization!=null) {
-                connection.addRequestProperty("Authorization", authorization);
-            }
-            if (status!=null) {
-                connection.addRequestProperty("X-Prey-Status", status);
-                PreyLogger.i("X-Prey-Status:"+status);
-            }
-
-            if (correlationId!=null) {
-                connection.addRequestProperty("X-Prey-Correlation-ID", correlationId);
-                PreyLogger.i("X-Prey-Correlation-ID:"+correlationId);
-                String deviceId=preyConfig.getDeviceId();
-                connection.addRequestProperty("X-Prey-Device-ID", deviceId);
-                PreyLogger.i("X-Prey-Device-ID:"+deviceId);
-                connection.addRequestProperty("X-Prey-State", status);
-                PreyLogger.i("X-Prey-State:"+status);
-
-            }
-
-
-            connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
-            if (entityFiles==null&&(params!=null&&params.size()>0)){
-                OutputStream os = connection.getOutputStream();
-                DataOutputStream dos = new DataOutputStream( os );
-                dos.writeBytes(getPostDataString(params));
-            }
-            if( entityFiles!=null&&entityFiles.size()>0 ) {
-                for(Map.Entry<String, String> entry : params.entrySet()){
-                    String key=  entry.getKey();
-                    String value=null;
-                    try{
-                        value=  entry.getValue() ;
-                    }catch(Exception e){
-                    }
-                    if(value==null){
-                        value="";
-                    }
-                    multiple.addPart(key,value);
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmZ");
+        List <ByteArrayOutputStream> listOutputStream = new ArrayList<>();
+        try{
+            do {
+                if (delay) {
+                    Thread.sleep(ARRAY_RETRY_DELAY_MS[retry]*1000);
                 }
-                for(int i=0;entityFiles!=null&&i<entityFiles.size();i++) {
+                if (uri.indexOf("https:")>=0) {
+                    connection = (HttpsURLConnection) url.openConnection();
+                }else{
+                    connection = (HttpURLConnection) url.openConnection();
+                }
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                connection.setRequestMethod(requestMethod);
+                connection.setRequestProperty("Accept", "*/*");
+                if(contentType!=null) {
+                    connection.addRequestProperty("Content-Type", contentType);
+                }
+                if (authorization!=null) {
+                    connection.addRequestProperty("Authorization", authorization);
+                    //PreyLogger.i("Authorization:"+authorization);
+                }
+                if (status!=null) {
+                    connection.addRequestProperty("X-Prey-Status", status);
+                    //PreyLogger.i("X-Prey-Status:"+status);
+                }
+
+                if (correlationId!=null) {
+                    connection.addRequestProperty("X-Prey-Correlation-ID", correlationId);
+                    PreyLogger.i("X-Prey-Correlation-ID:"+correlationId);
+                    String deviceId=preyConfig.getDeviceId();
+                    connection.addRequestProperty("X-Prey-Device-ID", deviceId);
+                    PreyLogger.i("X-Prey-Device-ID:"+deviceId);
+                    connection.addRequestProperty("X-Prey-State", status);
+                    PreyLogger.i("X-Prey-State:"+status);
+
+                }
+
+
+                connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
+                if (entityFiles==null&&(params!=null&&params.size()>0)){
+                    OutputStream os = connection.getOutputStream();
+                    DataOutputStream dos = new DataOutputStream( os );
+                    dos.writeBytes(getPostDataString(params));
+                }
+                if( entityFiles!=null&&entityFiles.size()>0 ) {
+                    for(Map.Entry<String, String> entry : params.entrySet()){
+                        String key=  entry.getKey();
+                        String value=null;
+                        try{
+                            value=  entry.getValue() ;
+                        }catch(Exception e){
+                        }
+                        if(value==null){
+                            value="";
+                        }
+                        multiple.addPart(key,value);
+                    }
+                    for(int i=0;entityFiles!=null&&i<entityFiles.size();i++) {
+                        EntityFile entityFile = entityFiles.get(i);
+                        boolean isLast = ((i + 1) == entityFiles.size() ? true : false);
+                        ByteArrayOutputStream outputStream=multiple.addPart(entityFile.getType(), entityFile.getName(), entityFile.getFile(), entityFile.getMimeType(), isLast);
+                        listOutputStream.add(outputStream);
+                    }
+                    connection.setRequestProperty("Content-Length", "" + multiple.getContentLength());
+                    connection.setRequestProperty("Content-Type", multiple.getContentType());
+                    OutputStream os = connection.getOutputStream();
+                    multiple.writeTo(os);
+                }
+                int responseCode=connection.getResponseCode();
+                String responseMessage = connection.getResponseMessage();
+                PreyLogger.i("responseCode:"+responseCode+" responseMessage:"+responseMessage+" uri:"+uri);
+                switch (responseCode) {
+                    case HttpURLConnection.HTTP_CREATED:
+                        PreyLogger.d(uri + " **CREATED**");
+                        response = convertPreyHttpResponse(responseCode,connection);
+                        retry = RETRIES;
+                        break;
+                    case HttpURLConnection.HTTP_OK:
+                        PreyLogger.d(uri + " **OK**");
+                        response = convertPreyHttpResponse(responseCode,connection);
+                        retry = RETRIES;
+                        break;
+                    case HttpURLConnection.HTTP_CONFLICT:
+                        PreyLogger.d(uri + " **CONFLICT**");
+                        response = convertPreyHttpResponse(responseCode,connection);
+                        retry = RETRIES;
+                        break;
+                    case HttpURLConnection.HTTP_FORBIDDEN:
+                        PreyLogger.d(uri + " **FORBIDDEN**");
+                        response = convertPreyHttpResponse(responseCode,connection);
+                        retry = RETRIES;
+                        break;
+                    case HttpURLConnection.HTTP_MOVED_TEMP:
+                        PreyLogger.d(uri + " **MOVED_TEMP**");
+                        response = convertPreyHttpResponse(responseCode,connection);
+                        retry = RETRIES;
+                        break;
+                    case 422:
+                        PreyLogger.d(uri + " **422**");
+                        response = convertPreyHttpResponse(responseCode,connection);
+                        retry = RETRIES;
+                        break;
+                    case HttpURLConnection.HTTP_BAD_GATEWAY:
+                        PreyLogger.d(uri + " **BAD_GATEWAY**");
+                        response = convertPreyHttpResponse(responseCode,connection);
+                        retry = RETRIES;
+                        break;
+                    case HttpURLConnection.HTTP_INTERNAL_ERROR:
+                        PreyLogger.d(uri + " **INTERNAL_ERROR**");
+                        response = convertPreyHttpResponse(responseCode,connection);
+                        retry = RETRIES;
+                        break;
+                    case HttpURLConnection.HTTP_NOT_FOUND:
+                        PreyLogger.d(uri + " **NOT_FOUND**");
+                        response = convertPreyHttpResponse(responseCode,connection);
+                        retry = RETRIES;
+                        break;
+                    case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
+                        PreyLogger.d(uri + " **gateway timeout**");
+                        break;
+                    case HttpURLConnection.HTTP_UNAVAILABLE:
+                        PreyLogger.d(uri + "**unavailable**");
+                        break;
+                    default:
+                        PreyLogger.d(uri + " **unknown response code**.");
+                        break;
+                }
+                connection.disconnect();
+                retry++;
+                if(retry <= RETRIES) {
+                    PreyLogger.i("Failed retry " + retry + "/" + RETRIES);
+                }
+                delay = true;
+            } while (retry < RETRIES);
+        }catch(Exception e){
+            PreyLogger.i("error util:"+e.getMessage());
+        }
+        if(response==null||(response!=null&& !(response.getStatusCode()==200||response.getStatusCode()==201))) {
+            OfflineDatasource datasource = new OfflineDatasource(preyConfig.getContext());
+            if(response!=null) {
+                PreyLogger.i("code:" + response.getStatusCode());
+            }
+            PreyLogger.i("uri:"+uri+" status:"+status);
+            OfflineDto offline=new OfflineDto();
+            offline.setOfflineId(sdf.format(new Date()));
+            offline.setUrl(uri);
+            offline.setContentType(contentType);
+            offline.setAuthorization(authorization);
+            offline.setStatus(status);
+            offline.setCorrelationId(correlationId);
+
+
+            offline.setParameters(params.toString());
+            offline.setRequestMethod(requestMethod);
+
+
+
+            if (entityFiles != null && entityFiles.size() > 0) {
+                Map<String, String> files = new HashMap<>();
+                for (int i = 0; entityFiles != null && i < entityFiles.size(); i++) {
                     EntityFile entityFile = entityFiles.get(i);
-                    boolean isLast = ((i + 1) == entityFiles.size() ? true : false);
-                    multiple.addPart(entityFile.getType(), entityFile.getName(), entityFile.getFile(), entityFile.getMimeType(), isLast);
+
+
+                    Map<String, String> fileMap = new HashMap<String, String>();
+
+                    fileMap.put("type", entityFile.getType());
+                    fileMap.put("name", entityFile.getName());
+                    fileMap.put("mimeType", entityFile.getMimeType());
+                    fileMap.put("length", "" + entityFile.getLength());
+
+                    ByteArrayOutputStream outputStream=listOutputStream.get(i);
+                    PreyLogger.i("idFile:"+entityFile.getIdFile()+" fileMap:"+fileMap.toString());
+                    files.put(entityFile.getIdFile(),fileMap.toString());
+
+
+                    saveFile(entityFile.getIdFile(),outputStream);
+
                 }
-                connection.setRequestProperty("Content-Length", "" + multiple.getContentLength());
-                connection.setRequestProperty("Content-Type", multiple.getContentType());
-                OutputStream os = connection.getOutputStream();
-                multiple.writeTo(os);
+                PreyLogger.i("files:"+files.toString());
+                offline.setFiles(files.toString());
+                offline.setOfflineId(sdf.format(new Date())+"_report");
             }
-            int responseCode=connection.getResponseCode();
-            String responseMessage = connection.getResponseMessage();
-            PreyLogger.i("responseCode:"+responseCode+" responseMessage:"+responseMessage+" uri:"+uri);
-            switch (responseCode) {
-                case HttpURLConnection.HTTP_CREATED:
-                    PreyLogger.d(uri + " **CREATED**");
-                    return convertPreyHttpResponse(responseCode,connection);
-                case HttpURLConnection.HTTP_OK:
-                    PreyLogger.d(uri + " **OK**");
-                    return convertPreyHttpResponse(responseCode,connection);
-                case HttpURLConnection.HTTP_CONFLICT:
-                    PreyLogger.d(uri + " **CONFLICT**");
-                    return convertPreyHttpResponse(responseCode,connection);
-                case HttpURLConnection.HTTP_FORBIDDEN:
-                    PreyLogger.d(uri + " **FORBIDDEN**");
-                    return convertPreyHttpResponse(responseCode,connection);
-                case HttpURLConnection.HTTP_MOVED_TEMP:
-                    PreyLogger.d(uri + " **MOVED_TEMP**");
-                    return convertPreyHttpResponse(responseCode,connection);
-                case 422:
-                    PreyLogger.d(uri + " **422**");
-                    return convertPreyHttpResponse(responseCode,connection);
-                case HttpURLConnection.HTTP_BAD_GATEWAY:
-                    PreyLogger.d(uri + " **BAD_GATEWAY**");
-                    return convertPreyHttpResponse(responseCode,connection);
-                case HttpURLConnection.HTTP_INTERNAL_ERROR:
-                    PreyLogger.d(uri + " **INTERNAL_ERROR**");
-                    return convertPreyHttpResponse(responseCode,connection);
-                case HttpURLConnection.HTTP_NOT_FOUND:
-                    PreyLogger.d(uri + " **NOT_FOUND**");
-                    return convertPreyHttpResponse(responseCode,connection);
-                case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
-                    PreyLogger.d(uri + " **gateway timeout**");
-                    break;
-                case HttpURLConnection.HTTP_UNAVAILABLE:
-                    PreyLogger.d(uri + "**unavailable**");
-                    break;
-                default:
-                    PreyLogger.d(uri + " **unknown response code**.");
-                    break;
-            }
-            connection.disconnect();
-            retry++;
-            PreyLogger.i("Failed retry " + retry + "/" + RETRIES);
-            delay = true;
-        } while (retry < RETRIES);
+
+            PreyLogger.i("id:"+offline.getOfflineId()+" url:"+offline.getUrl());
+            PreyLogger.i("id:"+offline.getOfflineId()+" requestMethod:" + requestMethod);
+            PreyLogger.i("id:"+offline.getOfflineId()+" contentType:" + contentType);
+            PreyLogger.i("id:"+offline.getOfflineId()+" authorization:" + authorization);
+            PreyLogger.i("id:"+offline.getOfflineId()+" status:" + status);
+            PreyLogger.i("id:"+offline.getOfflineId()+" correlationId:" + correlationId);
+            PreyLogger.i("id:"+offline.getOfflineId()+" files:" + offline.getFiles());
+
+
+            datasource.createOffline(offline);
+        }
         return response;
+    }
+
+    private static void saveFile(String idFile,ByteArrayOutputStream outputStream){
+        FileOutputStream fileOutputStream = null;
+        ByteArrayInputStream byteArrayInputStream = null;
+
+        try {
+            File preyDirectory = new File("/sdcard/prey/");
+            preyDirectory.mkdirs();
+
+
+
+            PreyLogger.i("idFile:"+idFile+" byteArrayInputStream null:"+(byteArrayInputStream==null));
+
+
+
+            File file=new File("/sdcard/prey/file" + idFile+".jpg");
+            fileOutputStream = new FileOutputStream(file);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+
+
+
+
+            fileOutputStream.write(outputStream.toByteArray());
+
+
+            fileOutputStream.flush();
+
+
+
+
+        } catch (Exception e) {
+            PreyLogger.i("Error:"+e.getMessage());
+            PreyLogger.e("Error:"+e.getMessage(),e);
+
+        } finally {
+
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                }
+
+            }
+
+            if (byteArrayInputStream != null) {
+                try {
+                    byteArrayInputStream.close();
+                } catch (IOException e) {
+                }
+            }
+
+        }
     }
 
     private static PreyHttpResponse convertPreyHttpResponse(int responseCode,HttpURLConnection connection)throws Exception {

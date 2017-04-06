@@ -9,10 +9,12 @@ package com.prey;
 import android.app.Application;
 import android.content.Intent;
 
+import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.fileretrieval.FileretrievalService;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.report.ReportScheduled;
 import com.prey.net.PreyWebServices;
+import com.prey.net.offline.OfflineController;
 
 import java.util.Date;
 
@@ -45,6 +47,7 @@ public class PreyApp extends Application {
                 PreyConfig.getPreyConfig(this).setPreferencePreyVersion(PreyVersion);
                 PreyWebServices.getInstance().sendEvent(this, PreyConfig.ANDROID_VERSION_UPDATED);
             }
+
             if (deviceKey != null && deviceKey != "") {
                 PreyConfig.getPreyConfig(this).registerC2dm();
                 new Thread() {
@@ -52,8 +55,16 @@ public class PreyApp extends Application {
                         GeofenceController.getInstance().init(getApplicationContext());
                     }
                 }.start();
-                Intent intentFile = new Intent(this, FileretrievalService.class);
-                this.startService(intentFile);
+                new Thread() {
+                    public void run() {
+                        FileretrievalController.getInstance().run(getApplicationContext());
+                    }
+                }.start();
+                new Thread() {
+                    public void run() {
+                        OfflineController.getInstance().run(getApplicationContext());
+                    }
+                }.start();
                 if (PreyConfig.getPreyConfig(this).isMissing()) {
                     if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {
                         ReportScheduled.getInstance(this).run();

@@ -8,6 +8,8 @@ package com.prey.actions.picture;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.Manifest;
 import android.content.Context;
@@ -30,7 +32,7 @@ public class PictureUtil {
     public static HttpDataService getPicture(Context ctx) {
         HttpDataService data = null;
         try {
-
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmZ");
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
                     || ActivityCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                     ) {
@@ -45,6 +47,7 @@ public class PictureUtil {
                     entityFile.setMimeType("image/png");
                     entityFile.setName("picture.jpg");
                     entityFile.setType("picture");
+                    entityFile.setIdFile(sdf.format(new Date()) + "_" + entityFile.getType());
                     entityFile.setLength(frontPicture.length);
                     data.addEntityFile(entityFile);
                 }
@@ -60,6 +63,7 @@ public class PictureUtil {
                         entityFile.setMimeType("image/png");
                         entityFile.setName("screenshot.jpg");
                         entityFile.setType("screenshot");
+                        entityFile.setIdFile(sdf.format(new Date()) + "_" + entityFile.getType());
                         entityFile.setLength(backPicture.length);
                         data.addEntityFile(entityFile);
                     }

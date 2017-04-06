@@ -99,8 +99,9 @@ public class SimpleMultipartEntity   {
         addPart(key, fileName, fin, "application/octet-stream", isLast);
     }
 
-    public void addPart(final String key, final String fileName, final InputStream fin, String type, final boolean isLast){
+    public ByteArrayOutputStream addPart(final String key, final String fileName, final InputStream fin, String type, final boolean isLast){
         writeFirstBoundaryIfNeeds();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
             type = "Content-Type: "+type+"\r\n";
             out.write(("Content-Disposition: form-data; name=\""+ key+"\"; filename=\"" + fileName + "\"\r\n").getBytes());
@@ -111,19 +112,29 @@ public class SimpleMultipartEntity   {
             int l = 0;
             while ((l = fin.read(tmp)) != -1) {
                 out.write(tmp, 0, l);
+                outputStream.write(tmp, 0, l);
             }
             if(!isLast)
                 out.write(("\r\n--" + boundary + "\r\n").getBytes());
             out.flush();
+            outputStream.flush();
         } catch (final IOException e) {
-            e.printStackTrace();
         } finally {
-            try {
-                fin.close();
-            } catch (final IOException e) {
-                e.printStackTrace();
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                }
+
+            }
+            if (fin != null) {
+                try {
+                    fin.close();
+                } catch (final IOException e) {
+                }
             }
         }
+        return outputStream;
     }
 
     public void addPart(final String key, final File value, final boolean isLast) {
