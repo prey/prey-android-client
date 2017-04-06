@@ -10,6 +10,7 @@ import java.io.InputStream;
 
 public class EntityFile {
 
+    private String idFile;
     private String type;
     private String name;
     private String mimeType;
@@ -56,5 +57,11 @@ public class EntityFile {
         this.type = type;
     }
 
+    public String getIdFile() {
+        return idFile;
+    }
 
+    public void setIdFile(String idFile) {
+        this.idFile = idFile;
+    }
 }

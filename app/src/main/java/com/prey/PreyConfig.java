@@ -198,6 +198,10 @@ public class PreyConfig {
         cachedInstance = null;
     }
 
+    public Context getContext(){
+        return ctx;
+    }
+
     private void saveString(String key, String value){
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         SharedPreferences.Editor editor = settings.edit();

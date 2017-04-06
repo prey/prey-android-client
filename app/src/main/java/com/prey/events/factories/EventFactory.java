@@ -27,14 +27,13 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.R;
-import com.prey.actions.fileretrieval.FileretrievalService;
-import com.prey.actions.report.ReportService;
+import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.activities.CheckPasswordActivity;
-import com.prey.activities.DeviceReadyActivity;
 import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.Event;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.managers.PreyTelephonyManager;
+import com.prey.net.offline.OfflineController;
 
 public class EventFactory {
 
@@ -44,10 +43,8 @@ public class EventFactory {
     private static final String ACTION_SHUTDOWN = "android.intent.action.ACTION_SHUTDOWN";
     private static final String AIRPLANE_MODE = "android.intent.action.AIRPLANE_MODE";
     private static final String BATTERY_LOW = "android.intent.action.BATTERY_LOW";
-    private static final String POWER_CONNECTED = "android.intent.action.ACTION_POWER_CONNECTED";
-    private static final String POWER_DISCONNECTED = "android.intent.action.ACTION_POWER_DISCONNECTED";
 
-    public static Event getEvent(Context ctx, Intent intent) {
+    public static Event getEvent(final Context ctx, Intent intent) {
         String message = "getEvent[" + intent.getAction() + "]";
         PreyLogger.d(message);
         if (BOOT_COMPLETED.equals(intent.getAction())) {
@@ -94,13 +91,18 @@ public class EventFactory {
                     }
                 }
                 if(connected){
-                    try {
-                        Thread.sleep(4000);
-                    } catch (Exception e) {
-                    }
+                    Thread.sleep(4000);
                     PreyConfig.getPreyConfig(ctx).registerC2dm();
-                    Intent intentFile = new Intent(ctx, FileretrievalService.class);
-                    ctx.startService(intentFile);
+                    new Thread() {
+                        public void run() {
+                            FileretrievalController.getInstance().run(ctx);
+                        }
+                    }.start();
+                    new Thread() {
+                        public void run() {
+                            OfflineController.getInstance().run(ctx);
+                        }
+                    }.start();
                 }
             } catch (Exception e) {
             }
@@ -110,7 +112,6 @@ public class EventFactory {
             JSONObject info = new JSONObject();
             int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
             PreyLogger.d("___wifiState:" + wifiState);
-
             try {
                 if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
                     info.put("connected", "wifi");
@@ -119,8 +120,16 @@ public class EventFactory {
                     } catch (Exception e) {
                     }
                     PreyConfig.getPreyConfig(ctx).registerC2dm();
-                    Intent intentFile = new Intent(ctx, FileretrievalService.class);
-                    ctx.startService(intentFile);
+                    new Thread() {
+                        public void run() {
+                            FileretrievalController.getInstance().run(ctx);
+                        }
+                    }.start();
+                    new Thread() {
+                        public void run() {
+                            OfflineController.getInstance().run(ctx);
+                        }
+                    }.start();
                 }
             } catch (Exception e) {
             }
@@ -146,13 +155,23 @@ public class EventFactory {
                 }
                 if(connected) {
                     PreyBetaController.startPrey(ctx);
-                    PreyConfig.getPreyConfig(ctx).registerC2dm();
-                    Intent intentFile = new Intent(ctx, FileretrievalService.class);
-                    ctx.startService(intentFile);
+                    try{
+                        PreyConfig.getPreyConfig(ctx).registerC2dm();
+                        Thread.sleep(4000);
+                    } catch (Exception e) {}
+                    new Thread() {
+                        public void run() {
+                            FileretrievalController.getInstance().run(ctx);
+                        }
+                    }.start();
+                    new Thread() {
+                        public void run() {
+                            OfflineController.getInstance().run(ctx);
+                        }
+                    }.start();
                 }
             }
         }
-
         return null;
     }
 
