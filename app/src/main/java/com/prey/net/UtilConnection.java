@@ -115,12 +115,12 @@ public class UtilConnection {
         HttpURLConnection connection=null;
         int retry = 0;
         boolean delay=false;
-        //PreyLogger.d("uri:"+uri);
+        PreyLogger.d("uri:"+uri);
         if(params!=null){
             Iterator<String> ite=params.keySet().iterator();
             while (ite.hasNext()){
                 String key=ite.next();
-                PreyLogger.i("["+key+"]:"+params.get(key));
+                PreyLogger.d("["+key+"]:"+params.get(key));
             }
         }
         SimpleMultipartEntity multiple=new SimpleMultipartEntity();
