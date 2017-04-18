@@ -21,9 +21,9 @@
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
 
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR"/>
 
-
-
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -374,7 +374,8 @@
         <service android:name="com.prey.actions.report.ReportService" />
         <service android:name="com.prey.actions.geofences.GeofenceIntentService" />
         <service android:name="com.prey.actions.fileretrieval.FileretrievalService" />
-
+        <service android:name="com.prey.services.PreyLockService" />
+        <service android:name="com.prey.services.PreyOverlayService" />
     </application>
 
 </manifest>

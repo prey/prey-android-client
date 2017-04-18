@@ -8,7 +8,9 @@ package com.prey;
 
 import android.Manifest;
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.content.PermissionChecker;
+import android.provider.Settings;
 
 public class PreyPermission {
 
@@ -77,5 +79,14 @@ public class PreyPermission {
                 PermissionChecker.PERMISSION_GRANTED;
         //PreyLogger.d("canAccessReadExternalStorage:"+canAccessReadExternalStorage);
         return canAccessReadExternalStorage;
+    }
+
+
+    public static boolean canDrawOverlays(Context ctx) {
+        boolean canDrawOverlays=true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            canDrawOverlays = Settings.canDrawOverlays(ctx);
+        }
+        return canDrawOverlays;
     }
 }

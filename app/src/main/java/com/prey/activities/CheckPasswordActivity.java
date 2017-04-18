@@ -6,8 +6,6 @@
  ******************************************************************************/
 package com.prey.activities;
 
-import java.util.Locale;
-
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -33,13 +31,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,15 +42,12 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.PreyStatus;
-import com.prey.PreyUtils;
 import com.prey.R;
-import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
-import com.prey.util.KeyboardStatusDetector;
-import com.prey.util.KeyboardVisibilityListener;
+import com.prey.services.PreyOverlayService;
 import com.prey.util.Version;
 
 public class CheckPasswordActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -63,7 +55,7 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
     int wrongPasswordIntents = 0;
 
     CheckPasswordActivity activity=null;
-
+    public static int OVERLAY_PERMISSION_REQ_CODE = 5469;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -198,6 +190,7 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
             boolean canAccessReadPhoneState=PreyPermission.canAccessReadPhoneState(this);
             boolean canAccessReadExternalStorage=PreyPermission.canAccessReadExternalStorage(this);
 
+            boolean canDrawOverlays=PreyPermission.canDrawOverlays(this);
 
             if(!canAccessFineLocation||!canAccessCoarseLocation||!canAccessCamera
                     || !canAccessReadPhoneState|| !canAccessReadExternalStorage){
@@ -250,7 +243,40 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
                 showLocation=false;
 
             }else{
-                showLocation=true;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!canDrawOverlays) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                        final FrameLayout frameView = new FrameLayout(this);
+                        builder.setView(frameView);
+
+                        final AlertDialog alertDialog = builder.create();
+                        LayoutInflater inflater = alertDialog.getLayoutInflater();
+                        View dialoglayout = inflater.inflate(R.layout.warning_android7, frameView);
+
+                        Button button_android7_ok = (Button) dialoglayout.findViewById(R.id.button_android7_ok);
+                        Button button_android7_close = (Button) dialoglayout.findViewById(R.id.button_android7_close);
+
+                        button_android7_ok.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                PreyLogger.d("askForPermissionAndroid7");
+                                askForPermissionAndroid7();
+                                startOverlayService();
+                                alertDialog.dismiss();
+                                finish();
+
+                            }
+                        });
+
+                        alertDialog.show();
+                        showLocation = false;
+                    } else {
+                        showLocation = true;
+                    }
+                } else {
+                    showLocation = true;
+                }
             }
 
 
@@ -303,6 +329,30 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
         }
 
         PreyConfig.getPreyConfig(this).registerC2dm();
+    }
+
+    @Override
+    @TargetApi(Build.VERSION_CODES.M)
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        PreyLogger.i("onActivityResult requestCode:"+requestCode+" resultCode:"+resultCode);
+        if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
+            PreyLogger.i("OVERLAY_PERMISSION_REQ_CODE");
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void askForPermissionAndroid7() {
+        PreyLogger.i("askForPermissionAndroid7");
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:" + getPackageName()));
+        startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
+
+    }
+
+    private void startOverlayService() {
+        PreyLogger.i("startOverlayService");
+        Intent intent = new Intent(getApplicationContext(), PreyOverlayService.class);
+        startService(intent);
     }
 
 
@@ -408,6 +458,7 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
     }
 
 
+
     @TargetApi(Build.VERSION_CODES.M)
     private void askForPermission() {
         ActivityCompat.requestPermissions(CheckPasswordActivity.this, INITIAL_PERMS, REQUEST_PERMISSIONS);
@@ -419,6 +470,8 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
         startActivity(intent);
         finish();
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

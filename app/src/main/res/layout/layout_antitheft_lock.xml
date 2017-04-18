@@ -1,0 +1,13 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:id="@+id/antitheft_main" android:background="@color/main_bg_color" android:layout_width="wrap_content" android:layout_height="wrap_content">
+    <ImageView android:id="@+id/imageView1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10dp" android:layout_marginTop="25dp" android:src="@drawable/logo" />
+    <LinearLayout android:orientation="vertical" android:paddingLeft="30dp" android:paddingRight="30dp" android:layout_width="match_parent" android:layout_height="match_parent">
+        <TextView android:textColor="@color/list_item_title_text_color" android:id="@+id/tv_mind" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@string/antitheft_lock"   />
+        <EditText android:id="@+id/et_lockpwd" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:password="true" android:singleLine="true" android:maxLength="16"   />
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp">
+            <Button android:id="@+id/btn_unlock" android:layout_width="150dp" android:layout_height="wrap_content"   android:text="@string/antitheft_unlock" />
+            <Button android:id="@+id/btn_cancel" android:visibility="gone" android:layout_width="150dp" android:layout_height="wrap_content" android:text="@string/antitheft_unlock" />
+        </LinearLayout>
+        <TextView android:layout_gravity="right" android:id="@+id/tv_forgottenpassword" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp"  />
+    </LinearLayout>
+</LinearLayout>

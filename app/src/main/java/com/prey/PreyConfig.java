@@ -148,6 +148,7 @@ public class PreyConfig {
 
     public static final String MESSAGE_ID="messageID";
 
+    public static final String UNLOCK_PASS="unlock_pass";
 
 
     private boolean securityPrivilegesAlreadyPrompted;
@@ -339,6 +340,14 @@ public class PreyConfig {
 
     public void setDeviceId(String deviceId){
         this.saveString(PreyConfig.DEVICE_ID, deviceId);
+    }
+
+    public String getUnlockPass(){
+        return getString(PreyConfig.UNLOCK_PASS, null);
+    }
+
+    public void setUnlockPass(String unlockPass){
+        this.saveString(PreyConfig.UNLOCK_PASS, unlockPass);
     }
 
     public void setSecurityPrivilegesAlreadyPrompted(boolean securityPrivilegesAlreadyPrompted) {

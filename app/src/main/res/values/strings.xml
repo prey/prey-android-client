@@ -257,4 +257,17 @@
     <string name="barcode_error">"Error reading barcode: %1$s"</string>
     <string name="barcode_find_your_QR">Visit panel.preyproject.com/qr\n on your computer an scan the QR code</string>
 
+
+    <string name="antitheft_lock">This device has been locked. Please enter the password to unlock.</string>
+    <string name="antitheft_unlock">Unlock</string>
+
+
+    <!-- Warning Android 7 Alert  -->
+    <string name="warning_android7_notification_title">Warning!Prey needs permissions</string>
+    <string name="warning_android7_notification_body">Tap to provide permissions.</string>
+    <string name="warning_android7_title">Warning! Provide new permissions for Prey</string>
+    <string name="warning_android7_body">You need to provide Prey some new permission in this Android 7 version for lock.</string>
+    <string name="warning_android7_re_approve">Approve</string>
+    <string name="warning_android7_close">Close</string>
+    
 </resources>
