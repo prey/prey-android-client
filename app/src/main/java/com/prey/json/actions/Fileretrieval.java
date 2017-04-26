@@ -50,7 +50,7 @@ public class Fileretrieval {
             FileretrievalDatasource datasource=new FileretrievalDatasource(ctx);
             datasource.createGeofence(fileDto);
             responseCode=PreyWebServices.getInstance().uploadFile(ctx, file, fileId,0);
-            PreyLogger.i("responseCode:"+responseCode);
+            //PreyLogger.i("responseCode:"+responseCode);
             if(responseCode==200||responseCode==201) {
                 datasource.deleteFileretrieval(fileId);
             }

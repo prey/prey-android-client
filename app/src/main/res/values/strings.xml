@@ -258,16 +258,16 @@
     <string name="barcode_find_your_QR">Visit panel.preyproject.com/qr\n on your computer an scan the QR code</string>
 
 
-    <string name="antitheft_lock">This device has been locked. Please enter the password to unlock.</string>
-    <string name="antitheft_unlock">Unlock</string>
 
 
     <!-- Warning Android 7 Alert  -->
-    <string name="warning_android7_notification_title">Warning!Prey needs permissions</string>
-    <string name="warning_android7_notification_body">Tap to provide permissions.</string>
-    <string name="warning_android7_title">Warning! Provide new permissions for Prey</string>
-    <string name="warning_android7_body">You need to provide Prey some new permission in this Android 7 version for lock.</string>
+    <string name="warning_android7_notification_title">Prey needs new permissions to guard this device</string>
+    <string name="warning_android7_notification_body">Take advantage of Prey’s new remote lock for Android 7.</string>
+    <string name="warning_android7_title">New permissions for a fortified lock!</string>
+    <string name="warning_android7_body">Prey’s improved lock for Android 7 now protects your device from being turned off and blocks access to the status bar. You’ll be asked to enable Prey to “draw over other apps” on the following menu to activate this feature.</string>
     <string name="warning_android7_re_approve">Approve</string>
     <string name="warning_android7_close">Close</string>
-    
+
+    <string name="lock_access_denied">The device has been blocked by its owner in protection of his privacy, and property.\n\nEnter the password to unlock.</string>
+    <string name="lock_unlock">UNLOCK</string>
 </resources>

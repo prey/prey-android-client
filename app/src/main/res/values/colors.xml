@@ -16,7 +16,7 @@
 <color name="darker_txt">#4d4d4d</color>
 <color name="lighter_txt">#808080</color>
     
-<color name="fb_border_start">#167EA0</color>
+<color name="fb_border_start">#167ea0</color>
 <color name="fb_border_center">#167EA0</color>
 <color name="fb_border_end">#167EA0</color>
 
@@ -55,4 +55,6 @@
 
     <color name="main_bg_color">#ffd6d9de</color>
     <color name="list_item_title_text_color">#ff333333</color>
+
+    <color name="lock_unlock_color">#3f81ba</color>
 </resources>

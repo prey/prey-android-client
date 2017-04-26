@@ -259,4 +259,15 @@
     <string name="barcode_find_your_QR">Visita panel.preyproject.com/qr\n en tu computador y escanea el código QR</string>
 
 
+
+    <!-- Warning Android 7 Alert  -->
+    <string name="warning_android7_notification_title">Prey necesita nuevos permisos en este dispositivo</string>
+    <string name="warning_android7_notification_body">Aprovecha el bloqueo remoto mejorado para Android 7.</string>
+    <string name="warning_android7_title">Nuevos permisos para un bloqueo fortificado!</string>
+    <string name="warning_android7_body">El nuevo bloqueo de Prey para Android 7 protege a tu dispositivo de ser apagado e impide el acceso a la barra de estado. En la próxima pantalla se te pedirá que habilites la “superposición de apps” para acceder a esta función.</string>
+    <string name="warning_android7_re_approve">Aprobar</string>
+    <string name="warning_android7_close">Cerrar</string>
+    <string name="lock_access_denied">El dispositivo ha sido bloqueado por su propietario en la protección de su privacidad, y la propiedad.\n\nIntroduzca la contraseña para desbloquear.</string>
+    <string name="lock_unlock">DESBLOQUEAR</string>
+
 </resources>

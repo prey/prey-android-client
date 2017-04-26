@@ -57,7 +57,7 @@ public class FileretrievalController {
             for (int i = 0; list != null && i < list.size(); i++) {
                 FileretrievalDto dto = list.get(i);
                 String fileId = dto.getFileId();
-                PreyLogger.i("id:" + dto.getFileId() + " " + dto.getPath());
+                PreyLogger.d("id:" + dto.getFileId() + " " + dto.getPath());
                 try {
                     FileretrievalDto dtoStatus = PreyWebServices.getInstance().uploadStatus(ctx, fileId);
                     PreyLogger.d("dtoStatus:" + dtoStatus.getStatus());
@@ -67,10 +67,10 @@ public class FileretrievalController {
                     if (dtoStatus.getStatus() == 2 || dtoStatus.getStatus() == 0) {
                         long total = dtoStatus.getTotal();
                         File file = new File(Environment.getExternalStorageDirectory() + "/" + dto.getPath());
-                        PreyLogger.i("total:"+total+" size:"+dtoStatus.getSize()+" length:"+file.length());
+                        PreyLogger.d("total:"+total+" size:"+dtoStatus.getSize()+" length:"+file.length());
 
                         int responseCode = PreyWebServices.getInstance().uploadFile(ctx, file, fileId, total);
-                        PreyLogger.i("responseCode:" + responseCode);
+                        PreyLogger.d("responseCode:" + responseCode);
                         if (responseCode == 200 || responseCode == 201) {
                             datasource.deleteFileretrieval(fileId);
                         }

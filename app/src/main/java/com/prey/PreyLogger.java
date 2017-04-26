@@ -11,7 +11,7 @@ import android.util.Log;
 public class PreyLogger {
 
     public static void d(String message) {
-        //if (PreyConfig.LOG_DEBUG_ENABLED)
+        if (PreyConfig.LOG_DEBUG_ENABLED)
             Log.i(PreyConfig.TAG, message);
     }
 

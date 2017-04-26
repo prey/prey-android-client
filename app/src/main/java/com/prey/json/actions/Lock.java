@@ -18,6 +18,7 @@ import android.os.PowerManager.WakeLock;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPermission;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
 import com.prey.backwardcompatibility.FroyoSupport;
@@ -45,15 +46,17 @@ public class Lock extends JsonAction {
             try {
                 unlock = parameters.getString(PreyConfig.UNLOCK_PASS);
                 PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
-                PreyLogger.i("unlock:"+unlock);
             } catch (Exception e) {
             }
-            Intent intent = new Intent(ctx, PreyLockService.class);
-            ctx.startService(intent);
-            PreyLogger.d("________startService PreyLockService");
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId, UtilJson.makeMapParam("start", "lock", "started",null));
+            if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
+                Intent intent = new Intent(ctx, PreyLockService.class);
+                ctx.startService(intent);
+            }else{
+                lock(ctx, unlock, messageId);
+            }
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "lock", "started", null));
         } catch (Exception e) {
-            PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
+            PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage()));
         }
     }
@@ -66,13 +69,22 @@ public class Lock extends JsonAction {
                 PreyLogger.d("messageId:"+messageId);
             } catch (Exception e) {
             }
-            PreyConfig.getPreyConfig(ctx).setUnlockPass(null);
-            Intent intent = new Intent(ctx, PreyLockService.class);
-            PreyLogger.d("________stopService PreyLockService");
-            ctx.stopService(intent);
+            if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
+                PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
+                Intent intent = new Intent(ctx, PreyLockService.class);
+                ctx.stopService(intent);
+            }else{
+                PreyLogger.d("-- Unlock instruction received");
+                FroyoSupport.getInstance(ctx).changePasswordAndLock("", true);
+                WakeLock screenLock = ((PowerManager) ctx.getSystemService(Context.POWER_SERVICE)).newWakeLock(
+                        PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, PreyConfig.TAG);
+                screenLock.acquire();
+                screenLock.release();
+            }
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "lock", "stopped",null));
+            PreyConfig.getPreyConfig(ctx).setLastEvent("lock_stopped");
         } catch (Exception e) {
-            PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
+            PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "lock", "failed", e.getMessage()));
         }
     }
@@ -80,17 +92,21 @@ public class Lock extends JsonAction {
     public void sms(Context ctx, List<ActionResult> list, JSONObject parameters) {
         try {
             String unlock = parameters.getString("parameter");
-            lock(ctx, unlock,null);
-
+            PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
+            if(PreyConfig.getPreyConfig(ctx).isNougatOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
+                Intent intent = new Intent(ctx, PreyLockService.class);
+                ctx.startService(intent);
+            }else{
+                lock(ctx, unlock, null);
+            }
         } catch (Exception e) {
-            PreyLogger.i("Error causa:" + e.getMessage());
+            PreyLogger.i("Error:" + e.getMessage());
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage()));
         }
     }
 
     public void lock(Context ctx, String unlock,String messageId) {
         if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {
-
             PreyConfig.getPreyConfig(ctx).setLock(true);
             FroyoSupport.getInstance(ctx).changePasswordAndLock(unlock, true);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId, UtilJson.makeMapParam("start", "lock", "started",null));

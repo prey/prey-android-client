@@ -6,7 +6,9 @@
  ******************************************************************************/
 package com.prey.services;
 
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
@@ -27,28 +29,37 @@ public class PreyOverlayService extends Service {
 
     public void onStart(Intent intent, int startId) {
         super.onStart(intent,startId);
-            int i=0;
-        boolean run=true;
-        while(run){
-            try{Thread.sleep(1000);
-                if(canDrawOverlays()){
-                    run=false;
-                    Intent intentWelcome = new Intent(this, WelcomeActivity.class);
-                    intentWelcome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intentWelcome);
-                    stopSelf();
-                    break;
+        final Context ctx=this;
+
+        new Thread() {
+            public void run() {
+                int i=0;
+                boolean run=true;
+            while(run){
+                    try{Thread.sleep(1000);
+                        PreyLogger.i("["+i+"] PreyOverlayService");
+                        if(canDrawOverlays()){
+                            run=false;
+                            NotificationManager nManager = ((NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE));
+                            nManager.cancelAll();
+                            Intent intentWelcome = new Intent(ctx, WelcomeActivity.class);
+                            intentWelcome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intentWelcome);
+                            stopSelf();
+                            break;
+                        }
+                        if (i>120){
+                            run=false;
+                            stopSelf();
+                            break;
+                        }
+                        i++;
+                    }catch (Exception e){
+                        PreyLogger.e("Error:"+e.getMessage(),e);
+                    }
                 }
-                if (i>120){
-                    run=false;
-                    stopSelf();
-                    break;
-                }
-                i++;
-            }catch (Exception e){
-                PreyLogger.e("Errror e:"+e.getMessage(),e);
             }
-        }
+        }.start();
     }
 
     private boolean canDrawOverlays() {

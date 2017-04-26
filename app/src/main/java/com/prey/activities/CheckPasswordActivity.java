@@ -269,6 +269,13 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
                             }
                         });
 
+                        button_android7_close.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                            }
+                        });
+
                         alertDialog.show();
                         showLocation = false;
                     } else {
