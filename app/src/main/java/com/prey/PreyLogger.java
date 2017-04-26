@@ -12,7 +12,7 @@ public class PreyLogger {
 
     public static void d(String message) {
         if (PreyConfig.LOG_DEBUG_ENABLED)
-            Log.d(PreyConfig.TAG, message);
+            Log.i(PreyConfig.TAG, message);
     }
 
     public static void i(String message) {

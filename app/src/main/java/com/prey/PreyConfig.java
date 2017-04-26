@@ -148,7 +148,9 @@ public class PreyConfig {
 
     public static final String MESSAGE_ID="messageID";
 
+    public static final String UNLOCK_PASS="unlock_pass";
 
+    public static final String NOTIFICATION_ANDROID_7="notify_android_7";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -242,6 +244,13 @@ public class PreyConfig {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         SharedPreferences.Editor editor = settings.edit();
         editor.putLong(key, value);
+        editor.commit();
+    }
+
+    private void removeKey(String key){
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.remove(key);
         editor.commit();
     }
 
@@ -341,6 +350,26 @@ public class PreyConfig {
         this.saveString(PreyConfig.DEVICE_ID, deviceId);
     }
 
+    public String getUnlockPass(){
+        return getString(PreyConfig.UNLOCK_PASS, null);
+    }
+
+    public void setUnlockPass(String unlockPass){
+        this.saveString(PreyConfig.UNLOCK_PASS, unlockPass);
+    }
+
+    public void deleteUnlockPass(){
+        this.removeKey(PreyConfig.UNLOCK_PASS);
+    }
+
+    public String getNotificationAndroid7(){
+        return getString(PreyConfig.NOTIFICATION_ANDROID_7, null);
+    }
+
+    public void setNotificationAndroid7(String notificationAndroid7){
+        this.saveString(PreyConfig.NOTIFICATION_ANDROID_7, notificationAndroid7);
+    }
+
     public void setSecurityPrivilegesAlreadyPrompted(boolean securityPrivilegesAlreadyPrompted) {
         this.securityPrivilegesAlreadyPrompted = securityPrivilegesAlreadyPrompted;
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -381,6 +410,10 @@ public class PreyConfig {
 
     public boolean isMarshmallowOrAbove() {
         return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
+
+    public boolean isNougatOrAbove() {
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
     }
 
     public String getLastEvent() {
