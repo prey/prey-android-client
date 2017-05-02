@@ -22,6 +22,7 @@ import com.prey.PreyPermission;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
 import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.exceptions.PreyException;
 import com.prey.json.JsonAction;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
@@ -105,7 +106,7 @@ public class Lock extends JsonAction {
         }
     }
 
-    public void lock(Context ctx, String unlock,String messageId) {
+    public void lock(Context ctx, String unlock,String messageId) throws PreyException{
         if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {
             PreyConfig.getPreyConfig(ctx).setLock(true);
             FroyoSupport.getInstance(ctx).changePasswordAndLock(unlock, true);

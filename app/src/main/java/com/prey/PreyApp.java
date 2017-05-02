@@ -84,8 +84,8 @@ public class PreyApp extends Application {
                 SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
                 String notificationAndroid7New=sdf.format(new Date());
                 String notificationAndroid7Old= PreyConfig.getPreyConfig(this).getNotificationAndroid7();
-                PreyLogger.i("notificationAndroid7New:"+notificationAndroid7New+" notificationAndroid7Old:"+notificationAndroid7Old);
-                PreyLogger.i("PreyPermission.canDrawOverlays(this):"+PreyPermission.canDrawOverlays(this));
+                PreyLogger.d("notificationAndroid7New:"+notificationAndroid7New+" notificationAndroid7Old:"+notificationAndroid7Old);
+                PreyLogger.d("PreyPermission.canDrawOverlays(this):"+PreyPermission.canDrawOverlays(this));
                 //isNougatOrAbove
                 if(!missing&&PreyConfig.getPreyConfig(this).isMarshmallowOrAbove() && !PreyPermission.canDrawOverlays(this)&&!notificationAndroid7New.equals(notificationAndroid7Old)){
                     int STATUS_ICON_REQUEST_CODE=1;

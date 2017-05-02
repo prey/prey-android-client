@@ -16,6 +16,7 @@ import android.telephony.TelephonyManager;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.exceptions.PreyException;
 import com.prey.receivers.PreyDeviceAdmin;
 
 @TargetApi(Build.VERSION_CODES.FROYO)
@@ -39,7 +40,7 @@ public class FroyoSupport {
         ctx = context;
     }
 
-    public void changePasswordAndLock(String newPass, boolean lock) {
+    public void changePasswordAndLock(String newPass, boolean lock) throws PreyException{
         try {
             if (isAdminActive()) {
                 try {
@@ -58,7 +59,7 @@ public class FroyoSupport {
                     lockNow();
             }
         } catch (Exception e) {
-            PreyLogger.e("This device couldn't be locked. Honeycomb bug?", e);
+            throw new PreyException("This device couldn't be locked");
         }
     }
 

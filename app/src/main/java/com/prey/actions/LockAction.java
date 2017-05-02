@@ -12,6 +12,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.observer.ActionJob;
 import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.exceptions.PreyException;
 
 public class LockAction extends PreyAction {
 
@@ -32,7 +33,11 @@ public class LockAction extends PreyAction {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         if (preyConfig.isFroyoOrAbove()){
             preyConfig.setLock(true);
-            FroyoSupport.getInstance(ctx).changePasswordAndLock(getConfig().get("unlock_pass"),true);
+            try{
+                FroyoSupport.getInstance(ctx).changePasswordAndLock(getConfig().get("unlock_pass"),true);
+            }catch (PreyException e){
+            }
+
         }
     }
 
@@ -51,7 +56,10 @@ public class LockAction extends PreyAction {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         if (preyConfig.isFroyoOrAbove()) {
             PreyLogger.d("-- Unlock instruction received");
-            FroyoSupport.getInstance(ctx).changePasswordAndLock("",true);
+            try{
+                FroyoSupport.getInstance(ctx).changePasswordAndLock("",true);
+            }catch (PreyException e){
+            }
         }
     }
 
