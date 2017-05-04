@@ -97,6 +97,9 @@ public class PictureUtil {
         mgr.setStreamSolo(streamType, true);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+        }else{
+            final int setVolFlags = AudioManager.FLAG_PLAY_SOUND;
+            mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 0, setVolFlags);
         }
         mgr.setStreamMute(streamType, true);
         while (SimpleCameraActivity.activity == null&& i < 10) {
