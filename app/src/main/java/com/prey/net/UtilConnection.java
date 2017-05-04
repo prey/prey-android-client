@@ -14,6 +14,7 @@ import com.prey.net.http.SimpleMultipartEntity;
 import com.prey.net.offline.OfflineDatasource;
 import com.prey.net.offline.OfflineDto;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -283,28 +284,30 @@ public class UtilConnection {
 
 
             if (entityFiles != null && entityFiles.size() > 0) {
-                Map<String, String> files = new HashMap<>();
+                JSONArray array=new JSONArray();
                 for (int i = 0; entityFiles != null && i < entityFiles.size(); i++) {
                     EntityFile entityFile = entityFiles.get(i);
 
 
-                    Map<String, String> fileMap = new HashMap<String, String>();
+                    JSONObject json=new JSONObject();
+                    json.put("idFile",entityFile.getIdFile());
+                    json.put("type",entityFile.getType());
+                    json.put("name",entityFile.getName());
+                    json.put("mimeType",entityFile.getMimeType());
+                    json.put("length",entityFile.getLength());
 
-                    fileMap.put("type", entityFile.getType());
-                    fileMap.put("name", entityFile.getName());
-                    fileMap.put("mimeType", entityFile.getMimeType());
-                    fileMap.put("length", "" + entityFile.getLength());
+
 
                     ByteArrayOutputStream outputStream=listOutputStream.get(i);
-                    PreyLogger.i("idFile:"+entityFile.getIdFile()+" fileMap:"+fileMap.toString());
-                    files.put(entityFile.getIdFile(),fileMap.toString());
+                    PreyLogger.i("idFile:"+entityFile.getIdFile()+" json:"+json.toString());
+                    array.put(json);
 
 
                     saveFile(entityFile.getIdFile(),outputStream);
 
                 }
-                PreyLogger.i("files:"+files.toString());
-                offline.setFiles(files.toString());
+                PreyLogger.i("files:"+array.toString());
+                offline.setFiles(array.toString());
                 offline.setOfflineId(sdf.format(new Date())+"_report");
             }
 

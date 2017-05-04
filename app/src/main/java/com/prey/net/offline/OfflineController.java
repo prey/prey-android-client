@@ -15,6 +15,9 @@ import com.prey.net.PreyHttpResponse;
 import com.prey.net.UtilConnection;
 import com.prey.net.http.EntityFile;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -101,32 +104,21 @@ public class OfflineController {
                 }
                 List<File> listFiles=new ArrayList<File>();
                 try{
-                    if(dto.getFiles()!=null) {
+                    if(dto.getFiles()!=null&&!"".equals(dto.getFiles())) {
                         entityFiles=new ArrayList<EntityFile>();
-                        Properties props = new Properties();
-                        String corte=dto.getFiles().substring(1, dto.getFiles().length() - 1);
-                        corte=corte.replace("}, ", "\n");
-                        corte=corte.replace("{", "");
-                        corte=corte.replace("}", "");
-                        props.load(new StringReader(corte));
-                        for (Map.Entry<Object, Object> e : props.entrySet()) {
-                            String idFile = (String) e.getKey();
-                            String val = (String) e.getValue();
-                            PreyLogger.d("idFile:"+idFile+" val:"+val);
-                            Map<String, String> filesMap=new HashMap<String, String>();
-                            Properties props2 = new Properties();
-                            props2.load(new StringReader(val.substring(0, val.length() - 1).replace(", ", "\n")));
-                            for (Map.Entry<Object, Object> e2 : props2.entrySet()) {
-                                String key2 = (String) e2.getKey();
-                                String val2 = (String) e2.getValue();
-                                PreyLogger.d("key2:"+key2+" val2:"+val2);
-                                filesMap.put(key2, val2);
-                            }
+                        String json="{\"files\":"+files+"}";
+                        PreyLogger.d("[" + i + "]json:"+json);
+                        JSONObject jsnobject = new JSONObject(json);
+                        JSONArray jsonArray = jsnobject.getJSONArray("files");
+                        for (int j = 0; j < jsonArray.length(); j++) {
+                            JSONObject jsonFile= (JSONObject)jsonArray.get(j) ;
+                            String idFile=jsonFile.getString("idFile");
+                            PreyLogger.d("idFile:"+idFile );
                             EntityFile entityFile=new EntityFile();
-                            entityFile.setType(filesMap.get("type"));
-                            entityFile.setName(filesMap.get("name"));
-                            entityFile.setMimeType(filesMap.get("mimeType"));
-                            entityFile.setLength(Integer.parseInt(filesMap.get("length")));
+                            entityFile.setType(jsonFile.getString("type"));
+                            entityFile.setName(jsonFile.getString("name"));
+                            entityFile.setMimeType(jsonFile.getString("mimeType"));
+                            entityFile.setLength(Integer.parseInt(jsonFile.getString("length")));
                             File file = new File("/sdcard/prey/file" + idFile+".jpg");
                             if(file.exists()) {
                                 InputStream fileInputStream = new FileInputStream(file);
