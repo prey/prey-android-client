@@ -70,82 +70,88 @@ public class OfflineController {
             for (int i = 0; list != null && i < list.size(); i++) {
                 OfflineDto dto = list.get(i);
                 String url=dto.getUrl();
-                String requestMethod=dto.getRequestMethod();
-                String contentType=dto.getContentType();
-                String authorization=dto.getAuthorization();
-                String status=dto.getStatus();
-                String files=dto.getFiles();
-                String parameters=dto.getParameters();
-                List<EntityFile> entityFiles=null;
-                String correlationId=dto.getCorrelationId();
+                if(url!=null&&(url.indexOf("devices.json")>0)||url.indexOf("data.json")>0||url.indexOf("profile.xml")>0||url.indexOf("signup.json")>0){
+                    datasource.deleteOffline(dto.getOfflineId());
+                }else {
+                    String requestMethod = dto.getRequestMethod();
+                    String contentType = dto.getContentType();
+                    String authorization = dto.getAuthorization();
+                    String status = dto.getStatus();
+                    String files = dto.getFiles();
+                    String parameters = dto.getParameters();
+                    List<EntityFile> entityFiles = null;
+                    String correlationId = dto.getCorrelationId();
 
-                PreyLogger.d("[" + i + "]id:"+dto.getOfflineId()+" url:"+url);
-                PreyLogger.d("[" + i + "]id:"+dto.getOfflineId()+" requestMethod:" + requestMethod);
-                PreyLogger.d("[" + i + "]id:"+dto.getOfflineId()+" contentType:" + contentType);
-                PreyLogger.d("[" + i + "]id:"+dto.getOfflineId()+" authorization:" + authorization);
-                PreyLogger.d("[" + i + "]id:"+dto.getOfflineId()+" status:" + status);
-                PreyLogger.d("[" + i + "]id:"+dto.getOfflineId()+" correlationId:" + correlationId);
-                PreyLogger.d("[" + i + "]id:"+dto.getOfflineId()+" parameters:" + parameters);
-                PreyLogger.d("[" + i + "]id:"+dto.getOfflineId()+" files:" + files);
-                Map<String, String> params=new HashMap<String, String>();
-                try{
-                    if(dto.getParameters()!=null) {
-                        PreyLogger.d("[" + i + "]id:"+dto.getOfflineId()+" Parameters:" + dto.getParameters());
-                        Properties props = new Properties();
-                        props.load(new StringReader(dto.getParameters().substring(1, dto.getParameters().length() - 1).replace(", ", "\n")));
-                        for (Map.Entry<Object, Object> e : props.entrySet()) {
-                            String key = (String) e.getKey();
-                            String val = (String) e.getValue();
-                            PreyLogger.d("[" + i + "]id:"+dto.getOfflineId()+" params key:" + key + " val:" + val);
-                            params.put(key, val);
-                        }
-                    }
-                }catch(Exception e){
-                }
-                List<File> listFiles=new ArrayList<File>();
-                try{
-                    if(dto.getFiles()!=null&&!"".equals(dto.getFiles())) {
-                        entityFiles=new ArrayList<EntityFile>();
-                        String json="{\"files\":"+files+"}";
-                        PreyLogger.d("[" + i + "]json:"+json);
-                        JSONObject jsnobject = new JSONObject(json);
-                        JSONArray jsonArray = jsnobject.getJSONArray("files");
-                        for (int j = 0; j < jsonArray.length(); j++) {
-                            JSONObject jsonFile= (JSONObject)jsonArray.get(j) ;
-                            String idFile=jsonFile.getString("idFile");
-                            PreyLogger.d("idFile:"+idFile );
-                            EntityFile entityFile=new EntityFile();
-                            entityFile.setType(jsonFile.getString("type"));
-                            entityFile.setName(jsonFile.getString("name"));
-                            entityFile.setMimeType(jsonFile.getString("mimeType"));
-                            entityFile.setLength(Integer.parseInt(jsonFile.getString("length")));
-                            File file = new File("/sdcard/prey/file" + idFile+".jpg");
-                            if(file.exists()) {
-                                InputStream fileInputStream = new FileInputStream(file);
-                                entityFile.setFile(fileInputStream);
-                                entityFiles.add(entityFile);
-                                listFiles.add(file);
+                    PreyLogger.d("[" + i + "]id:" + dto.getOfflineId() + " url:" + url);
+                    PreyLogger.d("[" + i + "]id:" + dto.getOfflineId() + " requestMethod:" + requestMethod);
+                    PreyLogger.d("[" + i + "]id:" + dto.getOfflineId() + " contentType:" + contentType);
+                    PreyLogger.d("[" + i + "]id:" + dto.getOfflineId() + " authorization:" + authorization);
+                    PreyLogger.d("[" + i + "]id:" + dto.getOfflineId() + " status:" + status);
+                    PreyLogger.d("[" + i + "]id:" + dto.getOfflineId() + " correlationId:" + correlationId);
+                    PreyLogger.d("[" + i + "]id:" + dto.getOfflineId() + " parameters:" + parameters);
+                    PreyLogger.d("[" + i + "]id:" + dto.getOfflineId() + " files:" + files);
+                    Map<String, String> params = new HashMap<String, String>();
+                    try {
+                        if (dto.getParameters() != null) {
+                            PreyLogger.d("[" + i + "]id:" + dto.getOfflineId() + " Parameters:" + dto.getParameters());
+                            Properties props = new Properties();
+                            props.load(new StringReader(dto.getParameters().substring(1, dto.getParameters().length() - 1).replace(", ", "\n")));
+                            for (Map.Entry<Object, Object> e : props.entrySet()) {
+                                String key = (String) e.getKey();
+                                String val = (String) e.getValue();
+                                PreyLogger.d("[" + i + "]id:" + dto.getOfflineId() + " params key:" + key + " val:" + val);
+                                params.put(key, val);
                             }
                         }
-
+                    } catch (Exception e) {
                     }
-                }catch(Exception e){
-                }
-                try{
-                    PreyHttpResponse response=UtilConnection.connection(preyConfig, url,  params, requestMethod, contentType, authorization, status,entityFiles, correlationId) ;
-                    if(response!=null){
-                        PreyLogger.i("["+i+"]id:"+dto.getOfflineId()+" StatusCode:"+response.getStatusCode());
-                        if (response.getStatusCode()==200||response.getStatusCode()==201){
-                            datasource.deleteOffline(dto.getOfflineId());
-                            for (File file:listFiles) {
-                                if(file.exists()) {
-                                    PreyLogger.i(" delete :"+file.getPath()+" "+file.getName());
-                                    file.delete();
+
+                    List<File> listFiles = new ArrayList<File>();
+                    try {
+                        if (dto.getFiles() != null && !"".equals(dto.getFiles())) {
+                            entityFiles = new ArrayList<EntityFile>();
+                            String json = "{\"files\":" + files + "}";
+                            PreyLogger.d("[" + i + "]json:" + json);
+                            JSONObject jsnobject = new JSONObject(json);
+                            JSONArray jsonArray = jsnobject.getJSONArray("files");
+                            for (int j = 0; j < jsonArray.length(); j++) {
+                                JSONObject jsonFile = (JSONObject) jsonArray.get(j);
+                                String idFile = jsonFile.getString("idFile");
+                                PreyLogger.d("idFile:" + idFile);
+                                EntityFile entityFile = new EntityFile();
+                                entityFile.setType(jsonFile.getString("type"));
+                                entityFile.setName(jsonFile.getString("name"));
+                                entityFile.setMimeType(jsonFile.getString("mimeType"));
+                                entityFile.setLength(Integer.parseInt(jsonFile.getString("length")));
+                                File file = new File("/sdcard/prey/file" + idFile + ".jpg");
+                                if (file.exists()) {
+                                    InputStream fileInputStream = new FileInputStream(file);
+                                    entityFile.setFile(fileInputStream);
+                                    entityFiles.add(entityFile);
+                                    listFiles.add(file);
+                                }
+                            }
+
+                        }
+                    } catch (Exception e) {
+                    }
+                    try {
+                        PreyHttpResponse response = UtilConnection.connection(preyConfig, url, params, requestMethod, contentType, authorization, status, entityFiles, correlationId);
+                        if (response != null) {
+                            int statusCode=response.getStatusCode();
+                            PreyLogger.i("[" + i + "]id:" + dto.getOfflineId() + " statusCode:" + statusCode);
+                            if (statusCode == 200 || statusCode == 201 || statusCode == 404 || statusCode == 406 || statusCode == 409 || statusCode == 502) {
+                                datasource.deleteOffline(dto.getOfflineId());
+                                for (File file : listFiles) {
+                                    if (file.exists()) {
+                                        PreyLogger.i("[" + i + "]id:" + dto.getOfflineId() + " delete :" + file.getPath() + " " + file.getName());
+                                        file.delete();
+                                    }
                                 }
                             }
                         }
+                    } catch (Exception e) {
                     }
-                }catch(Exception e){
                 }
             }
         }
