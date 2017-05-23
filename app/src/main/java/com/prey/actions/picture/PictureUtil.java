@@ -97,11 +97,12 @@ public class PictureUtil {
         mgr.setStreamSolo(streamType, true);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            mgr.setStreamMute(streamType, true);
         }else{
             final int setVolFlags = AudioManager.FLAG_PLAY_SOUND;
             mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 0, setVolFlags);
         }
-        mgr.setStreamMute(streamType, true);
+
         while (SimpleCameraActivity.activity == null&& i < 10) {
             try {
                 Thread.sleep(1000);
@@ -117,8 +118,10 @@ public class PictureUtil {
         } catch (InterruptedException e) {
         }
         mgr.setStreamSolo(streamType, false);
-        mgr.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-        mgr.setStreamMute(streamType, false);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            mgr.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+            mgr.setStreamMute(streamType, false);
+        }
         try {
             i = 0;
             while (SimpleCameraActivity.activity != null && SimpleCameraActivity.dataImagen == null && i < 5) {
