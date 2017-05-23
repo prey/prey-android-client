@@ -58,8 +58,8 @@ public class EventManager {
         }
 
         if (validation) {
-            PreyLogger.i("name:" + event.getName() + " info:" + event.getInfo() + " ssid[" + ssid + "] previousSsid[" + previousSsid + "]");
-            PreyLogger.i("change PreviousSsid:" + ssid);
+            PreyLogger.d("name:" + event.getName() + " info:" + event.getInfo() + " ssid[" + ssid + "] previousSsid[" + previousSsid + "]");
+            PreyLogger.d("change PreviousSsid:" + ssid);
             PreyConfig.getPreyConfig(ctx).setPreviousSsid(ssid);
             try {
                 isConnectionExists = PreyConfig.getPreyConfig(ctx).isConnectionExists();

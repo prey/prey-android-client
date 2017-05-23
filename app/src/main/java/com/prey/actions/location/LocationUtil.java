@@ -250,7 +250,7 @@ public class LocationUtil {
         parametersMap.put(ACC, Float.toString(Math.round(lastLocation.getAccuracy())));
         parametersMap.put(METHOD, lastLocation.getMethod() );
         data.addDataListAll(parametersMap);
-        PreyLogger.i("lat:"+lastLocation.getLat()+" lng:"+lastLocation.getLng()+" acc:"+lastLocation.getAccuracy()+" met:"+lastLocation.getMethod());
+        PreyLogger.d("lat:"+lastLocation.getLat()+" lng:"+lastLocation.getLng()+" acc:"+lastLocation.getAccuracy()+" met:"+lastLocation.getMethod());
         return data;
     }
 

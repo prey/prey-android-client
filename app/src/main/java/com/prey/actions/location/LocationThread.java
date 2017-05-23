@@ -38,7 +38,7 @@ public class LocationThread extends Thread {
             String message = "location http://maps.google.com/?q=" + lat + "," + lng;
             sendSMS(phoneNumber, message);
         }
-        PreyLogger.i("lat:" + parametersMap.get("lat") + " lng:" + parametersMap.get("lng"));
+        PreyLogger.d("lat:" + parametersMap.get("lat") + " lng:" + parametersMap.get("lng"));
     }
 
     private void sendSMS(String phoneNumber, String message) {
