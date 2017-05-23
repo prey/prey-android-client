@@ -415,6 +415,10 @@ public class PreyWebServices {
         return getDeviceUrlApiv2(ctx).concat("/response");
     }
 
+    public String getInfoUrlJson(Context ctx) throws PreyException {
+        return getDeviceUrlApiv2(ctx).concat("/info.json");
+    }
+
     private String getDeviceUrlApiv2(Context ctx) throws PreyException {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         String deviceKey = preyConfig.getDeviceId();
@@ -901,6 +905,19 @@ public class PreyWebServices {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public String getUuidDevice(Context ctx){
+        String uuid = null;
+        try {
+            String uri = getInfoUrlJson(ctx);
+            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).getAutentication(uri, null);
+            String out=response.getResponseAsString();
+            JSONObject jsnobject = new JSONObject(out);
+            uuid = jsnobject.getString("uuid");
+        } catch (Exception e) {
+        }
+        return uuid;
     }
 
 }
