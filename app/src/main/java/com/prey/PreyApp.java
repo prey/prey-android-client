@@ -68,11 +68,11 @@ public class PreyApp extends Application {
                         FileretrievalController.getInstance().run(getApplicationContext());
                     }
                 }.start();
-                new Thread() {
+                /*new Thread() {
                     public void run() {
                         OfflineController.getInstance().run(getApplicationContext());
                     }
-                }.start();
+                }.start();*/
                 if (missing) {
                     if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {
                         ReportScheduled.getInstance(this).run();
@@ -105,7 +105,7 @@ public class PreyApp extends Application {
                     mNotificationManager.notify(STATUS_ICON_REQUEST_CODE, notif);
 
                 }
-                new PreyBackupThread(this).start();
+                //new PreyBackupThread(this).start();
             }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);

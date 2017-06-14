@@ -267,6 +267,7 @@ public class UtilConnection {
         }catch(Exception e){
             PreyLogger.d("error util:"+e.getMessage());
         }
+        /*
         if(response==null||(response!=null&& !(response.getStatusCode()==200||response.getStatusCode()==201||response.getStatusCode()==404||response.getStatusCode()==406||response.getStatusCode()==409||response.getStatusCode()==502))) {
             OfflineDatasource datasource = new OfflineDatasource(preyConfig.getContext());
             if(response!=null) {
@@ -325,7 +326,7 @@ public class UtilConnection {
 
                 datasource.createOffline(offline);
             }
-        }
+        }*/
         return response;
     }
 
