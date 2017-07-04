@@ -38,6 +38,10 @@ public class PreyApp extends Application {
             PreyLogger.i("Application launched!");
             PreyLogger.d("__________________");
 
+
+            boolean chromium=getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
+            PreyLogger.d("chromium:"+chromium);
+
             String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
 
             PreyLogger.d("InstallationDate:" + PreyConfig.getPreyConfig(this).getInstallationDate());
@@ -79,32 +83,6 @@ public class PreyApp extends Application {
                     }
                 }
 
-                SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
-                String notificationAndroid7New=sdf.format(new Date());
-                String notificationAndroid7Old= PreyConfig.getPreyConfig(this).getNotificationAndroid7();
-                PreyLogger.d("notificationAndroid7New:"+notificationAndroid7New+" notificationAndroid7Old:"+notificationAndroid7Old);
-                PreyLogger.d("PreyPermission.canDrawOverlays(this):"+PreyPermission.canDrawOverlays(this));
-                //isNougatOrAbove
-                if(!missing&&PreyConfig.getPreyConfig(this).isMarshmallowOrAbove() && !PreyPermission.canDrawOverlays(this)&&!notificationAndroid7New.equals(notificationAndroid7Old)){
-                    int STATUS_ICON_REQUEST_CODE=1;
-
-                    PreyConfig.getPreyConfig(this).setNotificationAndroid7(notificationAndroid7New);
-                    android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                            .setContentTitle(this.getString(R.string.warning_android7_notification_title))
-                            .setContentText(getResources().getString(R.string.warning_android7_notification_body))
-                            .setSmallIcon(R.drawable.logo);
-
-                    Intent intent = new Intent(this, LoginActivity.class);
-                    PendingIntent pIntent = PendingIntent.getActivity(this, STATUS_ICON_REQUEST_CODE, intent, 0);
-                    builder.setContentIntent(pIntent);
-                    NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-                    Notification notif = builder.build();
-
-                    notif.flags |= Notification.FLAG_AUTO_CANCEL;
-                    mNotificationManager.notify(STATUS_ICON_REQUEST_CODE, notif);
-
-                }
                 //new PreyBackupThread(this).start();
             }
         } catch (Exception e) {

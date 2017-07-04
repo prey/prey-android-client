@@ -85,6 +85,7 @@ public class PreyLockService extends Service{
                                     }
                                 }.start();
                             }
+                            stopSelf();
                         } else {
                             editText.setText("");
                         }

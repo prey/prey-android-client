@@ -19,10 +19,19 @@ public class PreyUtils {
     }
 
     public static String getDeviceType(Context ctx) {
-        if (isTablet(ctx))
-            return "Tablet";
-        else
-            return "Phone";
+        if (isChromebook(ctx)) {
+            return "Laptop";
+        } else {
+            if (isTablet(ctx)) {
+                return "Tablet";
+            } else {
+                return "Phone";
+            }
+        }
+    }
+
+    public static boolean isChromebook(Context ctx) {
+        return PreyConfig.getPreyConfig(ctx).isChromebook();
     }
 
     public static boolean isTablet(Context ctx) {

@@ -944,4 +944,8 @@ public class PreyConfig {
         PreyLogger.d("lastEventGeo["+lastEventGeo+"]");
         saveString(PreyConfig.LAST_EVENT_GEO, lastEventGeo);
     }
+
+    public boolean isChromebook() {
+        return ctx.getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
+    }
 }
