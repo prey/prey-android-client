@@ -141,10 +141,10 @@ public class SignUpActivity extends Activity {
                     Toast.makeText(ctx, R.string.error_all_fields_are_required, Toast.LENGTH_LONG).show();
                 } else {
                     if (email.length() < 6 || email.length() > 100) {
-                        Toast.makeText(ctx, ctx.getString(R.string.error_mail_out_of_range, 6, 100), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ctx, ctx.getString(R.string.error_mail_out_of_range, "6", "100"), Toast.LENGTH_LONG).show();
                     } else {
                         if (password.length() < 6 || password.length() > 32) {
-                            Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range, 6, 32), Toast.LENGTH_LONG).show();
+                            Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range, "6", "32"), Toast.LENGTH_LONG).show();
                         } else {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
                                 new CreateAccount().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, name, email, password);
@@ -215,7 +215,13 @@ public class SignUpActivity extends Activity {
                 String message = getString(R.string.new_account_congratulations_text, email);
                 Bundle bundle = new Bundle();
                 bundle.putString("message", message);
-                Intent intent = new Intent(SignUpActivity.this, PermissionInformationActivity.class);
+                Intent intent =null;
+                if (PreyConfig.getPreyConfig(SignUpActivity.this).isChromebook()) {
+                    intent = new Intent(SignUpActivity.this, WelcomeActivity.class);
+                    PreyConfig.getPreyConfig(SignUpActivity.this).setProtectReady(true);
+                }else {
+                    intent = new Intent(SignUpActivity.this, PermissionInformationActivity.class);
+                }
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
