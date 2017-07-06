@@ -35,7 +35,16 @@ public class Camouflage extends JsonAction {
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "camouflage", "started",null));
+        String reason = null;
+        try {
+            String jobId = parameters.getString(PreyConfig.JOB_ID);
+            PreyLogger.d("jobId:"+jobId);
+            if(jobId!=null&&!"".equals(jobId)){
+                reason="{\"device_job_id\":\""+jobId+"\"}";
+            }
+        } catch (Exception e) {
+        }
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "camouflage", "started",reason));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(true);
 
         ComponentName componentToDisabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
@@ -52,7 +61,16 @@ public class Camouflage extends JsonAction {
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("stop", "camouflage", "stopped",null));
+        String reason = null;
+        try {
+            String jobId = parameters.getString(PreyConfig.JOB_ID);
+            PreyLogger.d("jobId:"+jobId);
+            if(jobId!=null&&!"".equals(jobId)){
+                reason="{\"device_job_id\":\""+jobId+"\"}";
+            }
+        } catch (Exception e) {
+        }
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("stop", "camouflage", "stopped",reason));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(false);
 
         ComponentName componentToEnabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");

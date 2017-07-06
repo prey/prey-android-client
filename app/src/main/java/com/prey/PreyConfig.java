@@ -148,6 +148,8 @@ public class PreyConfig {
 
     public static final String MESSAGE_ID="messageID";
 
+    public static final String JOB_ID="device_job_id";
+
     public static final String UNLOCK_PASS="unlock_pass";
 
     public static final String NOTIFICATION_ANDROID_7="notify_android_7";

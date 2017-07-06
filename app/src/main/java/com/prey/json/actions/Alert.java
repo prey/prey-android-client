@@ -33,7 +33,7 @@ public class Alert extends JsonAction {
             alert = parameters.getString("parameter");
         } catch (Exception e) {
         }
-        startAlert(ctx, alert,null);
+        startAlert(ctx, alert,null,null);
     }
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
@@ -52,13 +52,19 @@ public class Alert extends JsonAction {
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
-        startAlert(ctx, alert,messageId);
+        String jobId = null;
+        try {
+            jobId = parameters.getString(PreyConfig.JOB_ID);
+            PreyLogger.d("jobId:"+jobId);
+        } catch (Exception e) {
+        }
+        startAlert(ctx, alert,messageId,jobId);
     }
 
-    public void startAlert(Context ctx, String alert, String messageId) {
+    public void startAlert(Context ctx, String alert, String messageId,String jobId) {
         try {
             if (alert != null && !"".equals(alert)) {
-                new AlertThread(ctx, alert, messageId).start();
+                new AlertThread(ctx, alert, messageId,jobId).start();
             }
         } catch (Exception e) {
             PreyLogger.e("Error, causa:" + e.getMessage(), e);

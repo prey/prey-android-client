@@ -30,9 +30,18 @@ public class Tree {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
         } catch (Exception e) {
         }
+        String reason = null;
+        try {
+            String jobId = parameters.getString(PreyConfig.JOB_ID);
+            PreyLogger.d("jobId:"+jobId);
+            if(jobId!=null&&!"".equals(jobId)){
+                reason="{\"device_job_id\":\""+jobId+"\"}";
+            }
+        } catch (Exception e) {
+        }
         try{
             PreyLogger.d("Tree started");
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "tree", "started",null));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "tree", "started",reason));
             int depth = 1;
             try {
                 depth=Integer.parseInt(parameters.getString("depth"));
@@ -48,7 +57,7 @@ public class Tree {
             JSONObject jsonTree = new JSONObject();
             jsonTree.put("tree", array.toString());
             PreyWebServices.getInstance().sendTree(ctx, jsonTree);
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get", "tree", "stopped",null));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get", "tree", "stopped",reason));
             PreyLogger.d("Tree stopped");
         } catch (Exception e) {
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "tree", "failed", e.getMessage()));

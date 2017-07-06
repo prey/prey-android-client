@@ -38,7 +38,13 @@ public class Alarm extends JsonAction {
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
-        new AlarmThread(ctx, sound,messageId).start();
+        String jobId = null;
+        try {
+            jobId = parameters.getString(PreyConfig.JOB_ID);
+            PreyLogger.d("jobId:"+jobId);
+        } catch (Exception e) {
+        }
+        new AlarmThread(ctx, sound,messageId,jobId).start();
     }
 
     public void stop(Context ctx, List<ActionResult> list, JSONObject options) {

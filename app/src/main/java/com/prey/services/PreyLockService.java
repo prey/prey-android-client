@@ -85,6 +85,7 @@ public class PreyLockService extends Service{
                                     }
                                 }.start();
                             }
+                            PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
                             stopSelf();
                         } else {
                             editText.setText("");

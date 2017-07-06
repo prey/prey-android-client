@@ -46,6 +46,12 @@ public class Wipe {
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
+        String jobId = null;
+        try {
+            jobId = parameters.getString(PreyConfig.JOB_ID);
+            PreyLogger.d("jobId:"+jobId);
+        } catch (Exception e) {
+        }
         try {
             String factoryReset = parameters.getString("factory_reset");
             PreyLogger.i("factoryReset:" + factoryReset);
@@ -71,7 +77,7 @@ public class Wipe {
 
         }
         PreyLogger.i("wipe:" + wipe + " deleteSD:" + deleteSD);
-        new WipeThread(ctx, wipe, deleteSD, messageId).start();
+        new WipeThread(ctx, wipe, deleteSD, messageId,jobId).start();
     }
 }
 
