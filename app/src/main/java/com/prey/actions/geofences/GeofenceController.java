@@ -137,8 +137,8 @@ public class GeofenceController {
             if (!mapBD.containsKey(geo.getId())) {
                 listToBdAdd.add(geo);
                 PreyLogger.d("__[START]___________id:" + geo.name + " lat:" + geo.latitude + " long:" + geo.longitude + " ra:" + geo.radius + " expires:" + geo.expires);
-                int transitionTypes = com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER |
-                        com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_DWELL |
+                int transitionTypes = com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_DWELL |
+                        com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER |
                         com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT;
 
                 mGeofenceList.add(new com.google.android.gms.location.Geofence.Builder()
@@ -147,6 +147,7 @@ public class GeofenceController {
                         .setExpirationDuration(Geofence.NEVER_EXPIRE)
                         .setTransitionTypes(transitionTypes)
                         .setLoiteringDelay(FileConfigReader.getInstance(ctx).getGeofenceLoiteringDelay())
+                        .setNotificationResponsiveness(FileConfigReader.getInstance(ctx).getGeofenceNotificationResponsiveness())
                         .build());
 
                 infoAdd += geo.id;

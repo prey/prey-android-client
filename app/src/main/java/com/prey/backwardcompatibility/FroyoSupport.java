@@ -42,21 +42,27 @@ public class FroyoSupport {
 
     public void changePasswordAndLock(String newPass, boolean lock) throws PreyException{
         try {
+            PreyLogger.i("change0");
             if (isAdminActive()) {
+                PreyLogger.i("change1");
+
                 try {
                     policyManager.setPasswordMinimumLength(deviceAdmin, 0);
                     policyManager.setPasswordQuality(deviceAdmin, DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED);
+                    policyManager.resetPassword(newPass, DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
+                    if ("".equals(newPass))
+                        android.provider.Settings.System.putInt(ctx.getContentResolver(), android.provider.Settings.System.LOCK_PATTERN_ENABLED, 0);
                 } catch (Exception e1) {
+                    if (lock) {
+                        lockNow();
+                    }
+                    PreyLogger.e("locked:"+e1.getMessage(),e1);
+                    throw new PreyException("This device couldn't be locked");
                 }
 
-                boolean resultLocK = policyManager.resetPassword(newPass, DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
-
-                if ("".equals(newPass))
-                    android.provider.Settings.System.putInt(ctx.getContentResolver(), android.provider.Settings.System.LOCK_PATTERN_ENABLED, 0);
-
-                PreyLogger.i("resultLocK:" + resultLocK);
-                if (lock)
+                if (lock){
                     lockNow();
+                }
             }
         } catch (Exception e) {
             throw new PreyException("This device couldn't be locked");

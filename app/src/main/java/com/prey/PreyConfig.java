@@ -130,7 +130,7 @@ public class PreyConfig {
     public static final String DEVICE_ID = "DEVICE_ID";
 
     public static final String SIM_SERIAL_NUMBER = "SIM_SERIAL_NUMBER";
-    public static final String VERSION_PREY_DEFAULT="1.7.4";
+    public static final String VERSION_PREY_DEFAULT="1.7.5";
 
     public static final String CAN_ACCESS_FINE_LOCATION = "CAN_ACCESS_FINE_LOCATION";
     public static final String CAN_ACCESS_COARSE_LOCATION = "CAN_ACCESS_COARSE_LOCATION";
@@ -153,6 +153,8 @@ public class PreyConfig {
     public static final String UNLOCK_PASS="unlock_pass";
 
     public static final String NOTIFICATION_ANDROID_7="notify_android_7";
+
+    public static final String JOB_ID_LOCK="job_id_lock";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -653,11 +655,11 @@ public class PreyConfig {
         return FileConfigReader.getInstance(this.ctx).getPreyGooglePlay();
     }
     public String getPreyUninstallUrl() {
-        String url = FileConfigReader.getInstance(this.ctx).getPreyUninstall();
-        PreyLogger.i(url);
-        return url;
+        return FileConfigReader.getInstance(this.ctx).getPreyUninstall();
     }
-
+    public String getPreyUninstallEsUrl() {
+        return FileConfigReader.getInstance(this.ctx).getPreyUninstallEs();
+    }
     public String getApiKeyBatch() {
         return FileConfigReader.getInstance(this.ctx).getApiKeyBatch();
     }
@@ -949,5 +951,13 @@ public class PreyConfig {
 
     public boolean isChromebook() {
         return ctx.getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
+    }
+
+    public String getJobIdLock(){
+        return getString(PreyConfig.JOB_ID_LOCK, "");
+    }
+
+    public void setJobIdLock(String jobIdLock) {
+        saveString(PreyConfig.JOB_ID_LOCK, jobIdLock);
     }
 }

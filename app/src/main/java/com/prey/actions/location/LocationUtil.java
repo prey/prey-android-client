@@ -131,8 +131,10 @@ public class LocationUtil {
             throw new Exception();
         }
         preyLocation = PreyWebServices.getInstance().getLocation(ctx, listWifi);
-        preyLocation.setMethod("wifi");
-        sendLocation(ctx, asynchronous, null, preyLocation);
+        if(preyLocation!=null) {
+            preyLocation.setMethod("wifi");
+            sendLocation(ctx, asynchronous, null, preyLocation);
+        }
         return preyLocation;
     }
 

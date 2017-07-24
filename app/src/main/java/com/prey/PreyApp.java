@@ -7,22 +7,12 @@
 package com.prey;
 
 import android.app.Application;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.support.v7.app.NotificationCompat;
 
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.report.ReportScheduled;
-import com.prey.activities.LoginActivity;
-import com.prey.backup.PreyBackupThread;
 import com.prey.net.PreyWebServices;
-import com.prey.net.offline.OfflineController;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PreyApp extends Application {
@@ -72,18 +62,11 @@ public class PreyApp extends Application {
                         FileretrievalController.getInstance().run(getApplicationContext());
                     }
                 }.start();
-                /*new Thread() {
-                    public void run() {
-                        OfflineController.getInstance().run(getApplicationContext());
-                    }
-                }.start();*/
                 if (missing) {
                     if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {
                         ReportScheduled.getInstance(this).run();
                     }
                 }
-
-                //new PreyBackupThread(this).start();
             }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);

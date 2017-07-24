@@ -50,6 +50,8 @@ import com.prey.net.PreyWebServices;
 import com.prey.services.PreyOverlayService;
 import com.prey.util.Version;
 
+import java.util.Locale;
+
 public class CheckPasswordActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     int wrongPasswordIntents = 0;
@@ -133,11 +135,14 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
             textViewUninstall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String url = PreyConfig.getPreyConfig(getApplication()).getPreyUninstallUrl();
-
+                    String url;
+                    if ("es".equals(Locale.getDefault().getLanguage())) {
+                        url = PreyConfig.getPreyConfig(getApplication()).getPreyUninstallEsUrl();
+                    } else {
+                        url = PreyConfig.getPreyConfig(getApplication()).getPreyUninstallUrl();
+                    }
                     Intent browserIntent = new Intent("android.intent.action.VIEW", Uri.parse(url));
                     startActivity(browserIntent);
-
                     finish();
                 }
             });

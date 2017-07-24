@@ -16,6 +16,7 @@ prey-domain=preyproject.com
 #prey-subdomain=control
 #prey-domain=preyhq.com
 
+
 api-v1=api/v1/
 api-v2=api/v2/
 
@@ -45,13 +46,18 @@ subject-feedback=prey android feedback
 
 analytics-ua=UA-8743344-9
 
-prey-uninstall=https://preyproject.com/help/content/uninstalling-prey
+prey-uninstall=http://help.preyproject.com/article/190-how-to-uninstall-prey
+prey-uninstall-es=http://ayuda.preyproject.com/article/226-como-desinstalar-prey
 
 #300 meters
 geofence-maximum-accuracy=300
 
-#two minutes
-geofence-loitering-delay=120000
+#four minutes
+geofence-loitering-delay=240000
+
+#notification Responsiveness
+geofence-notification-responsiveness=5000
+
 
 #100 meters
 distance-location=100

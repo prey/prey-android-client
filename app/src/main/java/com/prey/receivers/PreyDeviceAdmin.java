@@ -14,6 +14,9 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 
 import com.prey.R;
+import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.json.UtilJson;
+import com.prey.net.PreyWebServices;
 
 public class PreyDeviceAdmin extends DeviceAdminReceiver {
 
@@ -39,20 +42,28 @@ public class PreyDeviceAdmin extends DeviceAdminReceiver {
 
     @Override
     public void onPasswordSucceeded(Context context, Intent intent) {
-        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
 
-        /*
-        if (preyConfig.isLockSet()){
+        PreyLogger.d("Password onPasswordSucceeded");
+
+        if (PreyConfig.getPreyConfig(context).isLockSet()){
             PreyLogger.d("Password was entered successfully");
-            preyConfig.setLock(false);
-            FroyoSupport.getInstance(context).changePasswordAndLock("", false);
-            final Context contexfinal=context;
+            PreyConfig.getPreyConfig(context).setLock(false);
+            PreyConfig.getPreyConfig(context).deleteUnlockPass();
+            try{FroyoSupport.getInstance(context).changePasswordAndLock("", false);}catch(Exception e){}
+            final Context ctx=context;
             new Thread(){
                 public void run() {
-                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(contexfinal, UtilJson.makeMapParam("stop","lock","stopped"));
+                    String jobIdLock=PreyConfig.getPreyConfig(ctx).getJobIdLock();
+                    String reason=null;
+                    if(jobIdLock!=null&&!"".equals(jobIdLock)){
+                        reason="{\"device_job_id\":\""+jobIdLock+"\"}";
+                        PreyConfig.getPreyConfig(ctx).setJobIdLock("");
+                    }
+                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","lock","stopped",reason));
+
                 }
             }.start();
-        }*/
+        }
     }
 
 }

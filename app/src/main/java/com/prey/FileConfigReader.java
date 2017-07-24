@@ -81,6 +81,10 @@ public class FileConfigReader {
         return properties.getProperty("prey-uninstall");
     }
 
+    public String getPreyUninstallEs() {
+        return properties.getProperty("prey-uninstall-es");
+    }
+
     public String getPreyMinorVersion() {
         return properties.getProperty("prey-minor-version");
     }
@@ -147,6 +151,10 @@ public class FileConfigReader {
 
     public int getDistanceLocation() {
         return Integer.parseInt(properties.getProperty("distance-location"));
+    }
+
+    public int getGeofenceNotificationResponsiveness() {
+        return Integer.parseInt(properties.getProperty("geofence-notification-responsiveness"));
     }
 
 }

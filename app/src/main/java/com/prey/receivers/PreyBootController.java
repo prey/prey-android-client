@@ -12,8 +12,10 @@ import android.content.Intent;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPermission;
 import com.prey.json.actions.Report;
 import com.prey.services.PreyDisablePowerOptionsService;
+import com.prey.services.PreyLockService;
 
 public class PreyBootController extends BroadcastReceiver {
 
@@ -30,6 +32,11 @@ public class PreyBootController extends BroadcastReceiver {
                 context.startService(new Intent(context, PreyDisablePowerOptionsService.class));
             } else {
                 context.stopService(new Intent(context, PreyDisablePowerOptionsService.class));
+            }
+            if (PreyConfig.getPreyConfig(context).isLockSet()) {
+                if(PreyConfig.getPreyConfig(context).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(context)) {
+                    context.startService(new Intent(context, PreyLockService.class));
+                }
             }
         } else
             PreyLogger.e("Received unexpected intent " + intent.toString(), null);

@@ -22,4 +22,7 @@ public class PreyException extends Exception {
         super(message);
     }
 
+    public PreyException(Throwable throwable) {
+        super(throwable);
+    }
 }
