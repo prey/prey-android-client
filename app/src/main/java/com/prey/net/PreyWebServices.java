@@ -400,7 +400,7 @@ public class PreyWebServices {
     }
 
     public String getFileUrlJson(Context ctx) throws PreyException {
-        return getDeviceUrlApiv2(ctx).concat("/files");
+        return getDeviceUrlApiv2(ctx).concat("/files.json");
     }
 
     public String getDataUrlJson(Context ctx) throws PreyException {
@@ -408,11 +408,11 @@ public class PreyWebServices {
     }
 
     private String getEventsUrlJson(Context ctx) throws PreyException {
-        return getDeviceUrlApiv2(ctx).concat("/events");
+        return getDeviceUrlApiv2(ctx).concat("/events.json");
     }
 
     private String getResponseUrlJson(Context ctx) throws PreyException {
-        return getDeviceUrlApiv2(ctx).concat("/response");
+        return getDeviceUrlApiv2(ctx).concat("/response.json");
     }
 
     public String getInfoUrlJson(Context ctx) throws PreyException {

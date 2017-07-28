@@ -43,8 +43,9 @@ public class Lock extends JsonAction {
             } catch (Exception e) {
             }
             String reason=null;
+            String jobId =null;
             try {
-                String jobId = parameters.getString(PreyConfig.JOB_ID);
+                jobId = parameters.getString(PreyConfig.JOB_ID);
                 PreyLogger.d("jobId:"+jobId);
                 reason="{\"device_job_id\":\""+jobId+"\"}";
                 PreyConfig.getPreyConfig(ctx).setJobIdLock(jobId);
@@ -56,7 +57,7 @@ public class Lock extends JsonAction {
                 PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
             } catch (Exception e) {
             }
-            lock(ctx, unlock, messageId, reason);
+            lock(ctx, unlock, messageId, reason,jobId);
         } catch (Exception e) {
             PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage()));
@@ -87,7 +88,7 @@ public class Lock extends JsonAction {
             PreyConfig.getPreyConfig(ctx).setLock(false);
             PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
             if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
-                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped",reason));
+                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId,UtilJson.makeMapParam("start", "lock", "stopped",reason));
 
                 int pid = android.os.Process.myPid();
                 android.os.Process.killProcess(pid);
@@ -113,27 +114,27 @@ public class Lock extends JsonAction {
     public void sms(Context ctx, List<ActionResult> list, JSONObject parameters) {
         try {
             String unlock = parameters.getString("parameter");
-            lock(ctx, unlock, null, null);
+            lock(ctx, unlock, null, null,null);
         } catch (Exception e) {
             PreyLogger.i("Error:" + e.getMessage());
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage()));
         }
     }
 
-    public void lock(Context ctx, String unlock, String messageId, String reason) {
+    public void lock(Context ctx, String unlock, String messageId, String reason,String device_job_id) {
         PreyLogger.i("lock unlock:"+unlock+" messageId:"+ messageId+" reason:"+reason);
         PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
         PreyConfig.getPreyConfig(ctx).setLock(true);
 
         if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
-            PreyLogger.i("uno");
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "lock", "started", reason));
+            try {
+                Thread.sleep(1500);
+                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "lock", "started", reason));
+            }catch(Exception e){}
             Intent intent = new Intent(ctx, PreyLockService.class);
             ctx.startService(intent);
         }else{
-            PreyLogger.i("dos");
             if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {
-                PreyLogger.i("dos_uno");
                 try{
                     FroyoSupport.getInstance(ctx).changePasswordAndLock(unlock, true);
                 }catch(Exception e){
