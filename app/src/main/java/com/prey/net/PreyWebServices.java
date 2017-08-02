@@ -540,7 +540,7 @@ public class PreyWebServices {
 
     public void sendPreyHttpEvent(Context ctx, Event event, JSONObject jsonObject) {
         try {
-            String url = getEventsUrlJson(ctx) + ".json";
+            String url = getEventsUrlJson(ctx);
             Map<String, String> parameters = new HashMap<String, String>();
             parameters.put("name", event.getName());
             parameters.put("info", event.getInfo());
