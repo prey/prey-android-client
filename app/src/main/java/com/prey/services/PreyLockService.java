@@ -105,7 +105,6 @@ public class PreyLockService extends Service{
             layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
             wm.addView(view, layoutParams);
         }else{
-            PreyLogger.i("unlock vacio");
             if(view != null){
                 WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
                 wm.removeView(view);
