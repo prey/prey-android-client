@@ -27,7 +27,7 @@
 
     <string name="permission_error_title_1">estado de tu dispositivo</string>
     <string name="permission_error_title_2">DESPROTEGIDO.</string>
-    <string name="permission_error_title_3">Prey necesita privilegios especiales para bloquear tu dispositivo y evitar que los ladrones puedan desinstalarlo.</string>
+    <string name="permission_error_title_3">Prey utiliza el Permiso de Administrador de Dispositivo para su funciones de Borrado Remoto y Bloqueo.\nActivar el permiso te permitirá utilizar estas funcione de manera remota para combatir el robo de información.\nCon el Borrado Remoto puedes eliminar los datos de un equipo perdido, mientras que la función de Bloqueo impide el acceso con una pantalla de bloqueo y una contraseña.</string>
     <string name="permission_error_button_1">ACTIVAR PROTECCIÓN</string>
 
     <string name="protect_title_1">estado de tu dispositivo</string>

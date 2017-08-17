@@ -46,15 +46,7 @@ public class PermissionInformationActivity extends PreyActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        PreyLogger.d("first:" + first);
-        if (getPreyConfig().isFroyoOrAbove() && !FroyoSupport.getInstance(this).isAdminActive() && !first) {
-            first = true;
-            Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
-            startActivityForResult(intent, SECURITY_PRIVILEGES);
-        } else {
-            first = false;
-            showScreen();
-        }
+        showScreen();
     }
 
     @Override

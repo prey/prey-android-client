@@ -67,12 +67,6 @@ public class LocationUtil {
         PreyLogger.d("status gps:" + isGpsEnabled + " net:" + isNetworkEnabled + " wifi:" + isWifiEnabled+" play:"+isGooglePlayServicesAvailable);
         String method = getMethod(isGpsEnabled, isNetworkEnabled);
         try {
-            if (isWifiEnabled) {
-                preyLocation = getDataLocationWifi(ctx,method,asynchronous,preyLocation);
-            }
-        } catch (Exception e) {
-        }
-        try {
             if(!isGooglePlayServicesAvailable||(isGpsEnabled&&!isNetworkEnabled)) {
                 preyLocation = getPreyLocationAppService(ctx,method,asynchronous,preyLocation);
             }else{
@@ -118,24 +112,6 @@ public class LocationUtil {
     private static void sendNotify(Context ctx, String message, String status) {
         Map<String, String> parms = UtilJson.makeMapParam("get", "location", status, message);
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
-    }
-
-    private static PreyLocation getDataLocationWifi(Context ctx, String method, boolean asynchronous, PreyLocation preyLocationOld) throws Exception {
-        PreyLocation preyLocation = null;
-        List<Wifi> listWifi = null;
-        PreyPhone preyPhone = new PreyPhone(ctx);
-        if (PreyWifiManager.getInstance(ctx).isWifiEnabled()) {
-            listWifi = preyPhone.getListWifi();
-        }
-        if (listWifi == null || listWifi.size() == 0) {
-            throw new Exception();
-        }
-        preyLocation = PreyWebServices.getInstance().getLocation(ctx, listWifi);
-        if(preyLocation!=null) {
-            preyLocation.setMethod("wifi");
-            sendLocation(ctx, asynchronous, null, preyLocation);
-        }
-        return preyLocation;
     }
 
     private final static int MAXIMUM_OF_ATTEMPTS=9;

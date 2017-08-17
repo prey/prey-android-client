@@ -641,44 +641,6 @@ public class PreyWebServices {
         return lista;
     }
 
-    public PreyHttpResponse registerNewDeviceRemote(Context ctx, String mail, String notificationId, String deviceType) throws PreyException {
-        PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-
-        String model = Build.MODEL;
-        String vendor = "Google";
-        if (!PreyConfig.getPreyConfig(ctx).isCupcakeOrAbove())
-            vendor = AboveCupcakeSupport.getDeviceVendor();
-
-
-        HashMap<String, String> parameters = new HashMap<String, String>();
-        parameters.put("device[notification_id]", notificationId);
-        parameters.put("device[remote_email]", mail);
-        parameters.put("device[title]", vendor + " " + model);
-        parameters.put("device[device_type]", deviceType);
-        parameters.put("device[os]", "Android");
-        parameters.put("device[os_version]", Build.VERSION.RELEASE);
-        parameters.put("device[referer_device_id]", "");
-        parameters.put("device[plan]", "free");
-        parameters.put("device[model_name]", model);
-        parameters.put("device[vendor_name]", vendor);
-
-        parameters = increaseData(ctx, parameters);
-        TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        String imei = mTelephonyMgr.getDeviceId();
-        parameters.put("device[physical_address]", imei);
-
-        PreyHttpResponse response = null;
-        try {
-            String url = "https://panel.preyapp.com/api/v2/remote.json";
-            response = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
-        } catch (Exception e) {
-            throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
-        }
-
-        return response;
-    }
-
-
     public PreyHttpResponse sendContact(Context ctx, HashMap<String, String> parameters) {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 
@@ -737,51 +699,6 @@ public class PreyWebServices {
         String responseAsString = response.getResponseAsString();
         PreyLogger.d("responseAsString:" + responseAsString);
         return responseAsString;
-    }
-
-    public PreyLocation getLocation(Context ctx, List<Wifi> listWifi) throws Exception {
-        PreyLocation location = null;
-        String url = googleLookup(listWifi);
-        PreyLogger.d("location url:" + url);
-        PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).get(url,null);
-        String responseAsString = response.getResponseAsString();
-        PreyLogger.d("location resp:" + responseAsString);
-        if (response.getStatusCode() == 200) {
-            if (responseAsString != null && responseAsString.indexOf("OK") >= 0) {
-                location = new PreyLocation();
-                JSONObject jsnobject = new JSONObject(response.getResponseAsString());
-                String accuracy = jsnobject.getString("accuracy");
-                JSONObject jsnobjectLocation = jsnobject.getJSONObject("location");
-                String lat = jsnobjectLocation.getString("lat");
-                String lng = jsnobjectLocation.getString("lng");
-                location.setLat(Double.parseDouble(lat));
-                location.setLng(Double.parseDouble(lng));
-                location.setAccuracy(Float.parseFloat(accuracy));
-                location.setMethod("wifi");
-            }
-        }
-        return location;
-    }
-
-    private String googleLookup(List<Wifi> listwifi) {
-        String queryString = "https://maps.googleapis.com/maps/api/browserlocation/json?browser=firefox&sensor=true";
-        try {
-            for (int i = 0; listwifi != null && i < listwifi.size(); i++) {
-                String ssid = listwifi.get(i).getSsid();
-                ssid = ssid.replaceAll(" ", "%20");
-                queryString += "&wifi=mac:";
-                queryString += listwifi.get(i).getMacAddress();
-                queryString += "%7C";
-                queryString += "ssid:";
-                queryString += ssid;
-                queryString += "%7C";
-                queryString += "ss:";
-                queryString += listwifi.get(i).getSignalStrength();
-
-            }
-        } catch (Exception e) {
-        }
-        return queryString;
     }
 
     public String geofencing(Context ctx) throws PreyException {

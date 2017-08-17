@@ -25,7 +25,7 @@
 
     <string name="permission_error_title_1">current device status</string>
     <string name="permission_error_title_2">NOT PROTECTED.</string>
-    <string name="permission_error_title_3">Prey need these special privileges to lock your device and also to prevent thieves from uninstalling it</string>
+    <string name="permission_error_title_3">Prey utilizes the Device Administrator permission for its Remote Wipe and Lock features.\nGranting permission allows you to activate our data protection tools remotely to counter data theft.\nThe Remote Wipe lets you execute a data wipe on a lost device, while our Lock feature blocks access to it with a lock screen and a custom password.</string>
     <string name="permission_error_button_1">ACTIVATE PROTECTION</string>
 
     <string name="protect_title_1">current device status</string>
