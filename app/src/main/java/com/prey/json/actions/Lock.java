@@ -88,6 +88,7 @@ public class Lock extends JsonAction {
             PreyConfig.getPreyConfig(ctx).setLock(false);
             PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
             if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
+                Thread.sleep(3000);
                 PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId,UtilJson.makeMapParam("start", "lock", "stopped",reason));
 
                 int pid = android.os.Process.myPid();
@@ -100,6 +101,7 @@ public class Lock extends JsonAction {
                         PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, PreyConfig.TAG);
                     screenLock.acquire();
                     screenLock.release();
+                    Thread.sleep(3000);
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped",reason));
                 }catch(Exception e){
                     throw new PreyException(e);
@@ -128,7 +130,7 @@ public class Lock extends JsonAction {
 
         if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
             try {
-                Thread.sleep(1500);
+                Thread.sleep(2000);
                 PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "lock", "started", reason));
             }catch(Exception e){}
             Intent intent = new Intent(ctx, PreyLockService.class);
