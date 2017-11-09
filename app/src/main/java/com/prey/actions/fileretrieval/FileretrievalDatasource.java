@@ -26,7 +26,7 @@ public class FileretrievalDatasource {
     public void createGeofence(FileretrievalDto dto) {
         try {
             dbHelper.insertFileretrieval(dto);
-        } catch (Exception e) {;
+        } catch (Exception e) {
             try {
                 dbHelper.updateFileretrieval(dto);
             } catch (Exception e1) {

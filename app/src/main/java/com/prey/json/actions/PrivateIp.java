@@ -40,7 +40,6 @@ public class PrivateIp extends JsonAction {
         String privateIp = phone.getWifi().getIpAddress();
         parametersMap.put(privateIp, privateIp);
         PreyLogger.d("privateIp:" + privateIp);
-        ;
 
         data.setSingleData(privateIp);
 

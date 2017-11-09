@@ -95,7 +95,6 @@ public class SimpleVideoActivity extends Activity implements
             preyHttpResponse = PreyRestHttpClient
                     .getInstance(ctx)
                     .postAutentication(uri, parameters, entityFiles);
-            ;
             PreyLogger.i("status line:" + preyHttpResponse.getStatusCode());
         } catch (Exception e) {
             PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);

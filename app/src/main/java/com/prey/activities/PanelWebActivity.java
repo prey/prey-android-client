@@ -86,7 +86,7 @@ public class PanelWebActivity extends Activity {
 
         String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelJwt();
 
-        String postData = "token="+PreyConfig.getPreyConfig(getApplicationContext()).getTokenJwt();;
+        String postData = "token="+PreyConfig.getPreyConfig(getApplicationContext()).getTokenJwt();
 
         byte[] postByte = EncodingUtils.getBytes(postData,"BASE64");
         myWebView.postUrl(url,postByte);

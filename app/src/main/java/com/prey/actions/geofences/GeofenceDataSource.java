@@ -24,7 +24,7 @@ public class GeofenceDataSource {
     public void createGeofence(GeofenceDto geofence) {
         try {
             dbHelper.insertGeofence(geofence);
-        } catch (Exception e) {;
+        } catch (Exception e) {
             try {
                 dbHelper.updateGeofence(geofence);
             } catch (Exception e1) {
