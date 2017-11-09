@@ -90,9 +90,6 @@ public class CameraSource {
     private String mFocusMode = null;
     private String mFlashMode = null;
 
-    private SurfaceView mDummySurfaceView;
-    private SurfaceTexture mDummySurfaceTexture;
-
 
     private Thread mProcessingThread;
     private FrameProcessingRunnable mFrameProcessor;
@@ -193,10 +190,10 @@ public class CameraSource {
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                mDummySurfaceTexture = new SurfaceTexture(DUMMY_TEXTURE_NAME);
+                SurfaceTexture mDummySurfaceTexture = new SurfaceTexture(DUMMY_TEXTURE_NAME);
                 mCamera.setPreviewTexture(mDummySurfaceTexture);
             } else {
-                mDummySurfaceView = new SurfaceView(mContext);
+                SurfaceView mDummySurfaceView = new SurfaceView(mContext);
                 mCamera.setPreviewDisplay(mDummySurfaceView.getHolder());
             }
             mCamera.startPreview();

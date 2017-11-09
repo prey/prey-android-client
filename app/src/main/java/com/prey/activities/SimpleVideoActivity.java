@@ -46,8 +46,6 @@ public class SimpleVideoActivity extends Activity implements
     private SurfaceHolder mSurfaceHolder;
     public static byte[] dataImagen = null;
 
-    private File directory;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,7 +124,7 @@ public class SimpleVideoActivity extends Activity implements
             mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
 
-            directory = new File(Environment.getExternalStorageDirectory()
+            File directory = new File(Environment.getExternalStorageDirectory()
                     .toString() + "/");
             if (!directory.exists())
                 directory.mkdirs();

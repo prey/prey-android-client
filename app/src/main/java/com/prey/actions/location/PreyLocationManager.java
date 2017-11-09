@@ -14,10 +14,9 @@ public class PreyLocationManager {
     private PreyLocation lastLocation;
     private static PreyLocationManager _instance = null;
     private LocationManager androidLocationManager = null;
-    private Context ctx;
 
     private PreyLocationManager(Context ctx) {
-        this.ctx = ctx;
+        Context ctx1 = ctx;
         androidLocationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
     }
 

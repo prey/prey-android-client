@@ -26,7 +26,6 @@ import com.prey.net.PreyWebServices;
 public class PermissionInformationActivity extends PreyActivity {
 
     private static final int SECURITY_PRIVILEGES = 10;
-    private String congratsMessage;
     private boolean first = false;
 
     @Override
@@ -35,7 +34,7 @@ public class PermissionInformationActivity extends PreyActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Bundle bundle = getIntent().getExtras();
-        congratsMessage = bundle.getString("message");
+        String congratsMessage = bundle.getString("message");
     }
 
     @Override

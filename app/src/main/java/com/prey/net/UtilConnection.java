@@ -45,8 +45,6 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class UtilConnection {
 
-    private static int RETRIES = 4;
-
     private static int[] ARRAY_RETRY_DELAY_MS =new int[]{1,2,3,4};
 
     private static final String REQUEST_METHOD_PUT="PUT";
@@ -127,6 +125,7 @@ public class UtilConnection {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmZ");
         List <ByteArrayOutputStream> listOutputStream = new ArrayList<>();
         try{
+            int RETRIES = 4;
             do {
                 if (delay) {
                     Thread.sleep(ARRAY_RETRY_DELAY_MS[retry]*1000);

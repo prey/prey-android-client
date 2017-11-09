@@ -22,7 +22,6 @@ public class RevokedPasswordPreferences extends EditTextPreference {
 
 
     Context ctx = null;
-    private String error = null;
 
     public RevokedPasswordPreferences(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -84,7 +83,7 @@ public class RevokedPasswordPreferences extends EditTextPreference {
 
                 //PreyWebServices.getInstance().updateActivationPhrase(getContext(), getText());
             } catch (Exception e) {
-                error = e.getMessage();
+                String error = e.getMessage();
             }
             return null;
         }
