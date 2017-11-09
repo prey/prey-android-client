@@ -69,13 +69,12 @@ public class FormFeedbackActivity extends PreyActivity {
                         if (input != null) {
                             Context ctx = getApplicationContext();
                             String emailFeedback = FileConfigReader.getInstance(getApplicationContext()).getEmailFeedback();
-                            StringBuffer subject = new StringBuffer();
-                            subject.append(FileConfigReader.getInstance(ctx).getSubjectFeedback()).append(" ");
-                            subject.append(PreyUtils.randomAlphaNumeric(7).toUpperCase());
+                            String subject = FileConfigReader.getInstance(ctx).getSubjectFeedback() + " " +
+                                    PreyUtils.randomAlphaNumeric(7).toUpperCase();
                             Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                             intent.setType("text/plain");
                             intent.putExtra(Intent.EXTRA_EMAIL, new String[]{emailFeedback});
-                            intent.putExtra(Intent.EXTRA_SUBJECT, subject.toString());
+                            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
                             intent.putExtra(Intent.EXTRA_TEXT, input.getText().toString());
                             Intent chooser = Intent.createChooser(intent, ctx.getText(R.string.feedback_form_send_email));
                             startActivity(chooser);

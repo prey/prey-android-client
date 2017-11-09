@@ -552,7 +552,7 @@ public class PreyWebServices {
             PreyHttpResponse preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters);
             String jsonString = preyHttpResponse.getResponseAsString();
             if (jsonString != null && jsonString.length() > 0) {
-                List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
+                List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString);
                 if (jsonObjectList != null && jsonObjectList.size() > 0) {
                     ActionsController.getInstance(ctx).runActionJson(ctx, jsonObjectList);
                 }

@@ -56,13 +56,13 @@ public class ReportService extends IntentService {
 
 			jsonArray = new JSONArray();
 			if (!exclude.contains("picture"))
-				jsonArray.put(new String("picture"));
+				jsonArray.put("picture");
 			if (!exclude.contains("location"))
-				jsonArray.put(new String("location"));
+				jsonArray.put("location");
 			if (!exclude.contains("access_points_list"))
-				jsonArray.put(new String("access_points_list"));
+				jsonArray.put("access_points_list");
 			if (!exclude.contains("active_access_point"))
-				jsonArray.put(new String("active_access_point"));
+				jsonArray.put("active_access_point");
 
 			try {
 				List<ActionResult> lista = new ArrayList<ActionResult>();

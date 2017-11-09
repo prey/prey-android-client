@@ -90,16 +90,16 @@ public class GeofenceController {
         }
         if (removeList != null && removeList.size() > 0) {
             LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient, removeList);
-            String infoDelete = "[";
+            StringBuilder infoDelete = new StringBuilder("[");
             for (int i = 0; removeList != null && i < removeList.size(); i++) {
-                infoDelete += removeList.get(i);
+                infoDelete.append(removeList.get(i));
                 if (i + 1 < removeList.size()) {
-                    infoDelete += ",";
+                    infoDelete.append(",");
                 }
             }
-            infoDelete += "]";
+            infoDelete.append("]");
             PreyLogger.d("infoDelete:" + infoDelete);
-            sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "stopped", infoDelete));
+            sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "stopped", infoDelete.toString()));
         }
     }
 
@@ -131,7 +131,7 @@ public class GeofenceController {
     private void addZones(final Context ctx) {
         List<com.google.android.gms.location.Geofence> mGeofenceList = new ArrayList<Geofence>();
         final List<GeofenceDto> listToBdAdd = new ArrayList<GeofenceDto>();
-        String infoAdd = "[";
+        StringBuilder infoAdd = new StringBuilder("[");
         for (int i = 0; listWeb != null && i < listWeb.size(); i++) {
             GeofenceDto geo = listWeb.get(i);
             if (!mapBD.containsKey(geo.getId())) {
@@ -150,15 +150,15 @@ public class GeofenceController {
                         .setNotificationResponsiveness(FileConfigReader.getInstance(ctx).getGeofenceNotificationResponsiveness())
                         .build());
 
-                infoAdd += geo.id;
+                infoAdd.append(geo.id);
                 if (i + 1 < listWeb.size()) {
-                    infoAdd += ",";
+                    infoAdd.append(",");
                 }
             }
         }
 
-        infoAdd += "]";
-        final String infoExtra = infoAdd;
+        infoAdd.append("]");
+        final String infoExtra = infoAdd.toString();
         PreyLogger.d("infoAdd:" + infoExtra);
 
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
@@ -218,7 +218,7 @@ public class GeofenceController {
             List<GeofenceDto> listBD = dataSource.getAllGeofences();
             List<com.google.android.gms.location.Geofence> mGeofenceList = new ArrayList<Geofence>();
             final List<GeofenceDto> listToBdAdd = new ArrayList<GeofenceDto>();
-            String info = "[";
+            StringBuilder info = new StringBuilder("[");
             for (int i = 0; listBD != null && i < listBD.size(); i++) {
                 GeofenceDto geo = listBD.get(i);
                 listToBdAdd.add(geo);
@@ -233,13 +233,13 @@ public class GeofenceController {
                         .setTransitionTypes(transitionTypes)
                         .setLoiteringDelay(FileConfigReader.getInstance(ctx).getGeofenceLoiteringDelay())
                         .build());
-                info += geo.id;
+                info.append(geo.id);
                 if (i + 1 < listBD.size()) {
-                    info += ",";
+                    info.append(",");
                 }
             }
-            info += "]";
-            final String extraInfo = info;
+            info.append("]");
+            final String extraInfo = info.toString();
             PreyLogger.d("info:" + extraInfo);
             GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
             builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
