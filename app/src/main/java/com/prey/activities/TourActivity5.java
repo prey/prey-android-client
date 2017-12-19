@@ -66,7 +66,7 @@ public class TourActivity5 extends Activity {
                 @Override
                 public void onClick(View v) {
                     PreyConfig.getPreyConfig(getApplication()).setProtectTour(true);
-                    Intent intent = new Intent(getApplicationContext(), CheckPasswordActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);
                     startActivity(intent);
                     finish();
                 }

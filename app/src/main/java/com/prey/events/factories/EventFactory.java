@@ -28,7 +28,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.R;
 import com.prey.actions.fileretrieval.FileretrievalController;
-import com.prey.activities.CheckPasswordActivity;
+import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.Event;
 import com.prey.managers.PreyConnectivityManager;
@@ -211,7 +211,7 @@ public class EventFactory {
                 PreyConfig.getPreyConfig(ctx).setCanAccessFineLocation(PreyPermission.canAccessFineLocation(ctx));
                 PreyConfig.getPreyConfig(ctx).setCanAccessReadPhoneState(PreyPermission.canAccessReadPhoneState(ctx));
                 if (!PreyPermission.canAccessCamera(ctx) || !PreyPermission.canAccessCoarseLocation(ctx) || !PreyPermission.canAccessFineLocation(ctx)|| !PreyPermission.canAccessReadPhoneState(ctx)) {
-                    Intent intent3 = new Intent(ctx, CheckPasswordActivity.class);
+                    Intent intent3 = new Intent(ctx, CheckPasswordHtmlActivity.class);
                     intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     PendingIntent pendingIntent = PendingIntent.getActivity(

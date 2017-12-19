@@ -171,6 +171,8 @@ public class BarcodeActivity extends Activity   {
                         PreyConfig.getPreyConfig(getApplicationContext()).saveAccount(accountData);
                         PreyConfig.getPreyConfig(getApplication()).registerC2dm();
                         PreyWebServices.getInstance().sendEvent(getApplication(), PreyConfig.ANDROID_SIGN_IN);
+                        String email=PreyWebServices.getInstance().getEmail(getApplicationContext());
+                        PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
                     }
                 }
 

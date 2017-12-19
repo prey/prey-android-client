@@ -191,7 +191,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.prey.activities.CheckPasswordActivity"
+            android:name="com.prey.activities.CheckPasswordHtmlActivity"
             android:launchMode="singleTask"
 
             android:windowSoftInputMode="stateHidden|adjustResize"

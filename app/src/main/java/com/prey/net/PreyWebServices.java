@@ -8,6 +8,7 @@ package com.prey.net;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -292,29 +293,31 @@ public class PreyWebServices {
     }
 
     public boolean checkPassword(Context ctx, String apikey, String password) throws PreyException {
-        String xml = this.checkPassword(apikey, password, ctx);
+        PreyHttpResponse response= this.checkPassword(apikey, password, ctx);
+        String xml = response.getResponseAsString();
         return xml.contains("<key");
     }
 
-    public String checkPassword(String apikey, String password, Context ctx) throws PreyException {
+    private PreyHttpResponse checkPassword(String apikey, String password, Context ctx) throws PreyException {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         HashMap<String, String> parameters = new HashMap<String, String>();
-        String xml=null;
-
+        PreyHttpResponse response=null;
         try {
             String uri=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("profile.xml");
-            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).get(uri, parameters, apikey, password);
-            xml=response.getResponseAsString();
+            response = PreyRestHttpClient.getInstance(ctx).get(uri, parameters, apikey, password);
         } catch (Exception e) {
             throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
+        }
+        if(response!=null&&response.getStatusCode()== HttpURLConnection.HTTP_UNAUTHORIZED){
+            throw new PreyException(ctx.getText(R.string.password_wrong).toString());
         }
         try {
             PreyLogger.d("____[token]_________________apikey:"+apikey+" password:"+password);
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
             String uri2=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("get_token.json");
-            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).get(uri2, parameters, apikey, password,"application/json");
-            if(response!=null) {
-                JSONObject jsnobject = new JSONObject(response.getResponseAsString());
+            PreyHttpResponse response2 = PreyRestHttpClient.getInstance(ctx).get(uri2, parameters, apikey, password,"application/json");
+            if(response2!=null) {
+                JSONObject jsnobject = new JSONObject(response2.getResponseAsString());
                 String tokenJwt = jsnobject.getString("token");
                 PreyLogger.d("tokenJwt:" + tokenJwt);
                 PreyConfig.getPreyConfig(ctx).setTokenJwt(tokenJwt);
@@ -325,8 +328,7 @@ public class PreyWebServices {
         } catch (Exception e) {
 
         }
-        PreyLogger.d("____[token]_________________xml:"+xml);
-        return xml;
+        return response;
     }
 
 
@@ -835,6 +837,24 @@ public class PreyWebServices {
         } catch (Exception e) {
         }
         return uuid;
+    }
+
+    public String getEmail(Context ctx) {
+        String email = null;
+        try {
+            HashMap<String, String> parameters = new HashMap<String, String>();
+            String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
+            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.json");
+            PreyLogger.d("url:" + url);
+            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).getAutentication(url, parameters);
+            String out=response.getResponseAsString();
+            JSONObject jsnobject = new JSONObject(out);
+            email = jsnobject.getString("email");
+            PreyLogger.d("email:"+email);
+        } catch (Exception e) {
+            PreyLogger.e("error get email", e);
+        }
+        return email;
     }
 
 }

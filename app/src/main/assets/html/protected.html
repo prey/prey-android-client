@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport">
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <title>Prey - Device protection and recovery solution.</title>
+  <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+  <link href="stylesheets/swiper.min.css" rel="stylesheet">
+  <link href="stylesheets/style.css?0.4.0" rel="stylesheet">
+</head>
+<body class="protected">
+<div id="wrap">
+  <div class="text-status">
+
+    <div class="data">
+      <h1>Protected</h1>
+      <small class="by">
+        by
+        <figure>
+          <img src="images/prey-logo-alt.svg">
+        </figure>
+      </small>
+    </div>
+  </div>
+  <div class="pulses">
+    <div class="pulse one"></div>
+    <div class="pulse two"></div>
+    <div class="pulse three"></div>
+  </div>
+  <div class="popover" id="modal-login">
+    <a class="close btn" href="#" onclick="closeSettings()">&times;</a>
+    <h4>Credentials</h4>
+    <ul class="form hvv">
+      <li><label id="label_pass" for="lpass">Enter your Prey password</label><input id="lpass" type="password"></li>
+    </ul>
+    <ul class="form vvv">
+      <li>
+        <a class="btn xl" onclick="signin()">Sign In</a>
+      </li>
+    </ul>
+  </div><!-- Slider main container-->
+  <div class="swiper-container" id="reminder">
+    <a class="close icon-cancel" href="javascript:void(0);"></a>
+    <div class="swiper-wrapper">
+      <div class="swiper-slide" id="slide1">
+        <h2 data-swiper-parallax="0">Hold up, what’s prey again?</h2>
+        <p class="desc">Prey is an Anti-Theft &amp; Tracking app. Once installed, <mark>it silently works</mark> while you <mark>use our Online Panel to track all devices and activate actions remotely</mark>, like locking your phone!</p>
+        <p class="desc">Log in at our website from any browser: computer, tablet, mobile.</p>
+        <div class="doodle" id="doodles-01">
+          <img src="images/doodles-01.svg"/>
+        </div>
+        <a class="draw-cta" data-swiper-parallax="-100" href="#" onclick="panel()">Go There</a>
+      </div>
+      <div class="swiper-slide" id="slide2">
+        <h2 data-swiper-parallax="0">So if my phone gets stolen…</h2>
+        <p class="desc"><del>Prey will fire laser beams!</del> (Nope, sorry) We will help you find, protect, and recover your device!</p>
+        <p class="desc">Mark a device as MISSING in your panel and Prey will gather evidence REPORTS with pictures, location, active networks, and more data.</p>
+        <div class="doodle" id="doodles-02">
+          <img src="images/doodles-02.svg"/>
+        </div>
+        <a class="draw-cta" data-swiper-parallax="-100" href="#" onclick="panel()">Want to try?</a>
+      </div>
+      <div class="swiper-slide" id="slide3">
+        <h2 data-swiper-parallax="0">And what can I do?</h2>
+        <p class="desc">React! Lock the thief out from your device, ring alarms to scare the crap out of them, or contact whoever finds it with a message.</p>
+        <p class="desc">If you upgrade to PRO, you level up to Data Protection Hero and unlock the Remote Wipe and File Retrieval skills</p>
+        <div class="doodle" id="doodles-03">
+          <img src="images/doodles-03.svg"/>
+        </div>
+        <a class="draw-cta" data-swiper-parallax="-100" href="#" onclick="panel()">Be a HERO!</a>
+      </div>
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+  <nav id="mobile">
+    <div class="button-group">
+      <a class="btn-reminder btn xl" href="#">Wait a minute, what's Prey?</a>
+    </div>
+    <div class="button-group">
+      <a class="btn-icon" href="#"  onclick="panel()"><i class="icon-prey-ico"></i><span>Panel</span></a>
+      <div class="icon-separator"></div>
+      <a class="btn-icon" href="#" onclick="openSettings()"><i class="icon-prey-term"></i><span>Settings</span></a>
+    </div>
+    <div class="button-group">
+      <a class="btn-icon no-icon" href="https://panel.preyproject.com/forgot">
+        <span>Forgot password?</span>
+      </a>
+    </div>
+    <div class="button-group">
+      <a class="btn-icon no-icon" href="http://help.preyproject.com/article/190-how-to-uninstall-prey">
+        <span>How to uninstall Prey?</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<script src="vendor/jquery/dist/jquery.min.js"></script>
+<script src="javascripts/swiper.min.js"></script>
+<script src="javascripts/setup.js?0.4.5"></script>
+<script src="javascripts/functions.js?0.4.7"></script>
+</body>
+</html>

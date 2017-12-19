@@ -253,6 +253,11 @@ public class UtilConnection {
                         response = convertPreyHttpResponse(responseCode,connection);
                         retry = RETRIES;
                         break;
+                    case HttpURLConnection.HTTP_UNAUTHORIZED:
+                        PreyLogger.d(uri + " **HTTP_UNAUTHORIZED**");
+                        response = convertPreyHttpResponse(responseCode,connection);
+                        retry = RETRIES;
+                        break;
                     default:
                         PreyLogger.d(uri + " **unknown response code**.");
                         break;

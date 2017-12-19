@@ -70,7 +70,7 @@ public class InitActivity extends FragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setContentView(R.layout.home);
-        PreyLogger.i("onCreate of MenuActivity");
+        PreyLogger.d("onCreate of InitActivity");
 
         onboardingPagerAdapter = new OnboardingPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);

@@ -199,6 +199,7 @@ public class SignUpActivity extends Activity {
                 PreyConfig.getPreyConfig(getApplicationContext()).saveAccount(accountData);
                 PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
                 PreyWebServices.getInstance().sendEvent(getApplication(),PreyConfig.ANDROID_SIGN_UP);
+                PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
             } catch (PreyException e) {
                 error = e.getMessage();
             }

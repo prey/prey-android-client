@@ -48,7 +48,7 @@ public class DeviceReadyActivity extends AppCompatActivity
 
     public void onBackPressed() {
         Intent intent = null;
-        intent = new Intent(getApplication(), CheckPasswordActivity.class);
+        intent = new Intent(getApplication(), CheckPasswordHtmlActivity.class);
         startActivity(intent);
         finish();
 
@@ -61,6 +61,8 @@ public class DeviceReadyActivity extends AppCompatActivity
 
         NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         nManager.cancel(PreyConfig.TAG,PreyConfig.NOTIFY_ANDROID_6);
+
+
     }
 
     @Override

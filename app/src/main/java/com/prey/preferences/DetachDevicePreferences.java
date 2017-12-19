@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.prey.PreyConfig;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.geofences.GeofenceDataSource;
+import com.prey.activities.InitActivity;
 import com.prey.activities.LoginActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.exceptions.PreyException;
@@ -81,7 +82,7 @@ public class DetachDevicePreferences extends DialogPreference {
                 Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
                 showDialog(new Bundle());
             } else {
-                Intent welcome = new Intent(getContext(), LoginActivity.class);
+                Intent welcome = new Intent(getContext(), InitActivity.class);
                 getContext().startActivity(welcome);
             }
         }
