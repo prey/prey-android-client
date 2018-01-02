@@ -52,7 +52,7 @@ public class PreyConfigurationSMSActivity extends PreferenceActivity {
                     pSMS.setChecked(value);
                     pSMS.setDefaultValue(value);
                     if(value){
-                        requestPermission();;
+                        requestPermission();
                     }
                     return false;
                 }

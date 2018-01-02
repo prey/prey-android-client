@@ -29,12 +29,12 @@ public class SMSParser {
                     json.put("options", null);
                 } else {
                     JSONObject jsonParameter = new JSONObject();
-                    String parameter = "";
+                    StringBuilder parameter = new StringBuilder();
                     for (int i = 3; listCommand != null && i < listCommand.size(); i++) {
-                        parameter = parameter + " " + listCommand.get(i).toLowerCase();
+                        parameter.append(" ").append(listCommand.get(i).toLowerCase());
                     }
-                    parameter = parameter.trim();
-                    jsonParameter.put("parameter", parameter);
+                    parameter = new StringBuilder(parameter.toString().trim());
+                    jsonParameter.put("parameter", parameter.toString());
                     jsonParameter.put("phoneNumber", phoneNumber);
                     json.put("options", jsonParameter);
                 }

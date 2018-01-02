@@ -19,14 +19,13 @@ public class WipeThread extends Thread {
     private Context ctx;
     private boolean wipe;
     private boolean deleteSD;
-    private String messageId;
     private String jobId;
 
     public WipeThread(Context ctx,boolean wipe,boolean deleteSD, String messageId,String jobId) {
         this.ctx = ctx;
         this.deleteSD = deleteSD;
         this.wipe = wipe;
-        this.messageId = messageId;
+        String messageId1 = messageId;
         this.jobId = jobId;
     }
 

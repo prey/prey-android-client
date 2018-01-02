@@ -156,8 +156,6 @@ public class PreyConfig {
 
     public static final String JOB_ID_LOCK="job_id_lock";
 
-    private boolean securityPrivilegesAlreadyPrompted;
-
     private Context ctx;
 
 
@@ -173,8 +171,6 @@ public class PreyConfig {
     private int timeoutReport;
     private boolean runOnce;
 
-    private boolean disablePowerOptions;
-
 
     private PreyConfig(Context ctx) {
         this.ctx = ctx;
@@ -186,7 +182,7 @@ public class PreyConfig {
         this.minuteScheduled=getInt(PreyConfig.MINUTE_SCHEDULED, FileConfigReader.getInstance(ctx).getMinuteScheduled());
         this.timeoutReport=getInt(PreyConfig.TIMEOUT_REPORT, FileConfigReader.getInstance(ctx).getTimeoutReport());
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        this.disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
+        boolean disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
 
     }
 
@@ -375,7 +371,7 @@ public class PreyConfig {
     }
 
     public void setSecurityPrivilegesAlreadyPrompted(boolean securityPrivilegesAlreadyPrompted) {
-        this.securityPrivilegesAlreadyPrompted = securityPrivilegesAlreadyPrompted;
+        boolean securityPrivilegesAlreadyPrompted1 = securityPrivilegesAlreadyPrompted;
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(PreyConfig.PREFS_SECURITY_PROMPT_SHOWN, securityPrivilegesAlreadyPrompted);

@@ -554,7 +554,7 @@ public class PreyWebServices {
             PreyHttpResponse preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters);
             String jsonString = preyHttpResponse.getResponseAsString();
             if (jsonString != null && jsonString.length() > 0) {
-                List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
+                List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString);
                 if (jsonObjectList != null && jsonObjectList.size() > 0) {
                     ActionsController.getInstance(ctx).runActionJson(ctx, jsonObjectList);
                 }
@@ -735,7 +735,7 @@ public class PreyWebServices {
 
                 String time = "" + new Date().getTime();
                 try {
-                    String page = FileConfigReader.getInstance(ctx).getPreyEventsLogs();;
+                    String page = FileConfigReader.getInstance(ctx).getPreyEventsLogs();
                     PreyLogger.d("URL:"+page);
                     JSONObject jsonParam = new JSONObject();
                     jsonParam.put("enum", id);

@@ -23,7 +23,7 @@ public class CupcakeSupport {
             // str += " :";
             // str += msgs[i].getMessageBody().toString();
             // str += "\n";
-            smsMessages.add(msgs[i].getMessageBody().toString());
+            smsMessages.add(msgs[i].getMessageBody());
         }
         return smsMessages;
     }

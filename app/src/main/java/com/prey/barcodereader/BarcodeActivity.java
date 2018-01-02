@@ -37,7 +37,6 @@ public class BarcodeActivity extends Activity   {
     private CompoundButton autoFocus;
     private CompoundButton useFlash;
     private TextView statusMessage;
-    private TextView barcodeValue;
 
     private static final int RC_BARCODE_CAPTURE = 9001;
 
@@ -48,7 +47,7 @@ public class BarcodeActivity extends Activity   {
         setContentView(R.layout.activity_barcode);
 
         statusMessage = (TextView) findViewById(R.id.status_message);
-        barcodeValue = (TextView) findViewById(R.id.barcode_value);
+        TextView barcodeValue = (TextView) findViewById(R.id.barcode_value);
 
         autoFocus = (CompoundButton) findViewById(R.id.auto_focus);
         useFlash = (CompoundButton) findViewById(R.id.use_flash);

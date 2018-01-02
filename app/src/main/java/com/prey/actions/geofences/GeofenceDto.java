@@ -23,14 +23,13 @@ public class GeofenceDto implements Comparable {
     public int expires;
 
     public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("id:").append(id);
-        sb.append(" name:").append(name);
-        sb.append(" latitude:").append(latitude);
-        sb.append(" longitude:").append(longitude);
-        sb.append(" radius:").append(radius);
-        sb.append(" expires:").append(expires).append("\n");
-        return sb.toString();
+        String sb = "id:" + id +
+                " name:" + name +
+                " latitude:" + latitude +
+                " longitude:" + longitude +
+                " radius:" + radius +
+                " expires:" + expires + "\n";
+        return sb;
     }
 
     public Geofence geofence() {

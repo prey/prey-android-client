@@ -28,7 +28,6 @@ import com.prey.net.http.EntityFile;
 
 public class PreyRestHttpClient {
 
-    private static PreyRestHttpClient _instance = null;
     private Context ctx = null;
 
     private PreyRestHttpClient(Context ctx) {
@@ -38,7 +37,7 @@ public class PreyRestHttpClient {
 
     public static PreyRestHttpClient getInstance(Context ctx) {
 
-        _instance = new PreyRestHttpClient(ctx);
+        PreyRestHttpClient _instance = new PreyRestHttpClient(ctx);
         return _instance;
 
     }
