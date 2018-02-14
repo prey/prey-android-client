@@ -421,6 +421,10 @@ public class PreyWebServices {
         return getDeviceUrlApiv2(ctx).concat("/info.json");
     }
 
+    public String getLocationUrlJson(Context ctx) throws PreyException {
+        return getDeviceUrlApiv2(ctx).concat("/location.json");
+    }
+
     private String getDeviceUrlApiv2(Context ctx) throws PreyException {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         String deviceKey = preyConfig.getDeviceId();
@@ -664,6 +668,18 @@ public class PreyWebServices {
         return preyHttpResponse;
     }
 
+    public PreyHttpResponse sendLocation(Context ctx,JSONObject jsonParam) {
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+        PreyHttpResponse preyHttpResponse = null;
+        try {
+            String url = getLocationUrlJson(ctx);
+            preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postJsonAutentication(url, jsonParam);
+        } catch (Exception e) {
+            PreyLogger.e("Contact wasn't send", e);
+        }
+        return preyHttpResponse;
+    }
+
     public PreyHttpResponse sendBrowser(Context ctx, HashMap<String, String> parameters) {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         PreyHttpResponse preyHttpResponse = null;
@@ -721,6 +737,30 @@ public class PreyWebServices {
         PreyLogger.d("cmd:" + sb);
         return sb;
     }
+
+
+    public JSONObject getStatus(Context ctx) throws PreyException {
+        JSONObject jsnobject =null;
+        String url = getDeviceUrlApiv2(ctx).concat("/status.json");
+        PreyLogger.d("getStatus url:"+url);
+        PreyHttpResponse response=null;
+        PreyRestHttpClient preyRestHttpClient=PreyRestHttpClient.getInstance(ctx);
+        try{
+            Map<String, String> params=null;
+            response=PreyRestHttpClient.getInstance(ctx).getAutentication(url, params);
+            if (response !=null){
+                String responseAsString=response.getResponseAsString();
+                if (responseAsString != null ) {
+                    jsnobject = new JSONObject(response.getResponseAsString());
+                }
+            }
+        }catch(Exception e){
+            PreyLogger.e("Error, causa:" + e.getMessage(), e);
+            return null;
+        }
+        return jsnobject;
+    }
+
 
     public void sendEvent(final Context ctx,final int id  ) {
         new Thread() {

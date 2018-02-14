@@ -152,15 +152,15 @@ public class PreyRestHttpClient {
         return httpResult;
     }
 
-    public int postJsonAutentication(String url, JSONObject jsonParam) {
-        int httpResult = -1;
+    public PreyHttpResponse postJsonAutentication(String url, JSONObject jsonParam) {
+        PreyHttpResponse response =null;
         HttpURLConnection connection=null;
         try {
             PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + jsonParam.toString());
             connection=UtilConnection.connectionPostJsonAuthorization(PreyConfig.getPreyConfig(ctx),url,jsonParam);
-            PreyHttpResponse response = new PreyHttpResponse(connection);
+            response = new PreyHttpResponse(connection);
             PreyLogger.d("Response from server: " + response.toString());
-            httpResult=connection.getResponseCode();
+
         } catch (Exception e) {
             PreyLogger.e("postJsonAutentication error:" + e.getMessage(), e);
         } finally {
@@ -168,7 +168,7 @@ public class PreyRestHttpClient {
                 connection.disconnect();
         }
 
-        return httpResult;
+        return response;
     }
 
     public int uploadFile(Context ctx,String url, File file,long total) {

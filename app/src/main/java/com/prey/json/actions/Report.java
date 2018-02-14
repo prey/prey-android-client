@@ -55,10 +55,6 @@ public class Report {
 
 
 
-        Intent intent2 = new Intent(ctx, ReportService.class);
-        PreyLogger.d("________startService ReportService");
-
-        ctx.startService(intent2);
 
         PreyLogger.d("________start ReportScheduled");
         ReportScheduled.getInstance(ctx).run();

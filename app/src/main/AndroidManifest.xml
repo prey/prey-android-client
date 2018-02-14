@@ -303,6 +303,9 @@
         <receiver android:name="com.prey.receivers.AlarmScheduledReceiver" />
         <receiver android:name="com.prey.receivers.AlarmDisablePowerReceiver" />
 
+        <receiver android:name="com.prey.actions.aware.AwareAlarmReceiver" />
+        <service android:name="com.prey.actions.aware.AwareService" />
+
         <receiver android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.CLOSE_SYSTEM_DIALOGS" />

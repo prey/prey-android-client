@@ -16,6 +16,7 @@ import android.content.Context;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
+import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.location.LocationThread;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.observer.ActionResult;
@@ -86,6 +87,12 @@ public class Location extends JsonAction{
                 PreyLogger.e("Error, causa:" + e.getMessage(), e);
             }
         }
+    }
+
+    public  List<HttpDataService> start_location_aware(Context ctx, List<ActionResult> list, JSONObject parameters) {
+        PreyLogger.d("_________start_location_aware:");
+        AwareConfig.getAwareConfig(ctx).startAware();
+        return null;
     }
 
 }

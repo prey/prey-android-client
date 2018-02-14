@@ -103,6 +103,7 @@ public class PreyConfig {
     public static final String EXCLUDE_REPORT="EXCLUDE_REPORT";
     public static final String LAST_REPORT_START_DATE="LAST_REPORT_START_DATE";
     public static final String TIMEOUT_REPORT="TIMEOUT_REPORT";
+    public static final String INTERVAL_AWARE="INTERVAL_AWARE";
 
     public static final String LOCATION_LOW_BATTERY_DATE="LOCATION_LOW_BATTERY_DATE";
     public static final String SESSION_ID="SESSION_ID";
@@ -155,6 +156,8 @@ public class PreyConfig {
     public static final String NOTIFICATION_ANDROID_7="notify_android_7";
 
     public static final String JOB_ID_LOCK="job_id_lock";
+
+    public static final String AWARE="aware";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -444,6 +447,15 @@ public class PreyConfig {
         this.saveString(PreyConfig.PREVIOUS_SSID, previousSsid);
     }
 
+    public void removeDeviceId(){
+        this.removeKey(PreyConfig.DEVICE_ID);
+    }
+    public void removeEmail(){
+        this.removeKey(PreyConfig.EMAIL);
+    }
+    public void removeApiKey(){
+        this.removeKey(PreyConfig.API_KEY);
+    }
 
     public boolean isThisDeviceAlreadyRegisteredWithPrey(boolean notifyUser) {
         String deviceId = getString(PreyConfig.DEVICE_ID, null);
@@ -813,6 +825,17 @@ public class PreyConfig {
         return getLong(PreyConfig.LAST_REPORT_START_DATE, 0);
     }
 
+
+    public String getIntervalAware(){
+        return getString(PreyConfig.INTERVAL_AWARE,"");
+    }
+
+    public void setIntervalAware(String intervalAware) {
+
+        this.saveString(PreyConfig.INTERVAL_AWARE, intervalAware);
+    }
+
+
     public void setInstallationDate(long installationDate){
         saveLong(PreyConfig.INSTALLATION_DATE, installationDate);
     }
@@ -959,5 +982,13 @@ public class PreyConfig {
 
     public void setJobIdLock(String jobIdLock) {
         saveString(PreyConfig.JOB_ID_LOCK, jobIdLock);
+    }
+
+    public boolean getAware() {
+        return getBoolean(PreyConfig.AWARE, false);
+    }
+
+    public void setAware(boolean aware) {
+        this.saveBoolean(PreyConfig.AWARE, aware);
     }
 }

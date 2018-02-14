@@ -10,9 +10,11 @@ import android.content.Context;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.actions.aware.AwareScheduled;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.observer.ActionResult;
+import com.prey.actions.report.ReportScheduled;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.net.PreyWebServices;
 
@@ -55,8 +57,15 @@ public class Detach {
             FileretrievalController.getInstance().deleteAll(ctx);
         } catch (Exception e) {}
 
-        try {  PreyWebServices.getInstance().deleteDevice(ctx);} catch (Exception e) {error = e.getMessage();}
-        try {    PreyConfig.getPreyConfig(ctx).wipeData();} catch (Exception e) {error = e.getMessage();}
+        try { ReportScheduled.getInstance(ctx).reset();} catch (Exception e) {error += e.getMessage();}
+        try { AwareScheduled.getInstance(ctx).reset();} catch (Exception e) {error += e.getMessage();}
+        try { PreyWebServices.getInstance().deleteDevice(ctx);} catch (Exception e) {error += e.getMessage();}
+        try { PreyConfig.getPreyConfig(ctx).wipeData();} catch (Exception e) {error += e.getMessage();}
+        try { PreyConfig.getPreyConfig(ctx).removeDeviceId();} catch (Exception e) {error += e.getMessage();}
+        try { PreyConfig.getPreyConfig(ctx).removeEmail();} catch (Exception e) {error += e.getMessage();}
+        try { PreyConfig.getPreyConfig(ctx).removeApiKey();} catch (Exception e) {error += e.getMessage();}
+
+
         return error;
     }
 }

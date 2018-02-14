@@ -37,22 +37,27 @@ public class ReportService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		run(this);
+		stopSelf();
+	}
+
+	public void run(Context ctx) {
 		int interval=-1;
 		try{
 			PreyLogger.i("_____________start ReportService");
 
 
-			interval=Integer.parseInt(PreyConfig.getPreyConfig(this).getIntervalReport());
+			interval=Integer.parseInt(PreyConfig.getPreyConfig(ctx).getIntervalReport());
 			//ReportScheduled.getInstance(this).run();
 
-			String exclude=PreyConfig.getPreyConfig(getApplicationContext()).getExcludeReport();
+			String exclude=PreyConfig.getPreyConfig(ctx).getExcludeReport();
 
 			JSONArray jsonArray = new JSONArray();
 
 
 			PreyLogger.i("start report:"+interval);
 			List<HttpDataService> listData = new ArrayList<HttpDataService>();
-			Context ctx = this;
+
 
 			jsonArray = new JSONArray();
 			if (!exclude.contains("picture"))
@@ -110,7 +115,7 @@ public class ReportService extends IntentService {
 		} catch (Exception e) {
 		}
 
-		stopSelf();
+
 
 	}
 
