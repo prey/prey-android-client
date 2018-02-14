@@ -1,46 +1,37 @@
 /*******************************************************************************
  * Created by Orlando Aliaga
- * Copyright 2015 Prey Inc. All rights reserved.
+ * Copyright 2018 Prey Inc. All rights reserved.
  * License: GPLv3
  * Full license at "/LICENSE"
  ******************************************************************************/
-package com.prey.receivers;
+package com.prey.actions.aware;
 
-import com.prey.PreyConfig;
-import com.prey.PreyLogger;
-import com.prey.actions.report.ReportService;
 
-import android.annotation.TargetApi;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 
-public class AlarmReportReceiver extends BroadcastReceiver {
+import com.prey.PreyConfig;
+import com.prey.PreyLogger;
 
+public class AwareAlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
+            String minuteSt = PreyConfig.getPreyConfig(context).getIntervalAware();
             PreyLogger.d("______________________________");
             PreyLogger.d("______________________________");
-            PreyLogger.d("----------AlarmReportReceiver onReceive");
-
-            final  Context ctx=context;
+            PreyLogger.d("----------AlarmAwareReceiver onReceive[" + minuteSt + "]");
+            final Context ctx = context;
             new Thread() {
                 public void run() {
-                    new ReportService().run(ctx);
+                    new AwareService().run(ctx);
                 }
             }.start();
-
-        }catch(Exception e){
-            PreyLogger.e("_______AlarmReportReceiver error:"+e.getMessage(),e);
+        } catch (Exception e) {
+            PreyLogger.e("_______AlarmAwareReceiver error:" + e.getMessage(), e);
         }
-
-
     }
-
 
 }

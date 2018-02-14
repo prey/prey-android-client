@@ -8,6 +8,7 @@ package com.prey;
 
 import android.app.Application;
 
+import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.report.ReportScheduled;
@@ -67,6 +68,11 @@ public class PreyApp extends Application {
                         ReportScheduled.getInstance(this).run();
                     }
                 }
+                new Thread() {
+                    public void run() {
+                        AwareConfig.getAwareConfig(getApplicationContext()).init();
+                    }
+                }.start();
             }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
