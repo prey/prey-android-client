@@ -28,10 +28,15 @@ public class AlarmReportReceiver extends BroadcastReceiver {
             PreyLogger.d("______________________________");
             PreyLogger.d("----------AlarmReportReceiver onReceive");
 
-            Intent intent2 = new Intent(context, ReportService.class);
-            context.startService(intent2);
+            final  Context ctx=context;
+            new Thread() {
+                public void run() {
+                    new ReportService().run(ctx);
+                }
+            }.start();
+
         }catch(Exception e){
-            PreyLogger.d("_______AlarmReportReceiver error:"+e.getMessage());
+            PreyLogger.e("_______AlarmReportReceiver error:"+e.getMessage(),e);
         }
 
 

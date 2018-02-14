@@ -58,17 +58,11 @@ public class ReportScheduled {
 
 			  if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
 				  PreyLogger.d("----------setRepeating");
-				  alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+(1000 * 60 * minute), 1000 * 60 * minute, pendingIntent);
+				  alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * minute, pendingIntent);
 			  } else {
 				  PreyLogger.d("----------setInexactRepeating");
-				  alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * 60 * minute), 1000 * 60 * minute, pendingIntent);
+				  alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() , 1000 * 60 * minute, pendingIntent);
 			  }
-			  //alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,0,2*60*1000, pendingIntent);
-
-
-			  //calendar.setTimeInMillis(System.currentTimeMillis());
-			  //alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * interval, alarmIntent);
-			  //alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * interval,alarmIntent);
 
 
 			  PreyLogger.d("----------start report [" + minute + "] ReportScheduled");
