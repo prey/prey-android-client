@@ -85,8 +85,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/shaders" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/build/.DS_Store" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/.DS_Store" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check-manifest" />
@@ -94,7 +92,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javaPrecompile" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/lint" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/multi-dex" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/prebuild" />
@@ -113,9 +110,12 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.android.support:multidex-1.0.2" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-auth-8.4.0" level="project" />
+    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-databind:2.8.9@jar" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-appstate-8.4.0" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-plus-8.4.0" level="project" />
+    <orderEntry type="library" name="io.jsonwebtoken:jjwt:0.9.0@jar" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-maps-8.4.0" level="project" />
+    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-core:2.8.9@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-v4-24.0.0-alpha2" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-base-8.4.0" level="project" />
     <orderEntry type="library" name="com.android.support:recyclerview-v7-24.0.0-alpha2" level="project" />
@@ -147,6 +147,7 @@
     <orderEntry type="library" name="com.google.android.gms:play-services-panorama-8.4.0" level="project" />
     <orderEntry type="library" name="com.android.support:support-vector-drawable-24.0.0-alpha2" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-safetynet-8.4.0" level="project" />
+    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-annotations:2.8.0@jar" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-basement-8.4.0" level="project" />
     <orderEntry type="library" name="org.apache.http.legacy-android-25" level="project" />
   </component>

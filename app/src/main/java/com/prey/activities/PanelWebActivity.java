@@ -30,7 +30,7 @@ public class PanelWebActivity extends Activity {
 
     public void onBackPressed() {
         Intent intent = null;
-        intent = new Intent(getApplication(), DeviceReadyActivity.class);
+        intent = new Intent(getApplication(), CheckPasswordHtmlActivity.class);
         startActivity(intent);
         finish();
 
