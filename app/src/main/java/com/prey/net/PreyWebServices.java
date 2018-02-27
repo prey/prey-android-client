@@ -939,7 +939,7 @@ public class PreyWebServices {
             HashMap<String, String> parameters = new HashMap<String, String>();
 
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile?api_key=84546b7de992");
+            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile?api_key="+PreyConfig.getPreyConfig(ctx).getApiKey());
             PreyLogger.d("url:" + url);
             PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).getAutentication(url, parameters);
             String out=response.getResponseAsString();
