@@ -43,6 +43,7 @@ public class EventFactory {
     private static final String ACTION_SHUTDOWN = "android.intent.action.ACTION_SHUTDOWN";
     private static final String AIRPLANE_MODE = "android.intent.action.AIRPLANE_MODE";
     private static final String BATTERY_LOW = "android.intent.action.BATTERY_LOW";
+    private static final String SIM_STATE_CHANGED = "android.intent.action.SIM_STATE_CHANGED";
 
     public static Event getEvent(final Context ctx, Intent intent) {
         String message = "getEvent[" + intent.getAction() + "]";
@@ -52,12 +53,29 @@ public class EventFactory {
             if (PreyConfig.getPreyConfig(ctx).isSimChanged()) {
                 JSONObject info = new JSONObject();
                 try {
-                    info.put("new_phone_number", PreyTelephonyManager.getInstance(ctx).getLine1Number());
+                    String lineNumber=PreyTelephonyManager.getInstance(ctx).getLine1Number();
+                    if(lineNumber!=null&&!"".equals(lineNumber)) {
+                        info.put("new_phone_number", PreyTelephonyManager.getInstance(ctx).getLine1Number());
+                    }
                 } catch (Exception e) {
                 }
                 return new Event(Event.SIM_CHANGED, info.toString());
             } else {
                 return new Event(Event.TURNED_ON);
+            }
+        }
+        if (SIM_STATE_CHANGED.equals(intent.getAction())) {
+            if (PreyConfig.getPreyConfig(ctx).isSimChanged()) {
+                JSONObject info = new JSONObject();
+                try {
+                    String lineNumber=PreyTelephonyManager.getInstance(ctx).getLine1Number();
+                    if(lineNumber!=null&&!"".equals(lineNumber)) {
+                        info.put("new_phone_number", PreyTelephonyManager.getInstance(ctx).getLine1Number());
+                    }
+                    info.put("sim_serial_number", PreyConfig.getPreyConfig(ctx).getSimSerialNumber());
+                } catch (Exception e) {
+                }
+                return new Event(Event.SIM_CHANGED, info.toString());
             }
         }
         if (ACTION_SHUTDOWN.equals(intent.getAction())) {
@@ -116,7 +134,7 @@ public class EventFactory {
                 if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
                     info.put("connected", "wifi");
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(6000);
                     } catch (Exception e) {
                     }
                     PreyConfig.getPreyConfig(ctx).registerC2dm();

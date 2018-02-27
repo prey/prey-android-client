@@ -12,7 +12,12 @@ import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.report.ReportScheduled;
+import com.prey.events.Event;
+import com.prey.events.manager.EventManagerRunner;
+import com.prey.managers.PreyTelephonyManager;
 import com.prey.net.PreyWebServices;
+
+import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -28,7 +33,6 @@ public class PreyApp extends Application {
             PreyLogger.d("__________________");
             PreyLogger.i("Application launched!");
             PreyLogger.d("__________________");
-
 
             boolean chromium=getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
             PreyLogger.d("chromium:"+chromium);
@@ -71,6 +75,23 @@ public class PreyApp extends Application {
                 new Thread() {
                     public void run() {
                         AwareConfig.getAwareConfig(getApplicationContext()).init();
+                    }
+                }.start();
+                new Thread() {
+                    public void run() {
+                        if (PreyConfig.getPreyConfig(getApplicationContext()).isSimChanged()) {
+                            JSONObject info = new JSONObject();
+                            try {
+                                String lineNumber=PreyTelephonyManager.getInstance(getApplicationContext()).getLine1Number();
+                                if(lineNumber!=null&&!"".equals(lineNumber)) {
+                                    info.put("new_phone_number", PreyTelephonyManager.getInstance(getApplicationContext()).getLine1Number());
+                                }
+                                info.put("sim_serial_number", PreyConfig.getPreyConfig(getApplicationContext()).getSimSerialNumber());
+                            } catch (Exception e) {
+                            }
+                            Event event= new Event(Event.SIM_CHANGED, info.toString());
+                            new EventManagerRunner(getApplicationContext(), event) ;
+                        }
                     }
                 }.start();
             }
