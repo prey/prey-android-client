@@ -8,6 +8,7 @@ package com.prey.net;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Date;
@@ -298,6 +299,34 @@ public class PreyWebServices {
         return xml.contains("<key");
     }
 
+    public boolean checkPassword2(Context ctx, String apikey, String password, String password2) throws PreyException {
+
+        PreyLogger.d("checkPassword2 password:"+password+" password2:"+password2);
+
+        String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
+        String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("authenticate");
+        HashMap<String, String> parameters = new HashMap<String, String>();
+        parameters.put("email",PreyConfig.getPreyConfig(ctx).getEmail());
+        parameters.put("password",password);
+        parameters.put("otp_code",password2);
+        try {
+            PreyHttpResponse response=PreyRestHttpClient.getInstance(ctx).postAutentication(url,parameters);
+            if(response!=null){
+                PreyLogger.d("authenticate:" + response.getResponseAsString());
+                if(response.getStatusCode()==200) {
+                    JSONObject jsnobject = new JSONObject(response.getResponseAsString());
+                    String tokenJwt = jsnobject.getString("token");
+                    PreyConfig.getPreyConfig(ctx).setTokenJwt(tokenJwt);
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            PreyLogger.e("m:"+e.getMessage(),e);
+        }
+        throw new PreyException(ctx.getText(R.string.password_wrong).toString());
+    }
+
+
     private PreyHttpResponse checkPassword(String apikey, String password, Context ctx) throws PreyException {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         HashMap<String, String> parameters = new HashMap<String, String>();
@@ -317,6 +346,7 @@ public class PreyWebServices {
             String uri2=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("get_token.json");
             PreyHttpResponse response2 = PreyRestHttpClient.getInstance(ctx).get(uri2, parameters, apikey, password,"application/json");
             if(response2!=null) {
+                PreyLogger.d("get_token:" + response2.getResponseAsString());
                 JSONObject jsnobject = new JSONObject(response2.getResponseAsString());
                 String tokenJwt = jsnobject.getString("token");
                 PreyLogger.d("tokenJwt:" + tokenJwt);
@@ -326,11 +356,16 @@ public class PreyWebServices {
             }
 
         } catch (Exception e) {
+            PreyLogger.e("error:"+e.getMessage(),e);
 
         }
         return response;
     }
 
+    private static String getJson(String strEncoded) throws UnsupportedEncodingException{
+        byte[] decodedBytes = android.util.Base64.decode(strEncoded, android.util.Base64.URL_SAFE);
+        return new String(decodedBytes, "UTF-8");
+    }
 
 
     public String deleteDevice(Context ctx) throws PreyException {
@@ -888,6 +923,7 @@ public class PreyWebServices {
             PreyLogger.d("url:" + url);
             PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).getAutentication(url, parameters);
             String out=response.getResponseAsString();
+            PreyLogger.d("out:"+out);
             JSONObject jsnobject = new JSONObject(out);
             email = jsnobject.getString("email");
             PreyLogger.d("email:"+email);
@@ -896,5 +932,26 @@ public class PreyWebServices {
         }
         return email;
     }
+
+    public boolean getTwoStepEnabled(Context ctx) {
+        boolean TwoStepEnabled = false;
+        try {
+            HashMap<String, String> parameters = new HashMap<String, String>();
+
+            String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
+            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile?api_key=84546b7de992");
+            PreyLogger.d("url:" + url);
+            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).getAutentication(url, parameters);
+            String out=response.getResponseAsString();
+            PreyLogger.d("out:"+out);
+            JSONObject jsnobject = new JSONObject(out);
+            TwoStepEnabled = jsnobject.getBoolean("two_step_enabled?");
+            PreyLogger.d("TwoStepEnabled:"+TwoStepEnabled);
+        } catch (Exception e) {
+            PreyLogger.e("error get TwoStepEnabled", e);
+        }
+        return TwoStepEnabled;
+    }
+
 
 }

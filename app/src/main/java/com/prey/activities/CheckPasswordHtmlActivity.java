@@ -50,15 +50,22 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity{
             public void run() {
                 String email= PreyWebServices.getInstance().getEmail(getApplicationContext());
                 PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
+                try {
+                    boolean twoStep = PreyWebServices.getInstance().getTwoStepEnabled(getApplicationContext());
+                    PreyConfig.getPreyConfig(getApplicationContext()).setTwoStep(twoStep);
+                }catch(Exception e){
+                    PreyConfig.getPreyConfig(getApplicationContext()).setTwoStep(false);
+                }
+
             }
         }.start();
+        loadUrl();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         PreyLogger.d("CheckPasswordHtmlActivity: onResume");
-        loadUrl();
         PreyConfig.getPreyConfig(this).registerC2dm();
     }
 

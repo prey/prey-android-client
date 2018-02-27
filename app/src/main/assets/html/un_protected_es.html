@@ -42,7 +42,23 @@
         <a class="btn xl" onclick="signin()">Ingresar</a>
       </li>
     </ul>
-  </div><!-- Slider main container-->
+  </div>
+  <div class="popover" id="modal-loginTwoStep">
+    <a class="close btn" href="#" onclick="closeSettingsTwoStep()">&times;</a>
+    <h4>Credenciales</h4>
+    <ul class="form hvv">
+      <li><label id="label_pass2" for="lpass2">Ingrese su contrase&ntilde;a de Prey</label><input id="lpass2" type="password"></li>
+    </ul>
+    <ul class="form hvv">
+      <li><label id="label_sixdigit" for="sixdigit">Código de seguridad de seis dígitos</label><input id="sixdigit" type="password"></li>
+    </ul>
+    <ul class="form vvv">
+      <li>
+        <a class="btn xl" onclick="signInTwoStep()">Ingresar</a>
+      </li>
+    </ul>
+  </div>
+  <!-- Slider main container-->
   <div class="swiper-container" id="reminder">
     <a class="close icon-cancel" href="javascript:void(0);"></a>
     <div class="swiper-wrapper">
@@ -83,7 +99,7 @@
     <div class="button-group">
       <a class="btn-icon" href="#"  onclick="panel()"><i class="icon-prey-ico"></i><span>Panel</span></a>
       <div class="icon-separator"></div>
-      <a class="btn-icon" href="#" onclick="openSettings()"><i class="icon-prey-term"></i><span>Configuraci&oacute;n</span></a>
+      <a class="btn-icon" href="#" onclick="setting()"><i class="icon-prey-term"></i><span>Configuraci&oacute;n</span></a>
     </div>
     <div class="button-group">
       <a class="btn-icon no-icon" href="https://panel.preyproject.com/forgot">

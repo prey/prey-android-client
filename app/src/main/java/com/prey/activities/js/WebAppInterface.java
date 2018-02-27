@@ -23,6 +23,7 @@ import com.prey.PreyPermission;
 import com.prey.PreyStatus;
 import com.prey.R;
 import com.prey.activities.CheckPasswordHtmlActivity;
+import com.prey.activities.PanelWebActivity;
 import com.prey.activities.PreyConfigurationActivity;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
@@ -52,19 +53,38 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
-    public void signIn(String passwordtyped) {
-        PreyLogger.d("signIn:" + passwordtyped);
+    public boolean openSettings(){
+        PreyLogger.i("openSettings two:"+!PreyConfig.getPreyConfig(mContext).getTwoStep());
+        return !PreyConfig.getPreyConfig(mContext).getTwoStep();
+    }
+
+    @JavascriptInterface
+    public void signIn(String passwordtyped,String from) {
+        PreyLogger.d("signIn:" + passwordtyped+" from:"+from);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            new CheckPassword().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,passwordtyped);
+            new CheckPassword().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,passwordtyped,from);
         else
-            new CheckPassword().execute(passwordtyped);
+            new CheckPassword().execute(passwordtyped,from);
+
+    }
+
+
+    @JavascriptInterface
+    public void signInTwoStep(String passwordtyped,String passwordtyped2,String from) {
+        PreyLogger.d("signIn:" + passwordtyped +" - "+ passwordtyped2+" "+from);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            new CheckPassword().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,passwordtyped,passwordtyped2,from);
+        else
+            new CheckPassword().execute(passwordtyped,passwordtyped2,from);
 
     }
 
     @JavascriptInterface
     public void panel() {
 
+        /*
 
         String url="https://panel.preyproject.com/login?email="+PreyConfig.getPreyConfig(mContext).getEmail()+"&id="+new Date().getTime();
 
@@ -72,10 +92,21 @@ public class WebAppInterface {
                 Intent.ACTION_VIEW, Uri.parse(url));
 
         mContext.startActivity(browserIntent);
+*/
+
+
+        Intent intent  = new Intent(     mContext, PanelWebActivity.class);
+
+        mContext.startActivity(intent);
 
 
     }
 
+    @JavascriptInterface
+    public boolean validarToken() {
+        PreyLogger.d("validarToken no");
+        return false;
+    }
 
     @JavascriptInterface
     public void givePermissions() {
@@ -155,11 +186,11 @@ public class WebAppInterface {
         ProgressDialog progressDialog = null;
         boolean isPasswordOk = false;
         String error = null;
-
+        String from = "";
 
         @Override
         protected void onPreExecute() {
-            try {
+            /*try {
                 progressDialog = new ProgressDialog(mContext);
                 progressDialog.setMessage(mContext.getText(R.string.password_checking_dialog).toString());
                 progressDialog.setIndeterminate(true);
@@ -167,15 +198,22 @@ public class WebAppInterface {
                 progressDialog.show();
             } catch (Exception e) {
 
-            }
+            }*/
         }
 
         @Override
         protected Void doInBackground(String... password) {
             try {
                 String apikey = PreyConfig.getPreyConfig(mContext).getApiKey();
-                PreyLogger.d("apikey:"+apikey+" password[0]:"+password[0]);
-                isPasswordOk =PreyWebServices.getInstance().checkPassword(mContext,apikey, password[0]);
+                if (PreyConfig.getPreyConfig(mContext).getTwoStep()) {
+                    PreyLogger.d("apikey:" + apikey + " password:" + password[0] + " password2:" + password[1] + " from:" + password[2]);
+                    from = password[2];
+                    isPasswordOk =PreyWebServices.getInstance().checkPassword2(mContext,apikey, password[0],password[1]);
+                }else{
+                    PreyLogger.d("apikey:" + apikey + " password:" + password[0] +  " from:" + password[1]);
+                    from = password[1];
+                    isPasswordOk =PreyWebServices.getInstance().checkPassword(mContext,apikey, password[0]);
+                }
                 if(isPasswordOk) {
                     PreyConfig.getPreyConfig(mContext).setTimePasswordOk();
                 }
@@ -197,7 +235,6 @@ public class WebAppInterface {
             if (error != null)
                 Toast.makeText(mContext, error, Toast.LENGTH_LONG).show();
             else if (!isPasswordOk) {
-
                 wrongPasswordIntents++;
                 if (wrongPasswordIntents == 3) {
                     Toast.makeText(mContext, R.string.password_intents_exceed, Toast.LENGTH_LONG).show();
@@ -205,12 +242,14 @@ public class WebAppInterface {
                 } else {
                     Toast.makeText(mContext, R.string.password_wrong, Toast.LENGTH_SHORT).show();
                 }
-
             } else {
-                Intent intent = new Intent(mContext, PreyConfigurationActivity.class);
-                PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
-                mContext.startActivity(intent);
-
+                if("panel".equals(from)) {
+                    panel();
+                }else{
+                    Intent intent = new Intent(mContext, PreyConfigurationActivity.class);
+                    PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
+                    mContext.startActivity(intent);
+                }
                 new Thread(new EventManagerRunner(mContext, new Event(Event.APPLICATION_OPENED))).start();
 
 
