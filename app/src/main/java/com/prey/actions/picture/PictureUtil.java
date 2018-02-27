@@ -94,7 +94,7 @@ public class PictureUtil {
         ctx.startActivity(intent);
         int i = 0;
         mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
-        mgr.setStreamSolo(streamType, true);
+        //mgr.setStreamSolo(streamType, true);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
             mgr.setStreamMute(streamType, true);
@@ -117,7 +117,7 @@ public class PictureUtil {
             Thread.sleep(4000);
         } catch (InterruptedException e) {
         }
-        mgr.setStreamSolo(streamType, false);
+        //mgr.setStreamSolo(streamType, false);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             mgr.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             mgr.setStreamMute(streamType, false);
