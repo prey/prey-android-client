@@ -39,16 +39,6 @@
 
             />
 
-
-
-        <com.prey.preferences.DisablePowerCheckBoxPreference
-            android:defaultValue="false"
-            android:key="PREFS_DISABLE_POWER"
-            android:summary="@string/preferences_disable_power_options_summary"
-            android:title="@string/preferences_disable_power_options_title"
-            />
-
-
         <ListPreference
             android:entries="@array/listScheduledEntries"
             android:entryValues="@array/listScheduledValues"

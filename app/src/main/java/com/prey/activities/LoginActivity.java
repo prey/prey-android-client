@@ -31,18 +31,8 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        // Delete notifications (in case Activity was started by one of them)
 
         startup();
-
-
-
-        boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
-        if (disablePowerOptions) {
-            startService(new Intent(getApplicationContext(), PreyDisablePowerOptionsService.class));
-        } else {
-            stopService(new Intent(getApplicationContext(), PreyDisablePowerOptionsService.class));
-        }
 
     }
 

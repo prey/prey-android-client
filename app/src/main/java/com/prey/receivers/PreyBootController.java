@@ -34,12 +34,13 @@ public class PreyBootController extends BroadcastReceiver {
                     AwareConfig.getAwareConfig(ctx).init();
                 }
             }.start();
+            /*
             boolean disablePowerOptions = PreyConfig.getPreyConfig(context).isDisablePowerOptions();
             if (disablePowerOptions) {
                 context.startService(new Intent(context, PreyDisablePowerOptionsService.class));
             } else {
                 context.stopService(new Intent(context, PreyDisablePowerOptionsService.class));
-            }
+            }*/
             if (PreyConfig.getPreyConfig(context).isLockSet()) {
                 if(PreyConfig.getPreyConfig(context).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(context)) {
                     context.startService(new Intent(context, PreyLockService.class));

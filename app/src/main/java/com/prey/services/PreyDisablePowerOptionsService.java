@@ -52,31 +52,35 @@ public class PreyDisablePowerOptionsService extends Service {
         } catch (IllegalArgumentException e) {
             PreyLogger.e("Error, cause:" + e.getMessage(), e);
         }
+        /*
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
         if (disablePowerOptions){
 
             schedule();
-        }
+        }*/
         stopForeground(true);
     }
 
     public int onStartCommand(Intent intent, int i, int j) {
+        /*
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
         if (disablePowerOptions) {
             IntentFilter intentfilter = new IntentFilter("android.intent.action.CLOSE_SYSTEM_DIALOGS");
             registerReceiver(mReceiver, intentfilter);
-        }
+        }*/
         return START_STICKY;
     }
 
     public void onTaskRemoved(Intent rootIntent) {
+        /*
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
         if (disablePowerOptions){
             schedule();
-        }
+        }*/
     }
 
     private void schedule() {
+        /*
         PreyLogger.i("PreyDisablePowerOptionsService  schedule_________");
         Intent intent = new Intent(getApplicationContext(), AlarmDisablePowerReceiver.class);
         PendingIntent alarmDisablePower = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
@@ -85,6 +89,6 @@ public class PreyDisablePowerOptionsService extends Service {
             alarmMgr.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 10000L, alarmDisablePower);
         }else{
             alarmMgr.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 10000L, alarmDisablePower);
-        }
+        }*/
     }
 }

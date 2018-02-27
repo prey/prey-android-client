@@ -23,6 +23,7 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
 
     @TargetApi(Build.VERSION_CODES.ECLAIR_MR1)
     public void onReceive(Context context, Intent intent) {
+        /*
         boolean disablePowerOptions = PreyConfig.getPreyConfig(context).isDisablePowerOptions();
         if (disablePowerOptions) {
             if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
@@ -40,7 +41,7 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                     }
                 }
             }
-        }
+        }*/
     }
 
 }
