@@ -289,6 +289,7 @@
                 <!-- WIFI CHANGED -->
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.intent.action.SIM_STATE_CHANGED" />
 
                 <!-- SIM CHANGED AND  BOOT COMPLETED -->
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

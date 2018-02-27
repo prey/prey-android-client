@@ -90,6 +90,7 @@ public class PreyConfig {
 
     public static final String PREFS_ACCOUNT_VERIFIED="PREFS_ACCOUNT_VERIFIED";
     public static final String EMAIL="EMAIL";
+    public static final String TWO_STEP="TWO_STEP";
     public static final String PREFS_SCHEDULED="PREFS_SCHEDULED";
 
     public static final String SEND_DATA="SEND_DATA";
@@ -469,17 +470,29 @@ public class PreyConfig {
     }
 
     public boolean isSimChanged() {
-
-        String simSerial=new PreyPhone(ctx).getSimSerialNumber();
-        PreyLogger.i("simSerial:" + simSerial + " actual:" + getSimSerialNumber());
-        if (getSimSerialNumber()==null||"".equals(getSimSerialNumber())){
-            if(simSerial!=null&&!"".equals(simSerial)){
-                this.setSimSerialNumber(simSerial);
+        String nowSimSerialNumber=new PreyPhone(ctx).getSimSerialNumber();
+        String currentSimSerialNumber=getSimSerialNumber();
+        PreyLogger.i("______________________________isSimChanged_______________");
+        PreyLogger.i("SimSerialNumber now:" + nowSimSerialNumber + " current:" + currentSimSerialNumber);
+        if (currentSimSerialNumber==null||"".equals(currentSimSerialNumber)){  //empty
+            if(nowSimSerialNumber!=null&&!"".equals(nowSimSerialNumber)){
+                this.setSimSerialNumber(nowSimSerialNumber);
+                PreyLogger.i("init setSimSerialNumber :"+nowSimSerialNumber);
+            }else{
+                PreyLogger.i("nothing setSimSerialNumber 1");
             }
-            return false;
-        }
-        if(simSerial!=null&&!"".equals(simSerial)&&!simSerial.equals(this.getSimSerialNumber())){
-            return true;
+        }else{
+            if(nowSimSerialNumber!=null&&!"".equals(nowSimSerialNumber)){ //not empty
+                if(!currentSimSerialNumber.equals(nowSimSerialNumber)){
+                    this.setSimSerialNumber(nowSimSerialNumber);
+                    PreyLogger.i("update setSimSerialNumber :"+nowSimSerialNumber);
+                    return true;
+                }else{
+                    PreyLogger.i("nothing setSimSerialNumber 2");
+                }
+            }else{
+                PreyLogger.i("nothing setSimSerialNumber 3");
+            }
         }
         return false;
     }
@@ -707,6 +720,15 @@ public class PreyConfig {
     public void setEmail(String email) {
         saveString(PreyConfig.EMAIL, email);
     }
+
+    public boolean getTwoStep() {
+        return getBoolean(PreyConfig.TWO_STEP, false);
+    }
+
+    public void setTwoStep(boolean twoStep) {
+        saveBoolean(PreyConfig.TWO_STEP, twoStep);
+    }
+
 
     public void setAccountVerified() {
         saveBoolean(PreyConfig.PREFS_ACCOUNT_VERIFIED, true);
