@@ -7,6 +7,7 @@
 package com.prey.receivers;
 
 import com.prey.PreyConfig;
+import com.prey.PreyLogger;
 
 import android.annotation.TargetApi;
 import android.app.KeyguardManager;
@@ -23,25 +24,31 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
 
     @TargetApi(Build.VERSION_CODES.ECLAIR_MR1)
     public void onReceive(Context context, Intent intent) {
-        /*
+
         boolean disablePowerOptions = PreyConfig.getPreyConfig(context).isDisablePowerOptions();
         if (disablePowerOptions) {
             if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
                 boolean flag = ((KeyguardManager) context.getSystemService("keyguard")).inKeyguardRestrictedInputMode();
-                if (flag) {
-                    PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                    boolean isScreenOn = pm.isScreenOn();
-                    if (isScreenOn) {
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
+                boolean lock=PreyConfig.getPreyConfig(context).isLockSet();
+                try {
+                    if (flag||lock) {
+                        PreyLogger.i("PreyDisablePowerOptionsReceiver flag:"+flag+" lock:"+flag);
+                        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                        boolean isScreenOn = pm.isScreenOn();
+                        if (isScreenOn) {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                            }
+                            Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
+                            context.sendBroadcast(intentClose);
                         }
-                        Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
-                        context.sendBroadcast(intentClose);
                     }
+                }catch (Exception e){
+                    PreyLogger.e("error:"+e.getMessage(),e);
                 }
             }
-        }*/
+        }
     }
 
 }

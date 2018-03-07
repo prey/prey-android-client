@@ -52,43 +52,48 @@ public class PreyDisablePowerOptionsService extends Service {
         } catch (IllegalArgumentException e) {
             PreyLogger.e("Error, cause:" + e.getMessage(), e);
         }
-        /*
+
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
         if (disablePowerOptions){
 
             schedule();
-        }*/
+        }
         stopForeground(true);
     }
 
     public int onStartCommand(Intent intent, int i, int j) {
-        /*
+
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
         if (disablePowerOptions) {
             IntentFilter intentfilter = new IntentFilter("android.intent.action.CLOSE_SYSTEM_DIALOGS");
             registerReceiver(mReceiver, intentfilter);
-        }*/
+        }
         return START_STICKY;
     }
 
     public void onTaskRemoved(Intent rootIntent) {
-        /*
+        PreyLogger.i("Servicio detenido por Android, programamos en 7 segundos");
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
         if (disablePowerOptions){
             schedule();
-        }*/
+        }
     }
 
     private void schedule() {
-        /*
+
         PreyLogger.i("PreyDisablePowerOptionsService  schedule_________");
         Intent intent = new Intent(getApplicationContext(), AlarmDisablePowerReceiver.class);
-        PendingIntent alarmDisablePower = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+        PendingIntent alarmDisablePower = PendingIntent.getBroadcast(getApplicationContext(), 1, intent, 0);
         AlarmManager alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            alarmMgr.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 10000L, alarmDisablePower);
+            alarmMgr.set(AlarmManager.RTC,  SystemClock.elapsedRealtime() +7000L, alarmDisablePower);
+            alarmMgr.set(AlarmManager.ELAPSED_REALTIME,  SystemClock.elapsedRealtime() +7000L, alarmDisablePower);
         }else{
-            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 10000L, alarmDisablePower);
-        }*/
+            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC,  7000L, alarmDisablePower);
+        }
+
+
     }
+
+
 }
