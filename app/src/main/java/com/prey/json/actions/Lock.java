@@ -25,6 +25,7 @@ import com.prey.exceptions.PreyException;
 import com.prey.json.JsonAction;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
+import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyLockService;
 
 public class Lock extends JsonAction {
@@ -135,6 +136,10 @@ public class Lock extends JsonAction {
             }catch(Exception e){}
             Intent intent = new Intent(ctx, PreyLockService.class);
             ctx.startService(intent);
+            if(PreyConfig.getPreyConfig(ctx).getDisablePowerOptions()) {
+                Intent intent2 = new Intent(ctx, PreyDisablePowerOptionsService.class);
+                ctx.startService(intent2);
+            }
         }else{
             if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {
                 try{

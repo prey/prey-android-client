@@ -102,7 +102,7 @@
     <string name="preferences_admin_disabled_dialog_title">Permisos adicionales</string>
      <string name="preferences_admin_disabled_dialog_message">Está a punto de conceder Prey privilegios de seguridad especial, que le permitirá bloquear de forma remota el dispositivo.\nHaga clic en Sí para continuar.</string>
     <string name="preferences_disable_power_options_title">Desactivar el menú de apagado</string>
-    <string name="preferences_disable_power_options_summary">Tu dispositivo no puede ser apagado si la pantalla está bloqueada</string>
+    <string name="preferences_disable_power_options_summary">Evita que se apague tu equipo al estar bloqueado por Prey, una notificación aparecerá al estar activo</string>
     <string name="preferences_scheduled_title">Fijar frecuenta de intervalo</string>
     <string name="preferences_scheduled_summary">Cuán rápido Prey se ejecutará si no hay servicios de Google disponibles</string>
     <string name="preferences_about_category_name">Acerca de</string>
@@ -270,4 +270,5 @@
     <string name="lock_access_denied">El dispositivo ha sido bloqueado por su propietario en la protección de su privacidad, y la propiedad.\n\nIntroduzca la contraseña para desbloquear.</string>
     <string name="lock_unlock">DESBLOQUEAR</string>
 
+    <string name="disable_power_ready">Listo</string>
 </resources>

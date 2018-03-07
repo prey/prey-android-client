@@ -307,8 +307,8 @@
         <receiver android:name="com.prey.actions.aware.AwareAlarmReceiver" />
         <service android:name="com.prey.actions.aware.AwareService" />
 
-        <receiver android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver">
-            <intent-filter>
+        <receiver android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver" android:enabled="true" android:exported="false">
+            <intent-filter android:priority="20000">
                 <action android:name="android.intent.action.CLOSE_SYSTEM_DIALOGS" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
