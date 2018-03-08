@@ -41,6 +41,7 @@ public class DisablePowerCheckBoxPreference extends CheckBoxPreference {
             notifyCancel(ctx);
             ctx.stopService(new Intent(ctx, PreyDisablePowerOptionsService.class));
         }
+        PreyConfig.getPreyConfig(ctx).setDisablePowerOptions(checked);
     }
 
     public static void notifyReady(Context ctx){

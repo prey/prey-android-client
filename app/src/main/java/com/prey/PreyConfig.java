@@ -132,7 +132,7 @@ public class PreyConfig {
     public static final String DEVICE_ID = "DEVICE_ID";
 
     public static final String SIM_SERIAL_NUMBER = "SIM_SERIAL_NUMBER";
-    public static final String VERSION_PREY_DEFAULT="1.8.1";
+    public static final String VERSION_PREY_DEFAULT="1.8.2";
 
     public static final String CAN_ACCESS_FINE_LOCATION = "CAN_ACCESS_FINE_LOCATION";
     public static final String CAN_ACCESS_COARSE_LOCATION = "CAN_ACCESS_COARSE_LOCATION";
