@@ -67,6 +67,17 @@ public class PreyConfigurationActivity extends PreferenceActivity {
         }
 
         PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
+
+        Preference pDisablePower=findPreference("PREFS_DISABLE_POWER");
+        try {
+            if (preyConfig.isMarshmallowOrAbove()) {
+                pDisablePower.setSummary(R.string.preferences_disable_power_options_summary);
+            } else {
+                pDisablePower.setSummary(R.string.preferences_disable_power_options_summary_old);
+            }
+        }catch(Exception e){
+        }
+
         Preference p = findPreference("PREFS_ADMIN_DEVICE");
         try {
             if (preyConfig.isFroyoOrAbove()) {

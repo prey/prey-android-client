@@ -98,6 +98,8 @@
      <string name="preferences_detach_dialog_message">Your device will be detached from the Control Panel. This will also delete all its stored reports.\n\nAre you sure?</string>
     <string name="preferences_disable_power_options_title">Disable Power Menu</string>
     <string name="preferences_disable_power_options_summary">Prevent your device from being turned off when locked by Prey, a notification will appear when active</string>
+    <string name="preferences_disable_power_options_summary_old">Your device can\'t be turned off if its screen is locked</string>
+
     <string name="preferences_scheduled_title">Set interval frequency</string>
     <string name="preferences_scheduled_summary">How often Prey will run if no Google Services are available</string>
     <string name="preferences_about_category_name">About</string>
