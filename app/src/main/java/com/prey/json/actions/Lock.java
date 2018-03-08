@@ -136,7 +136,7 @@ public class Lock extends JsonAction {
             }catch(Exception e){}
             Intent intent = new Intent(ctx, PreyLockService.class);
             ctx.startService(intent);
-            if(PreyConfig.getPreyConfig(ctx).getDisablePowerOptions()) {
+            if(PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()) {
                 Intent intent2 = new Intent(ctx, PreyDisablePowerOptionsService.class);
                 ctx.startService(intent2);
             }
