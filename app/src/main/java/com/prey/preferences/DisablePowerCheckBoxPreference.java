@@ -44,17 +44,21 @@ public class DisablePowerCheckBoxPreference extends CheckBoxPreference {
     }
 
     public static void notifyReady(Context ctx){
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx).setOngoing(true);
-        notificationBuilder.setContentTitle(ctx.getString(R.string.disable_power_ready));
-        notificationBuilder.setSmallIcon(R.drawable.status_bar);
-        notificationBuilder.setPriority(Notification.PRIORITY_MIN);
-        NotificationManager mgr= (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        mgr.notify(NOTIFY_ID, notificationBuilder.build());
+        if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove()) {
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx).setOngoing(true);
+            notificationBuilder.setContentTitle(ctx.getString(R.string.disable_power_ready));
+            notificationBuilder.setSmallIcon(R.drawable.status_bar);
+            notificationBuilder.setPriority(Notification.PRIORITY_MIN);
+            NotificationManager mgr= (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+            mgr.notify(NOTIFY_ID, notificationBuilder.build());
+        }
     }
 
     public static void notifyCancel(Context ctx){
-        NotificationManager mgr= (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        mgr.cancel(NOTIFY_ID);
+        if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove()) {
+            NotificationManager mgr = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+            mgr.cancel(NOTIFY_ID);
+        }
     }
 
     public static int NOTIFY_ID=1337;
