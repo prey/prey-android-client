@@ -32,7 +32,7 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                 boolean lock=PreyConfig.getPreyConfig(context).isLockSet();
                 try {
                     if (flag||lock) {
-                        PreyLogger.i("PreyDisablePowerOptionsReceiver flag:"+flag+" lock:"+flag);
+                        PreyLogger.i("PreyDisablePowerOptionsReceiver flag:"+flag+" lock:"+flag+" javo:"+intent.getStringExtra("javo"));
                         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                         boolean isScreenOn = pm.isScreenOn();
                         if (isScreenOn) {
@@ -40,8 +40,12 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                                 Thread.sleep(100);
                             } catch (InterruptedException e) {
                             }
-                            Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
-                            context.sendBroadcast(intentClose);
+                            String javo=intent.getStringExtra("javo");
+                            if(javo==null) {
+                                Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
+                                intentClose.putExtra("javo", "javo");
+                                context.sendBroadcast(intentClose);
+                            }
                         }
                     }
                 }catch (Exception e){
