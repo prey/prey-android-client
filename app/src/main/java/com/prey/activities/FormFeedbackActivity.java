@@ -47,7 +47,7 @@ public class FormFeedbackActivity extends PreyActivity {
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-                alert.setIcon(R.drawable.logo);
+                alert.setIcon(R.drawable.info);
                 alert.setTitle(R.string.feedback_form_title);
                 alert.setMessage(R.string.feedback_form_message);
                 alert.setView(textEntryView);

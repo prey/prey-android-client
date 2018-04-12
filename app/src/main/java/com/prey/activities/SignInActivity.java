@@ -294,7 +294,7 @@ public class SignInActivity extends Activity {
                         AwareConfig.getAwareConfig(getApplicationContext()).init();
                     }
                 }.start();
-            } catch (PreyException e) {
+            } catch (Exception e) {
                 error = e.getMessage();
                 try {
                     NoMoreDevicesAllowedException noMoreDevices = (NoMoreDevicesAllowedException) e;

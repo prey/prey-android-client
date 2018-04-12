@@ -43,9 +43,9 @@ public class ChangePinPreferences extends DialogPreference {
         LayoutInflater i = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         changePin = i.inflate(R.layout.set_pin, null);
         EditText pinEdit=(EditText) changePin.findViewById(R.id.pin_edit);
-        int pin=PreyConfig.getPreyConfig(getContext()).getPinNumber();
-        if( pin>=0){
-            try{pinEdit.setHint("" +pin );}catch (Exception e){PreyLogger.e("Error:"+e.getMessage(),e);}
+        String pinNumber=PreyConfig.getPreyConfig(getContext()).getPinNumber();
+        if(pinNumber!=null&&!"".equals(pinNumber)){
+            try{pinEdit.setHint(pinNumber );}catch (Exception e){PreyLogger.e("Error:"+e.getMessage(),e);}
         }else{
             pinEdit.setHint("");
         }
@@ -86,9 +86,9 @@ public class ChangePinPreferences extends DialogPreference {
         protected Void doInBackground(String... array) {
             PreyLogger.i("pin:" + array[0]);
             try {
-                PreyConfig.getPreyConfig(getContext()).setPinNumber(Integer.parseInt(array[0]));
+                PreyConfig.getPreyConfig(getContext()).setPinNumber(array[0]);
             } catch (Exception e) {
-                PreyConfig.getPreyConfig(getContext()).setPinNumber(-1);
+                PreyConfig.getPreyConfig(getContext()).setPinNumber("");
             }
             return null;
         }
@@ -97,9 +97,10 @@ public class ChangePinPreferences extends DialogPreference {
         protected void onPostExecute(Void unused) {
             progressDialog.dismiss();
             if (error == null) {
-                if(PreyConfig.getPreyConfig(getContext()).getPinNumber()>=0)
+                String pinNumber=PreyConfig.getPreyConfig(getContext()).getPinNumber();
+                if(pinNumber!=null&&!"".equals(pinNumber)) {
                     Toast.makeText(getContext(), R.string.preference_pin_successfully_changed, Toast.LENGTH_LONG).show();
-                else {
+                }else {
                     Toast.makeText(getContext(), R.string.preference_pin_removed, Toast.LENGTH_LONG).show();
                     PreyConfig.getPreyConfig(getContext()).setSmsCommand(false);
                 }

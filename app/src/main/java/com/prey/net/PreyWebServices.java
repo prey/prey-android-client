@@ -69,7 +69,7 @@ public class PreyWebServices {
      *
      * @throws PreyException
      */
-    public PreyAccountData registerNewAccount(Context ctx, String name, String email, String password, String deviceType) throws PreyException {
+    public PreyAccountData registerNewAccount(Context ctx, String name, String email, String password, String deviceType) throws Exception {
 
 
         HashMap<String, String> parameters = new HashMap<String, String>();
@@ -79,16 +79,23 @@ public class PreyWebServices {
         parameters.put("password", password);
         parameters.put("password_confirmation", password);
         parameters.put("country_name", Locale.getDefault().getDisplayCountry());
-
+        parameters.put("policy_rule_age", "true");
+        parameters.put("policy_rule_privacy_terms", "true");
 
         PreyHttpResponse response = null;
         String xml = "";
         try {
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("signup.json");
-
+            PreyLogger.d("url:"+url);
             response = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
-            xml = response.getResponseAsString();
+            if(response!=null) {
+                xml = response.getResponseAsString();
+                PreyLogger.d("code:" + response.getStatusCode() + "xml:" + xml);
+            }else{
+                PreyLogger.d("response nulo");
+            }
+
         } catch (Exception e) {
             PreyLogger.e("error: "+e.getMessage(),e);
             throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
@@ -144,7 +151,7 @@ public class PreyWebServices {
      *
      * @throws PreyException
      */
-    private PreyHttpResponse registerNewDevice(Context ctx, String api_key, String deviceType) throws PreyException {
+    private PreyHttpResponse registerNewDevice(Context ctx, String api_key, String deviceType) throws Exception {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
 
         String model = Build.MODEL;
@@ -171,7 +178,7 @@ public class PreyWebServices {
         parameters.put("physical_address", imei);
 
         PreyHttpResponse response = null;
-        try {
+
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices.json");
             PreyLogger.d("url:" + url);
@@ -189,15 +196,12 @@ public class PreyWebServices {
                     throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, "[" + response.getStatusCode() + "]"));
                 }
             }
-        } catch (Exception e) {
-            PreyLogger.e("error:"+e.getMessage(),e);
-            throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
-        }
+
 
         return response;
     }
 
-    public PreyAccountData registerNewDeviceToAccount(Context ctx, String email, String password, String deviceType) throws PreyException {
+    public PreyAccountData registerNewDeviceToAccount(Context ctx, String email, String password, String deviceType) throws Exception {
         PreyLogger.d("ws email:" + email + " password:" + password);
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         HashMap<String, String> parameters = new HashMap<String, String>();
@@ -253,7 +257,7 @@ public class PreyWebServices {
 
     }
 
-    public PreyAccountData registerNewDeviceWithApiKeyEmail(Context ctx, String apiKey, String email, String deviceType) throws PreyException {
+    public PreyAccountData registerNewDeviceWithApiKeyEmail(Context ctx, String apiKey, String email, String deviceType) throws Exception {
         String deviceId = "";
         PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType);
         String xmlDeviceId = responseDevice.getResponseAsString();
@@ -845,9 +849,9 @@ public class PreyWebServices {
         }.start();
     }
 
-    public void sendTree(final Context ctx,JSONObject json  ) throws PreyException{
+    public PreyHttpResponse sendTree(final Context ctx,JSONObject json  ) throws PreyException{
         String uri = getDeviceUrlApiv2(ctx).concat("/data.json");
-        PreyRestHttpClient.getInstance(ctx).postJsonAutentication(uri, json);
+        return PreyRestHttpClient.getInstance(ctx).postJsonAutentication(uri, json);
     }
 
     public int uploadFile(Context ctx, File file,String uploadID,long total)  throws PreyException{

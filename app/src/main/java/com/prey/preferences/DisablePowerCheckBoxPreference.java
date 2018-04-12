@@ -32,7 +32,7 @@ public class DisablePowerCheckBoxPreference extends CheckBoxPreference {
     @Override
     public void setChecked(boolean checked) {
         super.setChecked(checked);
-        PreyLogger.i("DisablePowerCheckBoxPreference:" + checked);
+        PreyLogger.d("DisablePowerCheckBoxPreference:" + checked);
         Context ctx=getContext();
         if(checked){
             notifyReady(ctx);

@@ -101,8 +101,8 @@
     <string name="preferences_detach_dettaching_message">Removiendo el equipo.\nUn segundo…</string>
     <string name="preferences_admin_disabled_dialog_title">Permisos adicionales</string>
      <string name="preferences_admin_disabled_dialog_message">Está a punto de conceder Prey privilegios de seguridad especial, que le permitirá bloquear de forma remota el dispositivo.\nHaga clic en Sí para continuar.</string>
-    <string name="preferences_disable_power_options_title">Desactivar el menú de apagado</string>
-    <string name="preferences_disable_power_options_summary">Evita que se apague tu equipo al estar bloqueado por Prey, una notificación aparecerá al estar activo</string>
+    <string name="preferences_disable_power_options_title">Bloquear botón de apagado</string>
+    <string name="preferences_disable_power_options_summary">Evita que se apague tu equipo al estar bloqueado por Prey, se mostrará una pequeña notificación. Se desbloquea utilizando el PIN Prey</string>
     <string name="preferences_disable_power_options_summary_old">Tu dispositivo no puede ser apagado si la pantalla está bloqueada</string>
     <string name="preferences_scheduled_title">Fijar frecuenta de intervalo</string>
     <string name="preferences_scheduled_summary">Cuán rápido Prey se ejecutará si no hay servicios de Google disponibles</string>
@@ -144,7 +144,7 @@
 
     <string name="set_old_user_loading">Agregando equipo a la cuenta…</string>
     <string name="set_old_user_no_more_devices_title">¡Oh, caramba!</string>
-    <string name="set_old_user_no_more_devices_text">Al parecer en tu cuenta Prey está llena. Intenta eliminar algún disposito para poder proteger tu Android, o actualiza la cuenta mediante preyproject.com/plans.</string>
+    <string name="set_old_user_no_more_devices_text">Alcanzaste el límite de equipos en tu cuenta gratuita. Elimina uno, o considera mejorar tu cuenta a un plan pago para expandir tu espacio y funciones: https://www.preyproject.com/es/precios</string>
     <string name="set_new_user_dialog_creating_popup">Creando la cuenta.\nUn segundo…</string>
 
     <string name="create_my_account">¡CREAR MI CUENTA!</string>
@@ -182,15 +182,16 @@
 
     <!-- preferece -->
     <string name="preference_pin">PIN Prey</string>
-    <string name="preference_pin_summary">Es un código de 4 dígitos requerido para usar los comandos SMS, que te permite ejecutar acciones en tu dispositivo de forma remota, enviando instrucciones a través de un mensaje de texto</string>
-    <string name="preference_pin_summary_subtitle">Es tu código personal de seguridad 4 dígitos requerido para usar los comandos SMS</string>
+    <string name="preference_pin_summary">Crea tu código PIN de 4 dígitos para activar el uso de las acciones remotas vía comandos SMS y la función de Bloqueo de Botón de apagado</string>
+    <string name="preference_pin_summary_subtitle">Este PIN se pedirá al utilizar comandos SMS o al bloquear el botón de apagado</string>
     <string name="preference_pin_dialog_title">Configura tu PIN de seguridad Prey</string>
 
     <string name="preference_pin_updating_dialog">Actualizando PIN Prey</string>
     <string name="preference_pin_successfully_changed">PIN Prey actualizado correctamente</string>
     <string name="preference_pin_removed">PIN Prey fue eliminado</string>
 
-
+    <string name="preference_pin_save">Grabar PIN</string>
+    <string name="preference_pin_remove">Borrar PIN</string>
 
     <string name="preference_sms">Comandos SMS</string>
     <string name="preference_sms_summary">Permite ejecutar acciones en tu dispositivo de forma remota, enviando instrucciones a través de un mensaje de texto</string>
@@ -227,8 +228,9 @@
     <string name="warning_notification_title">¡Atención!Prey necesita permisos</string>
     <string name="warning_notification_body">Toca aquí para otorgar permisos </string>
 
-    <string name="warning_title">¡Atención! Prey necesita permisos</string>
-    <string name="warning_body">Prey necesita nuevos permisos en la versión de Android 6.0 para generar reportes, que incluyen permisos de cámara, ubicación y estado del dispositivo.</string>
+    <string name="warning_title">Prey requiere múltiples permisos de Android para funcionar al máximo, estos son:</string>
+    <string name="warning_body"><b>Permiso de Administrador</b>\nHabilita el borrado y bloqueo remoto con contraseña del móvil, utilizado para combatir el robo de datos en móviles.\n\n<b>Permisos de cámara: ubicación y estado</b>\nEsenciales a la hora de rastrear al equipo y de generar los reportes de evidencia cuando este se pierde, incluyen fotografías y datos del móvil.\n\n<b>Permiso de superposición</b>\nPermite que el bloqueo de pantalla de Prey sea robusto, ya que se presenta por encima de la interfaz, evitando toda interacción de navegación.\n\n<b>Acceso a llamadas y contacto</b>\nPrey utiliza este permiso para obtener y proveer al usuario el IMEI del móvil, no hace uso de los contactos ni realiza llamadas con el mismo.\n\n<b>Acceso multimedia y de archivos</b>\nPermite el uso de la función de recuperación de archivos y el borrado de datos, para salvar documentos en equipos perdidos o borrarlos.</string>
+
 
     <string name="warning_re_approve">Otorgar</string>
     <string name="warning_close">Cerrar</string>
@@ -272,4 +274,10 @@
     <string name="lock_unlock">DESBLOQUEAR</string>
 
     <string name="disable_power_ready">Listo</string>
+
+    <string name="i_agree_terms_conditions">He leído y acepto los <u>Términos y Condiciones y la Política de Privacidad</u></string>
+    <string name="i_confirm_i_am_over_16">Declaro ser mayor de 16 años</string>
+
+    <string name="super_lock">Ingresa tu PIN\n para desbloquear</string>
+
 </resources>

@@ -270,68 +270,9 @@ public class UtilConnection {
                 delay = true;
             } while (retry < RETRIES);
         }catch(Exception e){
-            PreyLogger.d("error util:"+e.getMessage());
+            PreyLogger.e("error util:"+e.getMessage(),e);
         }
-        /*
-        if(response==null||(response!=null&& !(response.getStatusCode()==200||response.getStatusCode()==201||response.getStatusCode()==404||response.getStatusCode()==406||response.getStatusCode()==409||response.getStatusCode()==502))) {
-            OfflineDatasource datasource = new OfflineDatasource(preyConfig.getContext());
-            if(response!=null) {
-                PreyLogger.i("code:" + response.getStatusCode());
-            }
-            PreyLogger.i("uri:"+uri+" status:"+status);
-            if(pageOffline(uri)) {
-                OfflineDto offline = new OfflineDto();
-                offline.setOfflineId(sdf.format(new Date()));
-                offline.setUrl(uri);
-                offline.setContentType(contentType);
-                offline.setAuthorization(authorization);
-                offline.setStatus(status);
-                offline.setCorrelationId(correlationId);
 
-
-                offline.setParameters(params.toString());
-                offline.setRequestMethod(requestMethod);
-
-
-                if (entityFiles != null && entityFiles.size() > 0) {
-                    JSONArray array = new JSONArray();
-                    for (int i = 0; entityFiles != null && i < entityFiles.size(); i++) {
-                        EntityFile entityFile = entityFiles.get(i);
-
-
-                        JSONObject json = new JSONObject();
-                        json.put("idFile", entityFile.getIdFile());
-                        json.put("type", entityFile.getType());
-                        json.put("name", entityFile.getName());
-                        json.put("mimeType", entityFile.getMimeType());
-                        json.put("length", entityFile.getLength());
-
-
-                        ByteArrayOutputStream outputStream = listOutputStream.get(i);
-                        PreyLogger.i("idFile:" + entityFile.getIdFile() + " json:" + json.toString());
-                        array.put(json);
-
-
-                        saveFile(entityFile.getIdFile(), outputStream);
-
-                    }
-                    PreyLogger.i("files:" + array.toString());
-                    offline.setFiles(array.toString());
-                    offline.setOfflineId(sdf.format(new Date()) + "_report");
-                }
-
-                PreyLogger.i("id:" + offline.getOfflineId() + " url:" + offline.getUrl());
-                PreyLogger.i("id:" + offline.getOfflineId() + " requestMethod:" + requestMethod);
-                PreyLogger.i("id:" + offline.getOfflineId() + " contentType:" + contentType);
-                PreyLogger.i("id:" + offline.getOfflineId() + " authorization:" + authorization);
-                PreyLogger.i("id:" + offline.getOfflineId() + " status:" + status);
-                PreyLogger.i("id:" + offline.getOfflineId() + " correlationId:" + correlationId);
-                PreyLogger.i("id:" + offline.getOfflineId() + " files:" + offline.getFiles());
-
-
-                datasource.createOffline(offline);
-            }
-        }*/
         return response;
     }
 
@@ -400,9 +341,15 @@ public class UtilConnection {
 
     private static PreyHttpResponse convertPreyHttpResponse(int responseCode,HttpURLConnection connection)throws Exception {
         StringBuffer sb = new StringBuffer();
-        if(responseCode==200||responseCode==201) {
-            InputStream input = connection.getInputStream();
+        if(responseCode==200||responseCode==201||responseCode==422) {
+            InputStream input = null;
+            if(responseCode==422){
+                input = connection.getErrorStream();
+            }else {
+                input = connection.getInputStream();
+            }
             if (input != null) {
+
                 BufferedReader in = new BufferedReader(new InputStreamReader(input));
                 String decodedString;
 
@@ -411,8 +358,8 @@ public class UtilConnection {
                     sb.append('\r');
                 }
                 in.close();
+                PreyLogger.d(sb.toString());
             }
-            PreyLogger.d(sb.toString());
         }
         Map<String, List<String>> mapHeaderFields=connection.getHeaderFields();
 

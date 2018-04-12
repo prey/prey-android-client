@@ -105,11 +105,13 @@ public class PreyConfig {
     public static final String LAST_REPORT_START_DATE="LAST_REPORT_START_DATE";
     public static final String TIMEOUT_REPORT="TIMEOUT_REPORT";
     public static final String INTERVAL_AWARE="INTERVAL_AWARE";
+    public static final String TIME_SECURE_LOCK="TIME_SECURE_LOCK";
+    public static final String LAST_TIME_SECURE_LOCK="LAST_TIME_SECURE_LOCK";
 
     public static final String LOCATION_LOW_BATTERY_DATE="LOCATION_LOW_BATTERY_DATE";
     public static final String SESSION_ID="SESSION_ID";
 
-    public static final String PIN_NUMBER="PIN_NUMBER";
+    public static final String PIN_NUMBER2="PIN_NUMBER2";
     public static final String SMS_COMMAND="SMS_COMMAND";
     public static final String PREFERENCE_LOCATION_LOW_BATTERY="PREFERENCE_LOCATION_LOW_BATTERY";
 
@@ -132,7 +134,7 @@ public class PreyConfig {
     public static final String DEVICE_ID = "DEVICE_ID";
 
     public static final String SIM_SERIAL_NUMBER = "SIM_SERIAL_NUMBER";
-    public static final String VERSION_PREY_DEFAULT="1.8.2";
+    public static final String VERSION_PREY_DEFAULT="1.8.1";
 
     public static final String CAN_ACCESS_FINE_LOCATION = "CAN_ACCESS_FINE_LOCATION";
     public static final String CAN_ACCESS_COARSE_LOCATION = "CAN_ACCESS_COARSE_LOCATION";
@@ -157,6 +159,9 @@ public class PreyConfig {
     public static final String NOTIFICATION_ANDROID_7="notify_android_7";
 
     public static final String JOB_ID_LOCK="job_id_lock";
+
+    public static final String COUNTER_OFF="counter_off";
+
 
     public static final String AWARE="aware";
 
@@ -221,7 +226,7 @@ public class PreyConfig {
 
     private String getString(String key,String defaultValue){
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        return settings.getString(key, defaultValue);
+        return  settings.getString(key, defaultValue);
     }
 
     private void saveInt(String key, int value){
@@ -472,26 +477,26 @@ public class PreyConfig {
     public boolean isSimChanged() {
         String nowSimSerialNumber=new PreyPhone(ctx).getSimSerialNumber();
         String currentSimSerialNumber=getSimSerialNumber();
-        PreyLogger.i("______________________________isSimChanged_______________");
-        PreyLogger.i("SimSerialNumber now:" + nowSimSerialNumber + " current:" + currentSimSerialNumber);
+        PreyLogger.d("______________________________isSimChanged_______________");
+        PreyLogger.d("SimSerialNumber now:" + nowSimSerialNumber + " current:" + currentSimSerialNumber);
         if (currentSimSerialNumber==null||"".equals(currentSimSerialNumber)){  //empty
             if(nowSimSerialNumber!=null&&!"".equals(nowSimSerialNumber)){
                 this.setSimSerialNumber(nowSimSerialNumber);
-                PreyLogger.i("init setSimSerialNumber :"+nowSimSerialNumber);
+                PreyLogger.d("init setSimSerialNumber :"+nowSimSerialNumber);
             }else{
-                PreyLogger.i("nothing setSimSerialNumber 1");
+                PreyLogger.d("nothing setSimSerialNumber 1");
             }
         }else{
             if(nowSimSerialNumber!=null&&!"".equals(nowSimSerialNumber)){ //not empty
                 if(!currentSimSerialNumber.equals(nowSimSerialNumber)){
                     this.setSimSerialNumber(nowSimSerialNumber);
-                    PreyLogger.i("update setSimSerialNumber :"+nowSimSerialNumber);
+                    PreyLogger.d("update setSimSerialNumber :"+nowSimSerialNumber);
                     return true;
                 }else{
-                    PreyLogger.i("nothing setSimSerialNumber 2");
+                    PreyLogger.d("nothing setSimSerialNumber 2");
                 }
             }else{
-                PreyLogger.i("nothing setSimSerialNumber 3");
+                PreyLogger.d("nothing setSimSerialNumber 3");
             }
         }
         return false;
@@ -848,6 +853,15 @@ public class PreyConfig {
     }
 
 
+    public void setTimeSecureLock(long timeSecureLock){
+        saveLong(PreyConfig.TIME_SECURE_LOCK, timeSecureLock);
+    }
+
+    public long getTimeSecureLock(){
+        return getLong(PreyConfig.TIME_SECURE_LOCK, 0);
+    }
+
+
     public String getIntervalAware(){
         return getString(PreyConfig.INTERVAL_AWARE,"");
     }
@@ -912,12 +926,12 @@ public class PreyConfig {
         saveString(PreyConfig.SESSION_ID, sessionId);
     }
 
-    public void setPinNumber(int pin){
-        saveInt(PreyConfig.PIN_NUMBER, pin);
+    public void setPinNumber(String pin){
+        saveString(PreyConfig.PIN_NUMBER2, pin);
     }
 
-    public int getPinNumber() {
-        return getInt(PreyConfig.PIN_NUMBER, -1);
+    public String getPinNumber() {
+        return getString(PreyConfig.PIN_NUMBER2, "");
     }
 
     public void setSmsCommand(boolean smsCommand) {
@@ -1012,5 +1026,30 @@ public class PreyConfig {
 
     public void setAware(boolean aware) {
         this.saveBoolean(PreyConfig.AWARE, aware);
+    }
+
+    public int getCounterOff(){
+        return getInt(PreyConfig.COUNTER_OFF,0);
+    }
+
+    public void setCounterOff(int counter){
+        saveInt(PreyConfig.COUNTER_OFF,counter);
+    }
+
+    boolean openSecureService=false;
+    public void setOpenSecureService(boolean openSecureService){
+        this.openSecureService=openSecureService;
+    }
+
+    public boolean isOpenSecureService(){
+        return openSecureService;
+    }
+
+    public void setLastTimeSecureLock(long lastTimeSecureLock){
+        saveLong(PreyConfig.LAST_TIME_SECURE_LOCK, lastTimeSecureLock);
+    }
+
+    public long getLastTimeSecureLock(){
+        return getLong(PreyConfig.LAST_TIME_SECURE_LOCK, 0);
     }
 }

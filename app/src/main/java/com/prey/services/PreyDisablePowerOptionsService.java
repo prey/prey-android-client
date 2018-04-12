@@ -42,6 +42,12 @@ public class PreyDisablePowerOptionsService extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
         PreyLogger.i("PreyDisablePowerOptionsService  start ________");
+        boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
+        if (disablePowerOptions) {
+            IntentFilter intentfilter = new IntentFilter("android.intent.action.CLOSE_SYSTEM_DIALOGS");
+            registerReceiver(mReceiver, intentfilter);
+
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.ECLAIR)

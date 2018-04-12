@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/super_lock_bg"
+    >
+
+    <LinearLayout
+        android:id="@+id/linea_pin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        >
+
+        <TextView
+            android:id="@+id/textViewPin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/super_lock"
+            android:textColor="#E5CA45"
+            android:textSize="30dp"
+            android:textAlignment="center"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linea_cajita"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linea_pin"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        >
+
+        <EditText
+            android:id="@+id/editTextPin"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:background="#fff"
+            android:gravity="center"
+            android:textSize="30dp"
+            android:inputType="numberPassword"
+            android:textColor="#2B69CC"
+            android:text=""
+            android:maxLength="4"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linea_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linea_cajita"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        >
+
+        <Button
+            android:id="@+id/button_Super_Lock_Unlock"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+
+
+            android:background="@color/lock_unlock_color"
+            android:text="@string/lock_unlock"
+            android:textSize="30dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+             />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

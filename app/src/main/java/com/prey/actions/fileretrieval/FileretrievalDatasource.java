@@ -23,7 +23,7 @@ public class FileretrievalDatasource {
         dbHelper = new FileretrievalOpenHelper(context);
     }
 
-    public void createGeofence(FileretrievalDto dto) {
+    public void createFileretrieval(FileretrievalDto dto) {
         try {
             dbHelper.insertFileretrieval(dto);
         } catch (Exception e) {;

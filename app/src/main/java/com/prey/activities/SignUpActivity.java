@@ -20,10 +20,15 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,20 +78,67 @@ public class SignUpActivity extends Activity {
         final EditText nameText=((EditText)findViewById(R.id.editTextName));
         final EditText emailText=((EditText)findViewById(R.id.editTextEmailAddress));
         final EditText passwordText=((EditText)findViewById(R.id.editTextPassword));
+
+
+
         Button buttonSignup = (Button) findViewById(R.id.buttonSignup);
 
         final TextView linkSignup = (TextView) findViewById(R.id.linkSignup);
 
 
 
+
+        final CheckBox checkBox_linear_agree_terms_condition=(CheckBox)findViewById(R.id.checkBox_linear_agree_terms_condition);
+        final CheckBox checkBox_linear_confirm_over=(CheckBox)findViewById(R.id.checkBox_linear_confirm_over);
+
         Typeface magdacleanmonoRegular = Typeface.createFromAsset(getAssets(), "fonts/MagdaClean/magdacleanmono-regular.ttf");
         Typeface titilliumWebBold = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Bold.ttf");
 
         TextView textViewInit1=(TextView)findViewById(R.id.textViewInit1);
         TextView textViewInit2=(TextView)findViewById(R.id.textViewInit2);
+        TextView text_linear_agree_terms_condition=(TextView)findViewById(R.id.text_linear_agree_terms_condition);
+        TextView text_linear_confirm_over=(TextView)findViewById(R.id.text_linear_confirm_over);
+
         textViewInit1.setTypeface(magdacleanmonoRegular);
         textViewInit2.setTypeface(titilliumWebBold);
 
+        text_linear_agree_terms_condition.setTypeface(titilliumWebBold);
+        text_linear_confirm_over.setTypeface(titilliumWebBold);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog alert =builder.create();
+
+       // alert.setTitle("Title here");
+
+        WebView wv = new WebView(this);
+        wv.loadUrl("https://www.preyproject.com/terms");
+        wv.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+
+                return true;
+            }
+        });
+
+        alert.setView(wv);
+        alert.setButton(getString(R.string.warning_close), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+
+        text_linear_agree_terms_condition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PreyLogger.d("text_linear_agree_terms_condition");
+
+                alert.show();
+            }
+        });
 
 
         linkSignup.setTypeface(titilliumWebBold);
@@ -137,8 +189,16 @@ public class SignUpActivity extends Activity {
                 String name = nameText.getText().toString();
                 email = emailText.getText().toString();
                 String password = passwordText.getText().toString();
+
+                boolean confirm_over=checkBox_linear_confirm_over.isChecked();
+                boolean agree_terms_condition=checkBox_linear_agree_terms_condition.isChecked();
+                PreyLogger.i("email:"+email);
+                PreyLogger.i("password:"+password);
+                PreyLogger.i("confirm_over:"+confirm_over);
+                PreyLogger.i("agree_terms_condition:"+agree_terms_condition);
                 Context ctx = getApplicationContext();
-                if (email == null || email.equals("") || password == null || password.equals("")) {
+                if (email == null || email.equals("") || password == null || password.equals("")
+                        ||!confirm_over ||!agree_terms_condition ) {
                     Toast.makeText(ctx, R.string.error_all_fields_are_required, Toast.LENGTH_LONG).show();
                 } else {
                     if (email.length() < 6 || email.length() > 200) {
@@ -206,7 +266,7 @@ public class SignUpActivity extends Activity {
                         AwareConfig.getAwareConfig(getApplicationContext()).init();
                     }
                 }.start();
-            } catch (PreyException e) {
+            } catch (Exception e) {
                 error = e.getMessage();
             }
             return null;

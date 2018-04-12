@@ -54,7 +54,7 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public boolean openSettings(){
-        PreyLogger.i("openSettings two:"+!PreyConfig.getPreyConfig(mContext).getTwoStep());
+        PreyLogger.d("openSettings two:"+!PreyConfig.getPreyConfig(mContext).getTwoStep());
         return !PreyConfig.getPreyConfig(mContext).getTwoStep();
     }
 

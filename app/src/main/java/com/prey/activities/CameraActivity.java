@@ -40,7 +40,7 @@ public class CameraActivity extends PreyActivity {
         switch (id) {
 
             case SHOW_POPUP:
-                popup = new AlertDialog.Builder(CameraActivity.this).setIcon(R.drawable.logo).setTitle(R.string.popup_alert_title).setMessage(this.message)
+                popup = new AlertDialog.Builder(CameraActivity.this).setIcon(R.drawable.info).setTitle(R.string.popup_alert_title).setMessage(this.message)
                         .setCancelable(true).create();
 
                 popup.setOnDismissListener(new DialogInterface.OnDismissListener() {

@@ -96,7 +96,7 @@ public class WelcomeBatchActivity extends FragmentActivity {
                     PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
                 }
 
-            } catch (PreyException e) {
+            } catch (Exception e) {
                 error = e.getMessage();
             }
             return null;

@@ -48,7 +48,7 @@ public class AwareService extends IntentService {
                 PreyLocation locationNow = null;
                 do {
                     locationNow = LocationUtil.getLocation(ctx, null, false);
-                    PreyLogger.d("locationNow lat:" + locationNow.getLat() + " lng:" + locationNow.getLng() + " acc:" + locationNow.getAccuracy());
+                    //PreyLogger.d("locationNow lat:" + locationNow.getLat() + " lng:" + locationNow.getLng() + " acc:" + locationNow.getAccuracy());
                     Thread.sleep(1000);
                     i = i + 1;
                 } while (i < 3);

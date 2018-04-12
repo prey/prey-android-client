@@ -96,8 +96,8 @@
      <string name="preferences_detach_summary">Deletes this device from your Prey account</string>
      <string name="preferences_detach_dialog_title">Detaching device</string>
      <string name="preferences_detach_dialog_message">Your device will be detached from the Control Panel. This will also delete all its stored reports.\n\nAre you sure?</string>
-    <string name="preferences_disable_power_options_title">Disable Power Menu</string>
-    <string name="preferences_disable_power_options_summary">Prevent your device from being turned off when locked by Prey, a notification will appear when active</string>
+    <string name="preferences_disable_power_options_title">Shield OFF button when Prey-locked</string>
+    <string name="preferences_disable_power_options_summary">Prevents your device from being turned off when a Prey lock is active, a small notification will be shown. You can unlock it using the Prey PIN</string>
     <string name="preferences_disable_power_options_summary_old">Your device can\'t be turned off if its screen is locked</string>
 
     <string name="preferences_scheduled_title">Set interval frequency</string>
@@ -143,7 +143,7 @@
 
     <string name="set_old_user_loading">Attaching device to account…\nJust a sec!</string> 
     <string name="set_old_user_no_more_devices_title">Hold your horses!</string> 
-    <string name="set_old_user_no_more_devices_text">Your Prey account is full. To protect this Android device delete an older one, or upgrade your account on preyproject.com/plans</string> 
+    <string name="set_old_user_no_more_devices_text">You\'ve reached your free account\'s device limit. Delete one to make room or consider one of our paid plans for more device slots and extra features: https://www.preyproject.com/pricing</string> 
      <string name="set_new_user_dialog_creating_popup">Creating account. Please wait…</string>
 
     <string name="create_my_account">CREATE MY ACCOUNT!</string>
@@ -181,8 +181,8 @@
 
     <!-- preferece -->
     <string name="preference_pin">Prey security PIN</string>
-    <string name="preference_pin_summary">It is a four digit code required to use the SMS commands enable you to perform actions on your device remotely by sending instructions via a text message</string>
-    <string name="preference_pin_summary_subtitle">This is your personal four digit code required to use the SMS commands</string>
+    <string name="preference_pin_summary">Create your 4 digit PIN code to activate the use of remote actions via SMS commands and the OFF Button Lock feature</string>
+    <string name="preference_pin_summary_subtitle">This PIN number will be requested when using SMS commands or the OFF button <lock></lock></string>
     <string name="preference_pin_dialog_title">Set you Prey security PIN</string>
 
 
@@ -191,7 +191,8 @@
     <string name="preference_pin_updating_dialog">Updating Prey PIN</string>
     <string name="preference_pin_successfully_changed">Prey PIN set successfully</string>
     <string name="preference_pin_removed">Prey PIN removed successfully</string>
-
+    <string name="preference_pin_save">Save PIN</string>
+    <string name="preference_pin_remove">Remove PIN</string>
 
     <string name="preference_sms">SMS commands</string>
     <string name="preference_sms_summary">It allows execute actions on your device remotely by sending instructions via a text message</string>
@@ -228,8 +229,11 @@
     <!-- Warning Alert  -->
     <string name="warning_notification_title">Warning!Prey needs permissions</string>
     <string name="warning_notification_body">Tap to provide permissions.</string>
-    <string name="warning_title">Warning! Provide new permissions for Prey</string>
-    <string name="warning_body">You need to provide Prey some new permission in this Android version for it to generate reports, that include camera, location and device status access.</string>
+
+    <string name="warning_title">Prey requires multiple privileges from Android to work at maximum capacity, these are:</string>
+    <string name="warning_body"><b>Device Administrator</b>\nIt allows the use of two tools. The Remote Wipe, to delete data and protect your privacy, and the Remote Lock that blocks access to the device.\n\n<b>Access to camera, location, and state</b>\nUtilized in Prey’s tracking and in the generation of Evidence Reports, which include location, pictures, and local device information.\n\n<b>Permission to draw over other apps</b>\nEnables Prey’s screen lock to overlay above the phone’s interface and other apps, making the lock more robust by avoiding user navigation.\n\n<b>Access to contacts and calls</b>\nPrey uses this permission because it also provides access to the device’s IMEI, which we deliver to our users as info, it doesn’t utilize contacts or calls in any way.\n\n<b>Access to media and local files</b>\nPermits the use of our remote File Retrieval and Wipe features, utilized to save documents on lost devices and to wipe their data clean.</string>
+
+
     <string name="warning_re_approve">Approve</string>
     <string name="warning_close">Close</string>
 
@@ -270,9 +274,16 @@
     <string name="warning_android7_re_approve">Approve</string>
     <string name="warning_android7_close">Close</string>
 
-    <string name="lock_access_denied">The device has been blocked by its owner in protection of his privacy, and property.\n\nEnter the password to unlock.</string>
+    <string name="lock_access_denied">The device has been blocked by its owner to protect both privacy and property.\n\nEnter the password to unlock.</string>
+
     <string name="lock_unlock">UNLOCK</string>
 
 
     <string name="disable_power_ready">Ready</string>
+
+    <string name="i_agree_terms_conditions">I have read and agree to the <u>Terms and Conditions and Privacy Policy</u></string>
+    <string name="i_confirm_i_am_over_16">I confirm that I am over 16 years old</string>
+
+    <string name="super_lock">Please enter your\n PIN to unlock</string>
+
 </resources>
