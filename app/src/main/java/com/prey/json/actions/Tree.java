@@ -14,6 +14,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.UtilJson;
+import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 
 import org.json.JSONArray;
@@ -56,7 +57,8 @@ public class Tree {
             JSONArray array = getFilesRecursiveJSON(pathBase, dir, depth-1);
             JSONObject jsonTree = new JSONObject();
             jsonTree.put("tree", array.toString());
-            PreyWebServices.getInstance().sendTree(ctx, jsonTree);
+            PreyHttpResponse response=PreyWebServices.getInstance().sendTree(ctx, jsonTree);
+            PreyLogger.d("Tree stopped response"+response.getStatusCode());
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get", "tree", "stopped",reason));
             PreyLogger.d("Tree stopped");
         } catch (Exception e) {

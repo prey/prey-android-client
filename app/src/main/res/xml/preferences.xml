@@ -24,7 +24,7 @@
         >
         <com.prey.preferences.ChangePinPreferences
             android:key="PREFS_CHANGE_PIN"
-            android:dialogIcon="@drawable/logo"
+            android:dialogIcon="@drawable/status_bar"
             android:dialogTitle="@string/preference_pin_dialog_title"
             android:negativeButtonText="@string/cancel"
             android:positiveButtonText="@string/ok"
@@ -61,7 +61,7 @@
         android:title="@string/preferences_detach_title"
         >
         <com.prey.preferences.DetachDevicePreferences
-            android:dialogIcon="@drawable/logo"
+            android:dialogIcon="@drawable/status_bar"
             android:dialogMessage="@string/preferences_detach_dialog_message"
             android:dialogTitle="@string/preferences_detach_dialog_title"
             android:key="PREFS_DETACH"
@@ -77,7 +77,7 @@
         android:title="@string/preferences_about_category_name"
         >
         <EditTextPreference
-            android:dialogIcon="@drawable/logo"
+            android:dialogIcon="@drawable/status_bar"
             android:dialogMessage="@string/preferences_about_message"
             android:dialogTitle="@string/preferences_about_title"
             android:key="PREFS_ABOUT"

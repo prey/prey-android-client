@@ -22,7 +22,7 @@ public class SMSFactory {
         String secretKey = SMSUtil.getSecretKey(command);
         boolean isPasswordOk = false;
         try {
-            isPasswordOk = PreyConfig.getPreyConfig(ctx).getPinNumber() == Integer.parseInt(secretKey);
+            isPasswordOk = PreyConfig.getPreyConfig(ctx).getPinNumber().equals(secretKey);
         } catch (Exception e) {
         }
         if (isPasswordOk) {

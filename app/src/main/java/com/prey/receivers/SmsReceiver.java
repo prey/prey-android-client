@@ -57,7 +57,8 @@ public class SmsReceiver extends BroadcastReceiver {
     }
 
     private void executeActions(Context ctx, String messageBody,String displayMessageBody, String phoneNumber) {
-        if (PreyConfig.getPreyConfig(ctx).getPinNumber() >= 0) {
+        String pinNumber=PreyConfig.getPreyConfig(ctx).getPinNumber();
+        if(pinNumber!=null&&!"".equals(pinNumber)){
             if (SMSUtil.isValidSMSCommand(displayMessageBody)) {
                 this.abortBroadcast();
 

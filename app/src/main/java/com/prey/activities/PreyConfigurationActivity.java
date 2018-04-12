@@ -10,16 +10,20 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.prey.PreyConfig;
 import com.prey.PreyEmail;
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.R;
+import com.prey.preferences.ChangePinPreferences;
 
 public class PreyConfigurationActivity extends PreferenceActivity {
 
@@ -58,9 +62,12 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 
         }
         try {
-            if (PreyEmail.getEmail(getApplicationContext()) != null) {
+            GoogleApiAvailability api = GoogleApiAvailability.getInstance();
+            int code = api.isGooglePlayServicesAvailable(getApplicationContext());
+            if (code == ConnectionResult.SUCCESS) {
                 PreferenceCategory mCategory = (PreferenceCategory) findPreference("PREFS_CAT_PREFS");
-                Preference p2 = findPreference(PreyConfig.PREFS_SCHEDULED);
+                Preference p2 = findPreference("PREFS_SCHEDULED");
+                p2.setEnabled(false);
                 mCategory.removePreference(p2);
             }
         } catch (Exception e) {
@@ -68,7 +75,7 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 
         PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
 
-        Preference pDisablePower=findPreference("PREFS_DISABLE_POWER");
+        CheckBoxPreference pDisablePower=(CheckBoxPreference)findPreference("PREFS_DISABLE_POWER");
         try {
             if (preyConfig.isMarshmallowOrAbove()) {
                 pDisablePower.setSummary(R.string.preferences_disable_power_options_summary);
@@ -116,6 +123,7 @@ public class PreyConfigurationActivity extends PreferenceActivity {
         });
 
 
+
         Preference pSMS= findPreference("PREFS_SMS");
         pSMS.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
@@ -130,19 +138,30 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 
         try {
 
-            if (preyConfig.getPinNumber()<0) {
+            if ("".equals(preyConfig.getPinNumber())) {
 
                 pSMS.setEnabled(false);
-
-
+                pDisablePower.setEnabled(false);
+                PreyConfig.getPreyConfig(getApplicationContext()).setDisablePowerOptions(false);
+                pDisablePower.setChecked(false);
             }else{
 
                 pSMS.setEnabled(true);
+                pDisablePower.setEnabled(true);
             }
         } catch (Exception e) {
         }
         PreyStatus.getInstance().setPreyConfigurationActivityResume(false);
 
+
+
+        ChangePinPreferences changePin=(ChangePinPreferences)findPreference("PREFS_CHANGE_PIN");
+        String pin=PreyConfig.getPreyConfig(this).getPinNumber();
+        if("".equals(pin)) {
+            changePin.setPositiveButtonText(R.string.preference_pin_save);
+        }else{
+            changePin.setPositiveButtonText(R.string.preference_pin_remove);
+        }
 
     }
 

@@ -240,7 +240,7 @@ public class EventFactory {
                     NotificationManager nManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
                     android.support.v4.app.NotificationCompat.Builder mBuilder =
                             new android.support.v4.app.NotificationCompat.Builder(ctx)
-                                    .setSmallIcon(R.drawable.logo)
+                                    .setSmallIcon(R.drawable.status_bar)
                                     .setContentTitle(ctx.getResources().getString(R.string.warning_notification_title))
                                     .setContentText(ctx.getResources().getString(R.string.warning_notification_body));
                     mBuilder.setContentIntent(pendingIntent);

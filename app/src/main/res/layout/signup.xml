@@ -13,7 +13,7 @@
         android:textColor="#000000"
          android:textSize="14sp"
          android:fontFamily="MagdaCleanMono"
-
+         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
          android:layout_above="@+id/textViewInit2"
@@ -29,7 +29,7 @@
         android:textSize="23sp"
         android:textStyle="bold"
          android:fontFamily="Avenir Next LT Pro"
-        android:layout_marginTop="5dp"
+         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
 
@@ -50,7 +50,7 @@
         android:ems="10"
          android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:layout_above="@+id/editTextEmailAddress"
         android:hint="@string/field_name_signup"
         android:textColorHint="#9D9C96"
@@ -67,7 +67,7 @@
         android:ems="10"
          android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:layout_above="@+id/editTextPassword"
         android:hint="@string/field_email_signup"
         android:textColorHint="#9D9C96"
@@ -85,7 +85,7 @@
         android:ems="10"
          android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:layout_above="@+id/buttonSignup"
         android:hint="@string/field_password_signup"
         android:textColorHint="#9D9C96"
@@ -103,8 +103,8 @@
         android:textSize="18sp"
         android:fontFamily="Avenir Next LT Pro"
 
+        android:layout_above="@+id/linear_agree_terms_conditions"
 
-        android:layout_above="@+id/linkSignup"
 
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -112,7 +112,71 @@
 
          />
 
+    <LinearLayout
+        android:id="@+id/linear_agree_terms_conditions"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_above="@+id/linear_confirm_over"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        >
 
+        <CheckBox
+            android:id="@+id/checkBox_linear_agree_terms_condition"
+            android:background="#3578BB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/text_linear_agree_terms_condition"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+
+            android:layout_marginTop="-10dp"
+            android:fontFamily="MagdaCleanMono"
+
+            android:text="@string/i_agree_terms_conditions"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_confirm_over"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_above="@+id/linkSignup"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
+        >
+
+        <CheckBox
+
+            android:id="@+id/checkBox_linear_confirm_over"
+            android:layout_width="wrap_content"
+            android:background="#3578BB"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/text_linear_confirm_over"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="@string/i_confirm_i_am_over_16"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:fontFamily="MagdaCleanMono"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="-10dp"
+
+            />
+
+    </LinearLayout>
     <TextView
         android:id="@+id/linkSignup"
 
@@ -127,8 +191,9 @@
 
 
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/buttonSignup"
-        android:layout_alignEnd="@+id/buttonSignup" />
+        />
+
+
     
 
 </RelativeLayout>    

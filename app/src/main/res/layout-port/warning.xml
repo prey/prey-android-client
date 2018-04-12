@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center|top"
     android:background="#fff"
     >
+
     <TextView
 
         android:id="@+id/warning_title"
-        android:paddingTop="20dp"
+        android:paddingTop="5dp"
         android:textColor="#000"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -22,64 +23,76 @@
         android:gravity="center"
         />
 
-    <TextView
-        android:id="@+id/warning_body"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13dp"
+      <ScrollView
+          android:id="@+id/SCROLLER_ID"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:scrollbars="vertical"
+          android:layout_marginBottom="60dp"
+          android:layout_marginTop="10dp"
+          android:fillViewport="true"
+          android:layout_below="@+id/warning_title"
+          >
 
-        android:textColor="#000"
-        android:layout_marginTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="@string/warning_body"
-        android:gravity="center"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        />
+      <TextView
+          android:id="@+id/warning_body"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:textSize="14dp"
 
+          android:gravity="left"
+          android:textAlignment="gravity"
+          android:textColor="#000"
+
+
+
+          android:text="@string/warning_body"
+
+          android:layout_marginRight="10dp"
+          android:layout_marginLeft="10dp"
+
+          />
+      </ScrollView>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center|top"
-        android:paddingBottom="20dp"
-        >
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
 
+        android:orientation="horizontal"
+        android:paddingBottom="5dp">
 
 
         <Button
             android:id="@+id/button_ok"
             android:layout_width="120dp"
             android:layout_height="50dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="#2A5E93"
+            android:fontFamily="Avenir Next LT Pro"
+            android:paddingBottom="10dp"
             android:text="@string/warning_re_approve"
             android:textColor="#fff"
-            android:fontFamily="Avenir Next LT Pro"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:background="#2A5E93"
-            android:layout_marginTop="10dp"
-            android:paddingBottom="10dp"
-            android:layout_marginBottom="10dp"
-            />
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/button_close"
             android:layout_width="120dp"
             android:layout_height="50dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="#2A5E93"
+            android:fontFamily="Avenir Next LT Pro"
+            android:paddingBottom="10dp"
             android:text="@string/warning_close"
             android:textColor="#fff"
-            android:fontFamily="Avenir Next LT Pro"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:background="#2A5E93"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:paddingBottom="10dp"
-            />
+            android:textStyle="bold" />
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

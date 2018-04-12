@@ -42,13 +42,13 @@ public class PreyLockService extends Service{
 
     public void onCreate() {
         super.onCreate();
-        PreyLogger.i("PreyLockService onCreate");
+        PreyLogger.d("PreyLockService onCreate");
     }
 
     public void onStart(Intent intent, int startId) {
         super.onStart(intent,startId);
         final Context ctx=this;
-        PreyLogger.i("PreyLockService onStart");
+        PreyLogger.d("PreyLockService onStart");
 
         final String unlock= PreyConfig.getPreyConfig(ctx).getUnlockPass();
 
@@ -116,7 +116,7 @@ public class PreyLockService extends Service{
 
     public void onDestroy() {
         super.onDestroy();
-        PreyLogger.i("PreyLockService onDestroy");
+        PreyLogger.d("PreyLockService onDestroy");
         if(view != null){
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
             wm.removeView(view);

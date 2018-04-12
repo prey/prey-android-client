@@ -43,7 +43,7 @@ public class FeedbackActivity extends PreyActivity {
 
             case SHOW_POPUP:
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setIcon(R.drawable.logo);
+                alert.setIcon(R.drawable.info);
                 alert.setTitle(R.string.feedback_principal_title);
                 alert.setMessage(R.string.feedback_principal_message);
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id=":app" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="prey-android-client" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+<module external.linked.project.id=":app" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
@@ -71,13 +71,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/assets" type="java-test-resource" />
@@ -85,31 +78,28 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTest/shaders" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/build-info" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/builds" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check-manifest" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-classes" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-runtime-classes" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-verifier" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant-run-resources" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant-run-support" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javaPrecompile" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/multi-dex" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/prebuild" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/reload-dex" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/shaders" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/split-apk" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/splits-support" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/build/reports" />
@@ -117,47 +107,47 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 25 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="com.android.support:multidex-1.0.2" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-auth-8.4.0" level="project" />
-    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-databind:2.8.9@jar" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-appstate-8.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-plus-8.4.0" level="project" />
-    <orderEntry type="library" name="io.jsonwebtoken:jjwt:0.9.0@jar" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-maps-8.4.0" level="project" />
-    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-core:2.8.9@jar" level="project" />
-    <orderEntry type="library" name="com.android.support:support-v4-24.0.0-alpha2" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-base-8.4.0" level="project" />
-    <orderEntry type="library" name="com.android.support:recyclerview-v7-24.0.0-alpha2" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-gcm-8.4.0" level="project" />
-    <orderEntry type="library" name="com.android.support.constraint:constraint-layout-1.0.1" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-measurement-8.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-analytics-8.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-vision-8.4.0" level="project" />
-    <orderEntry type="library" name="com.android.support:support-annotations:24.0.0-alpha2@jar" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-wallet-8.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-appindexing-8.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-identity-8.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-8.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-fitness-8.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-wearable-8.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-games-8.4.0" level="project" />
-    <orderEntry type="library" name="com.android.support:mediarouter-v7-23.0.0" level="project" />
-    <orderEntry type="library" name="com.android.support:design-24.0.0-alpha2" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-drive-8.4.0" level="project" />
-    <orderEntry type="library" name="com.android.support:appcompat-v7-24.0.0-alpha2" level="project" />
-    <orderEntry type="library" name="com.android.support.constraint:constraint-layout-solver:1.0.1@jar" level="project" />
-    <orderEntry type="library" scope="TEST" name="com.android.support:multidex-instrumentation-1.0.2" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-cast-8.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-nearby-8.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-appinvite-8.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-ads-8.4.0" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-location-8.4.0" level="project" />
-    <orderEntry type="library" name="com.android.support:animated-vector-drawable-24.0.0-alpha2" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-panorama-8.4.0" level="project" />
-    <orderEntry type="library" name="com.android.support:support-vector-drawable-24.0.0-alpha2" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-safetynet-8.4.0" level="project" />
-    <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-annotations:2.8.0@jar" level="project" />
-    <orderEntry type="library" name="com.google.android.gms:play-services-basement-8.4.0" level="project" />
-    <orderEntry type="library" name="org.apache.http.legacy-android-25" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-fitness-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.8.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:support-annotations:24.0.0-alpha2@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-appstate-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:appcompat-v7-24.0.0-alpha2" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-wallet-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:animated-vector-drawable-24.0.0-alpha2" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-plus-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-appindexing-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-basement-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-games-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:multidex-1.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: io.jsonwebtoken:jjwt:0.9.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:support-vector-drawable-24.0.0-alpha2" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.8.9@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-maps-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-analytics-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-measurement-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-location-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-drive-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-nearby-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-vision-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-wearable-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:recyclerview-v7-24.0.0-alpha2" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support.constraint:constraint-layout-1.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-cast-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-panorama-8.4.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.android.support:multidex-instrumentation-1.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-gcm-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-ads-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:mediarouter-v7-23.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-appinvite-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:design-24.0.0-alpha2" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support.constraint:constraint-layout-solver:1.0.1@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-safetynet-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:support-v4-24.0.0-alpha2" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.8.9@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-auth-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-identity-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-base-8.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.http.legacy-android-25" level="project" />
   </component>
 </module>

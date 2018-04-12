@@ -7,6 +7,7 @@
 package com.prey;
 
 import android.app.Application;
+import android.content.Intent;
 
 import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.fileretrieval.FileretrievalController;
@@ -16,6 +17,8 @@ import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
 import com.prey.managers.PreyTelephonyManager;
 import com.prey.net.PreyWebServices;
+import com.prey.preferences.DisablePowerCheckBoxPreference;
+import com.prey.services.PreyDisablePowerOptionsService;
 
 import org.json.JSONObject;
 
@@ -94,6 +97,11 @@ public class PreyApp extends Application {
                         }
                     }
                 }.start();
+
+                if(PreyConfig.getPreyConfig(this).isDisablePowerOptions()){
+                    DisablePowerCheckBoxPreference.notifyReady(this);
+                    this.startService(new Intent(this, PreyDisablePowerOptionsService.class));
+                }
             }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
