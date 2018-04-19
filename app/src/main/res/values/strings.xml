@@ -96,8 +96,8 @@
      <string name="preferences_detach_summary">Deletes this device from your Prey account</string>
      <string name="preferences_detach_dialog_title">Detaching device</string>
      <string name="preferences_detach_dialog_message">Your device will be detached from the Control Panel. This will also delete all its stored reports.\n\nAre you sure?</string>
-    <string name="preferences_disable_power_options_title">Shield OFF button when Prey-locked</string>
-    <string name="preferences_disable_power_options_summary">Prevents your device from being turned off when a Prey lock is active, a small notification will be shown. You can unlock it using the Prey PIN</string>
+    <string name="preferences_disable_power_options_title">Shield OFF Button</string>
+    <string name="preferences_disable_power_options_summary">Prevents your device from being turned off manually. Upon using the OFF button it will request your Prey PIN. A notification is shown due to Android policies</string>
     <string name="preferences_disable_power_options_summary_old">Your device can\'t be turned off if its screen is locked</string>
 
     <string name="preferences_scheduled_title">Set interval frequency</string>
@@ -279,7 +279,7 @@
     <string name="lock_unlock">UNLOCK</string>
 
 
-    <string name="disable_power_ready">Ready</string>
+    <string name="disable_power_ready">Protected</string>
 
     <string name="i_agree_terms_conditions">I have read and agree to the <u>Terms and Conditions and Privacy Policy</u></string>
     <string name="i_confirm_i_am_over_16">I confirm that I am over 16 years old</string>
