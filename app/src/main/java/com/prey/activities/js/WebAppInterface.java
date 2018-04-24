@@ -204,6 +204,7 @@ public class WebAppInterface {
         @Override
         protected Void doInBackground(String... password) {
             try {
+                isPasswordOk = false;
                 String apikey = PreyConfig.getPreyConfig(mContext).getApiKey();
                 if (PreyConfig.getPreyConfig(mContext).getTwoStep()) {
                     PreyLogger.d("apikey:" + apikey + " password:" + password[0] + " password2:" + password[1] + " from:" + password[2]);

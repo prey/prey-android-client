@@ -46,10 +46,10 @@ public class FileretrievalController {
             if (connect) {
                 break;
             } else {
-                try{Thread.sleep(2000);}catch(Exception e){}
+                try{Thread.sleep(4000);}catch(Exception e){}
             }
             j++;
-        }while(j<10);
+        }while(j<5);
         if (connect) {
             FileretrievalDatasource datasource = new FileretrievalDatasource(ctx);
 

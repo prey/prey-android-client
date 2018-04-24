@@ -258,11 +258,14 @@ public class PreyWebServices {
     }
 
     public PreyAccountData registerNewDeviceWithApiKeyEmail(Context ctx, String apiKey, String email, String deviceType) throws Exception {
-        String deviceId = "";
+        String deviceId = null;
         PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType);
-        String xmlDeviceId = responseDevice.getResponseAsString();
+        String xmlDeviceId = null;
+        if(responseDevice!=null) {
+            xmlDeviceId = responseDevice.getResponseAsString();
+        }
         //if json
-        if (xmlDeviceId.contains("{\"key\"")) {
+        if (xmlDeviceId!=null&&xmlDeviceId.contains("{\"key\"")) {
             try {
                 JSONObject jsnobject = new JSONObject(xmlDeviceId);
                 deviceId = jsnobject.getString("key");
@@ -299,8 +302,13 @@ public class PreyWebServices {
 
     public boolean checkPassword(Context ctx, String apikey, String password) throws PreyException {
         PreyHttpResponse response= this.checkPassword(apikey, password, ctx);
-        String xml = response.getResponseAsString();
-        return xml.contains("<key");
+        if(response!=null) {
+            String xml = response.getResponseAsString();
+            if(xml!=null) {
+                return xml.contains("<key");
+            }
+        }
+        return false;
     }
 
     public boolean checkPassword2(Context ctx, String apikey, String password, String password2) throws PreyException {
