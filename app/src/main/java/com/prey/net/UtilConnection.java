@@ -349,16 +349,24 @@ public class UtilConnection {
                 input = connection.getInputStream();
             }
             if (input != null) {
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(input));
-                String decodedString;
-
-                while ((decodedString = in.readLine()) != null) {
-                    sb.append(decodedString);
-                    sb.append('\r');
+                BufferedReader in =null;
+                try{
+                    in = new BufferedReader(new InputStreamReader(input));
+                    String decodedString;
+                    while ((decodedString = in.readLine()) != null) {
+                        sb.append(decodedString);
+                        sb.append('\r');
+                    }
+                }catch(Exception e){
+                }finally {
+                    if(in!=null){
+                        try{
+                            in.close();
+                        }catch(Exception e) {
+                        }
+                    }
                 }
-                in.close();
-                PreyLogger.d(sb.toString());
+
             }
         }
         Map<String, List<String>> mapHeaderFields=connection.getHeaderFields();

@@ -28,6 +28,7 @@ import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
+import com.prey.receivers.PreyDisablePowerOptionsReceiver;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -116,6 +117,11 @@ public class PreySecureService extends Service{
             layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
             wm.addView(view, layoutParams);
             PreyConfig.getPreyConfig(this).setOpenSecureService(true);
+            try {
+                Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
+                intentClose.putExtra(PreyDisablePowerOptionsReceiver.stringExtra, PreyDisablePowerOptionsReceiver.stringExtra);
+                this.sendBroadcast(intentClose);
+            }catch (Exception e){}
         }else{
             if(view != null){
                 WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);

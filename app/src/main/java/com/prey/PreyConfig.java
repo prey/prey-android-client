@@ -218,10 +218,12 @@ public class PreyConfig {
     }
 
     private void saveString(String key, String value){
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(key, value);
-        editor.commit();
+        try {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(key, value);
+            editor.commit();
+        }catch(Exception e){}
     }
 
     private String getString(String key,String defaultValue){
@@ -230,10 +232,12 @@ public class PreyConfig {
     }
 
     private void saveInt(String key, int value){
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt(key, value);
-        editor.commit();
+        try {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putInt(key, value);
+            editor.commit();
+        }catch(Exception e){}
     }
 
     private int getInt(String key,int defaultValue){
@@ -242,10 +246,12 @@ public class PreyConfig {
     }
 
     private void saveBoolean(String key, boolean value){
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean(key, value);
-        editor.commit();
+        try {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putBoolean(key, value);
+            editor.commit();
+        }catch(Exception e){}
     }
 
     private boolean getBoolean(String key,boolean defaultValue){
@@ -254,17 +260,21 @@ public class PreyConfig {
     }
 
     private void saveLong(String key, long value){
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putLong(key, value);
-        editor.commit();
+        try {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putLong(key, value);
+            editor.commit();
+        }catch(Exception e){}
     }
 
     private void removeKey(String key){
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.remove(key);
-        editor.commit();
+        try {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.remove(key);
+            editor.commit();
+        }catch(Exception e){}
     }
 
     private long getLong(String key, long defaultValue){

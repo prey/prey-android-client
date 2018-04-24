@@ -27,7 +27,7 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
     public PreyDisablePowerOptionsReceiver() {
     }
 
-    String stringExtra="prey";
+    public static String stringExtra="prey";
 
 
 
@@ -73,24 +73,11 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
 
                                 PreyLogger.d("pinNumber:"+pinNumber);
                                 if("globalactions".equals(reason)&& pinNumber!=null&& !"".equals(pinNumber)){
-                                    int counterOff=  PreyConfig.getPreyConfig(context).getCounterOff();
-                                    PreyLogger.d("PreyDisablePowerOptionsReceiver counterOff:"+counterOff);
-
-
                                     PreyLogger.d("pinNumber:"+pinNumber);
-
-
-                                        if (counterOff >= 0) {
-                                            PreyConfig.getPreyConfig(context).setCounterOff(0);
-
-                                            if(!PreyConfig.getPreyConfig(context).isOpenSecureService()) {
-                                                Intent intentLock = new Intent(context, PreySecureService.class);
-                                                context.startService(intentLock);
-                                            }
-                                        } else {
-                                            PreyConfig.getPreyConfig(context).setCounterOff(counterOff + 1);
-                                        }
-
+                                    if(!PreyConfig.getPreyConfig(context).isOpenSecureService()) {
+                                        Intent intentLock = new Intent(context, PreySecureService.class);
+                                        context.startService(intentLock);
+                                    }
                                 }
                             }
                         }
