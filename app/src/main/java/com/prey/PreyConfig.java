@@ -43,6 +43,8 @@ public class PreyConfig {
 
     private static final String HTTP="https://";
 
+    public static final String VERSION_PREY_DEFAULT="1.8.4";
+
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
 
@@ -134,7 +136,7 @@ public class PreyConfig {
     public static final String DEVICE_ID = "DEVICE_ID";
 
     public static final String SIM_SERIAL_NUMBER = "SIM_SERIAL_NUMBER";
-    public static final String VERSION_PREY_DEFAULT="1.8.3";
+
 
     public static final String CAN_ACCESS_FINE_LOCATION = "CAN_ACCESS_FINE_LOCATION";
     public static final String CAN_ACCESS_COARSE_LOCATION = "CAN_ACCESS_COARSE_LOCATION";
@@ -187,15 +189,23 @@ public class PreyConfig {
 
     private PreyConfig(Context ctx) {
         this.ctx = ctx;
-
-
-
-
-        this.scheduled=getBoolean(PreyConfig.SCHEDULED, FileConfigReader.getInstance(ctx).isScheduled());
-        this.minuteScheduled=getInt(PreyConfig.MINUTE_SCHEDULED, FileConfigReader.getInstance(ctx).getMinuteScheduled());
-        this.timeoutReport=getInt(PreyConfig.TIMEOUT_REPORT, FileConfigReader.getInstance(ctx).getTimeoutReport());
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        this.disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
+        try {
+            this.scheduled = getBoolean(PreyConfig.SCHEDULED, FileConfigReader.getInstance(ctx).isScheduled());
+        } catch ( Exception e) {
+        } catch ( NoClassDefFoundError e) {}
+        try {
+            this.minuteScheduled = getInt(PreyConfig.MINUTE_SCHEDULED, FileConfigReader.getInstance(ctx).getMinuteScheduled());
+        } catch ( Exception e){
+        } catch ( NoClassDefFoundError e) {}
+        try {
+            this.timeoutReport = getInt(PreyConfig.TIMEOUT_REPORT, FileConfigReader.getInstance(ctx).getTimeoutReport());
+        } catch ( Exception e){
+        } catch ( NoClassDefFoundError e) {}
+        try {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+            this.disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
+        } catch ( Exception e){
+        } catch ( NoClassDefFoundError e) {}
 
     }
 
