@@ -218,7 +218,7 @@ public class WebAppInterface {
                 if(isPasswordOk) {
                     PreyConfig.getPreyConfig(mContext).setTimePasswordOk();
                 }
-            } catch (PreyException e) {
+            } catch (Exception e) {
                 PreyLogger.e("error:"+e.getMessage(),e);
                 error = e.getMessage();
             }
