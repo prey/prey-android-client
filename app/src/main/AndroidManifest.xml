@@ -130,13 +130,17 @@
             android:name="com.prey.activities.SignInActivity"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+            />
 
         <activity
             android:name="com.prey.activities.SignUpActivity"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+            />
 
 
         <activity
