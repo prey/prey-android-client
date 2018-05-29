@@ -1,199 +1,222 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg_w"
-    android:orientation="vertical" >
 
-    
-     <TextView
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/hero_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <TextView
         android:id="@+id/textViewInit1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/textViewInit2"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+
+        android:layout_marginEnd="8dp"
+
+        android:layout_marginRight="8dp"
         android:text="@string/signup_subtitle"
         android:textColor="#000000"
-         android:textSize="14sp"
-         android:fontFamily="MagdaCleanMono"
-         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-         android:layout_above="@+id/textViewInit2"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="8dp" />
 
-          />
-     
-     <TextView
+    <TextView
         android:id="@+id/textViewInit2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/editTextName"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+
+        android:layout_marginRight="8dp"
+
+        android:fontFamily="Avenir Next LT Pro"
         android:text="@string/signup_title"
         android:textColor="#000000"
         android:textSize="23sp"
         android:textStyle="bold"
-         android:fontFamily="Avenir Next LT Pro"
-         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-
- 		android:layout_above="@+id/editTextName"
-
-         />
-
-
-
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewInit1" />
 
 
     <EditText
         android:id="@+id/editTextName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-		android:inputType="text"
-        android:ems="10"
-         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="5dp"
         android:layout_above="@+id/editTextEmailAddress"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:ems="10"
         android:hint="@string/field_name_signup"
-        android:textColorHint="#9D9C96"
+        android:inputType="text"
         android:textColor="#000"
-          />
-
-
+        android:textColorHint="#9D9C96"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewInit2" />
 
     <EditText
         android:id="@+id/editTextEmailAddress"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="5dp"
         android:layout_above="@+id/editTextPassword"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:ems="10"
         android:hint="@string/field_email_signup"
-        android:textColorHint="#9D9C96"
+        android:inputType="textEmailAddress"
         android:textColor="#000"
-         />
-
-
+        android:textColorHint="#9D9C96"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
 
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="5dp"
         android:layout_above="@+id/buttonSignup"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:ems="10"
         android:hint="@string/field_password_signup"
-        android:textColorHint="#9D9C96"
+        android:inputType="textPassword"
         android:textColor="#000"
-         />
+        android:textColorHint="#9D9C96"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEmailAddress" />
 
     <Button
         android:id="@+id/buttonSignup"
         android:layout_width="fill_parent"
         android:layout_height="40dp"
-        android:text="@string/button_signup"
+
+
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+
+        android:layout_marginRight="8dp"
+
 
         android:background="#3578BB"
+        android:fontFamily="Avenir Next LT Pro"
+        android:text="@string/button_signup"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        android:fontFamily="Avenir Next LT Pro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 
-        android:layout_above="@+id/linear_agree_terms_conditions"
+
+    <CheckBox
+        android:id="@+id/checkBox_linear_agree_terms_condition"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
 
 
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSignup" />
 
-         />
 
-    <LinearLayout
-        android:id="@+id/linear_agree_terms_conditions"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:layout_above="@+id/linear_confirm_over"
-        android:orientation="horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        >
+    <CheckBox
 
-        <CheckBox
-            android:id="@+id/checkBox_linear_agree_terms_condition"
-            android:background="#3578BB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:id="@+id/checkBox_linear_confirm_over"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
 
-        <TextView
-            android:id="@+id/text_linear_agree_terms_condition"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox_linear_agree_terms_condition" />
 
-            android:layout_marginTop="-10dp"
-            android:fontFamily="MagdaCleanMono"
 
-            android:text="@string/i_agree_terms_conditions"
-            android:textColor="#000000"
-            android:textSize="14sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linear_confirm_over"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:layout_above="@+id/linkSignup"
-        android:orientation="horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="10dp"
-        >
-
-        <CheckBox
-
-            android:id="@+id/checkBox_linear_confirm_over"
-            android:layout_width="wrap_content"
-            android:background="#3578BB"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/text_linear_confirm_over"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="@string/i_confirm_i_am_over_16"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            android:fontFamily="MagdaCleanMono"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="-10dp"
-
-            />
-
-    </LinearLayout>
     <TextView
         android:id="@+id/linkSignup"
 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="8dp"
+
+        android:layout_marginLeft="8dp"
+
+
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="left"
         android:text="@string/link_signup"
         android:textColor="#3C77B9"
-         
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        android:gravity="left"
+    <TextView
+        android:id="@+id/text_linear_confirm_over"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:fontFamily="MagdaCleanMono"
+        android:text="@string/i_confirm_i_am_over_16"
+        android:textColor="#000000"
+        android:textSize="14sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkBox_linear_confirm_over"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox_linear_agree_terms_condition" />
+
+    <TextView
+        android:id="@+id/text_linear_agree_terms_condition"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:fontFamily="MagdaCleanMono"
+        android:text="@string/i_agree_terms_conditions"
+        android:textColor="#000000"
+        android:textSize="14sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkBox_linear_agree_terms_condition"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSignup" />
 
 
-        android:layout_alignParentBottom="true"
-        />
-
-
-    
-
-</RelativeLayout>    
+</android.support.constraint.ConstraintLayout>
