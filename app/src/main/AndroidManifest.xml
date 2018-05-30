@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
     android:installLocation="internalOnly"
-    android:versionCode="145"
-    android:versionName="1.8.6" >
+    android:versionCode="147"
+    android:versionName="1.8.7" >
 
 
     <uses-feature android:name="android.hardware.location.network" android:required="true" />
