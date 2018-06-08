@@ -22,6 +22,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.NotificationCompat;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -233,7 +234,8 @@ public class EventFactory {
                             intent3,
                             PendingIntent.FLAG_UPDATE_CURRENT);
                     NotificationManager nManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-                    android.support.v4.app.NotificationCompat.Builder mBuilder =
+
+                    NotificationCompat.Builder mBuilder =
                             new android.support.v4.app.NotificationCompat.Builder(ctx)
                                     .setSmallIcon(R.drawable.status_bar)
                                     .setContentTitle(ctx.getResources().getString(R.string.warning_notification_title))

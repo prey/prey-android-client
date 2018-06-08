@@ -74,7 +74,7 @@ public class AwareService extends IntentService {
                         }
                         if (preyResponse.getStatusCode() == 200) {
                             PreyLogger.d("getStatusCode 200");
-                            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "aware", "started", reason));
+                            //PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "aware", "started", reason));
                         }
                     }
                 }
