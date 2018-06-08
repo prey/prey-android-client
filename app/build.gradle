@@ -2,15 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '25.0.1'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.prey"
         minSdkVersion 9
         targetSdkVersion 26
-        versionCode 147
-        versionName '1.8.7'
+        versionCode 149
+        versionName '1.8.9'
         multiDexEnabled true
     }
     buildTypes {
