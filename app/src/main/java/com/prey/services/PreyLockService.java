@@ -11,7 +11,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -53,7 +55,7 @@ public class PreyLockService extends Service{
         final String unlock= PreyConfig.getPreyConfig(ctx).getUnlockPass();
 
         if(unlock!=null&&!"".equals(unlock)) {
-            WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.lock_android7, null);
             Typeface regularMedium = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-medium.ttf");
@@ -102,12 +104,25 @@ public class PreyLockService extends Service{
             layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
             layoutParams.format = PixelFormat.TRANSLUCENT;
             layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN;
-            layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-            wm.addView(view, layoutParams);
+            layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+                if (Settings.canDrawOverlays(this)) {
+                    if(wm != null) {
+                        try{
+                            wm.addView(view, layoutParams);
+                        }catch (Exception e){
+                            PreyLogger.e(e.getMessage(),e);
+                        }
+                    }
+                }
+            }
         }else{
             if(view != null){
                 WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-                wm.removeView(view);
+                if(wm != null) {
+                    wm.removeView(view);
+                }
                 view = null;
             }
             stopSelf();
