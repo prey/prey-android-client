@@ -48,7 +48,7 @@ public class PreyGooglePlayServiceLocation implements
 
     public void init(Context ctx) {
         this.ctx = ctx;
-        PreyLogger.d("init");
+        //PreyLogger.d("init");
         mCurrentLocation = null;
         mLastUpdateTime = null;
         mRequestingLocationUpdates = false;
@@ -64,7 +64,7 @@ public class PreyGooglePlayServiceLocation implements
             "Failed to connect to GoogleApiClient (error code = %d)";
 
     protected synchronized void buildGoogleApiClient() {
-        PreyLogger.d("Building GoogleApiClient");
+        //PreyLogger.d("Building GoogleApiClient");
         mGoogleApiClient = new GoogleApiClient.Builder(ctx)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -97,12 +97,12 @@ public class PreyGooglePlayServiceLocation implements
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        PreyLogger.d("Connected to GoogleApiClient");
+        //PreyLogger.d("Connected to GoogleApiClient");
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        PreyLogger.d("onLocationChanged");
+        //PreyLogger.d("onLocationChanged");
         mCurrentLocation = location;
         if (location != null) {
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());

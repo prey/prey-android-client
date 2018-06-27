@@ -157,4 +157,13 @@ public class FileConfigReader {
         return Integer.parseInt(properties.getProperty("geofence-notification-responsiveness"));
     }
 
+    public String getFlyerKey() {
+        return properties.getProperty("flyer-key");
+    }
+
+    public int getDistanceAware() {
+        return Integer.parseInt(properties.getProperty("distance-aware"));
+    }
+
+
 }

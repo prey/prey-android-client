@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.content.PermissionChecker;
 import android.telephony.TelephonyManager;
@@ -22,8 +23,11 @@ import android.telephony.TelephonyManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.prey.actions.location.PreyLocation;
 import com.prey.activities.FeedbackActivity;
 import com.prey.managers.PreyConnectivityManager;
+import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyRegistrationIntentService;
@@ -43,7 +47,7 @@ public class PreyConfig {
 
     private static final String HTTP="https://";
 
-    public static final String VERSION_PREY_DEFAULT="1.8.9";
+    public static final String VERSION_PREY_DEFAULT="1.9.2";
 
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
@@ -166,6 +170,11 @@ public class PreyConfig {
 
 
     public static final String AWARE="aware";
+    public static final String AWARE_LAT="AWARE_LAT";
+    public static final String AWARE_LNG="AWARE_LNG";
+    public static final String AWARE_ACC="AWARE_ACC";
+
+
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -278,6 +287,15 @@ public class PreyConfig {
         }catch(Exception e){}
     }
 
+    private void saveFloat(String key, float value){
+        try {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putFloat(key, value);
+            editor.commit();
+        }catch(Exception e){}
+    }
+
     private void removeKey(String key){
         try {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -292,6 +310,10 @@ public class PreyConfig {
         return settings.getLong(key, defaultValue);
     }
 
+    private float getFloat(String key, float defaultValue){
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+        return settings.getFloat(key, defaultValue);
+    }
 
     public void setProtectAccount(boolean protectAccount) {
         this.saveBoolean(PreyConfig.PROTECT_ACCOUNT, protectAccount);
@@ -553,57 +575,27 @@ public class PreyConfig {
 
 
     public void registerC2dm(){
-        boolean error=false;
-
-
-
-
         String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
         PreyLogger.d("deviceId:"+deviceId);
         if (deviceId != null && !"".equals(deviceId)) {
             try {
-
-                PreyLogger.d("______________________");
-                PreyLogger.d("___ registerC2dm _____");
-
-
-                Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-                registrationIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0)); // boilerplate
-                String gcmId = FileConfigReader.getInstance(this.ctx).getGcmId();
-
-                registrationIntent.putExtra("sender", gcmId);
-                this.ctx.startService(registrationIntent);
-                PreyLogger.d("______________________");
-
-            } catch (Exception e) {
-                error = true;
-
-            }
-
-            if (error) {
-                try {
-
-                    PreyLogger.d("______________________");
-                    PreyLogger.d("___ registerC2dm  2_____");
-
-
-                    PreyLogger.d("starservice RegistrationIntentService");
-                    Intent intent = new Intent(ctx, PreyRegistrationIntentService.class);
-                    ctx.startService(intent);
-
-
-                    PreyLogger.d("______________________");
-
-                } catch (Exception e) {
-                    PreyLogger.e("Error :" + e.getMessage(), e);
-
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                String token = FirebaseInstanceId.getInstance().getToken();
+                PreyLogger.d("token:"+token);
+                String registration="FCM__"+token;
+                PreyHttpResponse response = PreyWebServices.getInstance().setPushRegistrationId(ctx, registration);
+                PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
+                if (response != null) {
+                    PreyLogger.d("response:" + response.toString());
                 }
+                PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
+            } catch (Exception e) {
+                PreyLogger.e("error:"+e.getMessage(),e);
             }
         }
-
-
-
     }
+
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     /**
@@ -986,6 +978,10 @@ public class PreyConfig {
         return FileConfigReader.getInstance(this.ctx).getDistanceLocation();
     }
 
+    public int getDistanceAware(){
+        return FileConfigReader.getInstance(this.ctx).getDistanceAware();
+    }
+
     public boolean isSentUuidSerialNumber() {
         return getBoolean(PreyConfig.SENT_UUID_SERIAL_NUMBER, false);
     }
@@ -1072,4 +1068,29 @@ public class PreyConfig {
     public long getLastTimeSecureLock(){
         return getLong(PreyConfig.LAST_TIME_SECURE_LOCK, 0);
     }
+
+    public void setLocationAware(PreyLocation location){
+        saveFloat(PreyConfig.AWARE_LAT,(float)location.getLat());
+        saveFloat(PreyConfig.AWARE_LNG,(float)location.getLng());
+        saveFloat(PreyConfig.AWARE_ACC,location.getAccuracy());
+    }
+
+    public PreyLocation getLocationAware(){
+        try{
+            float lat=getFloat(PreyConfig.AWARE_LAT,0);
+            float lng=getFloat(PreyConfig.AWARE_LNG,0);
+            float acc=getFloat(PreyConfig.AWARE_ACC,0);
+            if(lat==0||lng==0){
+                return null;
+            }
+            PreyLocation location= new PreyLocation();
+            location.setLat(lat);
+            location.setLng(lng);
+            location.setAccuracy(acc);
+            return location;
+        }catch(Exception e){
+            return null;
+        }
+    }
+
 }

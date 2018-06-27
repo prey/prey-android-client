@@ -41,6 +41,8 @@ public class Detach {
         try {   PreyConfig.getPreyConfig(ctx).setProtectTour(false);} catch (Exception e) {error = e.getMessage();}
         try {   PreyConfig.getPreyConfig(ctx).setProtectReady(false);} catch (Exception e) {error = e.getMessage();}
         try {   PreyConfig.getPreyConfig(ctx).setEmail("");} catch (Exception e) {error = e.getMessage();}
+        try {   PreyConfig.getPreyConfig(ctx).setDeviceId("");} catch (Exception e) {error = e.getMessage();}
+        try {   PreyConfig.getPreyConfig(ctx).setApiKey("");} catch (Exception e) {error = e.getMessage();}
 
         try {
             FroyoSupport fSupport = FroyoSupport.getInstance(ctx);

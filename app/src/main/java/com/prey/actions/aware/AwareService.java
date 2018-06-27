@@ -10,9 +10,11 @@ package com.prey.actions.aware;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.actions.geofences.GeofenceDto;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
 import com.prey.json.UtilJson;
@@ -44,14 +46,32 @@ public class AwareService extends IntentService {
             String minuteSt = PreyConfig.getPreyConfig(ctx).getIntervalAware();
             PreyLogger.d("AwareService [" + minuteSt + "]");
             if (PreyConfig.getPreyConfig(ctx).getAware() && minuteSt != null && !"".equals(minuteSt)) {
-
+                int geofenceMaximumAccuracy=PreyConfig.getPreyConfig(ctx).getGeofenceMaximumAccuracy();
                 PreyLocation locationNow = null;
+                float accuracy=0;
                 do {
                     locationNow = LocationUtil.getLocation(ctx, null, false);
-                    //PreyLogger.d("locationNow lat:" + locationNow.getLat() + " lng:" + locationNow.getLng() + " acc:" + locationNow.getAccuracy());
+                    if(locationNow!=null){
+                        accuracy=locationNow.getAccuracy();
+                    }
                     Thread.sleep(1000);
                     i = i + 1;
                 } while (i < 3);
+
+
+                if(locationNow != null && geofenceMaximumAccuracy<accuracy){
+                    locationNow=null;
+                }
+                if (locationNow != null) {
+                    PreyLocation locationOld = PreyConfig.getPreyConfig(ctx).getLocationAware();
+                    if (locationOld != null) {
+                        double distance = distance(locationNow, locationOld);
+                        PreyLogger.d("distance:"+distance);
+                        if (distance <= PreyConfig.getPreyConfig(ctx).getDistanceAware()){
+                            locationNow=null;
+                        }
+                    }
+                }
                 if (locationNow != null) {
                     String messageId = null;
                     String reason = null;
@@ -63,6 +83,7 @@ public class AwareService extends IntentService {
                     json.put("method", locationNow.getMethod());
                     JSONObject location = new JSONObject();
                     location.put("location", json);
+                    PreyConfig.getPreyConfig(ctx).setLocationAware(locationNow);
                     PreyHttpResponse preyResponse = PreyWebServices.getInstance().sendLocation(ctx, location);
                     if (preyResponse != null) {
                         if (preyResponse.getStatusCode() == 201) {
@@ -70,11 +91,6 @@ public class AwareService extends IntentService {
                             PreyConfig.getPreyConfig(ctx).setAware(false);
                             PreyConfig.getPreyConfig(ctx).setIntervalAware("");
                             AwareScheduled.getInstance(ctx).reset();
-                            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("stop", "aware", "stopped", reason));
-                        }
-                        if (preyResponse.getStatusCode() == 200) {
-                            PreyLogger.d("getStatusCode 200");
-                            //PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "aware", "started", reason));
                         }
                     }
                 }
@@ -83,4 +99,16 @@ public class AwareService extends IntentService {
             PreyLogger.e("error AwareService run:" + e.getMessage(), e);
         }
     }
+
+    private double distance(PreyLocation start, PreyLocation end){
+        Location locStart = new Location("");
+        locStart.setLatitude(start.getLat());
+        locStart.setLongitude(start.getLng());
+        Location locEnd = new Location("");
+        locEnd.setLatitude(end.getLat());
+        locEnd.setLongitude(end.getLng());
+        return Math.round(locStart.distanceTo(locEnd));
+    }
+
+
 }

@@ -33,6 +33,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appsflyer.AFInAppEventParameterName;
+import com.appsflyer.AFInAppEventType;
+import com.appsflyer.AppsFlyerLib;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -43,6 +46,9 @@ import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 import com.prey.util.KeyboardStatusDetector;
 import com.prey.util.KeyboardVisibilityListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends Activity {
 
@@ -266,6 +272,11 @@ public class SignUpActivity extends Activity {
                         AwareConfig.getAwareConfig(getApplicationContext()).init();
                     }
                 }.start();
+                try {
+                    Map<String, Object> eventValue = new HashMap<>();
+                    eventValue.put(AFInAppEventParameterName.REGSITRATION_METHOD,"email");
+                    AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), AFInAppEventType.COMPLETE_REGISTRATION,eventValue);
+                } catch (Exception e1) {}
             } catch (Exception e) {
                 error = e.getMessage();
             }
