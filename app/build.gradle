@@ -1,16 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
+
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.prey"
-        minSdkVersion 9
-        targetSdkVersion 26
-        versionCode 149
-        versionName '1.8.9'
+        minSdkVersion 14
+        targetSdkVersion 27
+        versionCode 152
+        versionName '1.9.2'
         multiDexEnabled true
     }
     buildTypes {
@@ -24,12 +25,17 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:24.0.0-alpha2'
-    compile 'com.android.support:design:24.0.0-alpha2'
-    compile 'com.google.android.gms:play-services-gcm:8.4.0'
-    compile 'com.google.android.gms:play-services-location:8.4.0'
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
-    compile 'com.google.android.gms:play-services:8.4.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.1'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.1'
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation 'com.google.android.gms:play-services-gcm:15.0.1'
+    implementation 'com.google.android.gms:play-services-vision:15.0.2'
+    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-iid:16.0.0'
+    implementation 'com.google.firebase:firebase-messaging:17.0.0'
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
+    implementation 'com.appsflyer:af-android-sdk:4.8.7@aar'
+    implementation 'com.android.installreferrer:installreferrer:1.0'
 }
