@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
     android:installLocation="internalOnly"
-    android:versionCode="149"
-    android:versionName="1.8.9" >
+    android:versionCode="152"
+    android:versionName="1.9.2" >
 
 
     <uses-feature android:name="android.hardware.location.network" android:required="true" />
@@ -81,13 +81,9 @@
         android:supportsRtl = "true"
         android:theme="@style/Theme.AppCompat" >
 
-        <meta-data android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
-
 
         <activity
             android:name="com.prey.activities.LoginActivity"
@@ -343,35 +339,10 @@
             </intent-filter>
         </receiver>
 
-        <!-- Only C2DM servers can send messages for the app. If permission is not set - any other app can generate it -->
-        <receiver android:name="com.prey.receivers.C2DMReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
-
-            <!-- Receive the actual message -->
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.prey" />
-            </intent-filter>
-            <!-- Receive the registration id -->
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-                <category android:name="com.prey" />
-            </intent-filter>
-        </receiver>
 
 
-        <!-- [START instanceId_listener] -->
-        <service
-            android:name="com.prey.services.PreyInstanceIDListenerService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID"/>
-            </intent-filter>
-        </service>
-        <!-- [END instanceId_listener] -->
-        <service
-            android:name="com.prey.services.PreyRegistrationIntentService"
-            android:exported="false">
-        </service>
+
+
 
 
         <!-- Services -->
@@ -386,6 +357,27 @@
         <service android:name="com.prey.services.PreyLockService" />
         <service android:name="com.prey.services.PreySecureService" />
         <service android:name="com.prey.services.PreyOverlayService" />
+
+
+
+
+        <!-- [START firebase_service] -->
+        <service
+            android:name="com.prey.services.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <!-- [END firebase_service] -->
+
+
+
+        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

@@ -104,7 +104,13 @@ public class PreyLockService extends Service{
             layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
             layoutParams.format = PixelFormat.TRANSLUCENT;
             layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN;
-            layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            } else {
+                layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+            }
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
                 if (Settings.canDrawOverlays(this)) {

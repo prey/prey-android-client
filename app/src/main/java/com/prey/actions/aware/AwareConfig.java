@@ -59,8 +59,9 @@ public class AwareConfig {
     }
 
     public void startAware() {
+        PreyLogger.d("startAware");
         PreyConfig.getPreyConfig(ctx).setAware(true);
-        PreyConfig.getPreyConfig(ctx).setIntervalAware("20");
+        PreyConfig.getPreyConfig(ctx).setIntervalAware("15");
         AwareScheduled.getInstance(ctx).run();
     }
 }

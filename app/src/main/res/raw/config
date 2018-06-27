@@ -9,11 +9,12 @@ prey-campaign=login?utm_source=aplicacion-android&utm_medium=boton-login&utm_cam
 prey-google-play=https://play.google.com/store/apps/details?id=com.prey
 prey-events-logs=https://clients1.preyproject.com/events/log
 
+
 #production
 prey-subdomain=solid
 prey-domain=preyproject.com
 #staging
-#prey-subdomain=control
+#prey-subdomain=panel1
 #prey-domain=preyhq.com
 
 
@@ -24,7 +25,6 @@ scheduled=false
 minute-scheduled=5
 
 timeout-report=60
-
 api-key-batch=
 email-batch=
 
@@ -32,11 +32,6 @@ email-batch=
 gcm-id-prefix=GCM__
 #prod
 gcm-id=578864628893
-
-#oso
-#gcm-id=272815493416
-#gcm-id=407976907204
-
 
 c2dm-action=message
 c2dm-message-sync=sync
@@ -61,3 +56,6 @@ geofence-notification-responsiveness=5000
 
 #100 meters
 distance-location=100
+distance-aware=200
+
+flyer-key=pzZcjLhYQ5emA8XLvSKNub

@@ -12,7 +12,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -68,7 +70,13 @@ public class PreySecureService extends Service{
         final String pinNumber= PreyConfig.getPreyConfig(ctx).getPinNumber();
 
         if(pinNumber!=null&&!"".equals(pinNumber)) {
-            WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+            try {
+                Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
+                intentClose.putExtra(PreyDisablePowerOptionsReceiver.stringExtra, PreyDisablePowerOptionsReceiver.stringExtra);
+                this.sendBroadcast(intentClose);
+            }catch (Exception e){}
+
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.super_lock, null);
             editTextPin = (EditText) view.findViewById(R.id.editTextPin);
@@ -114,9 +122,26 @@ public class PreySecureService extends Service{
             layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
             layoutParams.format = PixelFormat.TRANSLUCENT;
             layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN;
-            layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-            wm.addView(view, layoutParams);
-            PreyConfig.getPreyConfig(this).setOpenSecureService(true);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            } else {
+                layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+                if (Settings.canDrawOverlays(this)) {
+                    if(wm != null) {
+                        try{
+                            wm.addView(view, layoutParams);
+                            PreyConfig.getPreyConfig(this).setOpenSecureService(true);
+                        }catch (Exception e){
+                            PreyLogger.e(e.getMessage(),e);
+                        }
+                    }
+                }
+            }
             try {
                 Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
                 intentClose.putExtra(PreyDisablePowerOptionsReceiver.stringExtra, PreyDisablePowerOptionsReceiver.stringExtra);
@@ -125,7 +150,9 @@ public class PreySecureService extends Service{
         }else{
             if(view != null){
                 WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-                wm.removeView(view);
+                if(wm != null) {
+                    wm.removeView(view);
+                }
                 view = null;
             }
             PreyConfig.getPreyConfig(this).setOpenSecureService(false);
@@ -139,7 +166,9 @@ public class PreySecureService extends Service{
         PreyConfig.getPreyConfig(this).setOpenSecureService(false);
         if(view != null){
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-            wm.removeView(view);
+            if(wm != null) {
+                wm.removeView(view);
+            }
             view = null;
         }
     }

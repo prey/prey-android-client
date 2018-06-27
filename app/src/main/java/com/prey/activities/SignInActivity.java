@@ -29,6 +29,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appsflyer.AFInAppEventParameterName;
+import com.appsflyer.AFInAppEventType;
+import com.appsflyer.AppsFlyerLib;
 import com.prey.actions.aware.AwareConfig;
 import com.prey.barcodereader.BarcodeActivity;
 import com.prey.PreyAccountData;
@@ -41,6 +44,9 @@ import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 import com.prey.util.KeyboardStatusDetector;
 import com.prey.util.KeyboardVisibilityListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignInActivity extends Activity {
 
@@ -294,6 +300,11 @@ public class SignInActivity extends Activity {
                         AwareConfig.getAwareConfig(getApplicationContext()).init();
                     }
                 }.start();
+                try {
+                    Map<String, Object> eventValue = new HashMap<String, Object>();
+                    eventValue.put(AFInAppEventParameterName.SUCCESS,true);
+                    AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), AFInAppEventType.LOGIN,eventValue);
+                } catch (Exception e1) {}
             } catch (Exception e) {
                 error = e.getMessage();
                 try {

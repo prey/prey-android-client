@@ -457,11 +457,11 @@ public class PreyWebServices {
     }
 
     private String getEventsUrlJson(Context ctx) throws PreyException {
-        return getDeviceUrlApiv2(ctx).concat("/events.json");
+        return getDeviceUrlApiv2(ctx).concat("/events");
     }
 
     private String getResponseUrlJson(Context ctx) throws PreyException {
-        return getDeviceUrlApiv2(ctx).concat("/response.json");
+        return getDeviceUrlApiv2(ctx).concat("/response");
     }
 
     public String getInfoUrlJson(Context ctx) throws PreyException {
@@ -629,7 +629,6 @@ public class PreyWebServices {
             PreyConfig.postUrl = null;
             PreyHttpResponse httpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, params);
             response = httpResponse.toString();
-            PreyLogger.d("Notify Action Result sent: " + response);
         } catch (Exception e) {
             //PreyLogger.e("Notify Action Result wasn't send",e);
         }
@@ -647,7 +646,6 @@ public class PreyWebServices {
             PreyConfig.postUrl = null;
             PreyHttpResponse httpResponse = PreyRestHttpClient.getInstance(ctx).postAutenticationCorrelationId(url, status,correlationId,params);
             response = httpResponse.toString();
-            PreyLogger.d("Notify Action Result sent: " + response);
         } catch (Exception e) {
             //PreyLogger.e("Notify Action Result wasn't send",e);
         }
