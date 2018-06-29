@@ -56,7 +56,7 @@ public class PreyDisablePowerOptionsService extends Service {
         try {
             unregisterReceiver(mReceiver);
         } catch (IllegalArgumentException e) {
-            PreyLogger.e("Error, cause:" + e.getMessage(), e);
+
         }
 
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
