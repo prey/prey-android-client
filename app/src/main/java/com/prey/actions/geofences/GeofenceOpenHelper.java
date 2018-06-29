@@ -113,40 +113,59 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
     }
 
     public List<GeofenceDto> getAllGeofences() {
+        Cursor cursor =null;
         List<GeofenceDto> list = new ArrayList<GeofenceDto>();
-        String selectQuery = "SELECT  * FROM " + GEOFENCE_TABLE_NAME;
-        SQLiteDatabase database = this.getReadableDatabase();
-        Cursor cursor = database.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            do {
-                GeofenceDto geofence = new GeofenceDto();
-                geofence.setId(cursor.getString(0));
-                geofence.setName(cursor.getString(1));
-                geofence.setLatitude(cursor.getDouble(2));
-                geofence.setLongitude(cursor.getDouble(3));
-                geofence.setRadius(cursor.getFloat(4));
-                geofence.setExpires(cursor.getInt(5));
-                list.add(geofence);
-            } while (cursor.moveToNext());
+        try {
+            String selectQuery = "SELECT  * FROM " + GEOFENCE_TABLE_NAME;
+            SQLiteDatabase database = this.getReadableDatabase();
+            cursor = database.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    GeofenceDto geofence = new GeofenceDto();
+                    geofence.setId(cursor.getString(0));
+                    geofence.setName(cursor.getString(1));
+                    geofence.setLatitude(cursor.getDouble(2));
+                    geofence.setLongitude(cursor.getDouble(3));
+                    geofence.setRadius(cursor.getFloat(4));
+                    geofence.setExpires(cursor.getInt(5));
+                    list.add(geofence);
+                } while (cursor.moveToNext());
+            }
+        }catch (Exception e){
+
+        }finally {
+            if(cursor!=null){
+                try{cursor.close();}catch (Exception e1){}
+            }
         }
         return list;
     }
 
     public GeofenceDto getGeofence(String id) {
-        SQLiteDatabase database = this.getReadableDatabase();
-        String selectQuery = "SELECT * FROM " + GEOFENCE_TABLE_NAME + " where " + COLUMN_ID + "='" + id + "'";
-        Cursor cursor = database.rawQuery(selectQuery, null);
+        Cursor cursor =null;
         GeofenceDto geofence = null;
-        if (cursor.moveToFirst()) {
-            do {
-                geofence = new GeofenceDto();
-                geofence.setId(cursor.getString(0));
-                geofence.setName(cursor.getString(1));
-                geofence.setLatitude(cursor.getDouble(2));
-                geofence.setLongitude(cursor.getDouble(3));
-                geofence.setRadius(cursor.getFloat(4));
-                geofence.setExpires(cursor.getInt(5));
-            } while (cursor.moveToNext());
+        try {
+            SQLiteDatabase database = this.getReadableDatabase();
+            String selectQuery = "SELECT * FROM " + GEOFENCE_TABLE_NAME + " where " + COLUMN_ID + "='" + id + "'";
+            cursor = database.rawQuery(selectQuery, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    geofence = new GeofenceDto();
+                    geofence.setId(cursor.getString(0));
+                    geofence.setName(cursor.getString(1));
+                    geofence.setLatitude(cursor.getDouble(2));
+                    geofence.setLongitude(cursor.getDouble(3));
+                    geofence.setRadius(cursor.getFloat(4));
+                    geofence.setExpires(cursor.getInt(5));
+                } while (cursor.moveToNext());
+            }
+        }catch (Exception e){
+
+        }finally {
+            if(cursor!=null){
+                try{cursor.close();}catch (Exception e1){}
+            }
         }
         return geofence;
     }

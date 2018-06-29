@@ -69,7 +69,11 @@ public class PreyApp extends Application {
                 PreyWebServices.getInstance().sendEvent(this, PreyConfig.ANDROID_VERSION_UPDATED);
             }
             if (deviceKey != null && deviceKey != "") {
-                PreyConfig.getPreyConfig(this).registerC2dm();
+                new Thread() {
+                    public void run() {
+                        PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
+                    }
+                }.start();
                 new Thread() {
                     public void run() {
                         GeofenceController.getInstance().init(getApplicationContext());
@@ -110,7 +114,7 @@ public class PreyApp extends Application {
 
                 if(PreyConfig.getPreyConfig(this).isDisablePowerOptions()){
                     DisablePowerCheckBoxPreference.notifyReady(this);
-                    this.startService(new Intent(this, PreyDisablePowerOptionsService.class));
+                    try{this.startService(new Intent(this, PreyDisablePowerOptionsService.class));}catch (Exception e){}
                 }
 
             }

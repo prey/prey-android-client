@@ -30,7 +30,7 @@ public class AwareAlarmReceiver extends BroadcastReceiver {
                 }
             }.start();
         } catch (Exception e) {
-            PreyLogger.e("_______AlarmAwareReceiver error:" + e.getMessage(), e);
+
         }
     }
 

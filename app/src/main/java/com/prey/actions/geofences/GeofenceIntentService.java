@@ -94,7 +94,9 @@ public class GeofenceIntentService extends IntentService {
                     PreyLocation locationNow =null;
                     do {
                         locationNow = LocationUtil.getLocation(context,null,false);
-                        PreyLogger.d("locationNow lat:"+locationNow.getLat()+" lng:"+locationNow.getLng()+" acc:"+locationNow.getAccuracy());
+                        if(locationNow!=null) {
+                            PreyLogger.d("locationNow lat:" + locationNow.getLat() + " lng:" + locationNow.getLng() + " acc:" + locationNow.getAccuracy());
+                        }
                         Thread.sleep(1000);
                         i=i+1;
                     }while (i<10 &&locationNow.getAccuracy() > geofenceMaximumAccuracy);

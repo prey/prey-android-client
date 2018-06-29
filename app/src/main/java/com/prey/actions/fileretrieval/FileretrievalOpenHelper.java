@@ -106,36 +106,54 @@ public class FileretrievalOpenHelper extends SQLiteOpenHelper {
     }
 
     public List<FileretrievalDto> getAllFileretrieval() {
+        Cursor cursor =null;
         List<FileretrievalDto> list = new ArrayList<FileretrievalDto>();
-        String selectQuery = "SELECT  * FROM " + FILERETRIEVAL_TABLE_NAME;
-        SQLiteDatabase database = this.getReadableDatabase();
-        Cursor cursor = database.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            do {
-                FileretrievalDto dto = new FileretrievalDto();
-                dto.setFileId(cursor.getString(0));
-                dto.setPath(cursor.getString(1));
-                dto.setSize(cursor.getLong(2));
-                dto.setStatus(cursor.getInt(3));
-                list.add(dto);
-            } while (cursor.moveToNext());
+        try {
+            String selectQuery = "SELECT  * FROM " + FILERETRIEVAL_TABLE_NAME;
+            SQLiteDatabase database = this.getReadableDatabase();
+            cursor = database.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    FileretrievalDto dto = new FileretrievalDto();
+                    dto.setFileId(cursor.getString(0));
+                    dto.setPath(cursor.getString(1));
+                    dto.setSize(cursor.getLong(2));
+                    dto.setStatus(cursor.getInt(3));
+                    list.add(dto);
+                } while (cursor.moveToNext());
+            }
+        }catch (Exception e){
+
+        }finally {
+            if(cursor!=null){
+                try{cursor.close();}catch (Exception e1){}
+            }
         }
         return list;
     }
 
     public FileretrievalDto getFileretrieval(String id) {
-        SQLiteDatabase database = this.getReadableDatabase();
-        String selectQuery = "SELECT * FROM " + FILERETRIEVAL_TABLE_NAME + " where " + COLUMN_FILEID + "='" + id + "'";
-        Cursor cursor = database.rawQuery(selectQuery, null);
+        Cursor cursor =null;
         FileretrievalDto dto = null;
-        if (cursor.moveToFirst()) {
-            do {
-                dto = new FileretrievalDto();
-                dto.setFileId(cursor.getString(0));
-                dto.setPath(cursor.getString(1));
-                dto.setSize(cursor.getLong(2));
-                dto.setStatus(cursor.getInt(3));
-            } while (cursor.moveToNext());
+        try {
+            SQLiteDatabase database = this.getReadableDatabase();
+            String selectQuery = "SELECT * FROM " + FILERETRIEVAL_TABLE_NAME + " where " + COLUMN_FILEID + "='" + id + "'";
+            cursor = database.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    dto = new FileretrievalDto();
+                    dto.setFileId(cursor.getString(0));
+                    dto.setPath(cursor.getString(1));
+                    dto.setSize(cursor.getLong(2));
+                    dto.setStatus(cursor.getInt(3));
+                } while (cursor.moveToNext());
+            }
+        }catch (Exception e){
+
+        }finally {
+            if(cursor!=null){
+                try{cursor.close();}catch (Exception e1){}
+            }
         }
         return dto;
     }

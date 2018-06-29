@@ -6,6 +6,10 @@
  ******************************************************************************/
 package com.prey.net;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
@@ -110,6 +114,13 @@ public class UtilConnection {
     }
 
     public static final PreyHttpResponse connection(PreyConfig preyConfig,String uri, Map<String, String> params,String requestMethod,String contentType,String authorization,String status,List<EntityFile> entityFiles,String correlationId) throws Exception {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) preyConfig.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo == null || !networkInfo.isConnected()) {
+            PreyLogger.i("no connection");
+            return null;
+        }
         PreyHttpResponse response=null;
         URL url = new URL(uri);
         HttpURLConnection connection=null;

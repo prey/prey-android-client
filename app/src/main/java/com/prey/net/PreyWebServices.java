@@ -120,18 +120,21 @@ public class PreyWebServices {
                 throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, ""));
             }
         }
-
-        PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType);
-        String xmlDeviceId = responseDevice.getResponseAsString();
         String deviceId = null;
-        if (xmlDeviceId.contains("{\"key\"")) {
-            try {
-                JSONObject jsnobject = new JSONObject(xmlDeviceId);
-                deviceId = jsnobject.getString("key");
-            } catch (Exception e) {
+        PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType);
+        if(responseDevice!=null){
+            String xmlDeviceId = responseDevice.getResponseAsString();
+            if (xmlDeviceId.contains("{\"key\"")) {
+                try {
+                    JSONObject jsnobject = new JSONObject(xmlDeviceId);
+                    deviceId = jsnobject.getString("key");
+                } catch (Exception e) {
 
+                }
+            } else {
+                throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, ""));
             }
-        } else {
+        }else {
             throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, ""));
         }
 
@@ -238,15 +241,19 @@ public class PreyWebServices {
         }
         String deviceId = null;
         PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType);
-        String xmlDeviceId = responseDevice.getResponseAsString();
-        //if json
-        if (xmlDeviceId.contains("{\"key\"")) {
-            try {
-                JSONObject jsnobject = new JSONObject(xmlDeviceId);
-                deviceId = jsnobject.getString("key");
-            } catch (Exception e) {
+        if(responseDevice!=null) {
+            String xmlDeviceId = responseDevice.getResponseAsString();
+            //if json
+            if (xmlDeviceId.contains("{\"key\"")) {
+                try {
+                    JSONObject jsnobject = new JSONObject(xmlDeviceId);
+                    deviceId = jsnobject.getString("key");
+                } catch (Exception e) {
 
+                }
             }
+        }else{
+            throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, status));
         }
         PreyAccountData newAccount = new PreyAccountData();
         newAccount.setApiKey(apiKey);
@@ -383,14 +390,15 @@ public class PreyWebServices {
     public String deleteDevice(Context ctx) throws PreyException {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         HashMap<String, String> parameters = new HashMap<String, String>();
-        String xml;
+        String xml=null;
         try {
             String url = this.getDeviceWebControlPanelUiUrl(ctx);
             PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx)
                     .delete(url, parameters);
-            PreyLogger.d(response.toString());
-            xml = response.getResponseAsString();
-
+            if(response!=null) {
+                PreyLogger.d(response.toString());
+                xml = response.getResponseAsString();
+            }
         } catch (Exception e) {
             throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
         }
@@ -603,11 +611,13 @@ public class PreyWebServices {
             PreyLogger.d("status:" + jsonObject.toString());
             String status = jsonObject.toString();
             PreyHttpResponse preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters);
-            String jsonString = preyHttpResponse.getResponseAsString();
-            if (jsonString != null && jsonString.length() > 0) {
-                List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
-                if (jsonObjectList != null && jsonObjectList.size() > 0) {
-                    ActionsController.getInstance(ctx).runActionJson(ctx, jsonObjectList);
+            if(preyHttpResponse!=null) {
+                String jsonString = preyHttpResponse.getResponseAsString();
+                if (jsonString != null && jsonString.length() > 0) {
+                    List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
+                    if (jsonObjectList != null && jsonObjectList.size() > 0) {
+                        ActionsController.getInstance(ctx).runActionJson(ctx, jsonObjectList);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -759,8 +769,11 @@ public class PreyWebServices {
     public String getIPAddress(Context ctx)throws Exception {
         String uri="http://ifconfig.me/ip";
         PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).get(uri,null);
-        String responseAsString = response.getResponseAsString();
-        PreyLogger.d("responseAsString:" + responseAsString);
+        String responseAsString = "";
+        if(response!=null) {
+            responseAsString = response.getResponseAsString();
+            PreyLogger.d("responseAsString:" + responseAsString);
+        }
         return responseAsString;
     }
 
@@ -772,9 +785,11 @@ public class PreyWebServices {
         try{
             Map<String, String> params=null;
             PreyHttpResponse response=PreyRestHttpClient.getInstance(ctx).getAutentication(url, params);
-            sb=response.getResponseAsString();
-            if (sb!=null)
-                sb = sb.trim();
+            if(response!=null) {
+                sb = response.getResponseAsString();
+                if (sb != null)
+                    sb = sb.trim();
+            }
         }catch(Exception e){
             PreyLogger.e("Error, causa:" + e.getMessage(), e);
             return null;
@@ -869,29 +884,31 @@ public class PreyWebServices {
         FileretrievalDto dto=null;
         String uri = PreyConfig.getPreyConfig(ctx).getPreyUrl() + "upload/upload?uploadID=" + uploadID;
         PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).get(uri,null);
-        String responseAsString = response.getResponseAsString();
-        PreyLogger.d("uploadStatus resp:" + responseAsString);
-        if (response.getStatusCode() == 200) {
-            if (responseAsString != null ) {
-                JSONObject jsnobject = new JSONObject(response.getResponseAsString());
-                String id = jsnobject.getString("ID");
-                String name = jsnobject.getString("Name");
-                String size = jsnobject.getString("Size");
-                String total = jsnobject.getString("Total");
-                String status = jsnobject.getString("Status");
-                String path = jsnobject.getString("Path");
-                dto=new FileretrievalDto();
-                dto.setFileId(id);
-                dto.setName(name);
-                dto.setSize(Long.parseLong(size));
-                dto.setTotal(Long.parseLong(total));
-                dto.setStatus(Integer.parseInt(status));
-                dto.setPath(path);
+        if(response!=null) {
+            String responseAsString = response.getResponseAsString();
+            PreyLogger.d("uploadStatus resp:" + responseAsString);
+            if (response.getStatusCode() == 200) {
+                if (responseAsString != null) {
+                    JSONObject jsnobject = new JSONObject(response.getResponseAsString());
+                    String id = jsnobject.getString("ID");
+                    String name = jsnobject.getString("Name");
+                    String size = jsnobject.getString("Size");
+                    String total = jsnobject.getString("Total");
+                    String status = jsnobject.getString("Status");
+                    String path = jsnobject.getString("Path");
+                    dto = new FileretrievalDto();
+                    dto.setFileId(id);
+                    dto.setName(name);
+                    dto.setSize(Long.parseLong(size));
+                    dto.setTotal(Long.parseLong(total));
+                    dto.setStatus(Integer.parseInt(status));
+                    dto.setPath(path);
+                }
             }
-        }
-        if (response.getStatusCode() == 404) {
-            dto=new FileretrievalDto();
-            dto.setStatus(response.getStatusCode());
+            if (response.getStatusCode() == 404) {
+                dto = new FileretrievalDto();
+                dto.setStatus(response.getStatusCode());
+            }
         }
         return dto;
     }
@@ -900,15 +917,17 @@ public class PreyWebServices {
         try {
             String uri = PreyConfig.getPreyConfig(ctx).getPreyGooglePlay();
             PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).get(uri, null);
-            String responseAsString = response.getResponseAsString();
-            int po = responseAsString.indexOf("softwareVersion\">");
-            responseAsString = responseAsString.substring(po + 17);
-            po = responseAsString.indexOf("</");
-            responseAsString = responseAsString.substring(0, po);
-            return responseAsString.trim();
+            if(response!=null) {
+                String responseAsString = response.getResponseAsString();
+                int po = responseAsString.indexOf("softwareVersion\">");
+                responseAsString = responseAsString.substring(po + 17);
+                po = responseAsString.indexOf("</");
+                responseAsString = responseAsString.substring(0, po);
+                return responseAsString.trim();
+            }
         } catch (Exception e) {
-            return null;
         }
+        return null;
     }
 
     public String getUuidDevice(Context ctx){
@@ -916,9 +935,11 @@ public class PreyWebServices {
         try {
             String uri = getInfoUrlJson(ctx);
             PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).getAutentication(uri, null);
-            String out=response.getResponseAsString();
-            JSONObject jsnobject = new JSONObject(out);
-            uuid = jsnobject.getString("uuid");
+            if(response!=null) {
+                String out = response.getResponseAsString();
+                JSONObject jsnobject = new JSONObject(out);
+                uuid = jsnobject.getString("uuid");
+            }
         } catch (Exception e) {
         }
         return uuid;
@@ -932,11 +953,13 @@ public class PreyWebServices {
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.json");
             PreyLogger.d("url:" + url);
             PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).getAutentication(url, parameters);
-            String out=response.getResponseAsString();
-            PreyLogger.d("out:"+out);
-            JSONObject jsnobject = new JSONObject(out);
-            email = jsnobject.getString("email");
-            PreyLogger.d("email:"+email);
+            if(response!=null) {
+                String out = response.getResponseAsString();
+                PreyLogger.d("out:" + out);
+                JSONObject jsnobject = new JSONObject(out);
+                email = jsnobject.getString("email");
+                PreyLogger.d("email:" + email);
+            }
         } catch (Exception e) {
             PreyLogger.e("error get email", e);
         }
@@ -952,11 +975,13 @@ public class PreyWebServices {
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile?api_key="+PreyConfig.getPreyConfig(ctx).getApiKey());
             PreyLogger.d("url:" + url);
             PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).getAutentication(url, parameters);
-            String out=response.getResponseAsString();
-            PreyLogger.d("out:"+out);
-            JSONObject jsnobject = new JSONObject(out);
-            TwoStepEnabled = jsnobject.getBoolean("two_step_enabled?");
-            PreyLogger.d("TwoStepEnabled:"+TwoStepEnabled);
+            if(response!=null) {
+                String out = response.getResponseAsString();
+                PreyLogger.d("out:" + out);
+                JSONObject jsnobject = new JSONObject(out);
+                TwoStepEnabled = jsnobject.getBoolean("two_step_enabled?");
+                PreyLogger.d("TwoStepEnabled:" + TwoStepEnabled);
+            }
         } catch (Exception e) {
             PreyLogger.e("error get TwoStepEnabled", e);
         }
