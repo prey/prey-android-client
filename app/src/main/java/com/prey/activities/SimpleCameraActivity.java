@@ -44,7 +44,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_camera);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         Bundle extras = getIntent().getExtras();
         if(extras.getInt("kill")==1){
             PreyLogger.d("Kill");
