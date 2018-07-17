@@ -245,7 +245,7 @@
             android:name="com.prey.activities.SimpleCameraActivity"
             android:theme="@style/Theme.Transparent"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="unspecified" />
         <activity
             android:name="com.prey.activities.SimpleVideoActivity"
             android:theme="@style/Theme.Transparent"
