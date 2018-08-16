@@ -73,7 +73,7 @@ public class AlarmThread extends Thread {
             PreyStatus.getInstance().setAlarmStop();
             PreyConfig.getPreyConfig(ctx).setLastEvent("alarm_finished");
         } catch (Exception e) {
-            PreyLogger.i("failed alarm: " + e.getMessage());
+            PreyLogger.e("failed alarm: " + e.getMessage(),e);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"failed", messageId, UtilJson.makeMapParam("start", "alarm", "failed", e.getMessage()));
         } finally {
             if (mp != null)

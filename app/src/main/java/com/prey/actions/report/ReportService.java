@@ -44,7 +44,7 @@ public class ReportService extends IntentService {
 	public void run(Context ctx) {
 		int interval=-1;
 		try{
-			PreyLogger.i("_____________start ReportService");
+			PreyLogger.d("_____________start ReportService");
 
 
 			interval=Integer.parseInt(PreyConfig.getPreyConfig(ctx).getIntervalReport());

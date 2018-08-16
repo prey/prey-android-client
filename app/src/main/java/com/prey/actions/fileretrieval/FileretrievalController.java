@@ -79,7 +79,7 @@ public class FileretrievalController {
                         datasource.deleteFileretrieval(fileId);
                     }
                 } catch (Exception e) {
-                    PreyLogger.i("FileretrievalController Error:" + e.getMessage());
+                    PreyLogger.e("FileretrievalController Error:" + e.getMessage(),e);
 
                 }
 

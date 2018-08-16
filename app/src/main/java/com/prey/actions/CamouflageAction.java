@@ -35,11 +35,11 @@ public class CamouflageAction extends PreyAction {
 
     @Override
     public void execute(ActionJob actionJob, Context ctx) throws PreyException {
-        PreyLogger.i("Ejecuting CamouflageAction Action");
+        PreyLogger.d("Ejecuting CamouflageAction Action");
         List<ActionResult> lista=null;
         JSONObject parameters=null;
         Camouflage.hide(ctx, lista, parameters);
-        PreyLogger.i("Ejecuting CamouflageAction Action[Finish]");
+        PreyLogger.d("Ejecuting CamouflageAction Action[Finish]");
     }
 
 

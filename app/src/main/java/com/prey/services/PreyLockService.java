@@ -72,7 +72,7 @@ public class PreyLockService extends Service{
                 public void onClick(View v) {
                     try {
                         String key = editText.getText().toString().trim();
-                        PreyLogger.i("unlock key:"+key+" unlock:"+unlock);
+                        PreyLogger.d("unlock key:"+key+" unlock:"+unlock);
                         if (unlock.equals(key)) {
                             String jobIdLock=PreyConfig.getPreyConfig(ctx).getJobIdLock();
                             String reason=null;

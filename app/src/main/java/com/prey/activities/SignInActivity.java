@@ -59,14 +59,14 @@ public class SignInActivity extends Activity {
 
     @Override
     public void onResume() {
-        PreyLogger.i("onResume of SignInActivity");
+        PreyLogger.d("onResume of SignInActivity");
         super.onResume();
 
     }
 
     @Override
     public void onPause() {
-        PreyLogger.i("onPause of SignInActivity");
+        PreyLogger.d("onPause of SignInActivity");
         super.onPause();
     }
 
@@ -81,7 +81,7 @@ public class SignInActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setContentView(R.layout.signin);
-        PreyLogger.i("onCreate of SignInActivity");
+        PreyLogger.d("onCreate of SignInActivity");
 
         Button buttonSignin = (Button) findViewById(R.id.buttonSignin);
 
@@ -140,7 +140,7 @@ public class SignInActivity extends Activity {
                     }
                     linkSignin.setLayoutParams(params);
                 } catch (Exception e) {
-                    PreyLogger.i("error:"+e.getMessage());
+                    PreyLogger.e("error:"+e.getMessage(),e);
                 }
             }
         });

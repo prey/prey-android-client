@@ -42,9 +42,9 @@ public class FroyoSupport {
 
     public void changePasswordAndLock(String newPass, boolean lock) throws PreyException{
         try {
-            PreyLogger.i("change0");
+            PreyLogger.d("change0");
             if (isAdminActive()) {
-                PreyLogger.i("change1");
+                PreyLogger.d("change1");
 
                 try {
                     policyManager.setPasswordMinimumLength(deviceAdmin, 0);

@@ -162,7 +162,7 @@ public class PreySecureService extends Service{
 
     public void onDestroy() {
         super.onDestroy();
-        PreyLogger.i("PreySecureService onDestroy");
+        PreyLogger.d("PreySecureService onDestroy");
         PreyConfig.getPreyConfig(this).setOpenSecureService(false);
         if(view != null){
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -193,7 +193,7 @@ public class PreySecureService extends Service{
                     PreyConfig.getPreyConfig(getApplicationContext()).setTimeSecureLock(cal.getTimeInMillis());
                     stopSelf();
                 }else{
-                    PreyLogger.i("error"  );
+                    PreyLogger.d("error"  );
 
                     editTextPin.setBackgroundColor(Color.RED);
 

@@ -37,7 +37,7 @@ public class PreyOverlayService extends Service {
                 boolean run=true;
             while(run){
                     try{Thread.sleep(1000);
-                        PreyLogger.i("["+i+"] PreyOverlayService");
+                        PreyLogger.d("["+i+"] PreyOverlayService");
                         if(canDrawOverlays()){
                             run=false;
                             NotificationManager nManager = ((NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE));

@@ -73,7 +73,6 @@ public class BarcodeActivity extends Activity   {
         readBarcodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PreyLogger.i("click");
                 Intent intent = new Intent(getApplicationContext(), BarcodeCaptureActivity.class);
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, autoFocus.isChecked());
                 intent.putExtra(BarcodeCaptureActivity.UseFlash, useFlash.isChecked());
@@ -108,7 +107,7 @@ public class BarcodeActivity extends Activity   {
                         String mail = "batch@preyproject.com";
                         for (String pair : pairs) {
                             String[] llave = pair.split("=");
-                            PreyLogger.i("key[" + llave[0] + "]" + llave[1]);
+                            PreyLogger.d("key[" + llave[0] + "]" + llave[1]);
                             if (llave[0].equals("api_key")) {
                                 apikey = llave[1];
                             }
@@ -162,7 +161,7 @@ public class BarcodeActivity extends Activity   {
                 error = null;
                 Context ctx = getApplicationContext();
 
-                PreyLogger.i("apikey:" + data[0] + " mail:" + data[1] + " device:" + data[2]);
+                PreyLogger.d("apikey:" + data[0] + " mail:" + data[1] + " device:" + data[2]);
 
                 if(!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
                     PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, data[0], data[1], data[2]);
@@ -188,7 +187,7 @@ public class BarcodeActivity extends Activity   {
                 progressDialog.dismiss();
             } catch (Exception e) {
             }
-            PreyLogger.i("error[" + error + "]");
+            PreyLogger.d("error[" + error + "]");
             if (error == null) {
                 String message = getString(R.string.device_added_congratulations_text);
                 Bundle bundle = new Bundle();

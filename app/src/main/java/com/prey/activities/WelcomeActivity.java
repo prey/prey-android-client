@@ -24,14 +24,14 @@ public class WelcomeActivity extends FragmentActivity {
 
     @Override
     public void onResume() {
-        PreyLogger.i("onResume of WelcomeActivity");
+        PreyLogger.d("onResume of WelcomeActivity");
         super.onResume();
         menu();
     }
 
     @Override
     public void onPause() {
-        PreyLogger.i("onPause of WelcomeActivity");
+        PreyLogger.d("onPause of WelcomeActivity");
         super.onPause();
     }
 
