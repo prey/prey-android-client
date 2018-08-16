@@ -26,6 +26,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyPhone;
 import com.prey.PreyPhone.Wifi;
 import com.prey.actions.HttpDataService;
+import com.prey.actions.geofences.GeofenceController;
 import com.prey.json.UtilJson;
 import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyWebServices;
@@ -42,13 +43,10 @@ public class LocationUtil {
         HttpDataService data = null;
         try {
             PreyLocation preyLocation = getLocation(ctx,messageId,asynchronous);
-            if (!asynchronous) {
-                if (preyLocation != null) {
-                    PreyLogger.d("locationData:" + preyLocation.getLat() + " " + preyLocation.getLng() + " " + preyLocation.getAccuracy());
-                    data = convertData(preyLocation);
-                } else {
-                    sendNotify(ctx, "Error", "failed");
-                }
+            if (preyLocation != null) {
+                PreyLogger.d("locationData:" + preyLocation.getLat() + " " + preyLocation.getLng() + " " + preyLocation.getAccuracy());
+                data = convertData(preyLocation);
+                GeofenceController.verifyGeozone(ctx, preyLocation);
             }else{
                 return null;
             }

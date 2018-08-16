@@ -60,36 +60,33 @@ public class GeofenceIntentService extends IntentService {
         }
     }
 
-    private static final String GEOFENCING_OUT="geofencing_out";
-    private static final String GEOFENCING_IN="geofencing_in";
+    public static final String GEOFENCING_OUT="geofencing_out";
+    public static final String GEOFENCING_IN="geofencing_in";
 
     private void notifyGeofenceTransition(
-            Context context,
-            int geofenceTransition,
-            List<Geofence> triggeringGeofences, Location location) {
+        Context context,
+        int geofenceTransition,
+        List<Geofence> triggeringGeofences, Location location) {
         PreyLogger.d("notifyGeofenceTransition  lat:"+location.getLatitude()+" lng:"+location.getLongitude()+" acc:"+location.getAccuracy());
-
-        for (Geofence geofence : triggeringGeofences) {
-            String requestId=geofence.getRequestId();
-            PreyLogger.d("geofence.getRequestId():" + requestId);
-            try {
+        try {
+            for (Geofence geofence : triggeringGeofences) {
+                String requestId = geofence.getRequestId();
+                PreyLogger.d("geofence.getRequestId():" + requestId);
                 Event event = new Event();
-                String eventGeofenceTransition="";
+                String transition = "";
                 if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
-                    eventGeofenceTransition=GEOFENCING_IN;
+                    transition = GEOFENCING_IN;
                 } else {
-                    eventGeofenceTransition=GEOFENCING_OUT;
+                    transition = GEOFENCING_OUT;
                 }
-                event.setName(eventGeofenceTransition);
-                PreyLogger.d("event:"+eventGeofenceTransition);
-                JSONObject jsonObjectStatus = new JSONObject();
+                event.setName(transition);
+                String newEventGeo=transition+"_"+requestId;
+                PreyLogger.d("event:"+transition);
+                GeofenceDataSource dataSource = new GeofenceDataSource(context);
+                GeofenceDto geo = dataSource.getGeofences(requestId);
                 int geofenceMaximumAccuracy=PreyConfig.getPreyConfig(context).getGeofenceMaximumAccuracy();
                 PreyLogger.d("geofenceMaximumAccuracy:"+geofenceMaximumAccuracy);
-                String newEventGeo=eventGeofenceTransition+"_"+requestId;
-                String lastEventGeo=PreyConfig.getPreyConfig(context).getLastEventGeo();
-
-                PreyLogger.d("newEventGeo:"+newEventGeo+" lastEventGeo:"+lastEventGeo);
-                if(!newEventGeo.equals(lastEventGeo)) {
+                if (!transition.equals(geo.getType())){
                     int i=0;
                     PreyLocation locationNow =null;
                     do {
@@ -103,12 +100,11 @@ public class GeofenceIntentService extends IntentService {
                     if(locationNow.getAccuracy() > geofenceMaximumAccuracy){
                         locationNow=null;
                     }
+                    JSONObject jsonObjectStatus = new JSONObject();
                     if(locationNow!=null) {
-                        GeofenceDataSource dataSource = new GeofenceDataSource(context);
-                        GeofenceDto geo = dataSource.getGeofences(geofence.getRequestId());
                         double distance = distance(geo, locationNow);
-                        PreyLogger.d("geofenceMaximumAccuracy distance:" + distance + " geo.getRadius()" + geo.getRadius());
-                        if (GEOFENCING_IN.equals(eventGeofenceTransition)) {
+                        PreyLogger.d("geofenceMaximumAccuracy distance:" + distance + " geo.getRadius()" + geo.getRadius()+" type:" + geo.getType());
+                        if (GEOFENCING_IN.equals(transition)) {
                             if (distance >= geo.getRadius()) {
                                 PreyLogger.d("geofenceMaximumAccuracy distance is greater ");
                             } else {
@@ -119,8 +115,8 @@ public class GeofenceIntentService extends IntentService {
                                 info.put("accuracy", locationNow.getAccuracy());
                                 info.put("method", locationNow.getMethod());
                                 event.setInfo(info.toString());
-                                new EventThread(this, event, jsonObjectStatus).start();
-                                PreyConfig.getPreyConfig(context).setLastEventGeo(newEventGeo);
+                                dataSource.updateGeofenceType(geo.id,transition);
+                                new EventThread(this, event, jsonObjectStatus, newEventGeo).start();
                             }
                         } else {
                             if (distance <= geo.getRadius()) {
@@ -133,15 +129,15 @@ public class GeofenceIntentService extends IntentService {
                                 info.put("accuracy", locationNow.getAccuracy());
                                 info.put("method", locationNow.getMethod());
                                 event.setInfo(info.toString());
-                                new EventThread(this, event, jsonObjectStatus).start();
-                                PreyConfig.getPreyConfig(context).setLastEventGeo(newEventGeo);
+                                dataSource.updateGeofenceType(geo.id,transition);
+                                new EventThread(this, event, jsonObjectStatus, newEventGeo).start();
                             }
                         }
                     }
                 }
-            } catch (Exception e) {
-                PreyLogger.e("notifyGeofenceTransition error:" + e.getMessage(), e);
             }
+        } catch (Exception e) {
+            PreyLogger.e("notifyGeofenceTransition error:" + e.getMessage(), e);
         }
     }
 
@@ -153,11 +149,9 @@ public class GeofenceIntentService extends IntentService {
         Location locStart = new Location("");
         locStart.setLatitude(start.getLatitude());
         locStart.setLongitude(start.getLongitude());
-
         Location locEnd = new Location("");
         locEnd.setLatitude(end.getLat());
         locEnd.setLongitude(end.getLng());
-
         return Math.round(locStart.distanceTo(locEnd));
     }
 

@@ -10,10 +10,13 @@ package com.prey.actions.aware;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.geofences.GeofenceDto;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
@@ -22,6 +25,9 @@ import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 
 import org.json.JSONObject;
+
+import java.util.List;
+import java.util.Locale;
 
 public class AwareService extends IntentService {
 
@@ -62,6 +68,7 @@ public class AwareService extends IntentService {
                 if(locationNow != null && geofenceMaximumAccuracy<accuracy){
                     locationNow=null;
                 }
+                PreyLocation locationNowGeo=locationNow;
                 if (locationNow != null) {
                     PreyLocation locationOld = PreyConfig.getPreyConfig(ctx).getLocationAware();
                     if (locationOld != null) {
@@ -94,13 +101,16 @@ public class AwareService extends IntentService {
                         }
                     }
                 }
+                if(locationNowGeo!=null) {
+                    GeofenceController.verifyGeozone(ctx, locationNowGeo);
+                }
             }
         } catch (Exception e) {
             PreyLogger.e("error AwareService run:" + e.getMessage(), e);
         }
     }
 
-    private double distance(PreyLocation start, PreyLocation end){
+    public static double distance(PreyLocation start, PreyLocation end){
         Location locStart = new Location("");
         locStart.setLatitude(start.getLat());
         locStart.setLongitude(start.getLng());

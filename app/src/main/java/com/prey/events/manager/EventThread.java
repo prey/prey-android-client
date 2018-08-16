@@ -10,8 +10,10 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.events.Event;
+import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 
 public class EventThread extends Thread {
@@ -20,11 +22,20 @@ public class EventThread extends Thread {
 
     private Event event;
     private Context ctx;
+    private String eventGeo;
 
     public EventThread(Context ctx, Event event, JSONObject jsonObjectStatus) {
         this.ctx = ctx;
         this.event = event;
         this.jsonObjectStatus = jsonObjectStatus;
+        this.eventGeo =null;
+    }
+
+    public EventThread(Context ctx, Event event, JSONObject jsonObjectStatus,String eventGeo) {
+        this.ctx = ctx;
+        this.event = event;
+        this.jsonObjectStatus = jsonObjectStatus;
+        this.eventGeo = eventGeo;
     }
 
     public void run() {
@@ -32,10 +43,15 @@ public class EventThread extends Thread {
             boolean valida = EventControl.getInstance().valida(jsonObjectStatus);
             PreyLogger.d("valida:" + valida + " eventName:" + event.getName());
             if (valida) {
-                PreyWebServices.getInstance().sendPreyHttpEvent(ctx, event, jsonObjectStatus);
+                PreyHttpResponse preyHttpResponse =PreyWebServices.getInstance().sendPreyHttpEvent(ctx, event, jsonObjectStatus);
+                if(preyHttpResponse!=null){
+                    if(preyHttpResponse.getStatusCode()==200 && eventGeo!=null) {
+                        PreyLogger.d("sendPreyHttpEvent eventName:" + eventGeo);
+                    }
+                }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            PreyLogger.e("Error EventThread:" + e.getMessage(),e);
         }
     }
 

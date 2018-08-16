@@ -11,7 +11,6 @@ import android.content.Context;
 import com.prey.PreyLogger;
 
 import java.util.List;
-import java.util.Map;
 
 public class GeofenceDataSource {
 
@@ -24,7 +23,7 @@ public class GeofenceDataSource {
     public void createGeofence(GeofenceDto geofence) {
         try {
             dbHelper.insertGeofence(geofence);
-        } catch (Exception e) {;
+        } catch (Exception e) {
             try {
                 dbHelper.updateGeofence(geofence);
             } catch (Exception e1) {
@@ -47,6 +46,14 @@ public class GeofenceDataSource {
 
     public void deleteAllGeofence() {
         dbHelper.deleteAllGeofence();
+    }
+
+    public void updateGeofenceType(String id, String type) {
+        dbHelper.updateGeofenceType(id, type);
+    }
+
+    public void updateGeofence(GeofenceDto geo) {
+        dbHelper.updateGeofence(geo);
     }
 
 }
