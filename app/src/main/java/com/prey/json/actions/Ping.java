@@ -38,9 +38,9 @@ public class Ping extends JsonAction {
 
             Map<String,String> map=UtilJson.makeMapParam("start","ping","started",reason);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed",messageId,map);
-            PreyLogger.i("messageId:"+messageId);
+            PreyLogger.d("messageId:"+messageId);
         }catch (Exception e){
-            PreyLogger.i("error ping:"+e.getMessage());
+            PreyLogger.e("error ping:"+e.getMessage(),e);
         }
         return null;
     }

@@ -84,7 +84,7 @@ public class ChangePinPreferences extends DialogPreference {
 
         @Override
         protected Void doInBackground(String... array) {
-            PreyLogger.i("pin:" + array[0]);
+            PreyLogger.d("pin:" + array[0]);
             try {
                 PreyConfig.getPreyConfig(getContext()).setPinNumber(array[0]);
             } catch (Exception e) {

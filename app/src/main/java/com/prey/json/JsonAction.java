@@ -21,7 +21,7 @@ import com.prey.net.PreyWebServices;
 public abstract class JsonAction {
 
     public List<HttpDataService> report(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.i(this.getClass().getName());
+        PreyLogger.d(this.getClass().getName());
         List<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
         try {
             HttpDataService data = run(ctx, list, parameters);
@@ -38,7 +38,7 @@ public abstract class JsonAction {
     }
 
     public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.i(this.getClass().getName());
+        PreyLogger.d(this.getClass().getName());
         HttpDataService data = run(ctx, list, parameters);
         ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
         dataToBeSent.add(data);

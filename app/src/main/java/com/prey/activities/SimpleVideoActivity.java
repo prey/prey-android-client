@@ -98,7 +98,7 @@ public class SimpleVideoActivity extends Activity implements
                     .getInstance(ctx)
                     .postAutentication(uri, parameters, entityFiles);
             ;
-            PreyLogger.i("status line:" + preyHttpResponse.getStatusCode());
+            PreyLogger.d("status line:" + preyHttpResponse.getStatusCode());
         } catch (Exception e) {
             PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
         }
@@ -175,7 +175,7 @@ public class SimpleVideoActivity extends Activity implements
         } catch (Exception e) {
 
         }
-        PreyLogger.i("recording service stopped");
+        PreyLogger.d("recording service stopped");
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -188,7 +188,7 @@ public class SimpleVideoActivity extends Activity implements
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-        PreyLogger.i("camera setPreviewDisplay()");
+        PreyLogger.d("camera setPreviewDisplay()");
         mSurfaceHolder = holder;
         try {
             if (mServiceCamera != null)

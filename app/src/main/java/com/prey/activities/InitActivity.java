@@ -142,7 +142,7 @@ public class InitActivity extends FragmentActivity {
                 int currentItem = mViewPager.getCurrentItem();
                 larr.setVisibility(View.VISIBLE);
                 rarr.setVisibility(View.VISIBLE);
-                PreyLogger.i("currentItem:" + currentItem);
+                PreyLogger.d("currentItem:" + currentItem);
                 if (currentItem == 0) {
                     larr.setVisibility(View.GONE);
                 }

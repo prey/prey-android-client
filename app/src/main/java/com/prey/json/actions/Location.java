@@ -41,7 +41,7 @@ public class Location extends JsonAction{
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
-        PreyLogger.i(this.getClass().getName());
+        PreyLogger.d(this.getClass().getName());
         HttpDataService data = LocationUtil.dataLocation(ctx,messageId,true);
         ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
         dataToBeSent.add(data);

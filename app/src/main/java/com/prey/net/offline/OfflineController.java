@@ -139,12 +139,12 @@ public class OfflineController {
                         PreyHttpResponse response = UtilConnection.connection(preyConfig, url, params, requestMethod, contentType, authorization, status, entityFiles, correlationId);
                         if (response != null) {
                             int statusCode=response.getStatusCode();
-                            PreyLogger.i("[" + i + "]id:" + dto.getOfflineId() + " statusCode:" + statusCode);
+                            PreyLogger.d("[" + i + "]id:" + dto.getOfflineId() + " statusCode:" + statusCode);
                             if (statusCode == 200 || statusCode == 201 || statusCode == 404 || statusCode == 406 || statusCode == 409 || statusCode == 502) {
                                 datasource.deleteOffline(dto.getOfflineId());
                                 for (File file : listFiles) {
                                     if (file.exists()) {
-                                        PreyLogger.i("[" + i + "]id:" + dto.getOfflineId() + " delete :" + file.getPath() + " " + file.getName());
+                                        PreyLogger.d("[" + i + "]id:" + dto.getOfflineId() + " delete :" + file.getPath() + " " + file.getName());
                                         file.delete();
                                     }
                                 }

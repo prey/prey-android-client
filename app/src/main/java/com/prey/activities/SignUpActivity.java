@@ -57,14 +57,14 @@ public class SignUpActivity extends Activity {
     private String email = null;
 
     public void onResume() {
-        PreyLogger.i("onResume of SignUpActivity");
+        PreyLogger.d("onResume of SignUpActivity");
         super.onResume();
 
     }
 
     @Override
     public void onPause() {
-        PreyLogger.i("onPause of SignUpActivity");
+        PreyLogger.d("onPause of SignUpActivity");
         super.onPause();
     }
 
@@ -79,7 +79,7 @@ public class SignUpActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setContentView(R.layout.signup);
-        PreyLogger.i("onCreate of SignUpActivity");
+        PreyLogger.d("onCreate of SignUpActivity");
 
         final EditText nameText=((EditText)findViewById(R.id.editTextName));
         final EditText emailText=((EditText)findViewById(R.id.editTextEmailAddress));
@@ -182,7 +182,7 @@ public class SignUpActivity extends Activity {
                     }
                     linkSignup.setLayoutParams(params);
                 } catch (Exception e) {
-                    PreyLogger.i("error:" + e.getMessage());
+                    PreyLogger.e("error:" + e.getMessage(),e);
                 }
             }
         });
@@ -198,10 +198,10 @@ public class SignUpActivity extends Activity {
 
                 boolean confirm_over=checkBox_linear_confirm_over.isChecked();
                 boolean agree_terms_condition=checkBox_linear_agree_terms_condition.isChecked();
-                PreyLogger.i("email:"+email);
-                PreyLogger.i("password:"+password);
-                PreyLogger.i("confirm_over:"+confirm_over);
-                PreyLogger.i("agree_terms_condition:"+agree_terms_condition);
+                PreyLogger.d("email:"+email);
+                PreyLogger.d("password:"+password);
+                PreyLogger.d("confirm_over:"+confirm_over);
+                PreyLogger.d("agree_terms_condition:"+agree_terms_condition);
                 Context ctx = getApplicationContext();
                 if (email == null || email.equals("") || password == null || password.equals("")
                         ||!confirm_over ||!agree_terms_condition ) {

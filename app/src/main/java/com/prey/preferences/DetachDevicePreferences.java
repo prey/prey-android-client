@@ -17,15 +17,9 @@ import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.widget.Toast;
 
-import com.prey.PreyConfig;
-import com.prey.actions.geofences.GeofenceController;
-import com.prey.actions.geofences.GeofenceDataSource;
+import com.prey.PreyLogger;
 import com.prey.activities.InitActivity;
-import com.prey.activities.LoginActivity;
-import com.prey.backwardcompatibility.FroyoSupport;
-import com.prey.exceptions.PreyException;
 import com.prey.json.actions.Detach;
-import com.prey.net.PreyWebServices;
 import com.prey.R;
 
 public class DetachDevicePreferences extends DialogPreference {
@@ -69,6 +63,7 @@ public class DetachDevicePreferences extends DialogPreference {
         @Override
         protected Void doInBackground(Void... unused) {
             error= Detach.detachDevice(getContext());
+            PreyLogger.d("error:"+error);
             return null;
         }
 

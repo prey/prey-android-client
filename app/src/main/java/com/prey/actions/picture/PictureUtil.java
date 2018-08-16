@@ -129,7 +129,7 @@ public class PictureUtil {
                 i++;
             }
         } catch (InterruptedException e) {
-            PreyLogger.i("Error:" + e.getMessage());
+            PreyLogger.e("Error:" + e.getMessage(),e);
         }
         byte[] out=null;
         if (SimpleCameraActivity.activity != null) {

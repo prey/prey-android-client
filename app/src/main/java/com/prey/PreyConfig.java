@@ -664,14 +664,12 @@ public class PreyConfig {
     public String getPreyPanelUrl() {
         String panel = FileConfigReader.getInstance(this.ctx).getPreyPanel();
         String url= HTTP.concat(panel).concat(".").concat(getPreyDomain()).concat("/").concat(getPreyCampaign());
-        PreyLogger.i(url);
         return url;
     }
 
     public String getPreyPanelJwt() {
         String panel = FileConfigReader.getInstance(this.ctx).getPreyPanel();
         String url= HTTP.concat(panel).concat(".").concat(getPreyDomain()).concat("/").concat(getPreyJwt());
-        PreyLogger.i(url);
         return url;
     }
 

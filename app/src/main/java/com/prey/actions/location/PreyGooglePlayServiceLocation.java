@@ -78,7 +78,7 @@ public class PreyGooglePlayServiceLocation implements
             createLocationRequest();
             startLocationUpdates();
         } else {
-            PreyLogger.i(String.format(GOOGLE_API_CLIENT_ERROR_MSG,
+            PreyLogger.d(String.format(GOOGLE_API_CLIENT_ERROR_MSG,
                     connectionResult.getErrorCode()));
         }
     }

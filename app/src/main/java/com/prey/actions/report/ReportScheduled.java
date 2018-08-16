@@ -75,8 +75,7 @@ public class ReportScheduled {
 	public void reset() {
 		if (alarmMgr != null) {
 			int minute =  Integer.parseInt(PreyConfig.getPreyConfig(context).getIntervalReport());
-
-			PreyLogger.i("_________________shutdown report [" + minute + "] alarmIntent");
+			PreyLogger.d("_________________shutdown report [" + minute + "] alarmIntent");
 			alarmMgr.cancel(pendingIntent);
 			minute = 0;
 		}

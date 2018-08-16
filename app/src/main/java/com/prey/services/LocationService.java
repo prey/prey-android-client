@@ -73,7 +73,7 @@ public class LocationService extends Service {
                 PreyLogger.d("NETWORK Location provider has been started.");
             }
         } else {
-            PreyLogger.i("___________ask for permission LocationService ACCESS_FINE_LOCATION");
+            PreyLogger.d("___________ask for permission LocationService ACCESS_FINE_LOCATION");
         }
 
         PreyLogger.d("LocationService has been started...");

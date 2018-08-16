@@ -35,7 +35,7 @@ public class PreyEmail {
                     PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
                     PreyHttpResponse preyHttpResponse = null;
                     preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, entityFiles);
-                    PreyLogger.i("status line:" + preyHttpResponse.getStatusCode());
+                    PreyLogger.d("status line:" + preyHttpResponse.getStatusCode());
                 }
             }
         } catch (Exception e) {
@@ -51,11 +51,11 @@ public class PreyEmail {
             if (account != null) {
                 return account.name;
             }else{
-                PreyLogger.i("account nulo");
+                PreyLogger.d("account nulo");
             }
 
         }else{
-            PreyLogger.i("sdk menor");
+            PreyLogger.d("sdk menor");
         }
         return null;
 
@@ -69,10 +69,10 @@ public class PreyEmail {
             if (accounts.length > 0) {
                 return accounts[0];
             }else{
-                PreyLogger.i("account length 0");
+                PreyLogger.d("account length 0");
             }
         }else {
-            PreyLogger.i("account bajo eckair");
+            PreyLogger.d("account bajo eckair");
         }
         return null;
     }

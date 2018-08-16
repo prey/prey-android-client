@@ -44,12 +44,12 @@ public class Camouflage {
         ComponentName componentToDisabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
         PackageManager pm = ctx.getPackageManager();
         pm.setComponentEnabledSetting(componentToDisabled, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-        PreyLogger.i("stopped hide");
+        PreyLogger.d("stopped hide");
         PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_hide");
     }
 
     public static void unhide(Context ctx, List<ActionResult> lista, JSONObject parameters) {
-        PreyLogger.i("started unhide");
+        PreyLogger.d("started unhide");
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
@@ -70,7 +70,7 @@ public class Camouflage {
         ComponentName componentToEnabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
         PackageManager pm = ctx.getApplicationContext().getPackageManager();
         pm.setComponentEnabledSetting(componentToEnabled, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-        PreyLogger.i("stopped unhide");
+        PreyLogger.d("stopped unhide");
         PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_unhide");
     }
 }
