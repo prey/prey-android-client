@@ -9,9 +9,9 @@ android {
     defaultConfig {
         applicationId "com.prey"
         minSdkVersion 14
-        targetSdkVersion 27
-        versionCode 154
-        versionName '1.9.4'
+        targetSdkVersion 24
+        versionCode 155
+        versionName '1.9.5'
         multiDexEnabled true
     }
     buildTypes {
