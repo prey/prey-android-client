@@ -7,10 +7,12 @@
 package com.prey.preferences;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.CheckBoxPreference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -21,6 +23,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.services.PreyDisablePowerOptionsService;
+import com.prey.services.PreyNotificationForeGroundService;
 
 public class DisablePowerCheckBoxPreference extends CheckBoxPreference {
     public DisablePowerCheckBoxPreference(Context context) { super(context); }
@@ -45,22 +48,18 @@ public class DisablePowerCheckBoxPreference extends CheckBoxPreference {
     }
 
     public static void notifyReady(Context ctx){
-        if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove()) {
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx).setOngoing(true);
-            notificationBuilder.setContentTitle(ctx.getString(R.string.disable_power_ready));
-            notificationBuilder.setSmallIcon(R.drawable.status_bar);
-            notificationBuilder.setPriority(Notification.PRIORITY_MIN);
-            NotificationManager mgr= (NotificationManager)ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-            mgr.notify(NOTIFY_ID, notificationBuilder.build());
-        }
+        try{
+            ctx.startService(new Intent(ctx, PreyNotificationForeGroundService.class));
+        }catch(Exception e){}
     }
 
     public static void notifyCancel(Context ctx){
-        if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove()) {
-            NotificationManager mgr = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-            mgr.cancel(NOTIFY_ID);
-        }
+        try{
+            ctx.stopService(new Intent(ctx, PreyNotificationForeGroundService.class));
+        }catch(Exception e){}
     }
+
+
 
     public static int NOTIFY_ID=1337;
 

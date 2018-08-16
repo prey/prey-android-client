@@ -358,6 +358,7 @@
         <service android:name="com.prey.services.PreySecureService" />
         <service android:name="com.prey.services.PreyOverlayService" />
 
+        <service android:name="com.prey.services.PreyNotificationForeGroundService" />
 
 
 

@@ -30,9 +30,8 @@ public class PreyDisablePowerOptionsService extends Service {
     BroadcastReceiver mReceiver;
 
     public PreyDisablePowerOptionsService() {
-        PreyLogger.i("PreyDisablePowerOptionsService  create ________");
+        PreyLogger.d("PreyDisablePowerOptionsService  create ________");
         mReceiver = new PreyDisablePowerOptionsReceiver();
-
     }
 
     public IBinder onBind(Intent intent) {
@@ -41,44 +40,40 @@ public class PreyDisablePowerOptionsService extends Service {
 
     @Override
     public void onStart(Intent intent, int startId) {
-        PreyLogger.i("PreyDisablePowerOptionsService  start ________");
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
+        PreyLogger.d("PreyDisablePowerOptionsService  onStart ________disablePowerOptions:"+disablePowerOptions);
         if (disablePowerOptions) {
-            IntentFilter intentfilter = new IntentFilter("android.intent.action.CLOSE_SYSTEM_DIALOGS");
+            IntentFilter intentfilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             registerReceiver(mReceiver, intentfilter);
-
         }
     }
 
     @TargetApi(Build.VERSION_CODES.ECLAIR)
     public void onDestroy() {
-        PreyLogger.i("PreyDisablePowerOptionsService  onDestroy__________");
+        PreyLogger.d("PreyDisablePowerOptionsService  onDestroy__________");
         try {
             unregisterReceiver(mReceiver);
         } catch (IllegalArgumentException e) {
-
         }
-
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
         if (disablePowerOptions){
-
             schedule();
         }
         stopForeground(true);
     }
 
     public int onStartCommand(Intent intent, int i, int j) {
-
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
+        PreyLogger.d("PreyDisablePowerOptionsService  onStartCommand disablePowerOptions:"+disablePowerOptions);
         if (disablePowerOptions) {
-            IntentFilter intentfilter = new IntentFilter("android.intent.action.CLOSE_SYSTEM_DIALOGS");
-            registerReceiver(mReceiver, intentfilter);
+            IntentFilter closeDialog = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            registerReceiver(mReceiver, closeDialog);
         }
         return START_STICKY;
     }
 
     public void onTaskRemoved(Intent rootIntent) {
-        PreyLogger.i("Servicio detenido por Android, programamos en 7 segundos");
+        PreyLogger.d("Service stopped by Android, we program in 7 seconds");
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
         if (disablePowerOptions){
             schedule();
@@ -86,8 +81,7 @@ public class PreyDisablePowerOptionsService extends Service {
     }
 
     private void schedule() {
-
-        PreyLogger.i("PreyDisablePowerOptionsService  schedule_________");
+        PreyLogger.d("PreyDisablePowerOptionsService  schedule_________");
         Intent intent = new Intent(getApplicationContext(), AlarmDisablePowerReceiver.class);
         PendingIntent alarmDisablePower = PendingIntent.getBroadcast(getApplicationContext(), 1, intent, 0);
         AlarmManager alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
@@ -97,9 +91,6 @@ public class PreyDisablePowerOptionsService extends Service {
         }else{
             alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC,  7000L, alarmDisablePower);
         }
-
-
     }
-
 
 }
