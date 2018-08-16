@@ -34,16 +34,17 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
     @TargetApi(Build.VERSION_CODES.ECLAIR_MR1)
     public void onReceive(Context context, Intent intent) {
         boolean disablePowerOptions = PreyConfig.getPreyConfig(context).isDisablePowerOptions();
+        PreyLogger.d("PreyDisablePowerOptionsReceiver disablePowerOptions:"+ disablePowerOptions );
         if (disablePowerOptions) {
             if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
                 Bundle bundle = intent.getExtras();
                 if (bundle != null) {
                     for (String key : bundle.keySet()) {
                         Object value = bundle.get(key);
-                        PreyLogger.i("key:"+ key +" value:"+ value );
+                        PreyLogger.d("PreyDisablePowerOptionsReceiver disablePowerOptions key:"+ key +" value:"+ value );
                     }
                 }
-                boolean flag = ((KeyguardManager) context.getSystemService("keyguard")).inKeyguardRestrictedInputMode();
+                boolean flag = ((KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE)).inKeyguardRestrictedInputMode();
                 boolean lock=PreyConfig.getPreyConfig(context).isLockSet();
                 try {
                    // if (flag||lock) {
@@ -53,14 +54,14 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                         String reason=intent.getStringExtra("reason");
                         if (isScreenOn && reason != null) {
 
-                            PreyLogger.i("PreyDisablePowerOptionsReceiver reason:"+reason+" flag:"+flag+" lock:"+flag+" putextra:"+intent.getStringExtra(stringExtra));
+                            PreyLogger.d("PreyDisablePowerOptionsReceiver reason:"+reason+" flag:"+flag+" lock:"+flag+" putextra:"+intent.getStringExtra(stringExtra));
 
 
                             String extra=intent.getStringExtra(stringExtra);
 
                             long time=PreyConfig.getPreyConfig(context).getTimeSecureLock( );
                             long now=new Date().getTime();
-                            PreyLogger.d("time:"+time+" now:"+now +" "+(now<time));
+                            PreyLogger.d("PreyDisablePowerOptionsReceiver time:"+time+" now:"+now +" "+(now<time));
                             if( now<time){
                                 extra="";
                             }
@@ -71,7 +72,7 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
 
                                 String pinNumber=PreyConfig.getPreyConfig(context).getPinNumber();
 
-                                PreyLogger.d("pinNumber:"+pinNumber);
+                                PreyLogger.d("PreyDisablePowerOptionsReceiver pinNumber:"+pinNumber);
                                 if("globalactions".equals(reason)&& pinNumber!=null&& !"".equals(pinNumber)){
                                     PreyLogger.d("pinNumber:"+pinNumber);
                                     if(!PreyConfig.getPreyConfig(context).isOpenSecureService()) {
