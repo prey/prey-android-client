@@ -279,7 +279,6 @@ public class PreyWebServices {
             } catch (Exception e) {
             }
         }
-        PreyLogger.i("deviceId:"+deviceId);
         PreyAccountData newAccount =null;
         if (deviceId!=null&&!"".equals(deviceId)) {
             newAccount = new PreyAccountData();
@@ -590,7 +589,6 @@ public class PreyWebServices {
     public boolean verify(Context ctx) throws Exception {
         boolean result = false;
         String url = getVerifyUrl(ctx);
-        //PreyLogger.i("verify url:"+url);
         PreyHttpResponse preyHttpResponse = null;
         PreyConfig config = PreyConfig.getPreyConfig(ctx);
         preyHttpResponse = PreyRestHttpClient.getInstance(ctx).getAutentication(url,null);
@@ -599,7 +597,8 @@ public class PreyWebServices {
         return result;
     }
 
-    public void sendPreyHttpEvent(Context ctx, Event event, JSONObject jsonObject) {
+    public PreyHttpResponse sendPreyHttpEvent(Context ctx, Event event, JSONObject jsonObject) {
+        PreyHttpResponse preyHttpResponse = null;
         try {
             String url = getEventsUrlJson(ctx);
             Map<String, String> parameters = new HashMap<String, String>();
@@ -610,7 +609,7 @@ public class PreyWebServices {
             PreyLogger.d("name:" + event.getName() + " info:" + event.getInfo());
             PreyLogger.d("status:" + jsonObject.toString());
             String status = jsonObject.toString();
-            PreyHttpResponse preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters);
+            preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters);
             if(preyHttpResponse!=null) {
                 String jsonString = preyHttpResponse.getResponseAsString();
                 if (jsonString != null && jsonString.length() > 0) {
@@ -621,9 +620,9 @@ public class PreyWebServices {
                 }
             }
         } catch (Exception e) {
-            PreyLogger.i("message:" + e.getMessage());
             PreyLogger.e("Event wasn't send", e);
         }
+        return preyHttpResponse;
     }
 
 
@@ -687,7 +686,7 @@ public class PreyWebServices {
                 preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutenticationTimeout(url, parameters);
             else
                 preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, entityFiles);
-            PreyLogger.i("Report sent: " + (preyHttpResponse==null?"":preyHttpResponse.getResponseAsString()));
+            PreyLogger.d("Report sent: " + (preyHttpResponse==null?"":preyHttpResponse.getResponseAsString()));
         } catch (Exception e) {
             PreyLogger.e("Report wasn't send:" + e.getMessage(), e);
         }
@@ -696,9 +695,7 @@ public class PreyWebServices {
 
     public List<JSONObject> getActionsJsonToPerform(Context ctx) throws PreyException {
         String url = getDeviceUrlJson(ctx);
-        //PreyLogger.i("url:"+url);
         List<JSONObject> lista = new JSONParser().getJSONFromUrl(ctx, url);
-
         return lista;
     }
 
@@ -988,5 +985,13 @@ public class PreyWebServices {
         return TwoStepEnabled;
     }
 
+
+    public PreyHttpResponse setMissing(final Context ctx) throws Exception{
+        String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
+        String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
+        String uri =PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("set-missing/").concat(deviceId).concat("/missing");
+        Map<String, String> params=new HashMap<>();
+        return PreyRestHttpClient.getInstance(ctx).postAutentication(uri,params);
+    }
 
 }

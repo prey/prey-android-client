@@ -19,7 +19,7 @@ import java.util.List;
 
 public class GeofenceOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String DATABASE_NAME = "Geofence.db";
 
@@ -96,6 +96,18 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
         database.close();
     }
 
+    public void updateGeofenceType(String id,String type) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TYPE,type);
+        String selection = COLUMN_ID + " = ?";
+        String[] selectionArgs = {id};
+        PreyLogger.d("___db update type:"+type+" id:" + id);
+        database.update(GEOFENCE_TABLE_NAME, values, selection, selectionArgs);
+        database.close();
+    }
+
+
     public void deleteGeofence(String id) {
         SQLiteDatabase database = this.getWritableDatabase();
         String deleteQuery = "DELETE FROM  " + GEOFENCE_TABLE_NAME + " where " + COLUMN_ID + "='" + id + "'";
@@ -127,12 +139,13 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
                     geofence.setLatitude(cursor.getDouble(2));
                     geofence.setLongitude(cursor.getDouble(3));
                     geofence.setRadius(cursor.getFloat(4));
-                    geofence.setExpires(cursor.getInt(5));
+                    geofence.setType(cursor.getString(5));
+                    geofence.setExpires(cursor.getInt(6));
                     list.add(geofence);
                 } while (cursor.moveToNext());
             }
         }catch (Exception e){
-
+            PreyLogger.e("error:"+e.getMessage(),e);
         }finally {
             if(cursor!=null){
                 try{cursor.close();}catch (Exception e1){}
@@ -157,11 +170,12 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
                     geofence.setLatitude(cursor.getDouble(2));
                     geofence.setLongitude(cursor.getDouble(3));
                     geofence.setRadius(cursor.getFloat(4));
-                    geofence.setExpires(cursor.getInt(5));
+                    geofence.setType(cursor.getString(5));
+                    geofence.setExpires(cursor.getInt(6));
                 } while (cursor.moveToNext());
             }
         }catch (Exception e){
-
+            PreyLogger.e("error:"+e.getMessage(),e);
         }finally {
             if(cursor!=null){
                 try{cursor.close();}catch (Exception e1){}
