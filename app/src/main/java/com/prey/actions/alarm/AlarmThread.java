@@ -61,7 +61,7 @@ public class AlarmThread extends Thread {
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("start", "alarm", "started",reason));
             start = true;
             int i = 0;
-            while (PreyStatus.getInstance().isAlarmStart() && i < 80) {
+            while (PreyStatus.getInstance().isAlarmStart() && i < 10) {
                 sleep(500);
                 int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
                 if(currentVolume!=max){

@@ -8,7 +8,7 @@ android {
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.prey"
-        minSdkVersion 14
+        minSdkVersion 23
         targetSdkVersion 24
         versionCode 155
         versionName '1.9.5'

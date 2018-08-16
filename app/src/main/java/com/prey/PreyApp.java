@@ -20,6 +20,9 @@ import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.geofences.GeofenceIntentService;
 import com.prey.actions.report.ReportScheduled;
+import com.prey.ble.PreyBluetoothLeService;
+import com.prey.ble.db.KeyDatasource;
+import com.prey.ble.db.KeyDto;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
 import com.prey.managers.PreyTelephonyManager;
@@ -151,13 +154,57 @@ public class PreyApp extends Application {
                 AppsFlyerLib.getInstance().init(flyerKey , conversionListener , getApplicationContext());
                 AppsFlyerLib.getInstance().startTracking(this, flyerKey);
                 AppsFlyerLib.getInstance().setDebugLog(true);
+
+
+
             }
             catch (Exception e) {
                 PreyLogger.e("error e:"+e.getMessage(),e);
             }
+
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
         }
+
+        new Thread() {
+            public void run() {
+                try{
+
+                        String macRed="00:81:F9:53:77:7C";
+                        String macGreen="00:81:F9:4C:85:03";
+                        String macOrange="E8:CE:6A:1D:7F:13";
+
+                        KeyDatasource data=new KeyDatasource(getApplicationContext());
+                        KeyDto keyRed=data.getKey(macRed);
+                        if(keyRed==null){
+                            keyRed=new KeyDto();
+                            keyRed.setName("Red");
+                            keyRed.setAddress(macRed);
+                            data.createKey(keyRed);
+                        }
+                        KeyDto keyGreen=data.getKey(macGreen);
+                        if(keyGreen==null){
+                            keyGreen=new KeyDto();
+                            keyGreen.setName("Green");
+                            keyGreen.setAddress(macGreen);
+                            data.createKey(keyGreen);
+                        }
+                        KeyDto keyOrange=data.getKey(macOrange);
+                        if(keyOrange==null){
+                            keyOrange=new KeyDto();
+                            keyOrange.setName("Red");
+                            keyOrange.setAddress(macOrange);
+                            data.createKey(keyOrange);
+                        }
+
+
+
+                    startService(new Intent(getApplicationContext(), PreyBluetoothLeService.class));
+                }catch (Exception e){
+                    PreyLogger.e("Error PreyBluetoothLeService:" + e.getMessage(), e);
+                }
+            }
+        }.start();
     }
 
 
