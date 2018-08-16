@@ -2,7 +2,7 @@
 
     function panel(){
       from='panel';
-      if(Android.openSettings()){
+      if(!Android.openSettings()){
         openSettings();
       }else{
         openSettingsTwoStep();
@@ -11,7 +11,7 @@
 
     function setting(){
       from='conf';
-      if(Android.openSettings()){
+      if(!Android.openSettings()){
         openSettings();
       }else{
         openSettingsTwoStep();
@@ -23,9 +23,14 @@
       if(passs==''){
          $('#label_pass').addClass("form-inline-error");
       }else{
-         $('.popover').toggleClass("show");
-         $('#mobile').show();
-         Android.signIn(passs,from);
+         if(!Android.openSettings()){
+             $('.popover').toggleClass("show");
+             $('#mobile').show();
+             Android.signIn(passs,from);
+         }else{
+            $('#modal-login').hide();
+            $('#modal-loginTwoStep').show();
+         }
       }
     }
 

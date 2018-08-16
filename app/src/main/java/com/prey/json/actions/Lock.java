@@ -27,6 +27,7 @@ import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyLockService;
+import com.prey.services.PreySecureService;
 
 public class Lock extends JsonAction {
 
@@ -88,6 +89,7 @@ public class Lock extends JsonAction {
             }
             PreyConfig.getPreyConfig(ctx).setLock(false);
             PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
+            try{ctx.stopService(new Intent(ctx, PreySecureService.class));}catch(Exception e){}
             if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
                 Thread.sleep(3000);
                 PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId,UtilJson.makeMapParam("start", "lock", "stopped",reason));
@@ -119,13 +121,13 @@ public class Lock extends JsonAction {
             String unlock = parameters.getString("parameter");
             lock(ctx, unlock, null, null,null);
         } catch (Exception e) {
-            PreyLogger.i("Error:" + e.getMessage());
+            PreyLogger.e("Error:" + e.getMessage(),e);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage()));
         }
     }
 
     public void lock(Context ctx, String unlock, String messageId, String reason,String device_job_id) {
-        PreyLogger.i("lock unlock:"+unlock+" messageId:"+ messageId+" reason:"+reason);
+        PreyLogger.d("lock unlock:"+unlock+" messageId:"+ messageId+" reason:"+reason);
         PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
         PreyConfig.getPreyConfig(ctx).setLock(true);
 
@@ -145,7 +147,7 @@ public class Lock extends JsonAction {
                 try{
                     FroyoSupport.getInstance(ctx).changePasswordAndLock(unlock, true);
                 }catch(Exception e){
-                    PreyLogger.i("Error:" + e.getMessage());
+                    PreyLogger.e("Error:" + e.getMessage(),e);
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage()));
                 }
             }

@@ -54,8 +54,10 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public boolean openSettings(){
-        PreyLogger.d("openSettings two:"+!PreyConfig.getPreyConfig(mContext).getTwoStep());
-        return !PreyConfig.getPreyConfig(mContext).getTwoStep();
+        boolean openSettingsTwoStep=   PreyWebServices.getInstance().getTwoStepEnabled(mContext);
+        PreyConfig.getPreyConfig(mContext).setTwoStep(openSettingsTwoStep);
+        PreyLogger.d("openSettingsTwoStep "+openSettingsTwoStep);
+        return openSettingsTwoStep;
     }
 
     @JavascriptInterface
@@ -206,7 +208,9 @@ public class WebAppInterface {
             try {
                 isPasswordOk = false;
                 String apikey = PreyConfig.getPreyConfig(mContext).getApiKey();
-                if (PreyConfig.getPreyConfig(mContext).getTwoStep()) {
+                boolean twoStep=PreyConfig.getPreyConfig(mContext).getTwoStep();
+                PreyLogger.d("twoStep:" +twoStep);
+                if (twoStep) {
                     PreyLogger.d("apikey:" + apikey + " password:" + password[0] + " password2:" + password[1] + " from:" + password[2]);
                     from = password[2];
                     isPasswordOk =PreyWebServices.getInstance().checkPassword2(mContext,apikey, password[0],password[1]);
