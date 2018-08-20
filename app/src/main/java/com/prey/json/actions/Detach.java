@@ -59,7 +59,7 @@ public class Detach {
         PreyLogger.d("5:"+error);
         try { ReportScheduled.getInstance(ctx).reset();} catch (Exception e) {error += e.getMessage();}
         try { AwareScheduled.getInstance(ctx).reset();} catch (Exception e) {error += e.getMessage();}
-        try { PreyWebServices.getInstance().deleteDevice(ctx);} catch (Exception e) {error += e.getMessage();}
+        try { PreyWebServices.getInstance().deleteDevice(ctx);} catch (Exception e) { }
         PreyLogger.d("6:"+error);
         try { PreyConfig.getPreyConfig(ctx).wipeData();} catch (Exception e) {error += e.getMessage();}
         try { PreyConfig.getPreyConfig(ctx).removeDeviceId();} catch (Exception e) {error += e.getMessage();}
