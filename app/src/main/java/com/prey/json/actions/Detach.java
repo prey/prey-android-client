@@ -10,7 +10,6 @@ import android.content.Context;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.actions.aware.AwareScheduled;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.observer.ActionResult;
@@ -58,7 +57,6 @@ public class Detach {
         } catch (Exception e) {}
         PreyLogger.d("5:"+error);
         try { ReportScheduled.getInstance(ctx).reset();} catch (Exception e) {error += e.getMessage();}
-        try { AwareScheduled.getInstance(ctx).reset();} catch (Exception e) {error += e.getMessage();}
         try { PreyWebServices.getInstance().deleteDevice(ctx);} catch (Exception e) { }
         PreyLogger.d("6:"+error);
         try { PreyConfig.getPreyConfig(ctx).wipeData();} catch (Exception e) {error += e.getMessage();}

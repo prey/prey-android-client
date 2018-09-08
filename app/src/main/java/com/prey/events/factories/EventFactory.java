@@ -28,6 +28,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.R;
+import com.prey.actions.aware.AwareController;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.beta.actions.PreyBetaController;
@@ -45,6 +46,7 @@ public class EventFactory {
     private static final String AIRPLANE_MODE = "android.intent.action.AIRPLANE_MODE";
     private static final String BATTERY_LOW = "android.intent.action.BATTERY_LOW";
     private static final String SIM_STATE_CHANGED = "android.intent.action.SIM_STATE_CHANGED";
+    private static final String USER_PRESENT = "android.intent.action.USER_PRESENT";
 
     public static Event getEvent(final Context ctx, Intent intent) {
         String message = "getEvent[" + intent.getAction() + "]";
@@ -125,6 +127,7 @@ public class EventFactory {
                 }
             } catch (Exception e) {
             }
+
             return new Event(Event.WIFI_CHANGED, info.toString());
         }
         if (WIFI_STATE_CHANGED.equals(intent.getAction())) {
@@ -186,8 +189,25 @@ public class EventFactory {
                 }
             }
         }
+        if(USER_PRESENT.equals(intent.getAction())){
+            String awareDate=PreyConfig.getPreyConfig(ctx).getAwareDate();
+            String now=PreyConfig.FORMAT_SDF_AWARE.format(new Date());
+            PreyLogger.d("AWARE USER_PRESENT awareDate:"+awareDate+" now:"+now);
+            if(!now.equals(awareDate)) {
+                PreyLogger.d("AWARE getSendNowAware"+now);
+                new Thread() {
+                    public void run() {
+                        try{
+                            AwareController.getSendNowAware(ctx);
+                        } catch (Exception e) {}
+                    }
+                }.start();
+            }
+        }
         return null;
     }
+
+
 
     public static boolean isAirplaneModeOn(Context context) {
         return Settings.System.getInt(context.getContentResolver
