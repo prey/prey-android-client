@@ -32,6 +32,7 @@ import com.prey.net.PreyWebServices;
 import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyRegistrationIntentService;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -47,7 +48,7 @@ public class PreyConfig {
 
     private static final String HTTP="https://";
 
-    public static final String VERSION_PREY_DEFAULT="1.9.5";
+    public static final String VERSION_PREY_DEFAULT="1.9.6";
 
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
@@ -129,13 +130,11 @@ public class PreyConfig {
     public static final int ANDROID_TOUR_COMPLETED = 2003;
     public static final int ANDROID_PRIVILEGES_GIVEN = 2004;
     public static final int ANDROID_SIGN_IN = 2005;
-    public static final int ANDROID_LOGIN_SETTINGS = 2007;
-    public static final int ANDROID_FAILED_LOGIN_SETTINGS = 2008;
     public static final int ANDROID_VERSION_UPDATED = 2009;
     public static final int ANDROID_ONBOARDING_INIT = 2010;
     public static final int ANDROID_ONBOARDING_COMPLETED = 2011;
 
-    public static final String PREFERENCE_PREY_VERSION="PREFERENCE_PREY_VERSION";
+    public static final String PREY_VERSION="PREY_VERSION";
     public static final String API_KEY="API_KEY";
     public static final String DEVICE_ID = "DEVICE_ID";
 
@@ -168,11 +167,12 @@ public class PreyConfig {
 
     public static final String COUNTER_OFF="counter_off";
 
-
-    public static final String AWARE="aware";
     public static final String AWARE_LAT="AWARE_LAT";
     public static final String AWARE_LNG="AWARE_LNG";
     public static final String AWARE_ACC="AWARE_ACC";
+    public static final String AWARE_DATE="AWARE_DATE";
+
+    public static final String AUTO_CONNECT="auto_connect";
 
 
 
@@ -195,7 +195,6 @@ public class PreyConfig {
 
     private boolean disablePowerOptions;
 
-
     private PreyConfig(Context ctx) {
         this.ctx = ctx;
         try {
@@ -215,7 +214,6 @@ public class PreyConfig {
             this.disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
         } catch ( Exception e){
         } catch ( NoClassDefFoundError e) {}
-
     }
 
     public static synchronized PreyConfig getPreyConfig(Context ctx) {
@@ -433,7 +431,7 @@ public class PreyConfig {
         editor.commit();
     }
 
-    public String getPreyVersion() {
+    public String getInfoPreyVersion() {
         String versionName=VERSION_PREY_DEFAULT;
         try{
             PackageInfo pinfo =ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
@@ -952,14 +950,6 @@ public class PreyConfig {
         return getBoolean(PreyConfig.SMS_COMMAND, false);
     }
 
-    public String getPreferencePreyVersion(){
-        return getString(PreyConfig.PREFERENCE_PREY_VERSION, "");
-    }
-
-    public void setPreferencePreyVersion(String preferencePreyVersion) {
-        saveString(PreyConfig.PREFERENCE_PREY_VERSION, preferencePreyVersion);
-    }
-
     public void setLocationLowBattery(boolean locationLowBattery) {
         saveBoolean(PreyConfig.PREFERENCE_LOCATION_LOW_BATTERY, locationLowBattery);
     }
@@ -1034,14 +1024,6 @@ public class PreyConfig {
         saveString(PreyConfig.JOB_ID_LOCK, jobIdLock);
     }
 
-    public boolean getAware() {
-        return getBoolean(PreyConfig.AWARE, false);
-    }
-
-    public void setAware(boolean aware) {
-        this.saveBoolean(PreyConfig.AWARE, aware);
-    }
-
     public int getCounterOff(){
         return getInt(PreyConfig.COUNTER_OFF,0);
     }
@@ -1067,11 +1049,25 @@ public class PreyConfig {
         return getLong(PreyConfig.LAST_TIME_SECURE_LOCK, 0);
     }
 
+    public static SimpleDateFormat FORMAT_SDF_AWARE=new SimpleDateFormat("yyyy-MM-dd");
+
     public void setLocationAware(PreyLocation location){
-        saveFloat(PreyConfig.AWARE_LAT,(float)location.getLat());
-        saveFloat(PreyConfig.AWARE_LNG,(float)location.getLng());
-        saveFloat(PreyConfig.AWARE_ACC,location.getAccuracy());
+        if(location!=null) {
+            saveFloat(PreyConfig.AWARE_LAT, (float) location.getLat());
+            saveFloat(PreyConfig.AWARE_LNG, (float) location.getLng());
+            saveFloat(PreyConfig.AWARE_ACC, location.getAccuracy());
+        }
     }
+
+    public String getAwareDate(){
+        return getString(PreyConfig.AWARE_DATE, "");
+    }
+
+    public void setAwareDate(String awareDate){
+        PreyLogger.i("AWARE setAwareDate ["+awareDate+"]");
+        saveString(PreyConfig.AWARE_DATE, awareDate);
+    }
+
 
     public PreyLocation getLocationAware(){
         try{
@@ -1091,4 +1087,19 @@ public class PreyConfig {
         }
     }
 
+    public boolean getAutoConnect() {
+        return getBoolean(PreyConfig.AUTO_CONNECT, false);
+    }
+
+    public void setAutoConnect(boolean auto_connect) {
+        this.saveBoolean(PreyConfig.AUTO_CONNECT, auto_connect);
+    }
+
+    public String getPreyVersion(){
+        return getString(PreyConfig.PREY_VERSION, "");
+    }
+
+    public void setPreyVersion(String preyVersion) {
+        saveString(PreyConfig.PREY_VERSION, preyVersion);
+    }
 }

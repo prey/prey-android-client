@@ -106,7 +106,7 @@ public class PreyGooglePlayServiceLocation implements
         mCurrentLocation = location;
         if (location != null) {
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            PreyLogger.d("latitude:" + location.getLatitude() + " longitude:" + location.getLongitude() + " accuracy:" + location.getAccuracy());
+            //PreyLogger.d("latitude:" + location.getLatitude() + " longitude:" + location.getLongitude() + " accuracy:" + location.getAccuracy());
             stopLocationUpdates();
         }
 

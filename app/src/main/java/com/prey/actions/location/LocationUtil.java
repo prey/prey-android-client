@@ -8,7 +8,6 @@ package com.prey.actions.location;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import android.Manifest;
@@ -23,8 +22,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.PreyPhone;
-import com.prey.PreyPhone.Wifi;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.json.UtilJson;
@@ -39,14 +36,18 @@ public class LocationUtil {
     public static final String ACC = "accuracy";
     public static final String METHOD = "method";
 
-    public static HttpDataService dataLocation(Context ctx, String messageId, boolean asynchronous) {
+    public static HttpDataService dataLocation(final Context ctx, String messageId, boolean asynchronous) {
         HttpDataService data = null;
         try {
-            PreyLocation preyLocation = getLocation(ctx,messageId,asynchronous);
+            final PreyLocation preyLocation = getLocation(ctx,messageId,asynchronous);
             if (preyLocation != null) {
                 PreyLogger.d("locationData:" + preyLocation.getLat() + " " + preyLocation.getLng() + " " + preyLocation.getAccuracy());
                 data = convertData(preyLocation);
-                GeofenceController.verifyGeozone(ctx, preyLocation);
+                new Thread() {
+                    public void run() {
+                        GeofenceController.verifyGeozone(ctx, preyLocation);
+                    }
+                }.start();
             }else{
                 return null;
             }
@@ -139,7 +140,7 @@ public class LocationUtil {
                 if (currentLocation != null) {
                     //PreyLogger.d("getPreyLocationPlayService["+i+"]:"+currentLocation.toString());
                     preyLocation = new PreyLocation(currentLocation, method);
-                    preyLocationOld = sendLocation(ctx, asynchronous, preyLocationOld, preyLocation);
+                    //preyLocationOld = sendLocation(ctx, asynchronous, preyLocationOld, preyLocation);
                     if(!asynchronous)
                         i=MAXIMUM_OF_ATTEMPTS;
                 }
@@ -149,7 +150,8 @@ public class LocationUtil {
             PreyLogger.d("Error getPreyLocationPlayService:"+e.getMessage());
             throw e;
         } finally {
-            play.stopLocationUpdates();
+            if(play!=null)
+                play.stopLocationUpdates();
         }
         return preyLocation;
     }
@@ -170,7 +172,7 @@ public class LocationUtil {
                     preyLocation=location;
                     preyLocation.setMethod(method);
                     PreyLogger.d("getPreyLocationAppService["+i+"]:"+preyLocation.toString());
-                    preyLocationOld = sendLocation(ctx, asynchronous, preyLocationOld, preyLocation);
+                    //preyLocationOld = sendLocation(ctx, asynchronous, preyLocationOld, preyLocation);
                     if(!asynchronous)
                         i=MAXIMUM_OF_ATTEMPTS;
                 }
@@ -203,7 +205,7 @@ public class LocationUtil {
         }
     }
 
-    private static double distance(PreyLocation locationOld, PreyLocation locationNew){
+    public static double distance(PreyLocation locationOld, PreyLocation locationNew){
         if(locationOld!=null&&locationNew!=null) {
             Location locStart = new Location("");
             locStart.setLatitude(locationNew.getLat());

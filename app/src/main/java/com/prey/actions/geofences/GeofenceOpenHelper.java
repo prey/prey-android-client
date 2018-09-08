@@ -91,7 +91,7 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
         values.put(COLUMN_EXPIRES, geofence.getExpires());
         String selection = COLUMN_ID + " = ?";
         String[] selectionArgs = {geofence.getId()};
-        PreyLogger.d("___db update:" + geofence.toString());
+        //PreyLogger.d("___db update:" + geofence.toString());
         database.update(GEOFENCE_TABLE_NAME, values, selection, selectionArgs);
         database.close();
     }
@@ -102,7 +102,7 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
         values.put(COLUMN_TYPE,type);
         String selection = COLUMN_ID + " = ?";
         String[] selectionArgs = {id};
-        PreyLogger.d("___db update type:"+type+" id:" + id);
+        //PreyLogger.d("___db update type:"+type+" id:" + id);
         database.update(GEOFENCE_TABLE_NAME, values, selection, selectionArgs);
         database.close();
     }
@@ -111,7 +111,7 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
     public void deleteGeofence(String id) {
         SQLiteDatabase database = this.getWritableDatabase();
         String deleteQuery = "DELETE FROM  " + GEOFENCE_TABLE_NAME + " where " + COLUMN_ID + "='" + id + "'";
-        PreyLogger.d("query" + deleteQuery);
+        //PreyLogger.d("query" + deleteQuery);
         database.execSQL(deleteQuery);
         database.close();
     }
@@ -119,7 +119,7 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
     public void deleteAllGeofence() {
         SQLiteDatabase database = this.getWritableDatabase();
         String deleteQuery = "DELETE FROM  " + GEOFENCE_TABLE_NAME ;
-        PreyLogger.d("query" + deleteQuery);
+        //PreyLogger.d("query" + deleteQuery);
         database.execSQL(deleteQuery);
         database.close();
     }
@@ -161,7 +161,6 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
             SQLiteDatabase database = this.getReadableDatabase();
             String selectQuery = "SELECT * FROM " + GEOFENCE_TABLE_NAME + " where " + COLUMN_ID + "='" + id + "'";
             cursor = database.rawQuery(selectQuery, null);
-
             if (cursor.moveToFirst()) {
                 do {
                     geofence = new GeofenceDto();
