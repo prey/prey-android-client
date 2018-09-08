@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
     android:installLocation="internalOnly"
-    android:versionCode="155"
-    android:versionName="1.9.5" >
+    android:versionCode="156"
+    android:versionName="1.9.6" >
 
 
     <uses-feature android:name="android.hardware.location.network" android:required="true" />
@@ -62,7 +62,6 @@
 
 
     <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" />
-
 
 
 
@@ -295,6 +294,9 @@
 
                 <!-- AIRPLANE -->
                 <action android:name="android.intent.action.AIRPLANE_MODE" />
+                <!-- USER_PRESENT -->
+                <action android:name="android.intent.action.USER_PRESENT"/>
+
 
             </intent-filter>
         </receiver>
@@ -302,9 +304,6 @@
         <receiver android:name="com.prey.receivers.AlarmReportReceiver" />
         <receiver android:name="com.prey.receivers.AlarmScheduledReceiver" />
         <receiver android:name="com.prey.receivers.AlarmDisablePowerReceiver" />
-
-        <receiver android:name="com.prey.actions.aware.AwareAlarmReceiver" />
-        <service android:name="com.prey.actions.aware.AwareService" />
 
         <receiver android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver" android:enabled="true" android:exported="false">
             <intent-filter android:priority="20000">
@@ -342,7 +341,7 @@
 
 
 
-
+        <receiver android:name="com.prey.actions.autoconnect.AutoConnectAlarmReceiver" />
 
 
         <!-- Services -->
@@ -353,6 +352,7 @@
         <service android:name="com.prey.beta.services.PreyBetaRunnerService" />
         <service android:name="com.prey.actions.report.ReportService" />
         <service android:name="com.prey.actions.geofences.GeofenceIntentService" />
+        <service android:name="com.prey.actions.aware.AwareIntentService" />
         <service android:name="com.prey.actions.fileretrieval.FileretrievalService" />
         <service android:name="com.prey.services.PreyLockService" />
         <service android:name="com.prey.services.PreySecureService" />
@@ -360,7 +360,7 @@
 
         <service android:name="com.prey.services.PreyNotificationForeGroundService" />
 
-
+        <service android:name="com.prey.actions.autoconnect.AutoConnectService" />
 
         <!-- [START firebase_service] -->
         <service

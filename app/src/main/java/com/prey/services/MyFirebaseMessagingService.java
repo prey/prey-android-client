@@ -6,24 +6,37 @@
  ******************************************************************************/
 package com.prey.services;
 
-import com.firebase.jobdispatcher.FirebaseJobDispatcher;
-import com.firebase.jobdispatcher.GooglePlayDriver;
-import com.firebase.jobdispatcher.Job;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
 import com.prey.PreyLogger;
 import com.prey.beta.actions.PreyBetaController;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        PreyLogger.d("MyFirebaseMessagingService onMessageReceived" );
+        PreyLogger.d("FIREBASE onMessageReceived" );
         if (remoteMessage.getData().size() > 0) {
-            PreyBetaController.startPrey(this,null);
+            final String text= remoteMessage.getData().toString();
+            PreyLogger.d("FIREBASE data:"+text);
+            String cmd=null;
+            try {
+                cmd = remoteMessage.getData().get("cmd");
+            } catch (Exception e) {
+                cmd = null;
+            }
+            /*
+            cmd="{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"alert_message\":\"oso\"}}";
+            android.os.Handler handler = new  android.os.Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(),cmd,Toast.LENGTH_LONG).show();
+                }
+            });*/
+            PreyLogger.d("FIREBASE cmd:"+cmd);
+            PreyBetaController.startPrey(this,cmd);
         }
     }
 
