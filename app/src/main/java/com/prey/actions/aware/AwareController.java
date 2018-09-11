@@ -47,10 +47,11 @@ public class AwareController {
         return INSTANCE;
     }
 
-    public void init(final Context ctx) {
+    public void init(Context ctx) {
         try{
-            PreyLogger.d("AWARE AwareController init:"+AwareConfig.getAwareConfig(ctx).isLocationAware());
-            if (AwareConfig.getAwareConfig(ctx).isLocationAware()) {
+            boolean isLocationAware=AwareConfig.getAwareConfig(ctx).isLocationAware();
+            PreyLogger.d("AWARE AwareController init:"+isLocationAware);
+            if (isLocationAware) {
                 PreyLocation locationAware = LocationUtil.getLocation(ctx, null, false);
                 PreyLocation locationNow = sendAware(ctx, locationAware);
                 if (locationNow != null) {
@@ -141,26 +142,29 @@ public class AwareController {
         sendNowAware(ctx,locationNow);
     }
 
-    private static void sendNowAware(Context ctx, PreyLocation locationNow) throws Exception{
-        PreyLogger.d("AWARE sendNowAware");
-        String messageId = null;
-        String reason = null;
-        double accD = Math.round(locationNow.getAccuracy() * 100.0) / 100.0;
-        JSONObject json = new JSONObject();
-        json.put("lat", Double.toString(locationNow.getLat()));
-        json.put("lng", Double.toString(locationNow.getLng()));
-        json.put("accuracy", Double.toString(accD));
-        json.put("method", locationNow.getMethod());
-        JSONObject location = new JSONObject();
-        location.put("location", json);
-        PreyHttpResponse preyResponse = PreyWebServices.getInstance().sendLocation(ctx, location);
-        if (preyResponse != null) {
-            if (preyResponse.getStatusCode() == 201) {
-                PreyLogger.d("AWARE getStatusCode 201");
-                AwareConfig.getAwareConfig(ctx).setLocationAware(false);
+    private static void sendNowAware(Context ctx, PreyLocation locationNow) throws Exception {
+        boolean isLocationAware = AwareConfig.getAwareConfig(ctx).isLocationAware();
+        PreyLogger.d("AWARE sendNowAware isLocationAware:"+isLocationAware);
+        if (isLocationAware){
+            String messageId = null;
+            String reason = null;
+            double accD = Math.round(locationNow.getAccuracy() * 100.0) / 100.0;
+            JSONObject json = new JSONObject();
+            json.put("lat", Double.toString(locationNow.getLat()));
+            json.put("lng", Double.toString(locationNow.getLng()));
+            json.put("accuracy", Double.toString(accD));
+            json.put("method", locationNow.getMethod());
+            JSONObject location = new JSONObject();
+            location.put("location", json);
+            PreyHttpResponse preyResponse = PreyWebServices.getInstance().sendLocation(ctx, location);
+            if (preyResponse != null) {
+                if (preyResponse.getStatusCode() == 201) {
+                    PreyLogger.d("AWARE getStatusCode 201");
+                    AwareConfig.getAwareConfig(ctx).setLocationAware(false);
+                }
+                PreyConfig.getPreyConfig(ctx).setAwareDate(PreyConfig.FORMAT_SDF_AWARE.format(new Date()));
+                PreyLogger.d("AWARE sendNowAware:" + locationNow.toString());
             }
-            PreyConfig.getPreyConfig(ctx).setAwareDate(PreyConfig.FORMAT_SDF_AWARE.format(new Date()));
-            PreyLogger.d("AWARE sendNowAware:"+locationNow.toString());
         }
     }
 

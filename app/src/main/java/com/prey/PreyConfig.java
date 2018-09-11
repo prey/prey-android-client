@@ -194,6 +194,7 @@ public class PreyConfig {
     private boolean runOnce;
 
     private boolean disablePowerOptions;
+    private String version;
 
     private PreyConfig(Context ctx) {
         this.ctx = ctx;
@@ -214,6 +215,10 @@ public class PreyConfig {
             this.disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
         } catch ( Exception e){
         } catch ( NoClassDefFoundError e) {}
+        try {
+            version =getString(PreyConfig.PREY_VERSION, getInfoPreyVersion(ctx));
+        }catch ( Exception e){
+        }
     }
 
     public static synchronized PreyConfig getPreyConfig(Context ctx) {
@@ -226,8 +231,10 @@ public class PreyConfig {
         return cachedInstance;
     }
 
-    private static void deleteCacheInstance() {
+    public static void deleteCacheInstance(Context ctx) {
         cachedInstance = null;
+        PreferenceManager.getDefaultSharedPreferences(ctx).
+                edit().clear().apply();
     }
 
     public Context getContext(){
@@ -300,7 +307,9 @@ public class PreyConfig {
             SharedPreferences.Editor editor = settings.edit();
             editor.remove(key);
             editor.commit();
-        }catch(Exception e){}
+        }catch(Exception e){
+            PreyLogger.e("removeKey:"+e.getMessage(),e);
+        }
     }
 
     private long getLong(String key, long defaultValue){
@@ -431,7 +440,7 @@ public class PreyConfig {
         editor.commit();
     }
 
-    public String getInfoPreyVersion() {
+    public String getInfoPreyVersion(Context ctx) {
         String versionName=VERSION_PREY_DEFAULT;
         try{
             PackageInfo pinfo =ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
@@ -1096,10 +1105,11 @@ public class PreyConfig {
     }
 
     public String getPreyVersion(){
-        return getString(PreyConfig.PREY_VERSION, "");
+        return version;
     }
 
-    public void setPreyVersion(String preyVersion) {
-        saveString(PreyConfig.PREY_VERSION, preyVersion);
+    public void setPreyVersion(String version) {
+        this.version=version;
+        this.saveString(PreyConfig.PREY_VERSION, version);
     }
 }
