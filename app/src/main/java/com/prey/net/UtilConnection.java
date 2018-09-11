@@ -162,12 +162,10 @@ public class UtilConnection {
                     PreyLogger.d("X-Prey-Device-ID:"+deviceId);
                     connection.addRequestProperty("X-Prey-State", status);
                     PreyLogger.d("X-Prey-State:"+status);
-
                 }
 
-
                 connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
-                PreyLogger.d("User-Agent"+getUserAgent(preyConfig));
+                PreyLogger.d("User-Agent:"+getUserAgent(preyConfig));
                 if (entityFiles==null&&(params!=null&&params.size()>0)){
                     OutputStream os = connection.getOutputStream();
                     DataOutputStream dos = new DataOutputStream( os );

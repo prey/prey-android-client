@@ -54,13 +54,6 @@ public class PreyApp extends Application {
             String sessionId = PreyUtils.randomAlphaNumeric(16);
             PreyLogger.d("#######sessionId:" + sessionId);
             PreyConfig.getPreyConfig(this).setSessionId(sessionId);
-            final String preyInfoVersion = PreyConfig.getPreyConfig(this).getInfoPreyVersion();
-            String preyVersion = PreyConfig.getPreyConfig(this).getPreyVersion();
-            PreyLogger.d("PreyVersion[" + preyVersion+"] preyInfoVersion["+preyInfoVersion+"]");
-            if (!preyVersion.equals(preyInfoVersion)) {
-                PreyConfig.getPreyConfig(getApplicationContext()).setPreyVersion(preyInfoVersion);
-                PreyWebServices.getInstance().sendEvent(getApplicationContext(), PreyConfig.ANDROID_VERSION_UPDATED);
-            }
 
             boolean missing=PreyConfig.getPreyConfig(this).isMissing();
 

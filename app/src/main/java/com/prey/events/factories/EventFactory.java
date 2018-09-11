@@ -194,7 +194,7 @@ public class EventFactory {
             String now=PreyConfig.FORMAT_SDF_AWARE.format(new Date());
             PreyLogger.d("AWARE USER_PRESENT awareDate:"+awareDate+" now:"+now);
             if(!now.equals(awareDate)) {
-                PreyLogger.d("AWARE getSendNowAware"+now);
+                PreyLogger.d("AWARE getSendNowAware: "+now);
                 new Thread() {
                     public void run() {
                         try{

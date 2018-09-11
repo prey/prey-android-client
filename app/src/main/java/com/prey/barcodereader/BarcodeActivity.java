@@ -28,6 +28,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
+import com.prey.actions.aware.AwareController;
 import com.prey.activities.PermissionInformationActivity;
 import com.prey.activities.SignInActivity;
 import com.prey.net.PreyWebServices;
@@ -176,6 +177,11 @@ public class BarcodeActivity extends Activity   {
                         PreyWebServices.getInstance().sendEvent(getApplication(), PreyConfig.ANDROID_SIGN_IN);
                         String email=PreyWebServices.getInstance().getEmail(getApplicationContext());
                         PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
+                        new Thread() {
+                            public void run() {
+                                AwareController.getInstance().init(getApplicationContext());
+                            }
+                        }.start();
                     }
                 }
             } catch (Exception e) {
