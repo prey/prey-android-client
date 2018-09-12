@@ -27,7 +27,7 @@ public class GeofenceDataSource {
             try {
                 dbHelper.updateGeofence(geofence);
             } catch (Exception e1) {
-                PreyLogger.e("error db update:" + e1.getMessage(), e1);
+                PreyLogger.e("GEO error db update:" + e1.getMessage(), e1);
             }
         }
     }

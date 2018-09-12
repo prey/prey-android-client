@@ -8,17 +8,13 @@ package com.prey;
 
 import android.app.Application;
 import android.content.Intent;
-import android.location.Location;
 
 import com.appsflyer.AppsFlyerConversionListener;
 import com.appsflyer.AppsFlyerLib;
-import com.google.android.gms.location.Geofence;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.prey.actions.aware.AwareConfig;
+import com.prey.actions.aware.AwareController;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
-import com.prey.actions.geofences.GeofenceIntentService;
 import com.prey.actions.report.ReportScheduled;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
@@ -29,9 +25,7 @@ import com.prey.services.PreyDisablePowerOptionsService;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 public class PreyApp extends Application {
@@ -60,27 +54,19 @@ public class PreyApp extends Application {
             String sessionId = PreyUtils.randomAlphaNumeric(16);
             PreyLogger.d("#######sessionId:" + sessionId);
             PreyConfig.getPreyConfig(this).setSessionId(sessionId);
-            String PreyVersion = PreyConfig.getPreyConfig(this).getPreyVersion();
-            String preferencePreyVersion = PreyConfig.getPreyConfig(this).getPreferencePreyVersion();
-            PreyLogger.d("PreyVersion:" + PreyVersion+" preferencePreyVersion:"+preferencePreyVersion);
+
             boolean missing=PreyConfig.getPreyConfig(this).isMissing();
-            if (PreyVersion.equals(preferencePreyVersion)) {
-                PreyConfig.getPreyConfig(this).setPreferencePreyVersion(PreyVersion);
-                PreyWebServices.getInstance().sendEvent(this, PreyConfig.ANDROID_VERSION_UPDATED);
-            }
+
             if (deviceKey != null && deviceKey != "") {
                 new Thread() {
                     public void run() {
                         PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
-                    }
-                }.start();
-                new Thread() {
-                    public void run() {
-                        GeofenceController.getInstance().init(getApplicationContext());
-                    }
-                }.start();
-                new Thread() {
-                    public void run() {
+                        try {
+                            String email = PreyWebServices.getInstance().getEmail(getApplicationContext());
+                            PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
+                        }catch (Exception e){}
+                        GeofenceController.getInstance().run(getApplicationContext());
+                        AwareController.getInstance().init(getApplicationContext());
                         FileretrievalController.getInstance().run(getApplicationContext());
                     }
                 }.start();
@@ -91,19 +77,17 @@ public class PreyApp extends Application {
                 }
                 new Thread() {
                     public void run() {
-                        AwareConfig.getAwareConfig(getApplicationContext()).init();
-                    }
-                }.start();
-                new Thread() {
-                    public void run() {
                         if (PreyConfig.getPreyConfig(getApplicationContext()).isSimChanged()) {
                             JSONObject info = new JSONObject();
                             try {
                                 String lineNumber=PreyTelephonyManager.getInstance(getApplicationContext()).getLine1Number();
                                 if(lineNumber!=null&&!"".equals(lineNumber)) {
-                                    info.put("new_phone_number", PreyTelephonyManager.getInstance(getApplicationContext()).getLine1Number());
+                                    info.put("new_phone_number", lineNumber);
                                 }
-                                info.put("sim_serial_number", PreyConfig.getPreyConfig(getApplicationContext()).getSimSerialNumber());
+                                String simSerialNumber=PreyConfig.getPreyConfig(getApplicationContext()).getSimSerialNumber();
+                                if(simSerialNumber!=null&&!"".equals(simSerialNumber)) {
+                                    info.put("sim_serial_number", simSerialNumber);
+                                }
                             } catch (Exception e) {
                             }
                             Event event= new Event(Event.SIM_CHANGED, info.toString());
@@ -116,6 +100,12 @@ public class PreyApp extends Application {
                     DisablePowerCheckBoxPreference.notifyReady(this);
                     try{this.startService(new Intent(this, PreyDisablePowerOptionsService.class));}catch (Exception e){}
                 }
+                /*
+                new Thread() {
+                    public void run() {
+                    AutoConnectScheduled.getInstance(getApplicationContext()).run();
+                    }
+                }.start();*/
 
             }
             try {
@@ -150,10 +140,10 @@ public class PreyApp extends Application {
                 String flyerKey= FileConfigReader.getInstance(getApplicationContext()).getFlyerKey();
                 AppsFlyerLib.getInstance().init(flyerKey , conversionListener , getApplicationContext());
                 AppsFlyerLib.getInstance().startTracking(this, flyerKey);
-                AppsFlyerLib.getInstance().setDebugLog(true);
+                AppsFlyerLib.getInstance().setDebugLog(false);
             }
             catch (Exception e) {
-                PreyLogger.e("error e:"+e.getMessage(),e);
+                PreyLogger.e("Error PreyApp:"+e.getMessage(),e);
             }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
@@ -174,7 +164,6 @@ public class PreyApp extends Application {
             InstallConversionData += install_type + media_source + install_time + click_time + is_first_launch;
             sessionCount++;
         }
-
     }
 
 }

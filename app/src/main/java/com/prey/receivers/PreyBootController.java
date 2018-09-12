@@ -32,11 +32,6 @@ public class PreyBootController extends BroadcastReceiver {
             final Context ctx = context;
             new Thread() {
                 public void run() {
-                    AwareConfig.getAwareConfig(ctx).init();
-                }
-            }.start();
-            new Thread() {
-                public void run() {
                     try {
                         boolean disablePowerOptions = PreyConfig.getPreyConfig(ctx).isDisablePowerOptions();
                         if (disablePowerOptions) {

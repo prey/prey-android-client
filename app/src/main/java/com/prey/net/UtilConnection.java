@@ -69,7 +69,7 @@ public class UtilConnection {
         return "Prey/".concat(preyConfig.getPreyVersion()).concat(" (Android " + PreyUtils.getBuildVersionRelease() + ")");
     }
 
-    private static String getAuthorization(PreyConfig preyConfig) {
+    public static String getAuthorization(PreyConfig preyConfig) {
         //PreyLogger.d("getAuthorization:("+preyConfig.getApiKey()+",X)");
         return "Basic " + getCredentials(preyConfig.getApiKey(), "X");
     }
@@ -119,7 +119,6 @@ public class UtilConnection {
         HttpURLConnection connection=null;
         int retry = 0;
         boolean delay=false;
-        PreyLogger.d("uri:"+uri);
         if(params!=null){
             Iterator<String> ite=params.keySet().iterator();
             while (ite.hasNext()){
@@ -163,11 +162,10 @@ public class UtilConnection {
                     PreyLogger.d("X-Prey-Device-ID:"+deviceId);
                     connection.addRequestProperty("X-Prey-State", status);
                     PreyLogger.d("X-Prey-State:"+status);
-
                 }
 
-
                 connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
+                PreyLogger.d("User-Agent:"+getUserAgent(preyConfig));
                 if (entityFiles==null&&(params!=null&&params.size()>0)){
                     OutputStream os = connection.getOutputStream();
                     DataOutputStream dos = new DataOutputStream( os );
@@ -341,7 +339,7 @@ public class UtilConnection {
         }
     }
 
-    private static PreyHttpResponse convertPreyHttpResponse(int responseCode,HttpURLConnection connection)throws Exception {
+    public static PreyHttpResponse convertPreyHttpResponse(int responseCode,HttpURLConnection connection)throws Exception {
         StringBuffer sb = new StringBuffer();
         if(responseCode==200||responseCode==201||responseCode==422) {
             InputStream input = null;

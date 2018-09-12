@@ -28,6 +28,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
+import com.prey.actions.aware.AwareController;
 import com.prey.activities.PermissionInformationActivity;
 import com.prey.activities.SignInActivity;
 import com.prey.net.PreyWebServices;
@@ -98,20 +99,26 @@ public class BarcodeActivity extends Activity   {
                     statusMessage.setText(R.string.barcode_success);
                     PreyLogger.d("Barcode read: " + barcode.displayValue);
                     String barcodeValue = barcode.displayValue;
-
+                    String apikey = "";
+                    String mail = "batch@preyproject.com";
                     if (barcodeValue.indexOf("prey") >= 0) {
 
                         barcodeValue = barcodeValue.substring(5);
-                        String[] pairs = barcodeValue.split("&");
-                        String apikey = "";
-                        String mail = "batch@preyproject.com";
-                        for (String pair : pairs) {
-                            String[] llave = pair.split("=");
+                        if(barcodeValue.indexOf("&")>=0){
+                            String[] pairs = barcodeValue.split("&");
+                            for (String pair : pairs) {
+                                String[] llave = pair.split("=");
+                                PreyLogger.d("key[" + llave[0] + "]" + llave[1]);
+                                if (llave[0].equals("api_key")) {
+                                    apikey = llave[1];
+                                }
+                            }
+                        }else{
+                            String[] llave = barcodeValue.split("=");
                             PreyLogger.d("key[" + llave[0] + "]" + llave[1]);
                             if (llave[0].equals("api_key")) {
                                 apikey = llave[1];
                             }
-
                         }
                         if (!"".equals(apikey)) {
                             new AddDeviceToApiKeyBatch().execute(apikey, mail, PreyUtils.getDeviceType(this));
@@ -157,12 +164,10 @@ public class BarcodeActivity extends Activity   {
 
         @Override
         protected Void doInBackground(String... data) {
+            error = null;
             try {
-                error = null;
                 Context ctx = getApplicationContext();
-
                 PreyLogger.d("apikey:" + data[0] + " mail:" + data[1] + " device:" + data[2]);
-
                 if(!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
                     PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, data[0], data[1], data[2]);
                     if (accountData != null) {
@@ -172,10 +177,15 @@ public class BarcodeActivity extends Activity   {
                         PreyWebServices.getInstance().sendEvent(getApplication(), PreyConfig.ANDROID_SIGN_IN);
                         String email=PreyWebServices.getInstance().getEmail(getApplicationContext());
                         PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
+                        new Thread() {
+                            public void run() {
+                                AwareController.getInstance().init(getApplicationContext());
+                            }
+                        }.start();
                     }
                 }
-
             } catch (Exception e) {
+                PreyLogger.e("error:"+e.getMessage(),e);
                 error = e.getMessage();
             }
             return null;

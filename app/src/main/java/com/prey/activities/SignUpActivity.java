@@ -19,6 +19,7 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.actions.aware.AwareConfig;
+import com.prey.actions.aware.AwareController;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 import com.prey.util.KeyboardStatusDetector;
@@ -170,7 +172,7 @@ public class SignUpActivity extends Activity {
                 try {
 
 
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) linkSignup.getLayoutParams();
+                    ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) linkSignup.getLayoutParams();
                     if (keyboardVisible) {
                         PreyLogger.d("key on");
 
@@ -269,7 +271,7 @@ public class SignUpActivity extends Activity {
                 PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
                 new Thread() {
                     public void run() {
-                        AwareConfig.getAwareConfig(getApplicationContext()).init();
+                        AwareController.getInstance().init(getApplicationContext());
                     }
                 }.start();
                 try {

@@ -85,6 +85,7 @@ public class PreyBetaActionsRunner implements Runnable {
                     PreyLogger.d("_________New Thread");
                     PreyBetaActionsRunner.getInstructions(context);
                 } catch (PreyException e) {
+                    PreyLogger.e("_________getInstructionsNewThread:"+e.getMessage(),e);
                 }
             }
         }).start();

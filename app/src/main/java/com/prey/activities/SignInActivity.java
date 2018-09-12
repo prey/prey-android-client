@@ -33,6 +33,7 @@ import com.appsflyer.AFInAppEventParameterName;
 import com.appsflyer.AFInAppEventType;
 import com.appsflyer.AppsFlyerLib;
 import com.prey.actions.aware.AwareConfig;
+import com.prey.actions.aware.AwareController;
 import com.prey.barcodereader.BarcodeActivity;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
@@ -297,7 +298,7 @@ public class SignInActivity extends Activity {
                 PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
                 new Thread() {
                     public void run() {
-                        AwareConfig.getAwareConfig(getApplicationContext()).init();
+                        AwareController.getInstance().init(getApplicationContext());
                     }
                 }.start();
                 try {

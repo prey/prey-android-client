@@ -46,19 +46,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity{
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.webview);
         PreyLogger.d("CheckPasswordHtmlActivity: onCreate");
-        new Thread() {
-            public void run() {
-                String email= PreyWebServices.getInstance().getEmail(getApplicationContext());
-                PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
-                try {
-                    boolean twoStep = PreyWebServices.getInstance().getTwoStepEnabled(getApplicationContext());
-                    PreyConfig.getPreyConfig(getApplicationContext()).setTwoStep(twoStep);
-                }catch(Exception e){
-                    PreyConfig.getPreyConfig(getApplicationContext()).setTwoStep(false);
-                }
-
-            }
-        }.start();
         loadUrl();
     }
 

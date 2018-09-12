@@ -13,14 +13,11 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.Intent;
-import android.widget.Toast;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.observer.ActionResult;
 import com.prey.actions.report.ReportScheduled;
-import com.prey.actions.report.ReportService;
 
 public class Report {
 

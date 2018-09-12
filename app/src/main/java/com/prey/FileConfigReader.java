@@ -38,7 +38,6 @@ public class FileConfigReader {
         if (_instance == null)
             _instance = new FileConfigReader(ctx);
         return _instance;
-
     }
 
     public String getPreyCampaign() {
@@ -165,5 +164,8 @@ public class FileConfigReader {
         return Integer.parseInt(properties.getProperty("distance-aware"));
     }
 
+    public int getRadiusAware() {
+        return Integer.parseInt(properties.getProperty("radius-aware"));
+    }
 
 }
