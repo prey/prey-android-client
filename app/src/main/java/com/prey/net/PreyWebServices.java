@@ -822,15 +822,10 @@ public class PreyWebServices {
     public void sendEvent(final Context ctx,final int id  ) {
         new Thread() {
             public void run() {
-
-
                 PreyPhone phone=new PreyPhone(ctx);
                 String serialNumber=phone.getHardware().getSerialNumber();
-
                 String version=PreyConfig.getPreyConfig(ctx).getPreyVersion();
                 String sid=PreyConfig.getPreyConfig(ctx).getSessionId();
-
-                String time = "" + new Date().getTime();
                 try {
                     String page = FileConfigReader.getInstance(ctx).getPreyEventsLogs();;
                     PreyLogger.d("URL:"+page);

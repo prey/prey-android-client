@@ -72,19 +72,12 @@ public class WelcomeActivity extends FragmentActivity {
     public void ready() {
         PreyLogger.d("ready WelcomeActivity");
         PreyVerify.getInstance(this);
-
-        Intent intent = null;
-
-            intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);
-
+        Intent intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);
         startActivity(intent);
         finish();
     }
 
-
-
     private static final int SECURITY_PRIVILEGES = 10;
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

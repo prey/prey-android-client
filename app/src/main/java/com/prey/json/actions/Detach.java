@@ -7,14 +7,17 @@
 package com.prey.json.actions;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.actions.aware.AwareScheduled;
+import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.observer.ActionResult;
 import com.prey.actions.report.ReportScheduled;
+import com.prey.activities.LoginActivity;
+import com.prey.activities.WelcomeBatchActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.net.PreyWebServices;
 
@@ -50,6 +53,9 @@ public class Detach {
         } catch (Exception e) {}
         PreyLogger.d("3:"+error);
         try {
+            AwareConfig.getAwareConfig(ctx).setLocationAware(false);
+        } catch (Exception e) {}
+        try {
             GeofenceController.getInstance().deleteAllZones(ctx);
         } catch (Exception e) {}
         PreyLogger.d("4:"+error);
@@ -58,7 +64,6 @@ public class Detach {
         } catch (Exception e) {}
         PreyLogger.d("5:"+error);
         try { ReportScheduled.getInstance(ctx).reset();} catch (Exception e) {error += e.getMessage();}
-        try { AwareScheduled.getInstance(ctx).reset();} catch (Exception e) {error += e.getMessage();}
         try { PreyWebServices.getInstance().deleteDevice(ctx);} catch (Exception e) { }
         PreyLogger.d("6:"+error);
         try { PreyConfig.getPreyConfig(ctx).wipeData();} catch (Exception e) {error += e.getMessage();}
@@ -70,6 +75,17 @@ public class Detach {
         try { PreyConfig.getPreyConfig(ctx).setDeviceId("");} catch (Exception e) {error = e.getMessage();}
         try { PreyConfig.getPreyConfig(ctx).setApiKey("");} catch (Exception e) {error = e.getMessage();}
         PreyLogger.d("8:"+error);
+
+        PreyLogger.d("Email:"+PreyConfig.getPreyConfig(ctx).getEmail());
+        PreyLogger.d("DeviceId:"+PreyConfig.getPreyConfig(ctx).getDeviceId());
+        PreyLogger.d("ApiKey:"+PreyConfig.getPreyConfig(ctx).getApiKey());
+        try {PreyConfig.deleteCacheInstance(ctx);} catch (Exception e) {}
+        try {
+            Intent intent = new Intent(ctx, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            ctx.startActivity(intent);
+        } catch (Exception e) {}
         return error;
     }
 }

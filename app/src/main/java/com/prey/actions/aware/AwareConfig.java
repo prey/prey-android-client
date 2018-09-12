@@ -8,7 +8,6 @@ package com.prey.actions.aware;
 
 import android.content.Context;
 
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.net.PreyWebServices;
 
@@ -21,7 +20,10 @@ public class AwareConfig {
 
     private AwareConfig(Context ctx) {
         this.ctx = ctx;
+        locationAware=getLocationAwareJson();
     }
+
+    public boolean locationAware = false;
 
     public static synchronized AwareConfig getAwareConfig(Context ctx) {
         if (cachedInstance == null) {
@@ -33,35 +35,32 @@ public class AwareConfig {
         return cachedInstance;
     }
 
-    public boolean getLocationAware() {
-        boolean locationAware = false;
+    public boolean isLocationAware(){
+        return locationAware;
+    }
+
+    public void setLocationAware(boolean locationAware){
+        this.locationAware=locationAware;
+    }
+
+    private boolean getLocationAwareJson() {
         try {
             JSONObject jsnobject = PreyWebServices.getInstance().getStatus(ctx);
             if (jsnobject != null) {
+                PreyLogger.d("AWARE jsnobject :" + jsnobject);
                 JSONObject jsnobjectSettings = jsnobject.getJSONObject("settings");
                 JSONObject jsnobjectLocal = jsnobjectSettings.getJSONObject("local");
                 locationAware = jsnobjectLocal.getBoolean("location_aware");
-                PreyLogger.d("locationAware :" + locationAware);
+                PreyLogger.d("AWARE getLocationAware :" + locationAware);
             } else {
-                PreyLogger.d("getLocationAware null");
+                PreyLogger.d("AWARE getLocationAware null");
+                locationAware = false;
             }
         } catch (Exception e) {
-            PreyLogger.e("Error:" + e.getMessage(), e);
+            PreyLogger.e("AWARE Error:" + e.getMessage(), e);
+            locationAware = false;
         }
         return locationAware;
     }
 
-    public void init() {
-        boolean locationAware = getLocationAware();
-        if (locationAware) {
-            startAware();
-        }
-    }
-
-    public void startAware() {
-        PreyLogger.d("startAware");
-        PreyConfig.getPreyConfig(ctx).setAware(true);
-        PreyConfig.getPreyConfig(ctx).setIntervalAware("15");
-        AwareScheduled.getInstance(ctx).run();
-    }
 }

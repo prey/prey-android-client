@@ -20,12 +20,12 @@ import java.util.List;
 public class GeofecenceParse {
 
     public static List<GeofenceDto> getJSONFromUrl(Context ctx) {
-        String commands = null;
+        String json = null;
         try {
-            commands = PreyWebServices.getInstance().geofencing(ctx);
+            json = PreyWebServices.getInstance().geofencing(ctx);
         } catch (Exception e) {
         }
-        return getJSONFromTxt(ctx, commands);
+        return getJSONFromTxt(ctx, json);
     }
 
     public static List<GeofenceDto> getJSONFromTxt(Context ctx, String json) {
@@ -47,7 +47,7 @@ public class GeofecenceParse {
                 listGeofence.add(geofence);
             }
         } catch (Exception e) {
-            PreyLogger.e("error in parser:" + e.getMessage(), e);
+            return null;
         }
         return listGeofence;
     }
