@@ -48,7 +48,7 @@ public class PreyConfig {
 
     private static final String HTTP="https://";
 
-    public static final String VERSION_PREY_DEFAULT="1.9.6";
+    public static final String VERSION_PREY_DEFAULT="1.9.7";
 
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
