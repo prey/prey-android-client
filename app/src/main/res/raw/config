@@ -58,6 +58,6 @@ geofence-notification-responsiveness=5000
 #100 meters
 distance-location=100
 distance-aware=120
-radius-aware=300
+radius-aware=500
 
 flyer-key=pzZcjLhYQ5emA8XLvSKNub

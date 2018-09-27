@@ -41,17 +41,17 @@ public class EventThread extends Thread {
     public void run() {
         try {
             boolean valida = EventControl.getInstance().valida(jsonObjectStatus);
-            PreyLogger.d("valida:" + valida + " eventName:" + event.getName());
+            PreyLogger.d("EVENT valida:" + valida + " eventName:" + event.getName());
             if (valida) {
                 PreyHttpResponse preyHttpResponse =PreyWebServices.getInstance().sendPreyHttpEvent(ctx, event, jsonObjectStatus);
                 if(preyHttpResponse!=null){
                     if(preyHttpResponse.getStatusCode()==200 && eventGeo!=null) {
-                        PreyLogger.d("sendPreyHttpEvent eventName:" + eventGeo);
+                        PreyLogger.d("EVENT sendPreyHttpEvent eventName:" + eventGeo);
                     }
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("Error EventThread:" + e.getMessage(),e);
+            PreyLogger.e("EVENT Error EventThread:" + e.getMessage(),e);
         }
     }
 

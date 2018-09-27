@@ -82,6 +82,7 @@ public class PreyConfig {
     public static final String PREFS_IS_MISSING="PREFS_IS_MISSING";
 
     public static final String PREFS_DISABLE_POWER_OPTIONS="PREFS_DISABLE_POWER_OPTIONS";
+    public static final String PREFS_BLOCK_APP_UNINSTALL="PREFS_BLOCK_APP_UNINSTALL";
     public static final String IS_LOCK_SET="IS_LOCK_SET";
     public static final String NEXT_ALERT="NEXT_ALERT";
     public static final String IS_CAMOUFLAGE_SET="IS_CAMOUFLAGE_SET";
@@ -174,7 +175,7 @@ public class PreyConfig {
 
     public static final String AUTO_CONNECT="auto_connect";
 
-
+    public static final String TIME_BLOCK_APP_UNINSTALL= "TIME_BLOCK_APP_UNINSTALL";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -1111,5 +1112,25 @@ public class PreyConfig {
     public void setPreyVersion(String version) {
         this.version=version;
         this.saveString(PreyConfig.PREY_VERSION, version);
+    }
+
+    public boolean isBlockAppUninstall(){
+        return getBlockAppUninstall();
+    }
+
+    public boolean getBlockAppUninstall() {
+        return getBoolean(PREFS_BLOCK_APP_UNINSTALL, false);
+    }
+
+    public void setBlockAppUninstall(boolean blockAppUninstall) {
+        saveBoolean(PREFS_BLOCK_APP_UNINSTALL, blockAppUninstall);
+    }
+
+    public void setTimeBlockAppUninstall(long timeBlockAppUninstall){
+        saveLong(TIME_BLOCK_APP_UNINSTALL, timeBlockAppUninstall);
+    }
+
+    public long getTimeBlockAppUninstall(){
+        return getLong(TIME_BLOCK_APP_UNINSTALL, 0);
     }
 }
