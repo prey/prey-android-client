@@ -136,18 +136,21 @@ public class PreyConfigurationActivity extends PreferenceActivity {
             }
         });
 
+        CheckBoxPreference pBlockAppUninstall=(CheckBoxPreference)findPreference(PreyConfig.PREFS_BLOCK_APP_UNINSTALL);
+
         try {
-
             if ("".equals(preyConfig.getPinNumber())) {
-
                 pSMS.setEnabled(false);
                 pDisablePower.setEnabled(false);
                 PreyConfig.getPreyConfig(getApplicationContext()).setDisablePowerOptions(false);
                 pDisablePower.setChecked(false);
+                pBlockAppUninstall.setEnabled(false);
+                PreyConfig.getPreyConfig(getApplicationContext()).setBlockAppUninstall(false);
+                pBlockAppUninstall.setChecked(false);
             }else{
-
                 pSMS.setEnabled(true);
                 pDisablePower.setEnabled(true);
+                pBlockAppUninstall.setEnabled(true);
             }
         } catch (Exception e) {
         }

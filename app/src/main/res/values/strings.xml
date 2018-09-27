@@ -286,4 +286,7 @@
 
     <string name="super_lock">Please enter your\n PIN to unlock</string>
 
+    <string name="preferences_block_app_uninstall_summary">Prevents uninstall attempts by locking the phone with your Prey PIN. If a native lock pattern or code is active, it will be used instead.</string>
+    <string name="preferences_block_app_uninstall_title">Block App Uninstall</string>
+
 </resources>

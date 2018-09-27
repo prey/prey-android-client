@@ -41,7 +41,7 @@ public class EventControl {
             JSONObject jsonBattery = json.getJSONObject("battery_status");
             state = jsonBattery.getString("state");
             String remaining = jsonBattery.getString("percentage_remaining");
-            PreyLogger.d("state:" + state + " remaining:" + remaining);
+            PreyLogger.d("EVENT state:" + state + " remaining:" + remaining);
             percentage = Double.parseDouble(remaining);
         } catch (Exception e) {
             percentage = -1;
@@ -60,8 +60,8 @@ public class EventControl {
                         cal.add(Calendar.MINUTE, 1);
                     }
                     long timeMore = cal.getTimeInMillis();
-                    PreyLogger.d("now        :" + now + " " + sdf2.format(new Date(now)));
-                    PreyLogger.d("timeMore:" + timeMore + " " + sdf2.format(new Date(timeMore)));
+                    PreyLogger.d("EVENT now        :" + now + " " + sdf2.format(new Date(now)));
+                    PreyLogger.d("EVENT timeMore:" + timeMore + " " + sdf2.format(new Date(timeMore)));
                     if (timeMore > now) {
                         return false;
                     } else {

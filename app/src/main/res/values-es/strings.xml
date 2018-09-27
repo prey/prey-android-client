@@ -280,4 +280,7 @@
 
     <string name="super_lock">Ingresa tu PIN\n para desbloquear</string>
 
+    <string name="preferences_block_app_uninstall_summary">Evita la desinstalación de la app y bloquea el móvil con tu PIN Prey. Si hay un patrón o código de bloqueo activo, se utilizará en vez del PIN.</string>
+    <string name="preferences_block_app_uninstall_title">Bloquear Desinstalación</string>
+
 </resources>

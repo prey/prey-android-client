@@ -18,6 +18,7 @@ public class Event {
     public static final String BATTERY_CHANGE = "change_battery";
     public static final String POWER_CONNECTED = "power_connected";
     public static final String POWER_DISCONNECTED = "power_disconnected";
+    public static final String PIN_CHANGED = "pin_changed";
 
     private String name;
     private String info;

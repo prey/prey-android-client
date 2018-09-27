@@ -91,7 +91,7 @@ public class PreyApp extends Application {
                             } catch (Exception e) {
                             }
                             Event event= new Event(Event.SIM_CHANGED, info.toString());
-                            new EventManagerRunner(getApplicationContext(), event) ;
+                            new EventManagerRunner(getApplicationContext(), event).run(); ;
                         }
                     }
                 }.start();

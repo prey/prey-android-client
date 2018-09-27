@@ -46,6 +46,11 @@
             android:title="@string/preferences_disable_power_options_title"
             />
 
+        <com.prey.preferences.BlockAppUninstallCheckBoxPreference
+            android:key="PREFS_BLOCK_APP_UNINSTALL"
+            android:summary="@string/preferences_block_app_uninstall_summary"
+            android:title="@string/preferences_block_app_uninstall_title"
+            />
 
 
         <ListPreference

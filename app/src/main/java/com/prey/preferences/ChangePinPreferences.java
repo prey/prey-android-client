@@ -25,6 +25,10 @@ import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.R;
 import com.prey.activities.PreyConfigurationActivity;
+import com.prey.events.Event;
+import com.prey.events.manager.EventManagerRunner;
+
+import org.json.JSONObject;
 
 public class ChangePinPreferences extends DialogPreference {
 
@@ -84,9 +88,20 @@ public class ChangePinPreferences extends DialogPreference {
 
         @Override
         protected Void doInBackground(String... array) {
-            PreyLogger.d("pin:" + array[0]);
+            String pin=array[0];
+            PreyLogger.d("pin:" + pin);
             try {
-                PreyConfig.getPreyConfig(getContext()).setPinNumber(array[0]);
+                PreyConfig.getPreyConfig(getContext()).setPinNumber(pin);
+                try {
+                    if(!"".equals(pin)) {
+                        PreyLogger.d("EVENT pin_:" + pin);
+                        JSONObject info = new JSONObject();
+                        info.put("pin", pin);
+                        Event event = new Event(Event.PIN_CHANGED, info.toString());
+                        new EventManagerRunner(getContext(), event).run();
+                    }
+                } catch (Exception e1) {
+                }
             } catch (Exception e) {
                 PreyConfig.getPreyConfig(getContext()).setPinNumber("");
             }

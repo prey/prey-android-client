@@ -605,9 +605,9 @@ public class PreyWebServices {
             parameters.put("name", event.getName());
             parameters.put("info", event.getInfo());
 
-            PreyLogger.d("sendPreyHttpEvent url:" + url);
-            PreyLogger.d("name:" + event.getName() + " info:" + event.getInfo());
-            PreyLogger.d("status:" + jsonObject.toString());
+            PreyLogger.d("EVENT sendPreyHttpEvent url:" + url);
+            PreyLogger.d("EVENT name:" + event.getName() + " info:" + event.getInfo());
+            PreyLogger.d("EVENT status:" + jsonObject.toString());
             String status = jsonObject.toString();
             preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters);
             if(preyHttpResponse!=null) {
