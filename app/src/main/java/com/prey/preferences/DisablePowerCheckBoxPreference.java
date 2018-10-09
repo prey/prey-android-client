@@ -38,29 +38,11 @@ public class DisablePowerCheckBoxPreference extends CheckBoxPreference {
         PreyLogger.d("DisablePowerCheckBoxPreference:" + checked);
         Context ctx=getContext();
         if(checked){
-            notifyReady(ctx);
             ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
         }else{
-            notifyCancel(ctx);
             ctx.stopService(new Intent(ctx, PreyDisablePowerOptionsService.class));
         }
         PreyConfig.getPreyConfig(ctx).setDisablePowerOptions(checked);
     }
-
-    public static void notifyReady(Context ctx){
-        try{
-            ctx.startService(new Intent(ctx, PreyNotificationForeGroundService.class));
-        }catch(Exception e){}
-    }
-
-    public static void notifyCancel(Context ctx){
-        try{
-            ctx.stopService(new Intent(ctx, PreyNotificationForeGroundService.class));
-        }catch(Exception e){}
-    }
-
-
-
-    public static int NOTIFY_ID=1337;
 
 }

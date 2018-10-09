@@ -347,6 +347,7 @@
 
         <!-- Services -->
         <service android:name="com.prey.services.LocationService" />
+        <service android:name="com.prey.actions.location.LocationUpdatesService" />
         <service android:name="com.prey.services.PreyBootService" />
         <service android:name="com.prey.services.PreyRunnerService" />
         <service android:name="com.prey.services.PreyDisablePowerOptionsService" />

@@ -66,9 +66,6 @@ public class PreyConfigurationActivity extends PreferenceActivity {
             int code = api.isGooglePlayServicesAvailable(getApplicationContext());
             if (code == ConnectionResult.SUCCESS) {
                 PreferenceCategory mCategory = (PreferenceCategory) findPreference("PREFS_CAT_PREFS");
-                Preference p2 = findPreference("PREFS_SCHEDULED");
-                p2.setEnabled(false);
-                mCategory.removePreference(p2);
             }
         } catch (Exception e) {
         }
