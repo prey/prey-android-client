@@ -19,8 +19,21 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="PREFS_CAT_PREFS"
+        android:key="PREFS_CAT_PREFS2"
         android:title="@string/preferences_config_title"
+        >
+
+        <com.prey.preferences.RunBackgroundCheckBoxPreference
+            android:key="PREFS_BACKGROUND"
+            android:summary="@string/preference_background_summary"
+            android:title="@string/preference_background_title"
+
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="PREFS_CAT_PREFS"
+        android:title="@string/preferences_config_pin_title"
         >
         <com.prey.preferences.ChangePinPreferences
             android:key="PREFS_CHANGE_PIN"
@@ -53,12 +66,6 @@
             />
 
 
-        <ListPreference
-            android:entries="@array/listScheduledEntries"
-            android:entryValues="@array/listScheduledValues"
-            android:key="PREFS_SCHEDULED"
-            android:summary="@string/preferences_scheduled_summary"
-            android:title="@string/preferences_scheduled_title" />
 
 
     </PreferenceCategory>

@@ -88,6 +88,7 @@
     <string name="preferences_password_new">New password</string>
      <string name="preferences_password_confirm">Confirm password</string> 
     <string name="preferences_config_title">Manage Your Devices</string>
+    <string name="preferences_config_pin_title">Pin Settings</string>
     <string name="preferences_go_to_control_panel_title">Manage Your Devices</string>
      <string name="preferences_go_to_control_panel_summary">Go to your Prey account</string>
     <string name="preferences_admin_enabled_title">Revoke extra permissions</string> 
@@ -288,5 +289,8 @@
 
     <string name="preferences_block_app_uninstall_summary">Prevents uninstall attempts by locking the phone with your Prey PIN. If a native lock pattern or code is active, it will be used instead.</string>
     <string name="preferences_block_app_uninstall_title">Block App Uninstall</string>
+
+    <string name="preference_background_summary">As of Android 8.0, Prey needs to display a notification to run as a background app and actively track the device and its control zone triggers.</string>
+    <string name="preference_background_title">Run in Background</string>
 
 </resources>

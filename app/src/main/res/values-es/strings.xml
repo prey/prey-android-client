@@ -90,6 +90,7 @@
     <string name="preferences_password_new">Nueva contraseña</string>
     <string name="preferences_password_confirm">Confirma la contraseña</string>
     <string name="preferences_config_title">Configuración principal</string>
+    <string name="preferences_config_pin_title">Configuración de PIN</string>
     <string name="preferences_go_to_control_panel_title">Administrar tus Dispositivos</string>
     <string name="preferences_go_to_control_panel_summary">Ir a tu cuenta Prey</string>
     <string name="preferences_admin_enabled_title">Quitar Permisos Extra</string>
@@ -282,5 +283,8 @@
 
     <string name="preferences_block_app_uninstall_summary">Evita la desinstalación de la app y bloquea el móvil con tu PIN Prey. Si hay un patrón o código de bloqueo activo, se utilizará en vez del PIN.</string>
     <string name="preferences_block_app_uninstall_title">Bloquear Desinstalación</string>
+
+    <string name="preference_background_summary">A partir de Android 8.0, Prey debe mostrar una notificación para rastrear y activar zonas de control con la app en segundo plano.</string>
+    <string name="preference_background_title">Correr en Segundo Plano</string>
 
 </resources>

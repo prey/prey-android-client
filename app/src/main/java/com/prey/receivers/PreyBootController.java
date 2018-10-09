@@ -16,6 +16,7 @@ import com.prey.PreyPermission;
 import com.prey.actions.aware.AwareConfig;
 import com.prey.json.actions.Report;
 import com.prey.preferences.DisablePowerCheckBoxPreference;
+import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyLockService;
 
@@ -36,10 +37,16 @@ public class PreyBootController extends BroadcastReceiver {
                         boolean disablePowerOptions = PreyConfig.getPreyConfig(ctx).isDisablePowerOptions();
                         if (disablePowerOptions) {
                             ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
-                            DisablePowerCheckBoxPreference.notifyReady(ctx);
                         } else {
                             ctx.stopService(new Intent(ctx, PreyDisablePowerOptionsService.class));
-                            DisablePowerCheckBoxPreference.notifyCancel(ctx);
+                        }
+                    }catch (Exception e){}
+                    try {
+                        boolean runBackground = PreyConfig.getPreyConfig(ctx).isRunBackground();
+                        if (runBackground) {
+                            RunBackgroundCheckBoxPreference.notifyReady(ctx);
+                        } else {
+                            RunBackgroundCheckBoxPreference.notifyCancel(ctx);
                         }
                     }catch (Exception e){}
                 }
