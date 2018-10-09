@@ -74,38 +74,40 @@ public class AwareController {
             LocationServices.getGeofencingClient(ctx).removeGeofences(listRemove);
             //new
             PreyLocation locationOld=PreyConfig.getPreyConfig(ctx).getLocationAware();
-            double lat=locationOld.getLat();
-            double lng=locationOld.getLng();
-            PreyLogger.d("AWARE lat:" + lat + " lng:" + lng);
-            List<Geofence> mGeofenceList = new ArrayList<Geofence>();
-            mGeofenceList.add(new com.google.android.gms.location.Geofence.Builder()
-                    .setRequestId(GEO_AWARE_NAME)
-                    .setCircularRegion(lat, lng, radiusAware)
-                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER|Geofence.GEOFENCE_TRANSITION_EXIT)
-                    .setLoiteringDelay(loiteringDelay)
-                    .setNotificationResponsiveness(0)
-                    .build());
-            GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-            builder.setInitialTrigger( GeofencingRequest.INITIAL_TRIGGER_EXIT|GeofencingRequest.INITIAL_TRIGGER_ENTER);
-            builder.addGeofences(mGeofenceList);
-            GeofencingRequest geofencingRequest = builder.build();
-            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(ctx, AwareIntentService.class);
-                PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                LocationServices.getGeofencingClient(ctx).addGeofences(geofencingRequest,pendingIntent)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+            if (locationOld != null) {
+                double lat = locationOld.getLat();
+                double lng = locationOld.getLng();
+                PreyLogger.d("AWARE lat:" + lat + " lng:" + lng);
+                List<Geofence> mGeofenceList = new ArrayList<Geofence>();
+                mGeofenceList.add(new com.google.android.gms.location.Geofence.Builder()
+                        .setRequestId(GEO_AWARE_NAME)
+                        .setCircularRegion(lat, lng, radiusAware)
+                        .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                        .setLoiteringDelay(loiteringDelay)
+                        .setNotificationResponsiveness(0)
+                        .build());
+                GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+                builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_EXIT | GeofencingRequest.INITIAL_TRIGGER_ENTER);
+                builder.addGeofences(mGeofenceList);
+                GeofencingRequest geofencingRequest = builder.build();
+                if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(ctx, AwareIntentService.class);
+                    PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    LocationServices.getGeofencingClient(ctx).addGeofences(geofencingRequest, pendingIntent)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     PreyLogger.d("AWARE saveGeofence");
                                 }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    PreyLogger.e("AWARE saveGeofence error: " + e.getMessage(),e);
+                                    PreyLogger.e("AWARE saveGeofence error: " + e.getMessage(), e);
                                 }
-                        });
+                            });
+                }
             }//if
         } catch (Exception e) {
             PreyLogger.e("AWARE error:" + e.getMessage(), e);
