@@ -63,13 +63,17 @@ public class LocationUtil {
         boolean isNetworkEnabled = PreyLocationManager.getInstance(ctx).isNetworkLocationServiceActive();
         boolean isWifiEnabled = PreyWifiManager.getInstance(ctx).isWifiEnabled();
         boolean isGooglePlayServicesAvailable=isGooglePlayServicesAvailable(ctx);
-        //PreyLogger.d("status gps:" + isGpsEnabled + " net:" + isNetworkEnabled + " wifi:" + isWifiEnabled+" play:"+isGooglePlayServicesAvailable);
+        PreyLogger.d("status gps:" + isGpsEnabled + " net:" + isNetworkEnabled + " wifi:" + isWifiEnabled+" play:"+isGooglePlayServicesAvailable);
         String method = getMethod(isGpsEnabled, isNetworkEnabled);
         try {
             if(!isGooglePlayServicesAvailable||(isGpsEnabled&&!isNetworkEnabled)) {
                 preyLocation = getPreyLocationAppService(ctx,method,asynchronous,preyLocation);
             }else{
-                preyLocation = getPreyLocationPlayService(ctx, method, asynchronous,preyLocation);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    preyLocation = getPreyLocationAppServiceOreo(ctx, method, asynchronous, preyLocation);
+                }else{
+                    preyLocation = getPreyLocationPlayService(ctx, method, asynchronous, preyLocation);
+                }
             }
         } catch (Exception e) {
             throw e;
@@ -113,10 +117,8 @@ public class LocationUtil {
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
     }
 
-    //private final static int MAXIMUM_OF_ATTEMPTS=9;
-    //private final static int []SLEEP_OF_ATTEMPTS=new int[]{2,2,2,3,3,3,4,4,4};
-    private final static int MAXIMUM_OF_ATTEMPTS=5;
-    private final static int []SLEEP_OF_ATTEMPTS=new int[]{2,2,3,3,4,4};
+    private final static int MAXIMUM_OF_ATTEMPTS=2;
+    private final static int []SLEEP_OF_ATTEMPTS=new int[]{2,2,2,3,3,3,4,4,4};
 
     private static PreyLocation getPreyLocationPlayService(final Context ctx, String method, boolean asynchronous, PreyLocation preyLocationOld) throws Exception {
         PreyLocation preyLocation = null;
@@ -138,9 +140,7 @@ public class LocationUtil {
                 }
                 currentLocation = play.getLastLocation(ctx);
                 if (currentLocation != null) {
-                    //PreyLogger.d("getPreyLocationPlayService["+i+"]:"+currentLocation.toString());
                     preyLocation = new PreyLocation(currentLocation, method);
-                    //preyLocationOld = sendLocation(ctx, asynchronous, preyLocationOld, preyLocation);
                     if(!asynchronous)
                         i=MAXIMUM_OF_ATTEMPTS;
                 }
@@ -152,6 +152,35 @@ public class LocationUtil {
         } finally {
             if(play!=null)
                 play.stopLocationUpdates();
+        }
+        return preyLocation;
+    }
+
+    private static PreyLocation  getPreyLocationAppServiceOreo(final Context ctx ,String method, boolean asynchronous, PreyLocation preyLocationOld){
+        PreyLocation preyLocation = null;
+        Intent intent = new Intent(ctx, LocationUpdatesService.class);
+        try {
+            ctx.startService(intent);
+            int i = 0;
+            PreyLocationManager.getInstance(ctx).setLastLocation(null);
+            while (i < MAXIMUM_OF_ATTEMPTS) {
+                PreyLogger.d("getPreyLocationAppServiceOreo[i]:"+i);
+                try {
+                    Thread.sleep(SLEEP_OF_ATTEMPTS[i]*1000);
+                } catch (InterruptedException e) {
+                }
+                preyLocation = PreyLocationManager.getInstance(ctx).getLastLocation();
+                if (preyLocation!=null) {
+                    preyLocation.setMethod(method);
+                    break;
+                }
+                i++;
+            }
+        } catch (Exception e) {
+            PreyLogger.e("Error getPreyLocationAppServiceOreo:"+e.getMessage(),e);
+            throw e;
+        } finally {
+            ctx.stopService(intent);
         }
         return preyLocation;
     }
