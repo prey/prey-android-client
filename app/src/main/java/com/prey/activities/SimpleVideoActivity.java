@@ -82,7 +82,7 @@ public class SimpleVideoActivity extends Activity implements
                     .toString() + "/videooutput.mp4";
             File file = new File(uniqueOutFile);
 
-            PreyLogger.i("size:" + file.length());
+            PreyLogger.d("size:" + file.length());
             FileInputStream fis = new FileInputStream(file);
             EntityFile entityFile = new EntityFile();
             entityFile.setFile(fis);

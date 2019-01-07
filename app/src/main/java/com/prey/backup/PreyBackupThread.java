@@ -38,16 +38,16 @@ public class PreyBackupThread extends Thread {
             if (uuid != null && !"".equals(uuid)) {
                 String uuidOld = PreyWebServices.getInstance().getUuidDevice(ctx);
                 if (uuidOld != null && !"".equals(uuidOld) && !uuid.equals(uuidOld)) {
-                    PreyLogger.i("uuid:" + uuid);
-                    PreyLogger.i("uuidOld:" + uuidOld);
+                    PreyLogger.d("uuid:" + uuid);
+                    PreyLogger.d("uuidOld:" + uuidOld);
                     PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, apiKey, email, PreyUtils.getDeviceType(ctx));
-                    PreyLogger.i("new deviceId:" + accountData.getDeviceId());
-                    PreyLogger.i("new apikey:" + accountData.getApiKey());
+                    PreyLogger.d("new deviceId:" + accountData.getDeviceId());
+                    PreyLogger.d("new apikey:" + accountData.getApiKey());
                     PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
                     PreyConfig.getPreyConfig(ctx).registerC2dm();
                     PreyWebServices.getInstance().sendEvent(ctx, PreyConfig.ANDROID_SIGN_UP);
-                    PreyLogger.i("get deviceId:" + PreyConfig.getPreyConfig(ctx).getDeviceId());
-                    PreyLogger.i("get apikey:" + PreyConfig.getPreyConfig(ctx).getApiKey());
+                    PreyLogger.d("get deviceId:" + PreyConfig.getPreyConfig(ctx).getDeviceId());
+                    PreyLogger.d("get apikey:" + PreyConfig.getPreyConfig(ctx).getApiKey());
                 }
             }
         }catch (Exception e){

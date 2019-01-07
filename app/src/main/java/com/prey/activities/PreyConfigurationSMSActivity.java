@@ -39,14 +39,14 @@ public class PreyConfigurationSMSActivity extends PreferenceActivity {
         try {
             CheckBoxPreference pSMS= (CheckBoxPreference)findPreference("PREFS_SMS_COMMAND");
             PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
-            PreyLogger.i("preyConfig.isSmsCommand:"+preyConfig.isSmsCommand());
+            PreyLogger.d("preyConfig.isSmsCommand:"+preyConfig.isSmsCommand());
 
 
             pSMS.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     CheckBoxPreference pSMS = (CheckBoxPreference) findPreference("PREFS_SMS_COMMAND");
-                    PreyLogger.i("preyConfig.newValue:" + newValue);
+                    PreyLogger.d("preyConfig.newValue:" + newValue);
                     boolean value=((Boolean) newValue).booleanValue();
                     PreyConfig.getPreyConfig(getApplicationContext()).setSmsCommand(value);
                     pSMS.setChecked(value);

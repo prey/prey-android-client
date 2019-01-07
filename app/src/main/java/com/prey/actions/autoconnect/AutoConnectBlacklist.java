@@ -31,7 +31,7 @@ public class AutoConnectBlacklist {
     public void print( ){
 
         for (int i=0;blackList!=null&&i<blackList.size();i++){
-            PreyLogger.i("blackList["+i+"]"+blackList.get(i));
+            PreyLogger.d("blackList["+i+"]"+blackList.get(i));
         }
 
     }
