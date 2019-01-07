@@ -222,7 +222,7 @@ public class GeofenceController {
     public synchronized static void verifyGeozone(Context ctx,PreyLocation locationNow){
         PreyLogger.d("GEO connection verifyGeozone");
         try{
-            if(locationNow!=null) {
+            if(locationNow!=null && (locationNow.getLat()!=0 && locationNow.getLng()!=0)) {
                 GeofenceDataSource dataSource = new GeofenceDataSource(ctx);
                 List<GeofenceDto> listBD = dataSource.getAllGeofences();
                 PreyLogger.d("GEO listBD size:" + (listBD == null ? 0 : listBD.size()));

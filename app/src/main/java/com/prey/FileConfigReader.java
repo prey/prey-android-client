@@ -168,4 +168,11 @@ public class FileConfigReader {
         return Integer.parseInt(properties.getProperty("radius-aware"));
     }
 
+    public String getPreyTerms() {
+        return properties.getProperty("prey-terms");
+    }
+
+    public String getPreyTermsEs() {
+        return properties.getProperty("prey-terms-es");
+    }
 }

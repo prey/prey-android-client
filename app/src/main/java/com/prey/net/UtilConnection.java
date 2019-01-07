@@ -15,10 +15,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.net.http.EntityFile;
 import com.prey.net.http.SimpleMultipartEntity;
-import com.prey.net.offline.OfflineDatasource;
-import com.prey.net.offline.OfflineDto;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -40,7 +37,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -123,7 +119,7 @@ public class UtilConnection {
             Iterator<String> ite=params.keySet().iterator();
             while (ite.hasNext()){
                 String key=ite.next();
-                PreyLogger.d("["+key+"]:"+params.get(key));
+                PreyLogger.i("["+key+"]:"+params.get(key));
             }
         }
         SimpleMultipartEntity multiple=new SimpleMultipartEntity();
@@ -132,143 +128,150 @@ public class UtilConnection {
         try{
             do {
                 if (delay) {
-                    Thread.sleep(ARRAY_RETRY_DELAY_MS[retry]*1000);
+                    Thread.sleep(ARRAY_RETRY_DELAY_MS[retry] * 1000);
                 }
-                if (uri.indexOf("https:")>=0) {
-                    connection = (HttpsURLConnection) url.openConnection();
+                if(!isInternetAvailable(preyConfig.getContext())){
+                    PreyLogger.d("NET isInternetAvailable: "+retry+" uri:"+uri);
+                    delay=true;
+                    retry++;
                 }else{
-                    connection = (HttpURLConnection) url.openConnection();
-                }
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                connection.setRequestMethod(requestMethod);
-                connection.setRequestProperty("Accept", "*/*");
-                if(contentType!=null) {
-                    connection.addRequestProperty("Content-Type", contentType);
-                }
-                if (authorization!=null) {
-                    connection.addRequestProperty("Authorization", authorization);
-                    PreyLogger.d("Authorization:"+authorization);
-                }
-                if (status!=null) {
-                    connection.addRequestProperty("X-Prey-Status", status);
-                    PreyLogger.d("X-Prey-Status:"+status);
+                    if (uri.indexOf("https:") >= 0) {
+                        connection = (HttpsURLConnection) url.openConnection();
+                    } else {
+                        connection = (HttpURLConnection) url.openConnection();
+                    }
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    connection.setRequestMethod(requestMethod);
+                    connection.setRequestProperty("Accept", "*/*");
+                    if (contentType != null) {
+                        connection.addRequestProperty("Content-Type", contentType);
+                    }
+                    if (authorization != null) {
+                        connection.addRequestProperty("Authorization", authorization);
+                        PreyLogger.d("Authorization:" + authorization);
+                    }
+                    if (status != null) {
+                        connection.addRequestProperty("X-Prey-Status", status);
+                        PreyLogger.d("X-Prey-Status:" + status);
+                    }
+
+                    if (correlationId != null) {
+                        connection.addRequestProperty("X-Prey-Correlation-ID", correlationId);
+                        PreyLogger.d("X-Prey-Correlation-ID:" + correlationId);
+                        String deviceId = preyConfig.getDeviceId();
+                        connection.addRequestProperty("X-Prey-Device-ID", deviceId);
+                        PreyLogger.d("X-Prey-Device-ID:" + deviceId);
+                        connection.addRequestProperty("X-Prey-State", status);
+                        PreyLogger.d("X-Prey-State:" + status);
+                    }
+
+                    connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
+                    PreyLogger.d("User-Agent:" + getUserAgent(preyConfig));
+                    if (entityFiles == null && (params != null && params.size() > 0)) {
+                        OutputStream os = connection.getOutputStream();
+                        DataOutputStream dos = new DataOutputStream(os);
+                        dos.writeBytes(getPostDataString(params));
+                    }
+                    if (entityFiles != null && entityFiles.size() > 0) {
+                        for (Map.Entry<String, String> entry : params.entrySet()) {
+                            String key = entry.getKey();
+                            String value = null;
+                            try {
+                                value = entry.getValue();
+                            } catch (Exception e) {
+                            }
+                            if (value == null) {
+                                value = "";
+                            }
+                            multiple.addPart(key, value);
+                        }
+                        for (int i = 0; entityFiles != null && i < entityFiles.size(); i++) {
+                            EntityFile entityFile = entityFiles.get(i);
+                            boolean isLast = ((i + 1) == entityFiles.size() ? true : false);
+                            ByteArrayOutputStream outputStream = multiple.addPart(entityFile.getType(), entityFile.getName(), entityFile.getFile(), entityFile.getMimeType(), isLast);
+                            listOutputStream.add(outputStream);
+                        }
+                        connection.setRequestProperty("Content-Length", "" + multiple.getContentLength());
+                        connection.setRequestProperty("Content-Type", multiple.getContentType());
+                        OutputStream os = connection.getOutputStream();
+                        multiple.writeTo(os);
+                    }
+                    int responseCode = connection.getResponseCode();
+                    String responseMessage = connection.getResponseMessage();
+                    switch (responseCode) {
+                        case HttpURLConnection.HTTP_CREATED:
+                            PreyLogger.i(uri + " **CREATED**");
+                            response = convertPreyHttpResponse(responseCode, connection);
+                            retry = RETRIES;
+                            break;
+                        case HttpURLConnection.HTTP_OK:
+                            PreyLogger.i(uri + " **OK**");
+                            response = convertPreyHttpResponse(responseCode, connection);
+                            retry = RETRIES;
+                            break;
+                        case HttpURLConnection.HTTP_CONFLICT:
+                            PreyLogger.i(uri + " **CONFLICT**");
+                            response = convertPreyHttpResponse(responseCode, connection);
+                            retry = RETRIES;
+                            break;
+                        case HttpURLConnection.HTTP_FORBIDDEN:
+                            PreyLogger.i(uri + " **FORBIDDEN**");
+                            response = convertPreyHttpResponse(responseCode, connection);
+                            retry = RETRIES;
+                            break;
+                        case HttpURLConnection.HTTP_MOVED_TEMP:
+                            PreyLogger.i(uri + " **MOVED_TEMP**");
+                            response = convertPreyHttpResponse(responseCode, connection);
+                            retry = RETRIES;
+                            break;
+                        case 422:
+                            PreyLogger.i(uri + " **422**");
+                            response = convertPreyHttpResponse(responseCode, connection);
+                            retry = RETRIES;
+                            break;
+                        case HttpURLConnection.HTTP_BAD_GATEWAY:
+                            PreyLogger.i(uri + " **BAD_GATEWAY**");
+                            response = convertPreyHttpResponse(responseCode, connection);
+                            retry = RETRIES;
+                            break;
+                        case HttpURLConnection.HTTP_INTERNAL_ERROR:
+                            PreyLogger.i(uri + " **INTERNAL_ERROR**");
+                            response = convertPreyHttpResponse(responseCode, connection);
+                            retry = RETRIES;
+                            break;
+                        case HttpURLConnection.HTTP_NOT_FOUND:
+                            PreyLogger.i(uri + " **NOT_FOUND**");
+                            response = convertPreyHttpResponse(responseCode, connection);
+                            retry = RETRIES;
+                            break;
+                        case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
+                            PreyLogger.i(uri + " **gateway timeout**");
+                            break;
+                        case HttpURLConnection.HTTP_UNAVAILABLE:
+                            PreyLogger.i(uri + "**unavailable**");
+                            break;
+                        case HttpURLConnection.HTTP_NOT_ACCEPTABLE:
+                            PreyLogger.i(uri + " **NOT_ACCEPTABLE**");
+                            response = convertPreyHttpResponse(responseCode, connection);
+                            retry = RETRIES;
+                            break;
+                        case HttpURLConnection.HTTP_UNAUTHORIZED:
+                            PreyLogger.i(uri + " **HTTP_UNAUTHORIZED**");
+                            response = convertPreyHttpResponse(responseCode, connection);
+                            retry = RETRIES;
+                            break;
+                        default:
+                            PreyLogger.i(uri + " **unknown response code**.");
+                            break;
+                    }
+                    connection.disconnect();
+                    retry++;
+                    if (retry <= RETRIES) {
+                        PreyLogger.d("Failed retry " + retry + "/" + RETRIES);
+                    }
+                    delay = true;
                 }
 
-                if (correlationId!=null) {
-                    connection.addRequestProperty("X-Prey-Correlation-ID", correlationId);
-                    PreyLogger.d("X-Prey-Correlation-ID:"+correlationId);
-                    String deviceId=preyConfig.getDeviceId();
-                    connection.addRequestProperty("X-Prey-Device-ID", deviceId);
-                    PreyLogger.d("X-Prey-Device-ID:"+deviceId);
-                    connection.addRequestProperty("X-Prey-State", status);
-                    PreyLogger.d("X-Prey-State:"+status);
-                }
-
-                connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
-                PreyLogger.d("User-Agent:"+getUserAgent(preyConfig));
-                if (entityFiles==null&&(params!=null&&params.size()>0)){
-                    OutputStream os = connection.getOutputStream();
-                    DataOutputStream dos = new DataOutputStream( os );
-                    dos.writeBytes(getPostDataString(params));
-                }
-                if( entityFiles!=null&&entityFiles.size()>0 ) {
-                    for(Map.Entry<String, String> entry : params.entrySet()){
-                        String key=  entry.getKey();
-                        String value=null;
-                        try{
-                            value=  entry.getValue() ;
-                        }catch(Exception e){
-                        }
-                        if(value==null){
-                            value="";
-                        }
-                        multiple.addPart(key,value);
-                    }
-                    for(int i=0;entityFiles!=null&&i<entityFiles.size();i++) {
-                        EntityFile entityFile = entityFiles.get(i);
-                        boolean isLast = ((i + 1) == entityFiles.size() ? true : false);
-                        ByteArrayOutputStream outputStream=multiple.addPart(entityFile.getType(), entityFile.getName(), entityFile.getFile(), entityFile.getMimeType(), isLast);
-                        listOutputStream.add(outputStream);
-                    }
-                    connection.setRequestProperty("Content-Length", "" + multiple.getContentLength());
-                    connection.setRequestProperty("Content-Type", multiple.getContentType());
-                    OutputStream os = connection.getOutputStream();
-                    multiple.writeTo(os);
-                }
-                int responseCode=connection.getResponseCode();
-                String responseMessage = connection.getResponseMessage();
-                switch (responseCode) {
-                    case HttpURLConnection.HTTP_CREATED:
-                        PreyLogger.d(uri + " **CREATED**");
-                        response = convertPreyHttpResponse(responseCode,connection);
-                        retry = RETRIES;
-                        break;
-                    case HttpURLConnection.HTTP_OK:
-                        PreyLogger.d(uri + " **OK**");
-                        response = convertPreyHttpResponse(responseCode,connection);
-                        retry = RETRIES;
-                        break;
-                    case HttpURLConnection.HTTP_CONFLICT:
-                        PreyLogger.d(uri + " **CONFLICT**");
-                        response = convertPreyHttpResponse(responseCode,connection);
-                        retry = RETRIES;
-                        break;
-                    case HttpURLConnection.HTTP_FORBIDDEN:
-                        PreyLogger.d(uri + " **FORBIDDEN**");
-                        response = convertPreyHttpResponse(responseCode,connection);
-                        retry = RETRIES;
-                        break;
-                    case HttpURLConnection.HTTP_MOVED_TEMP:
-                        PreyLogger.d(uri + " **MOVED_TEMP**");
-                        response = convertPreyHttpResponse(responseCode,connection);
-                        retry = RETRIES;
-                        break;
-                    case 422:
-                        PreyLogger.d(uri + " **422**");
-                        response = convertPreyHttpResponse(responseCode,connection);
-                        retry = RETRIES;
-                        break;
-                    case HttpURLConnection.HTTP_BAD_GATEWAY:
-                        PreyLogger.d(uri + " **BAD_GATEWAY**");
-                        response = convertPreyHttpResponse(responseCode,connection);
-                        retry = RETRIES;
-                        break;
-                    case HttpURLConnection.HTTP_INTERNAL_ERROR:
-                        PreyLogger.d(uri + " **INTERNAL_ERROR**");
-                        response = convertPreyHttpResponse(responseCode,connection);
-                        retry = RETRIES;
-                        break;
-                    case HttpURLConnection.HTTP_NOT_FOUND:
-                        PreyLogger.d(uri + " **NOT_FOUND**");
-                        response = convertPreyHttpResponse(responseCode,connection);
-                        retry = RETRIES;
-                        break;
-                    case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
-                        PreyLogger.d(uri + " **gateway timeout**");
-                        break;
-                    case HttpURLConnection.HTTP_UNAVAILABLE:
-                        PreyLogger.d(uri + "**unavailable**");
-                        break;
-                    case HttpURLConnection.HTTP_NOT_ACCEPTABLE:
-                        PreyLogger.d(uri + " **NOT_ACCEPTABLE**");
-                        response = convertPreyHttpResponse(responseCode,connection);
-                        retry = RETRIES;
-                        break;
-                    case HttpURLConnection.HTTP_UNAUTHORIZED:
-                        PreyLogger.d(uri + " **HTTP_UNAUTHORIZED**");
-                        response = convertPreyHttpResponse(responseCode,connection);
-                        retry = RETRIES;
-                        break;
-                    default:
-                        PreyLogger.d(uri + " **unknown response code**.");
-                        break;
-                }
-                connection.disconnect();
-                retry++;
-                if(retry <= RETRIES) {
-                    PreyLogger.d("Failed retry " + retry + "/" + RETRIES);
-                }
-                delay = true;
             } while (retry < RETRIES);
         }catch(Exception e){
             PreyLogger.e("error util:"+e.getMessage(),e);
@@ -341,12 +344,12 @@ public class UtilConnection {
 
     public static PreyHttpResponse convertPreyHttpResponse(int responseCode,HttpURLConnection connection)throws Exception {
         StringBuffer sb = new StringBuffer();
-        if(responseCode==200||responseCode==201||responseCode==422) {
+        if(responseCode==200||responseCode==201||responseCode>299) {
             InputStream input = null;
-            if(responseCode==422){
-                input = connection.getErrorStream();
-            }else {
+            if(responseCode==200||responseCode==201){
                 input = connection.getInputStream();
+            }else {
+                input = connection.getErrorStream();
             }
             if (input != null) {
                 BufferedReader in =null;
@@ -533,5 +536,40 @@ public class UtilConnection {
             }
         }
         return responseCode;
+    }
+
+    public static boolean isInternetAvailable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork == null) return false;
+
+        switch (activeNetwork.getType()) {
+            case ConnectivityManager.TYPE_WIFI:
+                if ((activeNetwork.getState() == NetworkInfo.State.CONNECTED ||
+                        activeNetwork.getState() == NetworkInfo.State.CONNECTING) &&
+                        isInternet())
+                    return true;
+                break;
+            case ConnectivityManager.TYPE_MOBILE:
+                if ((activeNetwork.getState() == NetworkInfo.State.CONNECTED ||
+                        activeNetwork.getState() == NetworkInfo.State.CONNECTING) &&
+                        isInternet())
+                    return true;
+                break;
+            default:
+                return false;
+        }
+        return false;
+    }
+
+    private static boolean isInternet() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch (IOException | InterruptedException e) {
+        }
+        return false;
     }
 }

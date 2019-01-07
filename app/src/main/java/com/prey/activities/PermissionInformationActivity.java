@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.prey.PreyLogger;
+import com.prey.actions.aware.AwareController;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.net.PreyWebServices;
 
@@ -62,9 +63,17 @@ public class PermissionInformationActivity extends PreyActivity {
 
             if (FroyoSupport.getInstance(this).isAdminActive()) {
                 Intent intent = new Intent(PermissionInformationActivity.this, WelcomeActivity.class);
-                startActivity(intent);
                 PreyConfig.getPreyConfig(PermissionInformationActivity.this).setProtectReady(true);
-
+                new Thread() {
+                    public void run() {
+                        try{
+                            AwareController.getInstance().init(getApplicationContext());
+                            AwareController.getInstance().initJob(getApplicationContext());
+                        }catch(Exception e){
+                        }
+                    }
+                }.start();
+                startActivity(intent);
                 finish();
             } else {
                 setContentView(R.layout.permission_information_error2);

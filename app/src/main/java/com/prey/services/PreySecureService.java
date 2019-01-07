@@ -167,12 +167,11 @@ public class PreySecureService extends Service{
         if(view != null){
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
             if(wm != null) {
-                wm.removeView(view);
+                try{wm.removeView(view);}catch (Exception e){}
             }
             view = null;
         }
     }
-
 
     public class ButtonPinOnClickListener implements View.OnClickListener {
 

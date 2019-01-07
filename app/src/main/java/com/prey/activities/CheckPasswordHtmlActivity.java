@@ -9,14 +9,17 @@ package com.prey.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.webkit.WebSettings;
@@ -34,6 +37,15 @@ import java.util.Locale;
 
 public class CheckPasswordHtmlActivity extends AppCompatActivity{
 
+    public static final String CLOSE_PREY="close_prey";
+    private final BroadcastReceiver close_prey_receiver = new BroadcastReceiver() {
+       @Override
+       public void onReceive(Context context, Intent intent) {
+           PreyLogger.d("CheckPasswordHtmlActivity BroadcastReceiver: finish");
+           finish();
+        }
+    };
+
     private WebView myWebView = null;
 
     public static int OVERLAY_PERMISSION_REQ_CODE = 5469;
@@ -47,13 +59,25 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity{
         setContentView(R.layout.webview);
         PreyLogger.d("CheckPasswordHtmlActivity: onCreate");
         loadUrl();
+
+        registerReceiver(close_prey_receiver, new IntentFilter(CLOSE_PREY));
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         PreyLogger.d("CheckPasswordHtmlActivity: onResume");
-        PreyConfig.getPreyConfig(this).registerC2dm();
+        new Thread() {
+            public void run() {
+                PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
+            }
+        }.start();
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(close_prey_receiver);
     }
 
     public void settings(){

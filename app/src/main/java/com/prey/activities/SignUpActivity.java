@@ -8,48 +8,45 @@ package com.prey.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.appsflyer.AFInAppEventParameterName;
 import com.appsflyer.AFInAppEventType;
 import com.appsflyer.AppsFlyerLib;
+import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
-import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.aware.AwareController;
-import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 import com.prey.util.KeyboardStatusDetector;
 import com.prey.util.KeyboardVisibilityListener;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class SignUpActivity extends Activity {
@@ -119,24 +116,10 @@ public class SignUpActivity extends Activity {
 
        // alert.setTitle("Title here");
 
-        WebView wv = new WebView(this);
-        wv.loadUrl("https://www.preyproject.com/terms");
-        wv.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
 
-                return true;
-            }
-        });
 
-        alert.setView(wv);
-        alert.setButton(getString(R.string.warning_close), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
+
+
 
 
         text_linear_agree_terms_condition.setOnClickListener(new View.OnClickListener() {
@@ -144,7 +127,41 @@ public class SignUpActivity extends Activity {
             public void onClick(View v) {
                 PreyLogger.d("text_linear_agree_terms_condition");
 
+                WebView wv = new WebView(getApplicationContext());
+
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    wv.getSettings().setSafeBrowsingEnabled(false);
+
+
+                wv.getSettings().setLoadWithOverviewMode(true);
+                wv.getSettings().setUseWideViewPort(false);
+                wv.getSettings().setSupportZoom(false);
+                wv.getSettings().setJavaScriptEnabled(true);
+                wv.getSettings().setUserAgentString("Desktop");
+                wv.setBackgroundColor(Color.TRANSPARENT);
+                String terms="";
+                if ("es".equals(Locale.getDefault().getLanguage())) {
+                    terms=FileConfigReader.getInstance(getApplicationContext()).getPreyTermsEs();
+                }else{
+                    terms=FileConfigReader.getInstance(getApplicationContext()).getPreyTerms();
+                }
+                PreyLogger.d("terms:"+terms);
+
+                wv.loadUrl(terms);
+
+
+                alert.setView(wv);
+                alert.setButton(getString(R.string.warning_close), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
                 alert.show();
+
             }
         });
 
@@ -165,31 +182,10 @@ public class SignUpActivity extends Activity {
         KeyboardStatusDetector keyboard = new KeyboardStatusDetector();
 
         keyboard.registerActivity(this); // or register to an activity
-        keyboard.setVisibilityListener(new KeyboardVisibilityListener() {
-
-            @Override
-            public void onVisibilityChanged(boolean keyboardVisible) {
-                try {
 
 
-                    ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) linkSignup.getLayoutParams();
-                    if (keyboardVisible) {
-                        PreyLogger.d("key on");
 
-                        params.setMargins(20, 0, 20, halfHeight);
-                    } else {
-                        PreyLogger.d("key off");
-
-                        params.setMargins(20, 0, 20, 20);
-                    }
-                    linkSignup.setLayoutParams(params);
-                } catch (Exception e) {
-                    PreyLogger.e("error:" + e.getMessage(),e);
-                }
-            }
-        });
-
-
+        Context ctx=this;
         buttonSignup.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -198,31 +194,17 @@ public class SignUpActivity extends Activity {
                 email = emailText.getText().toString();
                 String password = passwordText.getText().toString();
 
-                boolean confirm_over=checkBox_linear_confirm_over.isChecked();
-                boolean agree_terms_condition=checkBox_linear_agree_terms_condition.isChecked();
+                String confirm_over=""+checkBox_linear_confirm_over.isChecked();
+                String agree_terms_condition=""+checkBox_linear_agree_terms_condition.isChecked();
                 PreyLogger.d("email:"+email);
                 PreyLogger.d("password:"+password);
                 PreyLogger.d("confirm_over:"+confirm_over);
                 PreyLogger.d("agree_terms_condition:"+agree_terms_condition);
                 Context ctx = getApplicationContext();
-                if (email == null || email.equals("") || password == null || password.equals("")
-                        ||!confirm_over ||!agree_terms_condition ) {
-                    Toast.makeText(ctx, R.string.error_all_fields_are_required, Toast.LENGTH_LONG).show();
-                } else {
-                    if (email.length() < 6 || email.length() > 200) {
-                        Toast.makeText(ctx, ctx.getString(R.string.error_mail_out_of_range, "6", "256"), Toast.LENGTH_LONG).show();
-                    } else {
-                        if (password.length() < 6 || password.length() > 256) {
-                            Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range, "6", "256"), Toast.LENGTH_LONG).show();
-                        } else {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                                new CreateAccount().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, name, email, password);
+                                new CreateAccount(ctx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, name, email, password,confirm_over,agree_terms_condition);
                             else
-                                new CreateAccount().execute(name, email, password);
-                        }
-                    }
-                }
-
+                                new CreateAccount(ctx).execute(name, email, password,confirm_over,agree_terms_condition);
             }
         });
 
@@ -248,32 +230,37 @@ public class SignUpActivity extends Activity {
 
     private class CreateAccount extends AsyncTask<String, Void, Void> {
 
+        Context context;
+
+        public CreateAccount(Context mContext) {
+            this.context = mContext;
+        }
+
+
         ProgressDialog progressDialog = null;
 
         @Override
         protected void onPreExecute() {
-            progressDialog = new ProgressDialog(SignUpActivity.this);
-            progressDialog.setMessage(SignUpActivity.this.getText(R.string.creating_account_please_wait).toString());
-            progressDialog.setIndeterminate(true);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+            try {
+                progressDialog = new ProgressDialog(SignUpActivity.this);
+                progressDialog.setMessage(SignUpActivity.this.getText(R.string.creating_account_please_wait).toString());
+                progressDialog.setIndeterminate(true);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+            }catch (Exception e) {}
+            error = null;
         }
 
         @Override
         protected Void doInBackground(String... data) {
             try {
                 error = null;
-                PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(getApplicationContext(), data[0], data[1], data[2], PreyUtils.getDeviceType(getApplication()));
+                PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(getApplicationContext(), data[0], data[1], data[2],data[3],data[4],PreyUtils.getDeviceType(getApplication()));
                 PreyLogger.d("Response creating account: " + accountData.toString());
                 PreyConfig.getPreyConfig(getApplicationContext()).saveAccount(accountData);
                 PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
                 PreyWebServices.getInstance().sendEvent(getApplication(),PreyConfig.ANDROID_SIGN_UP);
                 PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
-                new Thread() {
-                    public void run() {
-                        AwareController.getInstance().init(getApplicationContext());
-                    }
-                }.start();
                 try {
                     Map<String, Object> eventValue = new HashMap<>();
                     eventValue.put(AFInAppEventParameterName.REGSITRATION_METHOD,"email");
@@ -281,6 +268,7 @@ public class SignUpActivity extends Activity {
                 } catch (Exception e1) {}
             } catch (Exception e) {
                 error = e.getMessage();
+                PreyLogger.e("e.getMessage():"+e.getMessage(),e);
             }
             return null;
         }
@@ -288,40 +276,35 @@ public class SignUpActivity extends Activity {
         @Override
         protected void onPostExecute(Void unused) {
             try {
-                progressDialog.dismiss();
+                if(progressDialog!=null)
+                    progressDialog.dismiss();
+
+                if (error == null) {
+                    String message = getString(R.string.new_account_congratulations_text, email);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("message", message);
+                    Intent intent =null;
+                    if (PreyConfig.getPreyConfig(SignUpActivity.this).isChromebook()) {
+                        intent = new Intent(SignUpActivity.this, WelcomeActivity.class);
+                        PreyConfig.getPreyConfig(SignUpActivity.this).setProtectReady(true);
+                    }else {
+                        intent = new Intent(SignUpActivity.this, PermissionInformationActivity.class);
+                    }
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    AlertDialog.Builder alertDialog= new AlertDialog.Builder( SignUpActivity.this);
+                    alertDialog.setIcon(R.drawable.error).setTitle(R.string.error_title).setMessage(error)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            }).setCancelable(false);
+                    alertDialog.show();
+                }
             } catch (Exception e) {
             }
-            if (error == null) {
-                String message = getString(R.string.new_account_congratulations_text, email);
-                Bundle bundle = new Bundle();
-                bundle.putString("message", message);
-                Intent intent =null;
-                if (PreyConfig.getPreyConfig(SignUpActivity.this).isChromebook()) {
-                    intent = new Intent(SignUpActivity.this, WelcomeActivity.class);
-                    PreyConfig.getPreyConfig(SignUpActivity.this).setProtectReady(true);
-                }else {
-                    intent = new Intent(SignUpActivity.this, PermissionInformationActivity.class);
-                }
-                intent.putExtras(bundle);
-                startActivity(intent);
-                finish();
-            } else
-                showDialog(ERROR);
         }
     }
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        Dialog pass = null;
-        switch (id) {
-
-            case ERROR:
-                return new AlertDialog.Builder(SignUpActivity.this).setIcon(R.drawable.error).setTitle(R.string.error_title).setMessage(error)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        }).setCancelable(false).create();
-        }
-        return pass;
-    }
 }

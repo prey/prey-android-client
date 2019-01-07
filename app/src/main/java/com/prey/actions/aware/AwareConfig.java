@@ -17,6 +17,7 @@ public class AwareConfig {
 
     private static AwareConfig cachedInstance = null;
     private Context ctx;
+    private int notificationId=1;
 
     private AwareConfig(Context ctx) {
         this.ctx = ctx;
@@ -33,6 +34,10 @@ public class AwareConfig {
             }
         }
         return cachedInstance;
+    }
+    public int getNotificationId(){
+        notificationId+=1;
+        return notificationId;
     }
 
     public boolean isLocationAware(){

@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.activities;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,8 +18,6 @@ import android.webkit.WebViewClient;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
-
-import org.apache.http.util.EncodingUtils;
 
 public class PanelWebActivity extends Activity {
 
@@ -86,10 +83,11 @@ public class PanelWebActivity extends Activity {
 
         String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelJwt();
 
-        String postData = "token="+PreyConfig.getPreyConfig(getApplicationContext()).getTokenJwt();;
+        String tokenJwt=PreyConfig.getPreyConfig(getApplicationContext()).getTokenJwt();
+        PreyLogger.d("tokenJwt:"+tokenJwt);
+        String postData = "token="+tokenJwt;
 
-        byte[] postByte = EncodingUtils.getBytes(postData,"BASE64");
-        myWebView.postUrl(url,postByte);
+        myWebView.postUrl(url, postData.getBytes());
     }
 
 }
