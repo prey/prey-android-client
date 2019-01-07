@@ -33,14 +33,14 @@ public class WelcomeBatchActivity extends FragmentActivity {
 
     @Override
     public void onResume() {
-        PreyLogger.i("onResume of WelcomeBatchActivity");
+        PreyLogger.d("onResume of WelcomeBatchActivity");
         super.onResume();
 
     }
 
     @Override
     public void onPause() {
-        PreyLogger.i("onPause of WelcomeBatchActivity");
+        PreyLogger.d("onPause of WelcomeBatchActivity");
         super.onPause();
     }
 
@@ -63,7 +63,7 @@ public class WelcomeBatchActivity extends FragmentActivity {
     }
 
     public void menu() {
-        PreyLogger.i("menu ready:" + PreyConfig.getPreyConfig(this).getProtectReady());
+        PreyLogger.d("menu ready:" + PreyConfig.getPreyConfig(this).getProtectReady());
 
         String email = PreyConfig.getPreyConfig(this).getEmail();
         if (email == null || "".equals(email)) {

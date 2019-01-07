@@ -30,7 +30,7 @@ public class LocationLowBatteryCheckBoxPreference extends CheckBoxPreference {
     @Override
     public void setChecked(boolean checked) {
         super.setChecked(checked);
-        PreyLogger.i("LocationLowBatteryCheckBoxPreference:" + checked);
+        PreyLogger.d("LocationLowBatteryCheckBoxPreference:" + checked);
         Context ctx=getContext();
         PreyConfig.getPreyConfig(ctx).setLocationLowBattery(checked);
         if(checked){

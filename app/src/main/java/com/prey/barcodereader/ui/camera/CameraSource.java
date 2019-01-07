@@ -492,7 +492,7 @@ public class CameraSource {
                     mFocusMode)) {
                 parameters.setFocusMode(mFocusMode);
             } else {
-                PreyLogger.i("Camera focus mode: " + mFocusMode + " is not supported on this device.");
+                PreyLogger.d("Camera focus mode: " + mFocusMode + " is not supported on this device.");
             }
         }
 
@@ -503,7 +503,7 @@ public class CameraSource {
                     mFlashMode)) {
                 parameters.setFlashMode(mFlashMode);
             } else {
-                PreyLogger.i("Camera flash mode: " + mFlashMode + " is not supported on this device.");
+                PreyLogger.d("Camera flash mode: " + mFlashMode + " is not supported on this device.");
             }
         }
 

@@ -32,7 +32,7 @@ public class Wipe {
         boolean deleteSD = false;
         try {
             String sd = parameters.getString("parameter");
-            PreyLogger.i("sd:" + sd);
+            PreyLogger.d("sd:" + sd);
             if (sd != null && "sd".equals(sd)) {
                 wipe = false;
                 deleteSD = true;

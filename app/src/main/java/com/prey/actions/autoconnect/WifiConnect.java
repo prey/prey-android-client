@@ -33,12 +33,12 @@ public class WifiConnect {
             try { Thread.sleep(4000);} catch (Exception e) { }
         }
         List<ScanResult> results = mWifiManager.getScanResults();
-        PreyLogger.i("results size:" + results.size());
+        PreyLogger.d("results size:" + results.size());
         for (int i = 0; results != null && i < results.size(); i++) {
             ScanResult scan = results.get(i);
 
             if ("[ESS]".equals(scan.capabilities)&&scan.SSID.indexOf("Prey")<0) {
-                PreyLogger.i("ssid:" + scan.SSID + " " + scan.capabilities + " ");
+                PreyLogger.d("ssid:" + scan.SSID + " " + scan.capabilities + " ");
 
                 //WifiConfiguration conf = new WifiConfiguration();
                 String ssid =   scan.SSID  ;
@@ -86,10 +86,10 @@ public class WifiConnect {
 
 
             boolean isDisconnected = wifiManager.disconnect();
-            PreyLogger.i("isDisconnected : " + isDisconnected);
+            PreyLogger.d("isDisconnected : " + isDisconnected);
 
             boolean isEnabled = wifiManager.enableNetwork(networkId, true);
-            PreyLogger.i("isEnabled : " + isEnabled);
+            PreyLogger.d("isEnabled : " + isEnabled);
 
             boolean isReconnected = wifiManager.reconnect();
 

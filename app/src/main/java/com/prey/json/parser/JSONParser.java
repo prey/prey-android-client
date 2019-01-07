@@ -49,7 +49,8 @@ public class JSONParser {
             PreyLogger.e("Error, causa:" + e.getMessage(), e);
             return null;
         }
-        PreyLogger.d("cmd:"+sb);
+        PreyLogger.i("_______cmd________");
+        PreyLogger.i(sb);
         //json = "[{\"command\":\"history\",\"target\":\"call\",\"options\":{}}]";
         //	json = "[{\"command\":\"history\",\"target\":\"sms\",\"options\":{}}]";
 
@@ -133,7 +134,7 @@ public class JSONParser {
             for (int i = 0; i < jsonArray.length(); i++) {
                 String jsonCommand= jsonArray.get(i).toString();
                 JSONObject explrObject =new JSONObject(jsonCommand);
-                PreyLogger.i(explrObject.toString());
+                PreyLogger.d(explrObject.toString());
                 listaJson.add(explrObject);
             }
         }catch(Exception e){
@@ -155,7 +156,7 @@ public class JSONParser {
                 PreyLogger.e("JSON Parser, Error parsing data " + e.toString(), e);
             }
         }
-        PreyLogger.i("json:" + json);
+        PreyLogger.d("json:" + json);
         // return JSON String
         return listaJson;
     }

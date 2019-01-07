@@ -23,7 +23,7 @@ import android.content.pm.PackageManager;
 public class Camouflage {
 
     public static void hide(Context ctx, List<ActionResult> lista, JSONObject parameters) {
-        PreyLogger.i("started hide");
+        PreyLogger.d("started hide");
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
