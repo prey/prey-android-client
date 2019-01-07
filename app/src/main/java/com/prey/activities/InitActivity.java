@@ -241,12 +241,11 @@ public class InitActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.frame_home0, container, false);
-            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
-            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
-            textView1.setTypeface(titilliumWebRegular);
-
-
-
+            try {
+                Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+                TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+                textView1.setTypeface(titilliumWebRegular);
+            }catch (Exception e){}
             return rootView;
         }
     }
@@ -259,9 +258,11 @@ public class InitActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.frame_home1, container, false);
-            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
-            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
-            textView1.setTypeface(titilliumWebRegular);
+            try {
+                Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+                TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+                textView1.setTypeface(titilliumWebRegular);
+            }catch (Exception e){}
             return rootView;
         }
     }
@@ -272,9 +273,11 @@ public class InitActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.frame_home2, container, false);
-            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
-            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
-            textView1.setTypeface(titilliumWebRegular);
+            try {
+                Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+                TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+                textView1.setTypeface(titilliumWebRegular);
+            }catch (Exception e){}
             return rootView;
         }
     }
@@ -286,9 +289,11 @@ public class InitActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.frame_home3, container, false);
-            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
-            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
-            textView1.setTypeface(titilliumWebRegular);
+            try {
+                Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+                TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+                textView1.setTypeface(titilliumWebRegular);
+            }catch (Exception e){}
             return rootView;
         }
     }
@@ -300,9 +305,11 @@ public class InitActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.frame_home4, container, false);
-            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
-            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
-            textView1.setTypeface(titilliumWebRegular);
+            try {
+                Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+                TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+                textView1.setTypeface(titilliumWebRegular);
+            }catch (Exception e){}
             return rootView;
         }
     }
@@ -313,9 +320,11 @@ public class InitActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.frame_home5, container, false);
-            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
-            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
-            textView1.setTypeface(titilliumWebRegular);
+            try {
+                Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+                TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+                textView1.setTypeface(titilliumWebRegular);
+            }catch (Exception e){}
             return rootView;
         }
     }
@@ -326,9 +335,11 @@ public class InitActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.frame_home6, container, false);
-            Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
-            TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
-            textView1.setTypeface(titilliumWebRegular);
+            try {
+                Typeface titilliumWebRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
+                TextView textView1 = (TextView) rootView.findViewById(R.id.textView1);
+                textView1.setTypeface(titilliumWebRegular);
+            }catch (Exception e){}
             return rootView;
         }
     }

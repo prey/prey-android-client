@@ -17,6 +17,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionsController;
+import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.beta.services.PreyBetaRunnerService;
 import com.prey.exceptions.PreyException;
 import com.prey.json.parser.JSONParser;
@@ -97,6 +98,7 @@ public class PreyBetaActionsRunner implements Runnable {
         PreyLogger.d("_______getInstructions________");
         List<JSONObject> jsonObject = null;
         try {
+            ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
             jsonObject = PreyWebServices.getInstance().getActionsJsonToPerform(ctx);
         } catch (PreyException e) {
             PreyLogger.e("Exception getting device's xml instruction set", e);

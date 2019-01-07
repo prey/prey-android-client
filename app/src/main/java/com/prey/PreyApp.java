@@ -8,7 +8,6 @@ package com.prey;
 
 import android.app.Application;
 import android.content.Intent;
-import android.os.Build;
 
 import com.appsflyer.AppsFlyerConversionListener;
 import com.appsflyer.AppsFlyerLib;
@@ -21,7 +20,6 @@ import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
 import com.prey.managers.PreyTelephonyManager;
 import com.prey.net.PreyWebServices;
-import com.prey.preferences.DisablePowerCheckBoxPreference;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyDisablePowerOptionsService;
 
@@ -59,6 +57,7 @@ public class PreyApp extends Application {
 
             boolean missing=PreyConfig.getPreyConfig(this).isMissing();
 
+
             if (deviceKey != null && deviceKey != "") {
                 new Thread() {
                     public void run() {
@@ -67,11 +66,13 @@ public class PreyApp extends Application {
                             String email = PreyWebServices.getInstance().getEmail(getApplicationContext());
                             PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
                         }catch (Exception e){}
-                        GeofenceController.getInstance().run(getApplicationContext());
-                        AwareController.getInstance().init(getApplicationContext());
-                        FileretrievalController.getInstance().run(getApplicationContext());
+                        try {GeofenceController.getInstance().run(getApplicationContext());}catch (Exception e){}
+                        try {AwareController.getInstance().initJob(getApplicationContext());}catch (Exception e){}
+                        try {AwareController.getInstance().init(getApplicationContext());}catch (Exception e){}
+                        try {FileretrievalController.getInstance().run(getApplicationContext());}catch (Exception e){}
                     }
                 }.start();
+
                 if (missing) {
                     if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {
                         ReportScheduled.getInstance(this).run();
@@ -104,7 +105,9 @@ public class PreyApp extends Application {
 
                 if(PreyConfig.getPreyConfig(this).isDisablePowerOptions()){
                     try{
-                        this.startService(new Intent(this, PreyDisablePowerOptionsService.class));
+                        if(android.os.Build.VERSION.SDK_INT < PreyConfig.VERSION_CODES_P) {
+                            this.startService(new Intent(this, PreyDisablePowerOptionsService.class));
+                        }
                     }catch (Exception e){
                         PreyLogger.e( "error startService PreyDisablePowerOptionsService : " + e.getMessage(),e);
                     }
@@ -130,7 +133,7 @@ public class PreyApp extends Application {
 
                     @Override
                     public void onInstallConversionFailure(String errorMessage) {
-                        PreyLogger.i( "error getting conversion data: " + errorMessage);
+                        PreyLogger.d( "error getting conversion data: " + errorMessage);
                     }
 
                     @Override

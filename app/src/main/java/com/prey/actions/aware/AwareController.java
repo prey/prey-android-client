@@ -7,6 +7,8 @@
 package com.prey.actions.aware;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +16,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
@@ -24,10 +28,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.R;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
+import com.prey.services.AwareJobService;
 
 import org.json.JSONObject;
 
@@ -47,10 +53,22 @@ public class AwareController {
         return INSTANCE;
     }
 
+    public void initJob(Context ctx) {
+        try{
+            boolean isLocationAware=AwareConfig.getAwareConfig(ctx).isLocationAware();
+            PreyLogger.d("AWARE AwareController initJob:"+isLocationAware);
+            if (isLocationAware) {
+                AwareJobService.schedule(ctx);
+            }
+        } catch (Exception e) {
+            PreyLogger.e("AWARE error:" + e.getMessage(), e);
+        }
+    }
+
     public void init(Context ctx) {
         try{
             boolean isLocationAware=AwareConfig.getAwareConfig(ctx).isLocationAware();
-            PreyLogger.d("AWARE AwareController init:"+isLocationAware);
+            PreyLogger.d("AWARE AwareController init isLocationAware:"+isLocationAware);
             if (isLocationAware) {
                 PreyLocation locationAware = LocationUtil.getLocation(ctx, null, false);
                 PreyLocation locationNow = sendAware(ctx, locationAware);
@@ -158,10 +176,13 @@ public class AwareController {
             json.put("method", locationNow.getMethod());
             JSONObject location = new JSONObject();
             location.put("location", json);
+
+            //createNotification(ctx,locationNow);
+
             PreyHttpResponse preyResponse = PreyWebServices.getInstance().sendLocation(ctx, location);
             if (preyResponse != null) {
+                PreyLogger.d("AWARE getStatusCode :"+preyResponse.getStatusCode());
                 if (preyResponse.getStatusCode() == 201) {
-                    PreyLogger.d("AWARE getStatusCode 201");
                     AwareConfig.getAwareConfig(ctx).setLocationAware(false);
                 }
                 PreyConfig.getPreyConfig(ctx).setAwareDate(PreyConfig.FORMAT_SDF_AWARE.format(new Date()));
@@ -171,5 +192,31 @@ public class AwareController {
     }
 
 
+    private static void createNotification(Context ctx,PreyLocation locationNow){
+        String CHANNEL_ID="CHANNEL_AWARE_ID";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "prey_aware";
+            String description = "aware";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+
+        int NOTIFICATION_ID=AwareConfig.getAwareConfig(ctx).getNotificationId();
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
+                .setSmallIcon(R.drawable.prey_logo_b_mono2)
+                .setContentTitle("AWARE")
+                .setContentText("lat:" +Double.toString(locationNow.getLat())+" lng:"+Double.toString(locationNow.getLng()))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+                .setAutoCancel(true);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ctx);
+        notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
 
 }

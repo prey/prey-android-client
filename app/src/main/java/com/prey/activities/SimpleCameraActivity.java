@@ -46,30 +46,32 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
         setContentView(R.layout.simple_camera);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         Bundle extras = getIntent().getExtras();
-        if(extras.getInt("kill")==1){
-            PreyLogger.d("Kill");
+        int kill=extras.getInt("kill");
+        PreyLogger.d("Kill:"+kill);
+        if(kill==1){
             finish();
-        }
-        String focus = null;
-        if (extras != null) {
-            focus = extras.getString("focus");
-        } else {
-            focus = "front";
-        }
-        camera = getCamera(focus);
-        if (camera != null) {
-            try {
-                camera.startPreview();
-            } catch (Exception e) {
+        }else {
+            String focus = null;
+            if (extras != null) {
+                focus = extras.getString("focus");
+            } else {
+                focus = "front";
             }
-        }
-        PreyLogger.d("focus:" + focus);
-        SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
-        mHolder = surfaceView.getHolder();
-        mHolder.addCallback(this);
-        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+            camera = getCamera(focus);
+            if (camera != null) {
+                try {
+                    camera.startPreview();
+                } catch (Exception e) {
+                }
+            }
+            PreyLogger.d("focus:" + focus);
+            SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
+            mHolder = surfaceView.getHolder();
+            mHolder.addCallback(this);
+            mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
-        activity = this;
+            activity = this;
+        }
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -264,13 +266,15 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
     private static final int PHOTO_WIDTH=768;
 
     byte[] resizeImage(byte[] input) {
-        Bitmap original = BitmapFactory.decodeByteArray(input , 0, input.length);
-        Bitmap resized = Bitmap.createScaledBitmap(original, PHOTO_WIDTH, PHOTO_HEIGHT, true);
-
-        ByteArrayOutputStream blob = new ByteArrayOutputStream();
-        resized.compress(Bitmap.CompressFormat.JPEG, 100, blob);
-
-        return blob.toByteArray();
+        try{
+            Bitmap original = BitmapFactory.decodeByteArray(input , 0, input.length);
+            Bitmap resized = Bitmap.createScaledBitmap(original, PHOTO_WIDTH, PHOTO_HEIGHT, true);
+            ByteArrayOutputStream blob = new ByteArrayOutputStream();
+            resized.compress(Bitmap.CompressFormat.JPEG, 100, blob);
+            return blob.toByteArray();
+        } catch (Exception e) {
+            return input;
+        }
     }
 }
 

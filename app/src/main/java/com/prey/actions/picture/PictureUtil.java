@@ -24,6 +24,7 @@ import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.camera.CameraAction;
 
+import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.SimpleCameraActivity;
 import com.prey.net.http.EntityFile;
 
@@ -53,7 +54,7 @@ public class PictureUtil {
                 }
                 Integer numberOfCameras = SimpleCameraActivity.getNumberOfCameras();
                 if (numberOfCameras != null && numberOfCameras > 1) {
-                    Thread.sleep(6000);
+                    //Thread.sleep(6000);
                     byte[] backPicture = getPicture(ctx, "back");
                     if (backPicture != null) {
                         PreyLogger.d("back data length=" + backPicture.length);
@@ -75,7 +76,7 @@ public class PictureUtil {
             myKillerBundle.putInt("kill",1);
             intent2.putExtras(myKillerBundle);
             ctx.startActivity(intent2);
-
+            ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
 
         } catch (Exception e) {
             PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
@@ -89,7 +90,7 @@ public class PictureUtil {
         int streamType = AudioManager.STREAM_SYSTEM;
         SimpleCameraActivity.activity = null;
         Intent intent = new Intent(ctx, SimpleCameraActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("focus", focus);
         ctx.startActivity(intent);
         int i = 0;
@@ -105,7 +106,7 @@ public class PictureUtil {
 
         while (SimpleCameraActivity.activity == null&& i < 10) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
             }
             i++;
@@ -114,7 +115,7 @@ public class PictureUtil {
             SimpleCameraActivity.activity.takePicture(ctx,focus);
         }
         try {
-            Thread.sleep(4000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
         }
         //mgr.setStreamSolo(streamType, false);
@@ -124,8 +125,8 @@ public class PictureUtil {
         }
         try {
             i = 0;
-            while (SimpleCameraActivity.activity != null && SimpleCameraActivity.dataImagen == null && i < 5) {
-                Thread.sleep(2000);
+            while (SimpleCameraActivity.activity != null && SimpleCameraActivity.dataImagen == null && i < 9) {
+                Thread.sleep(500);
                 i++;
             }
         } catch (InterruptedException e) {

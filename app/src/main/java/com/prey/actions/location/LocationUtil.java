@@ -40,7 +40,7 @@ public class LocationUtil {
         HttpDataService data = null;
         try {
             final PreyLocation preyLocation = getLocation(ctx,messageId,asynchronous);
-            if (preyLocation != null) {
+            if (preyLocation != null && (preyLocation.getLat()!=0 && preyLocation.getLng()!=0)) {
                 PreyLogger.d("locationData:" + preyLocation.getLat() + " " + preyLocation.getLng() + " " + preyLocation.getAccuracy());
                 data = convertData(preyLocation);
                 new Thread() {
@@ -49,6 +49,7 @@ public class LocationUtil {
                     }
                 }.start();
             }else{
+                PreyLogger.d("locationData else:");
                 return null;
             }
         } catch (Exception e) {
@@ -77,6 +78,9 @@ public class LocationUtil {
             }
         } catch (Exception e) {
             throw e;
+        }
+        if(preyLocation!=null) {
+            PreyLogger.d("preyLocation latt:" + preyLocation.getLat() + " lng:" + preyLocation.getLng());
         }
         return preyLocation;
     }

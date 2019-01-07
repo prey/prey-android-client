@@ -23,7 +23,9 @@ import android.telephony.TelephonyManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.prey.actions.location.PreyLocation;
 import com.prey.activities.FeedbackActivity;
 import com.prey.managers.PreyConnectivityManager;
@@ -48,7 +50,7 @@ public class PreyConfig {
 
     private static final String HTTP="https://";
 
-    public static final String VERSION_PREY_DEFAULT="1.9.8";
+    public static final String VERSION_PREY_DEFAULT="1.9.9";
 
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
@@ -179,6 +181,8 @@ public class PreyConfig {
     public static final String TIME_BLOCK_APP_UNINSTALL= "TIME_BLOCK_APP_UNINSTALL";
 
     private boolean securityPrivilegesAlreadyPrompted;
+
+    public static final int VERSION_CODES_P=28;
 
     private Context ctx;
 
@@ -585,22 +589,35 @@ public class PreyConfig {
 
     public void registerC2dm(){
         String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
-        PreyLogger.d("deviceId:"+deviceId);
+        PreyLogger.d("registerC2dm deviceId:"+deviceId);
         if (deviceId != null && !"".equals(deviceId)) {
             try {
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                StrictMode.setThreadPolicy(policy);
-                String token = FirebaseInstanceId.getInstance().getToken();
-                PreyLogger.d("token:"+token);
-                String registration="FCM__"+token;
-                PreyHttpResponse response = PreyWebServices.getInstance().setPushRegistrationId(ctx, registration);
-                PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
-                if (response != null) {
-                    PreyLogger.d("response:" + response.toString());
-                }
-                PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
+
+
+
+                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
+
+                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                        String token = instanceIdResult.getToken();
+                        PreyLogger.d("registerC2dm token:"+token);
+                        if(token!=null&&!"null".equals(token)) {
+                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                            StrictMode.setThreadPolicy(policy);
+                            String registration = "FCM__" + token;
+                            PreyHttpResponse response = PreyWebServices.getInstance().setPushRegistrationId(ctx, registration);
+                            PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
+                            if (response != null) {
+                                PreyLogger.d("registerC2dm response:" + response.toString());
+                            }
+                            PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
+                        }
+                    }
+                });
+
+
+
             } catch (Exception e) {
-                PreyLogger.e("error:"+e.getMessage(),e);
+                PreyLogger.e("registerC2dm error:"+e.getMessage(),e);
             }
         }
     }
@@ -1083,12 +1100,19 @@ public class PreyConfig {
         }
     }
 
+    public void removeLocationAware(){
+        saveFloat(PreyConfig.AWARE_LAT, 0);
+        saveFloat(PreyConfig.AWARE_LNG, 0);
+        saveFloat(PreyConfig.AWARE_ACC, 0);
+        saveString(PreyConfig.AWARE_DATE, "");
+    }
+
     public String getAwareDate(){
         return getString(PreyConfig.AWARE_DATE, "");
     }
 
     public void setAwareDate(String awareDate){
-        PreyLogger.i("AWARE setAwareDate ["+awareDate+"]");
+        PreyLogger.d("AWARE setAwareDate ["+awareDate+"]");
         saveString(PreyConfig.AWARE_DATE, awareDate);
     }
 

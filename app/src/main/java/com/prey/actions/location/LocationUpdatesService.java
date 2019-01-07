@@ -56,24 +56,26 @@ public class LocationUpdatesService  extends Service {
     }
 
     private void startForegroundService() {
-        PreyLogger.d("Start foreground service.");
+        PreyLogger.d("LocationUpdatesService Start foreground service.");
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 mLocation = locationResult.getLastLocation();
-                PreyLogger.d( "New location_: " + mLocation);
+                PreyLogger.d( "LocationUpdatesService New location_: " + mLocation);
                 PreyLocationManager.getInstance(getApplicationContext()).setLastLocation(new PreyLocation(mLocation));
                 stop();
             }
         };
-        createLocationRequest();
+        try {
+            createLocationRequest();
+        } catch (Exception e) {PreyLogger.e( "LocationUpdatesService error:" + e.getMessage(),e);}
         try {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest,
                     mLocationCallback, Looper.myLooper());
         } catch (SecurityException unlikely) {
-             PreyLogger.e( "Lost location permission. Could not request updates. " + unlikely.getMessage(),unlikely);
+             PreyLogger.e( "LocationUpdatesService error " + unlikely.getMessage(),unlikely);
         }
         getLastLocation();
     }
@@ -96,19 +98,35 @@ public class LocationUpdatesService  extends Service {
                             PreyLogger.d( "LocationUpdatesService onComplete" );
                             if (task.isSuccessful() && task.getResult() != null) {
                                 mLocation = task.getResult();
+
+                                PreyLogger.d("LocationUpdatesService mLocation lat :"+mLocation.getLatitude()+" lng:"+mLocation.getLongitude());
+
                                 PreyLocationManager.getInstance(getApplicationContext()).setLastLocation(new PreyLocation(mLocation));
                             } else {
-                                PreyLogger.d("Failed to get location.");
+                                PreyLogger.d("LocationUpdatesService Failed to get location.");
                             }
                         }
                     });
+            stop();
         } catch (SecurityException unlikely) {
-            PreyLogger.e( "Lost location permission." + unlikely.getMessage(),unlikely);
+            PreyLogger.e( "LocationUpdatesService error:" + unlikely.getMessage(),unlikely);
         }
     }
 
     private void stop() {
-        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-        stopSelf();
+        PreyLogger.d( "LocationUpdatesService stop" );
+        try {
+            if(mLocationCallback!=null)
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+
+        } catch (Exception e) {
+            PreyLogger.e( "error." + e.getMessage(),e);
+        }
+
+        try {
+            stopSelf();
+        } catch (Exception e) {
+            PreyLogger.e( "error." + e.getMessage(),e);
+        }
     }
 }

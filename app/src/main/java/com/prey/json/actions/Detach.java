@@ -20,6 +20,7 @@ import com.prey.activities.LoginActivity;
 import com.prey.activities.WelcomeBatchActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.net.PreyWebServices;
+import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
 import org.json.JSONObject;
 
@@ -50,6 +51,10 @@ public class Detach {
             if (fSupport.isAdminActive()) {
                 fSupport.removeAdminPrivileges();
             }
+        } catch (Exception e) {}
+        try {
+            RunBackgroundCheckBoxPreference.notifyCancel(ctx);
+            PreyConfig.getPreyConfig(ctx).removeLocationAware();
         } catch (Exception e) {}
         PreyLogger.d("3:"+error);
         try {

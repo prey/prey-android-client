@@ -41,12 +41,14 @@ public class PreyBetaController {
 
                 public void run() {
                     //First need to stop a previous running instance.
-                    context.stopService(new Intent(context, PreyBetaRunnerService.class));
-                    Intent intentStart = new Intent(context, PreyBetaRunnerService.class);
-                    if (cmd != null) {
-                        intentStart.putExtra("cmd", cmd);
-                    }
-                    context.startService(intentStart);
+                    try{
+                        context.stopService(new Intent(context, PreyBetaRunnerService.class));
+                        Intent intentStart = new Intent(context, PreyBetaRunnerService.class);
+                        if (cmd != null) {
+                            intentStart.putExtra("cmd", cmd);
+                        }
+                        context.startService(intentStart);
+                    }catch (Exception e){}
                 }
             }).start();
 

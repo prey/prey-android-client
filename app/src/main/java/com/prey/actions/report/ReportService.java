@@ -44,18 +44,16 @@ public class ReportService extends IntentService {
 	public void run(Context ctx) {
 		int interval=-1;
 		try{
-			PreyLogger.d("_____________start ReportService");
+			PreyLogger.d("REPORT _____________start ReportService");
 
 
 			interval=Integer.parseInt(PreyConfig.getPreyConfig(ctx).getIntervalReport());
-			//ReportScheduled.getInstance(this).run();
 
 			String exclude=PreyConfig.getPreyConfig(ctx).getExcludeReport();
 
 			JSONArray jsonArray = new JSONArray();
 
-
-			PreyLogger.i("start report:"+interval);
+			PreyLogger.d("REPORT start:"+interval);
 			List<HttpDataService> listData = new ArrayList<HttpDataService>();
 
 
@@ -102,7 +100,7 @@ public class ReportService extends IntentService {
 					PreyHttpResponse response = PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
 					if (response != null) {
 						PreyConfig.getPreyConfig(ctx).setLastEvent("report_send");
-						PreyLogger.d("response.getStatusCode():" + response.getStatusCode());
+						PreyLogger.d("REPORT response.getStatusCode():" + response.getStatusCode());
 						if (409 == response.getStatusCode()) {
 							ReportScheduled.getInstance(ctx).reset();
 							PreyConfig.getPreyConfig(ctx).setMissing(false);
