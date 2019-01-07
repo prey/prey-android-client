@@ -68,7 +68,7 @@ public class Location extends JsonAction{
     }
 
     public void sms(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("Ejecuting sms Location Data.");
+        /*PreyLogger.d("Ejecuting sms Location Data.");
         String phoneNumber = null;
         if (parameters != null) {
             try {
@@ -87,7 +87,7 @@ public class Location extends JsonAction{
             } catch (Exception e) {
                 PreyLogger.e("Error, causa:" + e.getMessage(), e);
             }
-        }
+        }*/
     }
 
     public  List<HttpDataService> start_location_aware(Context ctx, List<ActionResult> list, JSONObject parameters) {

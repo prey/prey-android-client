@@ -183,8 +183,10 @@
 
     <!-- preferece -->
     <string name="preference_pin">PIN Prey</string>
-    <string name="preference_pin_summary">Crea tu código PIN de 4 dígitos para activar el uso de las acciones remotas vía comandos SMS y la función de Bloqueo de Botón de apagado</string>
-    <string name="preference_pin_summary_subtitle">Este PIN se pedirá al utilizar comandos SMS o al bloquear el botón de apagado</string>
+    <string name="preference_pin_summary">Crea tu código PIN de 4 dígitos para activar el uso de la función de Bloqueo de Botón de apagado</string>
+    <!--<string name="preference_pin_summary">Crea tu código PIN de 4 dígitos para activar el uso de las acciones remotas vía comandos SMS y la función de Bloqueo de Botón de apagado</string>-->
+    <!--<string name="preference_pin_summary_subtitle">Este PIN se pedirá al utilizar comandos SMS o al bloquear el botón de apagado</string>-->
+    <string name="preference_pin_summary_subtitle">Este PIN se pedirá al utilizar al bloquear el botón de apagado</string>
     <string name="preference_pin_dialog_title">Configura tu PIN de seguridad Prey</string>
 
     <string name="preference_pin_updating_dialog">Actualizando PIN Prey</string>
@@ -286,5 +288,9 @@
 
     <string name="preference_background_summary">A partir de Android 8.0, Prey debe mostrar una notificación para rastrear y activar zonas de control con la app en segundo plano.</string>
     <string name="preference_background_title">Correr en Segundo Plano</string>
+
+
+    <string name="preferences_disable_power_alert_android9_title">No Disponible en Android 9</string>
+    <string name="preferences_disable_power_alert_android9_message">Lo sentimos, pero debido a restricciones del sistema operativo, esta función no está disponible.</string>
 
 </resources>

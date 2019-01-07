@@ -45,18 +45,20 @@
             android:title="@string/preference_pin"
             />
 
+        <!--
         <Preference
             android:key="PREFS_SMS"
             android:summary="@string/preference_sms_summary"
             android:title="@string/preference_sms"
 
-            />
+            />-->
 
         <com.prey.preferences.DisablePowerCheckBoxPreference
             android:defaultValue="false"
             android:key="PREFS_DISABLE_POWER"
             android:summary="@string/preferences_disable_power_options_summary"
             android:title="@string/preferences_disable_power_options_title"
+            android:enabled="false"
             />
 
         <com.prey.preferences.BlockAppUninstallCheckBoxPreference
