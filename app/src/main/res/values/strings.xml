@@ -182,8 +182,10 @@
 
     <!-- preferece -->
     <string name="preference_pin">Prey security PIN</string>
-    <string name="preference_pin_summary">Create your 4 digit PIN code to activate the use of remote actions via SMS commands and the OFF Button Lock feature</string>
-    <string name="preference_pin_summary_subtitle">This PIN number will be requested when using SMS commands or the OFF button <lock></lock></string>
+    <string name="preference_pin_summary">Create your 4 digit PIN code to activate the use the OFF Button Lock feature</string>
+    <!--<string name="preference_pin_summary">Create your 4 digit PIN code to activate the use of remote actions via SMS commands and the OFF Button Lock feature</string>-->
+    <!--<string name="preference_pin_summary_subtitle">This PIN number will be requested when using SMS commands or the OFF button <lock></lock></string>-->
+    <string name="preference_pin_summary_subtitle">This PIN number will be requested when using the OFF button</string>
     <string name="preference_pin_dialog_title">Set you Prey security PIN</string>
 
 
@@ -292,5 +294,9 @@
 
     <string name="preference_background_summary">As of Android 8.0, Prey needs to display a notification to run as a background app and actively track the device and its control zone triggers.</string>
     <string name="preference_background_title">Run in Background</string>
+
+
+    <string name="preferences_disable_power_alert_android9_title">Not Available in Android 9</string>
+    <string name="preferences_disable_power_alert_android9_message">We’re sorry! This feature is not available in Android 9 due to policy restrictions.</string>
 
 </resources>

@@ -31,14 +31,16 @@ public class LocationThread extends Thread {
     public void run() {
         PreyLogger.d("run location thread");
         HttpDataService data = LocationUtil.dataLocation(ctx,null,false);
-        Map<String, String> parametersMap = data.getDataList();
-        if (phoneNumber != null && !"".equals(phoneNumber)) {
-            String lat = parametersMap.get("lat");
-            String lng = parametersMap.get("lng");
-            String message = "location http://maps.google.com/?q=" + lat + "," + lng;
-            sendSMS(phoneNumber, message);
+        if(data!=null){
+            Map<String, String> parametersMap = data.getDataList();
+            if (phoneNumber != null && !"".equals(phoneNumber)) {
+                String lat = parametersMap.get("lat");
+                String lng = parametersMap.get("lng");
+                String message = "location http://maps.google.com/?q=" + lat + "," + lng;
+                sendSMS(phoneNumber, message);
+            }
+            PreyLogger.d("lat:" + parametersMap.get("lat") + " lng:" + parametersMap.get("lng"));
         }
-        PreyLogger.d("lat:" + parametersMap.get("lat") + " lng:" + parametersMap.get("lng"));
     }
 
     private void sendSMS(String phoneNumber, String message) {

@@ -6,14 +6,18 @@
  ******************************************************************************/
 package com.prey.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -24,6 +28,7 @@ import com.prey.PreyStatus;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.R;
 import com.prey.preferences.ChangePinPreferences;
+import com.prey.services.PreyDisablePowerOptionsService;
 
 public class PreyConfigurationActivity extends PreferenceActivity {
 
@@ -35,7 +40,6 @@ public class PreyConfigurationActivity extends PreferenceActivity {
         startActivity(intent);
         finish();
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +53,7 @@ public class PreyConfigurationActivity extends PreferenceActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // TODO Auto-generated method stub
+
         if (!PreyStatus.getInstance().isPreyConfigurationActivityResume()) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -61,14 +65,6 @@ public class PreyConfigurationActivity extends PreferenceActivity {
             finish();
 
         }
-        try {
-            GoogleApiAvailability api = GoogleApiAvailability.getInstance();
-            int code = api.isGooglePlayServicesAvailable(getApplicationContext());
-            if (code == ConnectionResult.SUCCESS) {
-                PreferenceCategory mCategory = (PreferenceCategory) findPreference("PREFS_CAT_PREFS");
-            }
-        } catch (Exception e) {
-        }
 
         PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
 
@@ -78,6 +74,47 @@ public class PreyConfigurationActivity extends PreferenceActivity {
                 pDisablePower.setSummary(R.string.preferences_disable_power_options_summary);
             } else {
                 pDisablePower.setSummary(R.string.preferences_disable_power_options_summary_old);
+            }
+
+            PreyLogger.d("SDK_INT:"+android.os.Build.VERSION.SDK_INT);
+
+            if(android.os.Build.VERSION.SDK_INT >= PreyConfig.VERSION_CODES_P){
+
+                pDisablePower.setEnabled(true);
+                pDisablePower.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+
+
+
+                        AlertDialog alertDialog = new AlertDialog.Builder(PreyConfigurationActivity.this).create();
+                        alertDialog.setTitle(R.string.preferences_disable_power_alert_android9_title);
+                        alertDialog.setMessage(getString(R.string.preferences_disable_power_alert_android9_message));
+
+
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+
+                        alertDialog.show();
+
+
+                        return false;
+                    }
+                });
+                pDisablePower.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                        CheckBoxPreference pDisablePower=(CheckBoxPreference)preference;
+                        pDisablePower.setChecked(false);
+                        return false;
+                    }
+                });
+                pDisablePower.setChecked(false);
+                stopService(new Intent(this, PreyDisablePowerOptionsService.class));
             }
         }catch(Exception e){
         }
@@ -120,7 +157,7 @@ public class PreyConfigurationActivity extends PreferenceActivity {
         });
 
 
-
+        /*
         Preference pSMS= findPreference("PREFS_SMS");
         pSMS.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
@@ -131,13 +168,13 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 
                 return false;
             }
-        });
+        });*/
 
         CheckBoxPreference pBlockAppUninstall=(CheckBoxPreference)findPreference(PreyConfig.PREFS_BLOCK_APP_UNINSTALL);
 
         try {
             if ("".equals(preyConfig.getPinNumber())) {
-                pSMS.setEnabled(false);
+                //pSMS.setEnabled(false);
                 pDisablePower.setEnabled(false);
                 PreyConfig.getPreyConfig(getApplicationContext()).setDisablePowerOptions(false);
                 pDisablePower.setChecked(false);
@@ -145,7 +182,7 @@ public class PreyConfigurationActivity extends PreferenceActivity {
                 PreyConfig.getPreyConfig(getApplicationContext()).setBlockAppUninstall(false);
                 pBlockAppUninstall.setChecked(false);
             }else{
-                pSMS.setEnabled(true);
+                //pSMS.setEnabled(true);
                 pDisablePower.setEnabled(true);
                 pBlockAppUninstall.setEnabled(true);
             }

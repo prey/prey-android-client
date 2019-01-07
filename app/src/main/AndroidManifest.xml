@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.prey"
     android:installLocation="internalOnly"
-    android:versionCode="158"
-    android:versionName="1.9.8" >
+    android:versionCode="159"
+    android:versionName="1.9.9" >
 
 
     <uses-feature android:name="android.hardware.location.network" android:required="true" />
@@ -33,10 +33,12 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!--
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    -->
 
     <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
 
@@ -177,13 +179,13 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.prey.activities.WelcomeActivity"
+            android:name=".activities.WelcomeActivity"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.prey.activities.WelcomeBatchActivity"
+            android:name=".activities.WelcomeBatchActivity"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
             android:screenOrientation="portrait" />
@@ -272,12 +274,17 @@
 
 
         <receiver
-            android:name="com.prey.events.receivers.EventReceiver"  >
+            android:name="com.prey.events.receivers.EventReceiver"
+
+
+            >
             <intent-filter android:priority="20000">
 
                 <!-- TURNED ON/OFF -->
 
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+
+                <action android:name="android.intent.action.QUICKBOOT_POWEROFF" />
 
                 <!-- BATTERY LOW -->
 
@@ -297,8 +304,16 @@
                 <!-- USER_PRESENT -->
                 <action android:name="android.intent.action.USER_PRESENT"/>
 
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
 
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+
+
+                <action android:name="android.os.action.POWER_SAVE_MODE_CHANGED"/>
+
+                <action android:name="android.intent.action.ACTION_REQUEST_SHUTDOWN"/>
             </intent-filter>
+
         </receiver>
 
         <receiver android:name="com.prey.receivers.AlarmReportReceiver" />
@@ -333,12 +348,13 @@
             </intent-filter>
         </receiver>
 
+        <!--
         <receiver android:name="com.prey.receivers.SmsReceiver">
             <intent-filter android:priority="2147483647" >
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
+        -->
 
 
 
@@ -373,7 +389,9 @@
         </service>
         <!-- [END firebase_service] -->
 
-
+        <service android:name="com.prey.services.AwareJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"/>
 
         <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
             <intent-filter>

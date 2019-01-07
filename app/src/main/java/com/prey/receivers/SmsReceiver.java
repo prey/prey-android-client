@@ -47,7 +47,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
                     String displayMessageBody = currentMessage.getDisplayMessageBody();
 
-                    PreyLogger.i("senderNum: " + phoneNumber + "; message: " + displayMessageBody);
+                    PreyLogger.d("senderNum: " + phoneNumber + "; message: " + displayMessageBody);
 
                     executeActions(context, messageBody,displayMessageBody, phoneNumber);
 
