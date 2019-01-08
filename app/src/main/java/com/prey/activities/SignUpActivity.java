@@ -23,6 +23,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -42,6 +43,7 @@ import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.actions.aware.AwareController;
 import com.prey.net.PreyWebServices;
+import com.prey.util.HttpUtil;
 import com.prey.util.KeyboardStatusDetector;
 import com.prey.util.KeyboardVisibilityListener;
 
@@ -54,6 +56,7 @@ public class SignUpActivity extends Activity {
     private static final int ERROR = 1;
     private String error = null;
     private String email = null;
+    private String htmTerms="";
 
     public void onResume() {
         PreyLogger.d("onResume of SignUpActivity");
@@ -84,15 +87,9 @@ public class SignUpActivity extends Activity {
         final EditText emailText=((EditText)findViewById(R.id.editTextEmailAddress));
         final EditText passwordText=((EditText)findViewById(R.id.editTextPassword));
 
-
-
         Button buttonSignup = (Button) findViewById(R.id.buttonSignup);
 
         final TextView linkSignup = (TextView) findViewById(R.id.linkSignup);
-
-
-
-
         final CheckBox checkBox_linear_agree_terms_condition=(CheckBox)findViewById(R.id.checkBox_linear_agree_terms_condition);
         final CheckBox checkBox_linear_confirm_over=(CheckBox)findViewById(R.id.checkBox_linear_confirm_over);
 
@@ -106,65 +103,50 @@ public class SignUpActivity extends Activity {
 
         textViewInit1.setTypeface(magdacleanmonoRegular);
         textViewInit2.setTypeface(titilliumWebBold);
-
         text_linear_agree_terms_condition.setTypeface(titilliumWebBold);
         text_linear_confirm_over.setTypeface(titilliumWebBold);
 
+        final Context ctx=this;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String urlTerms="";
+        if ("es".equals(Locale.getDefault().getLanguage())) {
+            urlTerms=FileConfigReader.getInstance(getApplicationContext()).getPreyTermsEs();
+        }else{
+            urlTerms=FileConfigReader.getInstance(getApplicationContext()).getPreyTerms();
+        }
+        PreyLogger.d("urlTerms:"+urlTerms);
+        htmTerms= HttpUtil.getContents(urlTerms);
+        String regex = "<a href.*?>";
+        htmTerms = htmTerms.replaceAll(regex, "<a>");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         final AlertDialog alert =builder.create();
+        WebView wv = new WebView(getApplicationContext());
+        wv.setWebChromeClient(new WebChromeClient());
+        wv.getSettings().setJavaScriptEnabled(true);
+        wv.getSettings().setLoadWithOverviewMode(true);
+        wv.getSettings().setUseWideViewPort(false);
+        wv.getSettings().setSupportZoom(false);
+        wv.loadData(htmTerms, "text/html", "UTF-8");
+        alert.setView(wv);
 
-       // alert.setTitle("Title here");
-
-
-
-
-
-
+        alert.setButton(getString(R.string.warning_close), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                try{
+                    dialog.dismiss();
+                }catch(Exception e){};
+            }
+        });
 
         text_linear_agree_terms_condition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PreyLogger.d("text_linear_agree_terms_condition");
-
-                WebView wv = new WebView(getApplicationContext());
-
-
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    wv.getSettings().setSafeBrowsingEnabled(false);
-
-
-                wv.getSettings().setLoadWithOverviewMode(true);
-                wv.getSettings().setUseWideViewPort(false);
-                wv.getSettings().setSupportZoom(false);
-                wv.getSettings().setJavaScriptEnabled(true);
-                wv.getSettings().setUserAgentString("Desktop");
-                wv.setBackgroundColor(Color.TRANSPARENT);
-                String terms="";
-                if ("es".equals(Locale.getDefault().getLanguage())) {
-                    terms=FileConfigReader.getInstance(getApplicationContext()).getPreyTermsEs();
-                }else{
-                    terms=FileConfigReader.getInstance(getApplicationContext()).getPreyTerms();
-                }
-                PreyLogger.d("terms:"+terms);
-
-                wv.loadUrl(terms);
-
-
-                alert.setView(wv);
-                alert.setButton(getString(R.string.warning_close), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-
-                alert.show();
-
+                try{
+                    alert.show();
+                }catch(Exception e){};
             }
         });
-
 
         linkSignup.setTypeface(titilliumWebBold);
         buttonSignup.setTypeface(titilliumWebBold);
@@ -176,16 +158,12 @@ public class SignUpActivity extends Activity {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-
-
         final int halfHeight=metrics.heightPixels/3;
         KeyboardStatusDetector keyboard = new KeyboardStatusDetector();
 
-        keyboard.registerActivity(this); // or register to an activity
+        keyboard.registerActivity(this);
 
 
-
-        Context ctx=this;
         buttonSignup.setOnClickListener(new View.OnClickListener() {
 
             @Override
