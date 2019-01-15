@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -57,7 +58,9 @@ public class Report {
 
         PreyLogger.d("________start ReportScheduled");
         ReportScheduled.getInstance(ctx).run();
-        ReportJobService.schedule(ctx);
+        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            ReportJobService.schedule(ctx);
+        }
     }
 
 

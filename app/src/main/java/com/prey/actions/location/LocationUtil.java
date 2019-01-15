@@ -70,11 +70,7 @@ public class LocationUtil {
             if(!isGooglePlayServicesAvailable||(isGpsEnabled&&!isNetworkEnabled)) {
                 preyLocation = getPreyLocationAppService(ctx,method,asynchronous,preyLocation);
             }else{
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    preyLocation = getPreyLocationAppServiceOreo(ctx, method, asynchronous, preyLocation);
-                }else{
-                    preyLocation = getPreyLocationPlayService(ctx, method, asynchronous, preyLocation);
-                }
+                preyLocation = getPreyLocationAppServiceOreo(ctx, method, asynchronous, preyLocation);
             }
         } catch (Exception e) {
             throw e;

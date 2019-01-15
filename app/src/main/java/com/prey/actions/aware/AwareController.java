@@ -58,7 +58,9 @@ public class AwareController {
             boolean isLocationAware=AwareConfig.getAwareConfig(ctx).isLocationAware();
             PreyLogger.d("AWARE AwareController initJob:"+isLocationAware);
             if (isLocationAware) {
-                AwareJobService.schedule(ctx);
+                if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+                    AwareJobService.schedule(ctx);
+                }
             }
         } catch (Exception e) {
             PreyLogger.e("AWARE error:" + e.getMessage(), e);
