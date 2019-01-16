@@ -10,8 +10,8 @@ android {
         applicationId "com.prey"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 159
-        versionName '1.9.9'
+        versionCode 160
+        versionName '1.9.10'
         multiDexEnabled true
     }
     buildTypes {
@@ -42,4 +42,5 @@ dependencies {
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     implementation 'com.appsflyer:af-android-sdk:4.8.18@aar'
     implementation 'com.android.installreferrer:installreferrer:1.0'
+    implementation 'com.android.support:multidex:1.0.3'
 }

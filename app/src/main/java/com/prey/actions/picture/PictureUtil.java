@@ -54,7 +54,7 @@ public class PictureUtil {
                 }
                 Integer numberOfCameras = SimpleCameraActivity.getNumberOfCameras();
                 if (numberOfCameras != null && numberOfCameras > 1) {
-                    //Thread.sleep(6000);
+                    Thread.sleep(1000);
                     byte[] backPicture = getPicture(ctx, "back");
                     if (backPicture != null) {
                         PreyLogger.d("back data length=" + backPicture.length);
