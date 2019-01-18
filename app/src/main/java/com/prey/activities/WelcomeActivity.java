@@ -71,7 +71,6 @@ public class WelcomeActivity extends FragmentActivity {
 
     public void ready() {
         PreyLogger.d("ready WelcomeActivity");
-        PreyVerify.getInstance(this);
         Intent intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);
         startActivity(intent);
         finish();

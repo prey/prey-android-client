@@ -68,11 +68,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         PreyLogger.d("CheckPasswordHtmlActivity: onResume");
-        new Thread() {
-            public void run() {
-                PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
-            }
-        }.start();
     }
 
     protected void onDestroy() {
