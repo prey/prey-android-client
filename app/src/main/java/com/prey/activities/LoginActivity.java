@@ -57,9 +57,6 @@ public class LoginActivity extends Activity {
     private void startup() {
         Intent intent = null;
         boolean ready=PreyConfig.getPreyConfig(this).getProtectReady();
-        if (isThisDeviceAlreadyRegisteredWithPrey()) {
-            PreyVerify.getInstance(this);
-        }
         if (isThereBatchInstallationKey()&&!ready) {
                 showLoginBatch();
         } else {
