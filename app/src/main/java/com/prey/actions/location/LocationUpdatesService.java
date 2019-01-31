@@ -7,6 +7,7 @@
 package com.prey.actions.location;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.IBinder;
@@ -45,26 +46,25 @@ public class LocationUpdatesService  extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        startForegroundService(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null) {
-            startForegroundService();
-        }
-        return super.onStartCommand(intent, flags, startId);
+        super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
-    private void startForegroundService() {
+    public void startForegroundService(final Context ctx) {
         PreyLogger.d("LocationUpdatesService Start foreground service.");
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(ctx);
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 mLocation = locationResult.getLastLocation();
                 PreyLogger.d( "LocationUpdatesService New location_: " + mLocation);
-                PreyLocationManager.getInstance(getApplicationContext()).setLastLocation(new PreyLocation(mLocation));
+                PreyLocationManager.getInstance(ctx).setLastLocation(new PreyLocation(mLocation));
                 stop();
             }
         };
@@ -72,12 +72,11 @@ public class LocationUpdatesService  extends Service {
             createLocationRequest();
         } catch (Exception e) {PreyLogger.e( "LocationUpdatesService error:" + e.getMessage(),e);}
         try {
-            mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-                    mLocationCallback, Looper.myLooper());
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper());
         } catch (SecurityException unlikely) {
              PreyLogger.e( "LocationUpdatesService error " + unlikely.getMessage(),unlikely);
         }
-        getLastLocation();
+        getLastLocation(ctx);
     }
 
     private void createLocationRequest() {
@@ -88,7 +87,7 @@ public class LocationUpdatesService  extends Service {
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    private void getLastLocation() {
+    private void getLastLocation(final Context ctx) {
         PreyLogger.d( "LocationUpdatesService getLastLocation" );
         try {
             mFusedLocationClient.getLastLocation()
@@ -101,7 +100,7 @@ public class LocationUpdatesService  extends Service {
 
                                 PreyLogger.d("LocationUpdatesService mLocation lat :"+mLocation.getLatitude()+" lng:"+mLocation.getLongitude());
 
-                                PreyLocationManager.getInstance(getApplicationContext()).setLastLocation(new PreyLocation(mLocation));
+                                PreyLocationManager.getInstance(ctx).setLastLocation(new PreyLocation(mLocation));
                             } else {
                                 PreyLogger.d("LocationUpdatesService Failed to get location.");
                             }

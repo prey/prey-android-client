@@ -29,8 +29,10 @@ import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
+import com.prey.actions.location.LocationUpdatesService;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
+import com.prey.actions.location.PreyLocationManager;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.services.AwareJobService;
@@ -72,7 +74,23 @@ public class AwareController {
             boolean isLocationAware=AwareConfig.getAwareConfig(ctx).isLocationAware();
             PreyLogger.d("AWARE AwareController init isLocationAware:"+isLocationAware);
             if (isLocationAware) {
-                PreyLocation locationAware = LocationUtil.getLocation(ctx, null, false);
+                PreyLocationManager.getInstance(ctx).setLastLocation(null);
+                new LocationUpdatesService().startForegroundService(ctx);
+                PreyLocation locationAware = null;
+                int i=0;
+                while (i < LocationUtil.MAXIMUM_OF_ATTEMPTS) {
+                    PreyLogger.d("AWARE getPreyLocationAppServiceOreo[i]:"+i);
+                    try {
+                        Thread.sleep(LocationUtil.SLEEP_OF_ATTEMPTS[i]*1000);
+                    } catch (InterruptedException e) {
+                    }
+                    locationAware = PreyLocationManager.getInstance(ctx).getLastLocation();
+                    if (locationAware!=null) {
+                        locationAware.setMethod("native");
+                        break;
+                    }
+                    i++;
+                }
                 PreyLocation locationNow = sendAware(ctx, locationAware);
                 if (locationNow != null) {
                     run(ctx);
@@ -98,6 +116,10 @@ public class AwareController {
                 double lat = locationOld.getLat();
                 double lng = locationOld.getLng();
                 PreyLogger.d("AWARE lat:" + lat + " lng:" + lng);
+                if(lat==0||lng==0){
+                    PreyLogger.d("AWARE is zero");
+                    return;
+                }
                 List<Geofence> mGeofenceList = new ArrayList<Geofence>();
                 mGeofenceList.add(new com.google.android.gms.location.Geofence.Builder()
                         .setRequestId(GEO_AWARE_NAME)
@@ -165,6 +187,10 @@ public class AwareController {
     }
 
     private static void sendNowAware(Context ctx, PreyLocation locationNow) throws Exception {
+        if(locationNow.getLat()==0|| locationNow.getLng()==0 ) {
+            PreyLogger.d("AWARE sendNowAware is zero");
+            return;
+        }
         boolean isLocationAware = AwareConfig.getAwareConfig(ctx).isLocationAware();
         PreyLogger.d("AWARE sendNowAware isLocationAware:"+isLocationAware);
         if (isLocationAware){

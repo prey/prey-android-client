@@ -20,14 +20,14 @@ import com.prey.actions.report.ReportService;
 
 @TargetApi(21)
 public class ReportJobService extends JobService {
-    private static final int JOB_ID = 123;
+    private static final int JOB_ID = 124;
 
 
     public static void schedule(Context ctx ) {
         JobScheduler jobScheduler = null;
         jobScheduler=(JobScheduler) ctx.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         JobInfo.Builder builder = new JobInfo.Builder(1, new ComponentName(ctx, ReportJobService.class.getName()));
-        builder.setPeriodic(15 * DateUtils.MINUTE_IN_MILLIS );
+        builder.setPeriodic(30 * DateUtils.MINUTE_IN_MILLIS );
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_NONE);
         builder.setRequiresDeviceIdle(false);
         int resulCode=jobScheduler.schedule(builder.build());
