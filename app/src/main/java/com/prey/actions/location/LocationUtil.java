@@ -117,8 +117,8 @@ public class LocationUtil {
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
     }
 
-    private final static int MAXIMUM_OF_ATTEMPTS=2;
-    private final static int []SLEEP_OF_ATTEMPTS=new int[]{2,2,2,3,3,3,4,4,4};
+    public final static int MAXIMUM_OF_ATTEMPTS=2;
+    public final static int []SLEEP_OF_ATTEMPTS=new int[]{2,2,2,3,3,3,4,4,4};
 
     private static PreyLocation getPreyLocationPlayService(final Context ctx, String method, boolean asynchronous, PreyLocation preyLocationOld) throws Exception {
         PreyLocation preyLocation = null;
