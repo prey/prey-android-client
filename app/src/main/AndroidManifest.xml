@@ -291,21 +291,15 @@
                 <action android:name="android.intent.action.BATTERY_LOW" />
                 <!-- <action android:name="android.intent.action.BATTERY_OKAY" />-->
 
-                <!-- WIFI CHANGED -->
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.intent.action.SIM_STATE_CHANGED" />
 
-                <!-- SIM CHANGED AND  BOOT COMPLETED -->
+
+
+                <!--   BOOT COMPLETED -->
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 
-                <!-- AIRPLANE -->
-                <action android:name="android.intent.action.AIRPLANE_MODE" />
 
 
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
 
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
 
 
                 <action android:name="android.os.action.POWER_SAVE_MODE_CHANGED"/>
@@ -389,6 +383,10 @@
         <!-- [END firebase_service] -->
 
         <service android:name="com.prey.services.AwareJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"/>
+
+        <service android:name="com.prey.services.AutoconnectJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>
 

@@ -177,8 +177,11 @@ public class PreyConfig {
     public static final String AWARE_DATE="AWARE_DATE";
 
     public static final String AUTO_CONNECT="auto_connect";
+    public static final String AWARE="aware";
 
     public static final String TIME_BLOCK_APP_UNINSTALL= "TIME_BLOCK_APP_UNINSTALL";
+
+    public static final String REPORT_NUMBER= "REPORT_NUMBER";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -1135,12 +1138,20 @@ public class PreyConfig {
         }
     }
 
-    public boolean getAutoConnect() {
-        return getBoolean(PreyConfig.AUTO_CONNECT, false);
+    public void setAware(boolean aware) {
+        this.saveBoolean(PreyConfig.AWARE, aware);
+    }
+
+    public boolean getAware() {
+        return getBoolean(PreyConfig.AWARE, false);
     }
 
     public void setAutoConnect(boolean auto_connect) {
         this.saveBoolean(PreyConfig.AUTO_CONNECT, auto_connect);
+    }
+
+    public boolean getAutoConnect() {
+        return getBoolean(PreyConfig.AUTO_CONNECT, false);
     }
 
     public String getPreyVersion(){
@@ -1170,5 +1181,12 @@ public class PreyConfig {
 
     public long getTimeBlockAppUninstall(){
         return getLong(TIME_BLOCK_APP_UNINSTALL, 0);
+    }
+
+    public int getReportNumber(){
+        return getInt(REPORT_NUMBER, 0);
+    }
+    public void setReportNumber(int number_report){
+        saveInt(REPORT_NUMBER, number_report);
     }
 }

@@ -57,7 +57,7 @@ public class AwareController {
 
     public void initJob(Context ctx) {
         try{
-            boolean isLocationAware=AwareConfig.getAwareConfig(ctx).isLocationAware();
+            boolean isLocationAware=PreyConfig.getPreyConfig(ctx).getAware();
             PreyLogger.d("AWARE AwareController initJob:"+isLocationAware);
             if (isLocationAware) {
                 if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
@@ -71,7 +71,7 @@ public class AwareController {
 
     public void init(Context ctx) {
         try{
-            boolean isLocationAware=AwareConfig.getAwareConfig(ctx).isLocationAware();
+            boolean isLocationAware=PreyConfig.getPreyConfig(ctx).getAware();
             PreyLogger.d("AWARE AwareController init isLocationAware:"+isLocationAware);
             if (isLocationAware) {
                 PreyLocationManager.getInstance(ctx).setLastLocation(null);
@@ -191,7 +191,7 @@ public class AwareController {
             PreyLogger.d("AWARE sendNowAware is zero");
             return;
         }
-        boolean isLocationAware = AwareConfig.getAwareConfig(ctx).isLocationAware();
+        boolean isLocationAware = PreyConfig.getPreyConfig(ctx).getAware();
         PreyLogger.d("AWARE sendNowAware isLocationAware:"+isLocationAware);
         if (isLocationAware){
             String messageId = null;
@@ -211,7 +211,7 @@ public class AwareController {
             if (preyResponse != null) {
                 PreyLogger.d("AWARE getStatusCode :"+preyResponse.getStatusCode());
                 if (preyResponse.getStatusCode() == 201) {
-                    AwareConfig.getAwareConfig(ctx).setLocationAware(false);
+                    PreyConfig.getPreyConfig(ctx).setAware(false);
                 }
                 PreyConfig.getPreyConfig(ctx).setAwareDate(PreyConfig.FORMAT_SDF_AWARE.format(new Date()));
                 PreyLogger.d("AWARE sendNowAware:" + locationNow.toString());
