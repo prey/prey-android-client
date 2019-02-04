@@ -14,6 +14,8 @@ import android.support.multidex.MultiDex;
 import com.appsflyer.AppsFlyerConversionListener;
 import com.appsflyer.AppsFlyerLib;
 import com.google.firebase.FirebaseApp;
+import com.prey.actions.autoconnect.AutoConnectController;
+import com.prey.actions.autoconnect.AutoConnectScheduled;
 import com.prey.actions.aware.AwareController;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
@@ -49,7 +51,7 @@ public class PreyApp extends Application {
             PreyLogger.d("__________________");
             PreyLogger.i("Application launched!");
             PreyLogger.d("__________________");
-
+            PreyConfig.getPreyConfig(getApplicationContext()).setReportNumber(0);
             boolean chromium=getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
             PreyLogger.d("chromium:"+chromium);
 
@@ -70,15 +72,18 @@ public class PreyApp extends Application {
             if (deviceKey != null && deviceKey != "") {
                 new Thread() {
                     public void run() {
-                        PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
+                     /*   try {PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm(); }catch (Exception e){}
                         try {
                             String email = PreyWebServices.getInstance().getEmail(getApplicationContext());
                             PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
                         }catch (Exception e){}
+                        try {PreyStatus.getInstance().getConfig(getApplicationContext());}catch (Exception e){}
                         try {GeofenceController.getInstance().run(getApplicationContext());}catch (Exception e){}
                         try {AwareController.getInstance().initJob(getApplicationContext());}catch (Exception e){}
                         try {AwareController.getInstance().init(getApplicationContext());}catch (Exception e){}
                         try {FileretrievalController.getInstance().run(getApplicationContext());}catch (Exception e){}
+*/
+                        try {AutoConnectController.getInstance().initJob(getApplicationContext());}catch (Exception e){}
                     }
                 }.start();
 
@@ -121,12 +126,8 @@ public class PreyApp extends Application {
                         PreyLogger.e( "error startService PreyDisablePowerOptionsService : " + e.getMessage(),e);
                     }
                 }
-                /*
-                new Thread() {
-                    public void run() {
-                    AutoConnectScheduled.getInstance(getApplicationContext()).run();
-                    }
-                }.start();*/
+
+
 
             }
             try {

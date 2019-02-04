@@ -58,7 +58,7 @@ public class Detach {
         } catch (Exception e) {}
         PreyLogger.d("3:"+error);
         try {
-            AwareConfig.getAwareConfig(ctx).setLocationAware(false);
+            PreyConfig.getPreyConfig(ctx).setAware(false);
         } catch (Exception e) {}
         try {
             GeofenceController.getInstance().deleteAllZones(ctx);

@@ -6,6 +6,12 @@
  ******************************************************************************/
 package com.prey;
 
+import android.content.Context;
+
+import com.prey.net.PreyWebServices;
+
+import org.json.JSONObject;
+
 public class PreyStatus {
 
     private PreyStatus() {
@@ -66,5 +72,35 @@ public class PreyStatus {
         this.preyPopUpOnclick = preyPopUpOnclick;
     }
 
+    public void getConfig(Context ctx){
+        boolean aware = false;
+        boolean autoconnect = false;
+        try {
+            JSONObject jsnobject = PreyWebServices.getInstance().getStatus(ctx);
+            if (jsnobject != null) {
+                PreyLogger.d("STATUS jsnobject :" + jsnobject);
+                JSONObject jsnobjectSettings = jsnobject.getJSONObject("settings");
+                try {
+                    JSONObject jsnobjectLocal = jsnobjectSettings.getJSONObject("local");
+                    aware = jsnobjectLocal.getBoolean("location_aware");
+                }catch(Exception e){
+                    aware = false;
+                }
+                try {
+                    JSONObject jsnobjectGlobal = jsnobjectSettings.getJSONObject("global");
+                    autoconnect = jsnobjectGlobal.getBoolean("auto_connect");
+                }catch(Exception e){
+                    autoconnect =false;
+                }
+                PreyConfig.getPreyConfig(ctx).setAware(aware);
+                PreyConfig.getPreyConfig(ctx).setAutoConnect(autoconnect);
+                PreyLogger.d("STATUS aware :" + aware);
+                PreyLogger.d("STATUS autoconnect :" + autoconnect);
+            }
+        } catch (Exception e) {
+            PreyLogger.e("STATUS Error:" + e.getMessage(), e);
+        }
+
+    }
 }
 
