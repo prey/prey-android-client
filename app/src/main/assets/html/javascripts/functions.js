@@ -18,6 +18,10 @@
       }
     }
 
+    function openBio(){
+          Android.openBio()
+    }
+
     function signin(){
       var passs=$("#lpass").val();
       if(passs==''){
@@ -62,6 +66,24 @@
        $('.popover').toggleClass("show");
        $('#label_pass').removeClass("form-inline-error");
        $('#mobile').hide();
+       if(from == 'conf' && Android.checkBiometricSupport()){
+          if(Android.checkPrefsBiometric()){
+             $('#li-finger-signin').hide();
+             $('#li-finger-signpass').hide();
+             $('#li-finger-text').show();
+             openBio();
+          }else{
+             $('#li-finger-signin').show();
+             $('#li-finger-signpass').show();
+             $('#li-finger-text').hide();
+          }
+          $('#li-finger-white').show();
+       }else{
+          $('#li-finger-signin').show();
+          $('#li-finger-signpass').show();
+          $('#li-finger-white').hide();
+          $('#li-finger-text').hide();
+       }
     }
 
     function openSettingsTwoStep(){
@@ -74,6 +96,22 @@
        $('#label_pass2').removeClass("form-inline-error");
        $('#label_sixdigit').removeClass("form-inline-error");
        $('#mobile').hide();
+       if(from == 'conf' && Android.checkBiometricSupport()){
+          if(Android.checkPrefsBiometric()){
+             $('#li-finger-signin2').hide();
+             $('#li-finger-signpass2').hide();
+             $('#li-finger-signpass3').hide();
+             $('#li-finger-text2').show();
+          }else{
+             $('#li-finger-signin2').show();
+             $('#li-finger-signpass2').show();
+             $('#li-finger-signpass3').show();
+             $('#li-finger-text2').hide();
+          }
+          $('#li-finger-white2').show();
+       }else{
+          $('#li-finger-white2').hide();
+       }
     }
 
     function closeSettings(){
