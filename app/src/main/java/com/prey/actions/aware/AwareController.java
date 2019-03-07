@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
@@ -35,7 +36,7 @@ import com.prey.actions.location.PreyLocation;
 import com.prey.actions.location.PreyLocationManager;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
-import com.prey.services.AwareJobService;
+import com.prey.receivers.AwareGeofenceReceiver;
 
 import org.json.JSONObject;
 
@@ -53,20 +54,6 @@ public class AwareController {
             INSTANCE = new AwareController();
         }
         return INSTANCE;
-    }
-
-    public void initJob(Context ctx) {
-        try{
-            boolean isLocationAware=PreyConfig.getPreyConfig(ctx).getAware();
-            PreyLogger.d("AWARE AwareController initJob:"+isLocationAware);
-            if (isLocationAware) {
-                if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-                    AwareJobService.schedule(ctx);
-                }
-            }
-        } catch (Exception e) {
-            PreyLogger.e("AWARE error:" + e.getMessage(), e);
-        }
     }
 
     public void init(Context ctx) {
@@ -113,9 +100,9 @@ public class AwareController {
             //new
             PreyLocation locationOld=PreyConfig.getPreyConfig(ctx).getLocationAware();
             if (locationOld != null) {
-                double lat = locationOld.getLat();
-                double lng = locationOld.getLng();
-                PreyLogger.d("AWARE lat:" + lat + " lng:" + lng);
+                final double lat = locationOld.getLat();
+                final double lng = locationOld.getLng();
+                PreyLogger.d("AWARE lat:" + LocationUpdatesService.round(lat) + " lng:" + LocationUpdatesService.round(lng));
                 if(lat==0||lng==0){
                     PreyLogger.d("AWARE is zero");
                     return;
@@ -134,13 +121,12 @@ public class AwareController {
                 builder.addGeofences(mGeofenceList);
                 GeofencingRequest geofencingRequest = builder.build();
                 if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(ctx, AwareIntentService.class);
-                    PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, AwareGeofenceReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
                     LocationServices.getGeofencingClient(ctx).addGeofences(geofencingRequest, pendingIntent)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    PreyLogger.d("AWARE saveGeofence");
+                                    PreyLogger.d("AWARE saveGeofence lat:" + LocationUpdatesService.round(lat) + " lng:" + LocationUpdatesService.round(lng));
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -198,15 +184,22 @@ public class AwareController {
             String reason = null;
             double accD = Math.round(locationNow.getAccuracy() * 100.0) / 100.0;
             JSONObject json = new JSONObject();
-            json.put("lat", Double.toString(locationNow.getLat()));
-            json.put("lng", Double.toString(locationNow.getLng()));
-            json.put("accuracy", Double.toString(accD));
-            json.put("method", locationNow.getMethod());
+            String method=locationNow.getMethod();
+            if(method==null)
+                method="native";
+            json.put("lat", locationNow.getLat());
+            json.put("lng", locationNow.getLng());
+            json.put("accuracy", accD);
+            json.put("method", method);
             JSONObject location = new JSONObject();
             location.put("location", json);
 
             //createNotification(ctx,locationNow);
 
+            if (android.os.Build.VERSION.SDK_INT > 9) {
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+            }
             PreyHttpResponse preyResponse = PreyWebServices.getInstance().sendLocation(ctx, location);
             if (preyResponse != null) {
                 PreyLogger.d("AWARE getStatusCode :"+preyResponse.getStatusCode());
@@ -239,7 +232,7 @@ public class AwareController {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
                 .setSmallIcon(R.drawable.prey_logo_b_mono2)
                 .setContentTitle("AWARE")
-                .setContentText("lat:" +Double.toString(locationNow.getLat())+" lng:"+Double.toString(locationNow.getLng()))
+                .setContentText("lt:" +LocationUpdatesService.round(locationNow.getLat())+" lg:"+LocationUpdatesService.round(locationNow.getLng())+" a:"+LocationUpdatesService.round(locationNow.getAccuracy()))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
                 .setAutoCancel(true);

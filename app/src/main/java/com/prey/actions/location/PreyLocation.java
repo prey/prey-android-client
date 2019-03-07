@@ -15,7 +15,7 @@ public class PreyLocation {
     private float accuracy;
     private double altitude;
     private long timestamp;
-    private String method;
+    private String method="native";
     private Location location;
 
     public PreyLocation() {

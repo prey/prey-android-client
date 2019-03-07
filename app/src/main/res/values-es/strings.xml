@@ -293,4 +293,11 @@
     <string name="preferences_disable_power_alert_android9_title">No Disponible en Android 9</string>
     <string name="preferences_disable_power_alert_android9_message">Lo sentimos, pero debido a restricciones del sistema operativo, esta función no está disponible.</string>
 
+    <string name="preference_biometric_summary">Utiliza tu huella digital en vez de tu contraseña para ingresar a Configuraciones de la aplicación</string>
+    <string name="preference_biometric_title">Iniciar Sesión con Huella</string>
+    <string name="biometric_prompt_title">Activar Huella Digital</string>
+    <string name="biometric_prompt_subtitle">Para acceder a la aplicación utilizando tu huella digital</string>
+    <string name="biometric_prompt_cancelled">Autenticación cancelada</string>
+    <string name="biometric_prompt_error">Entra al menú de Configuraciones de la app con tu contraseña y activa la función.</string>
+    <string name="biometric_touch">Toca el sensor de huella digital</string>
 </resources>

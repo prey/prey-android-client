@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.appsflyer.AFInAppEventParameterName;
 import com.appsflyer.AFInAppEventType;
 import com.appsflyer.AppsFlyerLib;
+import com.prey.PreyStatus;
 import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.aware.AwareController;
 import com.prey.barcodereader.BarcodeActivity;
@@ -43,6 +44,7 @@ import com.prey.R;
 import com.prey.exceptions.NoMoreDevicesAllowedException;
 import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
+import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.util.KeyboardStatusDetector;
 import com.prey.util.KeyboardVisibilityListener;
 
@@ -219,15 +221,26 @@ public class SignInActivity extends Activity {
                 noMoreDeviceError = false;
                 error = null;
                 PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceToAccount(SignInActivity.this, data[0], data[1], data[2]);
-                PreyConfig.getPreyConfig(getApplicationContext()).saveAccount(accountData);
-                PreyConfig.getPreyConfig(getApplication()).registerC2dm();
-                PreyWebServices.getInstance().sendEvent(getApplication(), PreyConfig.ANDROID_SIGN_IN);
-                String email=PreyWebServices.getInstance().getEmail(getApplicationContext());
-                PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
+                final Context ctx=getApplicationContext();
+                PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
+                PreyConfig.getPreyConfig(ctx).registerC2dm();
+                PreyWebServices.getInstance().sendEvent(ctx, PreyConfig.ANDROID_SIGN_IN);
+                String email=PreyWebServices.getInstance().getEmail(ctx);
+                PreyConfig.getPreyConfig(ctx).setEmail(email);
+                PreyConfig.getPreyConfig(ctx).setRunBackground(true);
+                RunBackgroundCheckBoxPreference.notifyReady(ctx);
+                new Thread() {
+                    public void run() {
+                        try{
+                            PreyStatus.getInstance().getConfig(getApplicationContext());
+                            AwareController.getInstance().init(ctx);
+                        }catch (Exception e){}
+                        }
+                }.start();
                 try {
                     Map<String, Object> eventValue = new HashMap<String, Object>();
                     eventValue.put(AFInAppEventParameterName.SUCCESS,true);
-                    AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), AFInAppEventType.LOGIN,eventValue);
+                    AppsFlyerLib.getInstance().trackEvent(ctx, AFInAppEventType.LOGIN,eventValue);
                 } catch (Exception e1) {}
             } catch (Exception e) {
                 PreyLogger.e("error:"+e.getMessage(),e);

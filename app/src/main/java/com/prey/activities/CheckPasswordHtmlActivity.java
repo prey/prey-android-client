@@ -14,28 +14,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.hardware.fingerprint.FingerprintManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
+import com.prey.PreyStatus;
 import com.prey.R;
 import com.prey.activities.js.WebAppInterface;
-import com.prey.net.PreyWebServices;
 import com.prey.services.PreyOverlayService;
 
 import java.util.Locale;
 
-public class CheckPasswordHtmlActivity extends AppCompatActivity{
+public class CheckPasswordHtmlActivity extends AppCompatActivity  implements  FingerprintHelper.FingerprintHelperListener{
 
     public static final String CLOSE_PREY="close_prey";
     private final BroadcastReceiver close_prey_receiver = new BroadcastReceiver() {
@@ -175,6 +174,22 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity{
         }else{
             reload();
         }
+    }
+
+    @Override
+    public void authenticationFailed(String error) {
+        PreyLogger.d("authenticationFailed");
+    }
+
+    @Override
+    public void authenticationSuccess(FingerprintManager.AuthenticationResult result) {
+        PreyLogger.d("authenticationSuccess");
+        PreyConfig.getPreyConfig(getApplicationContext()).setTimePasswordOk();
+        Intent intent = new Intent(getApplicationContext(), PreyConfigurationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
+        getApplicationContext().startActivity(intent);
+        finish();
     }
 
 }

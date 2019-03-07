@@ -67,6 +67,7 @@ public class Detach {
         try {
             FileretrievalController.getInstance().deleteAll(ctx);
         } catch (Exception e) {}
+        PreyConfig.getPreyConfig(ctx).setPrefsBiometric(false);
         PreyLogger.d("5:"+error);
         try { ReportScheduled.getInstance(ctx).reset();} catch (Exception e) {error += e.getMessage();}
         try { PreyWebServices.getInstance().deleteDevice(ctx);} catch (Exception e) { }

@@ -299,4 +299,11 @@
     <string name="preferences_disable_power_alert_android9_title">Not Available in Android 9</string>
     <string name="preferences_disable_power_alert_android9_message">We’re sorry! This feature is not available in Android 9 due to policy restrictions.</string>
 
+    <string name="preference_biometric_summary">Use your fingerprint instead of your password to view the app’s Settings.</string>
+    <string name="preference_biometric_title">Login With Fingerprint</string>
+    <string name="biometric_prompt_title">Activate Fingerprint Login</string>
+    <string name="biometric_prompt_subtitle">To access Prey using your fingerprint scanner</string>
+    <string name="biometric_prompt_cancelled">Authentication cancelled</string>
+    <string name="biometric_prompt_error">Enter thes app’s Settings menu with your password and activate the feature.</string>
+    <string name="biometric_touch">Touch the fingerprint sensor</string>
 </resources>
