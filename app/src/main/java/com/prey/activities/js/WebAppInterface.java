@@ -1,14 +1,15 @@
 package com.prey.activities.js;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.hardware.fingerprint.FingerprintManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.CancellationSignal;
+import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -27,12 +28,8 @@ import com.prey.activities.PanelWebActivity;
 import com.prey.activities.PreyConfigurationActivity;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
-import com.prey.exceptions.PreyException;
-import com.prey.net.PreyHttpResponse;
+import com.prey.activities.FingerprintHelper;
 import com.prey.net.PreyWebServices;
-
-import java.net.HttpURLConnection;
-import java.util.Date;
 
 /**
  * Created by oso on 21-11-17.
@@ -50,6 +47,39 @@ public class WebAppInterface {
 
 
         mActivity=activity;
+    }
+
+    private FingerprintHelper fingerprintHelper = null;
+    private FingerprintManager fingerprintManager = null;
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @JavascriptInterface
+    public void openBio(){
+        boolean prefsBiometric=PreyConfig.getPreyConfig(mContext).getPrefsBiometric();
+        PreyLogger.d("prefsBiometric "+prefsBiometric);
+        if(prefsBiometric) {
+            fingerprintHelper = new FingerprintHelper(mActivity);
+            fingerprintManager = (FingerprintManager)mContext.getSystemService(mContext.FINGERPRINT_SERVICE);
+            fingerprintHelper.startAuth(fingerprintManager, null);
+        }else{
+            Toast.makeText(mContext,
+                    mContext.getResources().getString(R.string.biometric_prompt_error),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @JavascriptInterface
+    public boolean checkBiometricSupport(){
+        boolean checkBiometricSupport=  PreyPermission.checkBiometricSupport(mContext);
+        PreyLogger.d("checkBiometricSupport "+checkBiometricSupport);
+        return checkBiometricSupport;
+    }
+
+    @JavascriptInterface
+    public boolean checkPrefsBiometric(){
+        boolean checkPrefsBiometric= PreyConfig.getPreyConfig(mContext).getPrefsBiometric();
+        PreyLogger.d("checkPrefsBiometric "+checkPrefsBiometric);
+        return checkPrefsBiometric;
     }
 
     @JavascriptInterface
@@ -253,6 +283,7 @@ public class WebAppInterface {
                 }else{
                     Intent intent = new Intent(mContext, PreyConfigurationActivity.class);
                     PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     mContext.startActivity(intent);
                 }
                 new Thread(new EventManagerRunner(mContext, new Event(Event.APPLICATION_OPENED))).start();
