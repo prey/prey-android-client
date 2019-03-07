@@ -26,12 +26,14 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyStatus;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.actions.aware.AwareController;
 import com.prey.activities.PermissionInformationActivity;
 import com.prey.activities.SignInActivity;
 import com.prey.net.PreyWebServices;
+import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
 public class BarcodeActivity extends Activity   {
 
@@ -166,20 +168,25 @@ public class BarcodeActivity extends Activity   {
         protected Void doInBackground(String... data) {
             error = null;
             try {
-                Context ctx = getApplicationContext();
+                final Context ctx = getApplicationContext();
                 PreyLogger.d("apikey:" + data[0] + " mail:" + data[1] + " device:" + data[2]);
                 if(!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
                     PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, data[0], data[1], data[2]);
                     if (accountData != null) {
                         PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
-                        PreyConfig.getPreyConfig(getApplicationContext()).saveAccount(accountData);
-                        PreyConfig.getPreyConfig(getApplication()).registerC2dm();
-                        PreyWebServices.getInstance().sendEvent(getApplication(), PreyConfig.ANDROID_SIGN_IN);
-                        String email=PreyWebServices.getInstance().getEmail(getApplicationContext());
-                        PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
+                        PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
+                        PreyConfig.getPreyConfig(ctx).registerC2dm();
+                        PreyWebServices.getInstance().sendEvent(ctx, PreyConfig.ANDROID_SIGN_IN);
+                        String email=PreyWebServices.getInstance().getEmail(ctx);
+                        PreyConfig.getPreyConfig(ctx).setEmail(email);
+                        PreyConfig.getPreyConfig(ctx).setRunBackground(true);
+                        RunBackgroundCheckBoxPreference.notifyReady(ctx);
                         new Thread() {
                             public void run() {
-                                AwareController.getInstance().init(getApplicationContext());
+                                try {
+                                    PreyStatus.getInstance().getConfig(getApplicationContext());
+                                    AwareController.getInstance().init(ctx);
+                                }catch (Exception e){}
                             }
                         }.start();
                     }

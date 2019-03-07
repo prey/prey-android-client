@@ -182,6 +182,7 @@ public class PreyConfig {
     public static final String TIME_BLOCK_APP_UNINSTALL= "TIME_BLOCK_APP_UNINSTALL";
 
     public static final String REPORT_NUMBER= "REPORT_NUMBER";
+    public static final String PREFS_BIOMETRIC="PREFS_BIOMETRIC";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -594,31 +595,41 @@ public class PreyConfig {
         String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
         PreyLogger.d("registerC2dm deviceId:"+deviceId);
         if (deviceId != null && !"".equals(deviceId)) {
+            String token=null;
             try {
+                token =FirebaseInstanceId.getInstance().getToken();
+                PreyLogger.d("registerC2dm token2:"+token);
+                sendToken(token);
+            } catch (Exception e) {
+                PreyLogger.e("registerC2dm error:"+e.getMessage(),e);
+                try{
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
 
-
-
-                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
-
-                    public void onSuccess(InstanceIdResult instanceIdResult) {
-                        String token = instanceIdResult.getToken();
-                        PreyLogger.d("registerC2dm token:"+token);
-                        if(token!=null&&!"null".equals(token)) {
-                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                            StrictMode.setThreadPolicy(policy);
-                            String registration = "FCM__" + token;
-                            PreyHttpResponse response = PreyWebServices.getInstance().setPushRegistrationId(ctx, registration);
-                            PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
-                            if (response != null) {
-                                PreyLogger.d("registerC2dm response:" + response.toString());
-                            }
-                            PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
+                        public void onSuccess(InstanceIdResult instanceIdResult) {
+                            String token = instanceIdResult.getToken();
+                            sendToken(token);
                         }
-                    }
-                });
+                    });
+                } catch (Exception ex) {
+                    PreyLogger.e("registerC2dm error2:"+ex.getMessage(),ex);
+                }
+            }
+        }
+    }
 
-
-
+    private void sendToken(String token) {
+        PreyLogger.d("registerC2dm send token:"+token);
+        if(token!=null&&!"null".equals(token)) {
+            try {
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                String registration = "FCM__" + token;
+                PreyHttpResponse response = PreyWebServices.getInstance().setPushRegistrationId(ctx, registration);
+                PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
+                if (response != null) {
+                    PreyLogger.d("registerC2dm response:" + response.toString());
+                }
+                PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
             } catch (Exception e) {
                 PreyLogger.e("registerC2dm error:"+e.getMessage(),e);
             }
@@ -1188,5 +1199,12 @@ public class PreyConfig {
     }
     public void setReportNumber(int number_report){
         saveInt(REPORT_NUMBER, number_report);
+    }
+
+    public boolean getPrefsBiometric() {
+        return getBoolean(PREFS_BIOMETRIC, false);
+    }
+    public void setPrefsBiometric(boolean prefsBiometric) {
+        saveBoolean(PREFS_BIOMETRIC, prefsBiometric);
     }
 }

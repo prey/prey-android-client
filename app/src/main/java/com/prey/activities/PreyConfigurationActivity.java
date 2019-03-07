@@ -24,6 +24,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.prey.PreyConfig;
 import com.prey.PreyEmail;
 import com.prey.PreyLogger;
+import com.prey.PreyPermission;
 import com.prey.PreyStatus;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.R;
@@ -37,6 +38,7 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 
         intent = new Intent(getApplication(), CheckPasswordHtmlActivity.class);
 
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
@@ -133,6 +135,16 @@ public class PreyConfigurationActivity extends PreferenceActivity {
             } else
                 p.setEnabled(false);
         }catch(Exception e){
+        }
+
+        boolean checkBiometricSupport=  PreyPermission.checkBiometricSupport(this);
+        if(!checkBiometricSupport){
+            try {
+                CheckBoxPreference mCheckBoxPref = (CheckBoxPreference) findPreference("PREFS_BIOMETRIC");
+                PreferenceCategory mCategory = (PreferenceCategory) findPreference("PREFS_CAT_PREFS2");
+                mCategory.removePreference(mCheckBoxPref);
+            } catch (Exception e) {
+            }
         }
 
         p = findPreference("PREFS_ABOUT");

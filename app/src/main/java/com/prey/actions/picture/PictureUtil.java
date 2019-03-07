@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.camera.CameraAction;
@@ -54,19 +55,24 @@ public class PictureUtil {
                 }
                 Integer numberOfCameras = SimpleCameraActivity.getNumberOfCameras();
                 if (numberOfCameras != null && numberOfCameras > 1) {
-                    Thread.sleep(1000);
-                    byte[] backPicture = getPicture(ctx, "back");
-                    if (backPicture != null) {
-                        PreyLogger.d("back data length=" + backPicture.length);
-                        InputStream file = new ByteArrayInputStream(backPicture);
-                        EntityFile entityFile = new EntityFile();
-                        entityFile.setFile(file);
-                        entityFile.setMimeType("image/png");
-                        entityFile.setName("screenshot.jpg");
-                        entityFile.setType("screenshot");
-                        entityFile.setIdFile(sdf.format(new Date()) + "_" + entityFile.getType());
-                        entityFile.setLength(backPicture.length);
-                        data.addEntityFile(entityFile);
+                    int reportNumber=PreyConfig.getPreyConfig(ctx).getReportNumber();
+                    PreyConfig.getPreyConfig(ctx).setReportNumber(reportNumber+1);
+                    if(reportNumber%2==0) {
+                        Thread.sleep(1000);
+                        PreyLogger.d("1 seg");
+                        byte[] backPicture = getPicture(ctx, "back");
+                        if (backPicture != null) {
+                            PreyLogger.d("back data length=" + backPicture.length);
+                            InputStream file = new ByteArrayInputStream(backPicture);
+                            EntityFile entityFile = new EntityFile();
+                            entityFile.setFile(file);
+                            entityFile.setMimeType("image/png");
+                            entityFile.setName("screenshot.jpg");
+                            entityFile.setType("screenshot");
+                            entityFile.setIdFile(sdf.format(new Date()) + "_" + entityFile.getType());
+                            entityFile.setLength(backPicture.length);
+                            data.addEntityFile(entityFile);
+                        }
                     }
                 }
             }
@@ -96,14 +102,17 @@ public class PictureUtil {
         int i = 0;
         mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
         //mgr.setStreamSolo(streamType, true);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-            mgr.setStreamMute(streamType, true);
-        }else{
-            final int setVolFlags = AudioManager.FLAG_PLAY_SOUND;
-            mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 0, setVolFlags);
-        }
 
+        try {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                mgr.setStreamMute(streamType, true);
+            }else{
+                final int setVolFlags = AudioManager.FLAG_PLAY_SOUND;
+                mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 0, setVolFlags);
+            }
+        } catch (Exception e) {
+        }
         while (SimpleCameraActivity.activity == null&& i < 10) {
             try {
                 Thread.sleep(500);
@@ -115,7 +124,7 @@ public class PictureUtil {
             SimpleCameraActivity.activity.takePicture(ctx,focus);
         }
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
         }
         //mgr.setStreamSolo(streamType, false);

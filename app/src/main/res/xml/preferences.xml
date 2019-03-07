@@ -29,6 +29,14 @@
             android:title="@string/preference_background_title"
 
             />
+
+        <CheckBoxPreference
+            android:key="PREFS_BIOMETRIC"
+            android:summary="@string/preference_biometric_summary"
+            android:title="@string/preference_biometric_title"
+
+            />
+
     </PreferenceCategory>
 
     <PreferenceCategory

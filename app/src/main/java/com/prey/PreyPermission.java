@@ -7,10 +7,15 @@
 package com.prey;
 
 import android.Manifest;
+import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.PermissionChecker;
 import android.provider.Settings;
+import android.widget.Toast;
 
 public class PreyPermission {
 
@@ -89,4 +94,31 @@ public class PreyPermission {
         }
         return canDrawOverlays;
     }
+
+    public static  boolean checkBiometricSupport(Context ctx) {
+        KeyguardManager keyguardManager = (KeyguardManager) ctx.getSystemService(ctx.KEYGUARD_SERVICE);
+        PackageManager packageManager = ctx.getPackageManager();
+        if (!keyguardManager.isKeyguardSecure()) {
+            PreyLogger.d("Lock screen security not enabled in Settings");
+            return false;
+        }
+        if (ActivityCompat.checkSelfPermission(ctx,Manifest.permission.USE_FINGERPRINT) !=PackageManager.PERMISSION_GRANTED) {
+            PreyLogger.d("Fingerprint authentication permission not enabled");
+            return false;
+        }
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)){
+            PreyLogger.d("Fingerprint hasSystemFeature");
+            return false;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            FingerprintManager fingerprintManager = (FingerprintManager) ctx.getSystemService(ctx.FINGERPRINT_SERVICE);
+            if (!fingerprintManager.hasEnrolledFingerprints()) {
+                PreyLogger.d( "User hasn't registered any fingerprints");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }
