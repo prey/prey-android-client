@@ -57,6 +57,7 @@ public class PreyApp extends Application {
 
             String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
 
+            PreyLogger.d("deviceKey:"+deviceKey);
             PreyLogger.d("InstallationDate:" + PreyConfig.getPreyConfig(this).getInstallationDate());
             if (PreyConfig.getPreyConfig(this).getInstallationDate() == 0) {
                 PreyConfig.getPreyConfig(this).setInstallationDate(new Date().getTime());
@@ -72,18 +73,23 @@ public class PreyApp extends Application {
             if (deviceKey != null && deviceKey != "") {
                 new Thread() {
                     public void run() {
-                     /*   try {PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm(); }catch (Exception e){}
-                        try {
+                       try {
+                           PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
+                       }catch (Exception e){
+                           PreyLogger.e("registerC2dm error:"+e.getMessage(),e);
+                       }
+                       try {
                             String email = PreyWebServices.getInstance().getEmail(getApplicationContext());
                             PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
-                        }catch (Exception e){}
+                       }catch (Exception e){
+                           PreyLogger.e("setEmail error:"+e.getMessage(),e);
+                       }
                         try {PreyStatus.getInstance().getConfig(getApplicationContext());}catch (Exception e){}
                         try {GeofenceController.getInstance().run(getApplicationContext());}catch (Exception e){}
-                        try {AwareController.getInstance().initJob(getApplicationContext());}catch (Exception e){}
                         try {AwareController.getInstance().init(getApplicationContext());}catch (Exception e){}
                         try {FileretrievalController.getInstance().run(getApplicationContext());}catch (Exception e){}
-*/
-                        try {AutoConnectController.getInstance().initJob(getApplicationContext());}catch (Exception e){}
+
+                       //try {AutoConnectController.getInstance().initJob(getApplicationContext());}catch (Exception e){}
                     }
                 }.start();
 

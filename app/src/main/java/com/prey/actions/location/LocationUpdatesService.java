@@ -23,6 +23,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.prey.PreyLogger;
 
+import java.text.DecimalFormat;
+
 public class LocationUpdatesService  extends Service {
 
     private LocationRequest mLocationRequest;
@@ -98,7 +100,7 @@ public class LocationUpdatesService  extends Service {
                             if (task.isSuccessful() && task.getResult() != null) {
                                 mLocation = task.getResult();
 
-                                PreyLogger.d("LocationUpdatesService mLocation lat :"+mLocation.getLatitude()+" lng:"+mLocation.getLongitude());
+                                PreyLogger.d("LocationUpdatesService mLocation lat :"+round(mLocation.getLatitude())+" lng:"+round(mLocation.getLongitude())+" acc:"+round(mLocation.getAccuracy()));
 
                                 PreyLocationManager.getInstance(ctx).setLastLocation(new PreyLocation(mLocation));
                             } else {
@@ -110,6 +112,17 @@ public class LocationUpdatesService  extends Service {
         } catch (SecurityException unlikely) {
             PreyLogger.e( "LocationUpdatesService error:" + unlikely.getMessage(),unlikely);
         }
+    }
+
+    public static double round(double value){
+        double finalValue=0;
+        DecimalFormat df=new DecimalFormat("0.000000");
+        String formate = df.format(value);
+        try{
+            finalValue = (Double)df.parse(formate) ;
+        } catch (Exception e){
+        }
+        return finalValue;
     }
 
     private void stop() {
