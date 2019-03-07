@@ -29,6 +29,8 @@ import com.prey.events.Event;
 import com.prey.events.manager.EventThread;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
+import com.prey.receivers.AwareGeofenceReceiver;
+import com.prey.receivers.GeofenceReceiver;
 
 import org.json.JSONObject;
 
@@ -196,8 +198,7 @@ public class GeofenceController {
         final Context ctx2=ctx;
         try {
             if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(ctx, GeofenceIntentService.class);
-                PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent=PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, GeofenceReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
                 LocationServices.getGeofencingClient(ctx).addGeofences(geofencingRequest,pendingIntent)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -220,7 +221,7 @@ public class GeofenceController {
     }
 
     public synchronized static void verifyGeozone(Context ctx,PreyLocation locationNow){
-        PreyLogger.d("GEO connection verifyGeozone");
+        PreyLogger.d("GEO connection verifyGeozone lat:"+locationNow.getLat()+" lng:"+ locationNow.getLng());
         try{
             if(locationNow!=null && (locationNow.getLat()!=0 && locationNow.getLng()!=0)) {
                 GeofenceDataSource dataSource = new GeofenceDataSource(ctx);

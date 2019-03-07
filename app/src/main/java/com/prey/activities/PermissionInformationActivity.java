@@ -68,7 +68,6 @@ public class PermissionInformationActivity extends PreyActivity {
                     public void run() {
                         try{
                             AwareController.getInstance().init(getApplicationContext());
-                            AwareController.getInstance().initJob(getApplicationContext());
                         }catch(Exception e){
                         }
                     }

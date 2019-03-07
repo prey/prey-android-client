@@ -39,10 +39,12 @@ import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyStatus;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.actions.aware.AwareController;
 import com.prey.net.PreyWebServices;
+import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.util.HttpUtil;
 import com.prey.util.KeyboardStatusDetector;
 import com.prey.util.KeyboardVisibilityListener;
@@ -233,16 +235,27 @@ public class SignUpActivity extends Activity {
         protected Void doInBackground(String... data) {
             try {
                 error = null;
-                PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(getApplicationContext(), data[0], data[1], data[2],data[3],data[4],PreyUtils.getDeviceType(getApplication()));
+                final Context ctx=getApplicationContext();
+                PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(ctx, data[0], data[1], data[2],data[3],data[4],PreyUtils.getDeviceType(getApplication()));
                 PreyLogger.d("Response creating account: " + accountData.toString());
-                PreyConfig.getPreyConfig(getApplicationContext()).saveAccount(accountData);
-                PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
-                PreyWebServices.getInstance().sendEvent(getApplication(),PreyConfig.ANDROID_SIGN_UP);
-                PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
+                PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
+                PreyConfig.getPreyConfig(ctx).registerC2dm();
+                PreyWebServices.getInstance().sendEvent(ctx,PreyConfig.ANDROID_SIGN_UP);
+                PreyConfig.getPreyConfig(ctx).setEmail(email);
+                PreyConfig.getPreyConfig(ctx).setRunBackground(true);
+                RunBackgroundCheckBoxPreference.notifyReady(ctx);
+                new Thread() {
+                    public void run() {
+                        try {
+                            PreyStatus.getInstance().getConfig(getApplicationContext());
+                            AwareController.getInstance().init(ctx);
+                        }catch (Exception e){}
+                    }
+                }.start();
                 try {
                     Map<String, Object> eventValue = new HashMap<>();
                     eventValue.put(AFInAppEventParameterName.REGSITRATION_METHOD,"email");
-                    AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), AFInAppEventType.COMPLETE_REGISTRATION,eventValue);
+                    AppsFlyerLib.getInstance().trackEvent(ctx, AFInAppEventType.COMPLETE_REGISTRATION,eventValue);
                 } catch (Exception e1) {}
             } catch (Exception e) {
                 error = e.getMessage();
