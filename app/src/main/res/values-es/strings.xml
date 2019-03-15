@@ -300,4 +300,11 @@
     <string name="biometric_prompt_cancelled">Autenticación cancelada</string>
     <string name="biometric_prompt_error">Entra al menú de Configuraciones de la app con tu contraseña y activa la función.</string>
     <string name="biometric_touch">Toca el sensor de huella digital</string>
+
+    <string name="password">Contraseña</string>
+    <string name="password2">Seis dígitos</string>
+    <string name="password_description">Ingrese su contraseña de Prey</string>
+    <string name="password_description2">Código de seguridad de seis dígitos</string>
+    <string name="use_password">Usar contraseña</string>
+
 </resources>

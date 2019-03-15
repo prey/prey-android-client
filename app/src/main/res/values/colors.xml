@@ -53,8 +53,8 @@
 <color name="dark_paragraph">#94A9B7</color>
 <color name="blackwhite">#010101</color>
 
-    <color name="main_bg_color">#ffd6d9de</color>
-    <color name="list_item_title_text_color">#ff333333</color>
+<color name="main_bg_color">#ffd6d9de</color>
+<color name="list_item_title_text_color">#ff333333</color>
+<color name="lock_unlock_color">#3f81ba</color>
 
-    <color name="lock_unlock_color">#3f81ba</color>
 </resources>
