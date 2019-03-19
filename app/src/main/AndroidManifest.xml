@@ -68,6 +68,7 @@
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-feature android:name="android.hardware.fingerprint" android:required="false" />
 
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
 
 
     <uses-feature
@@ -396,6 +397,9 @@
         <service android:name="com.prey.services.PreyNotificationForeGroundService" />
 
         <service android:name="com.prey.actions.autoconnect.AutoConnectService" />
+
+
+        <service android:name="com.prey.services.ActivityIntentService" />
 
         <!-- [START firebase_service] -->
         <service
