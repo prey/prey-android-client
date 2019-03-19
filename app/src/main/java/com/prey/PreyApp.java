@@ -14,8 +14,6 @@ import android.support.multidex.MultiDex;
 import com.appsflyer.AppsFlyerConversionListener;
 import com.appsflyer.AppsFlyerLib;
 import com.google.firebase.FirebaseApp;
-import com.prey.actions.autoconnect.AutoConnectController;
-import com.prey.actions.autoconnect.AutoConnectScheduled;
 import com.prey.actions.aware.AwareController;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
@@ -90,6 +88,24 @@ public class PreyApp extends Application {
                         try {FileretrievalController.getInstance().run(getApplicationContext());}catch (Exception e){}
 
                        //try {AutoConnectController.getInstance().initJob(getApplicationContext());}catch (Exception e){}
+                        /*
+                        try {
+                            ActivityRecognitionClient mActivityRecognitionClient = new ActivityRecognitionClient(getApplicationContext());
+                            Intent intent = new Intent(getApplicationContext(), ActivityIntentService.class);
+                            PendingIntent pendingIntent= PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                            com.google.android.gms.tasks.Task<Void> task = mActivityRecognitionClient.requestActivityUpdates(
+                                    60000,
+                                    pendingIntent);
+                            task.addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void result) {
+                                    PreyLogger.i("Task onSuccess");
+                                }
+                            });
+                        }catch (Exception e){}
+                        */
                     }
                 }.start();
 

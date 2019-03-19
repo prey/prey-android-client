@@ -20,6 +20,8 @@ public class Event {
     public static final String POWER_DISCONNECTED = "power_disconnected";
     public static final String PIN_CHANGED = "pin_changed";
 
+    public static final String ACTIVITY_UPDATES = "activity_updates";
+
     private String name;
     private String info;
 
