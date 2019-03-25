@@ -30,6 +30,7 @@ import com.prey.PreyPermission;
 import com.prey.PreyStatus;
 import com.prey.R;
 import com.prey.activities.js.WebAppInterface;
+import com.prey.net.PreyWebServices;
 import com.prey.services.PreyOverlayService;
 
 import java.util.Locale;
@@ -66,9 +67,14 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  implements  Fi
     @Override
     protected void onResume() {
         super.onResume();
-
         PreyLogger.d("CheckPasswordHtmlActivity: onResume");
         reload();
+        new Thread() {
+            public void run() {
+                boolean openSettingsTwoStepWeb = PreyWebServices.getInstance().getTwoStepEnabled(getApplicationContext());
+                PreyConfig.getPreyConfig(getApplicationContext()).setTwoStep(openSettingsTwoStepWeb);s
+            }
+        }.start();
     }
 
     protected void onDestroy() {

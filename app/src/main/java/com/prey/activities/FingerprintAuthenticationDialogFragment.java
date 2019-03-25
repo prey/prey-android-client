@@ -38,12 +38,13 @@ import com.prey.net.PreyWebServices;
 
 import java.util.Date;
 
-public class FingerprintAuthenticationDialogFragment  extends DialogFragment   implements TextView.OnEditorActionListener , FingerprintHelper.FingerprintHelperListener{
+public class FingerprintAuthenticationDialogFragment  extends DialogFragment   implements FingerprintHelper.FingerprintHelperListener{
 
     private Stage mStage = Stage.FINGERPRINT;
     private View mFingerprintContent;
     private View mBackupContent;
     private Button mSecondDialogButton;
+    private Button mFirstDialogButton;
 
     private EditText mPassword;
     private EditText mPassword2;
@@ -66,16 +67,23 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
         from=bundle.getString("from");
         PreyLogger.i("from:"+from);
         mFingerprintUiHelper=null;
-        if("setting".equals(from)) {
-            boolean checkBiometricSupport=  PreyPermission.checkBiometricSupport(getActivity());
-            if(checkBiometricSupport){
+
+
+        mStage = Stage.PASSWORD;
+
+        mFirstDialogButton = (Button) v.findViewById(R.id.first_dialog_button);
+        mFirstDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mStage == Stage.FINGERPRINT) {
+                    mStage = Stage.PASSWORD;
+                    updateStage();
+                } else {
                     mStage = Stage.FINGERPRINT;
-            }else{
-                mStage = Stage.PASSWORD;
+                    updateStage();
+                }
             }
-        }else{
-            mStage = Stage.PASSWORD;
-        }
+        });
 
         mSecondDialogButton = (Button) v.findViewById(R.id.second_dialog_button);
         mSecondDialogButton.setOnClickListener(new View.OnClickListener() {
@@ -105,20 +113,11 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
         mPassword.setTypeface(regularBold);
         mPassword2.setTypeface(regularBold);
         mSecondDialogButton.setTypeface(regularBold);
+        mFirstDialogButton.setTypeface(regularBold);
         fingerprint_description.setTypeface(regularBold);
-
-        mPassword.setOnEditorActionListener(this);
 
         updateStage();
         return v;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        PreyLogger.d("onResume");
-
     }
 
     @Override
@@ -162,15 +161,6 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
         }
     }
 
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_GO) {
-            verifyPassword();
-            return true;
-        }
-        return false;
-    }
-
     private void verifyPassword() {
         String passwordtyped=mPassword.getText().toString();
         String passwordtyped2=mPassword2.getText().toString();
@@ -197,6 +187,7 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
         StrictMode.setThreadPolicy(policy);
         switch (mStage) {
             case FINGERPRINT:
+                mFirstDialogButton.setVisibility(View.GONE);
                 mSecondDialogButton.setText(R.string.use_password);
                 mFingerprintContent.setVisibility(View.VISIBLE);
                 mBackupContent.setVisibility(View.GONE);
@@ -208,15 +199,16 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
                 }
                 break;
             case PASSWORD:
+                boolean checkBiometricSupport=  PreyPermission.checkBiometricSupport(getActivity());
+                if(!checkBiometricSupport){
+                    mFirstDialogButton.setVisibility(View.GONE);
+                }else{
+                    mFirstDialogButton.setVisibility(View.VISIBLE);
+                }
+                mFirstDialogButton.setText(R.string.use_fingerprint);
                 mSecondDialogButton.setText(R.string.ok);
                 mFingerprintContent.setVisibility(View.GONE);
                 mBackupContent.setVisibility(View.VISIBLE);
-                try {
-                    boolean openSettingsTwoStepWeb = PreyWebServices.getInstance().getTwoStepEnabled(getActivity());
-                    PreyConfig.getPreyConfig(getActivity()).setTwoStep(openSettingsTwoStepWeb);
-                    PreyLogger.d("openSettingsTwoStepWeb:"+openSettingsTwoStepWeb);
-                }catch (Exception e){
-                }
                 boolean openSettingsTwoStep=PreyConfig.getPreyConfig(getActivity()).getTwoStep();
                 PreyLogger.d("openSettingsTwoStep:"+openSettingsTwoStep);
                 if(openSettingsTwoStep) {
@@ -293,7 +285,7 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
             else if (!isPasswordOk) {
                 wrongPasswordIntents++;
                 if (wrongPasswordIntents == 3) {
-                    Toast.makeText(mCtx, R.string.password_intents_exceed, Toast.LENGTH_LONG).show();
+                    Toast.makeText(mCtx, R.string.password_intents_exceed, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(mCtx, R.string.password_wrong, Toast.LENGTH_SHORT).show();
                 }
