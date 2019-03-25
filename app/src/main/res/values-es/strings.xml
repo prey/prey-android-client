@@ -306,5 +306,6 @@
     <string name="password_description">Ingrese su contraseña de Prey</string>
     <string name="password_description2">Código de seguridad de seis dígitos</string>
     <string name="use_password">Usar contraseña</string>
+    <string name="use_fingerprint">Usar huella</string>
 
 </resources>
