@@ -15,6 +15,7 @@ import android.hardware.fingerprint.FingerprintManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.RequiresApi;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -113,6 +114,14 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        PreyLogger.d("onResume");
+
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         PreyLogger.d("onPause");
@@ -184,6 +193,8 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
 
     private void updateStage() {
         PreyLogger.d("updateStage:"+(mStage==Stage.FINGERPRINT?"FINGERPRINT":"PASSWORD"));
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         switch (mStage) {
             case FINGERPRINT:
                 mSecondDialogButton.setText(R.string.use_password);
@@ -200,7 +211,14 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
                 mSecondDialogButton.setText(R.string.ok);
                 mFingerprintContent.setVisibility(View.GONE);
                 mBackupContent.setVisibility(View.VISIBLE);
+                try {
+                    boolean openSettingsTwoStepWeb = PreyWebServices.getInstance().getTwoStepEnabled(getActivity());
+                    PreyConfig.getPreyConfig(getActivity()).setTwoStep(openSettingsTwoStepWeb);
+                    PreyLogger.d("openSettingsTwoStepWeb:"+openSettingsTwoStepWeb);
+                }catch (Exception e){
+                }
                 boolean openSettingsTwoStep=PreyConfig.getPreyConfig(getActivity()).getTwoStep();
+                PreyLogger.d("openSettingsTwoStep:"+openSettingsTwoStep);
                 if(openSettingsTwoStep) {
                     password_description2.setVisibility(View.VISIBLE);
                     mPassword2.setVisibility(View.VISIBLE);

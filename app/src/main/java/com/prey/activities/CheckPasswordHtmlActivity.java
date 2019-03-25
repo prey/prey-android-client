@@ -66,7 +66,9 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  implements  Fi
     @Override
     protected void onResume() {
         super.onResume();
+
         PreyLogger.d("CheckPasswordHtmlActivity: onResume");
+        reload();
     }
 
     protected void onDestroy() {

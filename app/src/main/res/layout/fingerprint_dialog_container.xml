@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:gravity="center"
         android:layout_height="wrap_content">
-        <include layout="@layout/fingerprint_dialog_content" />
-        <include layout="@layout/fingerprint_dialog_backup" android:visibility="gone" />
+        <include layout="@layout/fingerprint_dialog_content"  android:visibility="gone"/>
+        <include layout="@layout/fingerprint_dialog_backup"  />
     </FrameLayout>
 
     <LinearLayout
