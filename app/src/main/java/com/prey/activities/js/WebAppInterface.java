@@ -48,13 +48,15 @@ public class WebAppInterface {
     public WebAppInterface(Context context, CheckPasswordHtmlActivity activity) {
         mContext = context;
         mActivity=activity;
+
     }
 
     private static final String DIALOG_FRAGMENT_TAG = "myFragment";
+    FingerprintAuthenticationDialogFragment fragment=null;
 
     @JavascriptInterface
     public void open_panel(){
-        FingerprintAuthenticationDialogFragment fragment
+        fragment
                 = new FingerprintAuthenticationDialogFragment();
         Bundle bundle=new Bundle();
         bundle.putString("from","panel");
@@ -63,7 +65,7 @@ public class WebAppInterface {
     }
     @JavascriptInterface
     public void open_setting(){
-        FingerprintAuthenticationDialogFragment fragment
+        fragment
                 = new FingerprintAuthenticationDialogFragment();
         Bundle bundle=new Bundle();
         bundle.putString("from","setting");
