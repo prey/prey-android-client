@@ -43,4 +43,6 @@ dependencies {
     implementation 'com.appsflyer:af-android-sdk:4.8.18@aar'
     implementation 'com.android.installreferrer:installreferrer:1.0'
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.google.code.gson:gson:2.8.2'
+
 }

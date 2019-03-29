@@ -29,12 +29,13 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.PreyStatus;
 import com.prey.R;
-import com.prey.activities.js.WebAppInterface;
+import com.prey.activities.js.WebAppInterface2;
 import com.prey.services.PreyOverlayService;
 
+import java.util.Date;
 import java.util.Locale;
 
-public class CheckPasswordHtmlActivity extends AppCompatActivity  implements  FingerprintHelper.FingerprintHelperListener{
+public class CheckPasswordHtmlActivity extends AppCompatActivity  {
 
     public static final String CLOSE_PREY="close_prey";
     private final BroadcastReceiver close_prey_receiver = new BroadcastReceiver() {
@@ -89,13 +90,13 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  implements  Fi
 
     public void loadUrl(){
         settings();
-        myWebView.addJavascriptInterface(new WebAppInterface(this,this), "Android");
+        myWebView.addJavascriptInterface(new WebAppInterface2(this,this), "Android");
         myWebView.loadUrl(getUrl(this));
     }
 
     public void reload(){
         settings();
-        myWebView.addJavascriptInterface(new WebAppInterface(this,this), "Android");
+        myWebView.addJavascriptInterface(new WebAppInterface2(this,this), "Android");
         myWebView.loadUrl(getUrl(this));
         myWebView.reload();
     }
@@ -107,30 +108,41 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  implements  Fi
         } else {
             url="file:///android_asset/html/protected.html";
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
-            boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
-            boolean canAccessCamera = PreyPermission.canAccessCamera(this);
-            boolean canAccessReadPhoneState = PreyPermission.canAccessReadPhoneState(this);
-            boolean canAccessReadExternalStorage = PreyPermission.canAccessReadExternalStorage(this);
-            boolean canDrawOverlays =false;
-            if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
-                    || !canAccessReadPhoneState || !canAccessReadExternalStorage) {
-                if ("es".equals(Locale.getDefault().getLanguage())) {
-                    url="file:///android_asset/html/un_protected_es.html" ;
-                }else{
-                    url="file:///android_asset/html/un_protected.html";
+
+        String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
+        if (deviceKey != null && deviceKey != "") {
+            url = "http://10.10.2.32:1337/#/onboarding/android/activation?time=" + new Date().getTime();
+        }else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
+                boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
+                boolean canAccessCamera = PreyPermission.canAccessCamera(this);
+                boolean canAccessReadPhoneState = PreyPermission.canAccessReadPhoneState(this);
+                boolean canAccessReadExternalStorage = PreyPermission.canAccessReadExternalStorage(this);
+                boolean canDrawOverlays = false;
+                if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
+                        || !canAccessReadPhoneState || !canAccessReadExternalStorage) {
+                    if ("es".equals(Locale.getDefault().getLanguage())) {
+                        url = "file:///android_asset/html/un_protected_es.html";
+                    } else {
+                        url = "file:///android_asset/html/un_protected.html";
+                    }
+
                 }
+                url = "http://10.10.2.32:1337/#/onboarding/android/login?time=" + new Date().getTime();
+                // url="file:///android_asset/html2/index.html#/onboarding/android/login?time="+new Date().getTime();
+            }
+            boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+            if (!canDrawOverlays) {
+                if ("es".equals(Locale.getDefault().getLanguage())) {
+                    url = "file:///android_asset/html/un_protected_es.html";
+                } else {
+                    url = "file:///android_asset/html/un_protected.html";
+                }
+                url = "http://10.10.2.32:1337/#/";
             }
         }
-        boolean canDrawOverlays=PreyPermission.canDrawOverlays(this);
-        if (!canDrawOverlays) {
-            if ("es".equals(Locale.getDefault().getLanguage())) {
-                url="file:///android_asset/html/un_protected_es.html" ;
-            }else{
-                url="file:///android_asset/html/un_protected.html";
-            }
-        }
+
         PreyLogger.d("url"+url);
         return url;
     }
@@ -176,21 +188,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  implements  Fi
         }
     }
 
-    @Override
-    public void authenticationFailed(String error) {
-        PreyLogger.d("authenticationFailed");
-    }
-
-    @Override
-    public void authenticationSuccess(FingerprintManager.AuthenticationResult result) {
-        PreyLogger.d("authenticationSuccess");
-        PreyConfig.getPreyConfig(getApplicationContext()).setTimePasswordOk();
-        Intent intent = new Intent(getApplicationContext(), PreyConfigurationActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
-        getApplicationContext().startActivity(intent);
-        finish();
-    }
 
 }
 
