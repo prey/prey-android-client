@@ -40,6 +40,7 @@ import com.prey.activities.PermissionInformationActivity;
 import com.prey.activities.PreyConfigurationActivity;
 import com.prey.activities.SecurityActivity;
 import com.prey.activities.SignInActivity;
+import com.prey.activities.SignUpActivity;
 import com.prey.activities.WelcomeActivity;
 import com.prey.barcodereader.BarcodeActivity;
 import com.prey.events.Event;
@@ -82,7 +83,7 @@ public class WebAppInterface2 {
     @JavascriptInterface
     public void login(String password){
         PreyLogger.i("login:"+ password);
-        password="osito123";
+
         String passwordtyped2="";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             new CheckPassword(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,password,passwordtyped2);
@@ -103,7 +104,12 @@ public class WebAppInterface2 {
 
     @JavascriptInterface
     public void signup(String name,String email,String password1,String password2,String policy_rule_age,String policy_rule_privacy_terms){
-        PreyLogger.d("signup name: "+name+" email:"+email);
+        PreyLogger.d("signup name: "+name+" email:"+email+" policy_rule_age:"+policy_rule_age+" policy_rule_privacy_terms:"+policy_rule_privacy_terms);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            new CreateAccount(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, name, email, password1,password2,policy_rule_age,policy_rule_privacy_terms);
+        else
+            new CreateAccount(mContext).execute(name, email, password1,password2,policy_rule_age,policy_rule_privacy_terms);
     }
 
 
@@ -195,19 +201,8 @@ public class WebAppInterface2 {
                 if(progressDialog!=null)
                     progressDialog.dismiss();
                 if (error == null) {
-                    String message = mContext.getString(R.string.device_added_congratulations_text);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("message", message);
-                    Intent intent =null;
-                    if (PreyConfig.getPreyConfig(mContext).isChromebook()) {
-                        intent = new Intent(mContext, WelcomeActivity.class);
-                        PreyConfig.getPreyConfig(mContext).setProtectReady(true);
-                    }else {
-                        intent = new Intent(mContext, PermissionInformationActivity.class);
-                    }
-                    intent.putExtras(bundle);
-                    mContext.startActivity(intent);
-                    mActivity.finish();
+
+                      mActivity.loadUrl();
                 } else {
                     AlertDialog.Builder alertDialog= new AlertDialog.Builder( mContext);
                     alertDialog.setIcon(R.drawable.error).setTitle(R.string.error_title).setMessage(error)
@@ -300,4 +295,98 @@ public class WebAppInterface2 {
         }
     }
 
+
+    private class CreateAccount extends AsyncTask<String, Void, Void> {
+
+        Context context;
+
+        public CreateAccount(Context mContext) {
+            this.context = mContext;
+        }
+
+        String email="";
+        ProgressDialog progressDialog = null;
+
+        @Override
+        protected void onPreExecute() {
+            try {
+                progressDialog = new ProgressDialog(mContext);
+                progressDialog.setMessage(mContext.getText(R.string.creating_account_please_wait).toString());
+                progressDialog.setIndeterminate(true);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+            }catch (Exception e) {}
+            error = null;
+        }
+
+        @Override
+        protected Void doInBackground(String... data) {
+            try {
+                error = null;
+                final Context ctx=mContext;
+                String name=data[0];
+                email=data[1];
+                String password1=data[2];
+                String password2=data[3];
+                String rule_age=data[4];
+                String privacy_terms=data[5];
+
+                PreyLogger.d("name:"+name);
+                PreyLogger.d("email:"+email);
+                PreyLogger.d("password1:"+password1);
+                PreyLogger.d("password2:"+password2);
+                PreyLogger.d("rule_age:"+rule_age);
+                PreyLogger.d("privacy_terms:"+privacy_terms);
+
+
+
+                PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(ctx, name, email, password1,password2,rule_age,privacy_terms,PreyUtils.getDeviceType(mContext));
+                PreyLogger.d("Response creating account: " + accountData.toString());
+                PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
+                PreyConfig.getPreyConfig(ctx).registerC2dm();
+                PreyWebServices.getInstance().sendEvent(ctx,PreyConfig.ANDROID_SIGN_UP);
+                PreyConfig.getPreyConfig(ctx).setEmail(email);
+                PreyConfig.getPreyConfig(ctx).setRunBackground(true);
+                RunBackgroundCheckBoxPreference.notifyReady(ctx);
+                new Thread() {
+                    public void run() {
+                        try {
+                            PreyStatus.getInstance().getConfig(mContext);
+                            AwareController.getInstance().init(ctx);
+                        }catch (Exception e){}
+                    }
+                }.start();
+                try {
+                    Map<String, Object> eventValue = new HashMap<>();
+                    eventValue.put(AFInAppEventParameterName.REGSITRATION_METHOD,"email");
+                    AppsFlyerLib.getInstance().trackEvent(ctx, AFInAppEventType.COMPLETE_REGISTRATION,eventValue);
+                } catch (Exception e1) {}
+            } catch (Exception e) {
+                error = e.getMessage();
+                PreyLogger.e("e.getMessage():"+e.getMessage(),e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            try {
+                if(progressDialog!=null)
+                    progressDialog.dismiss();
+
+                if (error == null) {
+                    mActivity.loadUrl();
+                } else {
+                    AlertDialog.Builder alertDialog= new AlertDialog.Builder( mContext);
+                    alertDialog.setIcon(R.drawable.error).setTitle(R.string.error_title).setMessage(error)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            }).setCancelable(false);
+                    alertDialog.show();
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
 }

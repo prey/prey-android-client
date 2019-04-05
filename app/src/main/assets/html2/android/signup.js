@@ -18,17 +18,16 @@ const handleClick = (e)=>{
   var email=document.getElementById('email').value;
   var password1=document.getElementById('password1').value;
   var password2=document.getElementById('password2').value;
-  var policy_rule_age=document.getElementById('user[policy_rule_age]').value;
-  var policy_rule_privacy_terms=document.getElementById('user[policy_rule_privacy_terms]').value;
+  var policy_rule_age=document.getElementById('user[policy_rule_age]').checked;
+  var policy_rule_privacy_terms=document.getElementById('user[policy_rule_privacy_terms]').checked;
   
   if(window.Android){
-     window.Android.mylogin(''+name,''+email);
+     window.Android.signup(''+name,''+email,''+password1,''+password2,''+policy_rule_age,''+policy_rule_privacy_terms);
   } else{
-      alert("ola oso signup name:"+name+" email:"+email+"  password1:"+password1 );;
+      alert("ola oso signup name:"+name+" email:"+email+"  password1:"+password1+"  password2:"+password2+"  policy_rule_age:"+policy_rule_age+"  policy_rule_privacy_terms:"+policy_rule_privacy_terms );;
   }
 }
-
-
+ 
 
 export default () => (
   <div className="inner-content">
@@ -38,9 +37,7 @@ export default () => (
           <div className="sign-form">
             <form autoComplete="off" className="form form-session" id="new-session"acceptCharset="UTF-8">
               <input type="hidden" name="utf8" value="✓" />
-              <span className="msg info-error">Password doesn't match. Try again.</span>
-              <span className="msg info-error">That mail has already been taken. Did you already register?</span>
-              <span className="msg info-notice">Please enter your email.</span>
+ 
               <span className="h1">SIGN UP</span>
               <span className="here">One step from your new Prey account.</span>
               <ul className="form vvv">

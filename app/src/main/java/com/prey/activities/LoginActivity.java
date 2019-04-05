@@ -66,7 +66,7 @@ public class LoginActivity extends Activity {
 
     private void showLogin() {
         Intent intent = null;
-        intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+        intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);
         startActivity(intent);
         finish();
     }

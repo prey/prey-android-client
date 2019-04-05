@@ -58,7 +58,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.webview);
         PreyLogger.d("CheckPasswordHtmlActivity: onCreate");
-        loadUrl();
+
 
         registerReceiver(close_prey_receiver, new IntentFilter(CLOSE_PREY));
 
@@ -67,6 +67,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  {
     @Override
     protected void onResume() {
         super.onResume();
+        loadUrl();
         PreyLogger.d("CheckPasswordHtmlActivity: onResume");
     }
 
@@ -89,19 +90,77 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  {
     }
 
     public void loadUrl(){
+        PreyLogger.d("loadUrl");
         settings();
         myWebView.addJavascriptInterface(new WebAppInterface2(this,this), "Android");
         myWebView.loadUrl(getUrl(this));
     }
 
     public void reload(){
+        PreyLogger.d("reload");
         settings();
         myWebView.addJavascriptInterface(new WebAppInterface2(this,this), "Android");
         myWebView.loadUrl(getUrl(this));
         myWebView.reload();
     }
+//https://maps.googleapis.com/maps/api/staticmap?center=-33.4221661,-70.6116644&size=800x400&zoom=17&scale=2&key=AIzaSyBzmowtjrPZXj1WHF-JMBmbpp1W23Z-QJo
+
+
+    public static String URL_ONB="http://10.10.2.91:3000";
+    //public static String URL_ONB="http://192.168.0.15:3000";
 
     public String getUrl(Context ctx){
+
+        String url="";
+        boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
+        boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
+        boolean canAccessCamera = PreyPermission.canAccessCamera(this);
+        boolean canAccessReadPhoneState = PreyPermission.canAccessReadPhoneState(this);
+        boolean canAccessReadExternalStorage = PreyPermission.canAccessReadExternalStorage(this);
+        PreyLogger.i("canAccessFineLocation:"+canAccessFineLocation);
+        PreyLogger.i("canAccessCoarseLocation:"+canAccessCoarseLocation);
+        PreyLogger.i("canAccessCamera:"+canAccessCamera);
+        PreyLogger.i("canAccessReadPhoneState:"+canAccessReadPhoneState);
+        PreyLogger.i("canAccessReadExternalStorage:"+canAccessReadExternalStorage);
+        boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+        PreyLogger.i("canDrawOverlays:"+canDrawOverlays);
+        String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
+        PreyLogger.i("deviceKey:"+deviceKey);
+        if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
+                && canAccessReadPhoneState && canAccessReadExternalStorage && canDrawOverlays) {
+
+            if (deviceKey != null && deviceKey != "") {
+               // url = "http://10.10.2.91:1337/#/onboarding/android/activation?time=" + new Date().getTime();
+                url = URL_ONB+"/login";
+            }else{
+                //url = "http://10.10.2.91:1337/#/onboarding/android/login?time=" + new Date().getTime();
+                url = URL_ONB+"/signin";
+            }
+        }else{
+            if (deviceKey != null && deviceKey != "") {
+               // url = "http://10.10.2.91:1337/#/onboarding/android/permissions";
+                url = URL_ONB+"/permissions";
+            }else {
+              //  url = "http://10.10.2.91:1337/#";
+                url = URL_ONB+"/";
+            }
+
+        }
+        /*
+        http://localhost:3000/
+        http://localhost:3000/login
+        http://localhost:3000/permissions
+        http://localhost:3000/security
+        http://localhost:3000/signin
+        http://localhost:3000/signup
+*/
+        //report http://localhost:3000/activate
+
+        PreyLogger.i("url:"+url);
+
+        return url;
+    }
+    public String getUrl2(Context ctx){
         String url="";
         if ("es".equals(Locale.getDefault().getLanguage())) {
             url="file:///android_asset/html/protected_es.html";
@@ -111,7 +170,8 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  {
 
         String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
         if (deviceKey != null && deviceKey != "") {
-            url = "http://10.10.2.32:1337/#/onboarding/android/activation?time=" + new Date().getTime();
+            url = "http://10.10.2.91:1337/#/onboarding/android/activation?time=" + new Date().getTime();
+            PreyLogger.i("url1:"+url);
         }else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
@@ -119,18 +179,28 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  {
                 boolean canAccessCamera = PreyPermission.canAccessCamera(this);
                 boolean canAccessReadPhoneState = PreyPermission.canAccessReadPhoneState(this);
                 boolean canAccessReadExternalStorage = PreyPermission.canAccessReadExternalStorage(this);
+                PreyLogger.i("canAccessFineLocation:"+canAccessFineLocation);
+                PreyLogger.i("canAccessCoarseLocation:"+canAccessCoarseLocation);
+                PreyLogger.i("canAccessCamera:"+canAccessCamera);
+                PreyLogger.i("canAccessReadPhoneState:"+canAccessReadPhoneState);
+                PreyLogger.i("canAccessReadExternalStorage:"+canAccessReadExternalStorage);
+
+
                 boolean canDrawOverlays = false;
-                if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
-                        || !canAccessReadPhoneState || !canAccessReadExternalStorage) {
+                if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
+                        && canAccessReadPhoneState && canAccessReadExternalStorage) {
                     if ("es".equals(Locale.getDefault().getLanguage())) {
                         url = "file:///android_asset/html/un_protected_es.html";
                     } else {
                         url = "file:///android_asset/html/un_protected.html";
                     }
-
+                    url = "http://10.10.2.91:1337/#/onboarding/android/login?time=" + new Date().getTime();
+                }else{
+                    url = "http://10.10.2.91:1337/#/";
                 }
-                url = "http://10.10.2.32:1337/#/onboarding/android/login?time=" + new Date().getTime();
+
                 // url="file:///android_asset/html2/index.html#/onboarding/android/login?time="+new Date().getTime();
+                PreyLogger.i("url2:"+url);
             }
             boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
             if (!canDrawOverlays) {
@@ -139,7 +209,8 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  {
                 } else {
                     url = "file:///android_asset/html/un_protected.html";
                 }
-                url = "http://10.10.2.32:1337/#/";
+                url = "http://10.10.2.91:1337/#/";
+                PreyLogger.i("url3:"+url);
             }
         }
 
@@ -184,7 +255,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  {
             askForPermissionAndroid7();
             startOverlayService();
         }else{
-            reload();
+            super.onResume();
         }
     }
 
