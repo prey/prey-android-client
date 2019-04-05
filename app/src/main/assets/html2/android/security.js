@@ -32,6 +32,14 @@ export default class Configure extends React.Component {
     this.closeModal = this.closeModal.bind(this);
   }
 
+  wipe() {
+    if(window.Android){
+      window.Android.wipe();
+   } else{
+       alert("ola oso wipe:" );;
+   }
+  }
+
   openModal() {
     this.setState({modalIsOpen: true});
   }
@@ -129,7 +137,7 @@ export default class Configure extends React.Component {
                 <i className="icon-login-box-lock"/>
               </figure>
               <h5>Setup Prey PIN</h5>
-              <Link to="/onboarding/android/activation" className="btn">Activate</Link>
+              <Link to="#" onClick={this.openModal} className="btn">Activate</Link>
             </div>
             <span>Create your 4-digit PIN code to activate the use of remote actions via SMS commands and Android's extra safety features.</span>
           </div>
@@ -168,11 +176,25 @@ export default class Configure extends React.Component {
               <span>Blocks phone shutdown attempts with your Prey PIN.</span>
             </div>
           </div>
-          <Link to="/onboarding/android/activation" className="btn cta l success icon-right">Next</Link>
+          <div className="line-through" />
+
+          <div className="item">
+            <div className="row">
+              <figure>
+                <i className="icon-login-box-lock"/>
+              </figure>
+              <h5>Deteach</h5>
+              <Link to="#" onClick={this.wipe} className="btn">Wipe</Link>
+            </div>
+            <span>CreateWipes.</span>
+          </div>
+
+
+           
         </div>
 
         <div>
-        <button onClick={this.openModal}>Open Modal</button>
+         
         <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}

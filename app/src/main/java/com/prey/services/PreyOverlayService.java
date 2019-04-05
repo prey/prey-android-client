@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 
 import com.prey.PreyLogger;
+import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.WelcomeActivity;
 
 public class PreyOverlayService extends Service {
@@ -42,7 +43,7 @@ public class PreyOverlayService extends Service {
                             run=false;
                             NotificationManager nManager = ((NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE));
                             nManager.cancelAll();
-                            Intent intentWelcome = new Intent(ctx, WelcomeActivity.class);
+                            Intent intentWelcome = new Intent(ctx, CheckPasswordHtmlActivity.class);
                             intentWelcome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intentWelcome);
                             stopSelf();

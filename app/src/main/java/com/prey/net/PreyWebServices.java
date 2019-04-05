@@ -70,14 +70,18 @@ public class PreyWebServices {
      * @throws PreyException
      */
     public PreyAccountData registerNewAccount(Context ctx, String name, String email, String password,String rule_age,String privacy_terms, String deviceType) throws Exception {
+        return registerNewAccount(ctx,name,  email,  password,password, rule_age, privacy_terms,  deviceType);
+    }
+
+    public PreyAccountData registerNewAccount(Context ctx, String name, String email, String password1,String password2,String rule_age,String privacy_terms, String deviceType) throws Exception {
 
 
         HashMap<String, String> parameters = new HashMap<String, String>();
 
         parameters.put("name", name);
         parameters.put("email", email);
-        parameters.put("password", password);
-        parameters.put("password_confirmation", password);
+        parameters.put("password", password1);
+        parameters.put("password_confirmation", password2);
         parameters.put("country_name", Locale.getDefault().getDisplayCountry());
         parameters.put("policy_rule_age", rule_age);
         parameters.put("policy_rule_privacy_terms", privacy_terms);
@@ -140,7 +144,7 @@ public class PreyWebServices {
         newAccount.setApiKey(apiKey);
         newAccount.setDeviceId(deviceId);
         newAccount.setEmail(email);
-        newAccount.setPassword(password);
+        newAccount.setPassword(password1);
         newAccount.setName(name);
         return newAccount;
     }

@@ -30,6 +30,7 @@ import com.prey.PreyStatus;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.actions.aware.AwareController;
+import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.PermissionInformationActivity;
 import com.prey.activities.SignInActivity;
 import com.prey.net.PreyWebServices;
@@ -87,7 +88,7 @@ public class BarcodeActivity extends Activity   {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+        Intent intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);
         startActivity(intent);
         finish();
     }
@@ -210,7 +211,7 @@ public class BarcodeActivity extends Activity   {
                 Bundle bundle = new Bundle();
                 bundle.putString("message", message);
                 PreyConfig.getPreyConfig(getApplicationContext()).setCamouflageSet(true);
-                Intent intent = new Intent(getApplicationContext(), PermissionInformationActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
 
