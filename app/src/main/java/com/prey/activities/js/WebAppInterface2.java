@@ -92,6 +92,17 @@ public class WebAppInterface2 {
 
     }
 
+    @JavascriptInterface
+    public void login_tipo(String password,String tipo){
+        PreyLogger.i("login_tipo:"+ password+" tipo:"+tipo);
+        from=tipo;
+        String passwordtyped2="";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            new CheckPassword(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,password,passwordtyped2);
+        else
+            new CheckPassword(mContext).execute(password,passwordtyped2);
+
+    }
 
     @JavascriptInterface
     public void qr(){
