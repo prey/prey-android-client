@@ -85,8 +85,8 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  {
         settings.setLoadWithOverviewMode(true);
         settings.setLoadsImagesAutomatically(true);
         settings.setUseWideViewPort(true);
-        settings.setSupportZoom(true);
-        settings.setBuiltInZoomControls(true);
+        settings.setSupportZoom(false);
+        settings.setBuiltInZoomControls(false);
     }
 
     public void loadUrl(){
@@ -155,7 +155,10 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  {
         http://localhost:3000/signup
 */
         //report http://localhost:3000/activate
-
+       // url ="file:///android_asset/html4/index.html";
+        //url ="http://10.10.2.91:3000/#/es/start";
+        //url ="http://10.10.2.91:3000/#/es/index";
+        url ="http://10.10.2.91:3000/#/es/login";
         PreyLogger.i("url:"+url);
 
         return url;
