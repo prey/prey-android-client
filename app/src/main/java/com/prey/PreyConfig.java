@@ -171,6 +171,13 @@ public class PreyConfig {
 
     public static final String COUNTER_OFF="counter_off";
 
+
+    public static final String SSID="SSID";
+    public static final String IMEI="IMEI";
+    public static final String MODEL="MODEL";
+    public static final String PUBLIC_IP="PUBLIC_IP";
+    public static final String LOCATION_LAT="LOCATION_LAT";
+    public static final String LOCATION_LNG="LOCATION_LNG";
     public static final String AWARE_LAT="AWARE_LAT";
     public static final String AWARE_LNG="AWARE_LNG";
     public static final String AWARE_ACC="AWARE_ACC";
@@ -1106,6 +1113,19 @@ public class PreyConfig {
 
     public static SimpleDateFormat FORMAT_SDF_AWARE=new SimpleDateFormat("yyyy-MM-dd");
 
+    public void setLocation(PreyLocation location){
+        saveFloat(PreyConfig.LOCATION_LAT, (float) location.getLat());
+        saveFloat(PreyConfig.LOCATION_LNG, (float) location.getLng());
+    }
+    public PreyLocation getLocation(){
+        PreyLocation location=new PreyLocation();
+        float lat= getFloat(PreyConfig.LOCATION_LAT ,0);
+        float lng= getFloat(PreyConfig.LOCATION_LNG,0 );
+        location.setLat(lat);
+        location.setLng(lng);
+        return location;
+    }
+
     public void setLocationAware(PreyLocation location){
         if(location!=null) {
             saveFloat(PreyConfig.AWARE_LAT, (float) location.getLat());
@@ -1207,4 +1227,36 @@ public class PreyConfig {
     public void setPrefsBiometric(boolean prefsBiometric) {
         saveBoolean(PREFS_BIOMETRIC, prefsBiometric);
     }
+
+    public String getPublicIp() {
+        return getString(PUBLIC_IP, "");
+    }
+    public void setPublicIp(String publicIp) {
+        saveString(PUBLIC_IP, publicIp);
+    }
+
+    public String getSsid() {
+        return getString(SSID, "");
+    }
+    public void setSsid(String ssid) {
+        saveString(SSID, ssid);
+    }
+
+    public String getImei() {
+        return getString(IMEI, "");
+    }
+    public void setImei(String imei) {
+        saveString(IMEI, imei);
+    }
+
+    public String getModel() {
+        return getString(MODEL, "");
+    }
+    public void setModel(String model) {
+        saveString(MODEL, model);
+    }
+
+
+
+
 }

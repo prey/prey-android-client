@@ -41,6 +41,7 @@
 
     <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -95,7 +96,7 @@
             android:launchMode="singleInstance"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -104,10 +105,21 @@
             </intent-filter>
         </activity>
 
+
+        <activity android:name=".activities.ReportActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activities.PreReportActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+
+
         <activity
             android:name=".barcodereader.BarcodeActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" />
+
 
         <activity android:name=".barcodereader.BarcodeCaptureActivity"
             android:configChanges="keyboardHidden|orientation"

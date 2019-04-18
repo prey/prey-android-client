@@ -307,4 +307,16 @@
     <string name="password_description2">Código de seguridad de seis dígitos</string>
     <string name="use_password">Usar contraseña</string>
 
+
+    <string name="picture">Picture</string>
+    <string name="description_info">Info</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+
+
+    <string name="pre_report_camera1">Sacando foto</string>
+    <string name="pre_report_camera2">Sacando selfie</string>
+    <string name="pre_report_location">Recuperando Ubicación</string>
+    <string name="pre_report_public_ip">Recuperando IP pública</string>
+
 </resources>

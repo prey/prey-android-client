@@ -41,8 +41,9 @@ public class ReportService extends IntentService {
 		stopSelf();
 	}
 
-	public void run(Context ctx) {
+	public List<HttpDataService> run(Context ctx) {
 		int interval=-1;
+		List<HttpDataService> listData = new ArrayList<HttpDataService>();
 		try{
 			PreyLogger.d("REPORT _____________start ReportService");
 
@@ -54,7 +55,7 @@ public class ReportService extends IntentService {
 			JSONArray jsonArray = new JSONArray();
 
 			PreyLogger.d("REPORT start:"+interval);
-			List<HttpDataService> listData = new ArrayList<HttpDataService>();
+
 
 
 			jsonArray = new JSONArray();
@@ -113,7 +114,7 @@ public class ReportService extends IntentService {
 		} catch (Exception e) {
 		}
 
-
+		return listData;
 
 	}
 
