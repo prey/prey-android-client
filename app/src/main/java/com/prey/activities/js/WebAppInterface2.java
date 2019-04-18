@@ -32,11 +32,14 @@ import com.prey.PreyPermission;
 import com.prey.PreyStatus;
 import com.prey.PreyUtils;
 import com.prey.R;
+import com.prey.actions.HttpDataService;
 import com.prey.actions.aware.AwareController;
+import com.prey.actions.report.ReportService;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.FingerprintAuthenticationDialogFragment;
 import com.prey.activities.PanelWebActivity;
 import com.prey.activities.PermissionInformationActivity;
+import com.prey.activities.PreReportActivity;
 import com.prey.activities.PreyConfigurationActivity;
 import com.prey.activities.SecurityActivity;
 import com.prey.activities.SignInActivity;
@@ -49,6 +52,7 @@ import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class WebAppInterface2 {
@@ -61,6 +65,62 @@ public class WebAppInterface2 {
     public WebAppInterface2(Context context, CheckPasswordHtmlActivity activity) {
         mContext = context;
         mActivity=activity;
+    }
+
+    @JavascriptInterface
+    public boolean initBackground(){
+        boolean initBackground=true;
+        PreyLogger.i("initBackground:"+initBackground);
+        return initBackground;
+    }
+
+    @JavascriptInterface
+    public boolean initPin(){
+        boolean initPin=true;
+        PreyLogger.i("initPin:"+initPin);
+        return initPin;
+    }
+
+    @JavascriptInterface
+    public String getPin(){
+        String pin="1234";
+        PreyLogger.i("getPin:"+pin);
+        return pin;
+    }
+
+
+    @JavascriptInterface
+    public boolean initUninstall(){
+        boolean initUnis=true;
+        PreyLogger.i("initUninstall:"+initUnis);
+        return initUnis;
+    }
+
+    @JavascriptInterface
+    public boolean initShield(){
+        boolean initShi=true;
+        PreyLogger.i("initShield:"+initShi);
+        return initShi;
+    }
+
+    @JavascriptInterface
+    public void report(){
+        PreyLogger.i("report:");
+        Intent intent = new Intent(mContext, PreReportActivity.class);
+        mContext.startActivity(intent);
+        mActivity.finish();
+    }
+
+
+    @JavascriptInterface
+    public void wipe(){
+        PreyLogger.i("wipe:");
+
+    }
+
+    @JavascriptInterface
+    public void savePin(String pin){
+        PreyLogger.i("savePin:"+pin);
     }
 
 
@@ -132,17 +192,17 @@ public class WebAppInterface2 {
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(mContext);
         boolean canAccessCamera = PreyPermission.canAccessCamera(mContext);
         boolean canAccessReadPhoneState = PreyPermission.canAccessReadPhoneState(mContext);
-        boolean canAccessReadExternalStorage = PreyPermission.canAccessReadExternalStorage(mContext);
+        boolean canAccessWriteExternalStorage = PreyPermission.canAccessWriteExternalStorage(mContext);
         PreyLogger.d("canAccessFineLocation:"+canAccessFineLocation);
         PreyLogger.d("canAccessCoarseLocation:"+canAccessCoarseLocation);
         PreyLogger.d("canAccessCamera:"+canAccessCamera);
         PreyLogger.d("canAccessReadPhoneState:"+canAccessReadPhoneState);
-        PreyLogger.d("canAccessReadExternalStorage2:"+canAccessReadExternalStorage);
+        PreyLogger.d("canAccessReadExternalStorage2:"+canAccessWriteExternalStorage);
         boolean canDrawOverlays =false;
         //  boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
         //PreyLogger.d("canDrawOverlays:"+canDrawOverlays);
         if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
-                || !canAccessReadPhoneState || !canAccessReadExternalStorage) {
+                || !canAccessReadPhoneState || !canAccessWriteExternalStorage) {
             PreyLogger.d("dentro");
 
                     mActivity.askForPermission();

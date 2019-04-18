@@ -313,4 +313,15 @@
     <string name="password_description2">Six digit security code</string>
     <string name="use_password">Use password</string>
 
+
+    <string name="picture">Picture</string>
+    <string name="description_info">Info</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+
+    <string name="pre_report_camera1">Taking photo1</string>
+    <string name="pre_report_camera2">Taking photo2</string>
+    <string name="pre_report_location">Get Location</string>
+    <string name="pre_report_public_ip">Get Public IP</string>
+
 </resources>

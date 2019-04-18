@@ -57,6 +57,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  {
         getSupportActionBar().hide();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.webview);
+
         PreyLogger.d("CheckPasswordHtmlActivity: onCreate");
 
 
@@ -106,118 +107,51 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  {
 //https://maps.googleapis.com/maps/api/staticmap?center=-33.4221661,-70.6116644&size=800x400&zoom=17&scale=2&key=AIzaSyBzmowtjrPZXj1WHF-JMBmbpp1W23Z-QJo
 
 
-    public static String URL_ONB="http://10.10.2.91:3000";
-    //public static String URL_ONB="http://192.168.0.15:3000";
+    public static String URL_ONB="file:///android_asset/html4/index.html";
+    //public static String URL_ONB="http://10.10.2.91:3000/";
 
     public String getUrl(Context ctx){
 
+        String lng="es".equals(Locale.getDefault().getLanguage())?"es":"en";
         String url="";
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
         boolean canAccessCamera = PreyPermission.canAccessCamera(this);
         boolean canAccessReadPhoneState = PreyPermission.canAccessReadPhoneState(this);
-        boolean canAccessReadExternalStorage = PreyPermission.canAccessReadExternalStorage(this);
+        boolean canAccessWriteExternalStorage = PreyPermission.canAccessWriteExternalStorage(this);
         PreyLogger.i("canAccessFineLocation:"+canAccessFineLocation);
         PreyLogger.i("canAccessCoarseLocation:"+canAccessCoarseLocation);
         PreyLogger.i("canAccessCamera:"+canAccessCamera);
         PreyLogger.i("canAccessReadPhoneState:"+canAccessReadPhoneState);
-        PreyLogger.i("canAccessReadExternalStorage:"+canAccessReadExternalStorage);
+        PreyLogger.i("canAccessWriteExternalStorage:"+canAccessWriteExternalStorage);
         boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
         PreyLogger.i("canDrawOverlays:"+canDrawOverlays);
         String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
         PreyLogger.i("deviceKey:"+deviceKey);
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
-                && canAccessReadPhoneState && canAccessReadExternalStorage && canDrawOverlays) {
+                && canAccessReadPhoneState && canAccessWriteExternalStorage && canDrawOverlays) {
 
             if (deviceKey != null && deviceKey != "") {
-               // url = "http://10.10.2.91:1337/#/onboarding/android/activation?time=" + new Date().getTime();
-                url = URL_ONB+"/login";
+
+                url = URL_ONB+"#/"+lng+"/";
             }else{
-                //url = "http://10.10.2.91:1337/#/onboarding/android/login?time=" + new Date().getTime();
-                url = URL_ONB+"/signin";
+
+                url = URL_ONB+"#/"+lng+"/signin";
             }
         }else{
             if (deviceKey != null && deviceKey != "") {
-               // url = "http://10.10.2.91:1337/#/onboarding/android/permissions";
-                url = URL_ONB+"/permissions";
+
+                url = URL_ONB+"#/"+lng+"/permissions";
             }else {
-              //  url = "http://10.10.2.91:1337/#";
-                url = URL_ONB+"/";
+
+                url = URL_ONB+"#/"+lng+"/start";
             }
 
         }
-        /*
-        http://localhost:3000/
-        http://localhost:3000/login
-        http://localhost:3000/permissions
-        http://localhost:3000/security
-        http://localhost:3000/signin
-        http://localhost:3000/signup
-*/
-        //report http://localhost:3000/activate
-       // url ="file:///android_asset/html4/index.html";
-        //url ="http://10.10.2.91:3000/#/es/start";
-        //url ="http://10.10.2.91:3000/#/es/index";
-        url ="http://10.10.2.91:3000/#/es/login";
-        PreyLogger.i("url:"+url);
-
-        return url;
-    }
-    public String getUrl2(Context ctx){
-        String url="";
-        if ("es".equals(Locale.getDefault().getLanguage())) {
-            url="file:///android_asset/html/protected_es.html";
-        } else {
-            url="file:///android_asset/html/protected.html";
-        }
-
-        String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
-        if (deviceKey != null && deviceKey != "") {
-            url = "http://10.10.2.91:1337/#/onboarding/android/activation?time=" + new Date().getTime();
-            PreyLogger.i("url1:"+url);
-        }else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
-                boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
-                boolean canAccessCamera = PreyPermission.canAccessCamera(this);
-                boolean canAccessReadPhoneState = PreyPermission.canAccessReadPhoneState(this);
-                boolean canAccessReadExternalStorage = PreyPermission.canAccessReadExternalStorage(this);
-                PreyLogger.i("canAccessFineLocation:"+canAccessFineLocation);
-                PreyLogger.i("canAccessCoarseLocation:"+canAccessCoarseLocation);
-                PreyLogger.i("canAccessCamera:"+canAccessCamera);
-                PreyLogger.i("canAccessReadPhoneState:"+canAccessReadPhoneState);
-                PreyLogger.i("canAccessReadExternalStorage:"+canAccessReadExternalStorage);
 
 
-                boolean canDrawOverlays = false;
-                if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
-                        && canAccessReadPhoneState && canAccessReadExternalStorage) {
-                    if ("es".equals(Locale.getDefault().getLanguage())) {
-                        url = "file:///android_asset/html/un_protected_es.html";
-                    } else {
-                        url = "file:///android_asset/html/un_protected.html";
-                    }
-                    url = "http://10.10.2.91:1337/#/onboarding/android/login?time=" + new Date().getTime();
-                }else{
-                    url = "http://10.10.2.91:1337/#/";
-                }
+        PreyLogger.i("_url:"+url);
 
-                // url="file:///android_asset/html2/index.html#/onboarding/android/login?time="+new Date().getTime();
-                PreyLogger.i("url2:"+url);
-            }
-            boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
-            if (!canDrawOverlays) {
-                if ("es".equals(Locale.getDefault().getLanguage())) {
-                    url = "file:///android_asset/html/un_protected_es.html";
-                } else {
-                    url = "file:///android_asset/html/un_protected.html";
-                }
-                url = "http://10.10.2.91:1337/#/";
-                PreyLogger.i("url3:"+url);
-            }
-        }
-
-        PreyLogger.d("url"+url);
         return url;
     }
 
@@ -228,7 +162,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
     @TargetApi(Build.VERSION_CODES.M)

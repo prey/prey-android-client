@@ -32,6 +32,7 @@ import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.InitActivity;
 import com.prey.activities.PanelWebActivity;
 import com.prey.activities.PermissionInformationActivity;
+import com.prey.activities.PreReportActivity;
 import com.prey.activities.PreyConfigurationActivity;
 import com.prey.activities.SecurityActivity;
 import com.prey.activities.WelcomeActivity;
@@ -67,19 +68,53 @@ public class WebAppInterface3 {
 
 
     @JavascriptInterface
-    public void runInBg(boolean runInBg){
-        PreyLogger.i("runInBg:"+runInBg);
+    public void report(){
+        PreyLogger.i("report:");
+        Intent intent = new Intent(mContext, PreReportActivity.class);
+        mContext.startActivity(intent);
+        mActivity.finish();
+    }
+
+
+
+    @JavascriptInterface
+    public boolean initBackground(){
+        boolean initBackground=true;
+        PreyLogger.i("initBackground:"+initBackground);
+        return initBackground;
     }
 
     @JavascriptInterface
-    public void blockUninstall(boolean runInBg){
-        PreyLogger.i("blockUninstall:"+runInBg);
+    public boolean initPin(){
+        boolean initPin=true;
+        PreyLogger.i("initPin:"+initPin);
+        return initPin;
     }
 
     @JavascriptInterface
-    public void shieldOffBbtn(boolean runInBg){
-        PreyLogger.i("shieldOffBbtn:"+runInBg);
+    public String getPin(){
+        String pin="1234";
+        PreyLogger.i("getPin:"+pin);
+        return pin;
     }
+
+
+    @JavascriptInterface
+    public boolean initUninstall(){
+        boolean initUnis=true;
+        PreyLogger.i("initUninstall:"+initUnis);
+        return initUnis;
+    }
+
+    @JavascriptInterface
+    public boolean initShield(){
+        boolean initShi=true;
+        PreyLogger.i("initShield:"+initShi);
+        return initShi;
+    }
+
+
+
 
     @JavascriptInterface
     public void wipe(){
@@ -96,6 +131,17 @@ public class WebAppInterface3 {
     }
 
 
+    @JavascriptInterface
+    public void login_tipo(String password,String tipo){
+        PreyLogger.i("login_tipo:"+ password+" tipo:"+tipo);
+        from=tipo;
+        String passwordtyped2="";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            new CheckPassword(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,password,passwordtyped2);
+        else
+            new CheckPassword(mContext).execute(password,passwordtyped2);
+
+    }
 
 
     public class DetachDevice extends AsyncTask<Void, Void, Void> {
@@ -135,4 +181,81 @@ public class WebAppInterface3 {
         }
 
     }
+
+    String from="setting";
+
+    public class CheckPassword extends AsyncTask<String, Void, Void> {
+        private Context mCtx;
+        CheckPassword(Context ctx){
+            mCtx =ctx;
+        }
+
+        ProgressDialog progressDialog = null;
+        boolean isPasswordOk = false;
+        String error = null;
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Void doInBackground(String... password) {
+            try {
+                isPasswordOk = false;
+                String apikey = PreyConfig.getPreyConfig(mCtx).getApiKey();
+                boolean twoStep=PreyConfig.getPreyConfig(mCtx).getTwoStep();
+                PreyLogger.d("twoStep:" +twoStep);
+                if (twoStep) {
+                    PreyLogger.d("apikey:" + apikey + " password:" + password[0] + " password2:" + password[1] );
+                    isPasswordOk =PreyWebServices.getInstance().checkPassword2(mCtx,apikey, password[0],password[1]);
+                }else{
+                    PreyLogger.d("apikey:" + apikey + " password:" + password[0] );
+                    isPasswordOk =PreyWebServices.getInstance().checkPassword(mCtx,apikey, password[0]);
+                }
+                if(isPasswordOk) {
+                    PreyConfig.getPreyConfig(mCtx).setTimePasswordOk();
+                }
+            } catch (Exception e) {
+                PreyLogger.e("error:"+e.getMessage(),e);
+                error = e.getMessage();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            try {
+                if (progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+            } catch (Exception e) {
+            }
+            if (error != null)
+                Toast.makeText(mCtx, error, Toast.LENGTH_LONG).show();
+            else if (!isPasswordOk) {
+                wrongPasswordIntents++;
+                if (wrongPasswordIntents == 3) {
+                    Toast.makeText(mCtx, R.string.password_intents_exceed, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(mCtx, R.string.password_wrong, Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                PreyLogger.d("from:"+from);
+                if("setting".equals(from)) {
+                    Intent intent = new Intent(mCtx, SecurityActivity.class);
+                    PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    mCtx.startActivity(intent);
+                    new Thread(new EventManagerRunner(mCtx, new Event(Event.APPLICATION_OPENED))).start();
+                    mActivity.finish();
+                }else {
+                    Intent intent = new Intent(mCtx, PanelWebActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    mCtx.startActivity(intent);
+                    mActivity.finish();
+                }
+            }
+        }
+    }
+
 }
