@@ -72,7 +72,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity  implements  Fi
         new Thread() {
             public void run() {
                 boolean openSettingsTwoStepWeb = PreyWebServices.getInstance().getTwoStepEnabled(getApplicationContext());
-                PreyConfig.getPreyConfig(getApplicationContext()).setTwoStep(openSettingsTwoStepWeb);s
+                PreyConfig.getPreyConfig(getApplicationContext()).setTwoStep(openSettingsTwoStepWeb);
             }
         }.start();
     }
