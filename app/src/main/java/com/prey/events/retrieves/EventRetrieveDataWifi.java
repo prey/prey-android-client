@@ -1,8 +1,11 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.events.retrieves;
 
-/**
- * Created by oso on 24-08-15.
- */
 import java.util.Map;
 
 import org.json.JSONException;
@@ -14,7 +17,6 @@ import com.prey.actions.HttpDataService;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManager;
 import com.prey.json.actions.Wifi;
-
 
 import android.content.Context;
 

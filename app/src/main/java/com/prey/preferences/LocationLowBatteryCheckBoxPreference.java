@@ -8,18 +8,12 @@ package com.prey.preferences;
 
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.preference.CheckBoxPreference;
-import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 
-/**
- * Created by oso on 04-01-16.
- */
 public class LocationLowBatteryCheckBoxPreference extends CheckBoxPreference {
     public LocationLowBatteryCheckBoxPreference(Context context) { super(context); }
     public LocationLowBatteryCheckBoxPreference(Context context, AttributeSet attrs) { super(context, attrs); }

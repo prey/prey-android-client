@@ -175,4 +175,8 @@ public class FileConfigReader {
     public String getPreyTermsEs() {
         return properties.getProperty("prey-terms-es");
     }
+
+    public String getPreyForgot() {
+        return properties.getProperty("prey-forgot");
+    }
 }

@@ -31,8 +31,6 @@ import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.actions.aware.AwareController;
 import com.prey.activities.CheckPasswordHtmlActivity;
-import com.prey.activities.PermissionInformationActivity;
-import com.prey.activities.SignInActivity;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
@@ -210,6 +208,7 @@ public class BarcodeActivity extends Activity   {
                 String message = getString(R.string.device_added_congratulations_text);
                 Bundle bundle = new Bundle();
                 bundle.putString("message", message);
+                bundle.putString("nexturl", "tryReport");
                 PreyConfig.getPreyConfig(getApplicationContext()).setCamouflageSet(true);
                 Intent intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);
                 intent.putExtras(bundle);

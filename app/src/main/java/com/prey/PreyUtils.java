@@ -6,6 +6,7 @@
  ******************************************************************************/
 package com.prey;
 
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import android.app.Activity;
@@ -73,5 +74,9 @@ public class PreyUtils {
         } catch (Exception e) {
         }
         return version;
+    }
+
+    public static String getLanguage(){
+        return "es".equals(Locale.getDefault().getLanguage()) ? "es" : "en";
     }
 }

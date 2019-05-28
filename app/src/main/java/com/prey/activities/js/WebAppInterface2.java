@@ -6,185 +6,390 @@
  ******************************************************************************/
 package com.prey.activities.js;
 
-import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.webkit.JavascriptInterface;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.appsflyer.AFInAppEventParameterName;
-import com.appsflyer.AFInAppEventType;
-import com.appsflyer.AppsFlyerLib;
+import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
-import com.prey.PreyStatus;
 import com.prey.PreyUtils;
 import com.prey.R;
-import com.prey.actions.HttpDataService;
-import com.prey.actions.aware.AwareController;
-import com.prey.actions.report.ReportService;
 import com.prey.activities.CheckPasswordHtmlActivity;
-import com.prey.activities.FingerprintAuthenticationDialogFragment;
 import com.prey.activities.PanelWebActivity;
-import com.prey.activities.PermissionInformationActivity;
 import com.prey.activities.PreReportActivity;
-import com.prey.activities.PreyConfigurationActivity;
-import com.prey.activities.SecurityActivity;
-import com.prey.activities.SignInActivity;
-import com.prey.activities.SignUpActivity;
-import com.prey.activities.WelcomeActivity;
 import com.prey.barcodereader.BarcodeActivity;
-import com.prey.events.Event;
-import com.prey.events.manager.EventManagerRunner;
+import com.prey.json.actions.Detach;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
+import com.prey.services.PreyDisablePowerOptionsService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class WebAppInterface2 {
 
-    Context mContext;
-    int wrongPasswordIntents = 0;
-
+    public Context mContext;
+    private int wrongPasswordIntents = 0;
+    private String error = null;
+    private boolean noMoreDeviceError = false;
+    private String from = "setting";
     private CheckPasswordHtmlActivity mActivity;
+    public WebAppInterface2() {
 
+    }
     public WebAppInterface2(Context context, CheckPasswordHtmlActivity activity) {
         mContext = context;
-        mActivity=activity;
+        mActivity = activity;
     }
 
     @JavascriptInterface
-    public boolean initBackground(){
-        boolean initBackground=true;
-        PreyLogger.i("initBackground:"+initBackground);
+    public boolean initBackground() {
+        boolean initBackground = PreyConfig.getPreyConfig(mContext).getRunBackground();
+        PreyLogger.i("initBackground:" + initBackground);
         return initBackground;
     }
 
     @JavascriptInterface
-    public boolean initPin(){
-        boolean initPin=true;
-        PreyLogger.i("initPin:"+initPin);
+    public boolean initPin() {
+        String pinNumber = PreyConfig.getPreyConfig(mContext).getPinNumber();
+        boolean initPin = (pinNumber != null && !"".equals(pinNumber));
+        PreyLogger.i("initPin:" + initPin);
         return initPin;
     }
 
     @JavascriptInterface
-    public String getPin(){
-        String pin="1234";
-        PreyLogger.i("getPin:"+pin);
+    public String getPin() {
+        String pin = PreyConfig.getPreyConfig(mContext).getPinNumber();
+        ;
+        PreyLogger.i("getPin:" + pin);
         return pin;
     }
 
-
     @JavascriptInterface
-    public boolean initUninstall(){
-        boolean initUnis=true;
-        PreyLogger.i("initUninstall:"+initUnis);
+    public boolean initUninstall() {
+        boolean initUnis = PreyConfig.getPreyConfig(mContext).getBlockAppUninstall();
+        PreyLogger.i("initUninstall:" + initUnis);
         return initUnis;
     }
 
     @JavascriptInterface
-    public boolean initShield(){
-        boolean initShi=true;
-        PreyLogger.i("initShield:"+initShi);
+    public boolean initShield() {
+        boolean initShi = PreyConfig.getPreyConfig(mContext).getDisablePowerOptions();
+        PreyLogger.i("initShield:" + initShi);
         return initShi;
     }
 
     @JavascriptInterface
-    public void report(){
+    public void report() {
         PreyLogger.i("report:");
         Intent intent = new Intent(mContext, PreReportActivity.class);
         mContext.startActivity(intent);
         mActivity.finish();
     }
 
-
     @JavascriptInterface
-    public void wipe(){
-        PreyLogger.i("wipe:");
-
+    public void reload() {
+        PreyLogger.i("reload:");
+        Intent intent = new Intent(mContext, CheckPasswordHtmlActivity.class);
+        mContext.startActivity(intent);
+        mActivity.finish();
     }
 
     @JavascriptInterface
-    public void savePin(String pin){
-        PreyLogger.i("savePin:"+pin);
-    }
-
-
-
-    @JavascriptInterface
-    public void oso(){
-        PreyLogger.i("oso");
-    }
-
-
-    @JavascriptInterface
-    public void mylogin(String email,String password){
-        PreyLogger.i("mylogin llave:"+email+" valor:"+password);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            new AddDeviceToAccount().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, email, password, PreyUtils.getDeviceType(mContext));
-        else
-            new AddDeviceToAccount().execute(email, password, PreyUtils.getDeviceType(mContext));
-    }
-    @JavascriptInterface
-    public void login(String password){
-        PreyLogger.i("login:"+ password);
-
-        String passwordtyped2="";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            new CheckPassword(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,password,passwordtyped2);
-        else
-            new CheckPassword(mContext).execute(password,passwordtyped2);
-
+    public void savePin(String pin) {
+        PreyLogger.i("savepin:" + pin);
+        PreyConfig.getPreyConfig(mContext).setPinNumber(pin);
     }
 
     @JavascriptInterface
-    public void login_tipo(String password,String tipo){
-        PreyLogger.i("login_tipo:"+ password+" tipo:"+tipo);
-        from=tipo;
-        String passwordtyped2="";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            new CheckPassword(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,password,passwordtyped2);
-        else
-            new CheckPassword(mContext).execute(password,passwordtyped2);
+    public void log(String log) {
+        PreyLogger.i("log:" + log);
+    }
 
+
+    @JavascriptInterface
+    public String mylogin(String email, String password) {
+        PreyLogger.i("mylogin email:" + email + " password:" + password);
+        ProgressDialog progressDialog = null;
+        try {
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setMessage(mContext.getText(R.string.set_old_user_loading).toString());
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } catch (Exception e) {
+        }
+        try {
+            noMoreDeviceError = false;
+            error = null;
+            PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceToAccount(mContext, email, password, PreyUtils.getDeviceType(mContext));
+            PreyConfig.getPreyConfig(mContext).saveAccount(accountData);
+            PreyConfig.getPreyConfig(mContext).registerC2dm();
+            PreyWebServices.getInstance().sendEvent(mContext, PreyConfig.ANDROID_SIGN_IN);
+            PreyConfig.getPreyConfig(mContext).setEmail(email);
+            PreyConfig.getPreyConfig(mContext).setRunBackground(true);
+        } catch (Exception e) {
+            PreyLogger.d("mylogin error1:" + e.getMessage());
+            error = e.getMessage();
+        }
+        if (progressDialog != null)
+            progressDialog.dismiss();
+        if (error == null) {
+            error = "";
+        }
+        PreyLogger.d("mylogin error2:" + error);
+        return error;
     }
 
     @JavascriptInterface
-    public void qr(){
+    public boolean isTimePasswordOk() {
+        boolean isTimePasswordOk=PreyConfig.getPreyConfig(mContext).isTimePasswordOk();
+        PreyLogger.i("isTimePasswordOk:"+isTimePasswordOk);
+        return isTimePasswordOk;
+    }
+
+    @JavascriptInterface
+    public String login_tipo(String password, String password2, String tipo) {
+        PreyLogger.i("login_tipo2 password:" + password + " password2:" + password2 + " tipo:" + tipo);
+        from = tipo;
+        error = null;
+        boolean isPasswordOk = false;
+
+        try {
+            String apikey = PreyConfig.getPreyConfig(mContext).getApiKey();
+            boolean twoStep = PreyConfig.getPreyConfig(mContext).getTwoStep();
+            PreyLogger.d("login_tipo twoStep:" + twoStep);
+            if (twoStep) {
+                PreyLogger.d("login_tipo apikey:" + apikey + " password:" + password + " password2:" + password2);
+                isPasswordOk = PreyWebServices.getInstance().checkPassword2(mContext, apikey, password, password2);
+            } else {
+                PreyLogger.d("login_tipo apikey:" + apikey + " password:" + password);
+                isPasswordOk = PreyWebServices.getInstance().checkPassword(mContext, apikey, password);
+            }
+            if (isPasswordOk) {
+                PreyConfig.getPreyConfig(mContext).setTimePasswordOk();
+            }
+        } catch (Exception e) {
+            PreyLogger.e("login_tipo error:" + e.getMessage(), e);
+            error = e.getMessage();
+        }
+
+
+        PreyLogger.d("login_tipo isPasswordOk:" + isPasswordOk);
+        PreyLogger.i("login_tipo error:" + error);
+        if (error != null)
+            return error;
+        else if (!isPasswordOk) {
+            wrongPasswordIntents++;
+            if (wrongPasswordIntents == 3) {
+                error = "{\"error\":[\"" + mContext.getString(R.string.password_intents_exceed) + "\"]}";
+            } else {
+                error = "{\"error\":[\"" + mContext.getString(R.string.password_wrong) + "\"]}";
+            }
+        } else {
+            PreyLogger.d("login_tipo from:" + from);
+            if ("setting".equals(from)) {
+                //new Thread(new EventManagerRunner(mContext, new Event(Event.APPLICATION_OPENED))).start();
+                return "{\"result\":true}";
+            } else {
+                Intent intent = new Intent(mContext, PanelWebActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mContext.startActivity(intent);
+                mActivity.finish();
+            }
+        }
+        return error;
+    }
+
+    @JavascriptInterface
+    public void openPanelWeb() {
+        Intent intent = new Intent(mContext, PanelWebActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        mContext.startActivity(intent);
+        mActivity.finish();
+    }
+
+    @JavascriptInterface
+    public String initPin4() {
+        String initPin4 = PreyConfig.getPreyConfig(mContext).getPinNumber();
+        PreyLogger.i("initPin4:" + initPin4);
+        return initPin4;
+    }
+
+    @JavascriptInterface
+    public String initVersion() {
+        String initVersion = PreyConfig.getPreyConfig(mContext).getPreyVersion();
+        PreyLogger.i("initVersion:" + initVersion);
+        return initVersion;
+    }
+
+    @JavascriptInterface
+    public void setBackground(boolean background) {
+        if (background) {
+            RunBackgroundCheckBoxPreference.notifyReady(mContext);
+        } else {
+            RunBackgroundCheckBoxPreference.notifyCancel(mContext);
+        }
+        PreyConfig.getPreyConfig(mContext).setRunBackground(background);
+    }
+
+    @JavascriptInterface
+    public void wipe() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage(R.string.preferences_detach_summary)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        PreyLogger.i("wipe:");
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                            new DetachDevice().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        else
+                            new DetachDevice().execute();
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+        Dialog popup = builder.create();
+        popup.show();
+    }
+
+    @JavascriptInterface
+    public void savepin2(String pin) {
+        PreyLogger.i("savepin2:" + pin);
+        PreyConfig.getPreyConfig(mContext).setPinNumber(pin);
+        if ("".equals(pin)) {
+            setUninstall(false);
+            setShieldOf(false);
+        }
+    }
+    //TODO:Camabiar !!
+    @JavascriptInterface
+    public boolean getTwoStepEnabled() {
+        return false;
+    }
+    @JavascriptInterface
+    public boolean getTwoStepEnabled2() {
+        PreyLogger.d("!PreyConfig.getPreyConfig(mContext).isTimeTwoStep():" + !PreyConfig.getPreyConfig(mContext).isTimeTwoStep());
+        if (!PreyConfig.getPreyConfig(mContext).isTimeTwoStep()) {
+            PreyLogger.d("!PreyConfig.getPreyConfig(mContext).isTimeTwoStep() dentro");
+            boolean twoStepEnabled = PreyWebServices.getInstance().getTwoStepEnabled(mContext);
+            PreyConfig.getPreyConfig(mContext).setTwoStep(twoStepEnabled);
+            PreyConfig.getPreyConfig(mContext).setTimeTwoStep();
+        }
+        boolean twoStepEnabled = PreyConfig.getPreyConfig(mContext).getTwoStep();
+        PreyLogger.d("twoStepEnabled isTimeTwoStep:" + twoStepEnabled);
+        return twoStepEnabled;
+    }
+
+    @JavascriptInterface
+    public int versionAndroid() {
+        return android.os.Build.VERSION.SDK_INT;
+    }
+
+    @JavascriptInterface
+    public boolean versionIsPieOrAbove() {
+        return android.os.Build.VERSION.SDK_INT  > Build.VERSION_CODES.O_MR1;
+    }
+
+    @JavascriptInterface
+    public void notificationShieldOf() {
+        AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+        alertDialog.setTitle(R.string.preferences_disable_power_alert_android9_title);
+        alertDialog.setMessage(mContext.getString(R.string.preferences_disable_power_alert_android9_message));
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alertDialog.show();
+        setShieldOf(false);
+    }
+
+    @JavascriptInterface
+    public void setUninstall(boolean uninstall) {
+        PreyLogger.i("setUninstall:" + uninstall);
+        PreyConfig.getPreyConfig(mContext).setBlockAppUninstall(uninstall);
+    }
+
+    @JavascriptInterface
+    public void setShieldOf(boolean shieldOf) {
+        PreyLogger.i("setShieldOf:" + shieldOf);
+        PreyConfig.getPreyConfig(mContext).setDisablePowerOptions(shieldOf);
+        if (shieldOf) {
+            mContext.startService(new Intent(mContext, PreyDisablePowerOptionsService.class));
+        } else {
+            mContext.stopService(new Intent(mContext, PreyDisablePowerOptionsService.class));
+        }
+    }
+
+    @JavascriptInterface
+    public void qr() {
         PreyLogger.d("qr");
         Intent intent = new Intent(mContext, BarcodeActivity.class);
         mContext.startActivity(intent);
         mActivity.finish();
     }
 
-
     @JavascriptInterface
-    public void signup(String name,String email,String password1,String password2,String policy_rule_age,String policy_rule_privacy_terms){
-        PreyLogger.d("signup name: "+name+" email:"+email+" policy_rule_age:"+policy_rule_age+" policy_rule_privacy_terms:"+policy_rule_privacy_terms);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            new CreateAccount(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, name, email, password1,password2,policy_rule_age,policy_rule_privacy_terms);
-        else
-            new CreateAccount(mContext).execute(name, email, password1,password2,policy_rule_age,policy_rule_privacy_terms);
+    public String signup(String name, String email, String password1, String password2, String policy_rule_age, String policy_rule_privacy_terms) {
+        PreyLogger.d("signup name: " + name + " email:" + email + " policy_rule_age:" + policy_rule_age + " policy_rule_privacy_terms:" + policy_rule_privacy_terms);
+        ProgressDialog progressDialog = null;
+        try {
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setMessage(mContext.getText(R.string.creating_account_please_wait).toString());
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        } catch (Exception e) {
+        }
+        try {
+            error = null;
+            final Context ctx = mContext;
+            PreyLogger.d("name:" + name);
+            PreyLogger.d("email:" + email);
+            PreyLogger.d("password1:" + password1);
+            PreyLogger.d("password2:" + password2);
+            PreyLogger.d("rule_age:" + policy_rule_age);
+            PreyLogger.d("privacy_terms:" + policy_rule_privacy_terms);
+            PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(ctx, name, email, password1, password2, policy_rule_age, policy_rule_privacy_terms, PreyUtils.getDeviceType(mContext));
+            PreyLogger.d("Response creating account: " + accountData.toString());
+            PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
+            PreyConfig.getPreyConfig(ctx).registerC2dm();
+            PreyWebServices.getInstance().sendEvent(ctx, PreyConfig.ANDROID_SIGN_UP);
+            PreyConfig.getPreyConfig(ctx).setEmail(email);
+            PreyConfig.getPreyConfig(ctx).setRunBackground(true);
+        } catch (Exception e) {
+            error = e.getMessage();
+            PreyLogger.e("error:" + error, e);
+        }
+        try {
+            if (progressDialog != null)
+                progressDialog.dismiss();
+            if (error == null) {
+                error = "";
+            }
+        } catch (Exception e) {
+        }
+        return error;
     }
 
-
-
+    @JavascriptInterface
+    public void forgot() {
+        PreyLogger.d("forgot");
+        String url = FileConfigReader.getInstance(mContext).getPreyForgot();
+        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        mContext.startActivity(myIntent);
+    }
 
     @JavascriptInterface
     public void givePermissions() {
@@ -193,271 +398,58 @@ public class WebAppInterface2 {
         boolean canAccessCamera = PreyPermission.canAccessCamera(mContext);
         boolean canAccessReadPhoneState = PreyPermission.canAccessReadPhoneState(mContext);
         boolean canAccessWriteExternalStorage = PreyPermission.canAccessWriteExternalStorage(mContext);
-        PreyLogger.d("canAccessFineLocation:"+canAccessFineLocation);
-        PreyLogger.d("canAccessCoarseLocation:"+canAccessCoarseLocation);
-        PreyLogger.d("canAccessCamera:"+canAccessCamera);
-        PreyLogger.d("canAccessReadPhoneState:"+canAccessReadPhoneState);
-        PreyLogger.d("canAccessReadExternalStorage2:"+canAccessWriteExternalStorage);
-        boolean canDrawOverlays =false;
+        PreyLogger.d("canAccessFineLocation:" + canAccessFineLocation);
+        PreyLogger.d("canAccessCoarseLocation:" + canAccessCoarseLocation);
+        PreyLogger.d("canAccessCamera:" + canAccessCamera);
+        PreyLogger.d("canAccessReadPhoneState:" + canAccessReadPhoneState);
+        PreyLogger.d("canAccessReadExternalStorage2:" + canAccessWriteExternalStorage);
+        boolean canDrawOverlays = false;
         //  boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
         //PreyLogger.d("canDrawOverlays:"+canDrawOverlays);
         if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
                 || !canAccessReadPhoneState || !canAccessWriteExternalStorage) {
             PreyLogger.d("dentro");
-
-                    mActivity.askForPermission();
-
-        }else{
+            mActivity.askForPermission();
+        } else {
             mActivity.askForPermissionAndroid7();
         }
     }
 
-
-
-    private String error = null;
-    private boolean noMoreDeviceError = false;
-
-    private class AddDeviceToAccount extends AsyncTask<String, Void, Void> {
-
+    public class DetachDevice extends AsyncTask<Void, Void, Void> {
+        private String error = null;
         ProgressDialog progressDialog = null;
 
         @Override
         protected void onPreExecute() {
-            try {
-                progressDialog = new ProgressDialog(mContext);
-                progressDialog.setMessage(mContext.getText(R.string.set_old_user_loading).toString());
-                progressDialog.setIndeterminate(true);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-            }catch (Exception e){}
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setMessage(mContext.getText(R.string.preferences_detach_dettaching_message).toString());
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
         }
 
         @Override
-        protected Void doInBackground(String... data) {
-            try {
-                noMoreDeviceError = false;
-                error = null;
-                PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceToAccount(mContext, data[0], data[1], data[2]);
-
-                PreyConfig.getPreyConfig(mContext).saveAccount(accountData);
-                PreyConfig.getPreyConfig(mContext).registerC2dm();
-                PreyWebServices.getInstance().sendEvent(mContext, PreyConfig.ANDROID_SIGN_IN);
-                String email=PreyWebServices.getInstance().getEmail(mContext);
-                PreyConfig.getPreyConfig(mContext).setEmail(email);
-                PreyConfig.getPreyConfig(mContext).setRunBackground(true);
-                RunBackgroundCheckBoxPreference.notifyReady(mContext);
-                new Thread() {
-                    public void run() {
-                        try{
-                            PreyStatus.getInstance().getConfig(mContext);
-                            AwareController.getInstance().init(mContext);
-                        }catch (Exception e){}
-                    }
-                }.start();
-                try {
-                    Map<String, Object> eventValue = new HashMap<String, Object>();
-                    eventValue.put(AFInAppEventParameterName.SUCCESS,true);
-                    AppsFlyerLib.getInstance().trackEvent(mContext, AFInAppEventType.LOGIN,eventValue);
-                } catch (Exception e1) {}
-            } catch (Exception e) {
-                PreyLogger.e("error:"+e.getMessage(),e);
-                error = e.getMessage();
-            }
+        protected Void doInBackground(Void... unused) {
+            error = Detach.detachDevice(mContext);
+            PreyLogger.d("error:" + error);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void unused) {
             try {
-                if(progressDialog!=null)
-                    progressDialog.dismiss();
-                if (error == null) {
-
-                      mActivity.loadUrl();
-                } else {
-                    AlertDialog.Builder alertDialog= new AlertDialog.Builder( mContext);
-                    alertDialog.setIcon(R.drawable.error).setTitle(R.string.error_title).setMessage(error)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            }).setCancelable(false);
-                    alertDialog.show();
-                }
+                progressDialog.dismiss();
             } catch (Exception e) {
             }
-        }
-
-    }
-
-
-    String from="setting";
-
-    public class CheckPassword extends AsyncTask<String, Void, Void> {
-        private Context mCtx;
-        CheckPassword(Context ctx){
-            mCtx =ctx;
-        }
-
-        ProgressDialog progressDialog = null;
-        boolean isPasswordOk = false;
-        String error = null;
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected Void doInBackground(String... password) {
-            try {
-                isPasswordOk = false;
-                String apikey = PreyConfig.getPreyConfig(mCtx).getApiKey();
-                boolean twoStep=PreyConfig.getPreyConfig(mCtx).getTwoStep();
-                PreyLogger.d("twoStep:" +twoStep);
-                if (twoStep) {
-                    PreyLogger.d("apikey:" + apikey + " password:" + password[0] + " password2:" + password[1] );
-                    isPasswordOk =PreyWebServices.getInstance().checkPassword2(mCtx,apikey, password[0],password[1]);
-                }else{
-                    PreyLogger.d("apikey:" + apikey + " password:" + password[0] );
-                    isPasswordOk =PreyWebServices.getInstance().checkPassword(mCtx,apikey, password[0]);
-                }
-                if(isPasswordOk) {
-                    PreyConfig.getPreyConfig(mCtx).setTimePasswordOk();
-                }
-            } catch (Exception e) {
-                PreyLogger.e("error:"+e.getMessage(),e);
-                error = e.getMessage();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void unused) {
-            try {
-                if (progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                }
-            } catch (Exception e) {
-            }
-            if (error != null)
-                Toast.makeText(mCtx, error, Toast.LENGTH_LONG).show();
-            else if (!isPasswordOk) {
-                wrongPasswordIntents++;
-                if (wrongPasswordIntents == 3) {
-                    Toast.makeText(mCtx, R.string.password_intents_exceed, Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(mCtx, R.string.password_wrong, Toast.LENGTH_SHORT).show();
-                }
+            if (error != null) {
+                Toast.makeText(mContext, error, Toast.LENGTH_LONG).show();
             } else {
-                PreyLogger.d("from:"+from);
-                if("setting".equals(from)) {
-                    Intent intent = new Intent(mCtx, SecurityActivity.class);
-                    PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    mCtx.startActivity(intent);
-                    new Thread(new EventManagerRunner(mCtx, new Event(Event.APPLICATION_OPENED))).start();
-                    mActivity.finish();
-                }else {
-                    Intent intent = new Intent(mCtx, PanelWebActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    mCtx.startActivity(intent);
-                    mActivity.finish();
-                }
+                Intent welcome = new Intent(mContext, CheckPasswordHtmlActivity.class);
+                welcome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(welcome);
+                mActivity.finish();
             }
         }
-    }
 
-
-    private class CreateAccount extends AsyncTask<String, Void, Void> {
-
-        Context context;
-
-        public CreateAccount(Context mContext) {
-            this.context = mContext;
-        }
-
-        String email="";
-        ProgressDialog progressDialog = null;
-
-        @Override
-        protected void onPreExecute() {
-            try {
-                progressDialog = new ProgressDialog(mContext);
-                progressDialog.setMessage(mContext.getText(R.string.creating_account_please_wait).toString());
-                progressDialog.setIndeterminate(true);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-            }catch (Exception e) {}
-            error = null;
-        }
-
-        @Override
-        protected Void doInBackground(String... data) {
-            try {
-                error = null;
-                final Context ctx=mContext;
-                String name=data[0];
-                email=data[1];
-                String password1=data[2];
-                String password2=data[3];
-                String rule_age=data[4];
-                String privacy_terms=data[5];
-
-                PreyLogger.d("name:"+name);
-                PreyLogger.d("email:"+email);
-                PreyLogger.d("password1:"+password1);
-                PreyLogger.d("password2:"+password2);
-                PreyLogger.d("rule_age:"+rule_age);
-                PreyLogger.d("privacy_terms:"+privacy_terms);
-
-
-
-                PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(ctx, name, email, password1,password2,rule_age,privacy_terms,PreyUtils.getDeviceType(mContext));
-                PreyLogger.d("Response creating account: " + accountData.toString());
-                PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
-                PreyConfig.getPreyConfig(ctx).registerC2dm();
-                PreyWebServices.getInstance().sendEvent(ctx,PreyConfig.ANDROID_SIGN_UP);
-                PreyConfig.getPreyConfig(ctx).setEmail(email);
-                PreyConfig.getPreyConfig(ctx).setRunBackground(true);
-                RunBackgroundCheckBoxPreference.notifyReady(ctx);
-                new Thread() {
-                    public void run() {
-                        try {
-                            PreyStatus.getInstance().getConfig(mContext);
-                            AwareController.getInstance().init(ctx);
-                        }catch (Exception e){}
-                    }
-                }.start();
-                try {
-                    Map<String, Object> eventValue = new HashMap<>();
-                    eventValue.put(AFInAppEventParameterName.REGSITRATION_METHOD,"email");
-                    AppsFlyerLib.getInstance().trackEvent(ctx, AFInAppEventType.COMPLETE_REGISTRATION,eventValue);
-                } catch (Exception e1) {}
-            } catch (Exception e) {
-                error = e.getMessage();
-                PreyLogger.e("e.getMessage():"+e.getMessage(),e);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void unused) {
-            try {
-                if(progressDialog!=null)
-                    progressDialog.dismiss();
-
-                if (error == null) {
-                    mActivity.loadUrl();
-                } else {
-                    AlertDialog.Builder alertDialog= new AlertDialog.Builder( mContext);
-                    alertDialog.setIcon(R.drawable.error).setTitle(R.string.error_title).setMessage(error)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            }).setCancelable(false);
-                    alertDialog.show();
-                }
-            } catch (Exception e) {
-            }
-        }
     }
 }
