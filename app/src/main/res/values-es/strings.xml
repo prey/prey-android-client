@@ -142,6 +142,7 @@
     <string name="password_wrong">Contraseña incorrecta. Inténtalo nuevamente.</string>
     <string name="password_intents_exceed">Has fallado 3 veces.</string>
     <string name="password_checking_dialog">Comprobando tu contraseña…\n¡Un segundo!</string>
+    <string name="loading">Cargando,esper por favor..</string>
 
     <string name="set_old_user_loading">Agregando equipo a la cuenta…</string>
     <string name="set_old_user_no_more_devices_title">¡Oh, caramba!</string>
@@ -291,7 +292,7 @@
 
 
     <string name="preferences_disable_power_alert_android9_title">No Disponible en Android 9</string>
-    <string name="preferences_disable_power_alert_android9_message">Lo sentimos, pero debido a restricciones del sistema operativo, esta función no está disponible.</string>
+    <string name="preferences_disable_power_alert_android9_message">Esta función no está disponible en esta versión de Android por restricciones de Google.</string>
 
     <string name="preference_biometric_summary">Utiliza tu huella digital en vez de tu contraseña para ingresar a Configuraciones de la aplicación</string>
     <string name="preference_biometric_title">Iniciar Sesión con Huella</string>
@@ -307,16 +308,18 @@
     <string name="password_description2">Código de seguridad de seis dígitos</string>
     <string name="use_password">Usar contraseña</string>
 
-
     <string name="picture">Picture</string>
     <string name="description_info">Info</string>
     <string name="request_permission">This sample needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
 
 
-    <string name="pre_report_camera1">Sacando foto</string>
-    <string name="pre_report_camera2">Sacando selfie</string>
-    <string name="pre_report_location">Recuperando Ubicación</string>
-    <string name="pre_report_public_ip">Recuperando IP pública</string>
+
+
+    <string name="pre_report_title">Este es un reporte de prueba. Estas alertas o mensajes no se mostrarán al crear uno real.</string>
+    <string name="pre_report_camera1">Tomando fotografía frontal...</string>
+    <string name="pre_report_camera2">Tomando fotografía trasera...</string>
+    <string name="pre_report_location">Recolectando ubicación...</string>
+    <string name="pre_report_public_ip">Recolectando IP local...</string>
 
 </resources>

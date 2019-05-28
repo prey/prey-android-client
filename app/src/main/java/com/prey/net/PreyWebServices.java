@@ -119,7 +119,7 @@ public class PreyWebServices {
 
             if (response != null && response.getStatusCode() > 299) {
                 PreyLogger.d("response.getStatusCode() >299 :"+response.getStatusCode());
-                throw new PreyException(xml+ "[" + response.getStatusCode() + "]");
+                throw new PreyException(xml);
             }
         }
         String deviceId = null;
@@ -177,12 +177,11 @@ public class PreyWebServices {
         parameters.put("vendor_name", vendor);
 
         parameters = increaseData(ctx, parameters);
-        TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        //String imsi = mTelephonyMgr.getSubscriberId();
+
         String imei = new PreyPhone(ctx).getHardware().getAndroidDeviceId();
         parameters.put("physical_address", imei);
-
-        parameters.put("lang",Locale.getDefault().getLanguage());
+        String lang=Locale.getDefault().getLanguage();
+        parameters.put("lang",lang);
 
 
         PreyHttpResponse response = null;
@@ -198,8 +197,12 @@ public class PreyWebServices {
                 String json = response.getResponseAsString();
                 PreyLogger.d("json:" + json);
                 if (response.getStatusCode() > 299) {
-                    throw new PreyException(json+ "[" + response.getStatusCode() + "]");
+                    if("es".equals(lang))
+                        throw new PreyException("{\"error\":[\"No queda espacio disponible para agregar este dispositivo!\"]}" );
+                    else
+                        throw new PreyException("{\"error\":[\"No slots left for new devices\"]}" );
                 }
+
             }
 
 
@@ -207,14 +210,14 @@ public class PreyWebServices {
     }
 
     public PreyAccountData registerNewDeviceToAccount(Context ctx, String email, String password, String deviceType) throws Exception {
-        PreyLogger.d("ws email:" + email + " password:" + password);
+        PreyLogger.d("registerNewDeviceToAccount email:" + email + " password:" + password);
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         HashMap<String, String> parameters = new HashMap<String, String>();
         PreyHttpResponse response = null;
         String json;
         try {
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.json?lang="+Locale.getDefault().getLanguage());
+            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.json");
             PreyLogger.d("_____url:" + url);
             response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, email, password);
             PreyLogger.d("response:" + response);
@@ -230,7 +233,7 @@ public class PreyWebServices {
         }
         if (!json.contains("key")) {
             PreyLogger.d("no key");
-            throw new PreyException(json+ "[" + response.getStatusCode() + "]");
+            throw new PreyException(json );
         }
 
         int from;
@@ -362,7 +365,7 @@ public class PreyWebServices {
             throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
         }
         if(response!=null&&response.getStatusCode()== HttpURLConnection.HTTP_UNAUTHORIZED){
-            throw new PreyException(json+ "[" + response.getStatusCode() + "]" );
+            throw new PreyException(json);
         }
         try {
             PreyLogger.d("____[token]_________________apikey:"+apikey+" password:"+password);

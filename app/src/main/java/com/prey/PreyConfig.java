@@ -50,7 +50,7 @@ public class PreyConfig {
 
     private static final String HTTP="https://";
 
-    public static final String VERSION_PREY_DEFAULT="2.0.1";
+    public static final String VERSION_PREY_DEFAULT="2.0.9";
 
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
@@ -152,6 +152,7 @@ public class PreyConfig {
     public static final String CAN_ACCESS_EXTERNAL_STORAGE= "CAN_ACCESS_EXTERNAL_STORAGE";
 
     public static final String TIME_PASSWORD_OK = "TIME_PASSWORD_OK";
+    public static final String TIME_TWO_STEP = "TIME_TWO_STEP";
 
     public static final int NOTIFY_ANDROID_6 = 6;
 
@@ -490,6 +491,8 @@ public class PreyConfig {
     public boolean isMarshmallowOrAbove() {
         return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
+
+
 
     public boolean isNougatOrAbove() {
         return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
@@ -1051,7 +1054,7 @@ public class PreyConfig {
     public void setTimePasswordOk(){
         Calendar cal= Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.HOUR,1);
+        cal.add(Calendar.MINUTE,3);
         saveLong(TIME_PASSWORD_OK,cal.getTimeInMillis());
     }
 
@@ -1257,6 +1260,23 @@ public class PreyConfig {
     }
 
 
+
+    public void setTimeTwoStep(){
+        Calendar cal= Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MINUTE,2);
+        saveLong(TIME_TWO_STEP,cal.getTimeInMillis());
+    }
+
+    public boolean isTimeTwoStep(){
+        long timePasswordOk=getLong(TIME_TWO_STEP,0);
+        long timeNow=new Date().getTime();
+        if (timeNow<timePasswordOk){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
 }
