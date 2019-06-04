@@ -334,23 +334,47 @@ public class PreyWebServices {
         parameters.put("email",PreyConfig.getPreyConfig(ctx).getEmail());
         parameters.put("password",password);
         parameters.put("otp_code",password2);
+        parameters.put("lang",Locale.getDefault().getLanguage());
+        PreyHttpResponse response=null;
         try {
-            PreyHttpResponse response=PreyRestHttpClient.getInstance(ctx).postAutentication(url,parameters);
-            if(response!=null){
-                PreyLogger.d("authenticate:" + response.getResponseAsString());
-                if(response.getStatusCode()==200) {
+            response=PreyRestHttpClient.getInstance(ctx).postAutentication(url,parameters);
+        }catch (Exception e){}
+        if(response!=null){
+            PreyLogger.d("authenticate:" + response.getResponseAsString());
+            if(response.getStatusCode()==200) {
+                String tokenJwt ="";
+                try {
+                        JSONObject jsnobject = new JSONObject(response.getResponseAsString());
+                        tokenJwt = jsnobject.getString("token");
+                        PreyConfig.getPreyConfig(ctx).setTokenJwt(tokenJwt);
+                }catch (Exception e){}
+                return true;
+            }else{
+                String json="";
+                try {
                     JSONObject jsnobject = new JSONObject(response.getResponseAsString());
-                    String tokenJwt = jsnobject.getString("token");
-                    PreyConfig.getPreyConfig(ctx).setTokenJwt(tokenJwt);
-                    return true;
+                    json = response.getResponseAsString();
+                }catch (Exception e){}
+                try {
+                    JSONObject jsnobject = new JSONObject(response.getResponseAsString());
+                    JSONArray array=jsnobject.getJSONArray("error");
+                    String json2="";
+                    for(int i=0;array!=null&&i<array.length();i++){
+                        json2+=array.get(i);
+                        if((i+1)<array.length()){
+                            json2+=" ,";
+                        }
+                    }
+                    json=json2;
+                } catch (Exception e) {
+                    PreyLogger.e("error:"+e.getMessage(),e);
                 }
+                throw new PreyException(json+ " [" + response.getStatusCode() + "]" );
             }
-        } catch (Exception e) {
-            PreyLogger.e("m:"+e.getMessage(),e);
+        }else {
+            throw new PreyException(ctx.getText(R.string.password_wrong).toString());
         }
-        throw new PreyException(ctx.getText(R.string.password_wrong).toString());
     }
-
 
     private PreyHttpResponse checkPassword(String apikey, String password, Context ctx) throws PreyException {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
