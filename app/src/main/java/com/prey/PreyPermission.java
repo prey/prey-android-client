@@ -86,6 +86,14 @@ public class PreyPermission {
         return canAccessReadExternalStorage;
     }
 
+    public static boolean canAccessWriteExternalStorage(Context ctx) {
+        boolean canAccessWriteExternalStorage= PermissionChecker
+                .checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                PermissionChecker.PERMISSION_GRANTED;
+        //PreyLogger.d("canAccessWriteExternalStorage:"+canAccessWriteExternalStorage);
+        return canAccessWriteExternalStorage;
+    }
+
 
     public static boolean canDrawOverlays(Context ctx) {
         boolean canDrawOverlays=true;

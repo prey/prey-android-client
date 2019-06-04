@@ -142,6 +142,8 @@
     <string name="password_intents_exceed">You have failed 3 times. Sorry!</string> 
     <string name="password_checking_dialog">Checking your password…\nJust a sec!</string>
 
+    <string name="loading">Loading, please wait..</string>
+
     <string name="set_old_user_loading">Attaching device to account…\nJust a sec!</string> 
     <string name="set_old_user_no_more_devices_title">Hold your horses!</string> 
     <string name="set_old_user_no_more_devices_text">You\'ve reached your free account\'s device limit. Delete one to make room or consider one of our paid plans for more device slots and extra features: https://www.preyproject.com/pricing</string> 
@@ -297,7 +299,7 @@
 
 
     <string name="preferences_disable_power_alert_android9_title">Not Available in Android 9</string>
-    <string name="preferences_disable_power_alert_android9_message">We’re sorry! This feature is not available in Android 9 due to policy restrictions.</string>
+    <string name="preferences_disable_power_alert_android9_message">This feature is not availabe due to Google\'s policy restrictions in this Android version</string>
 
     <string name="preference_biometric_summary">Use your fingerprint instead of your password to view the app’s Settings.</string>
     <string name="preference_biometric_title">Login With Fingerprint</string>
@@ -314,4 +316,16 @@
     <string name="use_password">Use password</string>
     <string name="use_fingerprint">Use fingerprint</string>
 
+    <string name="picture">Picture</string>
+    <string name="description_info">Info</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+
+
+
+    <string name="pre_report_title">This a test report, no alerts or messages will be shown when gathering a real one.</string>
+    <string name="pre_report_camera1">Taking frontal picture...</string>
+    <string name="pre_report_camera2">Taking rear picture...</string>
+    <string name="pre_report_location">Gathering location..</string>
+    <string name="pre_report_public_ip">Gathering local IP...</string>
 </resources>

@@ -1,8 +1,11 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2015 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.events.retrieves;
 
-/**
- * Created by oso on 24-08-15.
- */
 import org.json.JSONException;
 import org.json.JSONObject;
 

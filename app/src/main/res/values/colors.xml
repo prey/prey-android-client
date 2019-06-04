@@ -57,4 +57,5 @@
 <color name="list_item_title_text_color">#ff333333</color>
 <color name="lock_unlock_color">#3f81ba</color>
 
+<color name="control_background">#3f81ba</color>
 </resources>

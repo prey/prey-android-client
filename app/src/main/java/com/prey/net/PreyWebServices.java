@@ -70,14 +70,18 @@ public class PreyWebServices {
      * @throws PreyException
      */
     public PreyAccountData registerNewAccount(Context ctx, String name, String email, String password,String rule_age,String privacy_terms, String deviceType) throws Exception {
+        return registerNewAccount(ctx,name,  email,  password,password, rule_age, privacy_terms,  deviceType);
+    }
+
+    public PreyAccountData registerNewAccount(Context ctx, String name, String email, String password1,String password2,String rule_age,String privacy_terms, String deviceType) throws Exception {
 
 
         HashMap<String, String> parameters = new HashMap<String, String>();
 
         parameters.put("name", name);
         parameters.put("email", email);
-        parameters.put("password", password);
-        parameters.put("password_confirmation", password);
+        parameters.put("password", password1);
+        parameters.put("password_confirmation", password2);
         parameters.put("country_name", Locale.getDefault().getDisplayCountry());
         parameters.put("policy_rule_age", rule_age);
         parameters.put("policy_rule_privacy_terms", privacy_terms);
@@ -115,7 +119,7 @@ public class PreyWebServices {
 
             if (response != null && response.getStatusCode() > 299) {
                 PreyLogger.d("response.getStatusCode() >299 :"+response.getStatusCode());
-                throw new PreyException(xml+ "[" + response.getStatusCode() + "]");
+                throw new PreyException(xml);
             }
         }
         String deviceId = null;
@@ -140,7 +144,7 @@ public class PreyWebServices {
         newAccount.setApiKey(apiKey);
         newAccount.setDeviceId(deviceId);
         newAccount.setEmail(email);
-        newAccount.setPassword(password);
+        newAccount.setPassword(password1);
         newAccount.setName(name);
         return newAccount;
     }
@@ -173,12 +177,11 @@ public class PreyWebServices {
         parameters.put("vendor_name", vendor);
 
         parameters = increaseData(ctx, parameters);
-        TelephonyManager mTelephonyMgr = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        //String imsi = mTelephonyMgr.getSubscriberId();
+
         String imei = new PreyPhone(ctx).getHardware().getAndroidDeviceId();
         parameters.put("physical_address", imei);
-
-        parameters.put("lang",Locale.getDefault().getLanguage());
+        String lang=Locale.getDefault().getLanguage();
+        parameters.put("lang",lang);
 
 
         PreyHttpResponse response = null;
@@ -194,8 +197,12 @@ public class PreyWebServices {
                 String json = response.getResponseAsString();
                 PreyLogger.d("json:" + json);
                 if (response.getStatusCode() > 299) {
-                    throw new PreyException(json+ "[" + response.getStatusCode() + "]");
+                    if("es".equals(lang))
+                        throw new PreyException("{\"error\":[\"No queda espacio disponible para agregar este dispositivo!\"]}" );
+                    else
+                        throw new PreyException("{\"error\":[\"No slots left for new devices\"]}" );
                 }
+
             }
 
 
@@ -203,14 +210,14 @@ public class PreyWebServices {
     }
 
     public PreyAccountData registerNewDeviceToAccount(Context ctx, String email, String password, String deviceType) throws Exception {
-        PreyLogger.d("ws email:" + email + " password:" + password);
+        PreyLogger.d("registerNewDeviceToAccount email:" + email + " password:" + password);
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         HashMap<String, String> parameters = new HashMap<String, String>();
         PreyHttpResponse response = null;
         String json;
         try {
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.json?lang="+Locale.getDefault().getLanguage());
+            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.json");
             PreyLogger.d("_____url:" + url);
             response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, email, password);
             PreyLogger.d("response:" + response);
@@ -226,7 +233,7 @@ public class PreyWebServices {
         }
         if (!json.contains("key")) {
             PreyLogger.d("no key");
-            throw new PreyException(json+ "[" + response.getStatusCode() + "]");
+            throw new PreyException(json );
         }
 
         int from;
@@ -382,22 +389,7 @@ public class PreyWebServices {
             throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
         }
         if(response!=null&&response.getStatusCode()== HttpURLConnection.HTTP_UNAUTHORIZED){
-            PreyLogger.i("json:"+json);
-            try {
-                JSONObject jsnobject = new JSONObject(json);
-                JSONArray array=jsnobject.getJSONArray("error");
-                String json2="";
-                for(int i=0;array!=null&&i<array.length();i++){
-                    json2+=array.get(i);
-                    if((i+1)<array.length()){
-                        json2+=" ,";
-                    }
-                }
-                json=json2;
-            } catch (Exception e) {
-                PreyLogger.e("error:"+e.getMessage(),e);
-            }
-            throw new PreyException(json+ " [" + response.getStatusCode() + "]" );
+            throw new PreyException(json);
         }
         try {
             PreyLogger.d("____[token]_________________apikey:"+apikey+" password:"+password);
@@ -611,7 +603,7 @@ public class PreyWebServices {
             }
             try {
                 String url = getDataUrlJson(ctx);
-                PreyLogger.i("URL:" + url);
+                PreyLogger.d("URL:" + url);
                 PreyConfig.postUrl = null;
                 if (entityFiles.size() == 0){
                     preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);

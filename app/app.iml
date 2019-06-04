@@ -172,6 +172,7 @@
     <orderEntry type="library" name="Gradle: com.android.support:support-core-utils-27.1.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-vision-17.0.2" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-gcm-16.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.8.2@jar" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:livedata-core-1.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-iid-interop-16.0.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-clearcut-16.0.0" level="project" />

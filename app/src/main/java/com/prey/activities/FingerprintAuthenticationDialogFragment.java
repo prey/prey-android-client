@@ -65,7 +65,7 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
 
         Bundle bundle=getArguments();
         from=bundle.getString("from");
-        PreyLogger.i("from:"+from);
+        PreyLogger.d("from:"+from);
         mFingerprintUiHelper=null;
 
 

@@ -119,7 +119,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
     private void createCameraSource(boolean autoFocus, boolean useFlash) {
         Context context = getApplicationContext();
 
-        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).build();
+        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context). setBarcodeFormats(Barcode.DRIVER_LICENSE | Barcode.DATA_MATRIX | Barcode.QR_CODE|Barcode.PDF417 ).build();
         BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay,this);
         barcodeDetector.setProcessor(
                 new MultiProcessor.Builder<>(barcodeFactory).build());
@@ -235,6 +235,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
             barcode = graphic.getBarcode();
 
             if (barcode != null) {
+
                 PreyLogger.d("displayValue:"+barcode.displayValue);
                 Intent data = new Intent();
                 data.putExtra(BarcodeObject, barcode);

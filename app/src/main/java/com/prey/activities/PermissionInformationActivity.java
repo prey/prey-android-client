@@ -28,7 +28,7 @@ public class PermissionInformationActivity extends PreyActivity {
 
     private static final int SECURITY_PRIVILEGES = 10;
     private String congratsMessage;
-    private boolean first = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class PermissionInformationActivity extends PreyActivity {
 
 
             if (FroyoSupport.getInstance(this).isAdminActive()) {
-                Intent intent = new Intent(PermissionInformationActivity.this, WelcomeActivity.class);
+                Intent intent = new Intent(PermissionInformationActivity.this, CheckPasswordHtmlActivity.class);
                 PreyConfig.getPreyConfig(PermissionInformationActivity.this).setProtectReady(true);
                 new Thread() {
                     public void run() {
@@ -75,35 +75,12 @@ public class PermissionInformationActivity extends PreyActivity {
                 startActivity(intent);
                 finish();
             } else {
-                setContentView(R.layout.permission_information_error2);
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                Button buttonActivate = (Button) findViewById(R.id.buttonActivate);
-                buttonActivate.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        first = true;
+
+
                         Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
                         startActivityForResult(intent, SECURITY_PRIVILEGES);
                         PreyWebServices.getInstance().sendEvent(getApplicationContext(), PreyConfig.ANDROID_PRIVILEGES_GIVEN);
-                    }
-                });
 
-
-                Typeface titilliumWebRegular = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
-                Typeface titilliumWebBold = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Bold.ttf");
-                Typeface magdacleanmonoRegular = Typeface.createFromAsset(getAssets(), "fonts/MagdaClean/magdacleanmono-regular.ttf");
-
-
-                TextView textView1 = (TextView) findViewById(R.id.textView1);
-                TextView textView2 = (TextView) findViewById(R.id.textView2);
-                TextView textView3 = (TextView) findViewById(R.id.textView3);
-
-
-                textView1.setTypeface(magdacleanmonoRegular);
-                textView2.setTypeface(magdacleanmonoRegular);
-                textView3.setTypeface(titilliumWebRegular);
-
-
-                buttonActivate.setTypeface(titilliumWebBold);
 
 
             }
