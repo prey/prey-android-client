@@ -314,6 +314,7 @@
     <string name="password_description">Enter your Prey password</string>
     <string name="password_description2">Six digit security code</string>
     <string name="use_password">Use password</string>
+    <string name="use_fingerprint">Use fingerprint</string>
 
     <string name="picture">Picture</string>
     <string name="description_info">Info</string>
