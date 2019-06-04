@@ -10,8 +10,8 @@ android {
         applicationId "com.prey"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 163
-        versionName '2.0.1'
+        versionCode 164
+        versionName '2.0.2'
         multiDexEnabled true
     }
     buildTypes {
@@ -36,9 +36,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-gcm:16.1.0'
     implementation 'com.google.android.gms:play-services-vision:17.0.2'
-    implementation 'com.google.firebase:firebase-core:16.0.8'
-    implementation 'com.google.firebase:firebase-iid:17.1.1'
-    implementation 'com.google.firebase:firebase-messaging:17.5.0'
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-iid:18.0.0'
+    implementation 'com.google.firebase:firebase-messaging:18.0.0'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     implementation 'com.appsflyer:af-android-sdk:4.8.18@aar'
     implementation 'com.android.installreferrer:installreferrer:1.0'

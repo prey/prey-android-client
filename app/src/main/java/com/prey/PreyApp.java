@@ -101,7 +101,7 @@ public class PreyApp extends Application {
                             task.addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void result) {
-                                    PreyLogger.i("Task onSuccess");
+                                    PreyLogger.d("Task onSuccess");
                                 }
                             });
                         }catch (Exception e){}

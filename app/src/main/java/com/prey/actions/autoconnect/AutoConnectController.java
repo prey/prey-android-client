@@ -5,10 +5,7 @@ import android.os.Build;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.actions.aware.AwareConfig;
-import com.prey.actions.aware.AwareController;
 import com.prey.services.AutoconnectJobService;
-import com.prey.services.AwareJobService;
 
 public class AutoConnectController {
 

@@ -11,10 +11,15 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 
 import com.prey.PreyLogger;
+import com.prey.PreyPermission;
+import com.prey.R;
+import com.prey.activities.CheckPasswordHtmlActivity;
+import com.prey.activities.PermissionInformationActivity;
 import com.prey.activities.WelcomeActivity;
 
 public class PreyOverlayService extends Service {
@@ -42,7 +47,11 @@ public class PreyOverlayService extends Service {
                             run=false;
                             NotificationManager nManager = ((NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE));
                             nManager.cancelAll();
-                            Intent intentWelcome = new Intent(ctx, WelcomeActivity.class);
+                            String message = getString(R.string.device_added_congratulations_text);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("message", message);
+                            Intent intentWelcome = new Intent(ctx, PermissionInformationActivity.class);
+                            intentWelcome.putExtras(bundle);
                             intentWelcome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intentWelcome);
                             stopSelf();
