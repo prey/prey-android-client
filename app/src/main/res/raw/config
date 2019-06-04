@@ -11,11 +11,12 @@ prey-events-logs=https://clients1.preyproject.com/events/log
 
 
 #production
-prey-subdomain=solid
-prey-domain=preyproject.com
+prey-subdomain=xxx
+prey-domain=xxx
+
 #staging
-#prey-subdomain=panel1
-#prey-domain=preyhq.com
+#prey-subdomain=xxx
+#prey-domain=xxx
 
 
 api-v1=api/v1/
@@ -31,7 +32,7 @@ email-batch=
 #gcm
 gcm-id-prefix=GCM__
 #prod
-gcm-id=578864628893
+gcm-id=xxx
 
 c2dm-action=message
 c2dm-message-sync=sync
@@ -39,16 +40,18 @@ c2dm-message-sync=sync
 email-feedback=android-feedback@preyproject.com
 subject-feedback=prey android feedback
 
-analytics-ua=UA-8743344-9
+analytics-ua=xxx
 
 prey-uninstall=http://help.preyproject.com/article/190-how-to-uninstall-prey
 prey-uninstall-es=http://ayuda.preyproject.com/article/226-como-desinstalar-prey
+prey-terms=https://preyproject.com/terms-mobile/
+prey-terms-es=https://preyproject.com/es/terminos-mobile/
 
-#300 meters
-geofence-maximum-accuracy=300
+#900 meters
+geofence-maximum-accuracy=900
 
 #four minutes
-geofence-loitering-delay=240000
+geofence-loitering-delay=30000
 
 #notification Responsiveness
 geofence-notification-responsiveness=5000
@@ -56,6 +59,7 @@ geofence-notification-responsiveness=5000
 
 #100 meters
 distance-location=100
-distance-aware=200
+distance-aware=120
+radius-aware=500
 
-flyer-key=pzZcjLhYQ5emA8XLvSKNub
+flyer-key=xxx
