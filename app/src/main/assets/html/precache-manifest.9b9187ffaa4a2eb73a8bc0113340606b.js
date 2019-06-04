@@ -1,10 +1,10 @@
 self.__precacheManifest = [
   {
-    "revision": "1e7c00aa635c595972522296b2ac0bdf",
-    "url": "./static/media/prey-logo-short-loading.1e7c00aa.gif"
+    "revision": "0169ebee5333ac5afdc9518e25975bfb",
+    "url": "./static/media/icons.0169ebee.eot"
   },
   {
-    "revision": "b25785e129b5f245bbe8",
+    "revision": "9a79711ba9fe1203aa37",
     "url": "./static/css/main.c6215e42.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = [
     "url": "./static/js/runtime~main.9eb600ee.js"
   },
   {
-    "revision": "7ae012637deb469b5ac9",
-    "url": "./static/js/2.7ae01263.chunk.js"
+    "revision": "28f18a67afa173a12c70",
+    "url": "./static/js/2.28f18a67.chunk.js"
   },
   {
     "revision": "ce31486d2c6e0b6d55bbf5dbf26992f0",
@@ -68,12 +68,12 @@ self.__precacheManifest = [
     "url": "./static/media/onboarding_03.37e7a6b7.png"
   },
   {
-    "revision": "0169ebee5333ac5afdc9518e25975bfb",
-    "url": "./static/media/icons.0169ebee.eot"
+    "revision": "9a79711ba9fe1203aa37",
+    "url": "./static/js/main.9a79711b.chunk.js"
   },
   {
-    "revision": "b25785e129b5f245bbe8",
-    "url": "./static/js/main.b25785e1.chunk.js"
+    "revision": "1e7c00aa635c595972522296b2ac0bdf",
+    "url": "./static/media/prey-logo-short-loading.1e7c00aa.gif"
   },
   {
     "revision": "22dd050a390a73b90089db9e174826a9",
@@ -86,18 +86,6 @@ self.__precacheManifest = [
   {
     "revision": "2f54fbbdcc5379a2bed9d6e2225bb646",
     "url": "./static/media/icons.2f54fbbd.svg"
-  },
-  {
-    "revision": "9a9cf3481f9edae699e7be85784b1caf",
-    "url": "./static/media/map.9a9cf348.jpg"
-  },
-  {
-    "revision": "c8dfc77fc871a37a85a5e47e5281dd74",
-    "url": "./static/media/front.c8dfc77f.jpg"
-  },
-  {
-    "revision": "c8dfc77fc871a37a85a5e47e5281dd74",
-    "url": "./static/media/back.c8dfc77f.jpg"
   },
   {
     "revision": "f591a42505f4c6ebabf2843079cb667d",
@@ -128,6 +116,10 @@ self.__precacheManifest = [
     "url": "./static/media/fondo2.ada00d71.png"
   },
   {
+    "revision": "baaac74770efd8c34382afa00468f635",
+    "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
+  },
+  {
     "revision": "6e8991140fc75b4927e2c440d9036429",
     "url": "./static/media/regular-book-webfont.6e899114.woff"
   },
@@ -136,15 +128,11 @@ self.__precacheManifest = [
     "url": "./static/media/regular-bold-webfont.391159c5.woff"
   },
   {
-    "revision": "baaac74770efd8c34382afa00468f635",
-    "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
-  },
-  {
     "revision": "c44603b2b93c1b7a984f21255d556ee9",
     "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
   },
   {
-    "revision": "e84dcb5b2c710739b8232a118e88d1a9",
+    "revision": "eed42a940f739bc802b12f8cec5c8c40",
     "url": "./index.html"
   }
 ];

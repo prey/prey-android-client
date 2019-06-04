@@ -89,6 +89,13 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         <activity
             android:name="com.prey.activities.LoginActivity"
             android:clearTaskOnLaunch="true"
@@ -105,6 +112,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activities.SecurityActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
 
         <activity android:name=".activities.ReportActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -114,12 +124,10 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" />
 
-
         <activity
             android:name=".barcodereader.BarcodeActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" />
-
 
         <activity android:name=".barcodereader.BarcodeCaptureActivity"
             android:configChanges="keyboardHidden|orientation"

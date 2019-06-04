@@ -39,7 +39,7 @@ public class ActivityIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        PreyLogger.i("ActivityIntentService onCreate");
+        PreyLogger.d("ActivityIntentService onCreate");
     }
 //Define an onHandleIntent() method, which will be called whenever an activity detection update is available//
 
@@ -72,7 +72,7 @@ public class ActivityIntentService extends IntentService {
             }
 
             final String out=out2;
-                PreyLogger.i(out);
+                PreyLogger.d(out);
 
 
             final Handler handler = new Handler(Looper.getMainLooper());

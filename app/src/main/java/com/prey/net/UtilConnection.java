@@ -119,7 +119,7 @@ public class UtilConnection {
             Iterator<String> ite=params.keySet().iterator();
             while (ite.hasNext()){
                 String key=ite.next();
-                PreyLogger.i("["+key+"]:"+params.get(key));
+                PreyLogger.d("["+key+"]:"+params.get(key));
             }
         }
         SimpleMultipartEntity multiple=new SimpleMultipartEntity();
@@ -200,68 +200,68 @@ public class UtilConnection {
                     String responseMessage = connection.getResponseMessage();
                     switch (responseCode) {
                         case HttpURLConnection.HTTP_CREATED:
-                            PreyLogger.i(uri + " **CREATED**");
+                            PreyLogger.d(uri + " **CREATED**");
                             response = convertPreyHttpResponse(responseCode, connection);
                             retry = RETRIES;
                             break;
                         case HttpURLConnection.HTTP_OK:
-                            PreyLogger.i(uri + " **OK**");
+                            PreyLogger.d(uri + " **OK**");
                             response = convertPreyHttpResponse(responseCode, connection);
                             retry = RETRIES;
                             break;
                         case HttpURLConnection.HTTP_CONFLICT:
-                            PreyLogger.i(uri + " **CONFLICT**");
+                            PreyLogger.d(uri + " **CONFLICT**");
                             response = convertPreyHttpResponse(responseCode, connection);
                             retry = RETRIES;
                             break;
                         case HttpURLConnection.HTTP_FORBIDDEN:
-                            PreyLogger.i(uri + " **FORBIDDEN**");
+                            PreyLogger.d(uri + " **FORBIDDEN**");
                             response = convertPreyHttpResponse(responseCode, connection);
                             retry = RETRIES;
                             break;
                         case HttpURLConnection.HTTP_MOVED_TEMP:
-                            PreyLogger.i(uri + " **MOVED_TEMP**");
+                            PreyLogger.d(uri + " **MOVED_TEMP**");
                             response = convertPreyHttpResponse(responseCode, connection);
                             retry = RETRIES;
                             break;
                         case 422:
-                            PreyLogger.i(uri + " **422**");
+                            PreyLogger.d(uri + " **422**");
                             response = convertPreyHttpResponse(responseCode, connection);
                             retry = RETRIES;
                             break;
                         case HttpURLConnection.HTTP_BAD_GATEWAY:
-                            PreyLogger.i(uri + " **BAD_GATEWAY**");
+                            PreyLogger.d(uri + " **BAD_GATEWAY**");
                             response = convertPreyHttpResponse(responseCode, connection);
                             retry = RETRIES;
                             break;
                         case HttpURLConnection.HTTP_INTERNAL_ERROR:
-                            PreyLogger.i(uri + " **INTERNAL_ERROR**");
+                            PreyLogger.d(uri + " **INTERNAL_ERROR**");
                             response = convertPreyHttpResponse(responseCode, connection);
                             retry = RETRIES;
                             break;
                         case HttpURLConnection.HTTP_NOT_FOUND:
-                            PreyLogger.i(uri + " **NOT_FOUND**");
+                            PreyLogger.d(uri + " **NOT_FOUND**");
                             response = convertPreyHttpResponse(responseCode, connection);
                             retry = RETRIES;
                             break;
                         case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
-                            PreyLogger.i(uri + " **gateway timeout**");
+                            PreyLogger.d(uri + " **gateway timeout**");
                             break;
                         case HttpURLConnection.HTTP_UNAVAILABLE:
-                            PreyLogger.i(uri + "**unavailable**");
+                            PreyLogger.d(uri + "**unavailable**");
                             break;
                         case HttpURLConnection.HTTP_NOT_ACCEPTABLE:
-                            PreyLogger.i(uri + " **NOT_ACCEPTABLE**");
+                            PreyLogger.d(uri + " **NOT_ACCEPTABLE**");
                             response = convertPreyHttpResponse(responseCode, connection);
                             retry = RETRIES;
                             break;
                         case HttpURLConnection.HTTP_UNAUTHORIZED:
-                            PreyLogger.i(uri + " **HTTP_UNAUTHORIZED**");
+                            PreyLogger.d(uri + " **HTTP_UNAUTHORIZED**");
                             response = convertPreyHttpResponse(responseCode, connection);
                             retry = RETRIES;
                             break;
                         default:
-                            PreyLogger.i(uri + " **unknown response code**.");
+                            PreyLogger.d(uri + " **unknown response code**.");
                             break;
                     }
                     connection.disconnect();
