@@ -25,9 +25,12 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.PreyUtils;
 import com.prey.R;
+import com.prey.actions.location.LocationUpdatesService;
+import com.prey.actions.location.PreyLocation;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.PanelWebActivity;
 import com.prey.activities.PreReportActivity;
+import com.prey.activities.SecurityActivity;
 import com.prey.barcodereader.BarcodeActivity;
 import com.prey.json.actions.Detach;
 import com.prey.net.PreyWebServices;
@@ -35,7 +38,7 @@ import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyDisablePowerOptionsService;
 
 
-public class WebAppInterface2 {
+public class WebAppInterface {
 
     public Context mContext;
     private int wrongPasswordIntents = 0;
@@ -43,18 +46,37 @@ public class WebAppInterface2 {
     private boolean noMoreDeviceError = false;
     private String from = "setting";
     private CheckPasswordHtmlActivity mActivity;
-    public WebAppInterface2() {
 
+    public WebAppInterface() {
     }
-    public WebAppInterface2(Context context, CheckPasswordHtmlActivity activity) {
+
+    public WebAppInterface(Context ctx) {
+        mContext = ctx;
+    }
+
+    public WebAppInterface(Context context, CheckPasswordHtmlActivity activity) {
         mContext = context;
         mActivity = activity;
     }
 
     @JavascriptInterface
+    public String getData() {
+        String ssid = PreyConfig.getPreyConfig(mContext).getSsid();
+        String model = PreyConfig.getPreyConfig(mContext).getModel();
+        String imei = PreyConfig.getPreyConfig(mContext).getImei();
+        PreyLocation preyLocation = PreyConfig.getPreyConfig(mContext).getLocation();
+        String lat = "" + LocationUpdatesService.round(preyLocation.getLat());
+        String lng = "" + LocationUpdatesService.round(preyLocation.getLng());
+        String public_ip = PreyConfig.getPreyConfig(mContext).getPublicIp().trim();
+        String json = "{\"lat\":\"" + lat + "\",\"lng\":\"" + lng + "\",\"ssid\":\"" + ssid + "\",\"public_ip\":\"" + public_ip + "\",\"imei\":\"" + imei + "\",\"model\": \"" + model + "\"}";
+        PreyLogger.d("getData:" + json);
+        return json;
+    }
+
+    @JavascriptInterface
     public boolean initBackground() {
         boolean initBackground = PreyConfig.getPreyConfig(mContext).getRunBackground();
-        PreyLogger.i("initBackground:" + initBackground);
+        PreyLogger.d("initBackground:" + initBackground);
         return initBackground;
     }
 
@@ -62,43 +84,50 @@ public class WebAppInterface2 {
     public boolean initPin() {
         String pinNumber = PreyConfig.getPreyConfig(mContext).getPinNumber();
         boolean initPin = (pinNumber != null && !"".equals(pinNumber));
-        PreyLogger.i("initPin:" + initPin);
+        PreyLogger.d("initPin:" + initPin);
         return initPin;
     }
 
     @JavascriptInterface
     public String getPin() {
         String pin = PreyConfig.getPreyConfig(mContext).getPinNumber();
-        ;
-        PreyLogger.i("getPin:" + pin);
+        PreyLogger.d("getPin:" + pin);
         return pin;
     }
 
     @JavascriptInterface
     public boolean initUninstall() {
         boolean initUnis = PreyConfig.getPreyConfig(mContext).getBlockAppUninstall();
-        PreyLogger.i("initUninstall:" + initUnis);
+        PreyLogger.d("initUninstall:" + initUnis);
         return initUnis;
     }
 
     @JavascriptInterface
     public boolean initShield() {
         boolean initShi = PreyConfig.getPreyConfig(mContext).getDisablePowerOptions();
-        PreyLogger.i("initShield:" + initShi);
+        PreyLogger.d("initShield:" + initShi);
         return initShi;
     }
 
     @JavascriptInterface
     public void report() {
-        PreyLogger.i("report:");
+        PreyLogger.d("report:");
         Intent intent = new Intent(mContext, PreReportActivity.class);
         mContext.startActivity(intent);
         mActivity.finish();
     }
 
     @JavascriptInterface
+    public void security() {
+        PreyLogger.d("security:");
+        Intent intent = new Intent(mContext, SecurityActivity.class);
+        mContext.startActivity(intent);
+        mActivity.finish();
+    }
+
+    @JavascriptInterface
     public void reload() {
-        PreyLogger.i("reload:");
+        PreyLogger.d("reload:");
         Intent intent = new Intent(mContext, CheckPasswordHtmlActivity.class);
         mContext.startActivity(intent);
         mActivity.finish();
@@ -106,19 +135,19 @@ public class WebAppInterface2 {
 
     @JavascriptInterface
     public void savePin(String pin) {
-        PreyLogger.i("savepin:" + pin);
+        PreyLogger.d("savepin:" + pin);
         PreyConfig.getPreyConfig(mContext).setPinNumber(pin);
     }
 
     @JavascriptInterface
     public void log(String log) {
-        PreyLogger.i("log:" + log);
+        PreyLogger.d("log:" + log);
     }
 
 
     @JavascriptInterface
     public String mylogin(String email, String password) {
-        PreyLogger.i("mylogin email:" + email + " password:" + password);
+        PreyLogger.d("mylogin email:" + email + " password:" + password);
         ProgressDialog progressDialog = null;
         try {
             progressDialog = new ProgressDialog(mContext);
@@ -152,14 +181,14 @@ public class WebAppInterface2 {
 
     @JavascriptInterface
     public boolean isTimePasswordOk() {
-        boolean isTimePasswordOk=PreyConfig.getPreyConfig(mContext).isTimePasswordOk();
-        PreyLogger.i("isTimePasswordOk:"+isTimePasswordOk);
+        boolean isTimePasswordOk = PreyConfig.getPreyConfig(mContext).isTimePasswordOk();
+        PreyLogger.d("isTimePasswordOk:" + isTimePasswordOk);
         return isTimePasswordOk;
     }
 
     @JavascriptInterface
     public String login_tipo(String password, String password2, String tipo) {
-        PreyLogger.i("login_tipo2 password:" + password + " password2:" + password2 + " tipo:" + tipo);
+        PreyLogger.d("login_tipo2 password:" + password + " password2:" + password2 + " tipo:" + tipo);
         from = tipo;
         error = null;
         boolean isPasswordOk = false;
@@ -182,10 +211,8 @@ public class WebAppInterface2 {
             PreyLogger.e("login_tipo error:" + e.getMessage(), e);
             error = e.getMessage();
         }
-
-
         PreyLogger.d("login_tipo isPasswordOk:" + isPasswordOk);
-        PreyLogger.i("login_tipo error:" + error);
+        PreyLogger.d("login_tipo error:" + error);
         if (error != null)
             return error;
         else if (!isPasswordOk) {
@@ -221,14 +248,14 @@ public class WebAppInterface2 {
     @JavascriptInterface
     public String initPin4() {
         String initPin4 = PreyConfig.getPreyConfig(mContext).getPinNumber();
-        PreyLogger.i("initPin4:" + initPin4);
+        PreyLogger.d("initPin4:" + initPin4);
         return initPin4;
     }
 
     @JavascriptInterface
     public String initVersion() {
         String initVersion = PreyConfig.getPreyConfig(mContext).getPreyVersion();
-        PreyLogger.i("initVersion:" + initVersion);
+        PreyLogger.d("initVersion:" + initVersion);
         return initVersion;
     }
 
@@ -248,7 +275,7 @@ public class WebAppInterface2 {
         builder.setMessage(R.string.preferences_detach_summary)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        PreyLogger.i("wipe:");
+                        PreyLogger.d("wipe:");
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
                             new DetachDevice().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         else
@@ -266,18 +293,14 @@ public class WebAppInterface2 {
 
     @JavascriptInterface
     public void savepin2(String pin) {
-        PreyLogger.i("savepin2:" + pin);
+        PreyLogger.d("savepin2:" + pin);
         PreyConfig.getPreyConfig(mContext).setPinNumber(pin);
         if ("".equals(pin)) {
             setUninstall(false);
             setShieldOf(false);
         }
     }
-    //TODO:Camabiar !!
-    @JavascriptInterface
-    public boolean getTwoStepEnabled() {
-        return false;
-    }
+
     @JavascriptInterface
     public boolean getTwoStepEnabled2() {
         PreyLogger.d("!PreyConfig.getPreyConfig(mContext).isTimeTwoStep():" + !PreyConfig.getPreyConfig(mContext).isTimeTwoStep());
@@ -299,7 +322,7 @@ public class WebAppInterface2 {
 
     @JavascriptInterface
     public boolean versionIsPieOrAbove() {
-        return android.os.Build.VERSION.SDK_INT  > Build.VERSION_CODES.O_MR1;
+        return android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.O_MR1;
     }
 
     @JavascriptInterface
@@ -317,13 +340,13 @@ public class WebAppInterface2 {
 
     @JavascriptInterface
     public void setUninstall(boolean uninstall) {
-        PreyLogger.i("setUninstall:" + uninstall);
+        PreyLogger.d("setUninstall:" + uninstall);
         PreyConfig.getPreyConfig(mContext).setBlockAppUninstall(uninstall);
     }
 
     @JavascriptInterface
     public void setShieldOf(boolean shieldOf) {
-        PreyLogger.i("setShieldOf:" + shieldOf);
+        PreyLogger.d("setShieldOf:" + shieldOf);
         PreyConfig.getPreyConfig(mContext).setDisablePowerOptions(shieldOf);
         if (shieldOf) {
             mContext.startService(new Intent(mContext, PreyDisablePowerOptionsService.class));
@@ -404,11 +427,8 @@ public class WebAppInterface2 {
         PreyLogger.d("canAccessReadPhoneState:" + canAccessReadPhoneState);
         PreyLogger.d("canAccessReadExternalStorage2:" + canAccessWriteExternalStorage);
         boolean canDrawOverlays = false;
-        //  boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
-        //PreyLogger.d("canDrawOverlays:"+canDrawOverlays);
         if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
                 || !canAccessReadPhoneState || !canAccessWriteExternalStorage) {
-            PreyLogger.d("dentro");
             mActivity.askForPermission();
         } else {
             mActivity.askForPermissionAndroid7();

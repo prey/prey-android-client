@@ -29,13 +29,14 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.PreyUtils;
 import com.prey.R;
-import com.prey.activities.js.WebAppInterface2;
+import com.prey.activities.js.WebAppInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.services.PreyOverlayService;
 
 public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
-    public static String URL_ONB="file:///android_asset/html4/index.html";
+    public static String JS_ALIAS="Android";
+    public static String URL_ONB = "file:///android_asset/html/index.html";
     //public static String URL_ONB = "http://10.10.2.91:3000/";
 
     public static final String CLOSE_PREY = "close_prey";
@@ -72,13 +73,14 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         }
         Bundle extras = getIntent().getExtras();
         String nexturl = "";
-        try{
-            nexturl=extras.getString("nexturl");
-        }catch (Exception e){}
-        PreyLogger.d("CheckPasswordHtmlActivity nexturl: "+nexturl);
-        if("tryReport".equals(nexturl)){
+        try {
+            nexturl = extras.getString("nexturl");
+        } catch (Exception e) {
+        }
+        PreyLogger.d("CheckPasswordHtmlActivity nexturl: " + nexturl);
+        if ("tryReport".equals(nexturl)) {
             tryReport();
-        }else{
+        } else {
             loadUrl();
         }
     }
@@ -106,8 +108,8 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         String lng = PreyUtils.getLanguage();
         String url = URL_ONB + "#/" + lng + "/activation";
         settings();
-        PreyLogger.i("_url:" + url);
-        myWebView.addJavascriptInterface(new WebAppInterface2(this, this), "Android");
+        PreyLogger.d("_url:" + url);
+        myWebView.addJavascriptInterface(new WebAppInterface(this, this), JS_ALIAS);
         myWebView.loadUrl(url);
     }
 
@@ -115,18 +117,17 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     public void loadUrl() {
         PreyLogger.d("CheckPasswordHtmlActivity: loadUrl");
         settings();
-        myWebView.addJavascriptInterface(new WebAppInterface2(this, this), "Android");
+        myWebView.addJavascriptInterface(new WebAppInterface(this, this), JS_ALIAS);
         myWebView.loadUrl(getUrl(this));
     }
 
     public void reload() {
         PreyLogger.d("CheckPasswordHtmlActivity: reload");
         settings();
-        myWebView.addJavascriptInterface(new WebAppInterface2(this, this), "Android");
+        myWebView.addJavascriptInterface(new WebAppInterface(this, this), JS_ALIAS);
         myWebView.loadUrl(getUrl(this));
         myWebView.reload();
     }
-
 
 
     public String getUrl(Context ctx) {
@@ -137,22 +138,22 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         boolean canAccessCamera = PreyPermission.canAccessCamera(this);
         boolean canAccessReadPhoneState = PreyPermission.canAccessReadPhoneState(this);
         boolean canAccessWriteExternalStorage = PreyPermission.canAccessWriteExternalStorage(this);
-        PreyLogger.i("CheckPasswordHtmlActivity: canAccessFineLocation:" + canAccessFineLocation);
-        PreyLogger.i("CheckPasswordHtmlActivity: canAccessCoarseLocation:" + canAccessCoarseLocation);
-        PreyLogger.i("CheckPasswordHtmlActivity: canAccessCamera:" + canAccessCamera);
-        PreyLogger.i("CheckPasswordHtmlActivity: canAccessReadPhoneState:" + canAccessReadPhoneState);
-        PreyLogger.i("CheckPasswordHtmlActivity: canAccessWriteExternalStorage:" + canAccessWriteExternalStorage);
+        PreyLogger.d("CheckPasswordHtmlActivity: canAccessFineLocation:" + canAccessFineLocation);
+        PreyLogger.d("CheckPasswordHtmlActivity: canAccessCoarseLocation:" + canAccessCoarseLocation);
+        PreyLogger.d("CheckPasswordHtmlActivity: canAccessCamera:" + canAccessCamera);
+        PreyLogger.d("CheckPasswordHtmlActivity: canAccessReadPhoneState:" + canAccessReadPhoneState);
+        PreyLogger.d("CheckPasswordHtmlActivity: canAccessWriteExternalStorage:" + canAccessWriteExternalStorage);
         boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
-        PreyLogger.i("CheckPasswordHtmlActivity: canDrawOverlays:" + canDrawOverlays);
+        PreyLogger.d("CheckPasswordHtmlActivity: canDrawOverlays:" + canDrawOverlays);
         String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
-        PreyLogger.i("CheckPasswordHtmlActivity: deviceKey:" + deviceKey);
-        boolean isAdminActive=FroyoSupport.getInstance(this).isAdminActive();
-        PreyLogger.i("CheckPasswordHtmlActivity: isAdminActive:" + isAdminActive);
+        PreyLogger.d("CheckPasswordHtmlActivity: deviceKey:" + deviceKey);
+        boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
+        PreyLogger.d("CheckPasswordHtmlActivity: isAdminActive:" + isAdminActive);
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
                 && canAccessReadPhoneState && canAccessWriteExternalStorage && canDrawOverlays) {
             if (!isAdminActive) {
                 url = URL_ONB + "#/" + lng + "/permissions";
-            }else {
+            } else {
                 if (deviceKey != null && deviceKey != "") {
                     url = URL_ONB + "#/" + lng + "/";
                 } else {
@@ -160,13 +161,13 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
                 }
             }
         } else {
-            if (deviceKey != null && deviceKey != "" &&!isAdminActive) {
+            if (deviceKey != null && deviceKey != "" && !isAdminActive) {
                 url = URL_ONB + "#/" + lng + "/permissions";
             } else {
                 url = URL_ONB + "#/" + lng + "/start";
             }
         }
-        PreyLogger.i("_url:" + url);
+        PreyLogger.d("_url:" + url);
         return url;
     }
 

@@ -579,7 +579,7 @@ public class PreyWebServices {
             }
             try {
                 String url = getDataUrlJson(ctx);
-                PreyLogger.i("URL:" + url);
+                PreyLogger.d("URL:" + url);
                 PreyConfig.postUrl = null;
                 if (entityFiles.size() == 0){
                     preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
