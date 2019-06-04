@@ -300,6 +300,10 @@ public class WebAppInterface {
             setShieldOf(false);
         }
     }
+    @JavascriptInterface
+    public boolean getTwoStepEnabled() {
+        return false;
+    }
 
     @JavascriptInterface
     public boolean getTwoStepEnabled2() {
