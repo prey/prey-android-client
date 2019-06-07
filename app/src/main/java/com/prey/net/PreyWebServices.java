@@ -307,8 +307,12 @@ public class PreyWebServices {
         ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
         dataToBeSent.add(data);
         PreyHttpResponse response = PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
-        if (response != null && response.getStatusCode() == 200) {
-            PreyLogger.d("c2dm registry id set succesfully");
+        if (response != null ) {
+            int code=response.getStatusCode();
+            PreyLogger.d("setPushRegistrationId code:"+code);
+            if ( code == 200 ) {
+                PreyLogger.d("setPushRegistrationId c2dm registry id set succesfully");
+            }
         }
         return response;
     }
