@@ -51,71 +51,42 @@ public class JSONParser {
         }
         PreyLogger.i("_______cmd________");
         PreyLogger.i(sb);
+
         //json = "[{\"command\":\"history\",\"target\":\"call\",\"options\":{}}]";
-        //	json = "[{\"command\":\"history\",\"target\":\"sms\",\"options\":{}}]";
-
-        //	json = "[{\"command\":\"history\",\"target\":\"contact\",\"options\":{}}]";
+        //json = "[{\"command\":\"history\",\"target\":\"sms\",\"options\":{}}]";
+        //json = "[{\"command\":\"history\",\"target\":\"contact\",\"options\":{}}]";
         //json = "[{\"command\":\"start\",\"target\":\"system_install\",\"options\":{}}]";
-
-
         //json = "[{\"command\":\"start\",\"target\":\"server\",\"options\":{}}]";
-
-        //	json = "[{\"command\":\"start\",\"target\":\"ring\",\"options\":{}}]";
-        // json = "[{\"command\":\"start\",\"target\":\"video\",\"options\":{}}]";
-
+        //json = "[{\"command\":\"start\",\"target\":\"ring\",\"options\":{}}]";
+        //json = "[{\"command\":\"start\",\"target\":\"video\",\"options\":{}}]";
         //json = "[{\"command\":\"get\",\"target\":\"picture\",\"options\":{}}]";
-
-        //json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\"]}}]";
-
-        // json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"screenshot\",\"access_points_list\"]}}]";
-
-        // json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"screenshot\",\"picture\",\"location\"]}}]";
-
-        // json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"screenshot\"]}}]";
-
-        // json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"location\"]}}]";
-
-        // json="[ {\"command\": \"start\",\"target\": \"geofencing\",\"options\": {\"origin\": \"-70.60713481,-36.42372147\",\"radius\": \"100\" }}]";
-
-        // json="[ {\"command\": \"start\",\"target\": \"geofencing\",\"options\": {\"origin\": \"-70.7193117,-32.7521112\",\"radius\": \"100\" }}]";
-
-        // json="[ {\"command\": \"start\",\"target\": \"geofencing\",\"options\": {\"id\":\"id1\",\"origin\":\"-70.60713481,-33.42372147\",\"radius\":\"100\",\"type:\":\"in",\"expire":"-1" }}]";
-        // json="[ {\"command\": \"stop\",\"target\": \"geofencing\",\"options\": {\"id\":\"id1\"}}]";
-
-        // json="[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}},{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}, {\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\"[\"picture\",\"location\",\"screenshot\",\"access_points_list\"]}}]";
-
-        // json="[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}}, {\"command\":\"get\",\"target\":\"report\",\"options\":{\"delay\": \"25\",\"include\"[\"picture\",\"location\",\"screenshot\",\"access_points_list\"]}}]";
-
-        // json="[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}}
-
-        //json = "[ {\"command\": \"data\",\"target\": \"location\",\"options\": {}}]";
-
-        // json="[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}}]";
-        // json="[{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}]";
-
-        // json="[{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}]";
-        //json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"interval\":\"2\"}}]";
-        //  json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"screenshot\",\"access_points_list\"],\"interval\":\"10\"}}]";
-        //  json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"access_points_list\"],\"interval\":\"10\"}}]";
-
-
-        //json="[{\"command\":\"start\",\"target\":\"camouflage\",\"options\":null}]";
-        // json="[{\"command\":\"stop\",\"target\":\"camouflage\",\"options\":{\"interval\":\"2\"}}}]";
-
-
-        //json="[{\"target\":\"alert\",\"command\":\"start\",\"options\":{\"alert_message\":\"This device is stolen property. Please contact testforkhq@gmail.com to arrange its safe return.\"}},{\"target\":\"lock\",\"command\":\"start\",\"options\":{\"unlock_pass\":\"oso\"}},{\"command\":\"get\",\"target\":\"location\"},{\"target\":\"network\",\"command\":\"start\"},{\"target\":\"geo\",\"command\":\"start\"}]";
-
-        // json="[{\"command\":\"start\",\"target\":\"contacts_backup\" }]";
-
-        //	 json="[{\"command\":\"start\",\"target\":\"contacts_restore\" }]";
-
-//		 json="[{\"command\":\"start\",\"target\":\"browser\" }]";
-
-//		json="[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"interval\":\"2\",\"exclude\":[\"picture\",false]}}]";
-
-
-        //	json = "[ {\"command\": \"start\",\"target\": \"detach\",\"options\": {}}]";
-
+        //json = "[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\"]}}]";
+        //json = "[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"screenshot\",\"access_points_list\"]}}]";
+        //json = "[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"screenshot\",\"picture\",\"location\"]}}]";
+        //json = "[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"screenshot\"]}}]";
+        //json = "[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"location\"]}}]";
+        //json = "[{\"command\":\"start\",\"target\": \"geofencing\",\"options\": {\"origin\": \"-70.60713481,-36.42372147\",\"radius\": \"100\" }}]";
+        //json = "[{\"command\":\"start\",\"target\": \"geofencing\",\"options\": {\"origin\": \"-70.7193117,-32.7521112\",\"radius\": \"100\" }}]";
+        //json = "[{\"command\":\"start\",\"target\": \"geofencing\",\"options\": {\"id\":\"id1\",\"origin\":\"-70.60713481,-33.42372147\",\"radius\":\"100\",\"type:\":\"in",\"expire":"-1" }}]";
+        //json = "[{\"command\":\"stop\",\"target\": \"geofencing\",\"options\": {\"id\":\"id1\"}}]";
+        //json = "[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}},{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}, {\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\"[\"picture\",\"location\",\"screenshot\",\"access_points_list\"]}}]";
+        //json = "[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}}, {\"command\":\"get\",\"target\":\"report\",\"options\":{\"delay\": \"25\",\"include\"[\"picture\",\"location\",\"screenshot\",\"access_points_list\"]}}]";
+        //json = "[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}}
+        //json = "[{\"command\": \"data\",\"target\": \"location\",\"options\": {}}]";
+        //json = "[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}}]";
+        //json = "[{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}]";
+        //json = "[{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}]";
+        //json = "[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"interval\":\"2\"}}]";
+        //json = "[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"screenshot\",\"access_points_list\"],\"interval\":\"10\"}}]";
+        //json = "[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\":[\"picture\",\"location\",\"access_points_list\"],\"interval\":\"10\"}}]";
+        //json = "[{\"command\":\"start\",\"target\":\"camouflage\",\"options\":null}]";
+        //json = "[{\"command\":\"stop\",\"target\":\"camouflage\",\"options\":{\"interval\":\"2\"}}}]";
+        //json = "[{\"target\":\"alert\",\"command\":\"start\",\"options\":{\"alert_message\":\"This device is stolen property. Please contact testforkhq@gmail.com to arrange its safe return.\"}},{\"target\":\"lock\",\"command\":\"start\",\"options\":{\"unlock_pass\":\"oso\"}},{\"command\":\"get\",\"target\":\"location\"},{\"target\":\"network\",\"command\":\"start\"},{\"target\":\"geo\",\"command\":\"start\"}]";
+        //json = "[{\"command\":\"start\",\"target\":\"contacts_backup\" }]";
+        //json = "[{\"command\":\"start\",\"target\":\"contacts_restore\" }]";
+        //json = "[{\"command\":\"start\",\"target\":\"browser\" }]";
+        //json = "[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"interval\":\"2\",\"exclude\":[\"picture\",false]}}]";
+        //json = "[{\"command\":\"start\",\"target\": \"detach\",\"options\": {}}]";
 
         if ("[]".equals(json)) {
             return null;

@@ -6,7 +6,7 @@
  ******************************************************************************/
 package com.prey.activities;
 
-import com.prey.PreyVerify;
+import com.prey.PreyApp;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.view.Window;
 
 import com.prey.PreyConfig;
-import com.prey.services.PreyDisablePowerOptionsService;
 
 public class LoginActivity extends Activity {
 
@@ -34,6 +33,7 @@ public class LoginActivity extends Activity {
 
         startup();
 
+        new PreyApp().run(this);
     }
 
     @Override

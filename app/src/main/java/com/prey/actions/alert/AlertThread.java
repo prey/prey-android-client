@@ -40,8 +40,8 @@ public class AlertThread extends Thread {
             bundle.putString("alert_message", description);
 
             Intent popup = new Intent(ctx, PopUpAlertActivity.class);
-            popup.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-            popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            popup.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            popup.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             popup.putExtras(bundle);
             popup.putExtra("description_message", description);
             ctx.startActivity(popup);

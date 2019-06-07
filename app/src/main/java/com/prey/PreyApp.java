@@ -44,105 +44,128 @@ public class PreyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        boolean chromium=getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
+        PreyLogger.d("chromium:"+chromium);
+        run(this);
+
+        try {
+            FirebaseApp.initializeApp(this);
+            AppsFlyerConversionListener conversionListener = new AppsFlyerConversionListener() {
+                @Override
+                public void onInstallConversionDataLoaded(Map<String, String> conversionData) {
+                    for (String attrName : conversionData.keySet()) {
+                        PreyLogger.d("attribute: " + attrName + " = " + conversionData.get(attrName));
+                    }
+                    setInstallData(conversionData);
+                }
+
+                @Override
+                public void onInstallConversionFailure(String errorMessage) {
+                    PreyLogger.d( "error getting conversion data: " + errorMessage);
+                }
+
+                @Override
+                public void onAppOpenAttribution(Map<String, String> conversionData) {
+                    for (String attrName : conversionData.keySet()) {
+                        PreyLogger.d( "attribute: " + attrName + " = " + conversionData.get(attrName));
+                    }
+                }
+
+                @Override
+                public void onAttributionFailure(String errorMessage) {
+                    PreyLogger.d( "error onAttributionFailure : " + errorMessage);
+                }
+            };
+
+
+        }
+        catch (Exception e) {
+            PreyLogger.e("Error PreyApp:"+e.getMessage(),e);
+        }
+
+    }
+
+    public void run(final Context ctx) {
         try {
             mLastPause = 0;
             PreyLogger.d("__________________");
             PreyLogger.i("Application launched!");
             PreyLogger.d("__________________");
-            PreyConfig.getPreyConfig(getApplicationContext()).setReportNumber(0);
-            boolean chromium=getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
-            PreyLogger.d("chromium:"+chromium);
+            PreyConfig.getPreyConfig(ctx).setReportNumber(0);
 
-            String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
+
+            String deviceKey = PreyConfig.getPreyConfig(ctx).getDeviceId();
 
             PreyLogger.d("deviceKey:"+deviceKey);
-            PreyLogger.d("InstallationDate:" + PreyConfig.getPreyConfig(this).getInstallationDate());
-            if (PreyConfig.getPreyConfig(this).getInstallationDate() == 0) {
-                PreyConfig.getPreyConfig(this).setInstallationDate(new Date().getTime());
-                PreyWebServices.getInstance().sendEvent(this, PreyConfig.ANDROID_INIT);
+            PreyLogger.d("InstallationDate:" + PreyConfig.getPreyConfig(ctx).getInstallationDate());
+            if (PreyConfig.getPreyConfig(ctx).getInstallationDate() == 0) {
+                PreyConfig.getPreyConfig(ctx).setInstallationDate(new Date().getTime());
+                PreyWebServices.getInstance().sendEvent(ctx, PreyConfig.ANDROID_INIT);
             }
             String sessionId = PreyUtils.randomAlphaNumeric(16);
             PreyLogger.d("#######sessionId:" + sessionId);
-            PreyConfig.getPreyConfig(this).setSessionId(sessionId);
+            PreyConfig.getPreyConfig(ctx).setSessionId(sessionId);
 
-            boolean missing=PreyConfig.getPreyConfig(this).isMissing();
+            boolean missing=PreyConfig.getPreyConfig(ctx).isMissing();
 
 
             if (deviceKey != null && deviceKey != "") {
                 new Thread() {
                     public void run() {
                        try {
-                           PreyConfig.getPreyConfig(getApplicationContext()).registerC2dm();
+                           PreyConfig.getPreyConfig(ctx).registerC2dm();
                        }catch (Exception e){
                            PreyLogger.e("registerC2dm error:"+e.getMessage(),e);
                        }
                        try {
-                            String email = PreyWebServices.getInstance().getEmail(getApplicationContext());
-                            PreyConfig.getPreyConfig(getApplicationContext()).setEmail(email);
+                            String email = PreyWebServices.getInstance().getEmail(ctx);
+                            PreyConfig.getPreyConfig(ctx).setEmail(email);
                        }catch (Exception e){
                            PreyLogger.e("setEmail error:"+e.getMessage(),e);
                        }
-                        try {PreyStatus.getInstance().getConfig(getApplicationContext());}catch (Exception e){}
-                        try {GeofenceController.getInstance().run(getApplicationContext());}catch (Exception e){}
-                        try {AwareController.getInstance().init(getApplicationContext());}catch (Exception e){}
-                        try {FileretrievalController.getInstance().run(getApplicationContext());}catch (Exception e){}
-
-                       //try {AutoConnectController.getInstance().initJob(getApplicationContext());}catch (Exception e){}
-                        /*
-                        try {
-                            ActivityRecognitionClient mActivityRecognitionClient = new ActivityRecognitionClient(getApplicationContext());
-                            Intent intent = new Intent(getApplicationContext(), ActivityIntentService.class);
-                            PendingIntent pendingIntent= PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        try {PreyStatus.getInstance().getConfig(ctx);}catch (Exception e){}
+                        try {GeofenceController.getInstance().run(ctx);}catch (Exception e){}
+                        try {AwareController.getInstance().init(ctx);}catch (Exception e){}
+                        try {FileretrievalController.getInstance().run(ctx);}catch (Exception e){}
 
 
-                            com.google.android.gms.tasks.Task<Void> task = mActivityRecognitionClient.requestActivityUpdates(
-                                    60000,
-                                    pendingIntent);
-                            task.addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void result) {
-                                    PreyLogger.d("Task onSuccess");
-                                }
-                            });
-                        }catch (Exception e){}
-                        */
                     }
                 }.start();
 
                 if (missing) {
-                    if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {
-                        ReportScheduled.getInstance(this).run();
+                    if (PreyConfig.getPreyConfig(ctx).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(ctx).getIntervalReport())) {
+                        ReportScheduled.getInstance(ctx).run();
                     }
                 }
                 new Thread() {
                     public void run() {
-                        if (PreyConfig.getPreyConfig(getApplicationContext()).isSimChanged()) {
+                        if (PreyConfig.getPreyConfig(ctx).isSimChanged()) {
                             JSONObject info = new JSONObject();
                             try {
-                                String lineNumber=PreyTelephonyManager.getInstance(getApplicationContext()).getLine1Number();
+                                String lineNumber=PreyTelephonyManager.getInstance(ctx).getLine1Number();
                                 if(lineNumber!=null&&!"".equals(lineNumber)) {
                                     info.put("new_phone_number", lineNumber);
                                 }
-                                String simSerialNumber=PreyConfig.getPreyConfig(getApplicationContext()).getSimSerialNumber();
+                                String simSerialNumber=PreyConfig.getPreyConfig(ctx).getSimSerialNumber();
                                 if(simSerialNumber!=null&&!"".equals(simSerialNumber)) {
                                     info.put("sim_serial_number", simSerialNumber);
                                 }
                             } catch (Exception e) {
                             }
                             Event event= new Event(Event.SIM_CHANGED, info.toString());
-                            new EventManagerRunner(getApplicationContext(), event).run(); ;
+                            new EventManagerRunner(ctx, event).run(); ;
                         }
                     }
                 }.start();
 
-                if(PreyConfig.getPreyConfig(this).isRunBackground()){
-                    RunBackgroundCheckBoxPreference.notifyReady(this);
+                if(PreyConfig.getPreyConfig(ctx).isRunBackground()){
+                    RunBackgroundCheckBoxPreference.notifyReady(ctx);
                 }
 
-                if(PreyConfig.getPreyConfig(this).isDisablePowerOptions()){
+                if(PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()){
                     try{
                         if(android.os.Build.VERSION.SDK_INT < PreyConfig.VERSION_CODES_P) {
-                            this.startService(new Intent(this, PreyDisablePowerOptionsService.class));
+                            ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
                         }
                     }catch (Exception e){
                         PreyLogger.e( "error startService PreyDisablePowerOptionsService : " + e.getMessage(),e);
@@ -152,43 +175,7 @@ public class PreyApp extends Application {
 
 
             }
-            try {
-                FirebaseApp.initializeApp(this);
-                AppsFlyerConversionListener conversionListener = new AppsFlyerConversionListener() {
-                    @Override
-                    public void onInstallConversionDataLoaded(Map<String, String> conversionData) {
-                        for (String attrName : conversionData.keySet()) {
-                            PreyLogger.d("attribute: " + attrName + " = " + conversionData.get(attrName));
-                        }
-                        setInstallData(conversionData);
-                    }
 
-                    @Override
-                    public void onInstallConversionFailure(String errorMessage) {
-                        PreyLogger.d( "error getting conversion data: " + errorMessage);
-                    }
-
-                    @Override
-                    public void onAppOpenAttribution(Map<String, String> conversionData) {
-                        for (String attrName : conversionData.keySet()) {
-                            PreyLogger.d( "attribute: " + attrName + " = " + conversionData.get(attrName));
-                        }
-                    }
-
-                    @Override
-                    public void onAttributionFailure(String errorMessage) {
-                        PreyLogger.d( "error onAttributionFailure : " + errorMessage);
-                    }
-                };
-
-                String flyerKey= FileConfigReader.getInstance(getApplicationContext()).getFlyerKey();
-                AppsFlyerLib.getInstance().init(flyerKey , conversionListener , getApplicationContext());
-                AppsFlyerLib.getInstance().startTracking(this, flyerKey);
-                AppsFlyerLib.getInstance().setDebugLog(false);
-            }
-            catch (Exception e) {
-                PreyLogger.e("Error PreyApp:"+e.getMessage(),e);
-            }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
         }
