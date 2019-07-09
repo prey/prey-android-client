@@ -8,14 +8,22 @@ package com.prey.actions.alert;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.PreyStatus;
-import com.prey.activities.PopUpAlertActivity;
+import com.prey.R;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.graphics.Color;
+import android.os.Build;
+import android.widget.RemoteViews;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 public class AlertThread extends Thread {
 
@@ -33,37 +41,55 @@ public class AlertThread extends Thread {
 
     public void run() {
         try {
+            String NOTIFICATION_CHANNEL_ID = "10002";
             PreyLogger.d("started alert");
-            String title = "title";
-            Bundle bundle = new Bundle();
-            bundle.putString("title_message", title);
-            bundle.putString("alert_message", description);
-
-            Intent popup = new Intent(ctx, PopUpAlertActivity.class);
-            popup.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            popup.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            popup.putExtras(bundle);
-            popup.putExtra("description_message", description);
-            ctx.startActivity(popup);
-
+            PreyLogger.i("description:" + description);
+            int notificationId = AlertConfig.getAlertConfig(ctx).getNotificationId();
+            String CHANNEL_ID = "CHANNEL_ALERT_ID";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                CharSequence name = "prey_alert";
+                NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                        name, NotificationManager.IMPORTANCE_HIGH);
+                channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+                NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
+                notificationManager.createNotificationChannel(channel);
+            }
+            String reason = null;
+            if (jobId != null && !"".equals(jobId)) {
+                reason = "{\"device_job_id\":\"" + jobId + "\"}";
+            }
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "started", reason));
+            PreyLogger.i("notificationId:" + notificationId);
+            Intent buttonIntent2 = new Intent(ctx, AlertReceiver.class);
+            buttonIntent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            buttonIntent2.setAction("" + notificationId);
+            buttonIntent2.putExtra("notificationId", notificationId);
+            buttonIntent2.putExtra("messageId", messageId);
+            buttonIntent2.putExtra("reason", reason);
+            PendingIntent btPendingIntent2 = PendingIntent.getBroadcast(ctx, 0, buttonIntent2, 0);
+            NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Notification.Builder notification = new Notification.Builder(ctx, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.alert2)
+                        .setContentTitle(ctx.getString(R.string.title_alert))
+                        .setStyle(new Notification.BigTextStyle().bigText(description))
+                        .addAction(R.drawable.xx2, ctx.getString(R.string.close_alert), btPendingIntent2)
+                        .setDeleteIntent(btPendingIntent2)
+                        .setContentIntent(btPendingIntent2)
+                        .setAutoCancel(true);
+                notificationManager.notify(notificationId, notification.build());
+            } else {
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx)
+                        .setSmallIcon(R.drawable.alert2)
+                        .setContentTitle(ctx.getString(R.string.title_alert))
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
+                        .addAction(R.drawable.xx2, ctx.getString(R.string.close_alert), btPendingIntent2)
+                        .setDeleteIntent(btPendingIntent2)
+                        .setContentIntent(btPendingIntent2)
+                        .setAutoCancel(true);
+                notificationManager.notify(notificationId, builder.build());
+            }
             PreyConfig.getPreyConfig(ctx).setNextAlert(true);
-
-            String reason=null;
-            if(jobId!=null&&!"".equals(jobId)){
-                reason="{\"device_job_id\":\""+jobId+"\"}";
-            }
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId,UtilJson.makeMapParam("start", "alert", "started",reason));
-            try {
-                int i = 0;
-                while (!PreyStatus.getInstance().isPreyPopUpOnclick() && i < 10) {
-                    sleep(1000);
-                    i++;
-                }
-            } catch (InterruptedException e) {
-            }
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId,UtilJson.makeMapParam("stop", "alert", "stopped",reason));
-            PreyConfig.getPreyConfig(ctx).setLastEvent("alert_started");
-            PreyLogger.d("stopped alert");
         } catch (Exception e) {
             PreyLogger.e("failed alert: " + e.getMessage(), e);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "alert", "failed", e.getMessage()));
