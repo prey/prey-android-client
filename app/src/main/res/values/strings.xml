@@ -328,4 +328,8 @@
     <string name="pre_report_camera2">Taking rear picture...</string>
     <string name="pre_report_location">Gathering location..</string>
     <string name="pre_report_public_ip">Gathering local IP...</string>
+
+    <string name="close_alert">Close</string>
+    <string name="title_alert">Important Alert</string>
+
 </resources>

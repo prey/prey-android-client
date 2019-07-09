@@ -323,4 +323,7 @@
     <string name="pre_report_location">Recolectando ubicación...</string>
     <string name="pre_report_public_ip">Recolectando IP local...</string>
 
+    <string name="close_alert">Cerrar</string>
+    <string name="title_alert">Alerta importante</string>
+
 </resources>
