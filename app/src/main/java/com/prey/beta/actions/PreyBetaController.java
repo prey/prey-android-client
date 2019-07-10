@@ -6,11 +6,9 @@
  ******************************************************************************/
 package com.prey.beta.actions;
 
-import android.Manifest;
-import android.app.NotificationManager;
+
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.PermissionChecker;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;

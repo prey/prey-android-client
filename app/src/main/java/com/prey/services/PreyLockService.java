@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
@@ -54,6 +56,7 @@ public class PreyLockService extends Service{
         final String unlock= PreyConfig.getPreyConfig(ctx).getUnlockPass();
 
         if(unlock!=null&&!"".equals(unlock)) {
+
 
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.lock_android7, null);

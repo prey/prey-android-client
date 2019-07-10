@@ -16,12 +16,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.annotation.RequiresApi;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,8 +32,6 @@ import com.prey.R;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
 import com.prey.net.PreyWebServices;
-
-import java.util.Date;
 
 public class FingerprintAuthenticationDialogFragment  extends DialogFragment   implements FingerprintHelper.FingerprintHelperListener{
 

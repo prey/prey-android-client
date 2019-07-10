@@ -11,20 +11,18 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 
 import android.os.AsyncTask;
 
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
-import com.prey.PreyVerify;
 import com.prey.R;
-import com.prey.backwardcompatibility.FroyoSupport;
-import com.prey.exceptions.PreyException;
 import com.prey.net.PreyWebServices;
 
 public class WelcomeBatchActivity extends FragmentActivity {

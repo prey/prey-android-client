@@ -121,6 +121,7 @@ public class WebAppInterface {
     public void security() {
         PreyLogger.d("security:");
         Intent intent = new Intent(mContext, SecurityActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
         mActivity.finish();
     }
