@@ -22,7 +22,7 @@ public class AlertReceiver extends BroadcastReceiver {
         int notificationId = intent.getIntExtra("notificationId", 0);
         final String messageId = intent.getStringExtra("messageId");
         final String reason = intent.getStringExtra("reason");
-        PreyLogger.i("notificationId:" + notificationId);
+        PreyLogger.d("notificationId:" + notificationId);
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(notificationId);
         new Thread() {

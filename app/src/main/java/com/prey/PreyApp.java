@@ -9,31 +9,30 @@ package com.prey;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.support.multidex.MultiDex;
+import android.content.IntentFilter;
+
+import androidx.multidex.MultiDex;
 
 import com.appsflyer.AppsFlyerConversionListener;
-import com.appsflyer.AppsFlyerLib;
 import com.google.firebase.FirebaseApp;
 import com.prey.actions.aware.AwareController;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.report.ReportScheduled;
 import com.prey.events.Event;
+import com.prey.events.factories.EventFactory;
 import com.prey.events.manager.EventManagerRunner;
-import com.prey.managers.PreyTelephonyManager;
+import com.prey.events.receivers.EventReceiver;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyDisablePowerOptionsService;
-
-import org.json.JSONObject;
-
 import java.util.Date;
 import java.util.Map;
 
 public class PreyApp extends Application {
 
     public long mLastPause;
-
+    private EventReceiver batteryLevelReceiver = new EventReceiver();
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -41,13 +40,13 @@ public class PreyApp extends Application {
         MultiDex.install(this);
     }
 
+
     @Override
     public void onCreate() {
         super.onCreate();
         boolean chromium=getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
         PreyLogger.d("chromium:"+chromium);
         run(this);
-
         try {
             FirebaseApp.initializeApp(this);
             AppsFlyerConversionListener conversionListener = new AppsFlyerConversionListener() {
@@ -76,13 +75,10 @@ public class PreyApp extends Application {
                     PreyLogger.d( "error onAttributionFailure : " + errorMessage);
                 }
             };
-
-
         }
         catch (Exception e) {
             PreyLogger.e("Error PreyApp:"+e.getMessage(),e);
         }
-
     }
 
     public void run(final Context ctx) {
@@ -93,9 +89,9 @@ public class PreyApp extends Application {
             PreyLogger.d("__________________");
             PreyConfig.getPreyConfig(ctx).setReportNumber(0);
 
-
+            String apiKey = PreyConfig.getPreyConfig(ctx).getApiKey();
             String deviceKey = PreyConfig.getPreyConfig(ctx).getDeviceId();
-
+            PreyLogger.d("apiKey:"+apiKey);
             PreyLogger.d("deviceKey:"+deviceKey);
             PreyLogger.d("InstallationDate:" + PreyConfig.getPreyConfig(ctx).getInstallationDate());
             if (PreyConfig.getPreyConfig(ctx).getInstallationDate() == 0) {
@@ -140,19 +136,9 @@ public class PreyApp extends Application {
                 new Thread() {
                     public void run() {
                         if (PreyConfig.getPreyConfig(ctx).isSimChanged()) {
-                            JSONObject info = new JSONObject();
-                            try {
-                                String lineNumber=PreyTelephonyManager.getInstance(ctx).getLine1Number();
-                                if(lineNumber!=null&&!"".equals(lineNumber)) {
-                                    info.put("new_phone_number", lineNumber);
-                                }
-                                String simSerialNumber=PreyConfig.getPreyConfig(ctx).getSimSerialNumber();
-                                if(simSerialNumber!=null&&!"".equals(simSerialNumber)) {
-                                    info.put("sim_serial_number", simSerialNumber);
-                                }
-                            } catch (Exception e) {
-                            }
-                            Event event= new Event(Event.SIM_CHANGED, info.toString());
+                            Intent newIntent=new Intent();
+                            newIntent.setAction(EventFactory.SIM_STATE_CHANGED);
+                            Event event= EventFactory.getEvent(ctx,newIntent);
                             new EventManagerRunner(ctx, event).run(); ;
                         }
                     }
@@ -171,11 +157,11 @@ public class PreyApp extends Application {
                         PreyLogger.e( "error startService PreyDisablePowerOptionsService : " + e.getMessage(),e);
                     }
                 }
-
-
-
+                IntentFilter ACTION_POWER_CONNECTED = new          IntentFilter(Intent.ACTION_POWER_CONNECTED);
+                IntentFilter ACTION_POWER_DISCONNECTED = new          IntentFilter(Intent.ACTION_POWER_DISCONNECTED);
+                registerReceiver(batteryLevelReceiver, ACTION_POWER_CONNECTED);
+                registerReceiver(batteryLevelReceiver, ACTION_POWER_DISCONNECTED);
             }
-
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
         }

@@ -516,6 +516,10 @@ public class PreyWebServices {
         return getDeviceUrlApiv2(ctx).concat("/location.json");
     }
 
+    public String getMissing(Context ctx) throws PreyException {
+        return getDeviceUrlApiv2(ctx).concat("/missing");
+    }
+
     private String getDeviceUrlApiv2(Context ctx) throws PreyException {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         String deviceKey = preyConfig.getDeviceId();
@@ -1022,6 +1026,34 @@ public class PreyWebServices {
         String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
         String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
         String uri =PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("set-missing/").concat(deviceId).concat("/missing");
+        Map<String, String> params=new HashMap<>();
+        return PreyRestHttpClient.getInstance(ctx).postAutentication(uri,params);
+    }
+
+    public String triggers(Context ctx) throws PreyException {
+        String url =  getDeviceUrlApiv2(ctx).concat("/triggers.json");
+        PreyLogger.d("url:"+url);
+        String sb=null;
+        PreyRestHttpClient preyRestHttpClient=PreyRestHttpClient.getInstance(ctx);
+        try{
+            Map<String, String> params=null;
+            PreyHttpResponse response=PreyRestHttpClient.getInstance(ctx).getAutentication(url, params);
+            if(response!=null) {
+                sb = response.getResponseAsString();
+                if (sb != null)
+                    sb = sb.trim();
+            }
+        }catch(Exception e){
+            PreyLogger.e("Error, causa:" + e.getMessage(), e);
+            return null;
+        }
+        PreyLogger.d("cmd:" + sb);
+        return sb;
+    }
+
+
+    public PreyHttpResponse setMissing(final Context ctx,String estado) throws Exception{
+        String uri =getMissing(ctx).concat("/").concat(estado);
         Map<String, String> params=new HashMap<>();
         return PreyRestHttpClient.getInstance(ctx).postAutentication(uri,params);
     }

@@ -26,6 +26,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
+import com.prey.actions.triggers.TriggerGeoReceiver;
 import com.prey.events.Event;
 import com.prey.events.manager.EventThread;
 import com.prey.json.UtilJson;
@@ -262,6 +263,7 @@ public class GeofenceController {
                         event.setName(transition);
                         event.setInfo(info.toString());
                         JSONObject jsonObjectStatus = new JSONObject();
+                        new TriggerGeoReceiver().onReceive(ctx,Integer.parseInt(geo.id),transition);
                         PreyLogger.d("GEO name:"+geo.name+" event:" + transition.toString());
                         new EventThread(ctx, event, jsonObjectStatus, transition).start();
                     } catch (Exception e) {

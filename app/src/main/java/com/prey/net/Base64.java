@@ -6,6 +6,8 @@
  ******************************************************************************/
 package com.prey.net;
 
+import com.prey.PreyLogger;
+
 /**
  * <p>
  * Encodes and decodes to and from Base64 notation.
@@ -887,10 +889,10 @@ public class Base64 {
 
 				return 3;
 			} catch (Exception e) {
-				System.out.println("" + source[srcOffset] + ": " + (DECODABET[source[srcOffset]]));
-				System.out.println("" + source[srcOffset + 1] + ": " + (DECODABET[source[srcOffset + 1]]));
-				System.out.println("" + source[srcOffset + 2] + ": " + (DECODABET[source[srcOffset + 2]]));
-				System.out.println("" + source[srcOffset + 3] + ": " + (DECODABET[source[srcOffset + 3]]));
+				PreyLogger.d("" + source[srcOffset] + ": " + (DECODABET[source[srcOffset]]));
+				PreyLogger.d("" + source[srcOffset + 1] + ": " + (DECODABET[source[srcOffset + 1]]));
+				PreyLogger.d("" + source[srcOffset + 2] + ": " + (DECODABET[source[srcOffset + 2]]));
+				PreyLogger.d("" + source[srcOffset + 3] + ": " + (DECODABET[source[srcOffset + 3]]));
 				return -1;
 			} // end catch
 		}
