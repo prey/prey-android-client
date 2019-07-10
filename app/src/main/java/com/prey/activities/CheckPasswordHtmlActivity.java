@@ -19,10 +19,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -133,40 +134,54 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     public String getUrl(Context ctx) {
         String lng = PreyUtils.getLanguage();
         String url = "";
-        boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
-        boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
-        boolean canAccessCamera = PreyPermission.canAccessCamera(this);
-        boolean canAccessReadPhoneState = PreyPermission.canAccessReadPhoneState(this);
-        boolean canAccessWriteExternalStorage = PreyPermission.canAccessWriteExternalStorage(this);
-        PreyLogger.d("CheckPasswordHtmlActivity: canAccessFineLocation:" + canAccessFineLocation);
-        PreyLogger.d("CheckPasswordHtmlActivity: canAccessCoarseLocation:" + canAccessCoarseLocation);
-        PreyLogger.d("CheckPasswordHtmlActivity: canAccessCamera:" + canAccessCamera);
-        PreyLogger.d("CheckPasswordHtmlActivity: canAccessReadPhoneState:" + canAccessReadPhoneState);
-        PreyLogger.d("CheckPasswordHtmlActivity: canAccessWriteExternalStorage:" + canAccessWriteExternalStorage);
-        boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
-        PreyLogger.d("CheckPasswordHtmlActivity: canDrawOverlays:" + canDrawOverlays);
+
         String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
         PreyLogger.d("CheckPasswordHtmlActivity: deviceKey:" + deviceKey);
-        boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
-        PreyLogger.d("CheckPasswordHtmlActivity: isAdminActive:" + isAdminActive);
-        if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
-                && canAccessReadPhoneState && canAccessWriteExternalStorage && canDrawOverlays) {
-            if (!isAdminActive) {
-                url = URL_ONB + "#/" + lng + "/permissions";
-            } else {
-                if (deviceKey != null && deviceKey != "") {
-                    url = URL_ONB + "#/" + lng + "/";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PreyLogger.d("CheckPasswordHtmlActivity: Build.VERSION_CODES >=M" );
+            boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
+            boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
+            boolean canAccessCamera = PreyPermission.canAccessCamera(this);
+            boolean canAccessReadPhoneState = PreyPermission.canAccessReadPhoneState(this);
+            boolean canAccessWriteExternalStorage = PreyPermission.canAccessWriteExternalStorage(this);
+            PreyLogger.d("CheckPasswordHtmlActivity: canAccessFineLocation:" + canAccessFineLocation);
+            PreyLogger.d("CheckPasswordHtmlActivity: canAccessCoarseLocation:" + canAccessCoarseLocation);
+            PreyLogger.d("CheckPasswordHtmlActivity: canAccessCamera:" + canAccessCamera);
+            PreyLogger.d("CheckPasswordHtmlActivity: canAccessReadPhoneState:" + canAccessReadPhoneState);
+            PreyLogger.d("CheckPasswordHtmlActivity: canAccessWriteExternalStorage:" + canAccessWriteExternalStorage);
+            boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+            PreyLogger.d("CheckPasswordHtmlActivity: canDrawOverlays:" + canDrawOverlays);
+            boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
+            PreyLogger.d("CheckPasswordHtmlActivity: isAdminActive:" + isAdminActive);
+            if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
+                    && canAccessReadPhoneState && canAccessWriteExternalStorage && canDrawOverlays) {
+                if (!isAdminActive) {
+                    url = URL_ONB + "#/" + lng + "/permissions";
                 } else {
-                    url = URL_ONB + "#/" + lng + "/signin";
+                    if (deviceKey != null && deviceKey != "") {
+                        url = URL_ONB + "#/" + lng + "/";
+                    } else {
+                        url = URL_ONB + "#/" + lng + "/signin";
+                    }
+                }
+            } else {
+                if (deviceKey != null && deviceKey != "" && !isAdminActive) {
+                    url = URL_ONB + "#/" + lng + "/permissions";
+                } else {
+                    url = URL_ONB + "#/" + lng + "/start";
                 }
             }
-        } else {
-            if (deviceKey != null && deviceKey != "" && !isAdminActive) {
-                url = URL_ONB + "#/" + lng + "/permissions";
+        }else{
+            PreyLogger.d("CheckPasswordHtmlActivity: Build.VERSION_CODES <M" );
+            if (deviceKey != null && deviceKey != ""  ) {
+                url = URL_ONB + "#/" + lng + "/";
             } else {
-                url = URL_ONB + "#/" + lng + "/start";
+                url = URL_ONB + "#/" + lng + "/signin";
             }
+
+
         }
+
         PreyLogger.d("_url:" + url);
         return url;
     }
