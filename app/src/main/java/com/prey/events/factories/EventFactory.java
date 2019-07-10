@@ -22,7 +22,9 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -30,6 +32,8 @@ import com.prey.PreyPermission;
 import com.prey.R;
 import com.prey.actions.aware.AwareController;
 import com.prey.actions.fileretrieval.FileretrievalController;
+import com.prey.actions.triggers.BatteryTriggerReceiver;
+import com.prey.actions.triggers.SimTriggerReceiver;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.Event;
@@ -39,29 +43,33 @@ import com.prey.net.offline.OfflineController;
 
 public class EventFactory {
 
-    private static final String BOOT_COMPLETED = "android.intent.action.BOOT_COMPLETED";
-    private static final String CONNECTIVITY_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
-    private static final String WIFI_STATE_CHANGED = "android.net.wifi.WIFI_STATE_CHANGED";
-    private static final String ACTION_SHUTDOWN = "android.intent.action.ACTION_SHUTDOWN";
-    private static final String AIRPLANE_MODE = "android.intent.action.AIRPLANE_MODE";
-    private static final String BATTERY_LOW = "android.intent.action.BATTERY_LOW";
-    private static final String SIM_STATE_CHANGED = "android.intent.action.SIM_STATE_CHANGED";
-    private static final String USER_PRESENT = "android.intent.action.USER_PRESENT";
+    public static final String BOOT_COMPLETED = "android.intent.action.BOOT_COMPLETED";
+    public static final String CONNECTIVITY_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
+    public static final String WIFI_STATE_CHANGED = "android.net.wifi.WIFI_STATE_CHANGED";
+    public static final String ACTION_SHUTDOWN = "android.intent.action.ACTION_SHUTDOWN";
+    public static final String AIRPLANE_MODE = "android.intent.action.AIRPLANE_MODE";
+    public static final String BATTERY_LOW = "android.intent.action.BATTERY_LOW";
+    public static final String SIM_STATE_CHANGED = "android.intent.action.SIM_STATE_CHANGED";
+    public static final String USER_PRESENT = "android.intent.action.USER_PRESENT";
+    public static final String ACTION_POWER_CONNECTED = "android.intent.action.ACTION_POWER_CONNECTED";
+    public static final String ACTION_POWER_DISCONNECTED = "android.intent.action.ACTION_POWER_DISCONNECTED";
 
     public static Event getEvent(final Context ctx, Intent intent) {
         String message = "getEvent[" + intent.getAction() + "]";
         PreyLogger.d(message);
+
         if (BOOT_COMPLETED.equals(intent.getAction())) {
             notification(ctx);
             if (PreyConfig.getPreyConfig(ctx).isSimChanged()) {
                 JSONObject info = new JSONObject();
                 try {
-                    String lineNumber=PreyTelephonyManager.getInstance(ctx).getLine1Number();
-                    if(lineNumber!=null&&!"".equals(lineNumber)) {
+                    String lineNumber = PreyTelephonyManager.getInstance(ctx).getLine1Number();
+                    if (lineNumber != null && !"".equals(lineNumber)) {
                         info.put("new_phone_number", PreyTelephonyManager.getInstance(ctx).getLine1Number());
                     }
                 } catch (Exception e) {
                 }
+                new SimTriggerReceiver().onReceive(ctx, intent);
                 return new Event(Event.SIM_CHANGED, info.toString());
             } else {
                 return new Event(Event.TURNED_ON);
@@ -71,24 +79,33 @@ public class EventFactory {
             if (PreyConfig.getPreyConfig(ctx).isSimChanged()) {
                 JSONObject info = new JSONObject();
                 try {
-                    String lineNumber=PreyTelephonyManager.getInstance(ctx).getLine1Number();
-                    if(lineNumber!=null&&!"".equals(lineNumber)) {
+                    String lineNumber = PreyTelephonyManager.getInstance(ctx).getLine1Number();
+                    if (lineNumber != null && !"".equals(lineNumber)) {
                         info.put("new_phone_number", PreyTelephonyManager.getInstance(ctx).getLine1Number());
                     }
                     info.put("sim_serial_number", PreyConfig.getPreyConfig(ctx).getSimSerialNumber());
                 } catch (Exception e) {
                 }
+                new SimTriggerReceiver().onReceive(ctx, intent);
                 return new Event(Event.SIM_CHANGED, info.toString());
             }
         }
         if (ACTION_SHUTDOWN.equals(intent.getAction())) {
             return new Event(Event.TURNED_OFF);
         }
-        if (BATTERY_LOW.equals(intent.getAction())){
+        if (BATTERY_LOW.equals(intent.getAction())) {
+            new BatteryTriggerReceiver().onReceive(ctx, intent);
             return new Event(Event.BATTERY_LOW);
         }
-
-        if (CONNECTIVITY_CHANGE.equals(intent.getAction())){
+        if (ACTION_POWER_CONNECTED.equals(intent.getAction())) {
+            new BatteryTriggerReceiver().onReceive(ctx, intent);
+            return new Event(Event.POWER_CONNECTED);
+        }
+        if (ACTION_POWER_DISCONNECTED.equals(intent.getAction())) {
+            new BatteryTriggerReceiver().onReceive(ctx, intent);
+            return new Event(Event.POWER_DISCONNECTED);
+        }
+        if (CONNECTIVITY_CHANGE.equals(intent.getAction())) {
             PreyConfig.getPreyConfig(ctx).registerC2dm();
         }
         if (CONNECTIVITY_CHANGE.equals(intent.getAction())) {
@@ -96,22 +113,22 @@ public class EventFactory {
             int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
             PreyLogger.d("__wifiState:" + wifiState);
             try {
-                boolean connected=false;
+                boolean connected = false;
                 if (!PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {
                     Bundle extras = intent.getExtras();
                     if (extras != null) {
                         if ("connected".equals(extras.getString(ConnectivityManager.EXTRA_REASON))) {
-                            connected=true;
+                            connected = true;
                         }
                     }
                 }
                 if (!PreyConnectivityManager.getInstance(ctx).isMobileConnected()) {
                     info.put("connected", "mobile");
                     if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
-                        connected=true;
+                        connected = true;
                     }
                 }
-                if(connected){
+                if (connected) {
                     Thread.sleep(4000);
                     PreyConfig.getPreyConfig(ctx).registerC2dm();
                     new Thread() {
@@ -160,27 +177,28 @@ public class EventFactory {
         if (AIRPLANE_MODE.equals(intent.getAction())) {
             if (!isAirplaneModeOn(ctx)) {
                 notification(ctx);
-                boolean connected=false;
+                boolean connected = false;
                 if (!PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {
                     Bundle extras = intent.getExtras();
                     if (extras != null) {
                         if ("connected".equals(extras.getString(ConnectivityManager.EXTRA_REASON))) {
-                            connected=true;
+                            connected = true;
                         }
                     }
                 }
                 if (!PreyConnectivityManager.getInstance(ctx).isMobileConnected()) {
                     int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
                     if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
-                        connected=true;
+                        connected = true;
                     }
                 }
-                if(connected) {
+                if (connected) {
                     PreyBetaController.startPrey(ctx);
-                    try{
+                    try {
                         PreyConfig.getPreyConfig(ctx).registerC2dm();
                         Thread.sleep(4000);
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                    }
                     new Thread() {
                         public void run() {
                             FileretrievalController.getInstance().run(ctx);
@@ -189,24 +207,24 @@ public class EventFactory {
                 }
             }
         }
-        if(USER_PRESENT.equals(intent.getAction())){
-            String awareDate=PreyConfig.getPreyConfig(ctx).getAwareDate();
-            String now=PreyConfig.FORMAT_SDF_AWARE.format(new Date());
-            PreyLogger.d("AWARE USER_PRESENT awareDate:"+awareDate+" now:"+now);
-            if(!now.equals(awareDate)) {
-                PreyLogger.d("AWARE getSendNowAware: "+now);
+        if (USER_PRESENT.equals(intent.getAction())) {
+            String awareDate = PreyConfig.getPreyConfig(ctx).getAwareDate();
+            String now = PreyConfig.FORMAT_SDF_AWARE.format(new Date());
+            PreyLogger.d("AWARE USER_PRESENT awareDate:" + awareDate + " now:" + now);
+            if (!now.equals(awareDate)) {
+                PreyLogger.d("AWARE getSendNowAware: " + now);
                 new Thread() {
                     public void run() {
-                        try{
+                        try {
                             AwareController.getSendNowAware(ctx);
-                        } catch (Exception e) {}
+                        } catch (Exception e) {
+                        }
                     }
                 }.start();
             }
         }
         return null;
     }
-
 
 
     public static boolean isAirplaneModeOn(Context context) {
@@ -237,14 +255,14 @@ public class EventFactory {
     }
 
 
-    public static void notification(Context ctx){
+    public static void notification(Context ctx) {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey(false)) {
                 PreyConfig.getPreyConfig(ctx).setCanAccessCamara(PreyPermission.canAccessCamera(ctx));
                 PreyConfig.getPreyConfig(ctx).setCanAccessCoarseLocation(PreyPermission.canAccessCoarseLocation(ctx));
                 PreyConfig.getPreyConfig(ctx).setCanAccessFineLocation(PreyPermission.canAccessFineLocation(ctx));
                 PreyConfig.getPreyConfig(ctx).setCanAccessReadPhoneState(PreyPermission.canAccessReadPhoneState(ctx));
-                if (!PreyPermission.canAccessCamera(ctx) || !PreyPermission.canAccessCoarseLocation(ctx) || !PreyPermission.canAccessFineLocation(ctx)|| !PreyPermission.canAccessReadPhoneState(ctx)) {
+                if (!PreyPermission.canAccessCamera(ctx) || !PreyPermission.canAccessCoarseLocation(ctx) || !PreyPermission.canAccessFineLocation(ctx) || !PreyPermission.canAccessReadPhoneState(ctx)) {
                     Intent intent3 = new Intent(ctx, CheckPasswordHtmlActivity.class);
                     intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -256,13 +274,13 @@ public class EventFactory {
                     NotificationManager nManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
                     NotificationCompat.Builder mBuilder =
-                            new android.support.v4.app.NotificationCompat.Builder(ctx)
+                            new NotificationCompat.Builder(ctx)
                                     .setSmallIcon(R.drawable.status_bar)
                                     .setContentTitle(ctx.getResources().getString(R.string.warning_notification_title))
                                     .setContentText(ctx.getResources().getString(R.string.warning_notification_body));
                     mBuilder.setContentIntent(pendingIntent);
                     mBuilder.setAutoCancel(true);
-                    nManager.notify(PreyConfig.TAG,PreyConfig.NOTIFY_ANDROID_6, mBuilder.build());
+                    nManager.notify(PreyConfig.TAG, PreyConfig.NOTIFY_ANDROID_6, mBuilder.build());
                 }
             }
         }

@@ -66,8 +66,8 @@ public class PreyUtils {
             boolean first = true;
             while (st.hasMoreElements()) {
                 String number = st.nextToken();
-                if (number != null)
-                    number = number.substring(0, 1);
+                //if (number != null)
+                    //number = number.substring(0, 1);
                 version = (first) ? number : version + "." + number;
                 first = false;
             }

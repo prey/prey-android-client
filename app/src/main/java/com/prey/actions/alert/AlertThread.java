@@ -43,7 +43,7 @@ public class AlertThread extends Thread {
         try {
             String NOTIFICATION_CHANNEL_ID = "10002";
             PreyLogger.d("started alert");
-            PreyLogger.i("description:" + description);
+            PreyLogger.d("description:" + description);
             int notificationId = AlertConfig.getAlertConfig(ctx).getNotificationId();
             String CHANNEL_ID = "CHANNEL_ALERT_ID";
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -59,7 +59,7 @@ public class AlertThread extends Thread {
                 reason = "{\"device_job_id\":\"" + jobId + "\"}";
             }
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "started", reason));
-            PreyLogger.i("notificationId:" + notificationId);
+            PreyLogger.d("notificationId:" + notificationId);
             Intent buttonIntent2 = new Intent(ctx, AlertReceiver.class);
             buttonIntent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             buttonIntent2.setAction("" + notificationId);
