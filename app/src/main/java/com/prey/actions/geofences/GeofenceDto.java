@@ -6,7 +6,7 @@
  ******************************************************************************/
 package com.prey.actions.geofences;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.location.Geofence;
 import com.prey.actions.location.PreyLocation;

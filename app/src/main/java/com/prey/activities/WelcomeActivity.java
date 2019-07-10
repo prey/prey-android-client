@@ -9,15 +9,13 @@ package com.prey.activities;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Window;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.PreyVerify;
 import com.prey.backwardcompatibility.FroyoSupport;
 
 public class WelcomeActivity extends FragmentActivity {

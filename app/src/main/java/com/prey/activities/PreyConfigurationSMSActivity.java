@@ -9,22 +9,19 @@ package com.prey.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
-import android.support.v4.app.ActivityCompat;
+
+import androidx.core.app.ActivityCompat;
 
 import com.prey.PreyConfig;
-import com.prey.PreyEmail;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.PreyStatus;
 import com.prey.R;
-import com.prey.backwardcompatibility.FroyoSupport;
 
 public class PreyConfigurationSMSActivity extends PreferenceActivity {
 

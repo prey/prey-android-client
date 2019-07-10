@@ -7,18 +7,14 @@
 
 package com.prey;
 
-import android.*;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.support.v4.content.PermissionChecker;
-import android.telephony.TelephonyManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -31,13 +27,10 @@ import com.prey.activities.FeedbackActivity;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
-import com.prey.services.PreyDisablePowerOptionsService;
-import com.prey.services.PreyRegistrationIntentService;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class PreyConfig {
 
@@ -50,7 +43,7 @@ public class PreyConfig {
 
     private static final String HTTP="https://";
 
-    public static final String VERSION_PREY_DEFAULT="2.0.9";
+    public static final String VERSION_PREY_DEFAULT="2.0.3";
 
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;

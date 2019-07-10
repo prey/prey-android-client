@@ -14,10 +14,10 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
-
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.prey.FileConfigReader;
 import com.prey.PreyConfig;

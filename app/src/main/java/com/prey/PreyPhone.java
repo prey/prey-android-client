@@ -12,8 +12,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,9 +35,9 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.os.Debug;
-import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
+
+import androidx.core.app.ActivityCompat;
 
 public class PreyPhone {
 
