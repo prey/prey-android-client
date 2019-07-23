@@ -14,7 +14,6 @@ import android.location.Location;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 import com.prey.PreyLogger;
-import com.prey.actions.aware.AwareController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.location.PreyLocation;
 
@@ -23,10 +22,8 @@ import java.util.List;
 
 public class GeofenceReceiver extends BroadcastReceiver {
 
-
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         try {
             GeofencingEvent event = GeofencingEvent.fromIntent(intent);
             if (event != null) {

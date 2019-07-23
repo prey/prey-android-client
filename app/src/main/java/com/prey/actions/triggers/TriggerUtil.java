@@ -13,18 +13,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class TriggerUtil {
 
+    static SimpleDateFormat sdf_dh = new SimpleDateFormat("yyyyMMddHHmmss");
+    static SimpleDateFormat sdf_h = new SimpleDateFormat("HHmmss");
+    static SimpleDateFormat sdf_d = new SimpleDateFormat("yyyyMMdd");
+
     public static boolean haveRange(List<TriggerEventDto> listEvents) {
         for (int j = 0; listEvents != null && j < listEvents.size(); j++) {
             TriggerEventDto event = listEvents.get(j);
-            if ("range_time".equals(event.type)) {
+            if (TimeTrigger.RANGE_TIME.equals(event.type)) {
                 return true;
             }
-            if ("repeat_range_time".equals(event.type)) {
+            if (TimeTrigger.REPEAT_RANGE_TIME.equals(event.type)) {
                 return true;
             }
         }
@@ -34,19 +37,15 @@ public class TriggerUtil {
     public static boolean validRange(List<TriggerEventDto> listEvents) {
         for (int j = 0; listEvents != null && j < listEvents.size(); j++) {
             TriggerEventDto event = listEvents.get(j);
-            if ("range_time".equals(event.type)) {
+            if (TimeTrigger.RANGE_TIME.equals(event.type)) {
                 return validRange(event);
             }
-            if ("repeat_range_time".equals(event.type)) {
+            if (TimeTrigger.REPEAT_RANGE_TIME.equals(event.type)) {
                 return validRangeTime(event);
             }
         }
         return false;
     }
-
-    static SimpleDateFormat sdf_dh = new SimpleDateFormat("yyyyMMddHHmmss");
-    static SimpleDateFormat sdf_h = new SimpleDateFormat("HHmmss");
-    static SimpleDateFormat sdf_d = new SimpleDateFormat("yyyyMMdd");
 
     public static boolean validRangeTime(TriggerEventDto event) {
         Date now = new Date();
@@ -56,9 +55,14 @@ public class TriggerUtil {
         PreyLogger.d("day_od_week:" + day_od_week);
         try {
             JSONObject root = new JSONObject(event.info);
-            JSONArray array = root.getJSONArray("days_of_week");
-            int hour_from = root.getInt("hour_from");
-            int hour_until = root.getInt("hour_until");
+            String daysOfWeek = root.getString("days_of_week");
+            daysOfWeek=daysOfWeek.replace("[","");
+            daysOfWeek=daysOfWeek.replace("]","");
+            String[] parts = daysOfWeek.split(",");
+            String hour_fromSt = root.getString("hour_from");
+            String hour_untilSt = root.getString("hour_until");
+            int hour_from = Integer.parseInt(hour_fromSt);
+            int hour_until = Integer.parseInt(hour_untilSt);
             int until = -1;
             try {
                 until = root.getInt("until");
@@ -74,9 +78,9 @@ public class TriggerUtil {
             } catch (Exception e) {
             }
             boolean isDay = false;
-            for (int j = 0; array != null && j < array.length(); j++) {
-                int day = array.getInt(j);
-                //PreyLogger.d("day:" + day);
+            for (int i = 0; parts != null && i < parts.length; i++) {
+                String daySt = parts[i];
+                int day=TriggerUtil.dayTrigger(daySt);
                 if (day == day_od_week)
                     isDay = true;
             }
@@ -97,47 +101,154 @@ public class TriggerUtil {
                     b = true;
                 }
                 if (a && b) {
-
                     return true;
                 }
             }
-
         } catch (Exception e) {
-            e.printStackTrace();
+            PreyLogger.e("error validRangeTime:"+e.getMessage(),e);
         }
         return false;
     }
 
     public static boolean validRange(TriggerEventDto event) {
-
         try {
-            Date now = new Date();
-            String fecha = sdf_dh.format(now);
-
-            double fechaDouble = Double.parseDouble(fecha);
-
+            Date nowDate = new Date();
+            String nowSt = sdf_d.format(nowDate);
+            double now = Double.parseDouble(nowSt);
             JSONObject root = new JSONObject(event.info);
             double from = root.getDouble("from");
             double until = root.getDouble("until");
-
             boolean a = false;
-            if (from <= fechaDouble) {
-
+            if (from <= now) {
                 a = true;
-
             }
             boolean b = false;
-            if (until >= fechaDouble) {
-
+            if (until >= now) {
                 b = true;
             }
             if (a && b) {
-
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            PreyLogger.e("error validRange:"+e.getMessage(),e);
         }
         return false;
     }
+
+    public static boolean validateTrigger(TriggerDto trigger) {
+        Date now = new Date();
+        List<TriggerEventDto> listEvents = TriggerParse.TriggerEvents(trigger.getEvents());
+        for (int j = 0; listEvents != null && j < listEvents.size(); j++) {
+            TriggerEventDto event = listEvents.get(j);
+            if (TimeTrigger.EXACT_TIME.equals(event.type)) {
+                boolean valid=true;
+                try {
+                    JSONObject json = new JSONObject(event.info);
+                    String dateTime = null;
+                    dateTime = json.getString("date");
+                    PreyLogger.d("TimeTrigger dateTime:" + dateTime);
+                    Date date = TimeTrigger.EXACT_TIME_FORMAT_SDF.parse(dateTime);
+                    valid=validDateAroundMinutes(date,3);
+                } catch (Exception e) {
+                }
+                return valid;
+            }
+            if (TimeTrigger.REPEAT_TIME.equals(event.type)) {
+                try {
+                    JSONObject json = new JSONObject(event.info);
+                    String daysOfWeek = json.getString("days_of_week");
+                    daysOfWeek = daysOfWeek.replace("[", "");
+                    daysOfWeek = daysOfWeek.replace("]", "");
+                    String[] parts = daysOfWeek.split(",");
+                    Calendar cal=Calendar.getInstance();
+                    cal.setTime(now);
+                    int dayNow=cal.get(Calendar.DAY_OF_WEEK);
+                    String hourSt = json.getString("hour");
+                    String minuteSt = json.getString("minute");
+                    String secondSt = json.getString("second");
+                    int hour =0;
+                    try{hour=Integer.parseInt(hourSt);}catch (Exception e){}
+                    int minute =0;
+                    try{minute=Integer.parseInt(minuteSt);}catch (Exception e){}
+                    int second =0;
+                    try{second=Integer.parseInt(secondSt);}catch (Exception e){}
+                    Calendar calender = Calendar.getInstance();
+                    calender.set(Calendar.HOUR_OF_DAY, hour);
+                    calender.set(Calendar.MINUTE, minute);
+                    calender.set(Calendar.SECOND, 0);
+                    calender.set(Calendar.MILLISECOND, 0);
+                    Date dateTime=calender.getTime();
+                    PreyLogger.d("TimeTrigger dateTime:" + dateTime);
+                    boolean valid=false;
+                    for (int i = 0; parts != null && i < parts.length; i++) {
+                        String daySt = parts[i];
+                        int day = dayTrigger(daySt);
+                        if(day==dayNow){
+                            valid=true;
+                            PreyLogger.d("TimeTrigger day==dayNow");
+                        }
+                    }
+                    if(valid){
+                        valid=validDateAroundMinutes(dateTime,3);
+                        PreyLogger.d("TimeTrigger validDateAroundMinutes");
+                    }
+                    return valid;
+                } catch (Exception e) {
+                }
+            }
+        }
+        return true;
+    }
+
+    public static int dayTrigger(String daySt) {
+        int day=-1;
+        switch(daySt)
+        {
+            case "0":
+                day = Calendar.SUNDAY;
+                break;
+            case "1":
+                day = Calendar.MONDAY;
+                break;
+            case "2":
+                day = Calendar.TUESDAY;
+                break;
+            case "3":
+                day = Calendar.WEDNESDAY;
+                break;
+            case "4":
+                day = Calendar.THURSDAY;
+                break;
+            case "5":
+                day = Calendar.FRIDAY;
+                break;
+            default:
+                day = Calendar.SATURDAY;
+        }
+        return day;
+    }
+
+
+    public static boolean validDateAroundMinutes(Date date,int minutes) {
+        Date now = new Date();
+        boolean valid=true;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        cal.add(Calendar.MINUTE, -2);
+        Date lessMinutes = cal.getTime();
+        long datetime=date.getTime();
+        if (datetime < lessMinutes.getTime()) {
+            PreyLogger.d("less minutes");
+            valid=false;
+        }
+        cal.setTime(now);
+        cal.add(Calendar.MINUTE, minutes);
+        Date moreMinutes = cal.getTime();
+        if (datetime > moreMinutes.getTime()) {
+            PreyLogger.d("more minutes");
+            valid=false;
+        }
+        return valid;
+    }
+
 }

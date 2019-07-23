@@ -18,12 +18,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
-import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 public class AlertThread extends Thread {
 
@@ -58,7 +55,6 @@ public class AlertThread extends Thread {
             if (jobId != null && !"".equals(jobId)) {
                 reason = "{\"device_job_id\":\"" + jobId + "\"}";
             }
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "started", reason));
             PreyLogger.d("notificationId:" + notificationId);
             Intent buttonIntent2 = new Intent(ctx, AlertReceiver.class);
             buttonIntent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -89,6 +85,7 @@ public class AlertThread extends Thread {
                         .setAutoCancel(true);
                 notificationManager.notify(notificationId, builder.build());
             }
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "started", reason));
             PreyConfig.getPreyConfig(ctx).setNextAlert(true);
         } catch (Exception e) {
             PreyLogger.e("failed alert: " + e.getMessage(), e);

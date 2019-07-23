@@ -20,6 +20,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
+import com.prey.actions.report.ReportService;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.exceptions.PreyException;
 import com.prey.json.JsonAction;
@@ -126,16 +127,19 @@ public class Lock extends JsonAction {
         }
     }
 
-    public void lock(Context ctx, String unlock, String messageId, String reason,String device_job_id) {
+    public void lock(final Context ctx, String unlock,final String messageId,final String reason,String device_job_id) {
         PreyLogger.d("lock unlock:"+unlock+" messageId:"+ messageId+" reason:"+reason);
         PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
         PreyConfig.getPreyConfig(ctx).setLock(true);
-
         if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
-            try {
-                Thread.sleep(2000);
-                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "lock", "started", reason));
-            }catch(Exception e){}
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        Thread.sleep(2000);
+                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "lock", "started", reason));
+                    }catch(Exception e){}
+                }
+            }).start();
             Intent intent = new Intent(ctx, PreyLockService.class);
             ctx.startService(intent);
             if(PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()) {

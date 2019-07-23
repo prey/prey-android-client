@@ -23,9 +23,12 @@ public class TimeTriggerReceiver extends TriggerReceiver {
             TriggerDto trigger = dataSource.getTrigger(triggerId);
             if (trigger != null) {
                 String triggerName = trigger.getName();
-                PreyLogger.d("Trigger triggerName:" + triggerName);
-                PreyLogger.d("Trigger triggerName trigger.getActions():" + trigger.getActions());
-                executeActions(context, trigger.getActions());
+                boolean validate=TriggerUtil.validateTrigger(trigger);
+                if(validate) {
+                    PreyLogger.d("Trigger triggerName:" + triggerName);
+                    PreyLogger.d("Trigger triggerName trigger.getActions():" + trigger.getActions());
+                    executeActions(context, trigger.getActions());
+                }
             }
         } catch (Exception e) {
             PreyLogger.e("Trigger error:" + e.getMessage(), e);

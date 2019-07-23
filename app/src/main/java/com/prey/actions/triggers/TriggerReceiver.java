@@ -33,15 +33,14 @@ public abstract class TriggerReceiver extends BroadcastReceiver {
         for (int i = 0; listTrigger != null && i < listTrigger.size(); i++) {
             TriggerDto trigger = listTrigger.get(i);
             List<TriggerEventDto> listEvents = TriggerParse.TriggerEvents(trigger.getEvents());
-            String triggerName = trigger.getName();
-            PreyLogger.d("Trigger TriggerReceiver triggerName:" + triggerName);
             for (int j = 0; listEvents != null && j < listEvents.size(); j++) {
                 TriggerEventDto event = listEvents.get(j);
+                PreyLogger.d("Trigger TriggerReceiver onReceive name:" + name+" event.type:"+event.type);
                 if (name.equals(event.type)) {
                     boolean process = true;
                     boolean haveRange = TriggerUtil.haveRange(listEvents);
+                    PreyLogger.d("Trigger TriggerReceiver  haveRange:" + haveRange);
                     if (haveRange) {
-                        PreyLogger.d("Trigger TriggerReceiver  haveRange:" + haveRange);
                         boolean validRange = TriggerUtil.validRange(listEvents);
                         PreyLogger.d("Trigger TriggerReceiver  validRange:" + validRange);
                         process = validRange;

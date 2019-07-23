@@ -22,7 +22,6 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
@@ -53,37 +52,29 @@ public class EventFactory {
     public static final String USER_PRESENT = "android.intent.action.USER_PRESENT";
     public static final String ACTION_POWER_CONNECTED = "android.intent.action.ACTION_POWER_CONNECTED";
     public static final String ACTION_POWER_DISCONNECTED = "android.intent.action.ACTION_POWER_DISCONNECTED";
+    public static final String LOCATION_MODE_CHANGED = "android.location.MODE_CHANGED";
+    public static final String LOCATION_PROVIDERS_CHANGED = "android.location.PROVIDERS_CHANGED";
 
     public static Event getEvent(final Context ctx, Intent intent) {
         String message = "getEvent[" + intent.getAction() + "]";
         PreyLogger.d(message);
-
         if (BOOT_COMPLETED.equals(intent.getAction())) {
             notification(ctx);
-            if (PreyConfig.getPreyConfig(ctx).isSimChanged()) {
-                JSONObject info = new JSONObject();
-                try {
-                    String lineNumber = PreyTelephonyManager.getInstance(ctx).getLine1Number();
-                    if (lineNumber != null && !"".equals(lineNumber)) {
-                        info.put("new_phone_number", PreyTelephonyManager.getInstance(ctx).getLine1Number());
-                    }
-                } catch (Exception e) {
-                }
-                new SimTriggerReceiver().onReceive(ctx, intent);
-                return new Event(Event.SIM_CHANGED, info.toString());
-            } else {
-                return new Event(Event.TURNED_ON);
-            }
+            return new Event(Event.TURNED_ON);
         }
         if (SIM_STATE_CHANGED.equals(intent.getAction())) {
-            if (PreyConfig.getPreyConfig(ctx).isSimChanged()) {
+            String state = intent.getExtras().getString(SimTriggerReceiver.EXTRA_SIM_STATE);
+            if ("ABSENT".equals(state)) {
                 JSONObject info = new JSONObject();
                 try {
                     String lineNumber = PreyTelephonyManager.getInstance(ctx).getLine1Number();
                     if (lineNumber != null && !"".equals(lineNumber)) {
-                        info.put("new_phone_number", PreyTelephonyManager.getInstance(ctx).getLine1Number());
+                        info.put("new_phone_number", lineNumber);
                     }
-                    info.put("sim_serial_number", PreyConfig.getPreyConfig(ctx).getSimSerialNumber());
+                    String simSerial=PreyConfig.getPreyConfig(ctx).getSimSerialNumber();
+                    if (simSerial != null && !"".equals(simSerial)) {
+                        info.put("sim_serial_number", simSerial);
+                    }
                 } catch (Exception e) {
                 }
                 new SimTriggerReceiver().onReceive(ctx, intent);

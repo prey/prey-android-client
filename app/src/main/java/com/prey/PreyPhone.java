@@ -18,12 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-
-
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.PreyWebServices;
 
-import android.*;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
