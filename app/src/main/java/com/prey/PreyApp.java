@@ -19,20 +19,20 @@ import com.prey.actions.aware.AwareController;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.report.ReportScheduled;
-import com.prey.events.Event;
+import com.prey.actions.triggers.TriggerController;
 import com.prey.events.factories.EventFactory;
-import com.prey.events.manager.EventManagerRunner;
 import com.prey.events.receivers.EventReceiver;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyDisablePowerOptionsService;
+
 import java.util.Date;
 import java.util.Map;
 
 public class PreyApp extends Application {
 
     public long mLastPause;
-    private EventReceiver batteryLevelReceiver = new EventReceiver();
+    private EventReceiver eventReceiver = new EventReceiver();
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -88,7 +88,6 @@ public class PreyApp extends Application {
             PreyLogger.i("Application launched!");
             PreyLogger.d("__________________");
             PreyConfig.getPreyConfig(ctx).setReportNumber(0);
-
             String apiKey = PreyConfig.getPreyConfig(ctx).getApiKey();
             String deviceKey = PreyConfig.getPreyConfig(ctx).getDeviceId();
             PreyLogger.d("apiKey:"+apiKey);
@@ -101,10 +100,7 @@ public class PreyApp extends Application {
             String sessionId = PreyUtils.randomAlphaNumeric(16);
             PreyLogger.d("#######sessionId:" + sessionId);
             PreyConfig.getPreyConfig(ctx).setSessionId(sessionId);
-
             boolean missing=PreyConfig.getPreyConfig(ctx).isMissing();
-
-
             if (deviceKey != null && deviceKey != "") {
                 new Thread() {
                     public void run() {
@@ -119,35 +115,21 @@ public class PreyApp extends Application {
                        }catch (Exception e){
                            PreyLogger.e("setEmail error:"+e.getMessage(),e);
                        }
-                        try {PreyStatus.getInstance().getConfig(ctx);}catch (Exception e){}
-                        try {GeofenceController.getInstance().run(ctx);}catch (Exception e){}
-                        try {AwareController.getInstance().init(ctx);}catch (Exception e){}
-                        try {FileretrievalController.getInstance().run(ctx);}catch (Exception e){}
-
-
+                       try {PreyStatus.getInstance().getConfig(ctx);}catch (Exception e){}
+                       try {GeofenceController.getInstance().run(ctx);}catch (Exception e){}
+                       try {AwareController.getInstance().init(ctx);}catch (Exception e){}
+                       try {FileretrievalController.getInstance().run(ctx);}catch (Exception e){}
+                       try {TriggerController.getInstance().run(ctx);}catch (Exception e){}
                     }
                 }.start();
-
                 if (missing) {
                     if (PreyConfig.getPreyConfig(ctx).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(ctx).getIntervalReport())) {
                         ReportScheduled.getInstance(ctx).run();
                     }
                 }
-                new Thread() {
-                    public void run() {
-                        if (PreyConfig.getPreyConfig(ctx).isSimChanged()) {
-                            Intent newIntent=new Intent();
-                            newIntent.setAction(EventFactory.SIM_STATE_CHANGED);
-                            Event event= EventFactory.getEvent(ctx,newIntent);
-                            new EventManagerRunner(ctx, event).run(); ;
-                        }
-                    }
-                }.start();
-
                 if(PreyConfig.getPreyConfig(ctx).isRunBackground()){
                     RunBackgroundCheckBoxPreference.notifyReady(ctx);
                 }
-
                 if(PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()){
                     try{
                         if(android.os.Build.VERSION.SDK_INT < PreyConfig.VERSION_CODES_P) {
@@ -157,16 +139,25 @@ public class PreyApp extends Application {
                         PreyLogger.e( "error startService PreyDisablePowerOptionsService : " + e.getMessage(),e);
                     }
                 }
-                IntentFilter ACTION_POWER_CONNECTED = new          IntentFilter(Intent.ACTION_POWER_CONNECTED);
-                IntentFilter ACTION_POWER_DISCONNECTED = new          IntentFilter(Intent.ACTION_POWER_DISCONNECTED);
-                registerReceiver(batteryLevelReceiver, ACTION_POWER_CONNECTED);
-                registerReceiver(batteryLevelReceiver, ACTION_POWER_DISCONNECTED);
+                IntentFilter ACTION_POWER_CONNECTED = new IntentFilter(Intent.ACTION_POWER_CONNECTED);
+                registerReceiver(eventReceiver, ACTION_POWER_CONNECTED);
+                IntentFilter ACTION_POWER_DISCONNECTED = new IntentFilter(Intent.ACTION_POWER_DISCONNECTED);
+                registerReceiver(eventReceiver, ACTION_POWER_DISCONNECTED);
+                IntentFilter ACTION_BATTERY_LOW = new IntentFilter(Intent.ACTION_BATTERY_LOW);
+                registerReceiver(eventReceiver, ACTION_BATTERY_LOW);
+                IntentFilter ACTION_PROVIDER_CHANGED = new IntentFilter(Intent.ACTION_PROVIDER_CHANGED);
+                registerReceiver(eventReceiver, ACTION_PROVIDER_CHANGED);
+                IntentFilter LOCATION_MODE_CHANGED = new IntentFilter(EventFactory.LOCATION_MODE_CHANGED);
+                registerReceiver(eventReceiver, LOCATION_MODE_CHANGED);
+                IntentFilter CONNECTIVITY_CHANGE = new IntentFilter(EventFactory.CONNECTIVITY_CHANGE);
+                registerReceiver(eventReceiver, CONNECTIVITY_CHANGE);
+                IntentFilter LOCATION_PROVIDERS_CHANGED = new IntentFilter(EventFactory.LOCATION_PROVIDERS_CHANGED);
+                registerReceiver(eventReceiver, LOCATION_PROVIDERS_CHANGED);
             }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
         }
     }
-
 
     public static String InstallConversionData =  "";
     public static int sessionCount = 0;

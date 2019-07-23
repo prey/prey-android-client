@@ -14,16 +14,19 @@ import com.prey.events.factories.EventFactory;
 
 public class SimTriggerReceiver extends TriggerReceiver {
 
+    public static final String EXTRA_SIM_STATE = "ss";
+
     public void onReceive(Context context, final Intent intent) {
         if (intent != null) {
             PreyLogger.d("Trigger SimTriggerReceiver:" + intent.getAction());
             String action = intent.getAction();
-            String name = "";
-            if (EventFactory.BOOT_COMPLETED.equals(action))
-                name = "sim_changed";
-            if (EventFactory.SIM_STATE_CHANGED.equals(action))
-                name = "sim_changed";
-            if (!"".equals(name)) {
+            String state = intent.getExtras().getString(EXTRA_SIM_STATE);
+            if (state == null) {
+                return;
+            }
+            boolean run = false;
+            if ("ABSENT".equals(state) && EventFactory.SIM_STATE_CHANGED.equals(action)) {
+                String name = "hardware_changed";
                 execute(context, name);
             }
         }

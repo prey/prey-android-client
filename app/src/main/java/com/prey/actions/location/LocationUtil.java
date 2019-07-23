@@ -68,11 +68,7 @@ public class LocationUtil {
         PreyLogger.d("status gps:" + isGpsEnabled + " net:" + isNetworkEnabled + " wifi:" + isWifiEnabled+" play:"+isGooglePlayServicesAvailable);
         String method = getMethod(isGpsEnabled, isNetworkEnabled);
         try {
-            if(!isGooglePlayServicesAvailable||(isGpsEnabled&&!isNetworkEnabled)) {
-                preyLocation = getPreyLocationAppService(ctx,method,asynchronous,preyLocation);
-            }else{
-                preyLocation = getPreyLocationAppServiceOreo(ctx, method, asynchronous, preyLocation);
-            }
+            preyLocation = getPreyLocationAppService(ctx,method,asynchronous,preyLocation);
         } catch (Exception e) {
             throw e;
         }
@@ -118,11 +114,13 @@ public class LocationUtil {
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
     }
 
-    public final static int MAXIMUM_OF_ATTEMPTS=2;
-    public final static int []SLEEP_OF_ATTEMPTS=new int[]{2,2,2,3,3,3,4,4,4};
+    public final static int MAXIMUM_OF_ATTEMPTS=4;
+    public final static int []SLEEP_OF_ATTEMPTS=new int[]{2,2,3,3,4,4,5};
 
-    private static PreyLocation getPreyLocationPlayService(final Context ctx, String method, boolean asynchronous, PreyLocation preyLocationOld) throws Exception {
+    public static PreyLocation getPreyLocationPlayService(final Context ctx, String method, boolean asynchronous, PreyLocation preyLocationOld) throws Exception {
         PreyLocation preyLocation = null;
+
+        PreyLogger.d("getPreyLocationPlayService");
         final PreyGooglePlayServiceLocation play = new PreyGooglePlayServiceLocation();
         try {
             new Thread(new Runnable() {
@@ -140,6 +138,7 @@ public class LocationUtil {
                 } catch (InterruptedException e) {
                 }
                 currentLocation = play.getLastLocation(ctx);
+                PreyLogger.d("currentLocation:"+currentLocation);
                 if (currentLocation != null) {
                     preyLocation = new PreyLocation(currentLocation, method);
                     if(!asynchronous)
@@ -157,7 +156,7 @@ public class LocationUtil {
         return preyLocation;
     }
 
-    private static PreyLocation  getPreyLocationAppServiceOreo(final Context ctx ,String method, boolean asynchronous, PreyLocation preyLocationOld){
+    public static PreyLocation getPreyLocationAppServiceOreo(final Context ctx ,String method, boolean asynchronous, PreyLocation preyLocationOld){
         PreyLocation preyLocation = null;
         Intent intent = new Intent(ctx, LocationUpdatesService.class);
         try {

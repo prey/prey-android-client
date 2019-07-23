@@ -63,11 +63,16 @@ public class AwareController {
             PreyLogger.d("AWARE AwareController init isLocationAware:"+isLocationAware);
             if (isLocationAware) {
                 PreyLocationManager.getInstance(ctx).setLastLocation(null);
+                PreyLocation locationNow=LocationUtil.getLocation(ctx,null,false);
+                if (locationNow!=null&&locationNow.getLat()!=0&&locationNow.getLng()!=0){
+                    PreyLocationManager.getInstance(ctx).setLastLocation(locationNow);
+                    PreyLogger.d("AWARE locationNow[i]:"+locationNow.toString());
+                }
                 new LocationUpdatesService().startForegroundService(ctx);
                 PreyLocation locationAware = null;
                 int i=0;
                 while (i < LocationUtil.MAXIMUM_OF_ATTEMPTS) {
-                    PreyLogger.d("AWARE getPreyLocationAppServiceOreo[i]:"+i);
+                    PreyLogger.d("AWARE getPreyLocationApp[i]:"+i);
                     try {
                         Thread.sleep(LocationUtil.SLEEP_OF_ATTEMPTS[i]*1000);
                     } catch (InterruptedException e) {
@@ -75,12 +80,17 @@ public class AwareController {
                     locationAware = PreyLocationManager.getInstance(ctx).getLastLocation();
                     if (locationAware!=null) {
                         locationAware.setMethod("native");
+                        PreyLogger.d("AWARE init:" + locationAware.toString());
+                    }else{
+                        PreyLogger.d("AWARE init nulo" +i);
+                    }
+                    if (locationAware!=null&&locationAware.getLat()!=0&&locationAware.getLng()!=0){
                         break;
                     }
                     i++;
                 }
-                PreyLocation locationNow = sendAware(ctx, locationAware);
-                if (locationNow != null) {
+                PreyLocation locationNow2 = sendAware(ctx, locationAware);
+                if (locationNow2 != null) {
                     run(ctx);
                 }
             }
@@ -137,7 +147,9 @@ public class AwareController {
                                 }
                             });
                 }
-            }//if
+            }else{
+                PreyLogger.d("AWARE locationOld is null");
+            }
         } catch (Exception e) {
             PreyLogger.e("AWARE error:" + e.getMessage(), e);
         }
@@ -157,8 +169,14 @@ public class AwareController {
                 if (distance <= maxDistance){
                     locationNow=null;
                 }
+            }else{
+                PreyLogger.d("AWARE locationOld__is null");
+
             }
+            PreyLogger.d("AWARE setLocationAware__ "+locationAware.toString());
             PreyConfig.getPreyConfig(ctx).setLocationAware(locationAware);
+        }else {
+            PreyLogger.d("AWARE locationNow__ is null");
         }
         //send aware
         if (locationNow != null) {
