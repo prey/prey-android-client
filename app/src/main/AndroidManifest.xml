@@ -140,12 +140,6 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activities.InitActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:name="com.prey.activities.SignInActivity"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
@@ -168,37 +162,6 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             />
-
-        <activity
-            android:name=".activities.TourActivity1"
-            android:configChanges="keyboardHidden|orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.TourActivity2"
-            android:configChanges="keyboardHidden|orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.TourActivity3"
-            android:configChanges="keyboardHidden|orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.TourActivity4"
-            android:configChanges="keyboardHidden|orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.TourActivity5"
-            android:configChanges="keyboardHidden|orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.TourActivity6"
-            android:configChanges="keyboardHidden|orientation"
-            android:noHistory="true"
-            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activities.WelcomeActivity"

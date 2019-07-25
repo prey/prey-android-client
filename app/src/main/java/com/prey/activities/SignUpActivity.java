@@ -200,14 +200,6 @@ public class SignUpActivity extends Activity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), InitActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-
     private class CreateAccount extends AsyncTask<String, Void, Void> {
 
         Context context;
