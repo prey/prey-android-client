@@ -31,9 +31,6 @@ public abstract class PreyAction {
     public final int LOCK_PRIORITY=5;
     public final int POPUPALERT_PRIORITY=4;
     public final int WIPE_PRIORITY=6;
-    public final int CAMOUFLAGE_PRIORITY=7;
-    public final int UN_CAMOUFLAGE_PRIORITY=8;
-
 
     private static HashMap<String, PreyAction> preyActions = null;
     protected HashMap<String, String> config = new HashMap<String, String>();
@@ -48,8 +45,6 @@ public abstract class PreyAction {
             actions.put(LockAction.DATA_ID, new LockAction());
             actions.put(CameraAction.DATA_ID, new CameraAction());
             actions.put(WipeAction.DATA_ID, new WipeAction());
-            actions.put(CamouflageAction.DATA_ID, new CamouflageAction());
-            actions.put(UnCamouflageAction.DATA_ID, new UnCamouflageAction());
             // Register here new available actions
             preyActions = actions;
         }

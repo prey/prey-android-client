@@ -41,9 +41,7 @@ public class Camouflage {
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "camouflage", "started",reason));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(true);
 
-        ComponentName componentToDisabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
-        PackageManager pm = ctx.getPackageManager();
-        pm.setComponentEnabledSetting(componentToDisabled, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+
         PreyLogger.d("stopped hide");
         PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_hide");
     }
@@ -67,9 +65,7 @@ public class Camouflage {
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "camouflage", "stopped",reason));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(false);
 
-        ComponentName componentToEnabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
-        PackageManager pm = ctx.getApplicationContext().getPackageManager();
-        pm.setComponentEnabledSetting(componentToEnabled, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+
         PreyLogger.d("stopped unhide");
         PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_unhide");
     }
