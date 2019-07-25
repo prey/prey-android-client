@@ -61,7 +61,7 @@ public class WelcomeActivity extends FragmentActivity {
         if (PreyConfig.getPreyConfig(this).isThisDeviceAlreadyRegisteredWithPrey()){
             ready();
         } else {
-            Intent intent = new Intent(getApplicationContext(), InitActivity.class);
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
             finish();
         }

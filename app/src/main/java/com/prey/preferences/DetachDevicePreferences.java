@@ -18,7 +18,7 @@ import android.util.AttributeSet;
 import android.widget.Toast;
 
 import com.prey.PreyLogger;
-import com.prey.activities.InitActivity;
+import com.prey.activities.LoginActivity;
 import com.prey.json.actions.Detach;
 import com.prey.R;
 
@@ -77,7 +77,7 @@ public class DetachDevicePreferences extends DialogPreference {
                 Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
                 showDialog(new Bundle());
             } else {
-                Intent welcome = new Intent(getContext(), InitActivity.class);
+                Intent welcome = new Intent(getContext(), LoginActivity.class);
                 getContext().startActivity(welcome);
             }
         }

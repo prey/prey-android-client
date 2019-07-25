@@ -188,18 +188,6 @@ public class SignInActivity extends Activity {
 
     }
 
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), InitActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-
-
-
-
     private class AddDeviceToAccount extends AsyncTask<String, Void, Void> {
 
         ProgressDialog progressDialog = null;
