@@ -66,7 +66,7 @@ public class AlertThread extends Thread {
             NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Notification.Builder notification = new Notification.Builder(ctx, CHANNEL_ID)
-                        .setSmallIcon(R.drawable.alert2)
+                        .setSmallIcon(R.drawable.icon2)
                         .setContentTitle(ctx.getString(R.string.title_alert))
                         .setStyle(new Notification.BigTextStyle().bigText(description))
                         .addAction(R.drawable.xx2, ctx.getString(R.string.close_alert), btPendingIntent2)
@@ -76,7 +76,7 @@ public class AlertThread extends Thread {
                 notificationManager.notify(notificationId, notification.build());
             } else {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx)
-                        .setSmallIcon(R.drawable.alert2)
+                        .setSmallIcon(R.drawable.icon2)
                         .setContentTitle(ctx.getString(R.string.title_alert))
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
                         .addAction(R.drawable.xx2, ctx.getString(R.string.close_alert), btPendingIntent2)

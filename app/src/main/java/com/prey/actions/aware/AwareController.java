@@ -245,11 +245,10 @@ public class AwareController {
             notificationManager.createNotificationChannel(channel);
         }
 
-
         int NOTIFICATION_ID=AwareConfig.getAwareConfig(ctx).getNotificationId();
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
-                .setSmallIcon(R.drawable.prey_logo_b_mono2)
+                .setSmallIcon(R.drawable.icon2)
                 .setContentTitle("AWARE")
                 .setContentText("lt:" +LocationUpdatesService.round(locationNow.getLat())+" lg:"+LocationUpdatesService.round(locationNow.getLng())+" a:"+LocationUpdatesService.round(locationNow.getAccuracy()))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
