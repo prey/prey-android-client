@@ -284,7 +284,7 @@
     <string name="lock_unlock">UNLOCK</string>
 
 
-    <string name="disable_power_ready">Protected</string>
+    <string name="disable_power_ready">Device actively protected by Prey</string>
 
     <string name="i_agree_terms_conditions">I have read and agree to the <u>Terms and Conditions and Privacy Policy</u></string>
     <string name="i_confirm_i_am_over_16">I confirm that I am over 16 years old</string>
