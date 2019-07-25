@@ -10,9 +10,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.PackageManager;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -44,13 +42,8 @@ public class Camouflage extends JsonAction {
             }
         } catch (Exception e) {
         }
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "camouflage", "started",reason));
-        PreyConfig.getPreyConfig(ctx).setCamouflageSet(true);
-
-        ComponentName componentToDisabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
-        PackageManager pm = ctx.getPackageManager();
-        pm.setComponentEnabledSetting(componentToDisabled, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "camouflage", "failed","Not available"));
+        PreyConfig.getPreyConfig(ctx).setCamouflageSet(false);
         PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_start");
     }
 
@@ -70,13 +63,8 @@ public class Camouflage extends JsonAction {
             }
         } catch (Exception e) {
         }
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("stop", "camouflage", "stopped",reason));
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("stop", "camouflage", "failed","Not available"));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(false);
-
-        ComponentName componentToEnabled = new ComponentName("com.prey", "com.prey.activities.LoginActivity");
-        PackageManager pm = ctx.getApplicationContext().getPackageManager();
-        pm.setComponentEnabledSetting(componentToEnabled, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-
         PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_stop");
     }
 }
