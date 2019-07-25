@@ -60,7 +60,7 @@ public class PreyNotificationForeGroundService extends Service {
             builder = new Notification.Builder(this);
         }
         builder.setWhen(System.currentTimeMillis());
-        builder.setSmallIcon(R.drawable.prey_protected);
+        builder.setSmallIcon(R.drawable.icon2);
         builder.setContentTitle(getString(R.string.disable_power_ready));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             builder.setPriority(Notification.PRIORITY_MIN);

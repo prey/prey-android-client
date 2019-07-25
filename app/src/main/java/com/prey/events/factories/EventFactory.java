@@ -266,7 +266,7 @@ public class EventFactory {
 
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(ctx)
-                                    .setSmallIcon(R.drawable.status_bar)
+                                    .setSmallIcon(R.drawable.icon2)
                                     .setContentTitle(ctx.getResources().getString(R.string.warning_notification_title))
                                     .setContentText(ctx.getResources().getString(R.string.warning_notification_body));
                     mBuilder.setContentIntent(pendingIntent);
