@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1F2938">
+
+    <ImageView
+        android:id="@+id/image_pic"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:src="@drawable/noti_escudo" />
+
+    <ImageView
+        android:id="@+id/noti_prey_logo"
+        android:layout_width="65dp"
+        android:layout_height="18dp"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="left"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/noti_prey_logo" />
+
+    <TextView
+        android:id="@+id/noti_title"
+        android:layout_width="600dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/noti_prey_logo"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/title_alert"
+        android:textColor="#fff"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/noti_body"
+        android:layout_width="600dp"
+        android:layout_height="110dp"
+        android:layout_below="@+id/noti_title"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="60dp"
+        android:gravity="left|center_vertical"
+        android:text="@string/close_alert"
+        android:textColor="#fff" />
+
+    <TextView
+        android:id="@+id/noti_button"
+        android:layout_width="600dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/noti_body"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/close_alert"
+        android:textColor="#fff"
+        android:textStyle="bold" />
+
+</RelativeLayout>
