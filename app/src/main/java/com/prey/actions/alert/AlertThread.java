@@ -19,6 +19,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
@@ -64,17 +67,7 @@ public class AlertThread extends Thread {
             buttonIntent2.putExtra("reason", reason);
             PendingIntent btPendingIntent2 = PendingIntent.getBroadcast(ctx, 0, buttonIntent2, 0);
             NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Notification.Builder notification = new Notification.Builder(ctx, CHANNEL_ID)
-                        .setSmallIcon(R.drawable.icon2)
-                        .setContentTitle(ctx.getString(R.string.title_alert))
-                        .setStyle(new Notification.BigTextStyle().bigText(description))
-                        .addAction(R.drawable.xx2, ctx.getString(R.string.close_alert), btPendingIntent2)
-                        .setDeleteIntent(btPendingIntent2)
-                        .setContentIntent(btPendingIntent2)
-                        .setAutoCancel(true);
-                notificationManager.notify(notificationId, notification.build());
-            } else {
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx)
                         .setSmallIcon(R.drawable.icon2)
                         .setContentTitle(ctx.getString(R.string.title_alert))
@@ -84,6 +77,63 @@ public class AlertThread extends Thread {
                         .setContentIntent(btPendingIntent2)
                         .setAutoCancel(true);
                 notificationManager.notify(notificationId, builder.build());
+            }else {
+                RemoteViews contentViewBig =null;
+                if(description.length()<=70) {
+                    PreyLogger.d("custom_notification1 length:"+description.length());
+                    contentViewBig = new RemoteViews(ctx.getPackageName(), R.layout.custom_notification1);
+                }else {
+                    if (description.length() <= 170) {
+                        PreyLogger.d("custom_notification2 length:"+description.length());
+                        contentViewBig = new RemoteViews(ctx.getPackageName(), R.layout.custom_notification2);
+                    } else {
+                        PreyLogger.d("custom_notification3 length:"+description.length());
+                        contentViewBig = new RemoteViews(ctx.getPackageName(), R.layout.custom_notification3);
+                    }
+                }
+                RemoteViews contentViewSmall = new RemoteViews(ctx.getPackageName(),R.layout.custom_notification_small);
+                contentViewBig.setOnClickPendingIntent(R.id.noti_button, btPendingIntent2);
+                String regularBold= "fonts/Regular/regular-bold.otf";
+                String regularBook= "fonts/Regular/regular-book.otf";
+                String title_alert=ctx.getString(R.string.title_alert);
+                PreyLogger.d("title_alert:"+title_alert);
+                SpannableStringBuilder notiTitle = new SpannableStringBuilder(title_alert);
+                notiTitle.setSpan (new CustomTypefaceSpan(ctx,regularBold), 0, notiTitle.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                contentViewBig.setTextViewText(R.id.noti_title, notiTitle);
+                contentViewSmall.setTextViewText(R.id.noti_title, notiTitle);
+                SpannableStringBuilder notiBody = new SpannableStringBuilder(description);
+                notiBody.setSpan (new CustomTypefaceSpan(ctx,regularBook), 0, notiBody.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                contentViewBig.setTextViewText(R.id.noti_body, notiBody);
+                int maxlength=45;
+                String descriptionSmall=description;
+                if(description.length()>maxlength){
+                    descriptionSmall=description.substring(0,maxlength)+"..";
+                }
+                SpannableStringBuilder notiBodySmall = new SpannableStringBuilder(descriptionSmall);
+                notiBodySmall.setSpan (new CustomTypefaceSpan(ctx,regularBook), 0, notiBodySmall.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                contentViewSmall.setTextViewText(R.id.noti_body, notiBodySmall);
+                String close_alert=ctx.getString(R.string.close_alert);
+                PreyLogger.d("close_alert:"+close_alert);
+                SpannableStringBuilder notiButton = new SpannableStringBuilder(close_alert);
+                notiButton.setSpan (new CustomTypefaceSpan(ctx,regularBold), 0, notiButton.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                contentViewBig.setTextViewText(R.id.noti_button, notiButton);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Notification.Builder notification = new Notification.Builder(ctx, CHANNEL_ID)
+                            .setSmallIcon(R.drawable.icon2)
+                            .setCustomContentView(contentViewSmall)
+                            .setCustomBigContentView(contentViewBig)
+                            .setDeleteIntent(btPendingIntent2)
+                            .setAutoCancel(true);
+                    notificationManager.notify(notificationId, notification.build());
+                } else {
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx)
+                            .setSmallIcon(R.drawable.icon2)
+                            .setCustomContentView(contentViewSmall)
+                            .setCustomBigContentView(contentViewBig)
+                            .setDeleteIntent(btPendingIntent2)
+                            .setAutoCancel(true);
+                    notificationManager.notify(notificationId, builder.build());
+                }
             }
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "started", reason));
             PreyConfig.getPreyConfig(ctx).setNextAlert(true);
