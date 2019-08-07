@@ -9,6 +9,7 @@ package com.prey.activities;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
 
@@ -69,7 +70,12 @@ public class WelcomeActivity extends FragmentActivity {
 
     public void ready() {
         PreyLogger.d("ready WelcomeActivity");
-        Intent intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);
+        Intent intent = null;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);
+        }else{
+            intent = new Intent(getApplicationContext(), DeviceReadyActivity.class);
+        }
         startActivity(intent);
         finish();
     }

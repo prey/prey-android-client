@@ -13,6 +13,7 @@ import com.prey.PreyConfig;
 import com.prey.R;
 
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -58,11 +59,13 @@ public class PermissionInformationActivity extends PreyActivity {
     }
 
     private void showScreen() {
-
-
-
             if (FroyoSupport.getInstance(this).isAdminActive()) {
-                Intent intent = new Intent(PermissionInformationActivity.this, CheckPasswordHtmlActivity.class);
+                Intent intent = null;
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    intent = new Intent(PermissionInformationActivity.this, CheckPasswordHtmlActivity.class);
+                }else{
+                    intent = new Intent(PermissionInformationActivity.this, LoginActivity.class);
+                }
                 PreyConfig.getPreyConfig(PermissionInformationActivity.this).setProtectReady(true);
                 new Thread() {
                     public void run() {

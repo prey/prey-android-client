@@ -119,16 +119,6 @@
         android:layout_alignParentBottom="true"
          />
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="70dp"
-        android:id="@+id/imageViewQR"
-        android:src="@drawable/qr_scan_code"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>
