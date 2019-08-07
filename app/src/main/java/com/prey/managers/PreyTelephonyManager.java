@@ -31,24 +31,6 @@ public class PreyTelephonyManager {
         return new PreyPhone(ctx).getDataState()==TelephonyManager.DATA_CONNECTED;
     }
 
-    public int getSimState(){
-        return new PreyPhone(ctx).getSimState();
-    }
-
-    public boolean isSimStateAbsent(){
-        return getSimState()==TelephonyManager.SIM_STATE_ABSENT;
-    }
-
-    public boolean isSimStateReady(){
-        return getSimState()==TelephonyManager.SIM_STATE_READY;
-    }
-
-
-    public String getLine1Number(){
-        return new PreyPhone(ctx).getLine1Number();
-
-    }
-
 
 }
 

@@ -128,9 +128,15 @@ public class PreyConfig {
     public static final int ANDROID_TOUR_COMPLETED = 2003;
     public static final int ANDROID_PRIVILEGES_GIVEN = 2004;
     public static final int ANDROID_SIGN_IN = 2005;
+    public static final int ANDROID_LOGIN_SETTINGS = 2007;
+    public static final int ANDROID_FAILED_LOGIN_SETTINGS = 2008;
     public static final int ANDROID_VERSION_UPDATED = 2009;
     public static final int ANDROID_ONBOARDING_INIT = 2010;
     public static final int ANDROID_ONBOARDING_COMPLETED = 2011;
+
+
+
+
 
     public static final String PREY_VERSION="PREY_VERSION";
     public static final String API_KEY="API_KEY";
@@ -187,8 +193,6 @@ public class PreyConfig {
     public static final String PREFS_BIOMETRIC="PREFS_BIOMETRIC";
 
     private boolean securityPrivilegesAlreadyPrompted;
-
-    public static final int VERSION_CODES_P=28;
 
     private Context ctx;
 
@@ -537,34 +541,6 @@ public class PreyConfig {
         return deviceID!=null&&!"".equals(deviceID);
     }
 
-    public boolean isSimChanged() {
-        String nowSimSerialNumber=new PreyPhone(ctx).getSimSerialNumber();
-        String currentSimSerialNumber=getSimSerialNumber();
-        PreyLogger.d("______________________________isSimChanged_______________");
-        PreyLogger.d("SimSerialNumber now:" + nowSimSerialNumber + " current:" + currentSimSerialNumber);
-        if (currentSimSerialNumber==null||"".equals(currentSimSerialNumber)){  //empty
-            if(nowSimSerialNumber!=null&&!"".equals(nowSimSerialNumber)){
-                this.setSimSerialNumber(nowSimSerialNumber);
-                PreyLogger.d("init setSimSerialNumber :"+nowSimSerialNumber);
-            }else{
-                PreyLogger.d("nothing setSimSerialNumber 1");
-            }
-        }else{
-            if(nowSimSerialNumber!=null&&!"".equals(nowSimSerialNumber)){ //not empty
-                if(!currentSimSerialNumber.equals(nowSimSerialNumber)){
-                    this.setSimSerialNumber(nowSimSerialNumber);
-                    PreyLogger.d("update setSimSerialNumber :"+nowSimSerialNumber);
-                    return true;
-                }else{
-                    PreyLogger.d("nothing setSimSerialNumber 2");
-                }
-            }else{
-                PreyLogger.d("nothing setSimSerialNumber 3");
-            }
-        }
-        return false;
-    }
-
     public String getSimSerialNumber(){
         return getString(PreyConfig.SIM_SERIAL_NUMBER,null);
     }
@@ -817,23 +793,9 @@ public class PreyConfig {
     }
 
     public void saveAccount(PreyAccountData accountData) {
-
-        this.saveSimInformation();
-
         saveString(PreyConfig.DEVICE_ID, accountData.getDeviceId());
         saveString(PreyConfig.API_KEY, accountData.getApiKey());
         saveString(PreyConfig.EMAIL, accountData.getEmail());
-
-
-    }
-
-    public void saveSimInformation() {
-        String simSerial=new PreyPhone(ctx).getSimSerialNumber();
-        if (simSerial !=null){
-            this.setSimSerialNumber(simSerial);
-        }
-        this.saveString(PreyConfig.PREFS_SIM_SERIAL_NUMBER, this.getSimSerialNumber());
-        PreyLogger.d("SIM Serial number stored: " + this.getSimSerialNumber());
     }
 
     public boolean isMissing() {
