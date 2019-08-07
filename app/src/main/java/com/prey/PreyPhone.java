@@ -619,29 +619,13 @@ public class PreyPhone {
         return android.provider.Settings.Secure.getString(ctx.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
     }
 
-
-    public int getSimState(){
-        TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        int simState =-1;
-        try {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                    simState = tManager.getSimState();
-                }
-            }else {
-                simState = tManager.getSimState();
-            }
-        }catch (Exception e){
-            PreyLogger.e("Error getSimSerialNumber:"+e.getMessage(),e);
-        }
-        return simState;
-    }
-
-
     private String getUuid() {
         String uuid="";
         TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
         try {
+            if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+                return uuid;
+            }
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                     uuid=tManager.getDeviceId();
@@ -654,25 +638,6 @@ public class PreyPhone {
         }
         return uuid;
     }
-
-    public String getSimSerialNumber(){
-        TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        String simSerialNumber ="";
-        try {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                    simSerialNumber = tManager.getSimSerialNumber();
-                }
-            }else {
-                simSerialNumber = tManager.getSimSerialNumber();
-            }
-        }catch (Exception e){
-            PreyLogger.e("Error getSimSerialNumber:"+e.getMessage(),e);
-        }
-        PreyLogger.d("simSerialNumber["+simSerialNumber+"]");
-        return simSerialNumber;
-    }
-
 
     public int getDataState(){
         TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
@@ -690,25 +655,6 @@ public class PreyPhone {
         }
         return dataState;
     }
-
-
-    public String getLine1Number(){
-        TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        String line1Number ="";
-        try {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                    line1Number = tManager.getLine1Number();
-                }
-            }else {
-                line1Number = tManager.getLine1Number();
-            }
-        }catch (Exception e){
-            PreyLogger.e("Error getDataState:"+e.getMessage(),e);
-        }
-        return line1Number;
-    }
-
 
 }
 
