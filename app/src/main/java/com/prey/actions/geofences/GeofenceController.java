@@ -205,6 +205,11 @@ public class GeofenceController {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         PreyLogger.d("GEO saveGeofence");
+                                        try {
+                                            PreyLocation locationNow = LocationUtil.getLocation(ctx2, null, false);
+                                            verifyGeozone(ctx2, locationNow);
+                                        }catch (Exception e3){
+                                        }
                                     }
                         })
                         .addOnFailureListener(new OnFailureListener() {

@@ -6,11 +6,18 @@
  ******************************************************************************/
 package com.prey;
 
+import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.multidex.MultiDex;
 
 import com.appsflyer.AppsFlyerConversionListener;
@@ -24,6 +31,7 @@ import com.prey.events.factories.EventFactory;
 import com.prey.events.receivers.EventReceiver;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
+import com.prey.services.AwareJobService;
 import com.prey.services.PreyDisablePowerOptionsService;
 
 import java.util.Date;
@@ -118,6 +126,11 @@ public class PreyApp extends Application {
                        try {PreyStatus.getInstance().getConfig(ctx);}catch (Exception e){}
                        try {GeofenceController.getInstance().run(ctx);}catch (Exception e){}
                        try {AwareController.getInstance().init(ctx);}catch (Exception e){}
+                       try {
+                           if(android.os.Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP ) {
+                               AwareJobService.schedule(ctx);
+                           }
+                       }catch (Exception e){}
                        try {FileretrievalController.getInstance().run(ctx);}catch (Exception e){}
                        try {TriggerController.getInstance().run(ctx);}catch (Exception e){}
                     }
@@ -132,7 +145,7 @@ public class PreyApp extends Application {
                 }
                 if(PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()){
                     try{
-                        if(android.os.Build.VERSION.SDK_INT < PreyConfig.VERSION_CODES_P) {
+                        if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
                             ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
                         }
                     }catch (Exception e){
