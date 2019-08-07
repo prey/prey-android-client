@@ -31,6 +31,9 @@ import com.prey.PreyPermission;
 import com.prey.R;
 import com.prey.actions.aware.AwareController;
 import com.prey.actions.fileretrieval.FileretrievalController;
+import com.prey.actions.geofences.GeofenceController;
+import com.prey.actions.location.LocationUtil;
+import com.prey.actions.location.PreyLocation;
 import com.prey.actions.triggers.BatteryTriggerReceiver;
 import com.prey.actions.triggers.SimTriggerReceiver;
 import com.prey.activities.CheckPasswordHtmlActivity;
@@ -67,10 +70,6 @@ public class EventFactory {
             if ("ABSENT".equals(state)) {
                 JSONObject info = new JSONObject();
                 try {
-                    String lineNumber = PreyTelephonyManager.getInstance(ctx).getLine1Number();
-                    if (lineNumber != null && !"".equals(lineNumber)) {
-                        info.put("new_phone_number", lineNumber);
-                    }
                     String simSerial=PreyConfig.getPreyConfig(ctx).getSimSerialNumber();
                     if (simSerial != null && !"".equals(simSerial)) {
                         info.put("sim_serial_number", simSerial);
@@ -80,6 +79,19 @@ public class EventFactory {
                 new SimTriggerReceiver().onReceive(ctx, intent);
                 return new Event(Event.SIM_CHANGED, info.toString());
             }
+        }
+        if(LOCATION_PROVIDERS_CHANGED.equals(intent.getAction())||
+                LOCATION_MODE_CHANGED.equals(intent.getAction())||
+                CONNECTIVITY_CHANGE.equals(intent.getAction())){
+            new Thread() {
+                public void run() {
+                    try {
+                        PreyLocation locationNow = LocationUtil.getLocation(ctx, null, false);
+                        GeofenceController.verifyGeozone(ctx, locationNow);
+                    }catch (Exception e3){
+                    }
+                }
+            }.start();
         }
         if (ACTION_SHUTDOWN.equals(intent.getAction())) {
             return new Event(Event.TURNED_OFF);
@@ -95,9 +107,6 @@ public class EventFactory {
         if (ACTION_POWER_DISCONNECTED.equals(intent.getAction())) {
             new BatteryTriggerReceiver().onReceive(ctx, intent);
             return new Event(Event.POWER_DISCONNECTED);
-        }
-        if (CONNECTIVITY_CHANGE.equals(intent.getAction())) {
-            PreyConfig.getPreyConfig(ctx).registerC2dm();
         }
         if (CONNECTIVITY_CHANGE.equals(intent.getAction())) {
             JSONObject info = new JSONObject();
