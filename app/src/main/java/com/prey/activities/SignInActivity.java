@@ -176,15 +176,6 @@ public class SignInActivity extends Activity {
         });
 
 
-        ImageView imageViewQr=(ImageView)findViewById(R.id.imageViewQR);
-        imageViewQr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), BarcodeActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
 
     }
 
@@ -252,6 +243,7 @@ public class SignInActivity extends Activity {
                             PreyConfig.getPreyConfig(SignInActivity.this).setProtectReady(true);
                         }else {
                             intent = new Intent(SignInActivity.this, PermissionInformationActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         }
                         intent.putExtras(bundle);
                         startActivity(intent);

@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
 
@@ -61,7 +62,16 @@ public class LoginActivity extends Activity {
 
     private void showLogin() {
         Intent intent = null;
-        intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);
+        }else {
+            String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
+            if (deviceKey != null && deviceKey != "") {
+                intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
+            }else{
+                intent = new Intent(LoginActivity.this, SignInActivity.class);
+            }
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
