@@ -32,6 +32,7 @@ import com.prey.activities.PanelWebActivity;
 import com.prey.activities.PreReportActivity;
 import com.prey.activities.SecurityActivity;
 import com.prey.barcodereader.BarcodeActivity;
+import com.prey.exceptions.PreyException;
 import com.prey.json.actions.Detach;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
@@ -208,6 +209,9 @@ public class WebAppInterface {
             if (isPasswordOk) {
                 PreyConfig.getPreyConfig(mContext).setTimePasswordOk();
             }
+        } catch (PreyException  e1) {
+            PreyLogger.e("login_tipo error1:" + e1.getMessage(), e1);
+            error=e1.getMessage();
         } catch (Exception e) {
             PreyLogger.e("login_tipo error:" + e.getMessage(), e);
             error = e.getMessage();
@@ -466,13 +470,16 @@ public class WebAppInterface {
                 progressDialog.dismiss();
             } catch (Exception e) {
             }
-            if (error != null) {
-                Toast.makeText(mContext, error, Toast.LENGTH_LONG).show();
-            } else {
-                Intent welcome = new Intent(mContext, CheckPasswordHtmlActivity.class);
-                welcome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(welcome);
-                mActivity.finish();
+            try {
+                if (error != null) {
+                    Toast.makeText(mContext, error, Toast.LENGTH_LONG).show();
+                } else {
+                    Intent welcome = new Intent(mContext, CheckPasswordHtmlActivity.class);
+                    welcome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mContext.startActivity(welcome);
+                    mActivity.finish();
+                }
+            } catch (Exception e) {
             }
         }
 

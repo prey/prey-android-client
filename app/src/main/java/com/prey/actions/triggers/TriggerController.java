@@ -14,6 +14,7 @@ import android.content.Intent;
 import com.prey.PreyLogger;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
+import com.prey.net.UtilConnection;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,12 +40,17 @@ public class TriggerController {
 
     public void run(Context ctx) {
         try {
-            Thread.sleep(1000);
-            TriggerDataSource dataSource = new TriggerDataSource(ctx);
-            listBD = dataSource.getAllTriggers();
-            listWeb =null;
-            try {listWeb = TriggerParse.getJSONFromUrl(ctx); } catch (Exception e) {}
-            updateTriggers(ctx,listWeb,listBD,dataSource);
+            if(UtilConnection.isInternetAvailable(ctx)) {
+                Thread.sleep(1000);
+                TriggerDataSource dataSource = new TriggerDataSource(ctx);
+                listBD = dataSource.getAllTriggers();
+                listWeb = null;
+                try {
+                    listWeb = TriggerParse.getJSONFromUrl(ctx);
+                } catch (Exception e) {
+                }
+                updateTriggers(ctx, listWeb, listBD, dataSource);
+            }
         } catch (Exception e) {
             PreyLogger.e("error run"+e.getMessage(),e);
         }

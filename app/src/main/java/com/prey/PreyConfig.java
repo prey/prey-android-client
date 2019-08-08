@@ -27,6 +27,7 @@ import com.prey.activities.FeedbackActivity;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
+import com.prey.net.UtilConnection;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -584,7 +585,6 @@ public class PreyConfig {
                 PreyLogger.e("registerC2dm error:"+e.getMessage(),e);
                 try{
                     FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
-
                         public void onSuccess(InstanceIdResult instanceIdResult) {
                             String token = instanceIdResult.getToken();
                             sendToken(token);
@@ -599,7 +599,7 @@ public class PreyConfig {
 
     private void sendToken(String token) {
         PreyLogger.d("registerC2dm send token:"+token);
-        if(token!=null&&!"null".equals(token)) {
+        if(token!=null && !"null".equals(token) && !"".equals(token) && UtilConnection.isInternetAvailable(ctx)) {
             try {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
