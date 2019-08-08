@@ -70,15 +70,20 @@ public class DetachDevicePreferences extends DialogPreference {
         @Override
         protected void onPostExecute(Void unused) {
             try {
-                progressDialog.dismiss();
+                if(progressDialog!=null) {
+                    progressDialog.dismiss();
+                }
             } catch (Exception e) {
             }
-            if (error != null) {
-                Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
-                showDialog(new Bundle());
-            } else {
-                Intent welcome = new Intent(getContext(), LoginActivity.class);
-                getContext().startActivity(welcome);
+            try {
+                if (error != null) {
+                    Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+                    showDialog(new Bundle());
+                } else {
+                    Intent welcome = new Intent(getContext(), LoginActivity.class);
+                    getContext().startActivity(welcome);
+                }
+            } catch (Exception e) {
             }
         }
 

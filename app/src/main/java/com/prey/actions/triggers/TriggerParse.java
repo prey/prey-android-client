@@ -30,33 +30,35 @@ public class TriggerParse {
     }
 
     public static List<TriggerDto> getJSONFromTxt(Context ctx, String json) {
-        json = "{\"prey\":" + json + "}";
         List<TriggerDto> listTrigger = new ArrayList<TriggerDto>();
-        PreyLogger.d(json);
-        try {
-            JSONObject jsnobject = new JSONObject(json);
-            JSONArray jsonArray = jsnobject.getJSONArray("prey");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                String jsonCommand = jsonArray.get(i).toString();
-                JSONObject explrObject = new JSONObject(jsonCommand);
-                TriggerDto trigger = new TriggerDto();
-                try {
-                    trigger.id = explrObject.getInt("id");
-                } catch (Exception e) {
-                    trigger.id = 101;
+        if(json!=null && !"".equals(json)) {
+            json = "{\"prey\":" + json + "}";
+            PreyLogger.d(json);
+            try {
+                JSONObject jsnobject = new JSONObject(json);
+                JSONArray jsonArray = jsnobject.getJSONArray("prey");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    String jsonCommand = jsonArray.get(i).toString();
+                    JSONObject explrObject = new JSONObject(jsonCommand);
+                    TriggerDto trigger = new TriggerDto();
+                    try {
+                        trigger.id = explrObject.getInt("id");
+                    } catch (Exception e) {
+                        trigger.id = 101;
+                    }
+                    try {
+                        trigger.name = explrObject.getString("name");
+                    } catch (Exception e) {
+                        trigger.name = "ups";
+                    }
+                    trigger.events = explrObject.getString("automation_events");
+                    trigger.actions = explrObject.getString("automation_actions");
+                    listTrigger.add(trigger);
                 }
-                try {
-                    trigger.name = explrObject.getString("name");
-                } catch (Exception e) {
-                    trigger.name = "ups";
-                }
-                trigger.events = explrObject.getString("automation_events");
-                trigger.actions = explrObject.getString("automation_actions");
-                listTrigger.add(trigger);
+            } catch (Exception e) {
+                PreyLogger.e("e:" + e.getMessage(), e);
+                return null;
             }
-        } catch (Exception e) {
-            PreyLogger.e("e:" + e.getMessage(), e);
-            return null;
         }
         return listTrigger;
     }

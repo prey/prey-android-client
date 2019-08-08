@@ -60,9 +60,6 @@ public class PreyWebServices {
         return _instance;
     }
 
-
-
-
     /**
      * Register a new account and get the API_KEY as return In case email is
      * already registered, this service will return an error.
@@ -390,7 +387,12 @@ public class PreyWebServices {
             response = PreyRestHttpClient.getInstance(ctx).get(uri, parameters, apikey, password);
             json = response.getResponseAsString();
         } catch (Exception e) {
-            throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
+            response = null;
+            String err = "" + ctx.getText(R.string.error_communication_exception);
+            json = "{\"error\":[\"" + err + "\"]}";
+        }
+        if(response == null){
+            throw new PreyException(json);
         }
         if(response!=null&&response.getStatusCode()== HttpURLConnection.HTTP_UNAUTHORIZED){
             throw new PreyException(json);
@@ -613,12 +615,14 @@ public class PreyWebServices {
                 String url = getDataUrlJson(ctx);
                 PreyLogger.d("URL:" + url);
                 PreyConfig.postUrl = null;
-                if (entityFiles.size() == 0){
-                    preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
-                }else {
-                    preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, entityFiles);
+                if(UtilConnection.isInternetAvailable(ctx)) {
+                    if (entityFiles.size() == 0) {
+                        preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
+                    } else {
+                        preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, entityFiles);
+                    }
+                    PreyLogger.d("Data sent_: " + (preyHttpResponse==null?"":preyHttpResponse.getResponseAsString()));
                 }
-                PreyLogger.d("Data sent_: " + (preyHttpResponse==null?"":preyHttpResponse.getResponseAsString()));
             } catch (Exception e) {
                 PreyLogger.e("Data wasn't send", e);
             }
@@ -766,7 +770,9 @@ public class PreyWebServices {
         PreyHttpResponse preyHttpResponse = null;
         try {
             String url = getLocationUrlJson(ctx);
-            preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postJsonAutentication(url, jsonParam);
+            if(UtilConnection.isInternetAvailable(ctx)) {
+                preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postJsonAutentication(url, jsonParam);
+            }
         } catch (Exception e) {
             PreyLogger.e("Contact wasn't send", e);
         }

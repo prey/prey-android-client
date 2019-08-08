@@ -166,6 +166,8 @@ public class PreyApp extends Application {
                 registerReceiver(eventReceiver, CONNECTIVITY_CHANGE);
                 IntentFilter LOCATION_PROVIDERS_CHANGED = new IntentFilter(EventFactory.LOCATION_PROVIDERS_CHANGED);
                 registerReceiver(eventReceiver, LOCATION_PROVIDERS_CHANGED);
+                IntentFilter ACTION_USER_PRESENT = new IntentFilter(Intent.ACTION_USER_PRESENT);
+                registerReceiver(eventReceiver, ACTION_USER_PRESENT);
             }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);

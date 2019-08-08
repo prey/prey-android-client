@@ -40,7 +40,7 @@ import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.Event;
 import com.prey.managers.PreyConnectivityManager;
-import com.prey.managers.PreyTelephonyManager;
+import com.prey.net.UtilConnection;
 import com.prey.net.offline.OfflineController;
 
 public class EventFactory {
@@ -77,7 +77,11 @@ public class EventFactory {
                 } catch (Exception e) {
                 }
                 new SimTriggerReceiver().onReceive(ctx, intent);
-                return new Event(Event.SIM_CHANGED, info.toString());
+                if (UtilConnection.isInternetAvailable(ctx)) {
+                    return new Event(Event.SIM_CHANGED, info.toString());
+                } else {
+                    return null;
+                }
             }
         }
         if(LOCATION_PROVIDERS_CHANGED.equals(intent.getAction())||
