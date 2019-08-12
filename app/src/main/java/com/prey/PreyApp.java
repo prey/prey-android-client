@@ -158,6 +158,7 @@ public class PreyApp extends Application {
                 registerReceiver(eventReceiver, ACTION_POWER_DISCONNECTED);
                 IntentFilter ACTION_BATTERY_LOW = new IntentFilter(Intent.ACTION_BATTERY_LOW);
                 registerReceiver(eventReceiver, ACTION_BATTERY_LOW);
+                /*
                 IntentFilter ACTION_PROVIDER_CHANGED = new IntentFilter(Intent.ACTION_PROVIDER_CHANGED);
                 registerReceiver(eventReceiver, ACTION_PROVIDER_CHANGED);
                 IntentFilter LOCATION_MODE_CHANGED = new IntentFilter(EventFactory.LOCATION_MODE_CHANGED);
@@ -168,6 +169,7 @@ public class PreyApp extends Application {
                 registerReceiver(eventReceiver, LOCATION_PROVIDERS_CHANGED);
                 IntentFilter ACTION_USER_PRESENT = new IntentFilter(Intent.ACTION_USER_PRESENT);
                 registerReceiver(eventReceiver, ACTION_USER_PRESENT);
+                */
             }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
