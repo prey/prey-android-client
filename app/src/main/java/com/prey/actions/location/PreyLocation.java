@@ -49,7 +49,7 @@ public class PreyLocation {
         this.method = method;
     }
 
-    public double getLat() {
+    public Double getLat() {
         return lat;
     }
 
@@ -57,7 +57,7 @@ public class PreyLocation {
         this.lat = lat;
     }
 
-    public double getLng() {
+    public Double getLng() {
         return lng;
     }
 

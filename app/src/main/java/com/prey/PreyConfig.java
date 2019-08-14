@@ -154,8 +154,12 @@ public class PreyConfig {
 
     public static final String TIME_PASSWORD_OK = "TIME_PASSWORD_OK";
     public static final String TIME_TWO_STEP = "TIME_TWO_STEP";
+    public static final String TIME_C2DM = "TIME_C2DM";
+    public static final String TIME_LOCATION_AWARE = "TIME_LOCATION_AWARE";
 
     public static final int NOTIFY_ANDROID_6 = 6;
+    public static final String NOTIFICATION_POPUP_ID = "NOTIFICATION_POPUP_ID";
+
 
     public static final String SENT_UUID_SERIAL_NUMBER = "SENT_UUID_SERIAL_NUMBER";
 
@@ -571,45 +575,59 @@ public class PreyConfig {
         this.run = run;
     }
 
-
     public void registerC2dm(){
-        String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
-        PreyLogger.d("registerC2dm deviceId:"+deviceId);
-        if (deviceId != null && !"".equals(deviceId)) {
-            String token=null;
-            try {
-                token =FirebaseInstanceId.getInstance().getToken();
-                PreyLogger.d("registerC2dm token2:"+token);
-                sendToken(token);
-            } catch (Exception e) {
-                PreyLogger.e("registerC2dm error:"+e.getMessage(),e);
-                try{
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
-                        public void onSuccess(InstanceIdResult instanceIdResult) {
-                            String token = instanceIdResult.getToken();
-                            sendToken(token);
+        new Thread() {
+            public void run() {
+                registerC2dmSynchronized(ctx);
+            }
+        }.start();
+    }
+
+    public void registerC2dmSynchronized(final Context ctx) {
+        synchronized(PreyConfig.class) {
+            String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
+            boolean isTimeC2dm=PreyConfig.getPreyConfig(ctx).isTimeC2dm();
+            PreyLogger.d("registerC2dm deviceId:"+deviceId+" isTimeC2dm:"+isTimeC2dm);
+            if (deviceId != null && !"".equals(deviceId)) {
+                 if (!isTimeC2dm) {
+                    String token = null;
+                    try {
+                        token = FirebaseInstanceId.getInstance().getToken();
+                        PreyLogger.d("registerC2dm token2:" + token);
+                        sendToken(ctx, token);
+                    } catch (Exception e) {
+                        PreyLogger.e("registerC2dm error:" + e.getMessage(), e);
+                        try {
+                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                                public void onSuccess(InstanceIdResult instanceIdResult) {
+                                    String token = instanceIdResult.getToken();
+                                    sendToken(ctx, token);
+                                }
+                            });
+                        } catch (Exception ex) {
+                            PreyLogger.e("registerC2dm error2:" + ex.getMessage(), ex);
                         }
-                    });
-                } catch (Exception ex) {
-                    PreyLogger.e("registerC2dm error2:"+ex.getMessage(),ex);
-                }
+                    }
+                 }
             }
         }
     }
 
-    private void sendToken(String token) {
+    public static void sendToken(Context ctx,String token) {
         PreyLogger.d("registerC2dm send token:"+token);
         if(token!=null && !"null".equals(token) && !"".equals(token) && UtilConnection.isInternetAvailable(ctx)) {
             try {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
-                String registration = "FCM__" + token;
+                String registration = FileConfigReader.getInstance(ctx).getGcmIdPrefix() + token;
+                PreyLogger.d("registerC2dm registration:" + registration);
                 PreyHttpResponse response = PreyWebServices.getInstance().setPushRegistrationId(ctx, registration);
                 PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
                 if (response != null) {
                     PreyLogger.d("registerC2dm response:" + response.toString());
                 }
                 PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
+                PreyConfig.getPreyConfig(ctx).setTimeC2dm();
             } catch (Exception e) {
                 PreyLogger.e("registerC2dm error:"+e.getMessage(),e);
             }
@@ -1074,8 +1092,10 @@ public class PreyConfig {
     public static SimpleDateFormat FORMAT_SDF_AWARE=new SimpleDateFormat("yyyy-MM-dd");
 
     public void setLocation(PreyLocation location){
-        saveFloat(PreyConfig.LOCATION_LAT, (float) location.getLat());
-        saveFloat(PreyConfig.LOCATION_LNG, (float) location.getLng());
+        if(location!=null) {
+            saveFloat(PreyConfig.LOCATION_LAT, (float) location.getLat().floatValue());
+            saveFloat(PreyConfig.LOCATION_LNG, (float) location.getLng().floatValue());
+        }
     }
     public PreyLocation getLocation(){
         PreyLocation location=new PreyLocation();
@@ -1088,8 +1108,8 @@ public class PreyConfig {
 
     public void setLocationAware(PreyLocation location){
         if(location!=null) {
-            saveFloat(PreyConfig.AWARE_LAT, (float) location.getLat());
-            saveFloat(PreyConfig.AWARE_LNG, (float) location.getLng());
+            saveFloat(PreyConfig.AWARE_LAT, location.getLat().floatValue());
+            saveFloat(PreyConfig.AWARE_LNG, location.getLng().floatValue());
             saveFloat(PreyConfig.AWARE_ACC, location.getAccuracy());
         }
     }
@@ -1235,5 +1255,49 @@ public class PreyConfig {
         }
     }
 
+    public void setTimeC2dm(){
+        Calendar cal= Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MINUTE,5);
+        saveLong(TIME_C2DM,cal.getTimeInMillis());
+    }
 
+    public boolean isTimeC2dm(){
+        long timeC2dm=getLong(TIME_C2DM,0);
+        long timeNow=new Date().getTime();
+        if (timeNow<timeC2dm){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void initTimeC2dm(){
+        saveLong(TIME_C2DM,0);
+    }
+
+    public void setTimeLocationAware(){
+        Calendar cal= Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MINUTE,1);
+        saveLong(TIME_LOCATION_AWARE,cal.getTimeInMillis());
+    }
+
+    public boolean isTimeLocationAware(){
+        long timeLocationAware=getLong(TIME_LOCATION_AWARE,0);
+        long timeNow=new Date().getTime();
+        if (timeNow<timeLocationAware){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void setNoficationPopupId(int noficationPopupId){
+        saveInt(NOTIFICATION_POPUP_ID,noficationPopupId);
+    }
+
+    public int getNoficationPopupId() {
+        return getInt(NOTIFICATION_POPUP_ID, 0);
+    }
 }
