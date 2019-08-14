@@ -9,6 +9,7 @@ package com.prey.actions.alert;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
+import com.prey.activities.PopUpAlertActivity;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 
@@ -19,6 +20,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.widget.RemoteViews;
@@ -31,20 +33,39 @@ public class AlertThread extends Thread {
     private String description;
     private String messageId;
     private String jobId;
+    private boolean fullscreen_notification=false;
 
-    public AlertThread(Context ctx, String description, String messageId, String jobId) {
+    public AlertThread(Context ctx, String description, String messageId, String jobId,boolean fullscreen_notification) {
         this.ctx = ctx;
         this.description = description;
         this.messageId = messageId;
         this.jobId = jobId;
+        this.fullscreen_notification = fullscreen_notification;
     }
 
     public void run() {
+        final int notificationId = AlertConfig.getAlertConfig(ctx).getNotificationId();
+        if (fullscreen_notification) {
+            new Thread() {
+                public void run() {
+                    fullscreen(notificationId);
+                }
+            }.start();
+        }
+        new Thread() {
+            public void run() {
+                notification(notificationId);
+            }
+        }.start();
+
+    }
+
+    public void notification(int notificationId) {
         try {
             String NOTIFICATION_CHANNEL_ID = "10002";
             PreyLogger.d("started alert");
             PreyLogger.d("description:" + description);
-            int notificationId = AlertConfig.getAlertConfig(ctx).getNotificationId();
+
             String CHANNEL_ID = "CHANNEL_ALERT_ID";
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 CharSequence name = "prey_alert";
@@ -140,6 +161,26 @@ public class AlertThread extends Thread {
         } catch (Exception e) {
             PreyLogger.e("failed alert: " + e.getMessage(), e);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "alert", "failed", e.getMessage()));
+        }
+    }
+
+    public void fullscreen(final int notificationId){
+        try {
+            PreyConfig.getPreyConfig(ctx).setNoficationPopupId(notificationId);
+            PreyLogger.d("started alert");
+            String title = "title";
+            Bundle bundle = new Bundle();
+            bundle.putString("title_message", title);
+            bundle.putString("alert_message", description);
+            Intent popup = new Intent(ctx, PopUpAlertActivity.class);
+            popup.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            popup.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            popup.putExtras(bundle);
+            popup.putExtra("description_message", description);
+            popup.putExtra("notificationId", notificationId);
+            ctx.startActivity(popup);
+        } catch (Exception e) {
         }
     }
 
