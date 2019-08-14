@@ -33,7 +33,7 @@ public class Alert extends JsonAction {
             alert = parameters.getString("parameter");
         } catch (Exception e) {
         }
-        startAlert(ctx, alert,null,null);
+        startAlert(ctx, alert,null,null,false);
     }
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
@@ -58,13 +58,19 @@ public class Alert extends JsonAction {
             PreyLogger.d("jobId:"+jobId);
         } catch (Exception e) {
         }
-        startAlert(ctx, alert,messageId,jobId);
+        boolean fullscreen_notification = false;
+        try {
+            fullscreen_notification = parameters.getBoolean("fullscreen_notification");
+            PreyLogger.d("fullscreen_notification:"+fullscreen_notification);
+        } catch (Exception e) {
+        }
+        startAlert(ctx, alert,messageId,jobId,fullscreen_notification);
     }
 
-    public void startAlert(Context ctx, String alert, String messageId,String jobId) {
+    public void startAlert(Context ctx, String alert, String messageId,String jobId,boolean fullscreen_notification) {
         try {
             if (alert != null && !"".equals(alert)) {
-                new AlertThread(ctx, alert, messageId,jobId).start();
+                new AlertThread(ctx, alert, messageId,jobId,fullscreen_notification).start();
             }
         } catch (Exception e) {
             PreyLogger.e("Error, causa:" + e.getMessage(), e);
