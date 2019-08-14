@@ -18,10 +18,10 @@ public class EventReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         Event event = EventFactory.getEvent(context, intent);
-        new Thread(new EventManagerRunner(context, event)).start();
-
+        if(event!=null) {
+            new Thread(new EventManagerRunner(context, event)).start();
+        }
     }
 
 }

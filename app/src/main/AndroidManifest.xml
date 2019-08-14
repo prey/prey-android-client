@@ -289,7 +289,7 @@
 
 
                 <action android:name="android.location.MODE_CHANGED" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+
                 <action android:name="android.location.PROVIDERS_CHANGED" />
 
                 <action android:name="android.intent.action.SIM_STATE_CHANGED" />
@@ -319,7 +319,7 @@
             >
             <intent-filter>
                 <action android:name="android.location.MODE_CHANGED" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+
                 <action android:name="android.location.PROVIDERS_CHANGED" />
             </intent-filter>
         </receiver>
@@ -329,7 +329,7 @@
             >
             <intent-filter>
                 <action android:name="android.location.MODE_CHANGED" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+
                 <action android:name="android.location.PROVIDERS_CHANGED" />
             </intent-filter>
         </receiver>
@@ -387,7 +387,6 @@
         <service android:name="com.prey.services.PreyNotificationForeGroundService" />
 
         <service android:name="com.prey.actions.autoconnect.AutoConnectService" />
-
 
         <service android:name="com.prey.services.ActivityIntentService" />
 

@@ -41,7 +41,6 @@ import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.Event;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.UtilConnection;
-import com.prey.net.offline.OfflineController;
 
 public class EventFactory {
 
@@ -84,14 +83,12 @@ public class EventFactory {
                 }
             }
         }
-        if(LOCATION_PROVIDERS_CHANGED.equals(intent.getAction())||
-                LOCATION_MODE_CHANGED.equals(intent.getAction())||
-                CONNECTIVITY_CHANGE.equals(intent.getAction())){
+        if(LOCATION_PROVIDERS_CHANGED.equals(intent.getAction())||LOCATION_MODE_CHANGED.equals(intent.getAction())
+                ){
             new Thread() {
                 public void run() {
                     try {
-                        PreyLocation locationNow = LocationUtil.getLocation(ctx, null, false);
-                        GeofenceController.verifyGeozone(ctx, locationNow);
+                        sendLocationAware(ctx);
                     }catch (Exception e3){
                     }
                 }
@@ -113,50 +110,16 @@ public class EventFactory {
             return new Event(Event.POWER_DISCONNECTED);
         }
         if (CONNECTIVITY_CHANGE.equals(intent.getAction())) {
-            JSONObject info = new JSONObject();
-            int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
-            PreyLogger.d("__wifiState:" + wifiState);
-            try {
-                boolean connected = false;
-                if (!PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {
-                    Bundle extras = intent.getExtras();
-                    if (extras != null) {
-                        if ("connected".equals(extras.getString(ConnectivityManager.EXTRA_REASON))) {
-                            connected = true;
-                        }
-                    }
-                }
-                if (!PreyConnectivityManager.getInstance(ctx).isMobileConnected()) {
-                    info.put("connected", "mobile");
-                    if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
-                        connected = true;
-                    }
-                }
-                if (connected) {
-                    Thread.sleep(4000);
-                    PreyConfig.getPreyConfig(ctx).registerC2dm();
-                    new Thread() {
-                        public void run() {
-                            FileretrievalController.getInstance().run(ctx);
-                        }
-                    }.start();
-                    new Thread() {
-                        public void run() {
-                            OfflineController.getInstance().run(ctx);
-                        }
-                    }.start();
-                }
-            } catch (Exception e) {
-            }
-
-            return new Event(Event.WIFI_CHANGED, info.toString());
+            return null;
         }
+
         if (WIFI_STATE_CHANGED.equals(intent.getAction())) {
             JSONObject info = new JSONObject();
             int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
-            PreyLogger.d("___wifiState:" + wifiState);
+            PreyLogger.d("getEvent ___wifiState:" + wifiState);
             try {
                 if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
+                    PreyLogger.d("getEvent wifiState connected");
                     info.put("connected", "wifi");
                     try {
                         Thread.sleep(6000);
@@ -170,7 +133,10 @@ public class EventFactory {
                     }.start();
                     new Thread() {
                         public void run() {
-                            OfflineController.getInstance().run(ctx);
+                            try {
+                                sendLocationAware(ctx);
+                            }catch (Exception e3){
+                            }
                         }
                     }.start();
                 }
@@ -198,11 +164,7 @@ public class EventFactory {
                 }
                 if (connected) {
                     PreyBetaController.startPrey(ctx);
-                    try {
-                        PreyConfig.getPreyConfig(ctx).registerC2dm();
-                        Thread.sleep(4000);
-                    } catch (Exception e) {
-                    }
+                    PreyConfig.getPreyConfig(ctx).registerC2dm();
                     new Thread() {
                         public void run() {
                             FileretrievalController.getInstance().run(ctx);
@@ -214,13 +176,13 @@ public class EventFactory {
         if (USER_PRESENT.equals(intent.getAction())) {
             String awareDate = PreyConfig.getPreyConfig(ctx).getAwareDate();
             String now = PreyConfig.FORMAT_SDF_AWARE.format(new Date());
-            PreyLogger.d("AWARE USER_PRESENT awareDate:" + awareDate + " now:" + now);
+            PreyLogger.d("getEvent AWARE USER_PRESENT awareDate:" + awareDate + " now:" + now);
             if (!now.equals(awareDate)) {
-                PreyLogger.d("AWARE getSendNowAware: " + now);
+                PreyLogger.d("getEvent AWARE getSendNowAware: " + now);
                 new Thread() {
                     public void run() {
                         try {
-                            AwareController.getSendNowAware(ctx);
+                            sendLocationAware(ctx);
                         } catch (Exception e) {
                         }
                     }
@@ -230,6 +192,23 @@ public class EventFactory {
         return null;
     }
 
+
+    public static void sendLocationAware(final Context ctx) {
+        synchronized(EventFactory.class) {
+            boolean isTimeLocationAware=PreyConfig.getPreyConfig(ctx).isTimeLocationAware();
+            PreyLogger.d("sendLocation isTimeLocationAware:"+isTimeLocationAware);
+            if (!isTimeLocationAware) {
+                try {
+                    PreyLocation locationNow = LocationUtil.getLocation(ctx, null, false);
+                    AwareController.sendAware(ctx, locationNow);
+                    GeofenceController.verifyGeozone(ctx, locationNow);
+                    PreyConfig.getPreyConfig(ctx).setTimeLocationAware();
+                } catch (Exception e){
+                    PreyLogger.e("Error sendLocation:"+e.getMessage(),e);
+                }
+            }
+        }
+    }
 
     public static boolean isAirplaneModeOn(Context context) {
         return Settings.System.getInt(context.getContentResolver

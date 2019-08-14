@@ -6,18 +6,13 @@
  ******************************************************************************/
 package com.prey;
 
-import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Build;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.multidex.MultiDex;
 
 import com.appsflyer.AppsFlyerConversionListener;
@@ -98,6 +93,8 @@ public class PreyApp extends Application {
             PreyConfig.getPreyConfig(ctx).setReportNumber(0);
             String apiKey = PreyConfig.getPreyConfig(ctx).getApiKey();
             String deviceKey = PreyConfig.getPreyConfig(ctx).getDeviceId();
+            PreyConfig.getPreyConfig(ctx).setAwareDate("");
+            PreyConfig.getPreyConfig(ctx).initTimeC2dm();
             PreyLogger.d("apiKey:"+apiKey);
             PreyLogger.d("deviceKey:"+deviceKey);
             PreyLogger.d("InstallationDate:" + PreyConfig.getPreyConfig(ctx).getInstallationDate());
@@ -110,13 +107,9 @@ public class PreyApp extends Application {
             PreyConfig.getPreyConfig(ctx).setSessionId(sessionId);
             boolean missing=PreyConfig.getPreyConfig(ctx).isMissing();
             if (deviceKey != null && deviceKey != "") {
+                PreyConfig.getPreyConfig(ctx).registerC2dm();
                 new Thread() {
                     public void run() {
-                       try {
-                           PreyConfig.getPreyConfig(ctx).registerC2dm();
-                       }catch (Exception e){
-                           PreyLogger.e("registerC2dm error:"+e.getMessage(),e);
-                       }
                        try {
                             String email = PreyWebServices.getInstance().getEmail(ctx);
                             PreyConfig.getPreyConfig(ctx).setEmail(email);
@@ -158,18 +151,12 @@ public class PreyApp extends Application {
                 registerReceiver(eventReceiver, ACTION_POWER_DISCONNECTED);
                 IntentFilter ACTION_BATTERY_LOW = new IntentFilter(Intent.ACTION_BATTERY_LOW);
                 registerReceiver(eventReceiver, ACTION_BATTERY_LOW);
-                /*
-                IntentFilter ACTION_PROVIDER_CHANGED = new IntentFilter(Intent.ACTION_PROVIDER_CHANGED);
-                registerReceiver(eventReceiver, ACTION_PROVIDER_CHANGED);
                 IntentFilter LOCATION_MODE_CHANGED = new IntentFilter(EventFactory.LOCATION_MODE_CHANGED);
                 registerReceiver(eventReceiver, LOCATION_MODE_CHANGED);
-                IntentFilter CONNECTIVITY_CHANGE = new IntentFilter(EventFactory.CONNECTIVITY_CHANGE);
-                registerReceiver(eventReceiver, CONNECTIVITY_CHANGE);
                 IntentFilter LOCATION_PROVIDERS_CHANGED = new IntentFilter(EventFactory.LOCATION_PROVIDERS_CHANGED);
                 registerReceiver(eventReceiver, LOCATION_PROVIDERS_CHANGED);
-                IntentFilter ACTION_USER_PRESENT = new IntentFilter(Intent.ACTION_USER_PRESENT);
-                registerReceiver(eventReceiver, ACTION_USER_PRESENT);
-                */
+                IntentFilter WIFI_STATE_CHANGED = new IntentFilter(EventFactory.WIFI_STATE_CHANGED);
+                registerReceiver(eventReceiver, WIFI_STATE_CHANGED);
             }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
