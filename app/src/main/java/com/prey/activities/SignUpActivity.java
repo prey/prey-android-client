@@ -37,6 +37,7 @@ import com.appsflyer.AFInAppEventType;
 import com.appsflyer.AppsFlyerLib;
 import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
+import com.prey.PreyApp;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
@@ -236,14 +237,7 @@ public class SignUpActivity extends Activity {
                 PreyConfig.getPreyConfig(ctx).setEmail(email);
                 PreyConfig.getPreyConfig(ctx).setRunBackground(true);
                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
-                new Thread() {
-                    public void run() {
-                        try {
-                            PreyStatus.getInstance().getConfig(getApplicationContext());
-                            AwareController.getInstance().init(ctx);
-                        }catch (Exception e){}
-                    }
-                }.start();
+                new PreyApp().run(ctx);
                 try {
                     Map<String, Object> eventValue = new HashMap<>();
                     eventValue.put(AFInAppEventParameterName.REGSITRATION_METHOD,"email");

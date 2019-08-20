@@ -173,6 +173,7 @@ public class PreyPhone {
         return cpuMaxFreq;
     }
 
+
     private void updateWifi() {
         wifi = new Wifi();
         try {
@@ -654,6 +655,38 @@ public class PreyPhone {
             PreyLogger.e("Error getDataState:"+e.getMessage(),e);
         }
         return dataState;
+    }
+    
+    public static String getNetworkClass(Context ctx) {
+        try{
+            TelephonyManager mTelephonyManager = (TelephonyManager)
+                    ctx.getSystemService(Context.TELEPHONY_SERVICE);
+            int networkType = mTelephonyManager.getNetworkType();
+            switch (networkType) {
+                case TelephonyManager.NETWORK_TYPE_GPRS:
+                case TelephonyManager.NETWORK_TYPE_EDGE:
+                case TelephonyManager.NETWORK_TYPE_CDMA:
+                case TelephonyManager.NETWORK_TYPE_1xRTT:
+                case TelephonyManager.NETWORK_TYPE_IDEN:
+                    return "2G";
+                case TelephonyManager.NETWORK_TYPE_UMTS:
+                case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                case TelephonyManager.NETWORK_TYPE_HSDPA:
+                case TelephonyManager.NETWORK_TYPE_HSUPA:
+                case TelephonyManager.NETWORK_TYPE_HSPA:
+                case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                case TelephonyManager.NETWORK_TYPE_EHRPD:
+                case TelephonyManager.NETWORK_TYPE_HSPAP:
+                    return "3G";
+                case TelephonyManager.NETWORK_TYPE_LTE:
+                    return "4G";
+                default:
+                    return null;
+            }
+        }catch (Exception e){
+            return null;
+        }
     }
 
 }

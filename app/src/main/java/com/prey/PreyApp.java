@@ -50,6 +50,7 @@ public class PreyApp extends Application {
         boolean chromium=getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
         PreyLogger.d("chromium:"+chromium);
         run(this);
+        runReceiver(this);
         try {
             FirebaseApp.initializeApp(this);
             AppsFlyerConversionListener conversionListener = new AppsFlyerConversionListener() {
@@ -107,9 +108,9 @@ public class PreyApp extends Application {
             PreyConfig.getPreyConfig(ctx).setSessionId(sessionId);
             boolean missing=PreyConfig.getPreyConfig(ctx).isMissing();
             if (deviceKey != null && deviceKey != "") {
-                PreyConfig.getPreyConfig(ctx).registerC2dm();
                 new Thread() {
                     public void run() {
+                       PreyConfig.getPreyConfig(ctx).registerC2dm();
                        try {
                             String email = PreyWebServices.getInstance().getEmail(ctx);
                             PreyConfig.getPreyConfig(ctx).setEmail(email);
@@ -145,22 +146,25 @@ public class PreyApp extends Application {
                         PreyLogger.e( "error startService PreyDisablePowerOptionsService : " + e.getMessage(),e);
                     }
                 }
-                IntentFilter ACTION_POWER_CONNECTED = new IntentFilter(Intent.ACTION_POWER_CONNECTED);
-                registerReceiver(eventReceiver, ACTION_POWER_CONNECTED);
-                IntentFilter ACTION_POWER_DISCONNECTED = new IntentFilter(Intent.ACTION_POWER_DISCONNECTED);
-                registerReceiver(eventReceiver, ACTION_POWER_DISCONNECTED);
-                IntentFilter ACTION_BATTERY_LOW = new IntentFilter(Intent.ACTION_BATTERY_LOW);
-                registerReceiver(eventReceiver, ACTION_BATTERY_LOW);
-                IntentFilter LOCATION_MODE_CHANGED = new IntentFilter(EventFactory.LOCATION_MODE_CHANGED);
-                registerReceiver(eventReceiver, LOCATION_MODE_CHANGED);
-                IntentFilter LOCATION_PROVIDERS_CHANGED = new IntentFilter(EventFactory.LOCATION_PROVIDERS_CHANGED);
-                registerReceiver(eventReceiver, LOCATION_PROVIDERS_CHANGED);
-                IntentFilter WIFI_STATE_CHANGED = new IntentFilter(EventFactory.WIFI_STATE_CHANGED);
-                registerReceiver(eventReceiver, WIFI_STATE_CHANGED);
             }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
         }
+    }
+
+    public void runReceiver(final Context ctx) {
+        IntentFilter ACTION_POWER_CONNECTED = new IntentFilter(Intent.ACTION_POWER_CONNECTED);
+        registerReceiver(eventReceiver, ACTION_POWER_CONNECTED);
+        IntentFilter ACTION_POWER_DISCONNECTED = new IntentFilter(Intent.ACTION_POWER_DISCONNECTED);
+        registerReceiver(eventReceiver, ACTION_POWER_DISCONNECTED);
+        IntentFilter ACTION_BATTERY_LOW = new IntentFilter(Intent.ACTION_BATTERY_LOW);
+        registerReceiver(eventReceiver, ACTION_BATTERY_LOW);
+        IntentFilter LOCATION_MODE_CHANGED = new IntentFilter(EventFactory.LOCATION_MODE_CHANGED);
+        registerReceiver(eventReceiver, LOCATION_MODE_CHANGED);
+        IntentFilter LOCATION_PROVIDERS_CHANGED = new IntentFilter(EventFactory.LOCATION_PROVIDERS_CHANGED);
+        registerReceiver(eventReceiver, LOCATION_PROVIDERS_CHANGED);
+        IntentFilter WIFI_STATE_CHANGED = new IntentFilter(EventFactory.WIFI_STATE_CHANGED);
+        registerReceiver(eventReceiver, WIFI_STATE_CHANGED);
     }
 
     public static String InstallConversionData =  "";

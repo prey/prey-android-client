@@ -205,11 +205,6 @@ public class GeofenceController {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         PreyLogger.d("GEO saveGeofence");
-                                        try {
-                                            PreyLocation locationNow = LocationUtil.getLocation(ctx2, null, false);
-                                            verifyGeozone(ctx2, locationNow);
-                                        }catch (Exception e3){
-                                        }
                                     }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -226,7 +221,8 @@ public class GeofenceController {
         }
     }
 
-    public synchronized static void verifyGeozone(Context ctx,PreyLocation locationNow){
+    public static void verifyGeozone(Context ctx,PreyLocation locationNow){
+        PreyLogger.d("GEO verifyGeozone");
         if(locationNow!=null) {
             PreyLogger.d("GEO connection verifyGeozone lat:" + locationNow.getLat() + " lng:" + locationNow.getLng());
         }
@@ -270,7 +266,6 @@ public class GeofenceController {
                         event.setName(transition);
                         event.setInfo(info.toString());
                         JSONObject jsonObjectStatus = new JSONObject();
-                        new TriggerGeoReceiver().onReceive(ctx,Integer.parseInt(geo.id),transition);
                         PreyLogger.d("GEO name:"+geo.name+" event:" + transition.toString());
                         new EventThread(ctx, event, jsonObjectStatus, transition).start();
                     } catch (Exception e) {

@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.prey.PreyConfig;
 import com.prey.events.Event;
 import com.prey.events.factories.EventFactory;
 import com.prey.events.manager.EventManagerRunner;
@@ -18,9 +19,12 @@ public class EventReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Event event = EventFactory.getEvent(context, intent);
-        if(event!=null) {
-            new Thread(new EventManagerRunner(context, event)).start();
+        boolean isDeviceRegistered = PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey();
+        if(isDeviceRegistered) {
+            Event event = EventFactory.getEvent(context, intent);
+            if (event != null) {
+                new Thread(new EventManagerRunner(context, event)).start();
+            }
         }
     }
 
