@@ -156,7 +156,7 @@ public class AwareController {
     }
 
 
-    public static synchronized PreyLocation sendAware(Context ctx, PreyLocation locationAware) throws Exception{
+    public static PreyLocation sendAware(Context ctx, PreyLocation locationAware) throws Exception{
         //get location
         PreyLocation locationNow = locationAware;
         if (locationNow != null) {

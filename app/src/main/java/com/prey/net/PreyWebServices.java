@@ -645,6 +645,7 @@ public class PreyWebServices {
     public PreyHttpResponse sendPreyHttpEvent(Context ctx, Event event, JSONObject jsonObject) {
         PreyHttpResponse preyHttpResponse = null;
         try {
+
             String url = getEventsUrlJson(ctx);
             Map<String, String> parameters = new HashMap<String, String>();
             parameters.put("name", event.getName());
@@ -838,7 +839,6 @@ public class PreyWebServices {
             PreyLogger.e("Error, causa:" + e.getMessage(), e);
             return null;
         }
-        PreyLogger.d("cmd:" + sb);
         return sb;
     }
 
@@ -1053,7 +1053,6 @@ public class PreyWebServices {
             PreyLogger.e("Error, causa:" + e.getMessage(), e);
             return null;
         }
-        PreyLogger.d("cmd:" + sb);
         return sb;
     }
 

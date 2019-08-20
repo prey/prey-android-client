@@ -14,13 +14,11 @@ public class Event {
     public static final String TURNED_OFF = "device_turned_off";
     public static final String BATTERY_LOW = "low_battery";
     public static final String APPLICATION_OPENED = "prey_opened";
-    public static final String BATTERY_OK = "ok_battery";
-    public static final String BATTERY_CHANGE = "change_battery";
     public static final String POWER_CONNECTED = "started_charging";
     public static final String POWER_DISCONNECTED = "stopped_charging";
     public static final String PIN_CHANGED = "pin_changed";
-
-    public static final String ACTIVITY_UPDATES = "activity_updates";
+    public static final String MOBILE_CONNECTED = "mobile_network";
+    public static final String DEVICE_STATUS = "device_status";
 
     private String name;
     private String info;

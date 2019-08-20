@@ -575,16 +575,9 @@ public class PreyConfig {
         this.run = run;
     }
 
-    public void registerC2dm(){
-        new Thread() {
-            public void run() {
-                registerC2dmSynchronized(ctx);
-            }
-        }.start();
-    }
 
-    public void registerC2dmSynchronized(final Context ctx) {
-        synchronized(PreyConfig.class) {
+    public void registerC2dm() {
+       // synchronized(PreyConfig.class) {
             String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
             boolean isTimeC2dm=PreyConfig.getPreyConfig(ctx).isTimeC2dm();
             PreyLogger.d("registerC2dm deviceId:"+deviceId+" isTimeC2dm:"+isTimeC2dm);
@@ -610,7 +603,7 @@ public class PreyConfig {
                     }
                  }
             }
-        }
+     //   }
     }
 
     public static void sendToken(Context ctx,String token) {

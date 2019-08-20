@@ -6,6 +6,8 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
+import com.prey.events.Event;
+import com.prey.events.manager.EventManagerRunner;
 import com.prey.json.JsonAction;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
@@ -22,10 +24,19 @@ public class Ping extends JsonAction {
         return null;
     }
 
+    public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
+        get(ctx,list,parameters);
+    }
+
     @Override
     public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
         try{
-            String messageId=parameters.getString(PreyConfig.MESSAGE_ID);
+            String messageId = null;
+            try {
+                messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+                PreyLogger.d("messageId:"+messageId);
+            } catch (Exception e) {
+            }
             String reason = null;
             try {
                 String jobId = parameters.getString(PreyConfig.JOB_ID);
@@ -35,7 +46,7 @@ public class Ping extends JsonAction {
                 }
             } catch (Exception e) {
             }
-
+            new Thread(new EventManagerRunner(ctx, new Event(Event.DEVICE_STATUS))).start();
             Map<String,String> map=UtilJson.makeMapParam("start","ping","started",reason);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed",messageId,map);
             PreyLogger.d("messageId:"+messageId);

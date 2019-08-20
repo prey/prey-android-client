@@ -37,7 +37,7 @@ public class EventRetrieveDataBattery {
                 ctx.unregisterReceiver(mBatInfoReceiver);
                 if (battery!=null){
                     String state=battery.isCharging()?"charging":"discharging";
-                    String remaining=Double.toString(battery.getLevel());
+                    String remaining=Integer.toString(battery.getLevel());
                     JSONObject batteryJSon = new JSONObject();
                     try {
                         JSONObject batteryElementJSon = new JSONObject();

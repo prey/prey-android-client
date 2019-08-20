@@ -31,7 +31,6 @@ public class GeofecenceParse {
     public static List<GeofenceDto> getJSONFromTxt(Context ctx, String json) {
         json = "{\"prey\":" + json + "}";
         List<GeofenceDto> listGeofence = new ArrayList<GeofenceDto>();
-        PreyLogger.d(json);
         try {
             JSONObject jsnobject = new JSONObject(json);
             JSONArray jsonArray = jsnobject.getJSONArray("prey");

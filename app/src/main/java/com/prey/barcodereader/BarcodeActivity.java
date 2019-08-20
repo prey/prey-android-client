@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.prey.PreyAccountData;
+import com.prey.PreyApp;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
@@ -180,6 +181,7 @@ public class BarcodeActivity extends Activity   {
                         PreyConfig.getPreyConfig(ctx).setEmail(email);
                         PreyConfig.getPreyConfig(ctx).setRunBackground(true);
                         RunBackgroundCheckBoxPreference.notifyReady(ctx);
+                        new PreyApp().run(ctx);
                         new Thread() {
                             public void run() {
                                 try {

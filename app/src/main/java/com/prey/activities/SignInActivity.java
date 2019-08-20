@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.appsflyer.AFInAppEventParameterName;
 import com.appsflyer.AFInAppEventType;
 import com.appsflyer.AppsFlyerLib;
+import com.prey.PreyApp;
 import com.prey.PreyStatus;
 import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.aware.AwareController;
@@ -208,14 +209,7 @@ public class SignInActivity extends Activity {
                 PreyConfig.getPreyConfig(ctx).setEmail(email);
                 PreyConfig.getPreyConfig(ctx).setRunBackground(true);
                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
-                new Thread() {
-                    public void run() {
-                        try{
-                            PreyStatus.getInstance().getConfig(getApplicationContext());
-                            AwareController.getInstance().init(ctx);
-                        }catch (Exception e){}
-                        }
-                }.start();
+                new PreyApp().run(ctx);
                 try {
                     Map<String, Object> eventValue = new HashMap<String, Object>();
                     eventValue.put(AFInAppEventParameterName.SUCCESS,true);

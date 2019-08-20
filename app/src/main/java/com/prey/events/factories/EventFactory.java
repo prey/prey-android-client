@@ -30,7 +30,6 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.R;
 import com.prey.actions.aware.AwareController;
-import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
@@ -112,7 +111,6 @@ public class EventFactory {
         if (CONNECTIVITY_CHANGE.equals(intent.getAction())) {
             return null;
         }
-
         if (WIFI_STATE_CHANGED.equals(intent.getAction())) {
             JSONObject info = new JSONObject();
             int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
@@ -121,24 +119,10 @@ public class EventFactory {
                 if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
                     PreyLogger.d("getEvent wifiState connected");
                     info.put("connected", "wifi");
-                    try {
-                        Thread.sleep(6000);
-                    } catch (Exception e) {
-                    }
-                    PreyConfig.getPreyConfig(ctx).registerC2dm();
-                    new Thread() {
-                        public void run() {
-                            FileretrievalController.getInstance().run(ctx);
-                        }
-                    }.start();
-                    new Thread() {
-                        public void run() {
-                            try {
-                                sendLocationAware(ctx);
-                            }catch (Exception e3){
-                            }
-                        }
-                    }.start();
+                }
+                if (wifiState == WifiManager.WIFI_STATE_DISABLED) {
+                    PreyLogger.d("getEvent mobile connected");
+                    info.put("connected", "mobile");
                 }
             } catch (Exception e) {
             }
@@ -164,12 +148,6 @@ public class EventFactory {
                 }
                 if (connected) {
                     PreyBetaController.startPrey(ctx);
-                    PreyConfig.getPreyConfig(ctx).registerC2dm();
-                    new Thread() {
-                        public void run() {
-                            FileretrievalController.getInstance().run(ctx);
-                        }
-                    }.start();
                 }
             }
         }
@@ -194,7 +172,6 @@ public class EventFactory {
 
 
     public static void sendLocationAware(final Context ctx) {
-        synchronized(EventFactory.class) {
             boolean isTimeLocationAware=PreyConfig.getPreyConfig(ctx).isTimeLocationAware();
             PreyLogger.d("sendLocation isTimeLocationAware:"+isTimeLocationAware);
             if (!isTimeLocationAware) {
@@ -207,7 +184,6 @@ public class EventFactory {
                     PreyLogger.e("Error sendLocation:"+e.getMessage(),e);
                 }
             }
-        }
     }
 
     public static boolean isAirplaneModeOn(Context context) {
