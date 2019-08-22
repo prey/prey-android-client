@@ -16,6 +16,7 @@ import android.telephony.TelephonyManager;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyUtils;
 import com.prey.exceptions.PreyException;
 import com.prey.receivers.PreyDeviceAdmin;
 
@@ -76,7 +77,11 @@ public class FroyoSupport {
     }
 
     public boolean isAdminActive() {
-        return policyManager.isAdminActive(deviceAdmin);
+        if(!PreyUtils.isChromebook(ctx)){
+            return policyManager.isAdminActive(deviceAdmin);
+        } else{
+            return true;
+        }
     }
 
     public void removeAdminPrivileges() {

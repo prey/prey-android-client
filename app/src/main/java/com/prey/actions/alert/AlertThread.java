@@ -8,6 +8,7 @@ package com.prey.actions.alert;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.activities.PopUpAlertActivity;
 import com.prey.json.UtilJson;
@@ -45,19 +46,26 @@ public class AlertThread extends Thread {
 
     public void run() {
         final int notificationId = AlertConfig.getAlertConfig(ctx).getNotificationId();
-        if (fullscreen_notification) {
+        if (PreyUtils.isChromebook(ctx)) {
             new Thread() {
                 public void run() {
                     fullscreen(notificationId);
                 }
             }.start();
-        }
-        new Thread() {
-            public void run() {
-                notification(notificationId);
+        }else {
+            if (fullscreen_notification) {
+                new Thread() {
+                    public void run() {
+                        fullscreen(notificationId);
+                    }
+                }.start();
             }
-        }.start();
-
+            new Thread() {
+                public void run() {
+                    notification(notificationId);
+                }
+            }.start();
+        }
     }
 
     public void notification(int notificationId) {
@@ -180,6 +188,15 @@ public class AlertThread extends Thread {
             popup.putExtra("description_message", description);
             popup.putExtra("notificationId", notificationId);
             ctx.startActivity(popup);
+            if(PreyUtils.isChromebook(ctx)){
+                new Thread() {
+                    public void run() {
+                        String reason = null;
+                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "started", reason));
+                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "stopped", reason));
+                    }
+                }.start();
+            }
         } catch (Exception e) {
         }
     }

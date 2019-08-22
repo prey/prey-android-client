@@ -12,7 +12,10 @@ import java.util.StringTokenizer;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
+import android.widget.Toast;
 
 public class PreyUtils {
     public static String getDeviceType(Activity act) {
@@ -79,4 +82,17 @@ public class PreyUtils {
     public static String getLanguage(){
         return "es".equals(Locale.getDefault().getLanguage()) ? "es" : "en";
     }
+
+    public static void toast(final Context ctx,final String out){
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(out!=null&& !"".equals(out)) {
+                    Toast.makeText(ctx, out, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 }
