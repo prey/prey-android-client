@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyUtils;
 import com.prey.services.PreyNotificationForeGroundService;
 
 public class RunBackgroundCheckBoxPreference extends CheckBoxPreference {
@@ -44,22 +45,26 @@ public class RunBackgroundCheckBoxPreference extends CheckBoxPreference {
     }
 
     public static void notifyReady(Context ctx){
-        try{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                ctx.startForegroundService(new Intent(ctx, PreyNotificationForeGroundService.class));
-            }else{
-                ctx.startService(new Intent(ctx, PreyNotificationForeGroundService.class));
+        if(!PreyUtils.isChromebook(ctx)) {
+            try{
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    ctx.startForegroundService(new Intent(ctx, PreyNotificationForeGroundService.class));
+                } else {
+                    ctx.startService(new Intent(ctx, PreyNotificationForeGroundService.class));
+                }
+            }catch(Exception e){
+                PreyLogger.e("notifyReady:"+e.getMessage(),e);
             }
-        }catch(Exception e){
-            PreyLogger.e("notifyReady:"+e.getMessage(),e);
         }
     }
 
     public static void notifyCancel(Context ctx){
-        try{
-            ctx.stopService(new Intent(ctx, PreyNotificationForeGroundService.class));
-        }catch(Exception e){
-            PreyLogger.e("notifyCancel:"+e.getMessage(),e);
+        if(!PreyUtils.isChromebook(ctx)) {
+            try {
+                ctx.stopService(new Intent(ctx, PreyNotificationForeGroundService.class));
+            } catch (Exception e) {
+                PreyLogger.e("notifyCancel:" + e.getMessage(), e);
+            }
         }
     }
 
