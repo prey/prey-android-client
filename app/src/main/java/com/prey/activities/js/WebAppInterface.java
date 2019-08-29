@@ -32,6 +32,7 @@ import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.PanelWebActivity;
 import com.prey.activities.PreReportActivity;
 import com.prey.activities.SecurityActivity;
+import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.barcodereader.BarcodeActivity;
 import com.prey.exceptions.PreyException;
 import com.prey.json.actions.Detach;
@@ -89,6 +90,46 @@ public class WebAppInterface {
         PreyLogger.d("initPin:" + initPin);
         return initPin;
     }
+
+    @JavascriptInterface
+    public boolean initAdminActive() {
+        return FroyoSupport.getInstance(mContext).isAdminActive();
+    }
+    @JavascriptInterface
+    public boolean initDrawOverlay() {
+        return PreyPermission.canDrawOverlays(mContext);
+    }
+
+    @JavascriptInterface
+    public boolean initLocation() {
+        PreyLogger.d("initLocation:");
+        return (PreyPermission.canAccessFineLocation(mContext)||PreyPermission.canAccessCoarseLocation(mContext))&&PreyPermission.canAccessBackgroundLocation(mContext);
+    }
+
+    @JavascriptInterface
+    public boolean initBackgroundLocation() {
+        return PreyPermission.canAccessBackgroundLocation(mContext);
+    }
+
+    @JavascriptInterface
+    public boolean initAndroid10OrAbove() {
+        return PreyConfig.getPreyConfig(mContext).isAndroid10OrAbove();
+    }
+
+    @JavascriptInterface
+    public boolean initCamera() {
+        PreyLogger.d("initCamera:");
+        return PreyPermission.canAccessCamera(mContext);
+    }
+    @JavascriptInterface
+    public boolean initReadPhone() {
+        return PreyPermission.canAccessReadPhoneState(mContext);
+    }
+    @JavascriptInterface
+    public boolean initWriteStorage() {
+        return PreyPermission.canAccessWriteExternalStorage(mContext);
+    }
+
 
     @JavascriptInterface
     public String getPin() {
@@ -435,14 +476,17 @@ public class WebAppInterface {
         boolean canAccessCamera = PreyPermission.canAccessCamera(mContext);
         boolean canAccessReadPhoneState = PreyPermission.canAccessReadPhoneState(mContext);
         boolean canAccessWriteExternalStorage = PreyPermission.canAccessWriteExternalStorage(mContext);
+        boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocation(mContext);
+
         PreyLogger.d("canAccessFineLocation:" + canAccessFineLocation);
         PreyLogger.d("canAccessCoarseLocation:" + canAccessCoarseLocation);
         PreyLogger.d("canAccessCamera:" + canAccessCamera);
         PreyLogger.d("canAccessReadPhoneState:" + canAccessReadPhoneState);
+        PreyLogger.d("canAccessBackgroundLocation:" + canAccessBackgroundLocation);
         PreyLogger.d("canAccessReadExternalStorage2:" + canAccessWriteExternalStorage);
         boolean canDrawOverlays = false;
         if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
-                || !canAccessReadPhoneState || !canAccessWriteExternalStorage) {
+                || !canAccessReadPhoneState || !canAccessWriteExternalStorage|| !canAccessBackgroundLocation) {
             mActivity.askForPermission();
         } else {
             mActivity.askForPermissionAndroid7();

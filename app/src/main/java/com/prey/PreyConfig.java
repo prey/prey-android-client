@@ -157,6 +157,8 @@ public class PreyConfig {
     public static final String TIME_C2DM = "TIME_C2DM";
     public static final String TIME_LOCATION_AWARE = "TIME_LOCATION_AWARE";
 
+    public static final int Build_VERSION_CODES_10 = 29;
+
     public static final int NOTIFY_ANDROID_6 = 6;
     public static final String NOTIFICATION_POPUP_ID = "NOTIFICATION_POPUP_ID";
 
@@ -495,10 +497,12 @@ public class PreyConfig {
         return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
-
-
     public boolean isNougatOrAbove() {
         return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
+    }
+
+    public boolean isAndroid10OrAbove() {
+        return android.os.Build.VERSION.SDK_INT >= PreyConfig.Build_VERSION_CODES_10;
     }
 
     public String getLastEvent() {

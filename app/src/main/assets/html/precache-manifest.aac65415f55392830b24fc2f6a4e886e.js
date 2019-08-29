@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "./static/media/icons.0169ebee.eot"
   },
   {
-    "revision": "9a79711ba9fe1203aa37",
+    "revision": "8a185eec7335894a342f",
     "url": "./static/css/main.c6215e42.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = [
     "url": "./static/js/runtime~main.9eb600ee.js"
   },
   {
-    "revision": "28f18a67afa173a12c70",
-    "url": "./static/js/2.28f18a67.chunk.js"
+    "revision": "b76d9f5cffbb70ec4392",
+    "url": "./static/js/2.b76d9f5c.chunk.js"
   },
   {
     "revision": "ce31486d2c6e0b6d55bbf5dbf26992f0",
@@ -68,8 +68,8 @@ self.__precacheManifest = [
     "url": "./static/media/onboarding_03.37e7a6b7.png"
   },
   {
-    "revision": "9a79711ba9fe1203aa37",
-    "url": "./static/js/main.9a79711b.chunk.js"
+    "revision": "8a185eec7335894a342f",
+    "url": "./static/js/main.8a185eec.chunk.js"
   },
   {
     "revision": "1e7c00aa635c595972522296b2ac0bdf",
@@ -116,23 +116,23 @@ self.__precacheManifest = [
     "url": "./static/media/fondo2.ada00d71.png"
   },
   {
-    "revision": "baaac74770efd8c34382afa00468f635",
-    "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
-  },
-  {
-    "revision": "6e8991140fc75b4927e2c440d9036429",
-    "url": "./static/media/regular-book-webfont.6e899114.woff"
+    "revision": "c44603b2b93c1b7a984f21255d556ee9",
+    "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
   },
   {
     "revision": "391159c582e0897e8d64ed22abe1ee2d",
     "url": "./static/media/regular-bold-webfont.391159c5.woff"
   },
   {
-    "revision": "c44603b2b93c1b7a984f21255d556ee9",
-    "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
+    "revision": "6e8991140fc75b4927e2c440d9036429",
+    "url": "./static/media/regular-book-webfont.6e899114.woff"
   },
   {
-    "revision": "eed42a940f739bc802b12f8cec5c8c40",
+    "revision": "baaac74770efd8c34382afa00468f635",
+    "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
+  },
+  {
+    "revision": "df0382321b4de87c2bd374c9decb2ce7",
     "url": "./index.html"
   }
 ];
