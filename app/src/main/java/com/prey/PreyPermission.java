@@ -35,6 +35,18 @@ public class PreyPermission {
         return canAccessCoarseLocation;
     }
 
+    public static final String ACCESS_BACKGROUND_LOCATION = "android.permission.ACCESS_BACKGROUND_LOCATION";
+
+    public static boolean canAccessBackgroundLocation(Context ctx) {
+        boolean canAccessBackgroundLocation =true;
+        if (PreyConfig.getPreyConfig(ctx).isAndroid10OrAbove()) {
+            canAccessBackgroundLocation = PermissionChecker
+                    .checkSelfPermission(ctx, ACCESS_BACKGROUND_LOCATION) ==
+                    PermissionChecker.PERMISSION_GRANTED;
+        }
+        //PreyLogger.d("canAccessBackgroundLocation:"+canAccessBackgroundLocation);
+        return canAccessBackgroundLocation;
+    }
 
 
     public static boolean canAccessCamera(Context ctx) {
@@ -104,6 +116,7 @@ public class PreyPermission {
     }
 
     public static  boolean checkBiometricSupport(Context ctx) {
+        return false;/*
         KeyguardManager keyguardManager = (KeyguardManager) ctx.getSystemService(ctx.KEYGUARD_SERVICE);
         PackageManager packageManager = ctx.getPackageManager();
         if (!keyguardManager.isKeyguardSecure()) {
@@ -127,6 +140,7 @@ public class PreyPermission {
         }
 
         return true;
+        */
     }
 
 }
