@@ -19,11 +19,13 @@ import android.os.AsyncTask;
 import androidx.fragment.app.FragmentActivity;
 
 import com.prey.PreyAccountData;
+import com.prey.PreyApp;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.net.PreyWebServices;
+import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
 public class WelcomeBatchActivity extends FragmentActivity {
 
@@ -92,6 +94,11 @@ public class WelcomeBatchActivity extends FragmentActivity {
                 if(!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
                     PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, data[0], data[1], data[2]);
                     PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
+                    PreyConfig.getPreyConfig(ctx).registerC2dm();
+                    PreyWebServices.getInstance().sendEvent(ctx,PreyConfig.ANDROID_SIGN_UP);
+                    PreyConfig.getPreyConfig(ctx).setRunBackground(true);
+                    RunBackgroundCheckBoxPreference.notifyReady(ctx);
+                    new PreyApp().run(ctx);
                 }
 
             } catch (Exception e) {

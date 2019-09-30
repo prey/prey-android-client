@@ -18,6 +18,7 @@ import com.prey.net.PreyWebServices;
 
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
 import java.util.List;
 
 public class Missing {
@@ -37,7 +38,7 @@ public class Missing {
             if (response != null) {
                 int code = response.getStatusCode();
                 PreyLogger.d("Missing code:" + code);
-                if (code == 200 || code == 201) {
+                if (code == HttpURLConnection.HTTP_OK || code == HttpURLConnection.HTTP_CREATED) {
                     new Report().get(ctx, list, parameters);
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "missing", "stopped", reason));
                 } else {
@@ -64,7 +65,7 @@ public class Missing {
             if (response != null) {
                 int code = response.getStatusCode();
                 PreyLogger.d("Missing code:" + code);
-                if (code == 200 || code == 201) {
+                if (code == HttpURLConnection.HTTP_OK|| code == HttpURLConnection.HTTP_CREATED) {
                     new Report().stop(ctx, list, parameters);
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("stop", "missing", "stopped", reason));
                 } else {

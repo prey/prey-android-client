@@ -6,40 +6,25 @@
  ******************************************************************************/
 package com.prey;
 
-import com.prey.net.PreyWebServices;
-
-import android.content.Context;
-
 public class PreyVerify {
 
-    private static PreyVerify instance = null;
+    private int statusCode=-1;
+    private String statusDescription;
 
-    private PreyVerify(Context ctx) {
-        init(ctx);
+    public int getStatusCode() {
+        return statusCode;
     }
 
-    public static PreyVerify getInstance(Context ctx) {
-        if (instance == null) {
-            instance = new PreyVerify(ctx);
-        }
-        return instance;
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
     }
 
-    private void init(Context ctx) {
-        final Context myContext = ctx;
-        new Thread() {
-            public void run() {
-                try {
-                    sleep(2000);
-                } catch (InterruptedException e) {
-                }
-                try {
-                    PreyWebServices.getInstance().verify(myContext);
-                } catch (Exception e) {
-                }
-            }
-        }.start();
+    public String getStatusDescription() {
+        return statusDescription;
     }
 
+    public void setStatusDescription(String statusDescription) {
+        this.statusDescription = statusDescription;
+    }
 }
 

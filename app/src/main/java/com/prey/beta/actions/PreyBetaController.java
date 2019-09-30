@@ -27,11 +27,6 @@ public class PreyBetaController {
         if (config.isThisDeviceAlreadyRegisteredWithPrey()) {
             // Cancelling the notification of the SMS that started Prey
 
-            PreyConfig.getPreyConfig(ctx).setCanAccessCamara(PreyPermission.canAccessCamera(ctx));
-            PreyConfig.getPreyConfig(ctx).setCanAccessCoarseLocation(PreyPermission.canAccessCoarseLocation(ctx));
-            PreyConfig.getPreyConfig(ctx).setCanAccessFineLocation(PreyPermission.canAccessFineLocation(ctx));
-            PreyConfig.getPreyConfig(ctx).setCanAccessReadPhoneState(PreyPermission.canAccessReadPhoneState(ctx));
-
             config.setRun(true);
             final Context context = ctx;
 

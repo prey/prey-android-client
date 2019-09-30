@@ -22,9 +22,11 @@ public class PreyUtils {
         return getDeviceType(act.getApplicationContext());
     }
 
+    public static final String LAPTOP="Laptop";
+
     public static String getDeviceType(Context ctx) {
         if (isChromebook(ctx)) {
-            return "Laptop";
+            return LAPTOP;
         } else {
             if (isTablet(ctx)) {
                 return "Tablet";

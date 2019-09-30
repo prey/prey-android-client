@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.provider.Settings;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
@@ -102,8 +103,7 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public boolean initLocation() {
-        PreyLogger.d("initLocation:");
-        return (PreyPermission.canAccessFineLocation(mContext)||PreyPermission.canAccessCoarseLocation(mContext))&&PreyPermission.canAccessBackgroundLocation(mContext);
+        return (PreyPermission.canAccessFineLocation(mContext)||PreyPermission.canAccessCoarseLocation(mContext));
     }
 
     @JavascriptInterface
@@ -118,18 +118,18 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public boolean initCamera() {
-        PreyLogger.d("initCamera:");
         return PreyPermission.canAccessCamera(mContext);
     }
+
     @JavascriptInterface
     public boolean initReadPhone() {
-        return PreyPermission.canAccessReadPhoneState(mContext);
-    }
-    @JavascriptInterface
-    public boolean initWriteStorage() {
-        return PreyPermission.canAccessWriteExternalStorage(mContext);
+        return PreyPermission.canAccessPhone(mContext);
     }
 
+    @JavascriptInterface
+    public boolean initWriteStorage() {
+        return PreyPermission.canAccessStorage(mContext);
+    }
 
     @JavascriptInterface
     public String getPin() {
@@ -308,6 +308,25 @@ public class WebAppInterface {
         return initVersion;
     }
 
+
+    @JavascriptInterface
+    public boolean initVerify() {
+        /*new Thread() {
+            public void run() {
+                try {
+                    PreyVerify verify=PreyWebServices.getInstance().verify(mContext);
+                    if(verify!=null&&"Unexisting device.".equals(verify.getStatusDescription())){
+                        PreyLogger.d("not verify Detach" );
+                         Detach.detachDevice(mContext,true,false);
+                    }
+                }catch (Exception e){
+                    PreyLogger.e("verify error:"+e.getMessage(),e);
+                }
+            }
+        }.start();*/
+        return false;
+    }
+
     @JavascriptInterface
     public void setBackground(boolean background) {
         if (background) {
@@ -474,22 +493,77 @@ public class WebAppInterface {
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(mContext);
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(mContext);
         boolean canAccessCamera = PreyPermission.canAccessCamera(mContext);
-        boolean canAccessReadPhoneState = PreyPermission.canAccessReadPhoneState(mContext);
-        boolean canAccessWriteExternalStorage = PreyPermission.canAccessWriteExternalStorage(mContext);
+        boolean canAccessPhone = PreyPermission.canAccessPhone(mContext);
+        boolean canAccessStorage = PreyPermission.canAccessStorage(mContext);
         boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocation(mContext);
-
+        boolean showFineLocation = PreyPermission.showRequestFineLocation(mActivity);
+        boolean showCoarseLocation = PreyPermission.showRequestCoarseLocation(mActivity);
+        boolean showBackgroundLocation = PreyPermission.showRequestBackgroundLocation(mActivity);
+        boolean showCamera = PreyPermission.showRequestCamera(mActivity);
+        boolean showPhone = PreyPermission.showRequestPhone(mActivity);
+        boolean showStorage = PreyPermission.showRequestStorage(mActivity);
+        boolean showDeniedPermission=false;
+        if(!canAccessStorage) {
+            if (!showStorage)
+                showDeniedPermission = true;
+        }
+        if(!canAccessFineLocation){
+            if(!showFineLocation)
+                showDeniedPermission=true;
+        }
+        if(!canAccessCoarseLocation){
+            if(!showCoarseLocation)
+                showDeniedPermission=true;
+        }
+        if(!canAccessCamera){
+            if(!showCamera)
+                showDeniedPermission=true;
+        }
+        if(!canAccessPhone){
+            if(!showPhone)
+                showDeniedPermission=true;
+        }
         PreyLogger.d("canAccessFineLocation:" + canAccessFineLocation);
         PreyLogger.d("canAccessCoarseLocation:" + canAccessCoarseLocation);
-        PreyLogger.d("canAccessCamera:" + canAccessCamera);
-        PreyLogger.d("canAccessReadPhoneState:" + canAccessReadPhoneState);
         PreyLogger.d("canAccessBackgroundLocation:" + canAccessBackgroundLocation);
-        PreyLogger.d("canAccessReadExternalStorage2:" + canAccessWriteExternalStorage);
-        boolean canDrawOverlays = false;
-        if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
-                || !canAccessReadPhoneState || !canAccessWriteExternalStorage|| !canAccessBackgroundLocation) {
-            mActivity.askForPermission();
-        } else {
-            mActivity.askForPermissionAndroid7();
+        PreyLogger.d("canAccessCamera:" + canAccessCamera);
+        PreyLogger.d("canAccessPhone:" + canAccessPhone);
+        PreyLogger.d("canAccessStorage:" + canAccessStorage);
+        PreyLogger.d("showFineLocation:" + showFineLocation);
+        PreyLogger.d("showCoarseLocation:" + showCoarseLocation);
+        PreyLogger.d("showCamera:" + showCamera);
+        PreyLogger.d("showPhoneState:" + showPhone);
+        PreyLogger.d("showWriteStorage:" + showStorage);
+        if(!canAccessStorage&&!canAccessFineLocation&&!canAccessCoarseLocation&&!canAccessCamera&&!canAccessPhone&&
+                !showStorage&&!showFineLocation&&!showCoarseLocation&&!showCamera&&!showPhone){
+            showDeniedPermission=false;
+        }
+        if(canAccessFineLocation||canAccessCoarseLocation) {
+            if (Build.VERSION.SDK_INT >= PreyConfig.BUILD_VERSION_CODES_10 && !canAccessBackgroundLocation) {
+                if (!showBackgroundLocation) {
+                    showDeniedPermission = true;
+                }
+            }
+        }
+        if (showDeniedPermission) {
+            mActivity.deniedPermission();
+        } else{
+            if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
+                    || !canAccessPhone || !canAccessStorage || !canAccessBackgroundLocation) {
+                mActivity.askForPermission();
+            } else {
+                boolean canDrawOverlays =true;
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    canDrawOverlays=Settings.canDrawOverlays(mContext);
+                if(!canDrawOverlays){
+                    mActivity.askForPermissionAndroid7();
+                }else{
+                    boolean isAdminActive = FroyoSupport.getInstance(mContext).isAdminActive();
+                    if (!isAdminActive) {
+                        mActivity.askForAdminActive();
+                    }
+                }
+            }
         }
     }
 

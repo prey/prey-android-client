@@ -135,21 +135,32 @@ public class PreyRestHttpClient {
 
     public int postJson(String url, JSONObject jsonParam) {
         int httpResult = -1;
+        try {
+            PreyHttpResponse response=postJsonResponse(url,jsonParam);
+            if(response!=null)
+                httpResult=response.getStatusCode();
+        } catch (Exception e) {
+            PreyLogger.e("postJson error:" + e.getMessage(), e);
+        }
+        return httpResult;
+    }
+
+    public PreyHttpResponse postJsonResponse(String url, JSONObject jsonParam) {
+        PreyHttpResponse response=null;
         HttpURLConnection connection=null;
         try {
             PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + jsonParam.toString());
             connection=UtilConnection.connectionPostJson(PreyConfig.getPreyConfig(ctx),url,jsonParam,null);
-            PreyHttpResponse response = new PreyHttpResponse(connection);
-            PreyLogger.d("Response from server: " + response.toString());
-            httpResult=connection.getResponseCode();
+            response = new PreyHttpResponse(connection);
+            if(response!=null)
+                PreyLogger.d("Response from server: " + response.toString());
         } catch (Exception e) {
-            PreyLogger.e("postJson error:" + e.getMessage(), e);
+            PreyLogger.e("postJsonResponse error:" + e.getMessage(), e);
         } finally {
             if (connection != null)
                 connection.disconnect();
         }
-
-        return httpResult;
+        return response;
     }
 
     public PreyHttpResponse postJsonAutentication(String url, JSONObject jsonParam) {

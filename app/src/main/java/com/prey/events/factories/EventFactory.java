@@ -220,8 +220,8 @@ public class EventFactory {
                 PreyConfig.getPreyConfig(ctx).setCanAccessCamara(PreyPermission.canAccessCamera(ctx));
                 PreyConfig.getPreyConfig(ctx).setCanAccessCoarseLocation(PreyPermission.canAccessCoarseLocation(ctx));
                 PreyConfig.getPreyConfig(ctx).setCanAccessFineLocation(PreyPermission.canAccessFineLocation(ctx));
-                PreyConfig.getPreyConfig(ctx).setCanAccessReadPhoneState(PreyPermission.canAccessReadPhoneState(ctx));
-                if (!PreyPermission.canAccessCamera(ctx) || !PreyPermission.canAccessCoarseLocation(ctx) || !PreyPermission.canAccessFineLocation(ctx) || !PreyPermission.canAccessReadPhoneState(ctx)) {
+                PreyConfig.getPreyConfig(ctx).setCanAccessReadPhoneState(PreyPermission.canAccessPhone(ctx));
+                if (!PreyPermission.canAccessCamera(ctx) || !PreyPermission.canAccessCoarseLocation(ctx) || !PreyPermission.canAccessFineLocation(ctx) || !PreyPermission.canAccessPhone(ctx)) {
                     Intent intent3 = new Intent(ctx, CheckPasswordHtmlActivity.class);
                     intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_CLEAR_TASK);

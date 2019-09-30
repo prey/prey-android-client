@@ -326,4 +326,10 @@
     <string name="close_alert">Cerrar</string>
     <string name="title_alert">Alerta importante</string>
 
+    <string name="permission_camera">Cámara</string>
+    <string name="permission_phone">Teléfono</string>
+    <string name="permission_storage">Almacenamiento</string>
+    <string name="permission_location">Ubicación</string>
+    <string name="permission_message_popup">El permiso de %1$s no fue dado, y esto afecta el funcionamiento de Prey. Por favor, otórgalo manualmente en las configuraciones.\n\nSeleccione Permisos -> Habilitar permiso</string>
+    <string name="permission_manually">Permitir manualmente</string>
 </resources>

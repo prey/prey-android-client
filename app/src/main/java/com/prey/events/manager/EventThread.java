@@ -16,6 +16,8 @@ import com.prey.events.Event;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 
+import java.net.HttpURLConnection;
+
 public class EventThread extends Thread {
 
     private JSONObject jsonObjectStatus;
@@ -45,7 +47,7 @@ public class EventThread extends Thread {
             if (valida) {
                 PreyHttpResponse preyHttpResponse =PreyWebServices.getInstance().sendPreyHttpEvent(ctx, event, jsonObjectStatus);
                 if(preyHttpResponse!=null){
-                    if(preyHttpResponse.getStatusCode()==200 && eventGeo!=null) {
+                    if(preyHttpResponse.getStatusCode()==HttpURLConnection.HTTP_OK && eventGeo!=null) {
                         PreyLogger.d("EVENT sendPreyHttpEvent eventName:" + eventGeo);
                     }
                 }
