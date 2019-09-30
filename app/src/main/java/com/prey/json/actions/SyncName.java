@@ -26,16 +26,22 @@ public class SyncName {
         new Thread() {
             public void run() {
                 try {
-                    String model = Build.MODEL;
-                    String vendor = "Google";
+                    String newName = "";
+                    String name = null;
                     try {
-                        vendor = AboveCupcakeSupport.getDeviceVendor();
+                        name = Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_name");
                     } catch (Exception e) {
                     }
-                    String newName = vendor + " " + model;
-                    String name = Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_name");
                     if (name != null && !"".equals(name)) {
-                        newName = newName + ", " + name;
+                        newName = name;
+                    } else {
+                        String model = Build.MODEL;
+                        String vendor = "Google";
+                        try {
+                            vendor = AboveCupcakeSupport.getDeviceVendor();
+                        } catch (Exception e) {
+                        }
+                        newName = vendor + " " + model;
                     }
                     PreyLogger.d("new_name:" + newName);
                     JSONObject info = new JSONObject();
