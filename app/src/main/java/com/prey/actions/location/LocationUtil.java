@@ -21,6 +21,9 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
@@ -71,6 +74,9 @@ public class LocationUtil {
             preyLocation = getPreyLocationAppService(ctx,method,asynchronous,preyLocation);
         } catch (Exception e) {
             throw e;
+        }
+        if(preyLocation==null&&PreyConfig.getPreyConfig(ctx).isChromebook()){
+            preyLocation=PreyWebServices.getInstance().geolocate(ctx);
         }
         if(preyLocation!=null) {
             PreyLogger.d("preyLocation latt:" + preyLocation.getLat() + " lng:" + preyLocation.getLng());
@@ -190,28 +196,49 @@ public class LocationUtil {
         Intent intent = new Intent(ctx, LocationService.class);
         try {
             ctx.startService(intent);
-            int i = 0;
-            while (i < MAXIMUM_OF_ATTEMPTS) {
-                try {
-                    Thread.sleep(SLEEP_OF_ATTEMPTS[i]*1000);
-                } catch (InterruptedException e) {
-                }
-                PreyLocation location = PreyLocationManager.getInstance(ctx).getLastLocation();
-                if (location.isValid()) {
-                    preyLocation=location;
-                    preyLocation.setMethod(method);
-                    PreyLogger.d("getPreyLocationAppService["+i+"]:"+preyLocation.toString());
-                    //preyLocationOld = sendLocation(ctx, asynchronous, preyLocationOld, preyLocation);
-                    if(!asynchronous)
-                        i=MAXIMUM_OF_ATTEMPTS;
-                }
-                i++;
-            }
+            preyLocation=waitLocation(ctx,method,asynchronous);
         } catch (Exception e) {
-            PreyLogger.d("Error getPreyLocationAppService:"+e.getMessage());
-            throw e;
+            try {
+                PreyLogger.d("getPreyLocationAppService FusedLocationProviderClient");
+                FusedLocationProviderClient fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(ctx);
+                com.google.android.gms.tasks.Task<Location> task = fusedLocationProviderClient.getLastLocation();
+                task.addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if(location!=null) {
+                            PreyLocationManager.getInstance(ctx).setLastLocation(new PreyLocation(location));
+                        }
+                    }
+                });
+                preyLocation = waitLocation(ctx,method,asynchronous);
+            } catch (Exception e1) {
+                PreyLogger.d("Error getPreyLocationAppService:" + e1.getMessage());
+                throw e1;
+            }
         } finally {
             ctx.stopService(intent);
+        }
+        return preyLocation;
+    }
+
+    public static PreyLocation waitLocation(final Context ctx, String method, boolean asynchronous){
+        PreyLocation preyLocation = null;
+        int i = 0;
+        while (i < MAXIMUM_OF_ATTEMPTS) {
+            try {
+                Thread.sleep(SLEEP_OF_ATTEMPTS[i]*1000);
+            } catch (InterruptedException e) {
+            }
+            PreyLocation location = PreyLocationManager.getInstance(ctx).getLastLocation();
+            if (location.isValid()) {
+                preyLocation=location;
+                preyLocation.setMethod(method);
+                PreyLogger.d("getPreyLocationAppService["+i+"]:"+preyLocation.toString());
+                //preyLocationOld = sendLocation(ctx, asynchronous, preyLocationOld, preyLocation);
+                if(!asynchronous)
+                    i=MAXIMUM_OF_ATTEMPTS;
+            }
+            i++;
         }
         return preyLocation;
     }

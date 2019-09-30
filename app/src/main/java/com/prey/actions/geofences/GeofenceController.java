@@ -166,7 +166,7 @@ public class GeofenceController {
         }.start();
     }
 
-    public void initList(Context ctx,List<GeofenceDto> listBD) {
+    public void initList(final Context ctx,List<GeofenceDto> listBD) {
         int loiteringDelay= FileConfigReader.getInstance(ctx).getGeofenceLoiteringDelay();
         List<com.google.android.gms.location.Geofence> mGeofenceList  = new ArrayList<Geofence>();
         final List<GeofenceDto> listToBdAdd = new ArrayList<GeofenceDto>();
@@ -205,6 +205,7 @@ public class GeofenceController {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         PreyLogger.d("GEO saveGeofence");
+                                        LocationUtil.dataLocation(ctx,null,true);
                                     }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -254,7 +255,7 @@ public class GeofenceController {
             dataSource.updateGeofenceType(geo.id, transition);
             PreyLogger.d("GEO validateGeozone name:"+geo.name+" type:"+geo.getType()+" transition:" + transition);
             if (!transition.equals(geo.getType())) {
-                if(GEOFENCING_IN.equals(transition)||(GEOFENCING_OUT.equals(transition) && geo.getType()!=null)) {
+                if(GEOFENCING_IN.equals(transition)||(GEOFENCING_OUT.equals(transition) )) {
                     try {
                         JSONObject info = new JSONObject();
                         info.put("id", "" + geo.id);
@@ -266,7 +267,7 @@ public class GeofenceController {
                         event.setName(transition);
                         event.setInfo(info.toString());
                         JSONObject jsonObjectStatus = new JSONObject();
-                        PreyLogger.d("GEO name:"+geo.name+" event:" + transition.toString());
+                        PreyLogger.d("GEO name:"+geo.name+" event:" + transition.toString()+" _ "+info.toString());
                         new EventThread(ctx, event, jsonObjectStatus, transition).start();
                     } catch (Exception e) {
                         PreyLogger.e("GEO error:" + e.getMessage(), e);
