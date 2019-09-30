@@ -98,6 +98,9 @@ public class EventManager {
                 validation = isMobileConnected;
             }
         }
+        if(event.isAlwaysSend()){
+            validation=true;
+        }
         PreyLogger.d("EVENT name:" + event.getName() + " info:" + event.getInfo() + " ssid[" + ssid + "] previousSsid[" + previousSsid + "]");
         PreyLogger.d("validation:"+validation);
         if (validation) {

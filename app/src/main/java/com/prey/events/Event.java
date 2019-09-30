@@ -19,9 +19,11 @@ public class Event {
     public static final String PIN_CHANGED = "pin_changed";
     public static final String MOBILE_CONNECTED = "mobile_network";
     public static final String DEVICE_STATUS = "device_status";
+    public static final String DEVICE_RENAMED = "device_renamed";
 
     private String name;
     private String info;
+    private boolean alwaysSend;
 
     public Event() {
 
@@ -30,6 +32,7 @@ public class Event {
     public Event(String name) {
         this.name = name;
         this.info = "";
+        this.alwaysSend= false;
     }
 
 
@@ -54,5 +57,12 @@ public class Event {
         this.info = info;
     }
 
+    public boolean isAlwaysSend() {
+        return alwaysSend;
+    }
+
+    public void setAlwaysSend(boolean alwaysSend) {
+        this.alwaysSend = alwaysSend;
+    }
 }
 
