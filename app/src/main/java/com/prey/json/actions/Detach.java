@@ -34,6 +34,10 @@ public class Detach {
     }
 
     public static String detachDevice(Context ctx){
+        return detachDevice(ctx,true,true);
+    }
+
+    public static String detachDevice(Context ctx,boolean openApplication,boolean removePermissions){
         PreyLogger.d("detachDevice");
         String error=null;
         try {
@@ -47,9 +51,11 @@ public class Detach {
         try {   PreyConfig.getPreyConfig(ctx).setProtectReady(false);} catch (Exception e) {error = e.getMessage();}
         PreyLogger.d("2:"+error);
         try {
-            FroyoSupport fSupport = FroyoSupport.getInstance(ctx);
-            if (fSupport.isAdminActive()) {
-                fSupport.removeAdminPrivileges();
+            if(removePermissions) {
+                FroyoSupport fSupport = FroyoSupport.getInstance(ctx);
+                if (fSupport.isAdminActive()) {
+                    fSupport.removeAdminPrivileges();
+                }
             }
         } catch (Exception e) {}
         try {
@@ -87,10 +93,12 @@ public class Detach {
         PreyLogger.d("ApiKey:"+PreyConfig.getPreyConfig(ctx).getApiKey());
         try {PreyConfig.deleteCacheInstance(ctx);} catch (Exception e) {}
         try {
-            Intent intent = new Intent(ctx, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            ctx.startActivity(intent);
+            if(openApplication) {
+                Intent intent = new Intent(ctx, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                ctx.startActivity(intent);
+            }
         } catch (Exception e) {}
         return error;
     }

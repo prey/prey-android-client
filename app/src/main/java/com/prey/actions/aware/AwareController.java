@@ -41,6 +41,7 @@ import com.prey.receivers.AwareGeofenceReceiver;
 
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -222,7 +223,7 @@ public class AwareController {
             PreyHttpResponse preyResponse = PreyWebServices.getInstance().sendLocation(ctx, location);
             if (preyResponse != null) {
                 PreyLogger.d("AWARE getStatusCode :"+preyResponse.getStatusCode());
-                if (preyResponse.getStatusCode() == 201) {
+                if (preyResponse.getStatusCode() == HttpURLConnection.HTTP_CREATED) {
                     PreyConfig.getPreyConfig(ctx).setAware(false);
                 }
                 PreyConfig.getPreyConfig(ctx).setAwareDate(PreyConfig.FORMAT_SDF_AWARE.format(new Date()));

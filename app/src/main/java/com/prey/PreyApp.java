@@ -10,13 +10,14 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Build;
 
 import androidx.multidex.MultiDex;
 
 import com.appsflyer.AppsFlyerConversionListener;
+
 import com.google.firebase.FirebaseApp;
+
 import com.prey.actions.aware.AwareController;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
@@ -42,7 +43,6 @@ public class PreyApp extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
 
     @Override
     public void onCreate() {
@@ -106,7 +106,7 @@ public class PreyApp extends Application {
             String sessionId = PreyUtils.randomAlphaNumeric(16);
             PreyLogger.d("#######sessionId:" + sessionId);
             PreyConfig.getPreyConfig(ctx).setSessionId(sessionId);
-            boolean missing=PreyConfig.getPreyConfig(ctx).isMissing();
+            final boolean missing=PreyConfig.getPreyConfig(ctx).isMissing();
             if (deviceKey != null && deviceKey != "") {
                 new Thread() {
                     public void run() {
@@ -120,33 +120,47 @@ public class PreyApp extends Application {
                        try {PreyStatus.getInstance().getConfig(ctx);}catch (Exception e){}
                        try {GeofenceController.getInstance().run(ctx);}catch (Exception e){}
                        try {AwareController.getInstance().init(ctx);}catch (Exception e){}
-                       try {
-                           if(android.os.Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP ) {
-                               AwareJobService.schedule(ctx);
-                           }
-                       }catch (Exception e){}
                        try {FileretrievalController.getInstance().run(ctx);}catch (Exception e){}
                        try {TriggerController.getInstance().run(ctx);}catch (Exception e){}
+                       if (missing) {
+                            if (PreyConfig.getPreyConfig(ctx).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(ctx).getIntervalReport())) {
+                                ReportScheduled.getInstance(ctx).run();
+                            }
+                       }
+                       if(!PreyConfig.getPreyConfig(ctx).isChromebook() ) {
+                            try {
+                                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    AwareJobService.schedule(ctx);
+                                }
+                            } catch (Exception e) {
+                            }
+                            if (PreyConfig.getPreyConfig(ctx).isRunBackground()) {
+                                RunBackgroundCheckBoxPreference.notifyReady(ctx);
+                            }
+                            if (PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()) {
+                                try {
+                                    if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                                        ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
+                                    }
+                                } catch (Exception e) {
+                                    PreyLogger.e("error startService PreyDisablePowerOptionsService : " + e.getMessage(), e);
+                                }
+                            }
+                       }
                     }
                 }.start();
-                if (missing) {
-                    if (PreyConfig.getPreyConfig(ctx).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(ctx).getIntervalReport())) {
-                        ReportScheduled.getInstance(ctx).run();
-                    }
-                }
-                if(PreyConfig.getPreyConfig(ctx).isRunBackground()){
-                    RunBackgroundCheckBoxPreference.notifyReady(ctx);
-                }
-                if(PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()){
-                    try{
-                        if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                            ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
-                        }
-                    }catch (Exception e){
-                        PreyLogger.e( "error startService PreyDisablePowerOptionsService : " + e.getMessage(),e);
-                    }
-                }
             }
+            /*else{
+                initChromebook(ctx);
+            }
+            IntentFilter restrictionsFilter = new IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
+            BroadcastReceiver restrictionsReceiver = new BroadcastReceiver() {
+                @Override public void onReceive(Context ctx, Intent intent) {
+                    initChromebook(ctx);
+                }
+            };
+            registerReceiver(restrictionsReceiver, restrictionsFilter);
+            */
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
         }
@@ -181,5 +195,35 @@ public class PreyApp extends Application {
             sessionCount++;
         }
     }
+
+    /*
+    private void initChromebook(final Context ctx){
+        String deviceKey = PreyConfig.getPreyConfig(ctx).getDeviceId();
+        if (deviceKey == null || deviceKey == "") {
+            if (PreyConfig.getPreyConfig(ctx).isChromebook()) {
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    RestrictionsManager manager = (RestrictionsManager) getSystemService(Context.RESTRICTIONS_SERVICE);
+                    Bundle bundle = manager.getApplicationRestrictions();
+                    if (bundle.containsKey("api_key")) {
+                        final String api_key = bundle.getString("api_key");
+                        new Thread() {
+                            public void run() {
+                                try {
+                                    PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, api_key, "", PreyUtils.LAPTOP);
+                                    PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
+                                    PreyConfig.getPreyConfig(ctx).registerC2dm();
+                                    PreyWebServices.getInstance().sendEvent(ctx, PreyConfig.ANDROID_SIGN_UP);
+                                    PreyConfig.getPreyConfig(ctx).setRunBackground(true);
+                                    RunBackgroundCheckBoxPreference.notifyReady(ctx);
+                                    new PreyApp().run(ctx);
+                                } catch (Exception e) {
+                                }
+                            }
+                        }.start();
+                    }
+                }
+            }
+        }
+    }*/
 
 }

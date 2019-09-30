@@ -157,7 +157,7 @@ public class PreyConfig {
     public static final String TIME_C2DM = "TIME_C2DM";
     public static final String TIME_LOCATION_AWARE = "TIME_LOCATION_AWARE";
 
-    public static final int Build_VERSION_CODES_10 = 29;
+    public static final int BUILD_VERSION_CODES_10 = 29;
 
     public static final int NOTIFY_ANDROID_6 = 6;
     public static final String NOTIFICATION_POPUP_ID = "NOTIFICATION_POPUP_ID";
@@ -292,7 +292,7 @@ public class PreyConfig {
         return settings.getInt(key, defaultValue);
     }
 
-    private void saveBoolean(String key, boolean value){
+    public void saveBoolean(String key, boolean value){
         try {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
             SharedPreferences.Editor editor = settings.edit();
@@ -301,7 +301,7 @@ public class PreyConfig {
         }catch(Exception e){}
     }
 
-    private boolean getBoolean(String key,boolean defaultValue){
+    public boolean getBoolean(String key,boolean defaultValue){
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         return settings.getBoolean(key, defaultValue);
     }
@@ -502,7 +502,7 @@ public class PreyConfig {
     }
 
     public boolean isAndroid10OrAbove() {
-        return android.os.Build.VERSION.SDK_INT >= PreyConfig.Build_VERSION_CODES_10;
+        return android.os.Build.VERSION.SDK_INT >= PreyConfig.BUILD_VERSION_CODES_10;
     }
 
     public String getLastEvent() {

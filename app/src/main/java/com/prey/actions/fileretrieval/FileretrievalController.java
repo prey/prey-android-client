@@ -15,6 +15,7 @@ import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyWebServices;
 
 import java.io.File;
+import java.net.HttpURLConnection;
 import java.util.List;
 
 public class FileretrievalController {
@@ -71,7 +72,7 @@ public class FileretrievalController {
 
                         int responseCode = PreyWebServices.getInstance().uploadFile(ctx, file, fileId, total);
                         PreyLogger.d("responseCode:" + responseCode);
-                        if (responseCode == 200 || responseCode == 201) {
+                        if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
                             datasource.deleteFileretrieval(fileId);
                         }
                     }

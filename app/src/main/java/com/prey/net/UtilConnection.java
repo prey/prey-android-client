@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -144,6 +145,7 @@ public class UtilConnection {
                     connection.setRequestMethod(requestMethod);
                     connection.setRequestProperty("Accept", "*/*");
                     if (contentType != null) {
+                        PreyLogger.d("Content-Type:" + contentType);
                         connection.addRequestProperty("Content-Type", contentType);
                     }
                     if (authorization != null) {
@@ -344,9 +346,9 @@ public class UtilConnection {
 
     public static PreyHttpResponse convertPreyHttpResponse(int responseCode,HttpURLConnection connection)throws Exception {
         StringBuffer sb = new StringBuffer();
-        if(responseCode==200||responseCode==201||responseCode>299) {
+        if(responseCode==HttpURLConnection.HTTP_OK||responseCode==HttpURLConnection.HTTP_CREATED||responseCode>299) {
             InputStream input = null;
-            if(responseCode==200||responseCode==201){
+            if(responseCode==HttpURLConnection.HTTP_OK||responseCode==HttpURLConnection.HTTP_CREATED){
                 input = connection.getInputStream();
             }else {
                 input = connection.getErrorStream();
@@ -569,4 +571,38 @@ public class UtilConnection {
         }
         return false;
     }
+
+    public static PreyHttpResponse postJson(String uri,String userAgent,JSONObject jsonParam){
+        BufferedWriter writer = null;
+        OutputStream os = null;
+        PreyHttpResponse response=null;
+        HttpURLConnection conn=null;
+        try{
+            URL url = new URL(uri);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+            conn.addRequestProperty("User-Agent",userAgent);
+            os = conn.getOutputStream();
+            writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+            writer.write(jsonParam.toString());
+            writer.flush();
+            conn.connect();
+            response = new PreyHttpResponse(conn);
+        } catch (Exception e) {
+            PreyLogger.d("error postJson:"+e.getMessage());
+        } finally {
+            if (writer!=null){
+                try{writer.close();} catch (Exception e) {}
+            }
+            if (os!=null){
+                try{os.close();} catch (Exception e) {}
+            }
+            if (conn!=null){
+                try{conn.disconnect();} catch (Exception e) {}
+            }
+        }
+        return response;
+    }
+
 }

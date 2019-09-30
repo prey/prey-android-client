@@ -174,7 +174,6 @@ public class BarcodeActivity extends Activity   {
                     PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, data[0], data[1], data[2]);
                     if (accountData != null) {
                         PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
-                        PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
                         PreyConfig.getPreyConfig(ctx).registerC2dm();
                         PreyWebServices.getInstance().sendEvent(ctx, PreyConfig.ANDROID_SIGN_IN);
                         String email=PreyWebServices.getInstance().getEmail(ctx);

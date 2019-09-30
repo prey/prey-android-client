@@ -332,4 +332,10 @@
     <string name="close_alert">Close</string>
     <string name="title_alert">Important Alert</string>
 
+    <string name="permission_camera">Camera</string>
+    <string name="permission_phone">Phone</string>
+    <string name="permission_storage">Storage</string>
+    <string name="permission_location">Location</string>
+    <string name="permission_message_popup">The %1$s permission was denied, which affects Prey\'s features. Please give permission manually in the settings menu.\n\nSelect Permissions -> Enable permission</string>
+    <string name="permission_manually">Permit Manually</string>
 </resources>

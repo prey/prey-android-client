@@ -21,6 +21,7 @@ import com.prey.net.PreyWebServices;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.net.HttpURLConnection;
 import java.util.List;
 
 public class Fileretrieval {
@@ -61,7 +62,7 @@ public class Fileretrieval {
             PreyLogger.d("Fileretrieval started uploadFile");
             responseCode=PreyWebServices.getInstance().uploadFile(ctx, file, fileId,0);
             PreyLogger.d("Fileretrieval responseCode uploadFile :"+responseCode);
-            if(responseCode==200||responseCode==201) {
+            if(responseCode==HttpURLConnection.HTTP_OK||responseCode==HttpURLConnection.HTTP_CREATED) {
                 datasource.deleteFileretrieval(fileId);
             }
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "fileretrieval", "stopped",reason));
