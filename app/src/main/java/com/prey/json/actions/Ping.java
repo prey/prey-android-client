@@ -19,6 +19,7 @@ import java.util.List;
 
 
 public class Ping extends JsonAction {
+
     @Override
     public HttpDataService run(Context ctx, List<ActionResult> list, JSONObject parameters) {
         return null;
@@ -31,25 +32,9 @@ public class Ping extends JsonAction {
     @Override
     public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
         try{
-            String messageId = null;
-            try {
-                messageId = parameters.getString(PreyConfig.MESSAGE_ID);
-                PreyLogger.d("messageId:"+messageId);
-            } catch (Exception e) {
-            }
-            String reason = null;
-            try {
-                String jobId = parameters.getString(PreyConfig.JOB_ID);
-                PreyLogger.d("jobId:"+jobId);
-                if(jobId!=null&&!"".equals(jobId)){
-                    reason="{\"device_job_id\":\""+jobId+"\"}";
-                }
-            } catch (Exception e) {
-            }
-            new Thread(new EventManagerRunner(ctx, new Event(Event.DEVICE_STATUS))).start();
-            Map<String,String> map=UtilJson.makeMapParam("start","ping","started",reason);
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed",messageId,map);
-            PreyLogger.d("messageId:"+messageId);
+            Event eventStatus=new Event(Event.DEVICE_STATUS,"pong");
+            eventStatus.setAlwaysSend(true);
+            new Thread(new EventManagerRunner(ctx, eventStatus)).start();
         }catch (Exception e){
             PreyLogger.e("error ping:"+e.getMessage(),e);
         }
