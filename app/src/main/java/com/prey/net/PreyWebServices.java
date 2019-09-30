@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Build;
+import android.provider.Settings;
 
 import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
@@ -149,16 +150,27 @@ public class PreyWebServices {
      */
     private PreyHttpResponse registerNewDevice(Context ctx, String api_key, String deviceType) throws Exception {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-
         String model = Build.MODEL;
         String vendor = "Google";
         try {
             vendor = AboveCupcakeSupport.getDeviceVendor();
-        }catch(Exception e){
+        } catch (Exception e) {
+        }
+        String newName = "";
+        String name = null;
+        try{
+            name=Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_name");
+        }catch (Exception e) {
+        }
+        if (name != null && !"".equals(name)) {
+            newName = name;
+        }else{
+
+            newName = vendor + " " + model;
         }
         HashMap<String, String> parameters = new HashMap<String, String>();
         parameters.put("api_key", api_key);
-        parameters.put("title", vendor + " " + model);
+        parameters.put("title", newName);
         parameters.put("device_type", deviceType);
         parameters.put("os", "Android");
         parameters.put("os_version", Build.VERSION.RELEASE);
