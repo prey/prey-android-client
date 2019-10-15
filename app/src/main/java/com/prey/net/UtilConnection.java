@@ -50,10 +50,10 @@ public class UtilConnection {
 
     private static int[] ARRAY_RETRY_DELAY_MS =new int[]{1,2,3,4};
 
-    private static final String REQUEST_METHOD_PUT="PUT";
-    private static final String REQUEST_METHOD_POST="POST";
-    private static final String REQUEST_METHOD_GET="GET";
-    private static final String REQUEST_METHOD_DELETE="DELETE";
+    public static final String REQUEST_METHOD_PUT="PUT";
+    public static final String REQUEST_METHOD_POST="POST";
+    public static final String REQUEST_METHOD_GET="GET";
+    public static final String REQUEST_METHOD_DELETE="DELETE";
     private static final boolean USE_CACHES=false;
     private static final int CONNECT_TIMEOUT=30000;
     private static final int READ_TIMEOUT=30000;
@@ -78,6 +78,9 @@ public class UtilConnection {
 
     public static final PreyHttpResponse connectionPut(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType) throws Exception {
         return connection(preyConfig,uri,params,REQUEST_METHOD_PUT,contentType,null,null,null,null);
+    }
+    public static final PreyHttpResponse connectionPutAuthorization(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType) throws Exception {
+        return connection(preyConfig,uri,params,REQUEST_METHOD_PUT,contentType,getAuthorization(preyConfig),null,null,null);
     }
     public static final PreyHttpResponse connectionGet(PreyConfig preyConfig,String uri, Map<String, String> params, String contentType) throws Exception {
         return connection(preyConfig,uri,params,REQUEST_METHOD_GET,contentType,null,null,null,null);
@@ -379,16 +382,16 @@ public class UtilConnection {
         connection.disconnect();
         return new PreyHttpResponse(responseCode,sb.toString(),mapHeaderFields);
     }
-    
-    public static HttpURLConnection connectionPostJson(PreyConfig preyConfig,String uri, JSONObject jsonParam) {
-        return connectionPostJson(preyConfig,uri,jsonParam,null);
+
+    public static HttpURLConnection connectionJson(PreyConfig preyConfig, String uri, String method, JSONObject jsonParam) {
+        return connectionJson(preyConfig,uri,REQUEST_METHOD_POST,jsonParam,null);
     }
     
-    public static HttpURLConnection connectionPostJsonAuthorization(PreyConfig preyConfig,String uri, JSONObject jsonParam) {
-        return connectionPostJson(preyConfig,uri,jsonParam,"Basic " + getCredentials(preyConfig.getApiKey(), "X"));
+    public static HttpURLConnection connectionJsonAuthorization(PreyConfig preyConfig,String uri,String method, JSONObject jsonParam) {
+        return connectionJson(preyConfig,uri,method,jsonParam,"Basic " + getCredentials(preyConfig.getApiKey(), "X"));
     }
 
-    public static HttpURLConnection connectionPostJson(PreyConfig preyConfig,String uri, JSONObject jsonParam, String authorization) {
+    public static HttpURLConnection connectionJson(PreyConfig preyConfig, String uri, String method, JSONObject jsonParam, String authorization) {
         HttpURLConnection connection=null;
         int httpResult = -1;
         try {
@@ -396,7 +399,7 @@ public class UtilConnection {
             PreyLogger.d("postJson page:" + uri);
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
-            connection.setRequestMethod(REQUEST_METHOD_POST);
+            connection.setRequestMethod(method);
             connection.setUseCaches(USE_CACHES);
             connection.setConnectTimeout(CONNECT_TIMEOUT);
             connection.setReadTimeout(READ_TIMEOUT);
@@ -406,10 +409,12 @@ public class UtilConnection {
             connection.addRequestProperty("User-Agent",getUserAgent(preyConfig));
             connection.addRequestProperty("Origin", "android:com.prey");
             connection.connect();
-            PreyLogger.d("jsonParam.toString():" + jsonParam.toString());
-            OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-            out.write(jsonParam.toString());
-            out.close();
+            if(jsonParam!=null) {
+                PreyLogger.d("jsonParam.toString():" + jsonParam.toString());
+                OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
+                out.write(jsonParam.toString());
+                out.close();
+            }
             httpResult = connection.getResponseCode();
             PreyLogger.d("postJson responseCode:"+httpResult);
         } catch (Exception e) {
