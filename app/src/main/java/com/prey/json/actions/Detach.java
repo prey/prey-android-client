@@ -30,14 +30,25 @@ public class Detach {
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
         PreyLogger.i("Detach");
-        Detach.detachDevice(ctx);
+        boolean expired=false;
+        try {
+            expired= parameters.getBoolean("expired");
+        } catch (Exception e) {
+        }
+        if(expired) {
+            PreyConfig.getPreyConfig(ctx).setInstallationStatus("DEL");
+            PreyLogger.d("Detach expired:" + expired);
+            Detach.detachDevice(ctx,true,false,false);
+        }else {
+            Detach.detachDevice(ctx);
+        }
     }
 
     public static String detachDevice(Context ctx){
-        return detachDevice(ctx,true,true);
+        return detachDevice(ctx,true,true,true);
     }
 
-    public static String detachDevice(Context ctx,boolean openApplication,boolean removePermissions){
+    public static String detachDevice(Context ctx,boolean openApplication,boolean removePermissions,boolean removeCache){
         PreyLogger.d("detachDevice");
         String error=null;
         try {
@@ -78,7 +89,13 @@ public class Detach {
         try { ReportScheduled.getInstance(ctx).reset();} catch (Exception e) {error += e.getMessage();}
         try { PreyWebServices.getInstance().deleteDevice(ctx);} catch (Exception e) { }
         PreyLogger.d("6:"+error);
-        try { PreyConfig.getPreyConfig(ctx).wipeData();} catch (Exception e) {error += e.getMessage();}
+        if(removeCache) {
+            try {
+                PreyConfig.getPreyConfig(ctx).wipeData();
+            } catch (Exception e) {
+                error += e.getMessage();
+            }
+        }
         try { PreyConfig.getPreyConfig(ctx).removeDeviceId();} catch (Exception e) {error += e.getMessage();}
         try { PreyConfig.getPreyConfig(ctx).removeEmail();} catch (Exception e) {error += e.getMessage();}
         try { PreyConfig.getPreyConfig(ctx).removeApiKey();} catch (Exception e) {}
@@ -91,7 +108,12 @@ public class Detach {
         PreyLogger.d("Email:"+PreyConfig.getPreyConfig(ctx).getEmail());
         PreyLogger.d("DeviceId:"+PreyConfig.getPreyConfig(ctx).getDeviceId());
         PreyLogger.d("ApiKey:"+PreyConfig.getPreyConfig(ctx).getApiKey());
-        try {PreyConfig.deleteCacheInstance(ctx);} catch (Exception e) {}
+        if(removeCache) {
+            try {
+                PreyConfig.deleteCacheInstance(ctx);
+            } catch (Exception e) {
+            }
+        }
         try {
             if(openApplication) {
                 Intent intent = new Intent(ctx, LoginActivity.class);

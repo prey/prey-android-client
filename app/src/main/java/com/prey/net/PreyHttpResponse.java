@@ -24,12 +24,17 @@ public class PreyHttpResponse {
     private Map<String, List<String>> mapHeaderFields;
 
     public PreyHttpResponse(HttpURLConnection connection) {
-
         try {
                 this.response=connection;
                 this.statusCode = connection.getResponseCode();
-                this.responseAsString = convertStreamToString(connection.getInputStream());
-             PreyLogger.d("responseAsString:"+responseAsString);
+                InputStream input = null;
+                if(statusCode==HttpURLConnection.HTTP_OK||statusCode==HttpURLConnection.HTTP_CREATED){
+                    input = connection.getInputStream();
+                }else {
+                    input = connection.getErrorStream();
+                }
+                this.responseAsString = convertStreamToString(input);
+                PreyLogger.d("responseAsString:"+responseAsString);
         } catch (IOException e) {
             PreyLogger.d("Can't receive body stream from http connection, setting response string as ''");
             this.responseAsString = "";
