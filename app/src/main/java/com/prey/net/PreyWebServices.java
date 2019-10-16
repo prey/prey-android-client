@@ -96,7 +96,7 @@ public class PreyWebServices {
 
         } catch (Exception e) {
             PreyLogger.e("error: "+e.getMessage(),e);
-            throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
+            throw new PreyException("{\"error\":[\""+ctx.getText(R.string.error_communication_exception).toString()+"\"]}" );
         }
 
         String apiKey = "";
@@ -228,7 +228,7 @@ public class PreyWebServices {
             PreyLogger.d("json:" + json);
         } catch (Exception e) {
             PreyLogger.e("Error!"+e.getMessage(), e);
-            throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
+            throw new PreyException("{\"error\":[\""+ctx.getText(R.string.error_communication_exception).toString()+"\"]}" );
         }
         String status = "";
         if (response != null  ) {

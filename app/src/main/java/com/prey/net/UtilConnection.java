@@ -280,6 +280,7 @@ public class UtilConnection {
             } while (retry < RETRIES);
         }catch(Exception e){
             PreyLogger.e("error util:"+e.getMessage(),e);
+            throw e;
         }
 
         return response;
