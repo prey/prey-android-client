@@ -1,9 +1,6 @@
 <p align="center">
-  <img src="https://pbs.twimg.com/profile_images/637039704228130817/xhKX1xSC.png" alt="Prey: Android client" height="200" width="200"/>
+  <img src="https://pbs.twimg.com/profile_images/1194256576451878913/Yhl6jBE4_400x400.jpg" alt="Prey: Android client" height="200" width="200"/>
 </p>
-#Prey 
-[![Build Status](https://travis-ci.org/prey/prey-android-client.svg?branch=master)](https://travis-ci.org/prey/prey-android-client) 
-[![AUR](https://img.shields.io/aur/license/yaourt.svg?maxAge=2592000)](http://www.gnu.org/licenses/gpl-3.0.en.html)
 
 Here you will find all the source code for the [current](https://play.google.com/store/apps/details?id=com.prey) and in development releases of the Prey client for Android devices.
 
