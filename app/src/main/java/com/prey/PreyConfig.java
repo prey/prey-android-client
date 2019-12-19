@@ -198,6 +198,7 @@ public class PreyConfig {
 
     public static final String REPORT_NUMBER= "REPORT_NUMBER";
     public static final String PREFS_BIOMETRIC="PREFS_BIOMETRIC";
+    public static final String INSTALLATION_STATUS="INSTALLATION_STATUS";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -1297,4 +1298,13 @@ public class PreyConfig {
     public int getNoficationPopupId() {
         return getInt(NOTIFICATION_POPUP_ID, 0);
     }
+
+    public String getInstallationStatus(){
+        return getString(PreyConfig.INSTALLATION_STATUS, null);
+    }
+
+    public void setInstallationStatus(String installationStatus){
+        saveString(PreyConfig.INSTALLATION_STATUS, installationStatus);
+    }
+
 }
