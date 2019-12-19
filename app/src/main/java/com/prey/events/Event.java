@@ -20,6 +20,7 @@ public class Event {
     public static final String MOBILE_CONNECTED = "mobile_network";
     public static final String DEVICE_STATUS = "device_status";
     public static final String DEVICE_RENAMED = "device_renamed";
+    public static final String DEVICE_ADDED = "device_added";
 
     private String name;
     private String info;

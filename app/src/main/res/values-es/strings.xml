@@ -332,4 +332,6 @@
     <string name="permission_location">Ubicación</string>
     <string name="permission_message_popup">El permiso de %1$s no fue dado, y esto afecta el funcionamiento de Prey. Por favor, otórgalo manualmente en las configuraciones.\n\nSeleccione Permisos -> Habilitar permiso</string>
     <string name="permission_manually">Permitir manualmente</string>
+
+    <string name="email_resend">Si el correo ingresado es válido, recibirá las instrucciones de activación en breve.</string>
 </resources>

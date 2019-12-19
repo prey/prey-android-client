@@ -96,7 +96,7 @@ public class PreyWebServices {
 
         } catch (Exception e) {
             PreyLogger.e("error: "+e.getMessage(),e);
-            throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
+            throw new PreyException("{\"error\":[\""+ctx.getText(R.string.error_communication_exception).toString()+"\"]}" );
         }
 
         String apiKey = "";
@@ -228,7 +228,7 @@ public class PreyWebServices {
             PreyLogger.d("json:" + json);
         } catch (Exception e) {
             PreyLogger.e("Error!"+e.getMessage(), e);
-            throw new PreyException(ctx.getText(R.string.error_communication_exception).toString(), e);
+            throw new PreyException("{\"error\":[\""+ctx.getText(R.string.error_communication_exception).toString()+"\"]}" );
         }
         String status = "";
         if (response != null  ) {
@@ -492,10 +492,6 @@ public class PreyWebServices {
         return getDeviceUrlApiv2(ctx).concat(".json");
     }
 
-    private String getVerifyUrl(Context ctx) throws PreyException {
-        return getDeviceUrlApiv2(ctx).concat("/verify.json");
-    }
-
     private String getReportUrlJson(Context ctx) throws PreyException {
         return getDeviceUrlApiv2(ctx).concat("/reports.json");
     }
@@ -636,8 +632,10 @@ public class PreyWebServices {
         return preyHttpResponse;
     }
 
-    public PreyVerify verify(Context ctx) throws Exception {
-        String url = getVerifyUrl(ctx);
+    public PreyVerify verifyUsers(Context ctx) throws Exception {
+        String apiKey= PreyConfig.getPreyConfig(ctx).getApiKey();
+        String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
+        String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("users/verify.json");;
         PreyHttpResponse preyHttpResponse = null;
         preyHttpResponse = PreyRestHttpClient.getInstance(ctx).getAutentication(url,null);
         PreyVerify verify=null;
@@ -662,6 +660,7 @@ public class PreyWebServices {
             Map<String, String> parameters = new HashMap<String, String>();
             parameters.put("name", event.getName());
             parameters.put("info", event.getInfo());
+            parameters.put("status", jsonObject.toString());
             PreyLogger.d("EVENT sendPreyHttpEvent url:" + url);
             PreyLogger.d("EVENT name:" + event.getName() + " info:" + event.getInfo());
             PreyLogger.d("EVENT status:" + jsonObject.toString());
@@ -778,7 +777,7 @@ public class PreyWebServices {
         try {
             String url = getLocationUrlJson(ctx);
             if(UtilConnection.isInternetAvailable(ctx)) {
-                preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postJsonAutentication(url, jsonParam);
+                preyHttpResponse = PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url,UtilConnection.REQUEST_METHOD_POST,jsonParam);
             }
         } catch (Exception e) {
             PreyLogger.e("Contact wasn't send", e);
@@ -921,7 +920,7 @@ public class PreyWebServices {
 
     public PreyHttpResponse sendTree(final Context ctx,JSONObject json  ) throws PreyException{
         String uri = getDeviceUrlApiv2(ctx).concat("/data.json");
-        return PreyRestHttpClient.getInstance(ctx).postJsonAutentication(uri, json);
+        return PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(uri,UtilConnection.REQUEST_METHOD_POST,json);
     }
 
     public int uploadFile(Context ctx, File file,String uploadID,long total)  throws PreyException{
@@ -1095,7 +1094,7 @@ public class PreyWebServices {
                 }
             }
             jsonParam.put("wifiAccessPoints",array);
-            PreyHttpResponse response=PreyRestHttpClient.getInstance(ctx).postJsonResponse(url,jsonParam);
+            PreyHttpResponse response=PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url,UtilConnection.REQUEST_METHOD_POST,jsonParam);
             if(response!=null) {
                 if(response.getStatusCode()==HttpURLConnection.HTTP_OK){
                     String out = response.getResponseAsString();
@@ -1138,5 +1137,30 @@ public class PreyWebServices {
         }
         return location;
     }
+
+    public PreyVerify verifyEmail(Context ctx,String email) throws Exception {
+        String apiKey= PreyConfig.getPreyConfig(ctx).getApiKey();
+        String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
+        String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("users/verify_email.json");
+        PreyHttpResponse preyHttpResponse = null;
+        JSONObject jsonParam=new  JSONObject ();
+        jsonParam.put("email",email);
+        jsonParam.put("lang", Locale.getDefault().getLanguage());
+        preyHttpResponse = PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url,UtilConnection.REQUEST_METHOD_PUT,jsonParam);
+        PreyVerify verify=null;
+        if(preyHttpResponse!=null) {
+            String body = preyHttpResponse.getResponseAsString();
+            if (body != null)
+                body = body.trim();
+            int statusCode=preyHttpResponse.getStatusCode();
+            PreyLogger.d("verify code:"+statusCode);
+            PreyLogger.d("verify body:"+body);
+            verify=new PreyVerify();
+            verify.setStatusCode(statusCode);
+            verify.setStatusDescription(body);
+        }
+        return verify;
+    }
+
 
 }

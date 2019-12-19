@@ -160,13 +160,28 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             PreyLogger.d("CheckPasswordHtmlActivity: isAdminActive:" + isAdminActive);
             boolean configurated=canAccessFineLocation||canAccessCoarseLocation || canAccessCamera
                     || canAccessPhone || canAccessStorage || canDrawOverlays ||isAdminActive;
-            PreyLogger.d("CheckPasswordHtmlActivity: configurated:" + configurated);
+            String status=PreyConfig.getPreyConfig(this).getInstallationStatus();
+            PreyLogger.d("CheckPasswordHtmlActivity: configurated:" + configurated +" status:"+status);
             if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
                     && canAccessPhone && canAccessStorage && canDrawOverlays && canAccessBackgroundLocation&&isAdminActive) {
                     if (deviceKey != null && deviceKey != "") {
-                        url = URL_ONB + "#/" + lng + "/";
+                        if ("".equals(status)) {
+                            url = URL_ONB + "#/" + lng + "/";
+                        }else{
+                            if ("OK".equals(status)) {
+                                PreyConfig.getPreyConfig(ctx).setInstallationStatus("");
+                                url = URL_ONB + "#/" + lng + "/emailok";
+                            }else {
+                                url = URL_ONB + "#/" + lng + "/emailsent";
+                            }
+                        }
                     } else {
-                        url = URL_ONB + "#/" + lng + "/signin";
+                        if ("DEL".equals(status)) {
+                            PreyConfig.getPreyConfig(ctx).setInstallationStatus("");
+                            url = URL_ONB + "#/" + lng + "/emailretry";
+                        }else {
+                            url = URL_ONB + "#/" + lng + "/signin";
+                        }
                     }
             } else {
                 if (configurated) {
