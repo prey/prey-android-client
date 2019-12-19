@@ -338,4 +338,6 @@
     <string name="permission_location">Location</string>
     <string name="permission_message_popup">The %1$s permission was denied, which affects Prey\'s features. Please give permission manually in the settings menu.\n\nSelect Permissions -> Enable permission</string>
     <string name="permission_manually">Permit Manually</string>
+
+    <string name="email_resend">If the email entered is valid, we will send the activation link shortly.</string>
 </resources>

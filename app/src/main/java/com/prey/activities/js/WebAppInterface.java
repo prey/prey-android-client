@@ -216,6 +216,7 @@ public class WebAppInterface {
             PreyConfig.getPreyConfig(mContext).setEmail(email);
             PreyConfig.getPreyConfig(mContext).setRunBackground(true);
             RunBackgroundCheckBoxPreference.notifyReady(mContext);
+            PreyConfig.getPreyConfig(mContext).setInstallationStatus("");
             new PreyApp().run(mContext);
         } catch (Exception e) {
             PreyLogger.d("mylogin error1:" + e.getMessage());
@@ -429,6 +430,7 @@ public class WebAppInterface {
         mContext.startActivity(intent);
         mActivity.finish();
     }
+
     @JavascriptInterface
     public String initMail(){
         return PreyConfig.getPreyConfig(mContext).getEmail();
@@ -436,16 +438,17 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public String changemail(String email){
-        PreyLogger.d("changemail:"+email);
         error = null;
         try {
             final Context ctx = mContext;
             PreyVerify verify=PreyWebServices.getInstance().verifyEmail(ctx,email);
             PreyLogger.d("verify:"+(verify==null?"":verify.getStatusCode()+" "+verify.getStatusDescription()));
             if(verify!=null){
-                if(verify.getStatusCode()== HttpURLConnection.HTTP_OK){
+                int statusCode=verify.getStatusCode();
+                if(statusCode==HttpURLConnection.HTTP_OK||statusCode==HttpURLConnection.HTTP_CONFLICT){
                     PreyConfig.getPreyConfig(mContext).setEmail(email);
-                    error="";
+                    String okObj=mContext.getString(R.string.email_resend);
+                    error="{\"ok\":[\"" + okObj + "\"]}";
                 }else{
                     error = verify.getStatusDescription();
                     if(error!=null){
@@ -467,22 +470,12 @@ public class WebAppInterface {
             error = e.getMessage();
             PreyLogger.e("error:" + error, e);
         }
-        PreyLogger.d("changemail error:"+error);
         return error;
     }
 
     @JavascriptInterface
     public String signup(String name, String email, String password1, String password2, String policy_rule_age, String policy_rule_privacy_terms) {
         PreyLogger.d("signup name: " + name + " email:" + email + " policy_rule_age:" + policy_rule_age + " policy_rule_privacy_terms:" + policy_rule_privacy_terms);
-        ProgressDialog progressDialog = null;
-        try {
-            progressDialog = new ProgressDialog(mContext);
-            progressDialog.setMessage(mContext.getText(R.string.creating_account_please_wait).toString());
-            progressDialog.setIndeterminate(true);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        } catch (Exception e) {
-        }
         try {
             error = null;
             final Context ctx = mContext;
@@ -499,16 +492,13 @@ public class WebAppInterface {
             PreyWebServices.getInstance().sendEvent(ctx, PreyConfig.ANDROID_SIGN_UP);
             PreyConfig.getPreyConfig(ctx).setEmail(email);
             PreyConfig.getPreyConfig(ctx).setRunBackground(true);
-            RunBackgroundCheckBoxPreference.notifyReady(ctx);
-            new PreyApp().run(ctx);
             PreyConfig.getPreyConfig(ctx).setInstallationStatus("Pending");
+
         } catch (Exception e) {
             error = e.getMessage();
             PreyLogger.e("error:" + error, e);
         }
         try {
-            if (progressDialog != null)
-                progressDialog.dismiss();
             if (error == null) {
                 error = "";
             }
