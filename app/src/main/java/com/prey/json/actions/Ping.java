@@ -2,19 +2,15 @@ package com.prey.json.actions;
 
 import android.content.Context;
 
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
 import com.prey.json.JsonAction;
-import com.prey.json.UtilJson;
-import com.prey.net.PreyWebServices;
 
 import org.json.JSONObject;
 
-import java.util.Map;
 import java.util.List;
 
 
@@ -32,7 +28,7 @@ public class Ping extends JsonAction {
     @Override
     public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
         try{
-            Event eventStatus=new Event(Event.DEVICE_STATUS,"pong");
+            Event eventStatus=new Event(Event.DEVICE_STATUS,parameters.toString());
             eventStatus.setAlwaysSend(true);
             new Thread(new EventManagerRunner(ctx, eventStatus)).start();
         }catch (Exception e){
