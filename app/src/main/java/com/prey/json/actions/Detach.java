@@ -38,17 +38,17 @@ public class Detach {
         if(expired) {
             PreyConfig.getPreyConfig(ctx).setInstallationStatus("DEL");
             PreyLogger.d("Detach expired:" + expired);
-            Detach.detachDevice(ctx,true,false,false);
+            Detach.detachDevice(ctx,true,false,false,expired);
         }else {
             Detach.detachDevice(ctx);
         }
     }
 
     public static String detachDevice(Context ctx){
-        return detachDevice(ctx,true,true,true);
+        return detachDevice(ctx,true,true,true,false);
     }
 
-    public static String detachDevice(Context ctx,boolean openApplication,boolean removePermissions,boolean removeCache){
+    public static String detachDevice(Context ctx,boolean openApplication,boolean removePermissions,boolean removeCache,boolean expired){
         PreyLogger.d("detachDevice");
         String error=null;
         try {
@@ -104,7 +104,13 @@ public class Detach {
         try { PreyConfig.getPreyConfig(ctx).setDeviceId("");} catch (Exception e) {error = e.getMessage();}
         try { PreyConfig.getPreyConfig(ctx).setApiKey("");} catch (Exception e) {error = e.getMessage();}
         PreyLogger.d("8:"+error);
-
+        if(!expired) {
+            try {
+                PreyConfig.getPreyConfig(ctx).setInstallationStatus("");
+            } catch (Exception e) {
+                error = e.getMessage();
+            }
+        }
         PreyLogger.d("Email:"+PreyConfig.getPreyConfig(ctx).getEmail());
         PreyLogger.d("DeviceId:"+PreyConfig.getPreyConfig(ctx).getDeviceId());
         PreyLogger.d("ApiKey:"+PreyConfig.getPreyConfig(ctx).getApiKey());

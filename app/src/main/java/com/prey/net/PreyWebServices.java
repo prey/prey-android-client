@@ -635,7 +635,7 @@ public class PreyWebServices {
     public PreyVerify verifyUsers(Context ctx) throws Exception {
         String apiKey= PreyConfig.getPreyConfig(ctx).getApiKey();
         String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-        String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("users/").concat(apiKey).concat("/verify.json");;
+        String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("users/verify.json");;
         PreyHttpResponse preyHttpResponse = null;
         preyHttpResponse = PreyRestHttpClient.getInstance(ctx).getAutentication(url,null);
         PreyVerify verify=null;
@@ -660,6 +660,7 @@ public class PreyWebServices {
             Map<String, String> parameters = new HashMap<String, String>();
             parameters.put("name", event.getName());
             parameters.put("info", event.getInfo());
+            parameters.put("status", jsonObject.toString());
             PreyLogger.d("EVENT sendPreyHttpEvent url:" + url);
             PreyLogger.d("EVENT name:" + event.getName() + " info:" + event.getInfo());
             PreyLogger.d("EVENT status:" + jsonObject.toString());
@@ -1140,7 +1141,7 @@ public class PreyWebServices {
     public PreyVerify verifyEmail(Context ctx,String email) throws Exception {
         String apiKey= PreyConfig.getPreyConfig(ctx).getApiKey();
         String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-        String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("users/").concat(apiKey).concat("/verify_email.json");
+        String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("users/verify_email.json");
         PreyHttpResponse preyHttpResponse = null;
         JSONObject jsonParam=new  JSONObject ();
         jsonParam.put("email",email);

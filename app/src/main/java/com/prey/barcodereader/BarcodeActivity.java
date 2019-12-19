@@ -180,6 +180,7 @@ public class BarcodeActivity extends Activity   {
                         PreyConfig.getPreyConfig(ctx).setEmail(email);
                         PreyConfig.getPreyConfig(ctx).setRunBackground(true);
                         RunBackgroundCheckBoxPreference.notifyReady(ctx);
+                        PreyConfig.getPreyConfig(ctx).setInstallationStatus("");
                         new PreyApp().run(ctx);
                         new Thread() {
                             public void run() {
