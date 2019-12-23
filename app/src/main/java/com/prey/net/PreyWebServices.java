@@ -220,7 +220,8 @@ public class PreyWebServices {
         String json;
         try {
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.json");
+            String lang = Locale.getDefault().getLanguage();
+            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.json?lang=").concat(lang);
             PreyLogger.d("_____url:" + url);
             response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, email, password);
             PreyLogger.d("response:" + response);
