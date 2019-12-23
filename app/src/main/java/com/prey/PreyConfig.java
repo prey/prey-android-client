@@ -1300,7 +1300,7 @@ public class PreyConfig {
     }
 
     public String getInstallationStatus(){
-        return getString(PreyConfig.INSTALLATION_STATUS, null);
+        return getString(PreyConfig.INSTALLATION_STATUS, "");
     }
 
     public void setInstallationStatus(String installationStatus){
