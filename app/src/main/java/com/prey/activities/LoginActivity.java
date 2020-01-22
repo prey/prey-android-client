@@ -16,6 +16,9 @@ import android.os.Bundle;
 import android.view.Window;
 
 import com.prey.PreyConfig;
+import com.prey.PreyLogger;
+import com.prey.PreyPermission;
+import com.prey.services.PreyLockService;
 
 public class LoginActivity extends Activity {
 
@@ -52,6 +55,13 @@ public class LoginActivity extends Activity {
 
     private void startup() {
         Intent intent = null;
+        boolean isLockSet=PreyConfig.getPreyConfig(getApplicationContext()).isLockSet();
+        if (isLockSet) {
+           if(PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(getApplicationContext())) {
+                PreyLogger.d("Login Boot finished. PreyLockService");
+                getApplicationContext().startService(new Intent(getApplicationContext(), PreyLockService.class));
+           }
+        }
         boolean ready=PreyConfig.getPreyConfig(this).getProtectReady();
         if (isThereBatchInstallationKey()&&!ready) {
                 showLoginBatch();
