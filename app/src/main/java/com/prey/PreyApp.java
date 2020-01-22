@@ -23,6 +23,7 @@ import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.report.ReportScheduled;
 import com.prey.actions.triggers.TriggerController;
+import com.prey.activities.LoginActivity;
 import com.prey.events.factories.EventFactory;
 import com.prey.events.receivers.EventReceiver;
 import com.prey.net.PreyWebServices;
@@ -49,6 +50,13 @@ public class PreyApp extends Application {
         super.onCreate();
         boolean chromium=getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
         PreyLogger.d("chromium:"+chromium);
+        try {
+            if (PreyConfig.getPreyConfig(getApplicationContext()).isLockSet()) {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                getApplicationContext().startActivity(intent);
+            }
+        }catch (Exception e){}
         run(this);
         runReceiver(this);
         try {
