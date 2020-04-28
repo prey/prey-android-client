@@ -27,7 +27,7 @@ public class AwareJobService extends JobService {
     public static void schedule(Context ctx ) {
         JobScheduler jobScheduler = null;
         jobScheduler=(JobScheduler) ctx.getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        JobInfo.Builder builder = new JobInfo.Builder(1, new ComponentName(ctx, AwareJobService.class.getName()));
+        JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, new ComponentName(ctx, AwareJobService.class.getName()));
         builder.setPeriodic(60 * DateUtils.MINUTE_IN_MILLIS );
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_NONE);
         builder.setRequiresDeviceIdle(false);
