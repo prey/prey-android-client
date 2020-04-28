@@ -16,6 +16,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
+import com.prey.json.UtilJson;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.net.http.EntityFile;
@@ -107,11 +108,17 @@ public class ReportService extends IntentService {
 							PreyConfig.getPreyConfig(ctx).setMissing(false);
 							PreyConfig.getPreyConfig(ctx).setIntervalReport("");
 							PreyConfig.getPreyConfig(ctx).setExcludeReport("");
+						}else{
+							if (response.getStatusCode() != 200 && response.getStatusCode() != 403) {
+								PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"failed", null, UtilJson.makeMapParam("get", "report", "failed", "{\"code:\":"+response.getStatusCode()+"}"));
+							}
 						}
 					}
 				}
 			}
 		} catch (Exception e) {
+			PreyLogger.e("error report:"+e.getMessage(),e);
+			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"failed", null, UtilJson.makeMapParam("get", "report", "failed", e.getMessage()));
 		}
 
 		return listData;

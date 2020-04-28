@@ -20,8 +20,10 @@ import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.aware.AwareController;
 import com.prey.actions.location.LocationThread;
 import com.prey.actions.location.LocationUtil;
+import com.prey.actions.location.PreyLocationManager;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
+import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 
 public class Location extends JsonAction{
@@ -30,6 +32,7 @@ public class Location extends JsonAction{
 
     public List<HttpDataService> report(Context ctx, List<ActionResult> list, JSONObject parameters) {
         PreyLogger.d("Ejecuting Location Report.");
+        PreyLocationManager.getInstance(ctx).setLastLocation(null);
         List<HttpDataService> listResult=super.report(ctx, list, parameters);
         return listResult;
     }
@@ -42,8 +45,26 @@ public class Location extends JsonAction{
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
         }
+        String jobId = null;
+        try {
+            jobId = parameters.getString(PreyConfig.JOB_ID);
+            PreyLogger.d("jobId:"+jobId);
+        } catch (Exception e) {
+        }
+        String reason=null;
+        if(jobId!=null&&!"".equals(jobId)){
+            reason="{\"device_job_id\":\""+jobId+"\"}";
+        }
+        PreyLocationManager.getInstance(ctx).setLastLocation(null);
+        PreyConfig.getPreyConfig(ctx).setLocationInfo("");
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("get", "location", "started",reason));
+
+
         PreyLogger.d(this.getClass().getName());
         HttpDataService data = LocationUtil.dataLocation(ctx,messageId,true);
+        if (data==null){
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"failed", messageId, UtilJson.makeMapParam("get", "location", "failed",PreyConfig.getPreyConfig(ctx).getLocationInfo()));
+        }
         ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
         dataToBeSent.add(data);
         PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
