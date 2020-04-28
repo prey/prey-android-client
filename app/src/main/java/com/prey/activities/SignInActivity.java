@@ -8,7 +8,6 @@ package com.prey.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,23 +26,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.appsflyer.AFInAppEventParameterName;
 import com.appsflyer.AFInAppEventType;
 import com.appsflyer.AppsFlyerLib;
 import com.prey.PreyApp;
-import com.prey.PreyStatus;
-import com.prey.actions.aware.AwareConfig;
-import com.prey.actions.aware.AwareController;
-import com.prey.barcodereader.BarcodeActivity;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
-import com.prey.exceptions.NoMoreDevicesAllowedException;
-import com.prey.exceptions.PreyException;
+import com.prey.barcodereader.BarcodeActivity;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.util.KeyboardStatusDetector;
@@ -177,6 +170,15 @@ public class SignInActivity extends Activity {
         });
 
 
+        ImageView imageViewQr=(ImageView)findViewById(R.id.imageViewQR);
+        imageViewQr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), BarcodeActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
     }
 
