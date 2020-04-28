@@ -40,6 +40,7 @@ import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.Event;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.UtilConnection;
+import com.prey.receivers.PreyDeviceAdmin;
 
 public class EventFactory {
 
@@ -152,20 +153,13 @@ public class EventFactory {
             }
         }
         if (USER_PRESENT.equals(intent.getAction())) {
-            String awareDate = PreyConfig.getPreyConfig(ctx).getAwareDate();
-            String now = PreyConfig.FORMAT_SDF_AWARE.format(new Date());
-            PreyLogger.d("getEvent AWARE USER_PRESENT awareDate:" + awareDate + " now:" + now);
-            if (!now.equals(awareDate)) {
-                PreyLogger.d("getEvent AWARE getSendNowAware: " + now);
-                new Thread() {
-                    public void run() {
-                        try {
-                            sendLocationAware(ctx);
-                        } catch (Exception e) {
-                        }
-                    }
-                }.start();
+            PreyLogger.d("EventFactory USER_PRESENT");
+            PreyDeviceAdmin.sendUnLock(ctx);
+            int minuteScheduled = PreyConfig.getPreyConfig(ctx).getMinuteScheduled();
+            if(minuteScheduled>0){
+                PreyBetaController.startPrey(ctx,null);
             }
+            return null;
         }
         return null;
     }
