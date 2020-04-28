@@ -68,7 +68,9 @@ public class LocationUtil {
         boolean isNetworkEnabled = PreyLocationManager.getInstance(ctx).isNetworkLocationServiceActive();
         boolean isWifiEnabled = PreyWifiManager.getInstance(ctx).isWifiEnabled();
         boolean isGooglePlayServicesAvailable=isGooglePlayServicesAvailable(ctx);
-        PreyLogger.d("status gps:" + isGpsEnabled + " net:" + isNetworkEnabled + " wifi:" + isWifiEnabled+" play:"+isGooglePlayServicesAvailable);
+        String locationInfo="{\"gps\":" + isGpsEnabled + ",\"net\":" + isNetworkEnabled + ",\"wifi\":" + isWifiEnabled+",\"play\":"+isGooglePlayServicesAvailable+"}";
+        PreyConfig.getPreyConfig(ctx).setLocationInfo(locationInfo);
+        PreyLogger.d(locationInfo);
         String method = getMethod(isGpsEnabled, isNetworkEnabled);
         try {
             preyLocation = getPreyLocationAppService(ctx,method,asynchronous,preyLocation);

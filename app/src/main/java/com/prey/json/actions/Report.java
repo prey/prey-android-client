@@ -19,11 +19,24 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.observer.ActionResult;
 import com.prey.actions.report.ReportScheduled;
+import com.prey.json.UtilJson;
+import com.prey.net.PreyWebServices;
 import com.prey.services.ReportJobService;
 
 public class Report {
 
     public void get(Context ctx, List<ActionResult> list, JSONObject parameters) {
+
+        String jobId = null;
+        try {
+            jobId = parameters.getString(PreyConfig.JOB_ID);
+            PreyLogger.d("jobId:"+jobId);
+        } catch (Exception e) {
+        }
+        String reason=null;
+        if(jobId!=null&&!"".equals(jobId)){
+            reason="{\"device_job_id\":\""+jobId+"\"}";
+        }
 
         long lastReportStartDate = new Date().getTime();
         PreyLogger.d("____lastReportStartDate:" + lastReportStartDate);
@@ -52,6 +65,7 @@ public class Report {
         PreyConfig.getPreyConfig(ctx).setIntervalReport("" + interval);
         PreyConfig.getPreyConfig(ctx).setExcludeReport(exclude);
 
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("get", "report", "started",reason));
 
 
 

@@ -696,10 +696,13 @@ public class PreyWebServices {
         return response;
     }
 
-    public String sendNotifyActionResultPreyHttp(Context ctx, String correlationId, Map<String, String> params) {
-        return sendNotifyActionResultPreyHttp(ctx,null,correlationId,params);
+    public void sendNotifyActionResultPreyHttp(Context ctx, String correlationId, Map<String, String> params) {
+        sendNotifyActionResultPreyHttp(ctx,null,correlationId,params);
     }
-    public String sendNotifyActionResultPreyHttp(Context ctx, String status,String correlationId, Map<String, String> params) {
+    public void sendNotifyActionResultPreyHttp(final Context ctx,final String status,final String correlationId,final Map<String, String> params) {
+
+        new Thread() {
+            public void run() {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         String response = null;
         try {
@@ -710,7 +713,9 @@ public class PreyWebServices {
         } catch (Exception e) {
             //PreyLogger.e("Notify Action Result wasn't send",e);
         }
-        return response;
+            }
+        }.start();
+
     }
 
     public PreyHttpResponse sendPreyHttpReport(Context ctx, List<HttpDataService> dataToSend) {

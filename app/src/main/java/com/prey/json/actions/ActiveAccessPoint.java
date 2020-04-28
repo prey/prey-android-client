@@ -26,22 +26,22 @@ public class ActiveAccessPoint extends JsonAction {
     }
 
     public HttpDataService run(Context ctx, List<ActionResult> list, JSONObject parameters) {
-
         PreyPhone phone = new PreyPhone(ctx);
         PreyPhone.Wifi wifiPhone = phone.getWifi();
-
         if (wifiPhone.isWifiEnabled()) {
-
-            HttpDataService data = new HttpDataService("active_access_point");
-            data.setList(true);
-            HashMap<String, String> parametersMap = new HashMap<String, String>();
-            parametersMap.put("ssid", wifiPhone.getSsid());
-            parametersMap.put("security", wifiPhone.getSecurity());
-            parametersMap.put("mac_address", wifiPhone.getMacAddress());
-            parametersMap.put("signal_strength", wifiPhone.getSignalStrength());
-            parametersMap.put("channel", wifiPhone.getChannel());
-            data.addDataListAll(parametersMap);
-
+            String ssid=wifiPhone.getSsid();
+            HttpDataService data = null;
+            if(!"".equals(ssid)&&!"<unknown ssid>".equals(ssid)) {
+                data = new HttpDataService("active_access_point");
+                data.setList(true);
+                HashMap<String, String> parametersMap = new HashMap<String, String>();
+                parametersMap.put("ssid", wifiPhone.getSsid());
+                parametersMap.put("security", wifiPhone.getSecurity());
+                parametersMap.put("mac_address", wifiPhone.getMacAddress());
+                parametersMap.put("signal_strength", wifiPhone.getSignalStrength());
+                parametersMap.put("channel", wifiPhone.getChannel());
+                data.addDataListAll(parametersMap);
+            }
             return data;
         } else {
             return null;
