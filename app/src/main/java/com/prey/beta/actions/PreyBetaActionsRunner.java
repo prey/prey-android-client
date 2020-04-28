@@ -55,9 +55,9 @@ public class PreyBetaActionsRunner implements Runnable {
                 if (connection) {
                     try {
                         if (cmd == null || "".equals(cmd)) {
-                            jsonObject = PreyBetaActionsRunner.getInstructions(ctx);
+                            jsonObject = PreyBetaActionsRunner.getInstructions(ctx,true);
                         } else {
-                            jsonObject = getInstructionsNewThread(ctx, cmd);
+                            jsonObject = getInstructionsNewThread(ctx, cmd,true);
                         }
                     } catch (Exception e) {
                     }
@@ -77,14 +77,14 @@ public class PreyBetaActionsRunner implements Runnable {
         ctx.stopService(new Intent(ctx, PreyBetaRunnerService.class));
     }
 
-    private static List<JSONObject> getInstructionsNewThread(Context ctx, String cmd) throws PreyException {
+    public static List<JSONObject> getInstructionsNewThread(Context ctx, String cmd,final boolean close) throws PreyException {
         List<JSONObject> jsonObject = new JSONParser().getJSONFromTxt(ctx, "[" + cmd + "]");
         final Context context = ctx;
         new Thread(new Runnable() {
             public void run() {
                 try {
                     PreyLogger.d("_________New Thread");
-                    PreyBetaActionsRunner.getInstructions(context);
+                    PreyBetaActionsRunner.getInstructions(context,close);
                 } catch (PreyException e) {
                     PreyLogger.e("_________getInstructionsNewThread:"+e.getMessage(),e);
                 }
@@ -93,12 +93,14 @@ public class PreyBetaActionsRunner implements Runnable {
         return jsonObject;
     }
 
-    private static List<JSONObject> getInstructions(Context ctx) throws PreyException {
+    private static List<JSONObject> getInstructions(Context ctx,boolean close) throws PreyException {
         PreyLogger.d("______________________________");
         PreyLogger.d("_______getInstructions________");
         List<JSONObject> jsonObject = null;
         try {
-            ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
+            if(close) {
+                ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
+            }
             jsonObject = PreyWebServices.getInstance().getActionsJsonToPerform(ctx);
         } catch (PreyException e) {
             PreyLogger.e("Exception getting device's xml instruction set", e);
