@@ -77,9 +77,9 @@ public class PreyLockService extends Service{
                         PreyLogger.d("unlock key:"+key+" unlock:"+unlock);
                         if (unlock.equals(key)) {
                             String jobIdLock=PreyConfig.getPreyConfig(ctx).getJobIdLock();
-                            String reason=null;
+                            String reason="{\"origin\":\"user\"}";
                             if(jobIdLock!=null&&!"".equals(jobIdLock)){
-                                reason="{\"device_job_id\":\""+jobIdLock+"\"}";
+                                reason="{\"device_job_id\":\""+jobIdLock+"\",\"origin\":\"user\"}";
                                 PreyConfig.getPreyConfig(ctx).setJobIdLock("");
                             }
                             final String reasonFinal=reason;

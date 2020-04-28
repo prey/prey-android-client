@@ -18,6 +18,8 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.exceptions.PreyException;
+import com.prey.json.UtilJson;
+import com.prey.net.PreyWebServices;
 import com.prey.receivers.PreyDeviceAdmin;
 
 @TargetApi(Build.VERSION_CODES.FROYO)
@@ -46,21 +48,23 @@ public class FroyoSupport {
             PreyLogger.d("change0");
             if (isAdminActive()) {
                 PreyLogger.d("change1");
-
-                try {
-                    policyManager.setPasswordMinimumLength(deviceAdmin, 0);
-                    policyManager.setPasswordQuality(deviceAdmin, DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED);
-                    policyManager.resetPassword(newPass, DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
-                    if ("".equals(newPass))
-                        android.provider.Settings.System.putInt(ctx.getContentResolver(), android.provider.Settings.System.LOCK_PATTERN_ENABLED, 0);
-                } catch (Exception e1) {
-                    if (lock) {
-                        lockNow();
+                boolean isPatternSet=PreyDeviceAdmin.isPatternSet(ctx);
+                boolean isPassOrPinSet=PreyDeviceAdmin.isPassOrPinSet(ctx);
+                if( !isPatternSet&&!isPassOrPinSet) {
+                    try {
+                        policyManager.setPasswordMinimumLength(deviceAdmin, 0);
+                        policyManager.setPasswordQuality(deviceAdmin, DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED);
+                        policyManager.resetPassword(newPass, DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
+                        if ("".equals(newPass))
+                            android.provider.Settings.System.putInt(ctx.getContentResolver(), android.provider.Settings.System.LOCK_PATTERN_ENABLED, 0);
+                    } catch (Exception e1) {
+                        if (lock) {
+                            lockNow();
+                        }
+                        PreyLogger.e("locked:" + e1.getMessage(), e1);
+                        throw new PreyException("This device couldn't be locked");
                     }
-                    PreyLogger.e("locked:"+e1.getMessage(),e1);
-                    throw new PreyException("This device couldn't be locked");
                 }
-
                 if (lock){
                     lockNow();
                 }

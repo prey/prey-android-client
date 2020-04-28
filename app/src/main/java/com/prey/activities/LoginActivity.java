@@ -18,6 +18,8 @@ import android.view.Window;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
+import com.prey.receivers.PreyDeviceAdmin;
+import com.prey.services.CheckLockActivated;
 import com.prey.services.PreyLockService;
 
 public class LoginActivity extends Activity {
@@ -60,6 +62,9 @@ public class LoginActivity extends Activity {
            if(PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(getApplicationContext())) {
                 PreyLogger.d("Login Boot finished. PreyLockService");
                 getApplicationContext().startService(new Intent(getApplicationContext(), PreyLockService.class));
+                getApplicationContext().startService(new Intent(getApplicationContext(), CheckLockActivated.class));
+           }else{
+               PreyDeviceAdmin.lockWhenYouNocantDrawOverlays(getApplicationContext());
            }
         }
         boolean ready=PreyConfig.getPreyConfig(this).getProtectReady();
