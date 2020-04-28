@@ -30,6 +30,7 @@ import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.AwareJobService;
 import com.prey.services.PreyDisablePowerOptionsService;
+import com.prey.services.PreyJobService;
 
 import java.util.Date;
 import java.util.Map;
@@ -138,6 +139,7 @@ public class PreyApp extends Application {
                        if(!PreyConfig.getPreyConfig(ctx).isChromebook() ) {
                             try {
                                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    PreyJobService.schedule(ctx);
                                     AwareJobService.schedule(ctx);
                                 }
                             } catch (Exception e) {
@@ -187,6 +189,8 @@ public class PreyApp extends Application {
         registerReceiver(eventReceiver, LOCATION_PROVIDERS_CHANGED);
         IntentFilter WIFI_STATE_CHANGED = new IntentFilter(EventFactory.WIFI_STATE_CHANGED);
         registerReceiver(eventReceiver, WIFI_STATE_CHANGED);
+        IntentFilter USER_PRESENT = new IntentFilter(EventFactory.USER_PRESENT);
+        registerReceiver(eventReceiver, USER_PRESENT);
     }
 
     public static String InstallConversionData =  "";

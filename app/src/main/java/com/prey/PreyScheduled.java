@@ -14,12 +14,13 @@ import android.content.Intent;
 import java.util.Calendar;
 
 import com.prey.receivers.AlarmScheduledReceiver;
+import com.prey.services.PreyJobService;
 
 public class PreyScheduled {
 
     private static PreyScheduled instance = null;
     private Context context = null;
-    private int minute = 0;
+
 
     private AlarmManager alarmMgr = null;
     private PendingIntent alarmIntent = null;
@@ -35,28 +36,28 @@ public class PreyScheduled {
         return instance;
     }
 
-    public void run(int interval) {
+    public void run(int minute) {
         final Context ctx = context;
-        if (minute != interval && PreyConfig.getPreyConfig(ctx).isScheduled() && interval > 0) {
+        if (minute > 0) {
             reset();
-            minute = interval;
             Intent intent = new Intent(context, AlarmScheduledReceiver.class);
             alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
             alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.add(Calendar.MINUTE,minute);
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
-                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * interval, alarmIntent);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * minute, alarmIntent);
             } else {
-                alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * interval, alarmIntent);
+                alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * minute, alarmIntent);
             }
-            PreyLogger.d("_____________start scheduled [" + minute + "] alarmIntent");
+            PreyLogger.d("SCHEDULE_____________start scheduled [" + minute + "] alarmIntent");
         }
     }
 
     public void reset() {
         if (alarmMgr != null) {
-            PreyLogger.d("_________________shutdown scheduled [" + minute + "]alarmIntent");
+            PreyLogger.d("_________________shutdown scheduled alarmIntent");
             alarmMgr.cancel(alarmIntent);
         }
     }

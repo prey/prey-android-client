@@ -90,6 +90,7 @@ public class PreyConfig {
     public static final String LOW_BATTERY_DATE="LOW_BATTERY_DATE";
     public static final String PREVIOUS_SSID="PREVIOUS_SSID";
 
+    public static final String ERROR="ERROR";
 
     public static final String FLAG_FEEDBACK="FLAG_FEEDBACK";
     public static final String INSTALLATION_DATE="INSTALLATION_DATE";
@@ -101,7 +102,7 @@ public class PreyConfig {
 
     public static final String SEND_DATA="SEND_DATA";
     public static final String SCHEDULED="SCHEDULED";
-    public static final String MINUTE_SCHEDULED="MINUTE_SCHEDULED";
+    public static final String MINUTE_SCHEDULED="MINUTE_SCHEDULED2";
 
     public static final String IS_REVOKED_PASSWORD="IS_REVOKED_PASSWORD";
     public static final String REVOKED_PASSWORD="REVOKED_PASSWORD";
@@ -142,6 +143,7 @@ public class PreyConfig {
     public static final String PREY_VERSION="PREY_VERSION";
     public static final String API_KEY="API_KEY";
     public static final String DEVICE_ID = "DEVICE_ID";
+    public static final String ACCOUNT = "ACCOUNT";
 
     public static final String SIM_SERIAL_NUMBER = "SIM_SERIAL_NUMBER";
 
@@ -200,6 +202,8 @@ public class PreyConfig {
     public static final String PREFS_BIOMETRIC="PREFS_BIOMETRIC";
     public static final String INSTALLATION_STATUS="INSTALLATION_STATUS";
 
+    public static final String LOCATION_INFO="LOCATION_INFO";
+
     private boolean securityPrivilegesAlreadyPrompted;
 
     private Context ctx;
@@ -225,10 +229,6 @@ public class PreyConfig {
         try {
             this.scheduled = getBoolean(PreyConfig.SCHEDULED, FileConfigReader.getInstance(ctx).isScheduled());
         } catch ( Exception e) {
-        } catch ( NoClassDefFoundError e) {}
-        try {
-            this.minuteScheduled = getInt(PreyConfig.MINUTE_SCHEDULED, FileConfigReader.getInstance(ctx).getMinuteScheduled());
-        } catch ( Exception e){
         } catch ( NoClassDefFoundError e) {}
         try {
             this.timeoutReport = getInt(PreyConfig.TIMEOUT_REPORT, FileConfigReader.getInstance(ctx).getTimeoutReport());
@@ -383,6 +383,16 @@ public class PreyConfig {
     public void setCanAccessFineLocation(boolean canAccessFineLocation) {
         this.saveBoolean(PreyConfig.CAN_ACCESS_FINE_LOCATION, canAccessFineLocation);
     }
+
+
+    public String getError() {
+        return getString(PreyConfig.ERROR, null);
+    }
+
+    public void setError(String error) {
+        this.saveString(PreyConfig.ERROR, error);
+    }
+
 
     public boolean canAccessFineLocation() {
         return getBoolean(PreyConfig.CAN_ACCESS_FINE_LOCATION, false);
@@ -809,10 +819,16 @@ public class PreyConfig {
     }
 
     public void saveAccount(PreyAccountData accountData) {
+        saveBoolean(PreyConfig.ACCOUNT,true);
         saveString(PreyConfig.DEVICE_ID, accountData.getDeviceId());
         saveString(PreyConfig.API_KEY, accountData.getApiKey());
         saveString(PreyConfig.EMAIL, accountData.getEmail());
     }
+
+    public boolean isAccount() {
+        return getBoolean(PreyConfig.ACCOUNT, false);
+    }
+
 
     public boolean isMissing() {
         return getBoolean(PreyConfig.PREFS_IS_MISSING, false);
@@ -940,24 +956,15 @@ public class PreyConfig {
     }
 
     public boolean isScheduled(){
-        try{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
-                if (PreyEmail.getEmail(ctx)!=null)
-                    return false;
-            }
-        }catch(Exception e){
-            return false;
-        }
-        return scheduled;
+        return false;
     }
 
     public void setMinuteScheduled(int minuteScheduled){
-        this.minuteScheduled=minuteScheduled;
         saveInt(PreyConfig.MINUTE_SCHEDULED, minuteScheduled);
     }
 
     public int getMinuteScheduled(){
-        return minuteScheduled;
+        return getInt(PreyConfig.MINUTE_SCHEDULED, 0);
     }
 
     public int getTimeoutReport(){
@@ -1305,6 +1312,14 @@ public class PreyConfig {
 
     public void setInstallationStatus(String installationStatus){
         saveString(PreyConfig.INSTALLATION_STATUS, installationStatus);
+    }
+
+    public String getLocationInfo(){
+        return getString(PreyConfig.LOCATION_INFO, "");
+    }
+
+    public void setLocationInfo(String locationInfo){
+        saveString(PreyConfig.LOCATION_INFO, locationInfo);
     }
 
 }
