@@ -8,9 +8,12 @@ android {
     defaultConfig {
         applicationId "com.prey"
         minSdkVersion 16
+
         targetSdkVersion 29
-        versionCode 203
-        versionName '2.2.2'
+
+        versionCode 189
+        versionName '2.1.10'
+
         multiDexEnabled true
     }
     buildTypes {
@@ -31,6 +34,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
     implementation 'com.google.android.material:material:1.2.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
