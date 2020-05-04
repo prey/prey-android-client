@@ -53,18 +53,22 @@ public class AlertThread extends Thread {
                 }
             }.start();
         }else {
-            if (fullscreen_notification) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                fullscreen(notificationId);
+            }else{
+                if (fullscreen_notification) {
+                    new Thread() {
+                        public void run() {
+                            fullscreen(notificationId);
+                        }
+                    }.start();
+                }
                 new Thread() {
                     public void run() {
-                        fullscreen(notificationId);
+                        notification(notificationId);
                     }
                 }.start();
             }
-            new Thread() {
-                public void run() {
-                    notification(notificationId);
-                }
-            }.start();
         }
     }
 
