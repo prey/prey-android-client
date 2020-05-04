@@ -95,8 +95,9 @@ public class Lock extends JsonAction {
             PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
             try{ctx.stopService(new Intent(ctx, PreySecureService.class));}catch(Exception e){}
             if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
-                Thread.sleep(3000);
+                Thread.sleep(1000);
                 PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId,UtilJson.makeMapParam("start", "lock", "stopped",reason));
+                Thread.sleep(2000);
                 int pid = android.os.Process.myPid();
                 android.os.Process.killProcess(pid);
             }else{
@@ -109,7 +110,7 @@ public class Lock extends JsonAction {
                         screenLock.acquire();
                         screenLock.release();
                     }
-                    Thread.sleep(3000);
+                    Thread.sleep(2000);
                     reason="{\"origin\":\"panel\"}";
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped",reason));
                 }catch(Exception e){
