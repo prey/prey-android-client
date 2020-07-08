@@ -59,7 +59,7 @@ public class UtilConnection {
     private static final int READ_TIMEOUT=30000;
 
     private static String getCredentials(String user, String password) {
-        return (Base64.encodeBytes((user + ":" + password).getBytes()));
+        return android.util.Base64.encodeToString((user + ":" + password).getBytes(), android.util.Base64.NO_WRAP);
     }
 
     private static String getUserAgent(PreyConfig preyConfig) {
