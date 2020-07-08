@@ -21,23 +21,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
+import com.prey.activities.CloseActivity;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 
 public class PreyLockService extends Service{
-
-    private WindowManager windowManager;
-    private View view;
-
-
-    public PreyLockService(){
-
-    }
 
     public IBinder onBind(Intent intent) {
         return null;
@@ -52,29 +43,25 @@ public class PreyLockService extends Service{
         super.onStart(intent,startId);
         final Context ctx=this;
         PreyLogger.d("PreyLockService onStart");
-
         final String unlock= PreyConfig.getPreyConfig(ctx).getUnlockPass();
-
         if(unlock!=null&&!"".equals(unlock)) {
-
-
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.lock_android7, null);
+            final View view = inflater.inflate(R.layout.lock_android7, null);
+            PreyConfig.getPreyConfig(this).view=view;
             Typeface regularMedium = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-medium.ttf");
-            TextView textView1 = (TextView) view.findViewById(R.id.TextView_Lock_AccessDenied);
+            final TextView textView1 = (TextView) view.findViewById(R.id.TextView_Lock_AccessDenied);
             textView1.setTypeface(regularMedium);
             Typeface regularBold = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-bold.ttf");
             EditText editText1 = (EditText) view.findViewById(R.id.EditText_Lock_Password);
             editText1.setTypeface(regularMedium);
-
-            final EditText editText = (EditText) this.view.findViewById(R.id.EditText_Lock_Password);
-            final Button btn_unlock = (Button) this.view.findViewById(R.id.Button_Lock_Unlock);
+            final EditText editText = (EditText)  view.findViewById(R.id.EditText_Lock_Password);
+            final Button btn_unlock = (Button)  view.findViewById(R.id.Button_Lock_Unlock);
             btn_unlock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         String key = editText.getText().toString().trim();
-                        PreyLogger.d("unlock key:"+key+" unlock:"+unlock);
+                        PreyLogger.d("PreyLockService unlock key:"+key+" unlock:"+unlock);
                         if (unlock.equals(key)) {
                             String jobIdLock=PreyConfig.getPreyConfig(ctx).getJobIdLock();
                             String reason="{\"origin\":\"user\"}";
@@ -85,16 +72,21 @@ public class PreyLockService extends Service{
                             final String reasonFinal=reason;
                             PreyConfig.getPreyConfig(ctx).setLock(false);
                             PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
+                            if(view!=null){
+                                    WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+                                    wm.removeView(view);
+                            }
                             new Thread(){
                                 public void run() {
                                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped",reasonFinal));
-
-
-                                    int pid = android.os.Process.myPid();
-                                    android.os.Process.killProcess(pid);
                                 }
                             }.start();
+                            Intent intent = new Intent(getApplicationContext(), CloseActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                         } else {
+                            TextView textView1 = (TextView) view.findViewById(R.id.TextView_Lock_AccessDenied);
+                            textView1.setText(R.string.password_wrong);
                             editText.setText("");
                         }
                     } catch (Exception e) {
@@ -106,13 +98,11 @@ public class PreyLockService extends Service{
             layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
             layoutParams.format = PixelFormat.TRANSLUCENT;
             layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN;
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             } else {
                 layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
             }
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
                 if (Settings.canDrawOverlays(this)) {
@@ -126,13 +116,6 @@ public class PreyLockService extends Service{
                 }
             }
         }else{
-            if(view != null){
-                WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-                if(wm != null) {
-                    wm.removeView(view);
-                }
-                view = null;
-            }
             stopSelf();
         }
     }
@@ -140,11 +123,6 @@ public class PreyLockService extends Service{
     public void onDestroy() {
         super.onDestroy();
         PreyLogger.d("PreyLockService onDestroy");
-        if(view != null){
-            WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-            wm.removeView(view);
-            view = null;
-        }
     }
 
 }

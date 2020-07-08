@@ -192,11 +192,12 @@ public class AlertThread extends Thread {
             popup.putExtra("description_message", description);
             popup.putExtra("notificationId", notificationId);
             ctx.startActivity(popup);
-            if(PreyUtils.isChromebook(ctx)){
+            if(PreyUtils.isChromebook(ctx)||Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
                 new Thread() {
                     public void run() {
                         String reason = null;
                         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "started", reason));
+                        try{sleep(2000);}catch (Exception e){}
                         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "stopped", reason));
                     }
                 }.start();

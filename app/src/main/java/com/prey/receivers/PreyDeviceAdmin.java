@@ -42,45 +42,7 @@ public class PreyDeviceAdmin extends DeviceAdminReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         PreyLogger.d("LOCK intent.getAction:" + intent.getAction());
-        if (intent.getAction().equals(ACTION_DEVICE_ADMIN_DISABLE_REQUESTED ) || intent.getAction().equals(ACTION_DEVICE_ADMIN_DISABLED)) {
-            PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
-            boolean isBlockAppUninstall= PreyConfig.getPreyConfig(context).isBlockAppUninstall();
-            PreyLogger.d("LOCK isBlockAppUninstall:" + isBlockAppUninstall);
-            Date now =new Date();
-            if(isBlockAppUninstall) {
-                boolean active=true;
-                long timeBlockAppUninstall=preyConfig.getTimeBlockAppUninstall(  );
-                if(timeBlockAppUninstall>0){
-                    long timeNow=now.getTime()/1000;
-                    long diff=timeBlockAppUninstall-timeNow;
-                    PreyLogger.d("LOCK diff:" + diff);
-                    if(diff>0){
-                        active=false;
-                    }
-                }
-                if(active) {
-                    boolean isDeviceScreenLocked = isDeviceScreenLocked(context);
-                    PreyLogger.d("LOCK isDeviceScreenLocked:" + isDeviceScreenLocked);
-                    if (!isDeviceScreenLocked) {
-                        if (preyConfig.isFroyoOrAbove()) {
-                            preyConfig.setLock(true);
-                            try {
-                                String pinNumber=PreyConfig.getPreyConfig(context).getPinNumber();
-                                FroyoSupport.getInstance(context).changePasswordAndLock(pinNumber, true);
-                            } catch (PreyException e) {
-                            }
-                        }
-                    }
-                    DevicePolicyManager policyManager = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
-                    policyManager.lockNow();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(now);
-                    cal.add(Calendar.MINUTE, 1);
-                    preyConfig.setTimeBlockAppUninstall(cal.getTimeInMillis() / 1000);
-                }
-            }
-            abortBroadcast();
-        }
+
         super.onReceive(context,intent);
     }
 
@@ -145,19 +107,22 @@ public class PreyDeviceAdmin extends DeviceAdminReceiver {
         boolean isLockSet=PreyConfig.getPreyConfig(ctx).isLockSet();
         PreyLogger.d("DeviceAdmin lockWhenYouNocantDrawOverlays isLockSet:" + isLockSet);
         if (isLockSet) {
-            if (!canDrawOverlays(ctx)) {
-                boolean isPatternSet = PreyDeviceAdmin.isPatternSet(ctx);
-                boolean isPassOrPinSet = PreyDeviceAdmin.isPassOrPinSet(ctx);
-                PreyLogger.d("CheckLockActivated isPatternSet:" + isPatternSet);
-                PreyLogger.d("CheckLockActivated  isPassOrPinSet:" + isPassOrPinSet);
-                if (isPatternSet || isPassOrPinSet) {
-                    FroyoSupport.getInstance(ctx).lockNow();
-                    new Thread(new EventManagerRunner(ctx, new Event(Event.NATIVE_LOCK))).start();
-                } else {
-                    try {
-                        FroyoSupport.getInstance(ctx).changePasswordAndLock(PreyConfig.getPreyConfig(ctx).getUnlockPass(), true);
+            if(!PreyPermission.isAccessibilityServiceEnabled(ctx)) {
+                if (!canDrawOverlays(ctx)) {
+                    boolean isPatternSet = PreyDeviceAdmin.isPatternSet(ctx);
+                    boolean isPassOrPinSet = PreyDeviceAdmin.isPassOrPinSet(ctx);
+                    PreyLogger.d("CheckLockActivated isPatternSet:" + isPatternSet);
+                    PreyLogger.d("CheckLockActivated  isPassOrPinSet:" + isPassOrPinSet);
+                    if (isPatternSet || isPassOrPinSet) {
+                        FroyoSupport.getInstance(ctx).lockNow();
                         new Thread(new EventManagerRunner(ctx, new Event(Event.NATIVE_LOCK))).start();
-                    } catch (Exception e) {}
+                    } else {
+                        try {
+                            FroyoSupport.getInstance(ctx).changePasswordAndLock(PreyConfig.getPreyConfig(ctx).getUnlockPass(), true);
+                            new Thread(new EventManagerRunner(ctx, new Event(Event.NATIVE_LOCK))).start();
+                        } catch (Exception e) {
+                        }
+                    }
                 }
             }
         }

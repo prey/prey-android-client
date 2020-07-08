@@ -298,7 +298,7 @@
     <string name="preference_background_title">Run in Background</string>
 
 
-    <string name="preferences_disable_power_alert_android9_title">Not Available in Android 9</string>
+    <string name="preferences_disable_power_alert_android9_title">Not Available in Android 9 and up</string>
     <string name="preferences_disable_power_alert_android9_message">This feature is not availabe due to Google\'s policy restrictions in this Android version</string>
 
     <string name="preference_biometric_summary">Use your fingerprint instead of your password to view the app’s Settings.</string>
@@ -340,4 +340,6 @@
     <string name="permission_manually">Permit Manually</string>
 
     <string name="email_resend">If the email entered is valid, we will send the activation link shortly.</string>
+    <string name="permission_summary">Enabling the accessibility service for Prey allows it to block all applications before they ́re opened when the device is marked as missing.</string>
+
 </resources>
