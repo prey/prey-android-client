@@ -24,7 +24,7 @@ public class EventRetrieveDataMobile {
         ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         String mobile_internet=null;
-        if(activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE){
+        if(activeNetwork!=null && activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE){
             try {
                 mobile_internet=PreyPhone.getNetworkClass(context);
                 PreyConfig.getPreyConfig(context).setPreviousSsid(mobile_internet);

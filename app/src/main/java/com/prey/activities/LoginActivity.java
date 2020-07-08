@@ -62,7 +62,6 @@ public class LoginActivity extends Activity {
            if(PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(getApplicationContext())) {
                 PreyLogger.d("Login Boot finished. PreyLockService");
                 getApplicationContext().startService(new Intent(getApplicationContext(), PreyLockService.class));
-                getApplicationContext().startService(new Intent(getApplicationContext(), CheckLockActivated.class));
            }else{
                PreyDeviceAdmin.lockWhenYouNocantDrawOverlays(getApplicationContext());
            }
@@ -77,7 +76,7 @@ public class LoginActivity extends Activity {
 
     private void showLogin() {
         Intent intent = null;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
             intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);
         }else {
             String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
@@ -91,7 +90,6 @@ public class LoginActivity extends Activity {
         startActivity(intent);
         finish();
     }
-
 
     private void showLoginBatch() {
         Intent intent = null;
