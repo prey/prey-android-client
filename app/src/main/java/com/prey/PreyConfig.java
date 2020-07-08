@@ -15,6 +15,7 @@ import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -1322,4 +1323,5 @@ public class PreyConfig {
         saveString(PreyConfig.LOCATION_INFO, locationInfo);
     }
 
+    public View view=null;
 }

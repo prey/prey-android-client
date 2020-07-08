@@ -64,6 +64,8 @@ public class Location extends JsonAction{
         HttpDataService data = LocationUtil.dataLocation(ctx,messageId,true);
         if (data==null){
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"failed", messageId, UtilJson.makeMapParam("get", "location", "failed",PreyConfig.getPreyConfig(ctx).getLocationInfo()));
+        }else{
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("get", "location", "stopped",reason));
         }
         ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
         dataToBeSent.add(data);

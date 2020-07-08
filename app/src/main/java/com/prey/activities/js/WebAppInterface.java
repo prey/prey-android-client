@@ -37,10 +37,10 @@ import com.prey.activities.SecurityActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.barcodereader.BarcodeActivity;
 import com.prey.exceptions.PreyException;
-import com.prey.json.UtilJson;
 import com.prey.json.actions.Detach;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
+import com.prey.services.AppAccessibilityService;
 import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyJobService;
 
@@ -103,9 +103,15 @@ public class WebAppInterface {
     public boolean initAdminActive() {
         return FroyoSupport.getInstance(mContext).isAdminActive();
     }
+
     @JavascriptInterface
     public boolean initDrawOverlay() {
         return PreyPermission.canDrawOverlays(mContext);
+    }
+
+    @JavascriptInterface
+    public boolean initAccessibility() {
+        return  PreyPermission.isAccessibilityServiceEnabled(mContext);
     }
 
     @JavascriptInterface
@@ -529,7 +535,6 @@ public class WebAppInterface {
             PreyConfig.getPreyConfig(ctx).setEmail(email);
             PreyConfig.getPreyConfig(ctx).setRunBackground(true);
             PreyConfig.getPreyConfig(ctx).setInstallationStatus("Pending");
-
         } catch (Exception e) {
             error = e.getMessage();
             PreyLogger.e("error:" + error, e);
@@ -566,6 +571,7 @@ public class WebAppInterface {
         boolean showCamera = PreyPermission.showRequestCamera(mActivity);
         boolean showPhone = PreyPermission.showRequestPhone(mActivity);
         boolean showStorage = PreyPermission.showRequestStorage(mActivity);
+        boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(mContext);
         boolean showDeniedPermission=false;
         if(!canAccessStorage) {
             if (!showStorage)
@@ -598,6 +604,7 @@ public class WebAppInterface {
         PreyLogger.d("showCamera:" + showCamera);
         PreyLogger.d("showPhoneState:" + showPhone);
         PreyLogger.d("showWriteStorage:" + showStorage);
+        PreyLogger.d("canAccessibility:" + canAccessibility);
         if(!canAccessStorage&&!canAccessFineLocation&&!canAccessCoarseLocation&&!canAccessCamera&&!canAccessPhone&&
                 !showStorage&&!showFineLocation&&!showCoarseLocation&&!showCamera&&!showPhone){
             showDeniedPermission=false;
@@ -610,24 +617,28 @@ public class WebAppInterface {
             }
         }
         if (showDeniedPermission) {
-            mActivity.deniedPermission();
-        } else{
-            if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
-                    || !canAccessPhone || !canAccessStorage || !canAccessBackgroundLocation) {
-                mActivity.askForPermission();
-            } else {
-                boolean canDrawOverlays =true;
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    canDrawOverlays=Settings.canDrawOverlays(mContext);
-                if(!canDrawOverlays){
-                    mActivity.askForPermissionAndroid7();
-                }else{
-                    boolean isAdminActive = FroyoSupport.getInstance(mContext).isAdminActive();
-                    if (!isAdminActive) {
-                        mActivity.askForAdminActive();
+                mActivity.deniedPermission();
+        } else {
+                if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
+                        || !canAccessPhone || !canAccessStorage || !canAccessBackgroundLocation) {
+                    mActivity.askForPermission();
+                } else {
+                    boolean canDrawOverlays = true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                        canDrawOverlays = Settings.canDrawOverlays(mContext);
+                    if (!canDrawOverlays) {
+                        mActivity.askForPermissionAndroid7();
+                    } else {
+                        boolean isAdminActive = FroyoSupport.getInstance(mContext).isAdminActive();
+                        if (!isAdminActive) {
+                            mActivity.askForAdminActive();
+                        }else{
+                            if(!canAccessibility){
+                                mActivity.accessibility();
+                            }
+                        }
                     }
                 }
-            }
         }
     }
 

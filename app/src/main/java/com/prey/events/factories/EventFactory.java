@@ -153,8 +153,10 @@ public class EventFactory {
             }
         }
         if (USER_PRESENT.equals(intent.getAction())) {
-            PreyLogger.d("EventFactory USER_PRESENT");
-            PreyDeviceAdmin.sendUnLock(ctx);
+            if(!PreyPermission.isAccessibilityServiceEnabled(ctx)) {
+                PreyLogger.d("EventFactory USER_PRESENT");
+                PreyDeviceAdmin.sendUnLock(ctx);
+            }
             int minuteScheduled = PreyConfig.getPreyConfig(ctx).getMinuteScheduled();
             if(minuteScheduled>0){
                 PreyBetaController.startPrey(ctx,null);

@@ -70,7 +70,7 @@
 
     <application
         android:name="com.prey.PreyApp"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
@@ -104,6 +104,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".activities.CloseActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
 
         <activity android:name=".activities.SecurityActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -170,6 +174,14 @@
 
         <activity
             android:name="com.prey.activities.CheckPasswordActivity"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.prey.activities.PasswordActivity2"
             android:launchMode="singleInstance"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
@@ -337,19 +349,10 @@
                 <action android:name="android.app.action.ACTION_PASSWORD_SUCCEEDED" />
                 <action android:name="android.app.action.ACTION_PASSWORD_CHANGED" />
                 <action android:name="android.app.action.ACTION_PASSWORD_FAILED" />
-                <action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLE_REQUESTED" />
-                <action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLED" />
+
 
             </intent-filter>
         </receiver>
-
-        <!--
-        <receiver android:name="com.prey.receivers.SmsReceiver">
-            <intent-filter android:priority="2147483647" >
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-            </intent-filter>
-        </receiver>
-        -->
 
         <receiver android:name="com.prey.actions.autoconnect.AutoConnectAlarmReceiver" />
 
@@ -371,6 +374,7 @@
         <service android:name="com.prey.services.CheckLockActivated" />
         <service android:name="com.prey.services.PreySecureService" />
         <service android:name="com.prey.services.PreyOverlayService" />
+        <service android:name="com.prey.services.PreyAccessibilityService" />
 
         <service android:name="com.prey.services.PreyNotificationForeGroundService" />
 
@@ -408,6 +412,13 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+
+        <service android:name="com.prey.services.AppAccessibilityService" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" android:enabled="true">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+            <meta-data android:name="android.accessibilityservice" android:resource="@xml/accessibilityservice"/>
+        </service>
 
     </application>
 

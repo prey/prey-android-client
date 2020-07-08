@@ -291,7 +291,7 @@
     <string name="preference_background_title">Correr en Segundo Plano</string>
 
 
-    <string name="preferences_disable_power_alert_android9_title">No Disponible en Android 9</string>
+    <string name="preferences_disable_power_alert_android9_title">No Disponible en Android 9 en adelante</string>
     <string name="preferences_disable_power_alert_android9_message">Esta función no está disponible en esta versión de Android por restricciones de Google.</string>
 
     <string name="preference_biometric_summary">Utiliza tu huella digital en vez de tu contraseña para ingresar a Configuraciones de la aplicación</string>
@@ -334,4 +334,6 @@
     <string name="permission_manually">Permitir manualmente</string>
 
     <string name="email_resend">Si el correo ingresado es válido, recibirá las instrucciones de activación en breve.</string>
+    <string name="permission_summary">Habilitar el servicio de accesibilidad para Prey permite bloquear todas las aplicaciones antes de que se abran cuando el dispositivo está marcado como perdido.</string>
+
 </resources>
