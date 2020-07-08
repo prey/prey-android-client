@@ -33,7 +33,7 @@ public class PreyJobService extends JobService {
     }
     public static void schedule(Context ctx ) {
         int minutes = getMinuteScheduled(ctx);
-        PreyLogger.i("SCHEDULE minuteScheduled:"+minutes);
+        PreyLogger.d("SCHEDULE minuteScheduled:"+minutes);
         if (minutes == 0) {
             PreyScheduled.getInstance(ctx).reset();
             cancel(ctx);
@@ -65,13 +65,12 @@ public class PreyJobService extends JobService {
         JobScheduler jobScheduler =null;
         jobScheduler=(JobScheduler)ctx.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.cancel(JOB_ID);
-        PreyLogger.i("SCHEDULE cancel");
+        PreyLogger.d("SCHEDULE cancel");
     }
 
     @Override
     public boolean onStartJob(final JobParameters jobParameters) {
         PreyLogger.d("SCHEDULE onStartJob");
-        PreyLogger.i("SCHEDULE hola");
         try {
             PreyBetaActionsRunner.getInstructionsNewThread(getApplicationContext(), null,false);
         } catch (Exception e){

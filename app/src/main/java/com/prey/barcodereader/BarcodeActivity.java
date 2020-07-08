@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -32,6 +33,8 @@ import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.actions.aware.AwareController;
 import com.prey.activities.CheckPasswordHtmlActivity;
+import com.prey.activities.LoginActivity;
+import com.prey.activities.PermissionInformationActivity;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
@@ -41,7 +44,6 @@ public class BarcodeActivity extends Activity   {
     private CompoundButton useFlash;
     private TextView statusMessage;
     private TextView barcodeValue;
-
     private static final int RC_BARCODE_CAPTURE = 9001;
 
     @Override
@@ -49,29 +51,20 @@ public class BarcodeActivity extends Activity   {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_barcode);
-
         statusMessage = (TextView) findViewById(R.id.status_message);
         barcodeValue = (TextView) findViewById(R.id.barcode_value);
-
         autoFocus = (CompoundButton) findViewById(R.id.auto_focus);
         useFlash = (CompoundButton) findViewById(R.id.use_flash);
         autoFocus.setChecked(true);
-
         Intent intent = new Intent(this, BarcodeCaptureActivity.class);
         intent.putExtra(BarcodeCaptureActivity.AutoFocus, autoFocus.isChecked());
         intent.putExtra(BarcodeCaptureActivity.UseFlash, useFlash.isChecked());
-
         startActivityForResult(intent, RC_BARCODE_CAPTURE);
-
-
-
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         Button readBarcodeButton=(Button)findViewById(R.id.read_barcode);
         readBarcodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,10 +77,14 @@ public class BarcodeActivity extends Activity   {
         });
     }
 
-
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);
+        Intent intent =null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);
+        }else{
+            intent = new Intent(getApplicationContext(), LoginActivity.class);
+        }
         startActivity(intent);
         finish();
     }
@@ -104,7 +101,6 @@ public class BarcodeActivity extends Activity   {
                     String apikey = "";
                     String mail = "batch@preyproject.com";
                     if (barcodeValue.indexOf("prey") >= 0) {
-
                         barcodeValue = barcodeValue.substring(5);
                         if(barcodeValue.indexOf("&")>=0){
                             String[] pairs = barcodeValue.split("&");
@@ -125,10 +121,7 @@ public class BarcodeActivity extends Activity   {
                         if (!"".equals(apikey)) {
                             new AddDeviceToApiKeyBatch().execute(apikey, mail, PreyUtils.getDeviceType(this));
                         }
-
-
                     }
-
                 } else {
                     statusMessage.setText(R.string.barcode_failure);
                     PreyLogger.d("No barcode captured, intent data is null");
@@ -142,13 +135,9 @@ public class BarcodeActivity extends Activity   {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
-
-
     String error = null;
-
     private static final int NO_MORE_DEVICES_WARNING = 0;
     private static final int ERROR = 3;
-
     private boolean noMoreDeviceError = false;
 
     private class AddDeviceToApiKeyBatch extends AsyncTask<String, Void, Void> {
@@ -212,19 +201,20 @@ public class BarcodeActivity extends Activity   {
                 bundle.putString("message", message);
                 bundle.putString("nexturl", "tryReport");
                 PreyConfig.getPreyConfig(getApplicationContext()).setCamouflageSet(true);
-                Intent intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);
+                Intent intent = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);
+                }else{
+                    intent = new Intent(getApplicationContext(), PermissionInformationActivity.class);
+                }
                 intent.putExtras(bundle);
                 startActivity(intent);
-
                 finish();
-
-
             } else {
                 showDialog(ERROR);
             }
         }
     }
-
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -261,12 +251,9 @@ public class BarcodeActivity extends Activity   {
                 ad.setMessage(error);
                 ad.setButton(DialogInterface.BUTTON_POSITIVE, this.getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // Handler code
                     }
                 });
-
                 ad.setCancelable(false);
-
                 break;
 
             case NO_MORE_DEVICES_WARNING:
@@ -276,11 +263,9 @@ public class BarcodeActivity extends Activity   {
                 ad.setMessage(error);
                 ad.setButton(DialogInterface.BUTTON_POSITIVE, this.getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // Handler code
                     }
                 });
                 ad.setCancelable(false);
-
                 break;
             default:
                 super.onPrepareDialog(id, dialog);

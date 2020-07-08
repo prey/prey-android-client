@@ -49,9 +49,10 @@ public class JSONParser {
             PreyLogger.e("Error, causa:" + e.getMessage(), e);
             return null;
         }
-        PreyLogger.i("_______cmd________");
-        PreyLogger.i(sb);
-
+        if(sb!=null) {
+            PreyLogger.i("_______cmd________");
+            PreyLogger.i(sb);
+        }
         //json = "[{\"command\":\"history\",\"target\":\"call\",\"options\":{}}]";
         //json = "[{\"command\":\"history\",\"target\":\"sms\",\"options\":{}}]";
         //json = "[{\"command\":\"history\",\"target\":\"contact\",\"options\":{}}]";
@@ -72,7 +73,7 @@ public class JSONParser {
         //json = "[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}},{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}, {\"command\":\"get\",\"target\":\"report\",\"options\":{\"include\"[\"picture\",\"location\",\"screenshot\",\"access_points_list\"]}}]";
         //json = "[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}}, {\"command\":\"get\",\"target\":\"report\",\"options\":{\"delay\": \"25\",\"include\"[\"picture\",\"location\",\"screenshot\",\"access_points_list\"]}}]";
         //json = "[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}}
-        //json = "[{\"command\": \"data\",\"target\": \"location\",\"options\": {}}]";
+        //json = "[{\"command\": \"get\",\"target\": \"location\",\"options\": {}}]";
         //json = "[{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"message\":\"This device i.\"}}]";
         //json = "[{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}]";
         //json = "[{\"command\":\"start\",\"target\":\"alarm\",\"options\":null}]";

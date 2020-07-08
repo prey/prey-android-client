@@ -116,7 +116,7 @@ public class PreyApp extends Application {
             PreyLogger.d("#######sessionId:" + sessionId);
             PreyConfig.getPreyConfig(ctx).setSessionId(sessionId);
             final boolean missing=PreyConfig.getPreyConfig(ctx).isMissing();
-            if (deviceKey != null && deviceKey != "") {
+            if (deviceKey != null && !"".equals(deviceKey)) {
                 new Thread() {
                     public void run() {
                        PreyConfig.getPreyConfig(ctx).registerC2dm();

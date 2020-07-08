@@ -108,10 +108,6 @@ public class ReportService extends IntentService {
 							PreyConfig.getPreyConfig(ctx).setMissing(false);
 							PreyConfig.getPreyConfig(ctx).setIntervalReport("");
 							PreyConfig.getPreyConfig(ctx).setExcludeReport("");
-						}else{
-							if (response.getStatusCode() != 200 && response.getStatusCode() != 403) {
-								PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"failed", null, UtilJson.makeMapParam("get", "report", "failed", "{\"code:\":"+response.getStatusCode()+"}"));
-							}
 						}
 					}
 				}
