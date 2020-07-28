@@ -880,48 +880,7 @@ public class PreyWebServices {
         return jsnobject;
     }
 
-
     public void sendEvent(final Context ctx,final int id  ) {
-        new Thread() {
-            public void run() {
-                PreyPhone phone=new PreyPhone(ctx);
-                String serialNumber=phone.getHardware().getSerialNumber();
-                String version=PreyConfig.getPreyConfig(ctx).getPreyVersion();
-                String sid=PreyConfig.getPreyConfig(ctx).getSessionId();
-                try {
-                    String page = FileConfigReader.getInstance(ctx).getPreyEventsLogs();;
-                    PreyLogger.d("URL:"+page);
-                    JSONObject jsonParam = new JSONObject();
-                    jsonParam.put("enum", id);
-
-                    JSONArray properties=new JSONArray();
-
-                    JSONObject jsonSid = new JSONObject();
-                    jsonSid.put("name", "sid");
-                    jsonSid.put("value", sid);
-                    properties.put(jsonSid);
-
-                    JSONObject jsonSerial = new JSONObject();
-                    jsonSerial.put("name", "sn");
-                    jsonSerial.put("value", serialNumber);
-                    properties.put(jsonSerial);
-
-
-                    JSONObject jsonVersion = new JSONObject();
-                    jsonVersion.put("name", "version");
-                    jsonVersion.put("value", version);
-                    properties.put(jsonVersion);
-
-                    jsonParam.put("properties",properties);
-
-                    PreyLogger.d("__________jsonParam:"+jsonParam.toString());
-
-                    PreyRestHttpClient.getInstance(ctx).postJson(page, jsonParam);
-                } catch (Exception e) {
-                    PreyLogger.e("Error:" + e.getMessage(), e);
-                }
-            }
-        }.start();
     }
 
     public PreyHttpResponse sendTree(final Context ctx,JSONObject json  ) throws PreyException{

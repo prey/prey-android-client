@@ -257,17 +257,8 @@ public class SignUpActivity extends Activity {
                     progressDialog.dismiss();
 
                 if (error == null) {
-                    String message = getString(R.string.new_account_congratulations_text, email);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("message", message);
-                    Intent intent =null;
-                    if (PreyConfig.getPreyConfig(SignUpActivity.this).isChromebook()) {
-                        intent = new Intent(SignUpActivity.this, WelcomeActivity.class);
-                        PreyConfig.getPreyConfig(SignUpActivity.this).setProtectReady(true);
-                    }else {
-                        intent = new Intent(SignUpActivity.this, PermissionInformationActivity.class);
-                    }
-                    intent.putExtras(bundle);
+                    Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
                 } else {

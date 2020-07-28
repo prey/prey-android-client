@@ -230,18 +230,8 @@ public class SignInActivity extends Activity {
                 if(progressDialog!=null)
                     progressDialog.dismiss();
                 if (error == null) {
-                        String message = getString(R.string.device_added_congratulations_text);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("message", message);
-                        Intent intent =null;
-                        if (PreyConfig.getPreyConfig(SignInActivity.this).isChromebook()) {
-                            intent = new Intent(SignInActivity.this, WelcomeActivity.class);
-                            PreyConfig.getPreyConfig(SignInActivity.this).setProtectReady(true);
-                        }else {
-                            intent = new Intent(SignInActivity.this, PermissionInformationActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        }
-                        intent.putExtras(bundle);
+                        Intent intent = new Intent(SignInActivity.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();
                 } else {

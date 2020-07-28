@@ -18,6 +18,8 @@ import android.view.Window;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
+import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.json.actions.Lock;
 import com.prey.receivers.PreyDeviceAdmin;
 import com.prey.services.CheckLockActivated;
 import com.prey.services.PreyLockService;
@@ -60,10 +62,10 @@ public class LoginActivity extends Activity {
         boolean isLockSet=PreyConfig.getPreyConfig(getApplicationContext()).isLockSet();
         if (isLockSet) {
            if(PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(getApplicationContext())) {
-                PreyLogger.d("Login Boot finished. PreyLockService");
-                getApplicationContext().startService(new Intent(getApplicationContext(), PreyLockService.class));
+               PreyLogger.d("Login Boot finished. PreyLockService");
+               getApplicationContext().startService(new Intent(getApplicationContext(), PreyLockService.class));
            }else{
-               PreyDeviceAdmin.lockWhenYouNocantDrawOverlays(getApplicationContext());
+               Lock.lockWhenYouNocantDrawOverlays(getApplicationContext());
            }
         }
         boolean ready=PreyConfig.getPreyConfig(this).getProtectReady();
@@ -83,7 +85,18 @@ public class LoginActivity extends Activity {
             if (deviceKey != null && deviceKey != "") {
                 intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
             }else{
-                intent = new Intent(LoginActivity.this, SignInActivity.class);
+                boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(this);
+                PreyLogger.d("LoginActivity: canAccessibility:" + canAccessibility);
+                boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+                PreyLogger.d("LoginActivity: canDrawOverlays:" + canDrawOverlays);
+                boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
+                PreyLogger.d("LoginActivity: isAdminActive:" + isAdminActive);
+                boolean configurated= canDrawOverlays &&isAdminActive&&canAccessibility;
+                if (configurated) {
+                    intent = new Intent(LoginActivity.this, SignInActivity.class);
+                } else {
+                    intent = new Intent(LoginActivity.this, OnboardingActivity.class);
+                }
             }
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -97,7 +110,6 @@ public class LoginActivity extends Activity {
         startActivity(intent);
         finish();
     }
-
 
     private boolean isThisDeviceAlreadyRegisteredWithPrey() {
         return PreyConfig.getPreyConfig(LoginActivity.this).isThisDeviceAlreadyRegisteredWithPrey(false);

@@ -16,6 +16,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.LoginActivity;
+import com.prey.activities.PermissionInformationActivity;
 
 public class PreyAccessibilityService extends Service {
 
@@ -40,10 +41,10 @@ public class PreyAccessibilityService extends Service {
                         if(isAccessibilityServiceEnabled()){
                             run=false;
                             Intent intentWelcome = null;
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                                 intentWelcome = new Intent(ctx, CheckPasswordHtmlActivity.class);
                             }else{
-                                intentWelcome = new Intent(ctx, LoginActivity.class);
+                                intentWelcome = new Intent(ctx, PermissionInformationActivity.class);
                             }
                             intentWelcome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intentWelcome);
