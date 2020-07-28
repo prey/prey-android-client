@@ -160,17 +160,6 @@ public class PreyApp extends Application {
                     }
                 }.start();
             }
-            /*else{
-                initChromebook(ctx);
-            }
-            IntentFilter restrictionsFilter = new IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
-            BroadcastReceiver restrictionsReceiver = new BroadcastReceiver() {
-                @Override public void onReceive(Context ctx, Intent intent) {
-                    initChromebook(ctx);
-                }
-            };
-            registerReceiver(restrictionsReceiver, restrictionsFilter);
-            */
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
         }
@@ -207,35 +196,5 @@ public class PreyApp extends Application {
             sessionCount++;
         }
     }
-
-    /*
-    private void initChromebook(final Context ctx){
-        String deviceKey = PreyConfig.getPreyConfig(ctx).getDeviceId();
-        if (deviceKey == null || deviceKey == "") {
-            if (PreyConfig.getPreyConfig(ctx).isChromebook()) {
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    RestrictionsManager manager = (RestrictionsManager) getSystemService(Context.RESTRICTIONS_SERVICE);
-                    Bundle bundle = manager.getApplicationRestrictions();
-                    if (bundle.containsKey("api_key")) {
-                        final String api_key = bundle.getString("api_key");
-                        new Thread() {
-                            public void run() {
-                                try {
-                                    PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, api_key, "", PreyUtils.LAPTOP);
-                                    PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
-                                    PreyConfig.getPreyConfig(ctx).registerC2dm();
-                                    PreyWebServices.getInstance().sendEvent(ctx, PreyConfig.ANDROID_SIGN_UP);
-                                    PreyConfig.getPreyConfig(ctx).setRunBackground(true);
-                                    RunBackgroundCheckBoxPreference.notifyReady(ctx);
-                                    new PreyApp().run(ctx);
-                                } catch (Exception e) {
-                                }
-                            }
-                        }.start();
-                    }
-                }
-            }
-        }
-    }*/
 
 }

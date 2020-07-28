@@ -38,6 +38,7 @@ import com.prey.actions.triggers.SimTriggerReceiver;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.Event;
+import com.prey.json.actions.Lock;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.UtilConnection;
 import com.prey.receivers.PreyDeviceAdmin;
@@ -155,7 +156,7 @@ public class EventFactory {
         if (USER_PRESENT.equals(intent.getAction())) {
             if(!PreyPermission.isAccessibilityServiceEnabled(ctx)) {
                 PreyLogger.d("EventFactory USER_PRESENT");
-                PreyDeviceAdmin.sendUnLock(ctx);
+                Lock.sendUnLock(ctx);
             }
             int minuteScheduled = PreyConfig.getPreyConfig(ctx).getMinuteScheduled();
             if(minuteScheduled>0){
