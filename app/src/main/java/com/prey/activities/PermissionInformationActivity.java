@@ -32,15 +32,15 @@ import com.prey.services.PreyOverlayService;
 public class PermissionInformationActivity extends PreyActivity {
 
     private static final int SECURITY_PRIVILEGES = 10;
-    private String congratsMessage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        Bundle bundle = getIntent().getExtras();
-        congratsMessage = bundle.getString("message");
+
+
     }
 
     @Override
@@ -85,10 +85,16 @@ public class PermissionInformationActivity extends PreyActivity {
                 intent4.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent4);
             }else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    intent = new Intent(PermissionInformationActivity.this, CheckPasswordHtmlActivity.class);
-                } else {
-                    intent = new Intent(PermissionInformationActivity.this, LoginActivity.class);
+                boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+                if(!canDrawOverlays) {
+                    askForPermissionAndroid7();
+                    startOverlayService();
+                }else{
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        intent = new Intent(PermissionInformationActivity.this, CheckPasswordHtmlActivity.class);
+                    } else {
+                        intent = new Intent(PermissionInformationActivity.this, LoginActivity.class);
+                    }
                 }
             }
             PreyConfig.getPreyConfig(PermissionInformationActivity.this).setProtectReady(true);

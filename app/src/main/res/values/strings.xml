@@ -40,7 +40,7 @@
 
     <string name="password_subtitle">For your safety, enter your password, to manage device settings.</string>
     <string name="password_button">SIGN IN</string>
-    <string name="password_forgot">Forgot password?</string>
+    <string name="password_forgot">FORGOT PASSWORD?</string>
     <string name="password_hint">Type in your password</string>
 
     <string name="tour_01_title">DOWNLOAD PREY ON THE DEVICES YOU WANT TO PROTECT.</string>
@@ -341,5 +341,28 @@
 
     <string name="email_resend">If the email entered is valid, we will send the activation link shortly.</string>
     <string name="permission_summary">Enabling the accessibility service for Prey allows it to block all applications before they ́re opened when the device is marked as missing.</string>
+
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+    <string name="permiso_tit">PREY NEEDS PERMISSIONS TO COMPLETELY SECURE YOUR DEVICE</string>
+    <string name="permiso_cat1">LOCATION, TAKE PICTURES AND RECORD VIDEOS, MAKE PHONE CALLS, ACCESS PHOTOS, MEDIA, AND FILES</string>
+    <string name="permiso_des1"><b>DEVICE\'S LOCATION</b>\nDevice tracking and use of control zones for geofencing require the device location.\n\n<b>TAKE PICTURES AND RECORD VIDEO</b>\nThe images included in evidence reports are taken with front and back cameras.\n\n<b>MAKE AND MANAGE PHONE CALLS</b>\nPrey uses this permission to show the user the device\'s IMEI on evidence reports.\n\n<b>ACCESS PHOTOS, MEDIA AND FILES ON YOUR DEVICE</b>\nThe File Retrieval tool needs this permission to recover files remotely from the device.</string>
+    <string name="permiso_cat2">ACCESS TO DEVICE ADMIN PERMISSION</string>
+    <string name="permiso_des2"><b>ACCESS DEVICE ADMIN PERMISSIONS</b>\nPrey can activate extra security tools with the administrator permission, like the Remote Wipe and Lock, or the Block Uninstall setting.</string>
+    <string name="permiso_cat3">OVERLAP APP SCREENS AND ACCESSIBILITY</string>
+    <string name="permiso_des3"><b>OVERLAP APP SCREENS</b>\nWhen a Remote Lock is activated, Prey utilizes this permission to display a custom screen lock over all other apps.\n\n<b>ACCESSIBILITY</b>\nWhen a device is marked as missing, this permission ensures that even if the permission to overlap app screens is removed, Prey will still block all applications before they can be opened.</string>
+    <string name="permiso_link">GO TO PERMITS</string>
+    <string name="link_privacy">YOUR PRIVACY</string>
+    <string name="privacy_info">All of the app functionalities require you to give the permissions needed and to activate your account directly in the control panel.\n\nNone of your data is being sold or sent to third parties for any purpose. It will not be used for any purposes other than to deliver or improve the app functionalities. \n\nAll data is sent through SSL.</string>
+    <string name="privacy_home">BACK</string>
+    <string name="onboarding01_tit">YOUR SECURITY HUB</string>
+    <string name="onboarding01_body">Protect your phone, laptop and tablet with the one app you can access anywhere.</string>
+    <string name="onboarding02_tit">TRACK AND FIND</string>
+    <string name="onboarding02_body">Know where you lost your device is and detect when it moves somewhere.</string>
+    <string name="onboarding03_tit">REACT AND PROTECT</string>
+    <string name="onboarding03_body">Protect your device and its data with security actions like Lock, Wipe and Alarm.</string>
+    <string name="onboarding04_tit">RECOVER WITH EVIDENCE</string>
+    <string name="onboarding04_body">Get evidence reports with pictures, screenshots, nearby WiFis, user data and locations.</string>
 
 </resources>
