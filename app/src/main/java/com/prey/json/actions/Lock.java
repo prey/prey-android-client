@@ -11,10 +11,15 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.KeyguardManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -27,6 +32,8 @@ import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.LoginActivity;
 import com.prey.activities.PasswordActivity2;
 import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.events.Event;
+import com.prey.events.manager.EventManagerRunner;
 import com.prey.exceptions.PreyException;
 import com.prey.json.JsonAction;
 import com.prey.json.UtilJson;
@@ -163,11 +170,11 @@ public class Lock extends JsonAction {
                     intent4.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ctx.startActivity(intent4);
                 }else{
-                    PreyDeviceAdmin.lockWhenYouNocantDrawOverlays(ctx);
+                    lockWhenYouNocantDrawOverlays(ctx);
                 }
             }
         }else{
-            PreyDeviceAdmin.lockOld(ctx);
+            lockOld(ctx);
         }
         new Thread(new Runnable() {
             public void run() {
@@ -177,6 +184,119 @@ public class Lock extends JsonAction {
                 }catch(Exception e){}
             }
         }).start();
+    }
+
+    public static void sendUnLock(final Context context){
+        new Thread(new Runnable() {
+            public void run() {
+                boolean isLockSet = PreyConfig.getPreyConfig(context).isLockSet();
+                PreyLogger.d("sendUnLock isLockSet:" + isLockSet);
+                if (isLockSet) {
+                    if (PreyConfig.getPreyConfig(context).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(context)) {
+                        PreyLogger.d("sendUnLock nothing");
+                    } else {
+                        PreyLogger.d("sendUnLock deleteUnlockPass");
+                        PreyConfig.getPreyConfig(context).setLock(false);
+                        PreyConfig.getPreyConfig(context).deleteUnlockPass();
+                        final Context ctx = context;
+                        new Thread() {
+                            public void run() {
+                                String jobIdLock = PreyConfig.getPreyConfig(ctx).getJobIdLock();
+                                String reason = "{\"origin\":\"user\"}";
+                                if (jobIdLock != null && !"".equals(jobIdLock)) {
+                                    reason = "{\"origin\":\"user\",\"device_job_id\":\"" + jobIdLock + "\"}";
+                                    PreyConfig.getPreyConfig(ctx).setJobIdLock("");
+                                }
+                                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
+                            }
+                        }.start();
+                    }
+                }
+            }
+        }).start();
+    }
+
+    public static void lockWhenYouNocantDrawOverlays(Context ctx) {
+        boolean isLockSet=PreyConfig.getPreyConfig(ctx).isLockSet();
+        PreyLogger.d("DeviceAdmin lockWhenYouNocantDrawOverlays isLockSet:" + isLockSet);
+        if (isLockSet) {
+            if(!PreyPermission.isAccessibilityServiceEnabled(ctx)) {
+                if (!canDrawOverlays(ctx)) {
+                    boolean isPatternSet = isPatternSet(ctx);
+                    boolean isPassOrPinSet = isPassOrPinSet(ctx);
+                    PreyLogger.d("CheckLockActivated isPatternSet:" + isPatternSet);
+                    PreyLogger.d("CheckLockActivated  isPassOrPinSet:" + isPassOrPinSet);
+                    if (isPatternSet || isPassOrPinSet) {
+                        FroyoSupport.getInstance(ctx).lockNow();
+                        new Thread(new EventManagerRunner(ctx, new Event(Event.NATIVE_LOCK))).start();
+                    } else {
+                        try {
+                            FroyoSupport.getInstance(ctx).changePasswordAndLock(PreyConfig.getPreyConfig(ctx).getUnlockPass(), true);
+                            new Thread(new EventManagerRunner(ctx, new Event(Event.NATIVE_LOCK))).start();
+                        } catch (Exception e) {
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static void lockOld(Context ctx) {
+        boolean isLockSet=PreyConfig.getPreyConfig(ctx).isLockSet();
+        PreyLogger.d("DeviceAdmin lockWhenYouNocantDrawOverlays isLockSet:" + isLockSet);
+        if (isLockSet) {
+            boolean isPatternSet = isPatternSet(ctx);
+            boolean isPassOrPinSet = isPassOrPinSet(ctx);
+            PreyLogger.d("CheckLockActivated isPatternSet:" + isPatternSet);
+            PreyLogger.d("CheckLockActivated  isPassOrPinSet:" + isPassOrPinSet);
+            if (isPatternSet || isPassOrPinSet) {
+                FroyoSupport.getInstance(ctx).lockNow();
+            } else {
+                try {
+                    FroyoSupport.getInstance(ctx).changePasswordAndLock(PreyConfig.getPreyConfig(ctx).getUnlockPass(), true);
+                } catch (Exception e) {
+                    PreyLogger.e("error lockold:"+e.getMessage(),e);
+                }
+            }
+        }
+    }
+
+    public static boolean canDrawOverlays(Context ctx) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        return Settings.canDrawOverlays(ctx);
+    }
+
+    /**
+     * @return true if pattern set, false if not (or if an issue when checking)
+     */
+    public static boolean isPatternSet(Context ctx) {
+        ContentResolver cr = ctx.getContentResolver();
+        try {
+            int lockPatternEnable = Settings.Secure.getInt(cr, Settings.Secure.LOCK_PATTERN_ENABLED);
+            return lockPatternEnable == 1;
+        } catch (Settings.SettingNotFoundException e) {
+            return false;
+        }
+    }
+
+    /**
+     * @return true if pass or pin set
+     */
+    @TargetApi(16)
+    public static boolean isPassOrPinSet(Context ctx) {
+        KeyguardManager keyguardManager = (KeyguardManager) ctx.getSystemService(Context.KEYGUARD_SERVICE); //api 16+
+        return keyguardManager.isKeyguardSecure();
+    }
+
+    /**
+     * @return true if pass or pin or pattern locks screen
+     */
+    @TargetApi(23)
+    private boolean isDeviceLocked(Context ctx) {
+        KeyguardManager keyguardManager = (KeyguardManager) ctx.getSystemService(Context.KEYGUARD_SERVICE); //api 23+
+        return keyguardManager.isDeviceSecure();
     }
 
 }

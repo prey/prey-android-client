@@ -13,6 +13,7 @@ import android.os.IBinder;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.json.actions.Lock;
 import com.prey.receivers.PreyDeviceAdmin;
 
 public class CheckLockActivated extends Service {
@@ -41,8 +42,8 @@ public class CheckLockActivated extends Service {
                     }
                     try {
                         Thread.sleep(1000);
-                        if (!PreyDeviceAdmin.canDrawOverlays(ctx)) {
-                            PreyDeviceAdmin.lockWhenYouNocantDrawOverlays(ctx);
+                        if (!Lock.canDrawOverlays(ctx)) {
+                            Lock.lockWhenYouNocantDrawOverlays(ctx);
                             stopSelf();
                             break;
                         }

@@ -33,13 +33,6 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!--
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_MMS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    -->
-
     <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -104,6 +97,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".activities.OnboardingActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activities.PermissionActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activities.PrivacyActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
 
         <activity android:name=".activities.CloseActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -346,11 +351,6 @@
 
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-                <action android:name="android.app.action.ACTION_PASSWORD_SUCCEEDED" />
-                <action android:name="android.app.action.ACTION_PASSWORD_CHANGED" />
-                <action android:name="android.app.action.ACTION_PASSWORD_FAILED" />
-
-
             </intent-filter>
         </receiver>
 
