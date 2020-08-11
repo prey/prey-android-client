@@ -1,27 +1,27 @@
 self.__precacheManifest = [
   {
-    "revision": "183f0f3bb1a9df67f876",
-    "url": "./static/css/main.c6215e42.chunk.css"
+    "revision": "d165259e090af9d881eb",
+    "url": "./static/css/main.e988944f.chunk.css"
   },
   {
-    "revision": "183f0f3bb1a9df67f876",
-    "url": "./static/js/main.183f0f3b.chunk.js"
+    "revision": "d165259e090af9d881eb",
+    "url": "./static/js/main.d165259e.chunk.js"
   },
   {
     "revision": "8c97409f0ee389fe75da",
     "url": "./static/js/runtime~main.8c97409f.js"
   },
   {
-    "revision": "df9373ab7c5566da9005",
-    "url": "./static/js/2.df9373ab.chunk.js"
-  },
-  {
-    "revision": "ce31486d2c6e0b6d55bbf5dbf26992f0",
-    "url": "./static/media/prey-iso-monotono-alt.ce31486d.svg"
+    "revision": "f653eb3c091d1f800dfc",
+    "url": "./static/js/2.f653eb3c.chunk.js"
   },
   {
     "revision": "c3679e2d8686db6f8013ffe2ad603c2c",
     "url": "./static/media/prey-logo-monotono-alt.c3679e2d.svg"
+  },
+  {
+    "revision": "ce31486d2c6e0b6d55bbf5dbf26992f0",
+    "url": "./static/media/prey-iso-monotono-alt.ce31486d.svg"
   },
   {
     "revision": "6dd5ae67bb0dc9ae0c9886ef62c28dca",
@@ -120,10 +120,6 @@ self.__precacheManifest = [
     "url": "./static/media/regular-book-webfont.6e899114.woff"
   },
   {
-    "revision": "baaac74770efd8c34382afa00468f635",
-    "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
-  },
-  {
     "revision": "391159c582e0897e8d64ed22abe1ee2d",
     "url": "./static/media/regular-bold-webfont.391159c5.woff"
   },
@@ -132,7 +128,11 @@ self.__precacheManifest = [
     "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
   },
   {
-    "revision": "bdab7f9c666f90793f60114ddb930954",
+    "revision": "baaac74770efd8c34382afa00468f635",
+    "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
+  },
+  {
+    "revision": "9c63cb39d628f9a9a419cd7771174ff8",
     "url": "./index.html"
   }
 ];

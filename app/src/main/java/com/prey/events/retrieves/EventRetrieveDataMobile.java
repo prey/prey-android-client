@@ -21,18 +21,18 @@ import org.json.JSONObject;
 public class EventRetrieveDataMobile {
 
     public  void execute(Context context, EventManager manager){
-        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        String mobile_internet=null;
-        if(activeNetwork!=null && activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE){
-            try {
-                mobile_internet=PreyPhone.getNetworkClass(context);
-                PreyConfig.getPreyConfig(context).setPreviousSsid(mobile_internet);
-            } catch (Exception e) {
-            }
-        }
         JSONObject mobileSon = new JSONObject();
         try {
+            ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            String mobile_internet=null;
+            if(activeNetwork!=null && activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE){
+                try {
+                    mobile_internet=PreyPhone.getNetworkClass(context);
+                    PreyConfig.getPreyConfig(context).setPreviousSsid(mobile_internet);
+                } catch (Exception e) {
+                }
+            }
             mobileSon.put("mobile_internet", mobile_internet);
             PreyLogger.d("mobile_internet:"+mobile_internet);
         } catch (JSONException e) {

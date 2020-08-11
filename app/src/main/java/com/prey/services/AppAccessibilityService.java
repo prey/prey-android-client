@@ -8,11 +8,13 @@ package com.prey.services;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
+import android.os.Build;
 import android.view.accessibility.AccessibilityEvent;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.activities.PasswordActivity2;
+import com.prey.activities.PasswordNativeActivity;
+import com.prey.activities.PasswordHtmlActivity;
 
 public class AppAccessibilityService extends AccessibilityService {
 
@@ -35,7 +37,12 @@ public class AppAccessibilityService extends AccessibilityService {
                     if ("com.prey".equals(charSequence) || "android".equals(charSequence)) {
                     } else {
                         PreyLogger.d("AppAccessibilityService isLock:" + isLock);
-                        Intent intent = new Intent(getApplicationContext(), PasswordActivity2.class);
+                        Intent intent = null;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            intent = new Intent(getApplicationContext(), PasswordHtmlActivity.class);
+                        }else{
+                            intent = new Intent(getApplicationContext(), PasswordNativeActivity.class);
+                        }
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         getApplicationContext().startActivity(intent);
                     }

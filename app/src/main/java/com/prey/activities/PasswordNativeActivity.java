@@ -30,7 +30,7 @@ import com.prey.R;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 
-public class PasswordActivity2 extends Activity {
+public class PasswordNativeActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

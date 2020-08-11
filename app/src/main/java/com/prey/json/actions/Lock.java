@@ -30,7 +30,8 @@ import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.LoginActivity;
-import com.prey.activities.PasswordActivity2;
+import com.prey.activities.PasswordNativeActivity;
+import com.prey.activities.PasswordHtmlActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
@@ -38,10 +39,9 @@ import com.prey.exceptions.PreyException;
 import com.prey.json.JsonAction;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
-import com.prey.receivers.PreyDeviceAdmin;
 import com.prey.services.PreyDisablePowerOptionsService;
-import com.prey.services.PreyLockService;
-import com.prey.services.PreySecureService;
+import com.prey.services.PreyLockHtmlService;
+import com.prey.services.PreySecureHtmlService;
 
 public class Lock extends JsonAction {
 
@@ -102,7 +102,7 @@ public class Lock extends JsonAction {
             }
             PreyConfig.getPreyConfig(ctx).setLock(false);
             PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
-            try{ctx.stopService(new Intent(ctx, PreySecureService.class));}catch(Exception e){}
+            try{ctx.stopService(new Intent(ctx, PreySecureHtmlService.class));}catch(Exception e){}
             Intent intent = new Intent(ctx, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             ctx.startActivity(intent);
@@ -110,10 +110,15 @@ public class Lock extends JsonAction {
                 Thread.sleep(1000);
                 PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId,UtilJson.makeMapParam("start", "lock", "stopped",reason));
                 Thread.sleep(2000);
-                View view=PreyConfig.getPreyConfig(ctx).view;
-                if(view!=null){
+                View viewLock=PreyConfig.getPreyConfig(ctx).viewLock;
+                if(viewLock!=null){
                     WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
-                    wm.removeView(view);
+                    wm.removeView(viewLock);
+                }
+                View viewSecure=PreyConfig.getPreyConfig(ctx).viewSecure;
+                if(viewSecure!=null){
+                    WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
+                    wm.removeView(viewSecure);
                 }
             }else{
                 PreyLogger.d("-- Unlock instruction received");
@@ -155,9 +160,14 @@ public class Lock extends JsonAction {
         PreyConfig.getPreyConfig(ctx).setLock(true);
         if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() ) {
             if(PreyPermission.canDrawOverlays(ctx)) {
-                Intent intent = new Intent(ctx, PreyLockService.class);
+                Intent intent = new Intent(ctx, PreyLockHtmlService.class);
                 ctx.startService(intent);
-                Intent intent4 = new Intent(ctx, PasswordActivity2.class);
+                Intent intent4 = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    intent4 = new Intent(ctx, PasswordHtmlActivity.class);
+                } else {
+                    intent4 = new Intent(ctx, PasswordNativeActivity.class);
+                }
                 intent4.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 ctx.startActivity(intent4);
                 if (PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()) {
@@ -166,7 +176,12 @@ public class Lock extends JsonAction {
                 }
             }else{
                 if(PreyPermission.isAccessibilityServiceEnabled(ctx)) {
-                    Intent intent4 = new Intent(ctx, PasswordActivity2.class);
+                    Intent intent4 = null;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        intent4 = new Intent(ctx, PasswordHtmlActivity.class);
+                    } else {
+                        intent4 = new Intent(ctx, PasswordNativeActivity.class);
+                    }
                     intent4.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ctx.startActivity(intent4);
                 }else{

@@ -10,7 +10,5 @@
     <force-lock />
     <reset-password />
     <wipe-data />
-    <watch-login />
-    <limit-password />
   </uses-policies>
 </device-admin>
