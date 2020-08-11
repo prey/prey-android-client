@@ -99,6 +99,7 @@ public class Detach {
         try { PreyConfig.getPreyConfig(ctx).removeDeviceId();} catch (Exception e) {error += e.getMessage();}
         try { PreyConfig.getPreyConfig(ctx).removeEmail();} catch (Exception e) {error += e.getMessage();}
         try { PreyConfig.getPreyConfig(ctx).removeApiKey();} catch (Exception e) {}
+        try { PreyConfig.getPreyConfig(ctx).setPinNumber("");} catch (Exception e) {error = e.getMessage();}
         try { PreyConfig.getPreyConfig(ctx).setEmail("");} catch (Exception e) {error = e.getMessage();}
         PreyLogger.d("7:"+error);
         try { PreyConfig.getPreyConfig(ctx).setDeviceId("");} catch (Exception e) {error = e.getMessage();}

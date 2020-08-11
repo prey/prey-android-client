@@ -8,8 +8,7 @@ package com.prey.receivers;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.services.PreyLockService;
-import com.prey.services.PreySecureService;
+import com.prey.services.PreySecureHtmlService;
 
 import android.annotation.TargetApi;
 import android.app.KeyguardManager;
@@ -76,7 +75,7 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                                 if("globalactions".equals(reason)&& pinNumber!=null&& !"".equals(pinNumber)){
                                     PreyLogger.d("pinNumber:"+pinNumber);
                                     if(!PreyConfig.getPreyConfig(context).isOpenSecureService()) {
-                                        Intent intentLock = new Intent(context, PreySecureService.class);
+                                        Intent intentLock = new Intent(context, PreySecureHtmlService.class);
                                         context.startService(intentLock);
                                     }
                                 }

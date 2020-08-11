@@ -20,9 +20,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.json.actions.Lock;
-import com.prey.receivers.PreyDeviceAdmin;
-import com.prey.services.CheckLockActivated;
-import com.prey.services.PreyLockService;
+import com.prey.services.PreyLockHtmlService;
 
 public class LoginActivity extends Activity {
 
@@ -63,7 +61,7 @@ public class LoginActivity extends Activity {
         if (isLockSet) {
            if(PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(getApplicationContext())) {
                PreyLogger.d("Login Boot finished. PreyLockService");
-               getApplicationContext().startService(new Intent(getApplicationContext(), PreyLockService.class));
+               getApplicationContext().startService(new Intent(getApplicationContext(), PreyLockHtmlService.class));
            }else{
                Lock.lockWhenYouNocantDrawOverlays(getApplicationContext());
            }

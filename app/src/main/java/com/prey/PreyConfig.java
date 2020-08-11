@@ -45,7 +45,7 @@ public class PreyConfig {
 
     private static final String HTTP="https://";
 
-    public static final String VERSION_PREY_DEFAULT="2.2.1";
+    public static final String VERSION_PREY_DEFAULT="2.2.2";
 
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
@@ -985,7 +985,11 @@ public class PreyConfig {
     }
 
     public String getPinNumber() {
-        return getString(PreyConfig.PIN_NUMBER2, "");
+        String pin=getString(PreyConfig.PIN_NUMBER2, "");
+        if(pin.length()>4){
+            pin=pin.substring(0,4);
+        }
+        return pin;
     }
 
     public void setSmsCommand(boolean smsCommand) {
@@ -1323,5 +1327,6 @@ public class PreyConfig {
         saveString(PreyConfig.LOCATION_INFO, locationInfo);
     }
 
-    public View view=null;
+    public View viewLock=null;
+    public View viewSecure=null;
 }

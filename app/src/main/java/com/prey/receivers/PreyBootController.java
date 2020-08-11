@@ -13,12 +13,10 @@ import android.content.Intent;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
-import com.prey.actions.aware.AwareConfig;
 import com.prey.json.actions.Report;
-import com.prey.preferences.DisablePowerCheckBoxPreference;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyDisablePowerOptionsService;
-import com.prey.services.PreyLockService;
+import com.prey.services.PreyLockHtmlService;
 
 public class PreyBootController extends BroadcastReceiver {
 
@@ -56,7 +54,7 @@ public class PreyBootController extends BroadcastReceiver {
                     try {
                         if (PreyConfig.getPreyConfig(ctx).isLockSet()) {
                             if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
-                                ctx.startService(new Intent(ctx, PreyLockService.class));
+                                ctx.startService(new Intent(ctx, PreyLockHtmlService.class));
                             }
                         }
                     }catch (Exception e){}

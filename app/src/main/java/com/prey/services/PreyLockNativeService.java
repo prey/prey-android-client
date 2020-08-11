@@ -28,7 +28,7 @@ import com.prey.activities.CloseActivity;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 
-public class PreyLockService extends Service{
+public class PreyLockNativeService extends Service{
 
     public IBinder onBind(Intent intent) {
         return null;
@@ -47,7 +47,7 @@ public class PreyLockService extends Service{
         if(unlock!=null&&!"".equals(unlock)) {
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             final View view = inflater.inflate(R.layout.lock_android7, null);
-            PreyConfig.getPreyConfig(this).view=view;
+            PreyConfig.getPreyConfig(this).viewLock=view;
             Typeface regularMedium = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-medium.ttf");
             final TextView textView1 = (TextView) view.findViewById(R.id.TextView_Lock_AccessDenied);
             textView1.setTypeface(regularMedium);

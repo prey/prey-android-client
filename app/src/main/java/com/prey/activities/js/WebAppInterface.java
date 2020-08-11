@@ -16,6 +16,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.Settings;
+import android.view.View;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
@@ -31,16 +33,17 @@ import com.prey.R;
 import com.prey.actions.location.LocationUpdatesService;
 import com.prey.actions.location.PreyLocation;
 import com.prey.activities.CheckPasswordHtmlActivity;
+import com.prey.activities.LoginActivity;
 import com.prey.activities.PanelWebActivity;
 import com.prey.activities.PreReportActivity;
 import com.prey.activities.SecurityActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.barcodereader.BarcodeActivity;
 import com.prey.exceptions.PreyException;
+import com.prey.json.UtilJson;
 import com.prey.json.actions.Detach;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
-import com.prey.services.AppAccessibilityService;
 import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyJobService;
 
@@ -476,6 +479,44 @@ public class WebAppInterface {
     @JavascriptInterface
     public String initMail(){
         return PreyConfig.getPreyConfig(mContext).getEmail();
+    }
+
+    @JavascriptInterface
+    public String lock(String key){
+        PreyLogger.d("lock:"+key);
+        String error2 = "";
+        final Context ctx = mContext;
+        String unlock = PreyConfig.getPreyConfig(ctx).getUnlockPass();
+        PreyLogger.d("lock:"+key+" unlock:"+unlock);
+        if (unlock != null && unlock.equals(key)) {
+            PreyConfig.getPreyConfig(ctx).setLock(false);
+            PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
+            new Thread() {
+                public void run() {
+                    String reason = "{\"origin\":\"user\"}";
+                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
+                }
+            }.start();
+            View viewLock=PreyConfig.getPreyConfig(ctx).viewLock;
+            if(viewLock!=null){
+                WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
+                wm.removeView(viewLock);
+            }
+            View viewSecure=PreyConfig.getPreyConfig(ctx).viewSecure;
+            if(viewSecure!=null){
+                WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
+                wm.removeView(viewSecure);
+            }
+            Intent intent = new Intent(ctx, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ctx.startActivity(intent);
+            try{Thread.sleep(2000);}catch (Exception e){}
+            ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
+        }else{
+            error2 = "{\"error\":[\"" + mContext.getString(R.string.password_wrong) + "\"]}";
+        }
+        PreyLogger.i("error2:"+error2);
+        return error2;
     }
 
     @JavascriptInterface
