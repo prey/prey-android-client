@@ -11,12 +11,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.hardware.Camera;
+import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,7 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
-public class PreReportActivity extends Activity implements SurfaceHolder.Callback {
+public class PreReportActivity extends Activity implements SurfaceHolder.Callback, OrientationManager.OrientationListener {
 
     public static PreReportActivity activity = null;
     public static Camera camera;
@@ -49,12 +49,18 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
     boolean secondPicture = false;
     static String BACK = "back";
     static String FRONT = "front";
+    static final int CODE_PORTRAIT=1;
+    static final int CODE_REVERSED_PORTRAIT=2;
+    static final int CODE_REVERSED_LANDSCAPE=3;
+    static final int CODE_LANDSCAPE=4;
+    OrientationManager orientationManager=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_camera2);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        orientationManager = new OrientationManager(getApplicationContext(), SensorManager.SENSOR_DELAY_NORMAL, this);
+        orientationManager.enable();
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
         mHolder = surfaceView.getHolder();
         mHolder.addCallback(this);
@@ -62,8 +68,6 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
         Typeface titilliumWebBold = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Bold.ttf");
         TextView pre_report_title = (TextView) findViewById(R.id.pre_report_title);
         pre_report_title.setTypeface(titilliumWebBold);
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             new CameraTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else
@@ -74,25 +78,6 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
         try {
             if (camera != null) {
                 Camera.Parameters parameters = camera.getParameters();
-                if ("front".equals(focus)) {
-                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        parameters.set("orientation", "portrait");
-                        parameters.set("rotation", 90);
-                    }
-                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        parameters.set("orientation", "landscape");
-                        parameters.set("rotation", 180);
-                    }
-                } else {
-                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        parameters.set("orientation", "portrait");
-                        parameters.set("rotation", 270);
-                    }
-                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        parameters.set("orientation", "landscape");
-                        parameters.set("rotation", 0);
-                    }
-                }
                 if (PreyConfig.getPreyConfig(ctx).isEclairOrAbove()) {
                     parameters = setParameters1(parameters);
                 }
@@ -227,13 +212,47 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
 
     private static final int PHOTO_HEIGHT = 1024;
     private static final int PHOTO_WIDTH = 768;
+    private int screenIntOrientation=-1;
 
     byte[] resizeImage(byte[] input) {
         try {
-            Bitmap original = BitmapFactory.decodeByteArray(input, 0, input.length);
+
+            Bitmap original = BitmapFactory.decodeByteArray(input , 0, input.length);
             Bitmap resized = Bitmap.createScaledBitmap(original, PHOTO_WIDTH, PHOTO_HEIGHT, true);
+            Bitmap resized2 =null;
+            Matrix matrix = new Matrix();
+            PreyLogger.d("SimpleCameraActivity focus :"+focus+" screenIntOrientation:"+screenIntOrientation);
+            if(screenIntOrientation==CODE_PORTRAIT ){
+                if ("front".equals(focus)) {
+                    matrix.postRotate(90);
+                } else {
+                    matrix.postRotate(270);
+                }
+            }
+            if(screenIntOrientation==CODE_REVERSED_PORTRAIT){
+                if ("front".equals(focus)) {
+                    matrix.postRotate(270);
+                } else {
+                    matrix.postRotate(90);
+                }
+            }
+            if(screenIntOrientation==CODE_LANDSCAPE ){
+                if ("front".equals(focus)) {
+                    matrix.postRotate(0);
+                } else {
+                    matrix.postRotate(0);
+                }
+            }
+            if(screenIntOrientation==CODE_REVERSED_LANDSCAPE ){
+                if ("front".equals(focus)) {
+                    matrix.postRotate(180);
+                } else {
+                    matrix.postRotate(180);
+                }
+            }
+            resized2 = Bitmap.createBitmap(resized, 0, 0, resized.getWidth(), resized.getHeight(), matrix, true);
             ByteArrayOutputStream blob = new ByteArrayOutputStream();
-            resized.compress(Bitmap.CompressFormat.JPEG, 100, blob);
+            resized2.compress(Bitmap.CompressFormat.JPEG, 100, blob);
             return blob.toByteArray();
         } catch (Exception e) {
             return input;
@@ -294,8 +313,11 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
             }
             try {
                 Thread.sleep(2000);
-                if (progressDialog != null)
-                    progressDialog.setMessage(getApplicationContext().getText(R.string.pre_report_camera2).toString());
+                try {
+                    if (progressDialog != null)
+                        progressDialog.setMessage(getApplicationContext().getText(R.string.pre_report_camera2).toString());
+                } catch (Exception e1) {
+                }
                 focus = BACK;
                 Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
                 Camera.getCameraInfo(1, cameraInfo);
@@ -322,6 +344,8 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
             try {
                 if (progressDialog != null)
                     progressDialog.setMessage(getApplicationContext().getText(R.string.pre_report_location).toString());
+            } catch (Exception e) {}
+            try{
                 preyLocation = LocationUtil.getLocation(getApplicationContext(), null, false);
                 if (preyLocation != null) {
                     PreyConfig.getPreyConfig(getApplicationContext()).setLocation(preyLocation);
@@ -332,6 +356,8 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
             try {
                 if (progressDialog != null)
                     progressDialog.setMessage(getApplicationContext().getText(R.string.pre_report_public_ip).toString());
+            } catch (Exception e) {}
+            try{
                 PreyPhone phone = new PreyPhone(getApplicationContext());
                 String publicIp = phone.getIPAddress();
                 PreyConfig.getPreyConfig(getApplicationContext()).setPublicIp(publicIp);
@@ -370,6 +396,24 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
             finish();
         }
 
+    }
+
+    @Override
+    public void onOrientationChange(OrientationManager.ScreenOrientation screenOrientation) {
+        switch(screenOrientation){
+            case PORTRAIT:
+                screenIntOrientation=1;
+                break;
+            case REVERSED_PORTRAIT:
+                screenIntOrientation=2;
+                break;
+            case REVERSED_LANDSCAPE:
+                screenIntOrientation=3;
+                break;
+            case LANDSCAPE:
+                screenIntOrientation=4;
+                break;
+        }
     }
 }
 

@@ -1,0 +1,66 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="#1e2938"
+    >
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+        android:layout_marginTop="100dp"
+        android:scaleType="fitCenter"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/prey_logo_b_mono2" />
+
+    <TextView
+        android:id="@+id/TextViewBatch2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:fontFamily="Avenir Next LT Pro"
+        android:text="@string/text_batch"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:textStyle="bold"
+
+
+        />
+
+    <EditText
+        android:id="@+id/editTextBatch2"
+        android:layout_width="fill_parent"
+        android:layout_height="36dp"
+        android:inputType="text"
+        android:ems="10"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:background="#fff"
+        android:paddingLeft="10dp"
+        android:hint="@string/placehoder_batch"
+        android:textColorHint="#9D9C96"
+        android:textColor="#000"
+        />
+
+    <Button
+        android:id="@+id/buttonBatch2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_batch"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="#626262"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:fontFamily="Avenir Next LT Pro"
+/>
+
+
+</LinearLayout>

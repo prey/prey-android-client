@@ -6,14 +6,19 @@
  ******************************************************************************/
 package com.prey.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 
 import android.os.AsyncTask;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 
 import androidx.fragment.app.FragmentActivity;
@@ -54,12 +59,33 @@ public class WelcomeBatchActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.welcomebatch);
-
         menu();
-        installBatch();
 
-
+        if(PreyConfig.getPreyConfig(this).isAskForNameBatch()){
+            setContentView(R.layout.welcomebatch2);
+            try {
+                EditText editTextBatch2 = findViewById(R.id.editTextBatch2);
+                editTextBatch2.setText(PreyUtils.getNameDevice(this));
+            }catch (Exception e){}
+            menu();
+            Button buttonBatch2=(Button)findViewById(R.id.buttonBatch2);
+            buttonBatch2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EditText editTextBatch2=(EditText)findViewById(R.id.editTextBatch2);
+                    String name=editTextBatch2.getText().toString();
+                    if(name!=null&&!"".equals(name)) {
+                        installBatch(name);
+                    }else{
+                        Toast.makeText(getApplicationContext(),getText(R.string.error),Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }else{
+            setContentView(R.layout.welcomebatch);
+            menu();
+            installBatch("");
+        }
     }
 
     public void menu() {
@@ -73,16 +99,25 @@ public class WelcomeBatchActivity extends FragmentActivity {
         }
     }
 
-    private void installBatch() {
+    private void installBatch(String name) {
         error=null;
         PreyConfig config=PreyConfig.getPreyConfig(this);
-        new AddDeviceToApiKeyBatch().execute(config.getApiKeyBatch(),config.getEmailBatch(), PreyUtils.getDeviceType(this));
+        new AddDeviceToApiKeyBatch().execute(config.getApiKeyBatch(),config.getEmailBatch(), PreyUtils.getDeviceType(this),name);
     }
 
     private class AddDeviceToApiKeyBatch extends AsyncTask<String, Void, Void> {
+
+        ProgressDialog progressDialog = null;
+
         @Override
         protected void onPreExecute() {
-
+            try {
+                progressDialog = new ProgressDialog(WelcomeBatchActivity.this);
+                progressDialog.setMessage(WelcomeBatchActivity.this.getText(R.string.set_old_user_loading).toString());
+                progressDialog.setIndeterminate(true);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+            }catch (Exception e){}
         }
 
         @Override
@@ -92,7 +127,7 @@ public class WelcomeBatchActivity extends FragmentActivity {
                 Context ctx=getApplicationContext();
 
                 if(!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
-                    PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, data[0], data[1], data[2]);
+                    PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, data[0], data[1], data[2],data[3]);
                     PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
                     PreyConfig.getPreyConfig(ctx).registerC2dm();
                     PreyWebServices.getInstance().sendEvent(ctx,PreyConfig.ANDROID_SIGN_UP);
@@ -109,6 +144,8 @@ public class WelcomeBatchActivity extends FragmentActivity {
 
         @Override
         protected void onPostExecute(Void unused) {
+            if(progressDialog!=null)
+                progressDialog.dismiss();
             if (error == null) {
                 String message = getString(R.string.device_added_congratulations_text);
                 Bundle bundle = new Bundle();

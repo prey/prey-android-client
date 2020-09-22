@@ -95,6 +95,7 @@ public class SignUpActivity extends Activity {
         final TextView linkSignup = (TextView) findViewById(R.id.linkSignup);
         final CheckBox checkBox_linear_agree_terms_condition=(CheckBox)findViewById(R.id.checkBox_linear_agree_terms_condition);
         final CheckBox checkBox_linear_confirm_over=(CheckBox)findViewById(R.id.checkBox_linear_confirm_over);
+        final CheckBox checkBox_linear_offer=(CheckBox)findViewById(R.id.checkBox_linear_offer);
 
         Typeface magdacleanmonoRegular = Typeface.createFromAsset(getAssets(), "fonts/MagdaClean/magdacleanmono-regular.ttf");
         Typeface titilliumWebBold = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Bold.ttf");
@@ -177,15 +178,17 @@ public class SignUpActivity extends Activity {
 
                 String confirm_over=""+checkBox_linear_confirm_over.isChecked();
                 String agree_terms_condition=""+checkBox_linear_agree_terms_condition.isChecked();
+                String offer=""+checkBox_linear_offer.isChecked();
                 PreyLogger.d("email:"+email);
                 PreyLogger.d("password:"+password);
                 PreyLogger.d("confirm_over:"+confirm_over);
                 PreyLogger.d("agree_terms_condition:"+agree_terms_condition);
+                PreyLogger.d("offer:"+offer);
                 Context ctx = getApplicationContext();
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                                new CreateAccount(ctx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, name, email, password,confirm_over,agree_terms_condition);
+                                new CreateAccount(ctx).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, name, email, password,confirm_over,agree_terms_condition,offer);
                             else
-                                new CreateAccount(ctx).execute(name, email, password,confirm_over,agree_terms_condition);
+                                new CreateAccount(ctx).execute(name, email, password,confirm_over,agree_terms_condition,offer);
             }
         });
 
@@ -229,7 +232,7 @@ public class SignUpActivity extends Activity {
             try {
                 error = null;
                 final Context ctx=getApplicationContext();
-                PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(ctx, data[0], data[1], data[2],data[3],data[4],PreyUtils.getDeviceType(getApplication()));
+                PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(ctx, data[0], data[1], data[2],data[3],data[4],data[5],PreyUtils.getDeviceType(getApplication()));
                 PreyLogger.d("Response creating account: " + accountData.toString());
                 PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
                 PreyConfig.getPreyConfig(ctx).registerC2dm();

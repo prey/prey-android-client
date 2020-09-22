@@ -8,15 +8,7 @@
     android:layout_height="match_parent"
     android:background="#0c152b">
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="320dp"
-        android:layout_height="320dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/onb_fondo1" />
+
 
     <ImageView
         android:id="@+id/imageView3"
@@ -26,20 +18,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/onboarding_01" />
-
+        app:srcCompat="@drawable/onb_02_track_find" />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="10dp"
-        android:text="@string/onboarding01_tit"
+        android:layout_marginTop="10dp"
+        android:text="@string/onboarding02_tit"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,13 +40,12 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="88dp"
-        android:layout_marginLeft="10dp"
         android:layout_marginTop="0dp"
-        android:layout_marginRight="10dp"
-        android:text="@string/onboarding01_body"
         android:textColor="@color/white"
         android:textSize="16sp"
-        
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="@string/onboarding02_body"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView1" />

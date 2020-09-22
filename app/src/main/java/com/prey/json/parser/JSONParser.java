@@ -50,8 +50,8 @@ public class JSONParser {
             return null;
         }
         if(sb!=null) {
-            PreyLogger.i("_______cmd________");
-            PreyLogger.i(sb);
+            PreyLogger.d("_______cmd________");
+            PreyLogger.d(sb);
         }
         //json = "[{\"command\":\"history\",\"target\":\"call\",\"options\":{}}]";
         //json = "[{\"command\":\"history\",\"target\":\"sms\",\"options\":{}}]";

@@ -30,7 +30,6 @@ public class UserActivated  extends JsonAction {
     }
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.i("UserActivated");
         PreyConfig.getPreyConfig(ctx).setInstallationStatus("OK");
         try {
             RunBackgroundCheckBoxPreference.notifyReady(ctx);

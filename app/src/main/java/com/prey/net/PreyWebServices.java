@@ -29,6 +29,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyPhone;
 import com.prey.PreyPhone.Hardware;
 import com.prey.PreyPhone.Wifi;
+import com.prey.PreyUtils;
 import com.prey.PreyVerify;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.fileretrieval.FileretrievalDto;
@@ -61,15 +62,13 @@ public class PreyWebServices {
      *
      * @throws PreyException
      */
-    public PreyAccountData registerNewAccount(Context ctx, String name, String email, String password,String rule_age,String privacy_terms, String deviceType) throws Exception {
-        return registerNewAccount(ctx,name,  email,  password,password, rule_age, privacy_terms,  deviceType);
+    public PreyAccountData registerNewAccount(Context ctx, String name, String email, String password,String rule_age,String privacy_terms, String offer,String deviceType) throws Exception {
+        return registerNewAccount(ctx,name,  email,  password,password, rule_age, privacy_terms, offer, deviceType);
     }
 
-    public PreyAccountData registerNewAccount(Context ctx, String name, String email, String password1,String password2,String rule_age,String privacy_terms, String deviceType) throws Exception {
-
+    public PreyAccountData registerNewAccount(Context ctx, String name, String email, String password1,String password2,String rule_age,String privacy_terms,String offers, String deviceType) throws Exception {
 
         HashMap<String, String> parameters = new HashMap<String, String>();
-
         parameters.put("name", name);
         parameters.put("email", email);
         parameters.put("password", password1);
@@ -77,7 +76,7 @@ public class PreyWebServices {
         parameters.put("country_name", Locale.getDefault().getDisplayCountry());
         parameters.put("policy_rule_age", rule_age);
         parameters.put("policy_rule_privacy_terms", privacy_terms);
-
+        parameters.put("mkt_newsletter", offers);
         parameters.put("lang", Locale.getDefault().getLanguage());
 
         PreyHttpResponse response = null;
@@ -115,7 +114,7 @@ public class PreyWebServices {
             }
         }
         String deviceId = null;
-        PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType);
+        PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType, PreyUtils.getNameDevice(ctx));
         if(responseDevice!=null){
             String xmlDeviceId = responseDevice.getResponseAsString();
             if (xmlDeviceId.contains("{\"key\"")) {
@@ -141,14 +140,16 @@ public class PreyWebServices {
         return newAccount;
     }
 
-
     /**
      * Register a new device for a given API_KEY, needed just after obtain the
      * new API_KEY.
      *
      * @throws PreyException
      */
-    private PreyHttpResponse registerNewDevice(Context ctx, String api_key, String deviceType) throws Exception {
+    private PreyHttpResponse registerNewDevice(Context ctx, String api_key, String deviceType, String name) throws Exception {
+        if(name==null||"".equals(name)){
+            name = PreyUtils.getNameDevice(ctx);
+        }
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         String model = Build.MODEL;
         String vendor = "Google";
@@ -156,21 +157,9 @@ public class PreyWebServices {
             vendor = AboveCupcakeSupport.getDeviceVendor();
         } catch (Exception e) {
         }
-        String newName = "";
-        String name = null;
-        try{
-            name=Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_name");
-        }catch (Exception e) {
-        }
-        if (name != null && !"".equals(name)) {
-            newName = name;
-        }else{
-
-            newName = vendor + " " + model;
-        }
         HashMap<String, String> parameters = new HashMap<String, String>();
         parameters.put("api_key", api_key);
-        parameters.put("title", newName);
+        parameters.put("title", name);
         parameters.put("device_type", deviceType);
         parameters.put("os", "Android");
         parameters.put("os_version", Build.VERSION.RELEASE);
@@ -186,9 +175,7 @@ public class PreyWebServices {
         String lang=Locale.getDefault().getLanguage();
         parameters.put("lang",lang);
 
-
         PreyHttpResponse response = null;
-
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices.json");
             PreyLogger.d("url:" + url);
@@ -205,10 +192,7 @@ public class PreyWebServices {
                     else
                         throw new PreyException("{\"error\":[\"No slots left for new devices\"]}" );
                 }
-
             }
-
-
         return response;
     }
 
@@ -251,7 +235,7 @@ public class PreyWebServices {
             throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, status));
         }
         String deviceId = null;
-        PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType);
+        PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType, PreyUtils.getNameDevice(ctx));
         if(responseDevice!=null) {
             String xmlDeviceId = responseDevice.getResponseAsString();
             //if json
@@ -275,9 +259,9 @@ public class PreyWebServices {
 
     }
 
-    public PreyAccountData registerNewDeviceWithApiKeyEmail(Context ctx, String apiKey, String email, String deviceType) throws Exception {
+    public PreyAccountData registerNewDeviceWithApiKeyEmail(Context ctx, String apiKey, String email, String deviceType, String name) throws Exception {
         String deviceId = null;
-        PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType);
+        PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType,name);
         String xmlDeviceId = null;
         if(responseDevice!=null) {
             xmlDeviceId = responseDevice.getResponseAsString();

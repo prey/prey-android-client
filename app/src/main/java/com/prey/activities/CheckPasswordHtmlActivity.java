@@ -14,12 +14,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.Settings;
+import android.view.KeyEvent;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -41,7 +41,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
     public static String JS_ALIAS="Android";
     public static String URL_ONB = "file:///android_asset/html/index.html";
-    //public static String URL_ONB = "http://10.10.2.91:3000/";
 
     public static final String CLOSE_PREY = "close_prey";
     private final BroadcastReceiver close_prey_receiver = new BroadcastReceiver() {
@@ -61,7 +60,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.webview);
         PreyLogger.d("CheckPasswordHtmlActivity: onCreate");
         registerReceiver(close_prey_receiver, new IntentFilter(CLOSE_PREY));
@@ -87,6 +85,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         } else {
             loadUrl();
         }
+        PreyConfig.getPreyConfig(this).setCapsLockOn(false);
     }
 
     protected void onDestroy() {
@@ -157,16 +156,19 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             PreyLogger.d("CheckPasswordHtmlActivity: canAccessStorage:" + canAccessStorage);
             PreyLogger.d("CheckPasswordHtmlActivity: canAccessBackgroundLocation:" + canAccessBackgroundLocation);
             PreyLogger.d("CheckPasswordHtmlActivity: canAccessibility:" + canAccessibility);
-            boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+            boolean canDrawOverlays = true;
+            if(PreyConfig.getPreyConfig(ctx).isOverOtherApps()){
+                canDrawOverlays=PreyPermission.canDrawOverlays(this);
+            }
             PreyLogger.d("CheckPasswordHtmlActivity: canDrawOverlays:" + canDrawOverlays);
             boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
             PreyLogger.d("CheckPasswordHtmlActivity: isAdminActive:" + isAdminActive);
             boolean configurated=canAccessFineLocation||canAccessCoarseLocation || canAccessCamera
-                    || canAccessPhone || canAccessStorage || canDrawOverlays ||isAdminActive||canAccessibility;
+                    || canAccessStorage  ||isAdminActive||canAccessibility;
             String status=PreyConfig.getPreyConfig(this).getInstallationStatus();
             PreyLogger.d("CheckPasswordHtmlActivity: configurated:" + configurated +" status:"+status);
             if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
-                    && canAccessPhone && canAccessStorage && canDrawOverlays && canAccessBackgroundLocation&&isAdminActive&&canAccessibility) {
+                    && canAccessStorage  && canAccessBackgroundLocation&&isAdminActive&&canAccessibility) {
                     if (deviceKey != null && deviceKey != "") {
                         if ("".equals(status)) {
                             url = URL_ONB + "#/" + lng + "/";
@@ -215,6 +217,13 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
     };
 
+    private static final String[] INITIAL_PERMS_9 = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    };
+
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermissionAndroid7() {
         PreyLogger.d("CheckPasswordHtmlActivity: askForPermissionAndroid7");
@@ -231,7 +240,14 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermission() {
-        ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, INITIAL_PERMS, REQUEST_PERMISSIONS);
+        PreyLogger.d("CheckPasswordHtmlActivity askForPermission");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            PreyLogger.d("CheckPasswordHtmlActivity askForPermission 1");
+            ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, INITIAL_PERMS_9, REQUEST_PERMISSIONS);
+        }else{
+            PreyLogger.d("CheckPasswordHtmlActivity askForPermission 2");
+            ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, INITIAL_PERMS, REQUEST_PERMISSIONS);
+        }
     }
 
     public void accessibility() {
@@ -248,8 +264,14 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         String permission="";
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
-        if(!canAccessFineLocation||!canAccessCoarseLocation)
-            permission+=this.getString(R.string.permission_location);
+        if(!canAccessFineLocation||!canAccessCoarseLocation) {
+            permission = this.getString(R.string.permission_location);
+        }else{
+            boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocation(this);
+            if(!canAccessBackgroundLocation) {
+                permission = this.getString(R.string.permission_location);
+            }
+        }
         boolean canAccessCamera = PreyPermission.canAccessCamera(this);
         if(!canAccessCamera) {
             if(!"".equals(permission))
@@ -268,6 +290,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
                 permission += ", ";
             permission += this.getString(R.string.permission_storage);
         }
+        PreyLogger.d("permission:"+permission);
         String message ="";
         try {
             message = String.format(getResources().getString(R.string.permission_message_popup),permission);
@@ -301,7 +324,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(this);
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
                 && canAccessPhone && canAccessStorage  ) {
-            boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+            boolean canDrawOverlays = true;//PreyPermission.canDrawOverlays(this); OSO
             if (!canDrawOverlays) {
                 askForPermissionAndroid7();
                 startOverlayService();

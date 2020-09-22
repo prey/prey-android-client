@@ -45,9 +45,7 @@ public class PreyConfig {
 
     private static final String HTTP="https://";
 
- 
-    public static final String VERSION_PREY_DEFAULT="2.1.10";
-
+    public static final String VERSION_PREY_DEFAULT="2.2.5";
 
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
@@ -206,6 +204,7 @@ public class PreyConfig {
     public static final String INSTALLATION_STATUS="INSTALLATION_STATUS";
 
     public static final String LOCATION_INFO="LOCATION_INFO";
+    public static final String CAPS_LOCK_ON="CAPS_LOCK_ON";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -246,6 +245,7 @@ public class PreyConfig {
             version =getString(PreyConfig.PREY_VERSION, getInfoPreyVersion(ctx));
         }catch ( Exception e){
         }
+
     }
 
     public static synchronized PreyConfig getPreyConfig(Context ctx) {
@@ -962,6 +962,15 @@ public class PreyConfig {
         return false;
     }
 
+
+    public boolean isOverOtherApps(){
+        return FileConfigReader.getInstance(ctx).isOverOtherApps();
+    }
+
+    public boolean isAskForNameBatch(){
+        return FileConfigReader.getInstance(ctx).isAskForNameBatch();
+    }
+
     public void setMinuteScheduled(int minuteScheduled){
         saveInt(PreyConfig.MINUTE_SCHEDULED, minuteScheduled);
     }
@@ -1331,4 +1340,12 @@ public class PreyConfig {
 
     public View viewLock=null;
     public View viewSecure=null;
+
+    public boolean getCapsLockOn(){
+        return getBoolean(PreyConfig.CAPS_LOCK_ON, false);
+    }
+
+    public void setCapsLockOn(boolean capsLockOn){
+        saveBoolean(PreyConfig.CAPS_LOCK_ON, capsLockOn);
+    }
 }

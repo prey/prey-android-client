@@ -14,8 +14,11 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
+
+import com.prey.backwardcompatibility.AboveCupcakeSupport;
 
 public class PreyUtils {
     public static String getDeviceType(Activity act) {
@@ -36,6 +39,27 @@ public class PreyUtils {
         }
     }
 
+    public static String getNameDevice(Context ctx) throws Exception {
+        String newName = "";
+        String name = null;
+        String model = Build.MODEL;
+        String vendor = "Google";
+        try {
+            vendor = AboveCupcakeSupport.getDeviceVendor();
+        } catch (Exception e) {
+        }
+        try{
+            name= Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_name");
+        }catch (Exception e) {
+        }
+        if (name != null && !"".equals(name)) {
+            newName = name;
+        }else{
+            newName = vendor + " " + model;
+        }
+        return newName;
+    }
+
     public static boolean isChromebook(Context ctx) {
         return PreyConfig.getPreyConfig(ctx).isChromebook();
     }
@@ -46,7 +70,7 @@ public class PreyUtils {
             float screenWidth = dm.widthPixels / dm.xdpi;
             float screenHeight = dm.heightPixels / dm.ydpi;
             double size = Math.sqrt(Math.pow(screenWidth, 2) + Math.pow(screenHeight, 2));
-            return size >= 6;
+            return size >= 7.0;
         } catch (Throwable t) {
             return false;
         }

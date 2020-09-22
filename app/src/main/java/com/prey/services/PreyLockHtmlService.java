@@ -35,14 +35,11 @@ public class PreyLockHtmlService extends Service{
 
     public class LocalBinder extends Binder {
         public PreyLockHtmlService getService() {
-
-            PreyLogger.i("PreyLockService getService");
             return PreyLockHtmlService.this;
         }
     }
 
     public void stop() {
-        PreyLogger.i("PreyLockService stop_______________");
         stopSelf();
     }
 
@@ -81,9 +78,6 @@ public class PreyLockHtmlService extends Service{
             myWebView.addJavascriptInterface(new WebAppInterface(this), CheckPasswordHtmlActivity.JS_ALIAS);
             myWebView.loadUrl(url);
             myWebView.loadUrl("javascript:window.location.reload(true)");
-
-
-
 
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
             layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;

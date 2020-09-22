@@ -11,10 +11,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
@@ -39,11 +42,8 @@ public class PasswordHtmlActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.webview);
         PreyLogger.d("PasswordActivity3: onCreate");
-
-
 
         WebView myWebView = (WebView) findViewById(R.id.install_browser);
         WebSettings settings = myWebView.getSettings();
@@ -63,6 +63,8 @@ public class PasswordHtmlActivity extends Activity {
         myWebView.loadUrl("javascript:window.location.reload(true)");
 
     }
+
+
 
     @Override
     protected void onResume() {

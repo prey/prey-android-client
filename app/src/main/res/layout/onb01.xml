@@ -8,15 +8,7 @@
     android:layout_height="match_parent"
     android:background="#0c152b">
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="320dp"
-        android:layout_height="320dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/onb_fondo1" />
+
 
     <ImageView
         android:id="@+id/imageView3"

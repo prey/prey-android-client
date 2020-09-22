@@ -25,7 +25,6 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.camera.CameraAction;
-
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.SimpleCameraActivity;
 import com.prey.net.http.EntityFile;
@@ -58,7 +57,6 @@ public class PictureUtil {
                 if (numberOfCameras != null && numberOfCameras > 1) {
                     int reportNumber=PreyConfig.getPreyConfig(ctx).getReportNumber();
                     PreyConfig.getPreyConfig(ctx).setReportNumber(reportNumber+1);
-                    if(reportNumber%2==0) {
                         Thread.sleep(1000);
                         PreyLogger.d("1 seg");
                         byte[] backPicture = getPicture(ctx, "back");
@@ -74,7 +72,6 @@ public class PictureUtil {
                             entityFile.setLength(backPicture.length);
                             data.addEntityFile(entityFile);
                         }
-                    }
                 }
             }
             Intent intent2 = new Intent(ctx, SimpleCameraActivity.class);
@@ -102,8 +99,6 @@ public class PictureUtil {
         ctx.startActivity(intent);
         int i = 0;
         mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
-        //mgr.setStreamSolo(streamType, true);
-
         try {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
@@ -128,7 +123,6 @@ public class PictureUtil {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
         }
-        //mgr.setStreamSolo(streamType, false);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             mgr.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             mgr.setStreamMute(streamType, false);
@@ -148,7 +142,6 @@ public class PictureUtil {
             SimpleCameraActivity.activity.finish();
             SimpleCameraActivity.activity=null;
             SimpleCameraActivity.dataImagen=null;
-
         }
         return out;
     }
