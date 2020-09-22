@@ -47,18 +47,14 @@ public class ReportService extends IntentService {
 		List<HttpDataService> listData = new ArrayList<HttpDataService>();
 		try{
 			PreyLogger.d("REPORT _____________start ReportService");
-
-
-			interval=Integer.parseInt(PreyConfig.getPreyConfig(ctx).getIntervalReport());
-
+			try {
+				interval = Integer.parseInt(PreyConfig.getPreyConfig(ctx).getIntervalReport());
+			}catch (Exception ee){
+				interval=10;
+			}
 			String exclude=PreyConfig.getPreyConfig(ctx).getExcludeReport();
-
 			JSONArray jsonArray = new JSONArray();
-
 			PreyLogger.d("REPORT start:"+interval);
-
-
-
 			jsonArray = new JSONArray();
 			if (!exclude.contains("picture"))
 				jsonArray.put(new String("picture"));
@@ -68,7 +64,6 @@ public class ReportService extends IntentService {
 				jsonArray.put(new String("access_points_list"));
 			if (!exclude.contains("active_access_point"))
 				jsonArray.put(new String("active_access_point"));
-
 			try {
 				List<ActionResult> lista = new ArrayList<ActionResult>();
 				for (int i = 0; i < jsonArray.length(); i++) {
@@ -82,7 +77,6 @@ public class ReportService extends IntentService {
 				}
 			} catch (Exception e) {
 			}
-
 			int parms = 0;
 			for (int i = 0; listData != null && i < listData.size(); i++) {
 				HttpDataService httpDataService = listData.get(i);
@@ -96,7 +90,6 @@ public class ReportService extends IntentService {
 					}
 				}
 			}
-
 			if(PreyConfig.getPreyConfig(ctx).isMissing()) {
 				if (parms > 0) {
 					PreyHttpResponse response = PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
@@ -116,9 +109,7 @@ public class ReportService extends IntentService {
 			PreyLogger.e("error report:"+e.getMessage(),e);
 			PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"failed", null, UtilJson.makeMapParam("get", "report", "failed", e.getMessage()));
 		}
-
 		return listData;
-
 	}
 
 }

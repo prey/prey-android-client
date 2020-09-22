@@ -51,7 +51,7 @@ public class PreyAccessibilityService extends Service {
                             stopSelf();
                             break;
                         }
-                        if (i>120){
+                        if (i>60){
                             run=false;
                             stopSelf();
                             break;

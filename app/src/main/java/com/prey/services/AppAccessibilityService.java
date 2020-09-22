@@ -29,14 +29,11 @@ public class AppAccessibilityService extends AccessibilityService {
         try {
             boolean isLock = PreyConfig.getPreyConfig(getApplicationContext()).isLockSet();
             if (isLock) {
-                PreyLogger.d("AppAccessibilityService onAccessibilityEvent");
                 if (accessibilityEvent != null && accessibilityEvent.getPackageName() != null) {
                     String charSequence = accessibilityEvent.getPackageName() != null ? accessibilityEvent.getPackageName().toString() : null;
-                    String charSequence2 = accessibilityEvent.getClassName() != null ? accessibilityEvent.getClassName().toString() : null;
-                    PreyLogger.d("AppAccessibilityService charSequence:" + charSequence + " charSequence2:" + charSequence2);
+                    //String charSequence2 = accessibilityEvent.getClassName() != null ? accessibilityEvent.getClassName().toString() : null;
                     if ("com.prey".equals(charSequence) || "android".equals(charSequence)) {
                     } else {
-                        PreyLogger.d("AppAccessibilityService isLock:" + isLock);
                         Intent intent = null;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             intent = new Intent(getApplicationContext(), PasswordHtmlActivity.class);
@@ -54,6 +51,5 @@ public class AppAccessibilityService extends AccessibilityService {
 
     @Override
     public void onInterrupt() {
-
     }
 }

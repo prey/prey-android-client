@@ -1,19 +1,19 @@
 self.__precacheManifest = [
   {
-    "revision": "d165259e090af9d881eb",
-    "url": "./static/css/main.e988944f.chunk.css"
+    "revision": "2a81a19676abf9bf684d",
+    "url": "./static/css/main.7c155169.chunk.css"
   },
   {
-    "revision": "d165259e090af9d881eb",
-    "url": "./static/js/main.d165259e.chunk.js"
+    "revision": "2a81a19676abf9bf684d",
+    "url": "./static/js/main.2a81a196.chunk.js"
   },
   {
     "revision": "8c97409f0ee389fe75da",
     "url": "./static/js/runtime~main.8c97409f.js"
   },
   {
-    "revision": "f653eb3c091d1f800dfc",
-    "url": "./static/js/2.f653eb3c.chunk.js"
+    "revision": "36e573c12c0b338d9b02",
+    "url": "./static/js/2.36e573c1.chunk.js"
   },
   {
     "revision": "c3679e2d8686db6f8013ffe2ad603c2c",
@@ -28,8 +28,8 @@ self.__precacheManifest = [
     "url": "./static/media/04-Evidencev.6dd5ae67.png"
   },
   {
-    "revision": "e6e4671ce6d7c5df131594612331578d",
-    "url": "./static/media/onboarding_04.e6e4671c.png"
+    "revision": "3c02d35628d2e57786ab3035fc9fcb75",
+    "url": "./static/media/onboarding_04.3c02d356.png"
   },
   {
     "revision": "6e26bdc9c9316e31084263223a3aa74e",
@@ -56,16 +56,16 @@ self.__precacheManifest = [
     "url": "./static/media/03-React-Protect.abee7ee7.png"
   },
   {
-    "revision": "e4f1689abbc8a74b1abdf5d9cf8bdb92",
-    "url": "./static/media/onboarding_01.e4f1689a.png"
+    "revision": "315c1325ddb63beaea9982de8bd147c9",
+    "url": "./static/media/onboarding_01.315c1325.png"
   },
   {
-    "revision": "836d64fc370a6773aeabf50174d034b3",
-    "url": "./static/media/onboarding_02.836d64fc.png"
+    "revision": "a9334e25cf841ce0cf9f4a25addf6cde",
+    "url": "./static/media/onboarding_02.a9334e25.png"
   },
   {
-    "revision": "37e7a6b7fbe721fa237834433e406880",
-    "url": "./static/media/onboarding_03.37e7a6b7.png"
+    "revision": "dc52ab1e0aa3908c15a02635f545673a",
+    "url": "./static/media/onboarding_03.dc52ab1e.png"
   },
   {
     "revision": "0169ebee5333ac5afdc9518e25975bfb",
@@ -116,14 +116,6 @@ self.__precacheManifest = [
     "url": "./static/media/fondo2.ada00d71.png"
   },
   {
-    "revision": "6e8991140fc75b4927e2c440d9036429",
-    "url": "./static/media/regular-book-webfont.6e899114.woff"
-  },
-  {
-    "revision": "391159c582e0897e8d64ed22abe1ee2d",
-    "url": "./static/media/regular-bold-webfont.391159c5.woff"
-  },
-  {
     "revision": "c44603b2b93c1b7a984f21255d556ee9",
     "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
   },
@@ -132,7 +124,15 @@ self.__precacheManifest = [
     "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
   },
   {
-    "revision": "9c63cb39d628f9a9a419cd7771174ff8",
+    "revision": "6e8991140fc75b4927e2c440d9036429",
+    "url": "./static/media/regular-book-webfont.6e899114.woff"
+  },
+  {
+    "revision": "391159c582e0897e8d64ed22abe1ee2d",
+    "url": "./static/media/regular-bold-webfont.391159c5.woff"
+  },
+  {
+    "revision": "6492b22606ca9fa780a6c1af39fdff29",
     "url": "./index.html"
   }
 ];

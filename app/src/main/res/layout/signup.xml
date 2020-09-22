@@ -153,12 +153,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBox_linear_agree_terms_condition" />
 
+    <CheckBox
+
+        android:id="@+id/checkBox_linear_offer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="100dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox_linear_agree_terms_condition" />
 
     <TextView
         android:id="@+id/linkSignup"
@@ -184,31 +193,27 @@
 
     <TextView
         android:id="@+id/text_linear_confirm_over"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_width="346dp"
+        android:layout_height="59dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:fontFamily="MagdaCleanMono"
         android:text="@string/i_confirm_i_am_over_16"
         android:textColor="#000000"
-        android:textSize="14sp"
 
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/checkBox_linear_confirm_over"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox_linear_agree_terms_condition" />
+        app:layout_constraintTop_toBottomOf="@+id/text_linear_agree_terms_condition" />
 
     <TextView
         android:id="@+id/text_linear_agree_terms_condition"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="346dp"
+        android:layout_height="59dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:fontFamily="MagdaCleanMono"
         android:text="@string/i_agree_terms_conditions"
         android:textColor="#000000"
@@ -218,5 +223,22 @@
         app:layout_constraintStart_toEndOf="@+id/checkBox_linear_agree_terms_condition"
         app:layout_constraintTop_toBottomOf="@+id/buttonSignup" />
 
+
+    <TextView
+        android:id="@+id/text_linear_offer"
+        android:layout_width="346dp"
+        android:layout_height="59dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="MagdaCleanMono"
+        android:text="@string/i_offer"
+        android:textColor="#000000"
+
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toEndOf="@+id/checkBox_linear_agree_terms_condition"
+        app:layout_constraintTop_toBottomOf="@+id/text_linear_confirm_over" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

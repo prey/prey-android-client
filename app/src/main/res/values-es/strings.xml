@@ -115,7 +115,7 @@
     <string name="preferences_admin_disabled_title">Habilitar permisos extras</string>
     <string name="preferences_admin_disabled_summary">Evita la desinstalación de Prey</string>
     <string name="preferences_admin_enabled_dialog_title">Atención</string>
-    <string name="preferences_admin_enabled_dialog_message">Al aceptar se eliminarán los permisos de administración de Prey en este dispositivo. Sin estos permisos, no será posible bloquearlo de forma remota.\n\n¿Estás seguro?</string>
+    <string name="preferences_admin_enabled_dialog_message">Al aceptar se eliminarán los permisos de administración de Prey en este dispositivo. Sin estos permisos, no será posible borrar de forma remota.\n\n¿Estás seguro?</string>
     <string name="preferences_passwords_do_not_match">Las contraseñas no coinciden</string>
     <string name="preferences_passwords_updating_dialog">Actualizando tu cuenta Prey.\nUn segundo…</string>
     <string name="preferences_passwords_successfully_changed">Tu contraseña fue cambiada exitosamente</string>
@@ -279,8 +279,9 @@
 
     <string name="disable_power_ready">Equipo activamente protegido por Prey</string>
 
-    <string name="i_agree_terms_conditions">He leído y acepto los <u>Términos y Condiciones y la Política de Privacidad</u></string>
-    <string name="i_confirm_i_am_over_16">Declaro ser mayor de 16 años</string>
+    <string name="i_agree_terms_conditions">He leído y acepto los <u>Términos y Condiciones y la Política de Privacidad</u>.</string>
+    <string name="i_confirm_i_am_over_16">Declaro ser mayor de 16 años.</string>
+    <string name="i_offer">Quiero recibir anuncios de ofertas y promociones de Prey a mi casilla.</string>
 
     <string name="super_lock">Ingresa tu PIN\n para desbloquear</string>
 
@@ -340,7 +341,7 @@
     <string name="skip">OMITIR</string>
     <string name="start">ENTENDIDO</string>
     <string name="permiso_tit">PREY NECESITA ESTOS PERMISOS PARA PROTEGER COMPLETAMENTE TU EQUIPO</string>
-    <string name="permiso_cat1">UBICACIÓN, HACER Y ADMINISTRAR LLAMADAS TELEFÓNICAS, Y TOMAR FOTOS Y VIDEOS, ACCESO A ARCHIVOS, FOTOS Y CONTENIDO MULTIMEDIA</string>
+    <string name="permiso_cat1">ACCEDER A UBICACIÓN, ARCHIVOS Y CONTENIDO MULTIMEDIA</string>
     <string name="permiso_des1"><b>ACCEDER A LA UBICACIÓN DEL DISPOSITIVO</b>\nLa ubicación del equipo es necesaria para rastreo y el uso de zonas de control.\n\n<b>TOMAR FOTOS Y GRABAR VIDEOS</b>\nLa generación de reportes de evidencia de robo con fotografías requiere este permiso.\n\n<b>HACER Y ADMINISTRAR LLAMADAS TELEFÓNICAS</b>\nPrey utiliza este permiso para obtener y mostrar el IMEI del equipo al usuario en los reportes.\n\n<b>ACCEDER A FOTOS, CONTENIDO MULTIMEDIA Y ARCHIVOS</b>\nLa Recuperación de Archivos requiere este permiso para extraer archivos de forma remota.</string>
     <string name="permiso_cat2">ACCESO APP DE ADMINISTRADOR</string>
     <string name="permiso_des2"><b>ACTIVAR APP DE ADMINISTRADOR</b>\nPrey puede activar otras funcionalidades de seguridad con la app de administrador, como el Borrado Remoto, el Bloqueo Remoto, o el Bloqueo de Desinstalación.</string>
@@ -358,5 +359,9 @@
     <string name="onboarding03_body">Protege tus equipos y sus datos con acciones de seguridad como Bloquear, Borrar y Alarma.</string>
     <string name="onboarding04_tit">RECUPERA CON EVIDENCIA</string>
     <string name="onboarding04_body">Obtén reportes con evidencia crucial para recuperar el equipo, como fotografías, caputas de pantalla, redes WiFi activas y cercanas, datos de usuario y ubicaciones.</string>
+
+    <string name="text_batch">Da un nombre a este dispositivo para identificarlo en Prey.</string>
+    <string name="placehoder_batch">Escribe aquí</string>
+    <string name="button_batch">Siguiente</string>
 
 </resources>

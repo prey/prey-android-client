@@ -14,16 +14,16 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -32,31 +32,39 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
 
-public class SimpleCameraActivity extends Activity implements SurfaceHolder.Callback {
+public class SimpleCameraActivity extends Activity implements SurfaceHolder.Callback , OrientationManager.OrientationListener {
 
     public static SimpleCameraActivity activity = null;
     public static Camera camera;
-
     public static SurfaceHolder mHolder;
     public static byte[] dataImagen = null;
+    private String focus="";
+    private int rotation = 0;
+    private int orientation=0;
+    private int screenIntOrientation=-1;
+    static final int CODE_PORTRAIT=1;
+    static final int CODE_REVERSED_PORTRAIT=2;
+    static final int CODE_REVERSED_LANDSCAPE=3;
+    static final int CODE_LANDSCAPE=4;
+    OrientationManager orientationManager=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_camera);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         Bundle extras = getIntent().getExtras();
         int kill=extras.getInt("kill");
         PreyLogger.d("Kill:"+kill);
         if(kill==1){
             finish();
         }else {
-            String focus = null;
             if (extras != null) {
                 focus = extras.getString("focus");
             } else {
                 focus = "front";
             }
+            orientationManager = new OrientationManager(getApplicationContext(), SensorManager.SENSOR_DELAY_NORMAL, this);
+            orientationManager.enable();
             camera = getCamera(focus);
             if (camera != null) {
                 try {
@@ -64,12 +72,10 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
                 } catch (Exception e) {
                 }
             }
-            PreyLogger.d("focus:" + focus);
             SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
             mHolder = surfaceView.getHolder();
             mHolder.addCallback(this);
             mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
             activity = this;
         }
     }
@@ -82,15 +88,18 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
             Class clsCamera;
             clsCamera = Class.forName("android.hardware.Camera");
             Integer numberOfCamerasInt = getNumberOfCameras();
+
             if (numberOfCamerasInt != null) {
                 if ("front".equals(focus)) {
                     mCamera = getCamera(0, clsCamera);
+                    PreyLogger.d("SimpleCameraActivity getCamera 0 focus:"+focus);
                 } else {
                     mCamera = getCamera(1, clsCamera);
+                    PreyLogger.d("SimpleCameraActivity getCamera 1 focus:"+focus);
                 }
             }
         } catch (Exception e1) {
-            PreyLogger.d("Camera failed to open facing front: " + e1.getMessage());
+            PreyLogger.d("SimpleCameraActivity Camera failed to open facing front: " + e1.getMessage());
             mCamera = null;
         }
         try {
@@ -125,58 +134,36 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
             Method methodOpen = clsCamera.getMethod("open", param);
             Integer[] input = {Integer.valueOf(idx)};
             mCamera = (Camera) methodOpen.invoke(null, input);
-            PreyLogger.d("Camera.open(camIdx)");
+            PreyLogger.d("SimpleCameraActivity Camera.open(camIdx)");
             // mCamera = Camera.open(camIdx);
         } catch (RuntimeException e) {
-            PreyLogger.d("Camera failed to open: " + e.getMessage());
+            PreyLogger.d("SimpleCameraActivityCamera failed to open: " + e.getMessage());
         }
         return mCamera;
     }
+
 
 
     public void takePicture(Context ctx, String focus) {
         try {
             if (camera != null) {
                 Camera.Parameters parameters = camera.getParameters();
-                if ("front".equals(focus)) {
-                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        parameters.set("orientation", "portrait");
-                        parameters.set("rotation", 90);
-                    }
-                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        parameters.set("orientation", "landscape");
-                        parameters.set("rotation", 180);
-                    }
-                } else {
-                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                        parameters.set("orientation", "portrait");
-                        parameters.set("rotation", 270);
-                    }
-                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        parameters.set("orientation", "landscape");
-                        parameters.set("rotation", 0);
-                    }
-                }
                 if (PreyConfig.getPreyConfig(ctx).isEclairOrAbove()) {
                     parameters = setParameters1(parameters);
                 }
-                // parameters.setFocusMode(Parameters.FOCUS_MODE_AUTO);
                 parameters.set("iso", 400);
                 if (PreyConfig.getPreyConfig(ctx).isFroyoOrAbove()) {
                     parameters = setParameters2(parameters);
                 }
-
                 camera.setParameters(parameters);
-
             }
         } catch (Exception e) {
+            PreyLogger.e("error takePicture:"+e.getMessage(),e);
         }
-
         try {
             if (camera != null) {
-
                 camera.takePicture(shutterCallback, rawCallback, jpegCallback);
-                PreyLogger.d("open takePicture()");
+                PreyLogger.d("SimpleCameraActivity open takePicture()");
             }
         } catch (Exception e) {
         }
@@ -237,7 +224,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-        PreyLogger.d("camera setPreviewDisplay()");
+        PreyLogger.d("SimpleCameraActivity camera setPreviewDisplay()");
         mHolder = holder;
         try {
             if (camera != null)
@@ -248,7 +235,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
-        PreyLogger.d("camera surfaceDestroyed()");
+        PreyLogger.d("SimpleCameraActivity camera surfaceDestroyed()");
         if (camera != null) {
             try {
                 camera.stopPreview();
@@ -269,11 +256,60 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
         try{
             Bitmap original = BitmapFactory.decodeByteArray(input , 0, input.length);
             Bitmap resized = Bitmap.createScaledBitmap(original, PHOTO_WIDTH, PHOTO_HEIGHT, true);
+            Bitmap resized2 =null;
+            Matrix matrix = new Matrix();
+            if(screenIntOrientation==CODE_PORTRAIT ){
+                if ("front".equals(focus)) {
+                    matrix.postRotate(90);
+                } else {
+                    matrix.postRotate(270);
+                }
+            }
+            if(screenIntOrientation==CODE_REVERSED_PORTRAIT){
+                if ("front".equals(focus)) {
+                    matrix.postRotate(270);
+                } else {
+                    matrix.postRotate(90);
+                }
+            }
+            if(screenIntOrientation==CODE_LANDSCAPE ){
+                if ("front".equals(focus)) {
+                    matrix.postRotate(0);
+                } else {
+                    matrix.postRotate(0);
+                }
+            }
+            if(screenIntOrientation==CODE_REVERSED_LANDSCAPE ){
+                if ("front".equals(focus)) {
+                    matrix.postRotate(180);
+                } else {
+                    matrix.postRotate(180);
+                }
+            }
+            resized2 = Bitmap.createBitmap(resized, 0, 0, resized.getWidth(), resized.getHeight(), matrix, true);
             ByteArrayOutputStream blob = new ByteArrayOutputStream();
-            resized.compress(Bitmap.CompressFormat.JPEG, 100, blob);
+            resized2.compress(Bitmap.CompressFormat.JPEG, 100, blob);
             return blob.toByteArray();
         } catch (Exception e) {
             return input;
+        }
+    }
+
+    @Override
+    public void onOrientationChange(OrientationManager.ScreenOrientation screenOrientation) {
+        switch(screenOrientation){
+            case PORTRAIT:
+                screenIntOrientation=1;
+                break;
+            case REVERSED_PORTRAIT:
+                screenIntOrientation=2;
+                break;
+            case REVERSED_LANDSCAPE:
+                screenIntOrientation=3;
+                break;
+            case LANDSCAPE:
+                screenIntOrientation=4;
+                break;
         }
     }
 }

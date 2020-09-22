@@ -49,8 +49,6 @@ public class PreyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        boolean chromium=getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
-        PreyLogger.d("chromium:"+chromium);
         try {
             if (PreyConfig.getPreyConfig(getApplicationContext()).isLockSet()) {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

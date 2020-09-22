@@ -53,11 +53,21 @@ public class OnboardingActivity extends AppCompatActivity {
         btnNext = (Button) findViewById(R.id.btn_next);
         btnNext.setText(getString(R.string.next));
         btnSkip.setText(getString(R.string.skip));
-        layouts = new int[]{
-                R.layout.onb1,
-                R.layout.onb2,
-                R.layout.onb3,
-                R.layout.onb4};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            layouts = new int[]{
+                    R.layout.onb1,
+                    R.layout.onb2,
+                    R.layout.onb3,
+                    R.layout.onb4};
+        }else{
+            layouts = new int[]{
+                    R.layout.onb01,
+                    R.layout.onb02,
+                    R.layout.onb03,
+                    R.layout.onb04};
+        }
+
+
         addBottomDots(0);
         changeStatusBarColor();
         myViewPagerAdapter = new MyViewPagerAdapter();

@@ -120,6 +120,14 @@ public class FileConfigReader {
         return Boolean.parseBoolean(properties.getProperty("scheduled"));
     }
 
+    public boolean isOverOtherApps() {
+        return Boolean.parseBoolean(properties.getProperty("over-other-apps"));
+    }
+
+    public boolean isAskForNameBatch() {
+        return Boolean.parseBoolean(properties.getProperty("ask-for-name-batch"));
+    }
+
     public int getMinuteScheduled() {
         return Integer.parseInt(properties.getProperty("minute-scheduled"));
     }

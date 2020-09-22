@@ -42,7 +42,7 @@ public class ReportActivity extends FragmentActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         setContentView(R.layout.report);
         PreyLogger.d("ReportActivity: onCreate");
         loadUrl();

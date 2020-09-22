@@ -111,7 +111,7 @@
     <string name="preferences_admin_disabled_title">Grant extra permissions</string>
      <string name="preferences_admin_disabled_summary">Allows lock and uninstall protection</string>
     <string name="preferences_admin_enabled_dialog_title">Please note</string>
-     <string name="preferences_admin_enabled_dialog_message">By clicking \'Yes\' you will revoke Prey administration privileges on this device. Without these privileges, Prey won\'t be able to lock your device.\nAre you sure?</string>
+     <string name="preferences_admin_enabled_dialog_message">By clicking \'Yes\' you will revoke Prey administration privileges on this device. Without these privileges, Prey won\'t be able to erase remotely.\nAre you sure?</string>
     <string name="preferences_passwords_do_not_match">Passwords do not match</string>
      <string name="preferences_passwords_updating_dialog">Updating your Prey password.\nPlease wait…</string>
      <string name="preferences_passwords_successfully_changed">Your Prey password was successfully changed</string>
@@ -288,6 +288,7 @@
 
     <string name="i_agree_terms_conditions">I have read and agree to the <u>Terms and Conditions and Privacy Policy</u></string>
     <string name="i_confirm_i_am_over_16">I confirm that I am over 16 years old</string>
+    <string name="i_offer">I want to receive emails regarding offers and promotions from Prey</string>
 
     <string name="super_lock">Please enter your\n PIN to unlock</string>
 
@@ -346,7 +347,7 @@
     <string name="skip">SKIP</string>
     <string name="start">GOT IT</string>
     <string name="permiso_tit">PREY NEEDS PERMISSIONS TO COMPLETELY SECURE YOUR DEVICE</string>
-    <string name="permiso_cat1">LOCATION, TAKE PICTURES AND RECORD VIDEOS, MAKE PHONE CALLS, ACCESS PHOTOS, MEDIA, AND FILES</string>
+    <string name="permiso_cat1">ACCESS LOCATION, FILES AND MULTIMEDIA CONTENT</string>
     <string name="permiso_des1"><b>DEVICE\'S LOCATION</b>\nDevice tracking and use of control zones for geofencing require the device location.\n\n<b>TAKE PICTURES AND RECORD VIDEO</b>\nThe images included in evidence reports are taken with front and back cameras.\n\n<b>MAKE AND MANAGE PHONE CALLS</b>\nPrey uses this permission to show the user the device\'s IMEI on evidence reports.\n\n<b>ACCESS PHOTOS, MEDIA AND FILES ON YOUR DEVICE</b>\nThe File Retrieval tool needs this permission to recover files remotely from the device.</string>
     <string name="permiso_cat2">ACCESS TO DEVICE ADMIN PERMISSION</string>
     <string name="permiso_des2"><b>ACCESS DEVICE ADMIN PERMISSIONS</b>\nPrey can activate extra security tools with the administrator permission, like the Remote Wipe and Lock, or the Block Uninstall setting.</string>
@@ -364,5 +365,9 @@
     <string name="onboarding03_body">Protect your device and its data with security actions like Lock, Wipe and Alarm.</string>
     <string name="onboarding04_tit">RECOVER WITH EVIDENCE</string>
     <string name="onboarding04_body">Get evidence reports with pictures, screenshots, nearby WiFis, user data and locations.</string>
+
+    <string name="text_batch">Give this device a name to identify it in Prey.</string>
+    <string name="placehoder_batch">Type here</string>
+    <string name="button_batch">Next</string>
 
 </resources>

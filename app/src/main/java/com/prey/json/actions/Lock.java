@@ -158,12 +158,13 @@ public class Lock extends JsonAction {
         PreyLogger.d("lock unlock:"+unlock+" messageId:"+ messageId+" reason:"+reason);
         PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
         PreyConfig.getPreyConfig(ctx).setLock(true);
-        if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() ) {
+        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
             if(PreyPermission.canDrawOverlays(ctx)) {
-                Intent intent = new Intent(ctx, PreyLockHtmlService.class);
-                ctx.startService(intent);
+
                 Intent intent4 = null;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Intent intent = new Intent(ctx, PreyLockHtmlService.class);
+                    ctx.startService(intent);
                     intent4 = new Intent(ctx, PasswordHtmlActivity.class);
                 } else {
                     intent4 = new Intent(ctx, PasswordNativeActivity.class);

@@ -109,7 +109,11 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public boolean initDrawOverlay() {
-        return PreyPermission.canDrawOverlays(mContext);
+        boolean canDrawOverlays = true;
+        if(PreyConfig.getPreyConfig(mContext).isOverOtherApps()){
+            canDrawOverlays=PreyPermission.canDrawOverlays(mContext);
+        }
+        return canDrawOverlays;
     }
 
     @JavascriptInterface
@@ -515,7 +519,7 @@ public class WebAppInterface {
         }else{
             error2 = "{\"error\":[\"" + mContext.getString(R.string.password_wrong) + "\"]}";
         }
-        PreyLogger.i("error2:"+error2);
+        PreyLogger.d("error2:"+error2);
         return error2;
     }
 
@@ -557,8 +561,8 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
-    public String signup(String name, String email, String password1, String password2, String policy_rule_age, String policy_rule_privacy_terms) {
-        PreyLogger.d("signup name: " + name + " email:" + email + " policy_rule_age:" + policy_rule_age + " policy_rule_privacy_terms:" + policy_rule_privacy_terms);
+    public String signup(String name, String email, String password1, String password2, String policy_rule_age, String policy_rule_privacy_terms,String offers) {
+        PreyLogger.d("signup name: " + name + " email:" + email + " policy_rule_age:" + policy_rule_age + " policy_rule_privacy_terms:" + policy_rule_privacy_terms+" offers:"+offers);
         try {
             error = null;
             final Context ctx = mContext;
@@ -568,7 +572,8 @@ public class WebAppInterface {
             PreyLogger.d("password2:" + password2);
             PreyLogger.d("rule_age:" + policy_rule_age);
             PreyLogger.d("privacy_terms:" + policy_rule_privacy_terms);
-            PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(ctx, name, email, password1, password2, policy_rule_age, policy_rule_privacy_terms, PreyUtils.getDeviceType(mContext));
+            PreyLogger.d("offers:" + offers);
+            PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(ctx, name, email, password1, password2, policy_rule_age, policy_rule_privacy_terms, offers, PreyUtils.getDeviceType(mContext));
             PreyLogger.d("Response creating account: " + accountData.toString());
             PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
             PreyConfig.getPreyConfig(ctx).registerC2dm();
@@ -650,23 +655,18 @@ public class WebAppInterface {
                 !showStorage&&!showFineLocation&&!showCoarseLocation&&!showCamera&&!showPhone){
             showDeniedPermission=false;
         }
-        if(canAccessFineLocation||canAccessCoarseLocation) {
-            if (Build.VERSION.SDK_INT >= PreyConfig.BUILD_VERSION_CODES_10 && !canAccessBackgroundLocation) {
-                if (!showBackgroundLocation) {
-                    showDeniedPermission = true;
-                }
-            }
-        }
         if (showDeniedPermission) {
-                mActivity.deniedPermission();
+            mActivity.deniedPermission();
         } else {
                 if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
-                        || !canAccessPhone || !canAccessStorage || !canAccessBackgroundLocation) {
+                        || !canAccessPhone || !canAccessStorage ) {
                     mActivity.askForPermission();
                 } else {
                     boolean canDrawOverlays = true;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                        canDrawOverlays = Settings.canDrawOverlays(mContext);
+                    if(PreyConfig.getPreyConfig(mContext).isOverOtherApps()){
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                            canDrawOverlays = Settings.canDrawOverlays(mContext);
+                    }
                     if (!canDrawOverlays) {
                         mActivity.askForPermissionAndroid7();
                     } else {
@@ -676,11 +676,19 @@ public class WebAppInterface {
                         }else{
                             if(!canAccessibility){
                                 mActivity.accessibility();
+                            }else{
+                                if(canAccessFineLocation||canAccessCoarseLocation) {
+                                    if (Build.VERSION.SDK_INT >= PreyConfig.BUILD_VERSION_CODES_10 && !canAccessBackgroundLocation) {
+                                        mActivity.deniedPermission();
+                                    }
+                                }
                             }
                         }
                     }
                 }
         }
+
+
     }
 
     public class DetachDevice extends AsyncTask<Void, Void, Void> {
@@ -722,5 +730,15 @@ public class WebAppInterface {
             }
         }
 
+    }
+
+    @JavascriptInterface
+    public boolean capsLockOn() {
+        return PreyConfig.getPreyConfig(mContext).getCapsLockOn();
+    }
+
+    @JavascriptInterface
+    public void touch() {
+        PreyConfig.getPreyConfig(mContext).setCapsLockOn(false);
     }
 }
