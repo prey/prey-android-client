@@ -8,6 +8,9 @@ package com.prey.receivers;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPermission;
+import com.prey.activities.PasswordHtmlActivity;
+import com.prey.activities.PasswordNativeActivity;
 import com.prey.services.PreySecureHtmlService;
 
 import android.annotation.TargetApi;
@@ -45,8 +48,9 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                 }
                 boolean flag = ((KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE)).inKeyguardRestrictedInputMode();
                 boolean lock=PreyConfig.getPreyConfig(context).isLockSet();
+                boolean pinActivated=PreyConfig.getPreyConfig(context).getPinActivated();
                 try {
-                   // if (flag||lock) {
+                   if (!pinActivated||!lock) {
 
                         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                         boolean isScreenOn = pm.isScreenOn();
@@ -71,17 +75,34 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
 
                                 String pinNumber=PreyConfig.getPreyConfig(context).getPinNumber();
 
-                                PreyLogger.d("PreyDisablePowerOptionsReceiver pinNumber:"+pinNumber);
+                                PreyLogger.d("PreyDisablePowerOptionsReceiver pinNumber1:"+pinNumber);
                                 if("globalactions".equals(reason)&& pinNumber!=null&& !"".equals(pinNumber)){
-                                    PreyLogger.d("pinNumber:"+pinNumber);
+                                    PreyLogger.d("PreyDisablePowerOptionsReceiver pinNumber2:"+pinNumber);
                                     if(!PreyConfig.getPreyConfig(context).isOpenSecureService()) {
-                                        Intent intentLock = new Intent(context, PreySecureHtmlService.class);
-                                        context.startService(intentLock);
+                                        PreyLogger.d("PreyDisablePowerOptionsReceiver pinNumber3:"+pinNumber);
+                                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                                            PreyLogger.d("PreyDisablePowerOptionsReceiver pinNumber4:"+pinNumber);
+                                            PreyConfig.getPreyConfig(context).setPinActivated(true);
+                                            boolean isOverOtherApps=PreyConfig.getPreyConfig(context).isOverOtherApps();
+                                            if(isOverOtherApps&&PreyConfig.getPreyConfig(context).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(context)) {
+                                                Intent intentLock = new Intent(context, PreySecureHtmlService.class);
+                                                context.startService(intentLock);
+                                            }else {
+                                                Intent intent4 = null;
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                                    intent4 = new Intent(context, PasswordHtmlActivity.class);
+                                                } else {
+                                                    intent4 = new Intent(context, PasswordNativeActivity.class);
+                                                }
+                                                intent4.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                context.startActivity(intent4);
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
-                   // }
+                    }
                 }catch (Exception e){
                     PreyLogger.e("error:"+e.getMessage(),e);
                 }

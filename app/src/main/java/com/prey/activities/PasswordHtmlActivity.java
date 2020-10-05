@@ -34,8 +34,6 @@ import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.activities.js.WebAppInterface;
-import com.prey.json.UtilJson;
-import com.prey.net.PreyWebServices;
 
 public class PasswordHtmlActivity extends Activity {
 
@@ -43,7 +41,7 @@ public class PasswordHtmlActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.webview);
-        PreyLogger.d("PasswordActivity3: onCreate");
+        PreyLogger.d("PasswordHtmlActivity: onCreate");
 
         WebView myWebView = (WebView) findViewById(R.id.install_browser);
         WebSettings settings = myWebView.getSettings();
@@ -58,7 +56,7 @@ public class PasswordHtmlActivity extends Activity {
         String lng = PreyUtils.getLanguage();
         String url = CheckPasswordHtmlActivity.URL_ONB + "#/" + lng + "/lock";
 
-        myWebView.addJavascriptInterface(new WebAppInterface(this), CheckPasswordHtmlActivity.JS_ALIAS);
+        myWebView.addJavascriptInterface(new WebAppInterface(this,this), CheckPasswordHtmlActivity.JS_ALIAS);
         myWebView.loadUrl(url);
         myWebView.loadUrl("javascript:window.location.reload(true)");
 
@@ -69,16 +67,17 @@ public class PasswordHtmlActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        String unlock = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
-        PreyLogger.d("PasswordActivity3 unlock:" + unlock);
-        if (unlock == null || "".equals(unlock)) {
-            Intent intent = new Intent(getApplicationContext(), CloseActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
+        boolean isLockSet = PreyConfig.getPreyConfig(getApplicationContext()).isLockSet();
+        boolean isPinActivated = PreyConfig.getPreyConfig(getApplicationContext()).getPinActivated();
+        PreyLogger.d("PasswordHtmlActivity isLockSet:" + isLockSet+" isPinActivated:"+isPinActivated);
+        if(!isLockSet&&!isPinActivated){
+            finishAffinity();
         }
     }
 
+    public void pfinish(){
+        finishAffinity();
+    }
 
 
 }

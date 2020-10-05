@@ -33,8 +33,10 @@ import com.prey.R;
 import com.prey.actions.location.LocationUpdatesService;
 import com.prey.actions.location.PreyLocation;
 import com.prey.activities.CheckPasswordHtmlActivity;
+import com.prey.activities.CloseActivity;
 import com.prey.activities.LoginActivity;
 import com.prey.activities.PanelWebActivity;
+import com.prey.activities.PasswordHtmlActivity;
 import com.prey.activities.PreReportActivity;
 import com.prey.activities.SecurityActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
@@ -42,6 +44,7 @@ import com.prey.barcodereader.BarcodeActivity;
 import com.prey.exceptions.PreyException;
 import com.prey.json.UtilJson;
 import com.prey.json.actions.Detach;
+import com.prey.json.actions.Lock;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyDisablePowerOptionsService;
@@ -50,6 +53,8 @@ import com.prey.services.PreyJobService;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class WebAppInterface {
@@ -60,6 +65,7 @@ public class WebAppInterface {
     private boolean noMoreDeviceError = false;
     private String from = "setting";
     private CheckPasswordHtmlActivity mActivity;
+    private PasswordHtmlActivity pActivity=null;
 
     public WebAppInterface() {
     }
@@ -71,6 +77,11 @@ public class WebAppInterface {
     public WebAppInterface(Context context, CheckPasswordHtmlActivity activity) {
         mContext = context;
         mActivity = activity;
+    }
+
+    public WebAppInterface(Context context, PasswordHtmlActivity activity) {
+        mContext = context;
+        pActivity = activity;
     }
 
     @JavascriptInterface
@@ -288,6 +299,13 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
+    public String newName(String name){
+        PreyLogger.d("newName:" + name);
+        PreyWebServices.getInstance().validateName(mContext,name);
+        return "";
+    }
+
+    @JavascriptInterface
     public String login_tipo(String password, String password2, String tipo) {
         PreyLogger.d("login_tipo2 password:" + password + " password2:" + password2 + " tipo:" + tipo);
         from = tipo;
@@ -328,7 +346,7 @@ public class WebAppInterface {
             }
         } else {
             PreyLogger.d("login_tipo from:" + from);
-            if ("setting".equals(from)) {
+            if ("setting".equals(from)||"rename".equals(from)) {
                 //new Thread(new EventManagerRunner(mContext, new Event(Event.APPLICATION_OPENED))).start();
                 return "{\"result\":true}";
             } else {
@@ -492,15 +510,159 @@ public class WebAppInterface {
         final Context ctx = mContext;
         String unlock = PreyConfig.getPreyConfig(ctx).getUnlockPass();
         PreyLogger.d("lock:"+key+" unlock:"+unlock);
-        if (unlock != null && unlock.equals(key)) {
+        if (unlock != null && !"".equals(unlock) && unlock.equals(key)) {
             PreyConfig.getPreyConfig(ctx).setLock(false);
             PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
+            PreyConfig.getPreyConfig(ctx).setOpenSecureService(false);
             new Thread() {
                 public void run() {
                     String reason = "{\"origin\":\"user\"}";
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
                 }
             }.start();
+            boolean overLock=PreyConfig.getPreyConfig(ctx).getOverLock();
+            PreyLogger.d("verifyLock :"+unlock+" overLock:"+overLock+" getPinActivated:"+PreyConfig.getPreyConfig(mContext).getPinActivated());
+            if(overLock){
+                if((unlock == null || "".equals(unlock))&&!PreyConfig.getPreyConfig(mContext).getPinActivated()){
+                    PreyConfig.getPreyConfig(ctx).setOverLock(false);
+                    int pid = android.os.Process.myPid();
+                    android.os.Process.killProcess(pid);
+                }
+            }
+            new Thread() {
+                public void run() {
+                    if(PreyConfig.getPreyConfig(ctx).isOverOtherApps()) {
+                        try {
+                            View viewLock = PreyConfig.getPreyConfig(ctx).viewLock;
+                            if (viewLock != null) {
+                                WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
+                                wm.removeView(viewLock);
+                            }
+                        } catch (Exception e) {
+                        }
+                        try {
+                            View viewSecure = PreyConfig.getPreyConfig(ctx).viewSecure;
+                            if (viewSecure != null) {
+                                WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
+                                wm.removeView(viewSecure);
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                    Intent intent = new Intent(ctx, CloseActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ctx.startActivity(intent);
+                    if(PreyConfig.getPreyConfig(ctx).isOverOtherApps()) {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (Exception e) {
+                        }
+                        ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
+                    }
+                }
+            }.start();
+            error2="{\"ok\":\"ok\"}";
+            if(pActivity!=null)
+                pActivity.pfinish();
+        }else{
+            String pin = PreyConfig.getPreyConfig(ctx).getPinNumber();
+            PreyLogger.d("lock:"+key+" pin:"+pin+" unlock:"+unlock);
+            if (
+                    (unlock == null || "".equals(unlock)) &&
+                            (
+
+                                    (PreyConfig.getPreyConfig(ctx).getPinActivated() && pin != null &&!"".equals(pin) && pin!= null && pin.equals(key))
+                                            ||
+                                     !PreyConfig.getPreyConfig(ctx).getPinActivated()
+                            )
+                ) {
+                error2="{\"ok\":\"ok\"}";
+                PreyLogger.d("error2.:"+error2);
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(new Date().getTime());
+                cal.add(Calendar.MINUTE, 1);
+                PreyConfig.getPreyConfig(ctx).setTimeSecureLock(cal.getTimeInMillis());
+                PreyConfig.getPreyConfig(ctx).setPinActivated(false);
+
+                PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
+                PreyConfig.getPreyConfig(ctx).setOpenSecureService(false);
+                new Thread() {
+                    public void run() {
+                        String reason = "{\"origin\":\"user\"}";
+                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
+                    }
+                }.start();
+                boolean overLock=PreyConfig.getPreyConfig(ctx).getOverLock();
+                PreyLogger.d("verifyLock :"+unlock+" overLock:"+overLock+" getPinActivated:"+PreyConfig.getPreyConfig(mContext).getPinActivated());
+                if(overLock){
+
+                    if((unlock == null || "".equals(unlock))&&!PreyConfig.getPreyConfig(mContext).getPinActivated()){
+                        PreyConfig.getPreyConfig(ctx).setOverLock(false);
+                        int pid = android.os.Process.myPid();
+                        android.os.Process.killProcess(pid);
+                    }
+                }
+                PreyLogger.d("--lock:" + key + " pin:" + pin + " unlock:" + unlock);
+                new Thread() {
+                    public void run() {
+                        if(PreyConfig.getPreyConfig(ctx).isOverOtherApps()) {
+                            try {
+                                View viewLock = PreyConfig.getPreyConfig(ctx).viewLock;
+                                if (viewLock != null) {
+                                    WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
+                                    wm.removeView(viewLock);
+                                }
+                            } catch (Exception e) {
+                            }
+                            try {
+                                View viewSecure = PreyConfig.getPreyConfig(ctx).viewSecure;
+                                if (viewSecure != null) {
+                                    WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
+                                    wm.removeView(viewSecure);
+                                }
+                            } catch (Exception e) {
+                            }
+                        }
+                        Intent intent = new Intent(ctx, CloseActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        ctx.startActivity(intent);
+                        if(PreyConfig.getPreyConfig(ctx).isOverOtherApps()) {
+                            try {
+                                Thread.sleep(2000);
+                            } catch (Exception e) {
+                            }
+                            ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
+                        }
+                    }
+                }.start();
+
+
+                if(pActivity!=null)
+                    pActivity.pfinish();
+            }else {
+                error2 = "{\"error\":[\"" + mContext.getString(R.string.password_wrong) + "\"]}";
+            }
+        }
+
+        PreyLogger.d("error2:"+error2);
+        return error2;
+    }
+    @JavascriptInterface
+    public void verifyLock() {
+
+    }
+
+
+
+    @JavascriptInterface
+    public String unpin(String key){
+        PreyLogger.d("lock:"+key);
+        String error2 = "";
+        final Context ctx = mContext;
+        String pin = PreyConfig.getPreyConfig(ctx).getPinNumber();
+        PreyLogger.d("lock:"+key+" pin:"+pin);
+        if (pin != null && pin.equals(key)) {
+
             View viewLock=PreyConfig.getPreyConfig(ctx).viewLock;
             if(viewLock!=null){
                 WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
@@ -741,4 +903,15 @@ public class WebAppInterface {
     public void touch() {
         PreyConfig.getPreyConfig(mContext).setCapsLockOn(false);
     }
+
+    @JavascriptInterface
+    public boolean initConfigure() {
+        String deviceKey = PreyConfig.getPreyConfig(mContext).getDeviceId();
+        if (deviceKey != null && !"".equals(deviceKey)) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }

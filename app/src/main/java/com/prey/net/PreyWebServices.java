@@ -942,6 +942,22 @@ public class PreyWebServices {
         return uuid;
     }
 
+    public String getNameDevice(Context ctx){
+        String name = null;
+        try {
+            String uri = getInfoUrlJson(ctx);
+            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).getAutentication(uri, null);
+            if(response!=null) {
+                String out = response.getResponseAsString();
+                PreyLogger.d("getNameDevice:"+out);
+                JSONObject jsnobject = new JSONObject(out);
+                name = jsnobject.getString("name");
+            }
+        } catch (Exception e) {
+        }
+        return name;
+    }
+
     public String getEmail(Context ctx) {
         String email = null;
         try {
@@ -1111,5 +1127,70 @@ public class PreyWebServices {
         return verify;
     }
 
+
+    public PreyLocation validateName(final Context ctx,String name){
+        PreyLocation location=null;
+        try{
+            String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
+            PreyConfig config=PreyConfig.getPreyConfig(ctx);
+            String deviceKey = config.getDeviceId();
+            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey).concat("/validate.json");
+
+
+            JSONObject jsonParam=new JSONObject();
+            jsonParam.put("name", name);
+
+            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url,UtilConnection.REQUEST_METHOD_POST,jsonParam);
+            if(response.getStatusCode()==HttpURLConnection.HTTP_OK) {
+                String out = response.getResponseAsString();
+                PreyLogger.d("nameDevice:"+out);
+                JSONObject outJson = new JSONObject(out);
+               // PreyLogger.d(outJson);
+            }
+            if(response.getStatusCode()==422) {
+
+            }
+
+
+
+        }catch(Exception e){
+            PreyLogger.d("error validate:" + e.getMessage());
+        }
+        return location;
+    }
+
+    public PreyLocation renameName(final Context ctx,String name){
+        PreyLocation location=null;
+        try{
+            String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
+            PreyConfig config=PreyConfig.getPreyConfig(ctx);
+            String deviceKey = config.getDeviceId();
+            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey).concat(".json");
+
+
+            JSONObject jsonParam=new JSONObject();
+            jsonParam.put("name", name);
+
+            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url,UtilConnection.REQUEST_METHOD_PUT,jsonParam);
+
+            PreyLogger.d("renameName:"+response.getStatusCode());
+
+            if(response.getStatusCode()==HttpURLConnection.HTTP_OK) {
+                String out = response.getResponseAsString();
+                PreyLogger.d("renameName:"+out);
+                JSONObject outJson = new JSONObject(out);
+                // PreyLogger.d(outJson);
+            }
+            if(response.getStatusCode()==422) {
+
+            }
+
+
+
+        }catch(Exception e){
+            PreyLogger.d("error validate:" + e.getMessage());
+        }
+        return location;
+    }
 
 }

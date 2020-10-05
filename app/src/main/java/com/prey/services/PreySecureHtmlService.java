@@ -41,7 +41,7 @@ public class PreySecureHtmlService extends Service {
 
     public void onCreate() {
         super.onCreate();
-        PreyLogger.d("PreySecureService onCreate");
+        PreyLogger.d("PreySecureHtmlService onCreate");
     }
 
     Button button_Super_Lock_Unlock = null;
@@ -51,7 +51,7 @@ public class PreySecureHtmlService extends Service {
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         final Context ctx = this;
-        PreyLogger.d("PreySecureService onStart");
+        PreyLogger.d("PreySecureHtmlService onStart");
         final String pinNumber = PreyConfig.getPreyConfig(ctx).getPinNumber();
         String deviceKey = PreyConfig.getPreyConfig(ctx).getDeviceId();
         if (deviceKey != null && !"".equals(deviceKey) && pinNumber != null && !"".equals(pinNumber)) {
@@ -95,6 +95,7 @@ public class PreySecureHtmlService extends Service {
                         try {
                             wm.addView(view, layoutParams);
                             PreyConfig.getPreyConfig(this).setOpenSecureService(true);
+                            PreyConfig.getPreyConfig(this).setOverLock(true);
                         } catch (Exception e) {
                             PreyLogger.e(e.getMessage(), e);
                         }
