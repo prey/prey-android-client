@@ -195,30 +195,30 @@ public class LocationUtil {
 
     private static PreyLocation getPreyLocationAppService(final Context ctx, String method, boolean asynchronous, PreyLocation preyLocationOld) throws Exception {
         PreyLocation preyLocation = null;
-        Intent intent = new Intent(ctx, LocationService.class);
-        try {
-            ctx.startService(intent);
-            preyLocation=waitLocation(ctx,method,asynchronous);
-        } catch (Exception e) {
-            try {
-                PreyLogger.d("getPreyLocationAppService FusedLocationProviderClient");
-                FusedLocationProviderClient fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(ctx);
-                com.google.android.gms.tasks.Task<Location> task = fusedLocationProviderClient.getLastLocation();
-                task.addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if(location!=null) {
-                            PreyLocationManager.getInstance(ctx).setLastLocation(new PreyLocation(location));
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M &&
+                (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(ctx);
+            fusedLocationProviderClient.getLastLocation()
+                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                PreyLocationManager.getInstance(ctx).setLastLocation(new PreyLocation(location));
+                            }
                         }
-                    }
-                });
-                preyLocation = waitLocation(ctx,method,asynchronous);
-            } catch (Exception e1) {
-                PreyLogger.d("Error getPreyLocationAppService:" + e1.getMessage());
-                throw e1;
+                    });
+            preyLocation = waitLocation(ctx, method, asynchronous);
+        } else {
+            Intent intent = new Intent(ctx, LocationService.class);
+            try {
+                ctx.startService(intent);
+                preyLocation = waitLocation(ctx, method, asynchronous);
+            } catch (Exception e) {
+                PreyLogger.e("getPreyLocationAppService e:" + e.getMessage(), e);
+            }  finally {
+                ctx.stopService(intent);
             }
-        } finally {
-            ctx.stopService(intent);
         }
         return preyLocation;
     }
