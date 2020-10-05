@@ -95,6 +95,8 @@ public class PreyLockHtmlService extends Service{
                     if(wm != null) {
                         try{
                             wm.addView(view, layoutParams);
+                            PreyConfig.getPreyConfig(this).setOpenSecureService(true);
+                            PreyConfig.getPreyConfig(this).setOverLock(true);
                         }catch (Exception e){
                             PreyLogger.e(e.getMessage(),e);
                         }

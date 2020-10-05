@@ -158,19 +158,22 @@ public class Lock extends JsonAction {
         PreyLogger.d("lock unlock:"+unlock+" messageId:"+ messageId+" reason:"+reason);
         PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
         PreyConfig.getPreyConfig(ctx).setLock(true);
+        boolean isOverOtherApps=PreyConfig.getPreyConfig(ctx).isOverOtherApps();
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
-            if(PreyPermission.canDrawOverlays(ctx)) {
-
+            if(isOverOtherApps&&PreyPermission.canDrawOverlays(ctx)) {
                 Intent intent4 = null;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     Intent intent = new Intent(ctx, PreyLockHtmlService.class);
                     ctx.startService(intent);
-                    intent4 = new Intent(ctx, PasswordHtmlActivity.class);
-                } else {
-                    intent4 = new Intent(ctx, PasswordNativeActivity.class);
+                }else{
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        intent4 = new Intent(ctx, PasswordHtmlActivity.class);
+                    } else {
+                        intent4 = new Intent(ctx, PasswordNativeActivity.class);
+                    }
+                    intent4.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ctx.startActivity(intent4);
                 }
-                intent4.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                ctx.startActivity(intent4);
                 if (PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()) {
                     Intent intent2 = new Intent(ctx, PreyDisablePowerOptionsService.class);
                     ctx.startService(intent2);

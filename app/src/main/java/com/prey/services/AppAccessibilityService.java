@@ -28,7 +28,8 @@ public class AppAccessibilityService extends AccessibilityService {
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
         try {
             boolean isLock = PreyConfig.getPreyConfig(getApplicationContext()).isLockSet();
-            if (isLock) {
+            boolean isPinActivated = PreyConfig.getPreyConfig(getApplicationContext()).getPinActivated();
+            if (isLock||isPinActivated) {
                 if (accessibilityEvent != null && accessibilityEvent.getPackageName() != null) {
                     String charSequence = accessibilityEvent.getPackageName() != null ? accessibilityEvent.getPackageName().toString() : null;
                     //String charSequence2 = accessibilityEvent.getClassName() != null ? accessibilityEvent.getClassName().toString() : null;

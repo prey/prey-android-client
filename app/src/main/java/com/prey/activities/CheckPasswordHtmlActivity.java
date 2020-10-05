@@ -168,7 +168,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             String status=PreyConfig.getPreyConfig(this).getInstallationStatus();
             PreyLogger.d("CheckPasswordHtmlActivity: configurated:" + configurated +" status:"+status);
             if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
-                    && canAccessStorage  && canAccessBackgroundLocation&&isAdminActive&&canAccessibility) {
+                    && canAccessStorage  && canAccessBackgroundLocation&&isAdminActive&&(canAccessibility||canDrawOverlays)) {
                     if (deviceKey != null && deviceKey != "") {
                         if ("".equals(status)) {
                             url = URL_ONB + "#/" + lng + "/";

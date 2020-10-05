@@ -181,7 +181,7 @@ public class PreyConfig {
     public static final String JOB_ID_LOCK="job_id_lock";
 
     public static final String COUNTER_OFF="counter_off";
-
+    public static final String PIN_ACTIVATED="pin_activated";
 
     public static final String SSID="SSID";
     public static final String IMEI="IMEI";
@@ -205,6 +205,8 @@ public class PreyConfig {
 
     public static final String LOCATION_INFO="LOCATION_INFO";
     public static final String CAPS_LOCK_ON="CAPS_LOCK_ON";
+    public static final String OVER_LOCK="OVER_LOCK";
+
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -1170,6 +1172,14 @@ public class PreyConfig {
         }
     }
 
+    public void setPinActivated(boolean activated) {
+        this.saveBoolean(PreyConfig.PIN_ACTIVATED, activated);
+    }
+
+    public boolean getPinActivated() {
+        return getBoolean(PreyConfig.PIN_ACTIVATED, false);
+    }
+
     public void setAware(boolean aware) {
         this.saveBoolean(PreyConfig.AWARE, aware);
     }
@@ -1347,5 +1357,13 @@ public class PreyConfig {
 
     public void setCapsLockOn(boolean capsLockOn){
         saveBoolean(PreyConfig.CAPS_LOCK_ON, capsLockOn);
+    }
+
+    public boolean getOverLock(){
+        return getBoolean(PreyConfig.OVER_LOCK, false);
+    }
+
+    public void setOverLock(boolean overLock){
+        saveBoolean(PreyConfig.OVER_LOCK, overLock);
     }
 }
