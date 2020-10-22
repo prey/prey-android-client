@@ -26,6 +26,7 @@ import com.prey.PreyAccountData;
 import com.prey.PreyApp;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyName;
 import com.prey.PreyPermission;
 import com.prey.PreyUtils;
 import com.prey.PreyVerify;
@@ -912,6 +913,22 @@ public class WebAppInterface {
         }else{
             return false;
         }
+    }
+
+    @JavascriptInterface
+    public String initName() {
+        String initName = PreyWebServices.getInstance().getNameDevice(mContext);
+        PreyLogger.d("initName:"+initName);
+        return initName;
+    }
+
+    @JavascriptInterface
+    public String rename2(String newName){
+        PreyLogger.d("rename:"+newName);
+        PreyName preyName =PreyWebServices.getInstance().renameName(mContext,newName);
+        String out="{\"code\":" + preyName.getCode() + ",\"error\":\"" + preyName.getError() + "\",\"name\":\"" + preyName.getName() + "\"}";
+        PreyLogger.d("rename out:"+out);
+        return out;
     }
 
 }

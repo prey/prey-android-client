@@ -26,6 +26,7 @@ import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyName;
 import com.prey.PreyPhone;
 import com.prey.PreyPhone.Hardware;
 import com.prey.PreyPhone.Wifi;
@@ -1127,70 +1128,99 @@ public class PreyWebServices {
         return verify;
     }
 
-
-    public PreyLocation validateName(final Context ctx,String name){
-        PreyLocation location=null;
+    public PreyName validateName(final Context ctx,String name){
+        PreyName preyName=new PreyName();
         try{
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
             PreyConfig config=PreyConfig.getPreyConfig(ctx);
             String deviceKey = config.getDeviceId();
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey).concat("/validate.json");
-
-
+            PreyLogger.d("validateName name:"+name);
             JSONObject jsonParam=new JSONObject();
             jsonParam.put("name", name);
-
+            jsonParam.put("lang", Locale.getDefault().getLanguage());
             PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url,UtilConnection.REQUEST_METHOD_POST,jsonParam);
-            if(response.getStatusCode()==HttpURLConnection.HTTP_OK) {
-                String out = response.getResponseAsString();
-                PreyLogger.d("nameDevice:"+out);
-                JSONObject outJson = new JSONObject(out);
-               // PreyLogger.d(outJson);
-            }
-            if(response.getStatusCode()==422) {
-
-            }
-
-
-
+            PreyLogger.d("validateName getStatusCode:"+response.getStatusCode());
+            preyName.setCode(response.getStatusCode());
         }catch(Exception e){
-            PreyLogger.d("error validate:" + e.getMessage());
+            PreyLogger.d("validateName error validate:" + e.getMessage());
         }
-        return location;
+        return preyName;
     }
 
-    public PreyLocation renameName(final Context ctx,String name){
-        PreyLocation location=null;
+    public PreyName renameName(final Context ctx, String name){
+        PreyName preyName=new PreyName();
         try{
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
             PreyConfig config=PreyConfig.getPreyConfig(ctx);
             String deviceKey = config.getDeviceId();
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey).concat(".json");
-
-
             JSONObject jsonParam=new JSONObject();
             jsonParam.put("name", name);
-
+            jsonParam.put("lang", Locale.getDefault().getLanguage());
             PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url,UtilConnection.REQUEST_METHOD_PUT,jsonParam);
-
             PreyLogger.d("renameName:"+response.getStatusCode());
-
+            preyName.setCode(response.getStatusCode());
             if(response.getStatusCode()==HttpURLConnection.HTTP_OK) {
                 String out = response.getResponseAsString();
                 PreyLogger.d("renameName:"+out);
-                JSONObject outJson = new JSONObject(out);
-                // PreyLogger.d(outJson);
             }
             if(response.getStatusCode()==422) {
-
+                String out = response.getResponseAsString();
+                PreyLogger.d("renameName:"+out);
+                JSONObject outJson = new JSONObject(out);
+                String name_available_error="";
+                String name_available="";
+                if(out.indexOf("\"title\"")>0){
+                    JSONArray array2 = outJson.getJSONArray("title");
+                    for (int i = 0; array2 != null && i < array2.length(); i++) {
+                        try {
+                            String outJson1 = (String) array2.getString(i);
+                            if ("".equals(name_available_error)) {
+                                String s = outJson1.substring(0, 1).toUpperCase();
+                                name_available_error = s + outJson1.substring(1);
+                            } else {
+                                name_available_error += ", " + outJson1;
+                            }
+                        }catch (Exception e){
+                            name_available_error=e.getMessage();
+                        }
+                    }
+                }else {
+                    JSONArray array1 = outJson.getJSONArray("name_available_error");
+                    for (int i = 0; array1 != null && i < array1.length(); i++) {
+                        try {
+                            String outJson1 = (String) array1.getString(i);
+                            if ("".equals(name_available_error)) {
+                                name_available_error = outJson1;
+                            } else {
+                                name_available_error += ", " + outJson1;
+                            }
+                        }catch (Exception e){
+                            name_available_error=e.getMessage();
+                        }
+                    }
+                    JSONArray array2 = outJson.getJSONArray("name_available");
+                    for (int i = 0; array2 != null && i < array2.length(); i++) {
+                        try {
+                            String outJson2 = (String) array2.getString(i);
+                            if ("".equals(name_available)) {
+                                name_available = outJson2;
+                            } else {
+                                name_available += ", " + outJson2;
+                            }
+                        }catch (Exception e){
+                            name_available_error=e.getMessage();
+                        }
+                    }
+                }
+                preyName.setError(name_available_error);
+                preyName.setName(name_available);
             }
-
-
-
         }catch(Exception e){
             PreyLogger.d("error validate:" + e.getMessage());
         }
-        return location;
+        return preyName;
     }
 
 }
