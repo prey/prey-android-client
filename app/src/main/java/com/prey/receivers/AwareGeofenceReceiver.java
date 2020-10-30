@@ -21,23 +21,24 @@ public class AwareGeofenceReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-
-        GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
-        if (geofencingEvent.hasError()) {
-            PreyLogger.d( "AWARE AwareGeofenceReceiver hasError:" +geofencingEvent.toString());
-            return;
-        }
-        int geofenceTransition = geofencingEvent.getGeofenceTransition();
-        PreyLogger.d( "AWARE AwareGeofenceReceiver onReceive :"+ (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT?"EXIT":"ENTER"));
-        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
-            Location location=geofencingEvent.getTriggeringLocation();
-            try {
-                AwareController.sendAware(context,new PreyLocation(location));
-                AwareController.getInstance().run(context);
-            } catch (Exception e) {
-                PreyLogger.e("AWARE AwareGeofenceReceiver error:" + e.getMessage(), e);
+        try {
+            GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+            if (geofencingEvent.hasError()) {
+                PreyLogger.d( "AWARE AwareGeofenceReceiver hasError:" +geofencingEvent.toString());
+                return;
             }
-        }
+            int geofenceTransition = geofencingEvent.getGeofenceTransition();
+            PreyLogger.d( "AWARE AwareGeofenceReceiver onReceive :"+ (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT?"EXIT":"ENTER"));
+            if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+                Location location=geofencingEvent.getTriggeringLocation();
+                try {
+                    AwareController.sendAware(context,new PreyLocation(location));
+                    AwareController.getInstance().run(context);
+                } catch (Exception e) {
+                    PreyLogger.e("AWARE AwareGeofenceReceiver error:" + e.getMessage(), e);
+                }
+            }
+        } catch (Exception e1) {}
     }
 
 }

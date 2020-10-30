@@ -57,8 +57,8 @@ public class LoginActivity extends Activity {
 
     private void startup() {
         Intent intent = null;
-        boolean isLockSet=PreyConfig.getPreyConfig(getApplicationContext()).isLockSet();
-        if (isLockSet) {
+        String unlockPass=PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
+        if (unlockPass!=null&&!"".equals(unlockPass)) {
            if(PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(getApplicationContext())) {
                PreyLogger.d("Login Boot finished. PreyLockService");
                getApplicationContext().startService(new Intent(getApplicationContext(), PreyLockHtmlService.class));

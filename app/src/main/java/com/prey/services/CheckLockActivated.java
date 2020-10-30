@@ -14,7 +14,6 @@ import android.os.IBinder;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.json.actions.Lock;
-import com.prey.receivers.PreyDeviceAdmin;
 
 public class CheckLockActivated extends Service {
 
@@ -34,8 +33,8 @@ public class CheckLockActivated extends Service {
             public void run() {
                 boolean run = true;
                 while (run) {
-                    boolean isLockSet = PreyConfig.getPreyConfig(ctx).isLockSet();
-                    if (!isLockSet) {
+                    String unlockPass=PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
+                    if (unlockPass==null || "".equals(unlockPass)) {
                         run = false;
                         stopSelf();
                         break;

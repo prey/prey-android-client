@@ -44,6 +44,11 @@ public class PreyLockNativeService extends Service{
         final Context ctx=this;
         PreyLogger.d("PreyLockService onStart");
         final String unlock= PreyConfig.getPreyConfig(ctx).getUnlockPass();
+        if(unlock == null || "".equals(unlock)){
+            PreyConfig.getPreyConfig(ctx).setOverLock(false);
+            int pid = android.os.Process.myPid();
+            android.os.Process.killProcess(pid);
+        }
         if(unlock!=null&&!"".equals(unlock)) {
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             final View view = inflater.inflate(R.layout.lock_android7, null);
@@ -70,8 +75,7 @@ public class PreyLockNativeService extends Service{
                                 PreyConfig.getPreyConfig(ctx).setJobIdLock("");
                             }
                             final String reasonFinal=reason;
-                            PreyConfig.getPreyConfig(ctx).setLock(false);
-                            PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
+                            PreyConfig.getPreyConfig(ctx).setUnlockPass("");
                             if(view!=null){
                                     WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
                                     wm.removeView(view);

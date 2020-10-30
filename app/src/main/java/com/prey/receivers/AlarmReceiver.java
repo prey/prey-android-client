@@ -16,8 +16,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent intent2 = new Intent(context, ReportService.class);
-        context.startService(intent2);
+        try {
+            Intent intent2 = new Intent(context, ReportService.class);
+            context.startService(intent2);
+        }catch (Exception e){}
     }
 
 }

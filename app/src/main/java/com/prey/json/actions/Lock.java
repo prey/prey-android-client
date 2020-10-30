@@ -100,8 +100,7 @@ public class Lock extends JsonAction {
                 reason="{\"device_job_id\":\""+jobIdLock+"\",\"origin\":\"panel\"}";
                 PreyConfig.getPreyConfig(ctx).setJobIdLock("");
             }
-            PreyConfig.getPreyConfig(ctx).setLock(false);
-            PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
+            PreyConfig.getPreyConfig(ctx).setUnlockPass("");
             try{ctx.stopService(new Intent(ctx, PreySecureHtmlService.class));}catch(Exception e){}
             Intent intent = new Intent(ctx, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -157,7 +156,6 @@ public class Lock extends JsonAction {
     public void lock(final Context ctx, String unlock,final String messageId,final String reason,String device_job_id) {
         PreyLogger.d("lock unlock:"+unlock+" messageId:"+ messageId+" reason:"+reason);
         PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
-        PreyConfig.getPreyConfig(ctx).setLock(true);
         boolean isOverOtherApps=PreyConfig.getPreyConfig(ctx).isOverOtherApps();
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
             if(isOverOtherApps&&PreyPermission.canDrawOverlays(ctx)) {
@@ -208,15 +206,14 @@ public class Lock extends JsonAction {
     public static void sendUnLock(final Context context){
         new Thread(new Runnable() {
             public void run() {
-                boolean isLockSet = PreyConfig.getPreyConfig(context).isLockSet();
-                PreyLogger.d("sendUnLock isLockSet:" + isLockSet);
-                if (isLockSet) {
+                String unlockPass=PreyConfig.getPreyConfig(context).getUnlockPass();
+                PreyLogger.d("sendUnLock unlockPass:" + unlockPass);
+                if (unlockPass!=null && !"".equals(unlockPass)) {
                     if (PreyConfig.getPreyConfig(context).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(context)) {
                         PreyLogger.d("sendUnLock nothing");
                     } else {
                         PreyLogger.d("sendUnLock deleteUnlockPass");
-                        PreyConfig.getPreyConfig(context).setLock(false);
-                        PreyConfig.getPreyConfig(context).deleteUnlockPass();
+                        PreyConfig.getPreyConfig(context).setUnlockPass("");
                         final Context ctx = context;
                         new Thread() {
                             public void run() {
@@ -236,9 +233,9 @@ public class Lock extends JsonAction {
     }
 
     public static void lockWhenYouNocantDrawOverlays(Context ctx) {
-        boolean isLockSet=PreyConfig.getPreyConfig(ctx).isLockSet();
-        PreyLogger.d("DeviceAdmin lockWhenYouNocantDrawOverlays isLockSet:" + isLockSet);
-        if (isLockSet) {
+        String unlockPass=PreyConfig.getPreyConfig(ctx).getUnlockPass();
+        PreyLogger.d("DeviceAdmin lockWhenYouNocantDrawOverlays unlockPass:" + unlockPass);
+        if (unlockPass!=null && !"".equals(unlockPass)) {
             if(!PreyPermission.isAccessibilityServiceEnabled(ctx)) {
                 if (!canDrawOverlays(ctx)) {
                     boolean isPatternSet = isPatternSet(ctx);
@@ -261,9 +258,9 @@ public class Lock extends JsonAction {
     }
 
     public static void lockOld(Context ctx) {
-        boolean isLockSet=PreyConfig.getPreyConfig(ctx).isLockSet();
-        PreyLogger.d("DeviceAdmin lockWhenYouNocantDrawOverlays isLockSet:" + isLockSet);
-        if (isLockSet) {
+        String unlockPass=PreyConfig.getPreyConfig(ctx).getUnlockPass();
+        PreyLogger.d("DeviceAdmin lockWhenYouNocantDrawOverlays unlockPass:" + unlockPass);
+        if (unlockPass!=null && !"".equals(unlockPass)) {
             boolean isPatternSet = isPatternSet(ctx);
             boolean isPassOrPinSet = isPassOrPinSet(ctx);
             PreyLogger.d("CheckLockActivated isPatternSet:" + isPatternSet);
