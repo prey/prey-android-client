@@ -7,27 +7,9 @@
 package com.prey.activities;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.DisplayMetrics;
-import android.view.KeyEvent;
-import android.view.SurfaceHolder;
-import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -67,10 +49,13 @@ public class PasswordHtmlActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        boolean isLockSet = PreyConfig.getPreyConfig(getApplicationContext()).isLockSet();
-        boolean isPinActivated = PreyConfig.getPreyConfig(getApplicationContext()).getPinActivated();
-        PreyLogger.d("PasswordHtmlActivity isLockSet:" + isLockSet+" isPinActivated:"+isPinActivated);
-        if(!isLockSet&&!isPinActivated){
+        String unlockPass=PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
+        String pinNumber=PreyConfig.getPreyConfig(getApplicationContext()).getPinNumber();
+        String pinActivated=PreyConfig.getPreyConfig(getApplicationContext()).getPinActivated();
+        boolean isLock = unlockPass!=null&&!"".equals(unlockPass);
+        boolean isPinActivated = pinNumber!=null&&!"".equals(pinNumber)&&pinActivated!=null&&!"".equals(pinActivated);
+        PreyLogger.d("PasswordHtmlActivity isLock:" + isLock+" isPinActivated:"+isPinActivated);
+        if(!isLock&&!isPinActivated){
             finishAffinity();
         }
     }

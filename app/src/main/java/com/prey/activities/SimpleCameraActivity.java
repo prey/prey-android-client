@@ -12,17 +12,14 @@ import java.lang.reflect.Method;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
-
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
-
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
@@ -63,8 +60,10 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
             } else {
                 focus = "front";
             }
-            orientationManager = new OrientationManager(getApplicationContext(), SensorManager.SENSOR_DELAY_NORMAL, this);
-            orientationManager.enable();
+            try {
+                orientationManager = new OrientationManager(getApplicationContext(), SensorManager.SENSOR_DELAY_NORMAL, this);
+                orientationManager.enable();
+            }catch (Exception e){}
             camera = getCamera(focus);
             if (camera != null) {
                 try {
@@ -185,11 +184,13 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 
     protected void onDestroy() {
         super.onDestroy();
-        if (camera != null) {
-            camera.stopPreview();
-            camera.release();
-            camera = null;
-        }
+        try {
+            if (camera != null) {
+                camera.stopPreview();
+                camera.release();
+                camera = null;
+            }
+        }catch (Exception e){}
     }
 
     ShutterCallback shutterCallback = new ShutterCallback() {

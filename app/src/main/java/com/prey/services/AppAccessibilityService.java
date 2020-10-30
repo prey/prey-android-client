@@ -27,12 +27,14 @@ public class AppAccessibilityService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
         try {
-            boolean isLock = PreyConfig.getPreyConfig(getApplicationContext()).isLockSet();
-            boolean isPinActivated = PreyConfig.getPreyConfig(getApplicationContext()).getPinActivated();
+            String unlockPass=PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
+            String pinNumber=PreyConfig.getPreyConfig(getApplicationContext()).getPinNumber();
+            String pinActivated=PreyConfig.getPreyConfig(getApplicationContext()).getPinActivated();
+            boolean isLock = unlockPass!=null && !"".equals(unlockPass);
+            boolean isPinActivated = pinNumber!=null&&!"".equals(pinNumber)&&pinActivated!=null&&!"".equals(pinActivated);
             if (isLock||isPinActivated) {
                 if (accessibilityEvent != null && accessibilityEvent.getPackageName() != null) {
                     String charSequence = accessibilityEvent.getPackageName() != null ? accessibilityEvent.getPackageName().toString() : null;
-                    //String charSequence2 = accessibilityEvent.getClassName() != null ? accessibilityEvent.getClassName().toString() : null;
                     if ("com.prey".equals(charSequence) || "android".equals(charSequence)) {
                     } else {
                         Intent intent = null;

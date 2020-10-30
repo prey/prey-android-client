@@ -53,8 +53,15 @@ public class PreySecureHtmlService extends Service {
         final Context ctx = this;
         PreyLogger.d("PreySecureHtmlService onStart");
         final String pinNumber = PreyConfig.getPreyConfig(ctx).getPinNumber();
+        String pinActivated=PreyConfig.getPreyConfig(getApplicationContext()).getPinActivated();
+        boolean isPinActivated = pinNumber!=null&&!"".equals(pinNumber)&&pinActivated!=null&&!"".equals(pinActivated);
+        if(pinNumber == null || "".equals(pinNumber) ||!isPinActivated){
+            PreyConfig.getPreyConfig(ctx).setOverLock(false);
+            int pid = android.os.Process.myPid();
+            android.os.Process.killProcess(pid);
+        }
         String deviceKey = PreyConfig.getPreyConfig(ctx).getDeviceId();
-        if (deviceKey != null && !"".equals(deviceKey) && pinNumber != null && !"".equals(pinNumber)) {
+        if (deviceKey != null && !"".equals(deviceKey) && isPinActivated) {
             try {
                 Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
                 intentClose.putExtra(PreyDisablePowerOptionsReceiver.stringExtra, PreyDisablePowerOptionsReceiver.stringExtra);

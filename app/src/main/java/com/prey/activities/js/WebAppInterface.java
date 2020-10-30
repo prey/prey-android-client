@@ -45,7 +45,6 @@ import com.prey.barcodereader.BarcodeActivity;
 import com.prey.exceptions.PreyException;
 import com.prey.json.UtilJson;
 import com.prey.json.actions.Detach;
-import com.prey.json.actions.Lock;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyDisablePowerOptionsService;
@@ -56,7 +55,6 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.util.Calendar;
 import java.util.Date;
-
 
 public class WebAppInterface {
 
@@ -506,14 +504,19 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public String lock(String key){
-        PreyLogger.d("lock:"+key);
         String error2 = "";
         final Context ctx = mContext;
         String unlock = PreyConfig.getPreyConfig(ctx).getUnlockPass();
-        PreyLogger.d("lock:"+key+" unlock:"+unlock);
+        String pinActivated=PreyConfig.getPreyConfig(ctx).getPinActivated();
+        PreyLogger.d("lock key:"+key+"  unlock:"+unlock+" pinActivated:"+pinActivated);
+        if ( (unlock == null || "".equals(unlock))&&(pinActivated==null || "".equals(pinActivated)) ) {
+            PreyConfig.getPreyConfig(ctx).setOverLock(false);
+            int pid = android.os.Process.myPid();
+            android.os.Process.killProcess(pid);
+            return "{\"ok\":\"ok\"}";
+        }
         if (unlock != null && !"".equals(unlock) && unlock.equals(key)) {
-            PreyConfig.getPreyConfig(ctx).setLock(false);
-            PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
+            PreyConfig.getPreyConfig(ctx).setUnlockPass("");
             PreyConfig.getPreyConfig(ctx).setOpenSecureService(false);
             new Thread() {
                 public void run() {
@@ -524,7 +527,7 @@ public class WebAppInterface {
             boolean overLock=PreyConfig.getPreyConfig(ctx).getOverLock();
             PreyLogger.d("verifyLock :"+unlock+" overLock:"+overLock+" getPinActivated:"+PreyConfig.getPreyConfig(mContext).getPinActivated());
             if(overLock){
-                if((unlock == null || "".equals(unlock))&&!PreyConfig.getPreyConfig(mContext).getPinActivated()){
+                if((unlock == null || "".equals(unlock))){
                     PreyConfig.getPreyConfig(ctx).setOverLock(false);
                     int pid = android.os.Process.myPid();
                     android.os.Process.killProcess(pid);
@@ -566,26 +569,17 @@ public class WebAppInterface {
             if(pActivity!=null)
                 pActivity.pfinish();
         }else{
-            String pin = PreyConfig.getPreyConfig(ctx).getPinNumber();
+            String pin=PreyConfig.getPreyConfig(ctx).getPinNumber();
             PreyLogger.d("lock:"+key+" pin:"+pin+" unlock:"+unlock);
-            if (
-                    (unlock == null || "".equals(unlock)) &&
-                            (
-
-                                    (PreyConfig.getPreyConfig(ctx).getPinActivated() && pin != null &&!"".equals(pin) && pin!= null && pin.equals(key))
-                                            ||
-                                     !PreyConfig.getPreyConfig(ctx).getPinActivated()
-                            )
-                ) {
+            if (  pinActivated!=null && !"".equals(pinActivated) && pin != null &&!"".equals(pin) && pin!= null && pin.equals(key) ) {
                 error2="{\"ok\":\"ok\"}";
                 PreyLogger.d("error2.:"+error2);
                 Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(new Date().getTime());
                 cal.add(Calendar.MINUTE, 1);
                 PreyConfig.getPreyConfig(ctx).setTimeSecureLock(cal.getTimeInMillis());
-                PreyConfig.getPreyConfig(ctx).setPinActivated(false);
-
-                PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
+                PreyConfig.getPreyConfig(ctx).setPinActivated("");
+                PreyConfig.getPreyConfig(ctx).setUnlockPass("");
                 PreyConfig.getPreyConfig(ctx).setOpenSecureService(false);
                 new Thread() {
                     public void run() {
@@ -596,8 +590,7 @@ public class WebAppInterface {
                 boolean overLock=PreyConfig.getPreyConfig(ctx).getOverLock();
                 PreyLogger.d("verifyLock :"+unlock+" overLock:"+overLock+" getPinActivated:"+PreyConfig.getPreyConfig(mContext).getPinActivated());
                 if(overLock){
-
-                    if((unlock == null || "".equals(unlock))&&!PreyConfig.getPreyConfig(mContext).getPinActivated()){
+                    if(pinActivated!=null && !"".equals(pinActivated)){
                         PreyConfig.getPreyConfig(ctx).setOverLock(false);
                         int pid = android.os.Process.myPid();
                         android.os.Process.killProcess(pid);
@@ -636,24 +629,18 @@ public class WebAppInterface {
                         }
                     }
                 }.start();
-
-
                 if(pActivity!=null)
                     pActivity.pfinish();
             }else {
                 error2 = "{\"error\":[\"" + mContext.getString(R.string.password_wrong) + "\"]}";
             }
         }
-
         PreyLogger.d("error2:"+error2);
         return error2;
     }
     @JavascriptInterface
     public void verifyLock() {
-
     }
-
-
 
     @JavascriptInterface
     public String unpin(String key){
@@ -663,7 +650,6 @@ public class WebAppInterface {
         String pin = PreyConfig.getPreyConfig(ctx).getPinNumber();
         PreyLogger.d("lock:"+key+" pin:"+pin);
         if (pin != null && pin.equals(key)) {
-
             View viewLock=PreyConfig.getPreyConfig(ctx).viewLock;
             if(viewLock!=null){
                 WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
@@ -850,8 +836,6 @@ public class WebAppInterface {
                     }
                 }
         }
-
-
     }
 
     public class DetachDevice extends AsyncTask<Void, Void, Void> {

@@ -11,6 +11,8 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.activities.PasswordHtmlActivity;
 import com.prey.activities.PasswordNativeActivity;
+import com.prey.events.Event;
+import com.prey.events.manager.EventThread;
 import com.prey.services.PreySecureHtmlService;
 
 import android.annotation.TargetApi;
@@ -22,6 +24,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 
+import org.json.JSONObject;
+
 import java.util.Date;
 
 public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
@@ -30,8 +34,6 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
     }
 
     public static String stringExtra="prey";
-
-
 
     @TargetApi(Build.VERSION_CODES.ECLAIR_MR1)
     public void onReceive(Context context, Intent intent) {
@@ -47,21 +49,18 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                     }
                 }
                 boolean flag = ((KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE)).inKeyguardRestrictedInputMode();
-                boolean lock=PreyConfig.getPreyConfig(context).isLockSet();
-                boolean pinActivated=PreyConfig.getPreyConfig(context).getPinActivated();
+                String unlockPass=PreyConfig.getPreyConfig(context).getUnlockPass();
+                boolean lock=unlockPass!=null && !"".equals(unlockPass);
+                String pinActivated=PreyConfig.getPreyConfig(context).getPinActivated();
+                boolean pin=pinActivated!=null && !"".equals(pinActivated);
                 try {
-                   if (!pinActivated||!lock) {
-
+                   if (!pin||!lock) {
                         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                         boolean isScreenOn = pm.isScreenOn();
                         String reason=intent.getStringExtra("reason");
                         if (isScreenOn && reason != null) {
-
                             PreyLogger.d("PreyDisablePowerOptionsReceiver reason:"+reason+" flag:"+flag+" lock:"+flag+" putextra:"+intent.getStringExtra(stringExtra));
-
-
                             String extra=intent.getStringExtra(stringExtra);
-
                             long time=PreyConfig.getPreyConfig(context).getTimeSecureLock( );
                             long now=new Date().getTime();
                             PreyLogger.d("PreyDisablePowerOptionsReceiver time:"+time+" now:"+now +" "+(now<time));
@@ -72,9 +71,7 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                                 Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
                                 intentClose.putExtra(stringExtra, stringExtra);
                                 context.sendBroadcast(intentClose);
-
                                 String pinNumber=PreyConfig.getPreyConfig(context).getPinNumber();
-
                                 PreyLogger.d("PreyDisablePowerOptionsReceiver pinNumber1:"+pinNumber);
                                 if("globalactions".equals(reason)&& pinNumber!=null&& !"".equals(pinNumber)){
                                     PreyLogger.d("PreyDisablePowerOptionsReceiver pinNumber2:"+pinNumber);
@@ -82,7 +79,18 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                                         PreyLogger.d("PreyDisablePowerOptionsReceiver pinNumber3:"+pinNumber);
                                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
                                             PreyLogger.d("PreyDisablePowerOptionsReceiver pinNumber4:"+pinNumber);
-                                            PreyConfig.getPreyConfig(context).setPinActivated(true);
+                                            PreyConfig.getPreyConfig(context).setPinActivated(pinNumber);
+                                            try {
+                                                JSONObject info = new JSONObject();
+                                                info.put("PIN", pinNumber);
+                                                Event event = new Event();
+                                                event.setName("android_lock_pin");
+                                                event.setInfo(info.toString());
+                                                JSONObject jsonObjectStatus = new JSONObject();
+                                                jsonObjectStatus.put("PIN", pinNumber);
+                                                new EventThread(context, event, jsonObjectStatus, null).start();
+                                            } catch (Exception e) {
+                                            }
                                             boolean isOverOtherApps=PreyConfig.getPreyConfig(context).isOverOtherApps();
                                             if(isOverOtherApps&&PreyConfig.getPreyConfig(context).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(context)) {
                                                 Intent intentLock = new Intent(context, PreySecureHtmlService.class);

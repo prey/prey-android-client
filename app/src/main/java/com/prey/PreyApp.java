@@ -50,7 +50,8 @@ public class PreyApp extends Application {
     public void onCreate() {
         super.onCreate();
         try {
-            if (PreyConfig.getPreyConfig(getApplicationContext()).isLockSet()) {
+            String unlockPass=PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
+            if (unlockPass!=null && !"".equals(unlockPass)) {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 getApplicationContext().startActivity(intent);

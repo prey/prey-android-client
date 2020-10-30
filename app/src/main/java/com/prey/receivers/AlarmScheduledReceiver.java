@@ -16,8 +16,11 @@ public class AlarmScheduledReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent intent2 = new Intent(context, PreyBetaRunnerService.class);
-        context.startService(intent2);
+        try {
+            Intent intent2 = new Intent(context, PreyBetaRunnerService.class);
+            context.startService(intent2);
+        }catch (Exception e){
+        }
     }
 
 }

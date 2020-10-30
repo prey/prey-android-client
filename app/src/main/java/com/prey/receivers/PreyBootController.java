@@ -52,7 +52,8 @@ public class PreyBootController extends BroadcastReceiver {
             new Thread() {
                 public void run() {
                     try {
-                        if (PreyConfig.getPreyConfig(ctx).isLockSet()) {
+                        String unlockPass=PreyConfig.getPreyConfig(ctx).getUnlockPass();
+                        if (unlockPass!=null && !"".equals(unlockPass)) {
                             if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
                                 ctx.startService(new Intent(ctx, PreyLockHtmlService.class));
                             }

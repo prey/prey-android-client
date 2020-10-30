@@ -26,7 +26,9 @@ public class EventRetrieveDataBattery {
 
     public  void execute(Context context,EventManager manager){
         this.manager=manager;
-        context.getApplicationContext().registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        try{
+            context.getApplicationContext().registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        }catch (Exception e){}
     }
 
     private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {

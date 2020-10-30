@@ -120,6 +120,7 @@ public class PreyConfig {
     public static final String SESSION_ID="SESSION_ID";
 
     public static final String PIN_NUMBER2="PIN_NUMBER2";
+    public static final String PIN_NUMBER_ACTIVATE="PIN_NUMBER_ACTIVATE";
     public static final String SMS_COMMAND="SMS_COMMAND";
     public static final String PREFERENCE_LOCATION_LOW_BATTERY="PREFERENCE_LOCATION_LOW_BATTERY";
 
@@ -459,10 +460,6 @@ public class PreyConfig {
         this.saveString(PreyConfig.UNLOCK_PASS, unlockPass);
     }
 
-    public void deleteUnlockPass(){
-        this.removeKey(PreyConfig.UNLOCK_PASS);
-    }
-
     public String getNotificationAndroid7(){
         return getString(PreyConfig.NOTIFICATION_ANDROID_7, null);
     }
@@ -699,15 +696,6 @@ public class PreyConfig {
     public void setRunBackground(boolean disablePowerOptions) {
         saveBoolean(PreyConfig.PREFS_RUN_BACKGROUND, disablePowerOptions);
         saveBoolean(PreyConfig.PREFS_BACKGROUND, disablePowerOptions);
-    }
-
-
-    public void setLock(boolean locked) {
-        saveBoolean(PreyConfig.IS_LOCK_SET, locked);
-    }
-
-    public boolean isLockSet() {
-        return getBoolean(PreyConfig.IS_LOCK_SET, false);
     }
 
     public void setNextAlert(boolean nextAlert){
@@ -1172,12 +1160,12 @@ public class PreyConfig {
         }
     }
 
-    public void setPinActivated(boolean activated) {
-        this.saveBoolean(PreyConfig.PIN_ACTIVATED, activated);
+    public void setPinActivated(String number_activated) {
+        this.saveString(PreyConfig.PIN_NUMBER_ACTIVATE, number_activated);
     }
 
-    public boolean getPinActivated() {
-        return getBoolean(PreyConfig.PIN_ACTIVATED, false);
+    public String getPinActivated() {
+        return getString(PreyConfig.PIN_NUMBER_ACTIVATE, "");
     }
 
     public void setAware(boolean aware) {

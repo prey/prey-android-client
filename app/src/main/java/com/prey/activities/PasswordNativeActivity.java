@@ -89,8 +89,7 @@ public class PasswordNativeActivity extends Activity {
                     String key = editText.getText().toString().trim();
                     PreyLogger.d("PasswordActivity2 unlock key:" + key + " unlock:" + unlock);
                     if (unlock != null && unlock.equals(key)) {
-                        PreyConfig.getPreyConfig(getApplicationContext()).setLock(false);
-                        PreyConfig.getPreyConfig(getApplicationContext()).deleteUnlockPass();
+                        PreyConfig.getPreyConfig(getApplicationContext()).setUnlockPass("");
                         new Thread() {
                             public void run() {
                                 String reason = "{\"origin\":\"user\"}";
