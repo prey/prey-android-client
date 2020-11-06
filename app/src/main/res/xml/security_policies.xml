@@ -10,5 +10,6 @@
     <force-lock />
     <reset-password />
     <wipe-data />
+    <limit-password />
   </uses-policies>
 </device-admin>

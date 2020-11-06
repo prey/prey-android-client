@@ -74,5 +74,19 @@
         android:layout_marginEnd="8dp"
         app:layout_constraintHorizontal_bias="0.0" />
 
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="291dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        android:text=""
+        android:textSize="16sp"
+        android:textColor="#fff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/EditText_Lock_Password" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

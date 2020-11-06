@@ -30,55 +30,11 @@
 
             />
 
-        <CheckBoxPreference
-            android:key="PREFS_BIOMETRIC"
-            android:summary="@string/preference_biometric_summary"
-            android:title="@string/preference_biometric_title"
-
-            />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:key="PREFS_CAT_PREFS"
-        android:title="@string/preferences_config_pin_title"
-        >
-        <com.prey.preferences.ChangePinPreferences
-            android:key="PREFS_CHANGE_PIN"
-            android:dialogIcon="@drawable/status_bar"
-            android:dialogTitle="@string/preference_pin_dialog_title"
-            android:negativeButtonText="@string/cancel"
-            android:positiveButtonText="@string/ok"
-            android:summary="@string/preference_pin_summary"
-            android:title="@string/preference_pin"
-            />
-
-        <!--
-        <Preference
-            android:key="PREFS_SMS"
-            android:summary="@string/preference_sms_summary"
-            android:title="@string/preference_sms"
-
-            />-->
-
-        <com.prey.preferences.DisablePowerCheckBoxPreference
-            android:defaultValue="false"
-            android:key="PREFS_DISABLE_POWER"
-            android:summary="@string/preferences_disable_power_options_summary"
-            android:title="@string/preferences_disable_power_options_title"
-            android:enabled="false"
-            />
-
-        <com.prey.preferences.BlockAppUninstallCheckBoxPreference
-            android:key="PREFS_BLOCK_APP_UNINSTALL"
-            android:summary="@string/preferences_block_app_uninstall_summary"
-            android:title="@string/preferences_block_app_uninstall_title"
-            />
-
-
 
 
     </PreferenceCategory>
+
+
     <PreferenceCategory
         android:title="@string/preferences_detach_title"
         >

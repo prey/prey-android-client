@@ -351,8 +351,8 @@
     <string name="permiso_des1"><b>DEVICE\'S LOCATION</b>\nDevice tracking and use of control zones for geofencing require the device location.\n\n<b>TAKE PICTURES AND RECORD VIDEO</b>\nThe images included in evidence reports are taken with front and back cameras.\n\n<b>MAKE AND MANAGE PHONE CALLS</b>\nPrey uses this permission to show the user the device\'s IMEI on evidence reports.\n\n<b>ACCESS PHOTOS, MEDIA AND FILES ON YOUR DEVICE</b>\nThe File Retrieval tool needs this permission to recover files remotely from the device.</string>
     <string name="permiso_cat2">ACCESS TO DEVICE ADMIN PERMISSION</string>
     <string name="permiso_des2"><b>ACCESS DEVICE ADMIN PERMISSIONS</b>\nPrey can activate extra security tools with the administrator permission, like the Remote Wipe and Lock, or the Block Uninstall setting.</string>
-    <string name="permiso_cat3">OVERLAP APP SCREENS AND ACCESSIBILITY</string>
-    <string name="permiso_des3"><b>OVERLAP APP SCREENS</b>\nWhen a Remote Lock is activated, Prey utilizes this permission to display a custom screen lock over all other apps.\n\n<b>ACCESSIBILITY</b>\nWhen a device is marked as missing, this permission ensures that even if the permission to overlap app screens is removed, Prey will still block all applications before they can be opened.</string>
+    <string name="permiso_cat3">OVERLAP APP SCREENS</string>
+    <string name="permiso_des3"><b>OVERLAP APP SCREENS</b>\nWhen a Remote Lock is activated, Prey utilizes this permission to display a custom screen lock over all other apps.</string>
     <string name="permiso_link">GO TO PERMITS</string>
     <string name="link_privacy">YOUR PRIVACY</string>
     <string name="privacy_info">All of the app functionalities require you to give the permissions needed and to activate your account directly in the control panel.\n\nNone of your data is being sold or sent to third parties for any purpose. It will not be used for any purposes other than to deliver or improve the app functionalities. \n\nAll data is sent through SSL.</string>
