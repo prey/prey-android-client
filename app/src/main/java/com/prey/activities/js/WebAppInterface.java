@@ -16,8 +16,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.Settings;
-import android.view.View;
-import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
@@ -34,27 +32,21 @@ import com.prey.R;
 import com.prey.actions.location.LocationUpdatesService;
 import com.prey.actions.location.PreyLocation;
 import com.prey.activities.CheckPasswordHtmlActivity;
-import com.prey.activities.CloseActivity;
-import com.prey.activities.LoginActivity;
 import com.prey.activities.PanelWebActivity;
-import com.prey.activities.PasswordHtmlActivity;
 import com.prey.activities.PreReportActivity;
 import com.prey.activities.SecurityActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.barcodereader.BarcodeActivity;
 import com.prey.exceptions.PreyException;
-import com.prey.json.UtilJson;
 import com.prey.json.actions.Detach;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
-import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyJobService;
 
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
-import java.util.Calendar;
-import java.util.Date;
+
 
 public class WebAppInterface {
 
@@ -64,7 +56,6 @@ public class WebAppInterface {
     private boolean noMoreDeviceError = false;
     private String from = "setting";
     private CheckPasswordHtmlActivity mActivity;
-    private PasswordHtmlActivity pActivity=null;
 
     public WebAppInterface() {
     }
@@ -76,11 +67,6 @@ public class WebAppInterface {
     public WebAppInterface(Context context, CheckPasswordHtmlActivity activity) {
         mContext = context;
         mActivity = activity;
-    }
-
-    public WebAppInterface(Context context, PasswordHtmlActivity activity) {
-        mContext = context;
-        pActivity = activity;
     }
 
     @JavascriptInterface
@@ -116,7 +102,6 @@ public class WebAppInterface {
     public boolean initAdminActive() {
         return FroyoSupport.getInstance(mContext).isAdminActive();
     }
-
     @JavascriptInterface
     public boolean initDrawOverlay() {
         boolean canDrawOverlays = true;
@@ -128,7 +113,7 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public boolean initAccessibility() {
-        return  PreyPermission.isAccessibilityServiceEnabled(mContext);
+        return false;
     }
 
     @JavascriptInterface
@@ -481,12 +466,6 @@ public class WebAppInterface {
     @JavascriptInterface
     public void setShieldOf(boolean shieldOf) {
         PreyLogger.d("setShieldOf:" + shieldOf);
-        PreyConfig.getPreyConfig(mContext).setDisablePowerOptions(shieldOf);
-        if (shieldOf) {
-            mContext.startService(new Intent(mContext, PreyDisablePowerOptionsService.class));
-        } else {
-            mContext.stopService(new Intent(mContext, PreyDisablePowerOptionsService.class));
-        }
     }
 
     @JavascriptInterface
@@ -504,172 +483,7 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public String lock(String key){
-        String error2 = "";
-        final Context ctx = mContext;
-        String unlock = PreyConfig.getPreyConfig(ctx).getUnlockPass();
-        String pinActivated=PreyConfig.getPreyConfig(ctx).getPinActivated();
-        PreyLogger.d("lock key:"+key+"  unlock:"+unlock+" pinActivated:"+pinActivated);
-        if ( (unlock == null || "".equals(unlock))&&(pinActivated==null || "".equals(pinActivated)) ) {
-            PreyConfig.getPreyConfig(ctx).setOverLock(false);
-            int pid = android.os.Process.myPid();
-            android.os.Process.killProcess(pid);
-            return "{\"ok\":\"ok\"}";
-        }
-        if (unlock != null && !"".equals(unlock) && unlock.equals(key)) {
-            PreyConfig.getPreyConfig(ctx).setUnlockPass("");
-            PreyConfig.getPreyConfig(ctx).setOpenSecureService(false);
-            new Thread() {
-                public void run() {
-                    String reason = "{\"origin\":\"user\"}";
-                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
-                }
-            }.start();
-            boolean overLock=PreyConfig.getPreyConfig(ctx).getOverLock();
-            PreyLogger.d("verifyLock :"+unlock+" overLock:"+overLock+" getPinActivated:"+PreyConfig.getPreyConfig(mContext).getPinActivated());
-            if(overLock){
-                if((unlock == null || "".equals(unlock))){
-                    PreyConfig.getPreyConfig(ctx).setOverLock(false);
-                    int pid = android.os.Process.myPid();
-                    android.os.Process.killProcess(pid);
-                }
-            }
-            new Thread() {
-                public void run() {
-                    if(PreyConfig.getPreyConfig(ctx).isOverOtherApps()) {
-                        try {
-                            View viewLock = PreyConfig.getPreyConfig(ctx).viewLock;
-                            if (viewLock != null) {
-                                WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
-                                wm.removeView(viewLock);
-                            }
-                        } catch (Exception e) {
-                        }
-                        try {
-                            View viewSecure = PreyConfig.getPreyConfig(ctx).viewSecure;
-                            if (viewSecure != null) {
-                                WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
-                                wm.removeView(viewSecure);
-                            }
-                        } catch (Exception e) {
-                        }
-                    }
-                    Intent intent = new Intent(ctx, CloseActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ctx.startActivity(intent);
-                    if(PreyConfig.getPreyConfig(ctx).isOverOtherApps()) {
-                        try {
-                            Thread.sleep(2000);
-                        } catch (Exception e) {
-                        }
-                        ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
-                    }
-                }
-            }.start();
-            error2="{\"ok\":\"ok\"}";
-            if(pActivity!=null)
-                pActivity.pfinish();
-        }else{
-            String pin=PreyConfig.getPreyConfig(ctx).getPinNumber();
-            PreyLogger.d("lock:"+key+" pin:"+pin+" unlock:"+unlock);
-            if (  pinActivated!=null && !"".equals(pinActivated) && pin != null &&!"".equals(pin) && pin!= null && pin.equals(key) ) {
-                error2="{\"ok\":\"ok\"}";
-                PreyLogger.d("error2.:"+error2);
-                Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis(new Date().getTime());
-                cal.add(Calendar.MINUTE, 1);
-                PreyConfig.getPreyConfig(ctx).setTimeSecureLock(cal.getTimeInMillis());
-                PreyConfig.getPreyConfig(ctx).setPinActivated("");
-                PreyConfig.getPreyConfig(ctx).setUnlockPass("");
-                PreyConfig.getPreyConfig(ctx).setOpenSecureService(false);
-                new Thread() {
-                    public void run() {
-                        String reason = "{\"origin\":\"user\"}";
-                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
-                    }
-                }.start();
-                boolean overLock=PreyConfig.getPreyConfig(ctx).getOverLock();
-                PreyLogger.d("verifyLock :"+unlock+" overLock:"+overLock+" getPinActivated:"+PreyConfig.getPreyConfig(mContext).getPinActivated());
-                if(overLock){
-                    if(pinActivated!=null && !"".equals(pinActivated)){
-                        PreyConfig.getPreyConfig(ctx).setOverLock(false);
-                        int pid = android.os.Process.myPid();
-                        android.os.Process.killProcess(pid);
-                    }
-                }
-                PreyLogger.d("--lock:" + key + " pin:" + pin + " unlock:" + unlock);
-                new Thread() {
-                    public void run() {
-                        if(PreyConfig.getPreyConfig(ctx).isOverOtherApps()) {
-                            try {
-                                View viewLock = PreyConfig.getPreyConfig(ctx).viewLock;
-                                if (viewLock != null) {
-                                    WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
-                                    wm.removeView(viewLock);
-                                }
-                            } catch (Exception e) {
-                            }
-                            try {
-                                View viewSecure = PreyConfig.getPreyConfig(ctx).viewSecure;
-                                if (viewSecure != null) {
-                                    WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
-                                    wm.removeView(viewSecure);
-                                }
-                            } catch (Exception e) {
-                            }
-                        }
-                        Intent intent = new Intent(ctx, CloseActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        ctx.startActivity(intent);
-                        if(PreyConfig.getPreyConfig(ctx).isOverOtherApps()) {
-                            try {
-                                Thread.sleep(2000);
-                            } catch (Exception e) {
-                            }
-                            ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
-                        }
-                    }
-                }.start();
-                if(pActivity!=null)
-                    pActivity.pfinish();
-            }else {
-                error2 = "{\"error\":[\"" + mContext.getString(R.string.password_wrong) + "\"]}";
-            }
-        }
-        PreyLogger.d("error2:"+error2);
-        return error2;
-    }
-    @JavascriptInterface
-    public void verifyLock() {
-    }
-
-    @JavascriptInterface
-    public String unpin(String key){
-        PreyLogger.d("lock:"+key);
-        String error2 = "";
-        final Context ctx = mContext;
-        String pin = PreyConfig.getPreyConfig(ctx).getPinNumber();
-        PreyLogger.d("lock:"+key+" pin:"+pin);
-        if (pin != null && pin.equals(key)) {
-            View viewLock=PreyConfig.getPreyConfig(ctx).viewLock;
-            if(viewLock!=null){
-                WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
-                wm.removeView(viewLock);
-            }
-            View viewSecure=PreyConfig.getPreyConfig(ctx).viewSecure;
-            if(viewSecure!=null){
-                WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
-                wm.removeView(viewSecure);
-            }
-            Intent intent = new Intent(ctx, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            ctx.startActivity(intent);
-            try{Thread.sleep(2000);}catch (Exception e){}
-            ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
-        }else{
-            error2 = "{\"error\":[\"" + mContext.getString(R.string.password_wrong) + "\"]}";
-        }
-        PreyLogger.d("error2:"+error2);
-        return error2;
+        return "{\"ok\":\"ok\"}";
     }
 
     @JavascriptInterface
@@ -730,6 +544,7 @@ public class WebAppInterface {
             PreyConfig.getPreyConfig(ctx).setEmail(email);
             PreyConfig.getPreyConfig(ctx).setRunBackground(true);
             PreyConfig.getPreyConfig(ctx).setInstallationStatus("Pending");
+
         } catch (Exception e) {
             error = e.getMessage();
             PreyLogger.e("error:" + error, e);
@@ -754,6 +569,7 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void givePermissions() {
+        PreyLogger.i("givePermissions");
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(mContext);
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(mContext);
         boolean canAccessCamera = PreyPermission.canAccessCamera(mContext);
@@ -766,7 +582,6 @@ public class WebAppInterface {
         boolean showCamera = PreyPermission.showRequestCamera(mActivity);
         boolean showPhone = PreyPermission.showRequestPhone(mActivity);
         boolean showStorage = PreyPermission.showRequestStorage(mActivity);
-        boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(mContext);
         boolean showDeniedPermission=false;
         if(!canAccessStorage) {
             if (!showStorage)
@@ -794,47 +609,56 @@ public class WebAppInterface {
         PreyLogger.d("canAccessCamera:" + canAccessCamera);
         PreyLogger.d("canAccessPhone:" + canAccessPhone);
         PreyLogger.d("canAccessStorage:" + canAccessStorage);
+        PreyLogger.d("showBackgroundLocation:" + showBackgroundLocation);
         PreyLogger.d("showFineLocation:" + showFineLocation);
         PreyLogger.d("showCoarseLocation:" + showCoarseLocation);
         PreyLogger.d("showCamera:" + showCamera);
         PreyLogger.d("showPhoneState:" + showPhone);
         PreyLogger.d("showWriteStorage:" + showStorage);
-        PreyLogger.d("canAccessibility:" + canAccessibility);
         if(!canAccessStorage&&!canAccessFineLocation&&!canAccessCoarseLocation&&!canAccessCamera&&!canAccessPhone&&
                 !showStorage&&!showFineLocation&&!showCoarseLocation&&!showCamera&&!showPhone){
             showDeniedPermission=false;
         }
+        if(canAccessFineLocation||canAccessCoarseLocation) {
+            PreyLogger.d("0-0:");
+            if (Build.VERSION.SDK_INT == PreyConfig.BUILD_VERSION_CODES_10 && !canAccessBackgroundLocation) {
+                PreyLogger.d("0-1---10:");
+                if (!showBackgroundLocation) {
+                    PreyLogger.d("0-2--10:");
+                    showDeniedPermission = true;
+                }
+            }
+            if (Build.VERSION.SDK_INT == PreyConfig.BUILD_VERSION_CODES_11 && !canAccessBackgroundLocation) {
+                PreyLogger.d("0-1----11:");
+                showDeniedPermission = true;
+            }
+        }
+        PreyLogger.d("showDeniedPermission:" + showDeniedPermission);
         if (showDeniedPermission) {
+            PreyLogger.d("1:");
             mActivity.deniedPermission();
-        } else {
-                if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
-                        || !canAccessPhone || !canAccessStorage ) {
-                    mActivity.askForPermission();
-                } else {
-                    boolean canDrawOverlays = true;
-                    if(PreyConfig.getPreyConfig(mContext).isOverOtherApps()){
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                            canDrawOverlays = Settings.canDrawOverlays(mContext);
-                    }
-                    if (!canDrawOverlays) {
-                        mActivity.askForPermissionAndroid7();
-                    } else {
-                        boolean isAdminActive = FroyoSupport.getInstance(mContext).isAdminActive();
-                        if (!isAdminActive) {
-                            mActivity.askForAdminActive();
-                        }else{
-                            if(!canAccessibility){
-                                mActivity.accessibility();
-                            }else{
-                                if(canAccessFineLocation||canAccessCoarseLocation) {
-                                    if (Build.VERSION.SDK_INT >= PreyConfig.BUILD_VERSION_CODES_10 && !canAccessBackgroundLocation) {
-                                        mActivity.deniedPermission();
-                                    }
-                                }
-                            }
-                        }
+        } else{
+            if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
+                    || !canAccessPhone || !canAccessStorage || !canAccessBackgroundLocation) {
+                PreyLogger.d("2:");
+                mActivity.askForPermission();
+            } else {
+                boolean canDrawOverlays =true;
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    canDrawOverlays=Settings.canDrawOverlays(mContext);
+                if(!canDrawOverlays){
+                    PreyLogger.d("2:");
+                    mActivity.askForPermissionAndroid7();
+                }else{
+                    boolean isAdminActive = FroyoSupport.getInstance(mContext).isAdminActive();
+                    if (!isAdminActive) {
+                        PreyLogger.d("4:");
+                        mActivity.askForAdminActive();
+                    }else{
+                        PreyLogger.d("5:");
                     }
                 }
+            }
         }
     }
 
@@ -914,5 +738,4 @@ public class WebAppInterface {
         PreyLogger.d("rename out:"+out);
         return out;
     }
-
 }

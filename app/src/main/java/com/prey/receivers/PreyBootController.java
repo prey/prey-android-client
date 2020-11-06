@@ -15,8 +15,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.json.actions.Report;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
-import com.prey.services.PreyDisablePowerOptionsService;
-import com.prey.services.PreyLockHtmlService;
+import com.prey.services.PreyLockService;
 
 public class PreyBootController extends BroadcastReceiver {
 
@@ -31,14 +30,6 @@ public class PreyBootController extends BroadcastReceiver {
             final Context ctx = context;
             new Thread() {
                 public void run() {
-                    try {
-                        boolean disablePowerOptions = PreyConfig.getPreyConfig(ctx).isDisablePowerOptions();
-                        if (disablePowerOptions) {
-                            ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
-                        } else {
-                            ctx.stopService(new Intent(ctx, PreyDisablePowerOptionsService.class));
-                        }
-                    }catch (Exception e){}
                     try {
                         boolean runBackground = PreyConfig.getPreyConfig(ctx).isRunBackground();
                         if (runBackground) {
@@ -55,7 +46,7 @@ public class PreyBootController extends BroadcastReceiver {
                         String unlockPass=PreyConfig.getPreyConfig(ctx).getUnlockPass();
                         if (unlockPass!=null && !"".equals(unlockPass)) {
                             if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
-                                ctx.startService(new Intent(ctx, PreyLockHtmlService.class));
+                                ctx.startService(new Intent(ctx, PreyLockService.class));
                             }
                         }
                     }catch (Exception e){}
