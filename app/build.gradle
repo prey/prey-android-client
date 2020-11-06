@@ -11,8 +11,8 @@ android {
 
         targetSdkVersion 30
 
-        versionCode 210
-        versionName '2.2.8'
+        versionCode 214
+        versionName '2.2.9'
 
         multiDexEnabled true
     }
