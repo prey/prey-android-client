@@ -14,6 +14,8 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,11 +26,16 @@ import android.widget.TextView;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
-import com.prey.activities.CloseActivity;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 
-public class PreyLockNativeService extends Service{
+public class PreyLockService extends Service{
+
+    private WindowManager windowManager;
+    private View view;
+
+    public PreyLockService(){
+    }
 
     public IBinder onBind(Intent intent) {
         return null;
@@ -43,31 +50,41 @@ public class PreyLockNativeService extends Service{
         super.onStart(intent,startId);
         final Context ctx=this;
         PreyLogger.d("PreyLockService onStart");
-        final String unlock= PreyConfig.getPreyConfig(ctx).getUnlockPass();
-        if(unlock == null || "".equals(unlock)){
-            PreyConfig.getPreyConfig(ctx).setOverLock(false);
-            int pid = android.os.Process.myPid();
-            android.os.Process.killProcess(pid);
-        }
+        String unlock= PreyConfig.getPreyConfig(ctx).getUnlockPass();
         if(unlock!=null&&!"".equals(unlock)) {
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            final View view = inflater.inflate(R.layout.lock_android7, null);
-            PreyConfig.getPreyConfig(this).viewLock=view;
+            view = inflater.inflate(R.layout.lock_android7, null);
             Typeface regularMedium = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-medium.ttf");
-            final TextView textView1 = (TextView) view.findViewById(R.id.TextView_Lock_AccessDenied);
+            TextView textView1 = (TextView) view.findViewById(R.id.TextView_Lock_AccessDenied);
             textView1.setTypeface(regularMedium);
             Typeface regularBold = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-bold.ttf");
             EditText editText1 = (EditText) view.findViewById(R.id.EditText_Lock_Password);
             editText1.setTypeface(regularMedium);
-            final EditText editText = (EditText)  view.findViewById(R.id.EditText_Lock_Password);
-            final Button btn_unlock = (Button)  view.findViewById(R.id.Button_Lock_Unlock);
+            final TextView textView8 = (TextView) view.findViewById(R.id.textView8);
+            textView8.setTypeface(regularBold);
+            final EditText editText = (EditText) this.view.findViewById(R.id.EditText_Lock_Password);
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    textView8.setText("");
+                }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
+            final Button btn_unlock = (Button) this.view.findViewById(R.id.Button_Lock_Unlock);
             btn_unlock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         String key = editText.getText().toString().trim();
-                        PreyLogger.d("PreyLockService unlock key:"+key+" unlock:"+unlock);
-                        if (unlock.equals(key)) {
+                        String unlock= PreyConfig.getPreyConfig(ctx).getUnlockPass();
+                        PreyLogger.d("unlock key:"+key+" unlock:"+unlock);
+                        if (unlock==null||"".equals(unlock)||unlock.equals(key)) {
                             String jobIdLock=PreyConfig.getPreyConfig(ctx).getJobIdLock();
                             String reason="{\"origin\":\"user\"}";
                             if(jobIdLock!=null&&!"".equals(jobIdLock)){
@@ -75,23 +92,29 @@ public class PreyLockNativeService extends Service{
                                 PreyConfig.getPreyConfig(ctx).setJobIdLock("");
                             }
                             final String reasonFinal=reason;
-                            PreyConfig.getPreyConfig(ctx).setUnlockPass("");
-                            if(view!=null){
-                                    WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-                                    wm.removeView(view);
-                            }
+                            PreyConfig.getPreyConfig(ctx).setLock(false);
+                            PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
                             new Thread(){
                                 public void run() {
                                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped",reasonFinal));
+                                    try{
+                                        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+                                        if(wm != null&&view!=null) {
+                                            wm.removeView(view);
+                                            view = null;
+                                        }else{
+                                            view = null;
+                                            android.os.Process.killProcess(android.os.Process.myPid());
+                                        }
+                                    }catch (Exception e){
+                                        view = null;
+                                        android.os.Process.killProcess(android.os.Process.myPid());
+                                    }
                                 }
                             }.start();
-                            Intent intent = new Intent(getApplicationContext(), CloseActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
                         } else {
-                            TextView textView1 = (TextView) view.findViewById(R.id.TextView_Lock_AccessDenied);
-                            textView1.setText(R.string.password_wrong);
                             editText.setText("");
+                            textView8.setText(ctx.getString(R.string.password_wrong));
                         }
                     } catch (Exception e) {
                     }
@@ -113,6 +136,7 @@ public class PreyLockNativeService extends Service{
                     if(wm != null) {
                         try{
                             wm.addView(view, layoutParams);
+                            PreyConfig.getPreyConfig(this).viewLock=view;
                         }catch (Exception e){
                             PreyLogger.e(e.getMessage(),e);
                         }
@@ -120,6 +144,13 @@ public class PreyLockNativeService extends Service{
                 }
             }
         }else{
+            if(view != null){
+                WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+                if(wm != null) {
+                    wm.removeView(view);
+                }
+                view = null;
+            }
             stopSelf();
         }
     }
@@ -127,6 +158,11 @@ public class PreyLockNativeService extends Service{
     public void onDestroy() {
         super.onDestroy();
         PreyLogger.d("PreyLockService onDestroy");
+        if(view != null){
+            WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+            wm.removeView(view);
+            view = null;
+        }
     }
 
 }

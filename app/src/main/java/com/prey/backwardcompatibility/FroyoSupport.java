@@ -18,9 +18,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.exceptions.PreyException;
-import com.prey.json.UtilJson;
 import com.prey.json.actions.Lock;
-import com.prey.net.PreyWebServices;
 import com.prey.receivers.PreyDeviceAdmin;
 
 @TargetApi(Build.VERSION_CODES.FROYO)

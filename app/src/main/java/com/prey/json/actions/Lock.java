@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.KeyguardManager;
 import android.content.ContentResolver;
@@ -28,10 +27,6 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
-import com.prey.activities.CheckPasswordHtmlActivity;
-import com.prey.activities.LoginActivity;
-import com.prey.activities.PasswordNativeActivity;
-import com.prey.activities.PasswordHtmlActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
@@ -39,9 +34,8 @@ import com.prey.exceptions.PreyException;
 import com.prey.json.JsonAction;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
-import com.prey.services.PreyDisablePowerOptionsService;
-import com.prey.services.PreyLockHtmlService;
-import com.prey.services.PreySecureHtmlService;
+import com.prey.services.CheckLockActivated;
+import com.prey.services.PreyLockService;
 
 public class Lock extends JsonAction {
 
@@ -100,31 +94,30 @@ public class Lock extends JsonAction {
                 reason="{\"device_job_id\":\""+jobIdLock+"\",\"origin\":\"panel\"}";
                 PreyConfig.getPreyConfig(ctx).setJobIdLock("");
             }
-            PreyConfig.getPreyConfig(ctx).setUnlockPass("");
-            try{ctx.stopService(new Intent(ctx, PreySecureHtmlService.class));}catch(Exception e){}
-            Intent intent = new Intent(ctx, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            ctx.startActivity(intent);
+            PreyConfig.getPreyConfig(ctx).setLock(false);
+            PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
             if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
                 Thread.sleep(1000);
                 PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId,UtilJson.makeMapParam("start", "lock", "stopped",reason));
                 Thread.sleep(2000);
-                View viewLock=PreyConfig.getPreyConfig(ctx).viewLock;
-                if(viewLock!=null){
+                try {
+                    View view = PreyConfig.getPreyConfig(ctx).viewLock;
                     WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
-                    wm.removeView(viewLock);
-                }
-                View viewSecure=PreyConfig.getPreyConfig(ctx).viewSecure;
-                if(viewSecure!=null){
-                    WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
-                    wm.removeView(viewSecure);
+                    if (wm != null && view != null) {
+                        wm.removeView(view);
+                        PreyConfig.getPreyConfig(ctx).viewLock = null;
+                    } else {
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                    }
+                }catch (Exception e){
+                    android.os.Process.killProcess(android.os.Process.myPid());
                 }
             }else{
                 PreyLogger.d("-- Unlock instruction received");
                 try{
                     if(!PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() ) {
                         FroyoSupport.getInstance(ctx).changePasswordAndLock("", true);
-                        @SuppressLint("InvalidWakeLockTag") WakeLock screenLock = ((PowerManager) ctx.getSystemService(Context.POWER_SERVICE)).newWakeLock(
+                        WakeLock screenLock = ((PowerManager) ctx.getSystemService(Context.POWER_SERVICE)).newWakeLock(
                                 PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, PreyConfig.TAG);
                         screenLock.acquire();
                         screenLock.release();
@@ -136,7 +129,6 @@ public class Lock extends JsonAction {
                     throw new PreyException(e);
                 }
             }
-            ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
         } catch (Exception e) {
             PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage()));
@@ -156,42 +148,18 @@ public class Lock extends JsonAction {
     public void lock(final Context ctx, String unlock,final String messageId,final String reason,String device_job_id) {
         PreyLogger.d("lock unlock:"+unlock+" messageId:"+ messageId+" reason:"+reason);
         PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
-        boolean isOverOtherApps=PreyConfig.getPreyConfig(ctx).isOverOtherApps();
-        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
-            if(isOverOtherApps&&PreyPermission.canDrawOverlays(ctx)) {
-                Intent intent4 = null;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    Intent intent = new Intent(ctx, PreyLockHtmlService.class);
-                    ctx.startService(intent);
-                }else{
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        intent4 = new Intent(ctx, PasswordHtmlActivity.class);
-                    } else {
-                        intent4 = new Intent(ctx, PasswordNativeActivity.class);
-                    }
-                    intent4.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ctx.startActivity(intent4);
-                }
-                if (PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()) {
-                    Intent intent2 = new Intent(ctx, PreyDisablePowerOptionsService.class);
-                    ctx.startService(intent2);
-                }
+        PreyConfig.getPreyConfig(ctx).setLock(true);
+        if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() ) {
+            if(PreyPermission.canDrawOverlays(ctx)) {
+                Intent intent = new Intent(ctx, PreyLockService.class);
+                ctx.startService(intent);
+                Intent intent3 = new Intent(ctx, CheckLockActivated.class);
+                ctx.startService(intent3);
             }else{
-                if(PreyPermission.isAccessibilityServiceEnabled(ctx)) {
-                    Intent intent4 = null;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        intent4 = new Intent(ctx, PasswordHtmlActivity.class);
-                    } else {
-                        intent4 = new Intent(ctx, PasswordNativeActivity.class);
-                    }
-                    intent4.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ctx.startActivity(intent4);
-                }else{
-                    lockWhenYouNocantDrawOverlays(ctx);
-                }
+                Lock.lockWhenYouNocantDrawOverlays(ctx);
             }
         }else{
-            lockOld(ctx);
+            Lock.lockOld(ctx);
         }
         new Thread(new Runnable() {
             public void run() {
@@ -236,8 +204,7 @@ public class Lock extends JsonAction {
         String unlockPass=PreyConfig.getPreyConfig(ctx).getUnlockPass();
         PreyLogger.d("DeviceAdmin lockWhenYouNocantDrawOverlays unlockPass:" + unlockPass);
         if (unlockPass!=null && !"".equals(unlockPass)) {
-            if(!PreyPermission.isAccessibilityServiceEnabled(ctx)) {
-                if (!canDrawOverlays(ctx)) {
+            if (!canDrawOverlays(ctx)) {
                     boolean isPatternSet = isPatternSet(ctx);
                     boolean isPassOrPinSet = isPassOrPinSet(ctx);
                     PreyLogger.d("CheckLockActivated isPatternSet:" + isPatternSet);
@@ -252,7 +219,7 @@ public class Lock extends JsonAction {
                         } catch (Exception e) {
                         }
                     }
-                }
+
             }
         }
     }

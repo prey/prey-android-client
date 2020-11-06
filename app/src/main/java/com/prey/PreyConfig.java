@@ -120,7 +120,6 @@ public class PreyConfig {
     public static final String SESSION_ID="SESSION_ID";
 
     public static final String PIN_NUMBER2="PIN_NUMBER2";
-    public static final String PIN_NUMBER_ACTIVATE="PIN_NUMBER_ACTIVATE";
     public static final String SMS_COMMAND="SMS_COMMAND";
     public static final String PREFERENCE_LOCATION_LOW_BATTERY="PREFERENCE_LOCATION_LOW_BATTERY";
 
@@ -162,6 +161,7 @@ public class PreyConfig {
     public static final String TIME_LOCATION_AWARE = "TIME_LOCATION_AWARE";
 
     public static final int BUILD_VERSION_CODES_10 = 29;
+    public static final int BUILD_VERSION_CODES_11 = 30;
 
     public static final int NOTIFY_ANDROID_6 = 6;
     public static final String NOTIFICATION_POPUP_ID = "NOTIFICATION_POPUP_ID";
@@ -182,7 +182,7 @@ public class PreyConfig {
     public static final String JOB_ID_LOCK="job_id_lock";
 
     public static final String COUNTER_OFF="counter_off";
-    public static final String PIN_ACTIVATED="pin_activated";
+
 
     public static final String SSID="SSID";
     public static final String IMEI="IMEI";
@@ -207,7 +207,7 @@ public class PreyConfig {
     public static final String LOCATION_INFO="LOCATION_INFO";
     public static final String CAPS_LOCK_ON="CAPS_LOCK_ON";
     public static final String OVER_LOCK="OVER_LOCK";
-
+    public static final String FIRST="FIRST";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -248,7 +248,6 @@ public class PreyConfig {
             version =getString(PreyConfig.PREY_VERSION, getInfoPreyVersion(ctx));
         }catch ( Exception e){
         }
-
     }
 
     public static synchronized PreyConfig getPreyConfig(Context ctx) {
@@ -458,6 +457,10 @@ public class PreyConfig {
 
     public void setUnlockPass(String unlockPass){
         this.saveString(PreyConfig.UNLOCK_PASS, unlockPass);
+    }
+
+    public void deleteUnlockPass(){
+        this.removeKey(PreyConfig.UNLOCK_PASS);
     }
 
     public String getNotificationAndroid7(){
@@ -696,6 +699,15 @@ public class PreyConfig {
     public void setRunBackground(boolean disablePowerOptions) {
         saveBoolean(PreyConfig.PREFS_RUN_BACKGROUND, disablePowerOptions);
         saveBoolean(PreyConfig.PREFS_BACKGROUND, disablePowerOptions);
+    }
+
+
+    public void setLock(boolean locked) {
+        saveBoolean(PreyConfig.IS_LOCK_SET, locked);
+    }
+
+    public boolean isLockSet() {
+        return getBoolean(PreyConfig.IS_LOCK_SET, false);
     }
 
     public void setNextAlert(boolean nextAlert){
@@ -943,6 +955,14 @@ public class PreyConfig {
         return getLong(PreyConfig.LOCATION_LOW_BATTERY_DATE, 0);
     }
 
+    public boolean isOverOtherApps(){
+        return FileConfigReader.getInstance(ctx).isOverOtherApps();
+    }
+
+    public boolean isAskForNameBatch(){
+        return FileConfigReader.getInstance(ctx).isAskForNameBatch();
+    }
+
     public void setScheduled(boolean scheduled){
         this.scheduled=scheduled;
         saveBoolean(PreyConfig.SCHEDULED, scheduled);
@@ -950,15 +970,6 @@ public class PreyConfig {
 
     public boolean isScheduled(){
         return false;
-    }
-
-
-    public boolean isOverOtherApps(){
-        return FileConfigReader.getInstance(ctx).isOverOtherApps();
-    }
-
-    public boolean isAskForNameBatch(){
-        return FileConfigReader.getInstance(ctx).isAskForNameBatch();
     }
 
     public void setMinuteScheduled(int minuteScheduled){
@@ -1160,14 +1171,6 @@ public class PreyConfig {
         }
     }
 
-    public void setPinActivated(String number_activated) {
-        this.saveString(PreyConfig.PIN_NUMBER_ACTIVATE, number_activated);
-    }
-
-    public String getPinActivated() {
-        return getString(PreyConfig.PIN_NUMBER_ACTIVATE, "");
-    }
-
     public void setAware(boolean aware) {
         this.saveBoolean(PreyConfig.AWARE, aware);
     }
@@ -1337,6 +1340,7 @@ public class PreyConfig {
     }
 
     public View viewLock=null;
+
     public View viewSecure=null;
 
     public boolean getCapsLockOn(){
@@ -1353,5 +1357,13 @@ public class PreyConfig {
 
     public void setOverLock(boolean overLock){
         saveBoolean(PreyConfig.OVER_LOCK, overLock);
+    }
+
+    public boolean isFirst(){
+        return getBoolean(PreyConfig.FIRST, true);
+    }
+
+    public void setFirst(boolean first){
+        saveBoolean(PreyConfig.FIRST, first);
     }
 }
