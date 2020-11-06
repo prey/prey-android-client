@@ -89,8 +89,6 @@
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleInstance"
             android:noHistory="true"
-
-
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -187,22 +185,6 @@
             />
 
         <activity
-        android:name="com.prey.activities.PasswordNativeActivity"
-        android:launchMode="singleInstance"
-        android:noHistory="true"
-        android:windowSoftInputMode="stateHidden|adjustResize"
-        android:configChanges="keyboardHidden|orientation"
-        />
-
-        <activity
-            android:name="com.prey.activities.PasswordHtmlActivity"
-            android:launchMode="singleInstance"
-            android:noHistory="true"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:configChanges="keyboardHidden|orientation"
-              />
-
-        <activity
             android:name="com.prey.activities.CheckPasswordHtmlActivity"
             android:launchMode="singleTask"
             android:noHistory="true"
@@ -246,12 +228,9 @@
         <activity
             android:name="com.prey.activities.SimpleCameraActivity"
             android:theme="@style/Theme.Transparent"
-
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
-
              />
-
 
         <activity
             android:name="com.prey.activities.PermissionInformationActivity"
@@ -311,14 +290,6 @@
 
         <receiver android:name="com.prey.receivers.AlarmReportReceiver" />
         <receiver android:name="com.prey.receivers.AlarmScheduledReceiver" />
-        <receiver android:name="com.prey.receivers.AlarmDisablePowerReceiver" />
-
-        <receiver android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver" android:enabled="true" android:exported="false">
-            <intent-filter android:priority="20000">
-                <action android:name="android.intent.action.CLOSE_SYSTEM_DIALOGS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
 
         <receiver
             android:name="com.prey.receivers.GeofenceReceiver"
@@ -329,7 +300,6 @@
                 <action android:name="android.location.PROVIDERS_CHANGED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name="com.prey.receivers.AwareGeofenceReceiver"
             android:exported="true"
@@ -363,17 +333,14 @@
         <service android:name="com.prey.actions.location.LocationUpdatesService" />
         <service android:name="com.prey.services.PreyBootService" />
         <service android:name="com.prey.services.PreyRunnerService" />
-        <service android:name="com.prey.services.PreyDisablePowerOptionsService" />
         <service android:name="com.prey.beta.services.PreyBetaRunnerService" />
         <service android:name="com.prey.actions.report.ReportService" />
         <service android:name="com.prey.actions.geofences.GeofenceIntentService" />
         <service android:name="com.prey.actions.aware.AwareIntentService" />
         <service android:name="com.prey.actions.fileretrieval.FileretrievalService" />
-        <service android:name="com.prey.services.PreyLockHtmlService" />
+        <service android:name="com.prey.services.PreyLockService" />
         <service android:name="com.prey.services.CheckLockActivated" />
-        <service android:name="com.prey.services.PreySecureHtmlService" />
         <service android:name="com.prey.services.PreyOverlayService" />
-        <service android:name="com.prey.services.PreyAccessibilityService" />
 
         <service android:name="com.prey.services.PreyNotificationForeGroundService" />
 
@@ -411,13 +378,6 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
-        <service android:name="com.prey.services.AppAccessibilityService" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" android:enabled="true">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService"/>
-            </intent-filter>
-            <meta-data android:name="android.accessibilityservice" android:resource="@xml/accessibilityservice"/>
-        </service>
 
     </application>
 

@@ -13,12 +13,17 @@ import android.content.pm.ActivityInfo;
 
 import com.prey.PreyConfig;
 import com.prey.PreyPermission;
+import com.prey.R;
 
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
 
@@ -26,12 +31,12 @@ import com.prey.PreyLogger;
 import com.prey.actions.aware.AwareController;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.net.PreyWebServices;
-import com.prey.services.PreyAccessibilityService;
 import com.prey.services.PreyOverlayService;
 
 public class PermissionInformationActivity extends PreyActivity {
 
     private static final int SECURITY_PRIVILEGES = 10;
+    private String congratsMessage;
 
 
     @Override
@@ -39,12 +44,11 @@ public class PermissionInformationActivity extends PreyActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-
     }
 
     @Override
     public void onBackPressed() {
+
     }
 
     @Override
@@ -75,16 +79,7 @@ public class PermissionInformationActivity extends PreyActivity {
             }
         }
         if (FroyoSupport.getInstance(this).isAdminActive()) {
-            Intent intent = null;
-            PreyLogger.d("PermissionInformationActivity: showScreen");
-            if(!PreyPermission.isAccessibilityServiceEnabled(this)) {
-                PreyLogger.d("PermissionInformationActivity: accessibility");
-                Intent intent3 = new Intent(PermissionInformationActivity.this, PreyAccessibilityService.class);
-                startService(intent3);
-                Intent intent4 = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                intent4.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent4);
-            }else {
+                Intent intent = null;
                 boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
                 if(!canDrawOverlays) {
                     askForPermissionAndroid7();
@@ -96,27 +91,33 @@ public class PermissionInformationActivity extends PreyActivity {
                         intent = new Intent(PermissionInformationActivity.this, LoginActivity.class);
                     }
                 }
-            }
-            PreyConfig.getPreyConfig(PermissionInformationActivity.this).setProtectReady(true);
-            new Thread() {
-                public void run() {
-                    try{
-                        AwareController.getInstance().init(getApplicationContext());
-                    }catch(Exception e){
+                PreyConfig.getPreyConfig(PermissionInformationActivity.this).setProtectReady(true);
+                new Thread() {
+                    public void run() {
+                        try{
+                            AwareController.getInstance().init(getApplicationContext());
+                        }catch(Exception e){
+                        }
                     }
-                }
-            }.start();
-            if(intent!=null) {
-                startActivity(intent);
+                }.start();
+                try {
+                    if(intent!=null) {
+                        startActivity(intent);
+                    }
+                }catch (Exception e){}
                 finish();
-            }
-        } else {
-            Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
-            startActivityForResult(intent, SECURITY_PRIVILEGES);
-            PreyWebServices.getInstance().sendEvent(getApplicationContext(), PreyConfig.ANDROID_PRIVILEGES_GIVEN);
-        }
-    }
+            } else {
 
+
+                        Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
+                        startActivityForResult(intent, SECURITY_PRIVILEGES);
+                        PreyWebServices.getInstance().sendEvent(getApplicationContext(), PreyConfig.ANDROID_PRIVILEGES_GIVEN);
+
+
+
+            }
+
+    }
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermission() {
         ActivityCompat.requestPermissions(PermissionInformationActivity.this, INITIAL_PERMS, REQUEST_PERMISSIONS);
@@ -148,7 +149,6 @@ public class PermissionInformationActivity extends PreyActivity {
         boolean canAccessCamera = PreyPermission.canAccessCamera(this);
         boolean canAccessPhone = PreyPermission.canAccessPhone(this);
         boolean canAccessStorage = PreyPermission.canAccessStorage(this);
-        boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(this);
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
                 && canAccessPhone && canAccessStorage  ) {
             boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
@@ -159,9 +159,6 @@ public class PermissionInformationActivity extends PreyActivity {
                 if (!canDrawOverlays) {
                     askForAdminActive();
                 } else {
-                    if(!canAccessibility){
-                        accessibility();
-                    }else {
                         finish();
                         Intent intent = null;
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -170,7 +167,7 @@ public class PermissionInformationActivity extends PreyActivity {
                             intent = new Intent(this, CheckPasswordActivity.class);
                         }
                         startActivity(intent);
-                    }
+
                 }
             }
         }
@@ -185,15 +182,6 @@ public class PermissionInformationActivity extends PreyActivity {
     public void askForAdminActive() {
         Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
         startActivityForResult(intent, SECURITY_PRIVILEGES);
-    }
-
-    public void accessibility() {
-        PreyLogger.d("PermissionInformationActivity accessibility");
-        Intent intent = new Intent(getApplicationContext(), PreyAccessibilityService.class);
-        startService(intent);
-        Intent intent2 = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-        intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent2);
     }
 
 }

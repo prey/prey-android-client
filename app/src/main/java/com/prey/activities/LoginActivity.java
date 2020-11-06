@@ -20,7 +20,8 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.json.actions.Lock;
-import com.prey.services.PreyLockHtmlService;
+import com.prey.services.CheckLockActivated;
+import com.prey.services.PreyLockService;
 
 public class LoginActivity extends Activity {
 
@@ -61,7 +62,8 @@ public class LoginActivity extends Activity {
         if (unlockPass!=null&&!"".equals(unlockPass)) {
            if(PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(getApplicationContext())) {
                PreyLogger.d("Login Boot finished. PreyLockService");
-               getApplicationContext().startService(new Intent(getApplicationContext(), PreyLockHtmlService.class));
+               getApplicationContext().startService(new Intent(getApplicationContext(), PreyLockService.class));
+               getApplicationContext().startService(new Intent(getApplicationContext(), CheckLockActivated.class));
            }else{
                Lock.lockWhenYouNocantDrawOverlays(getApplicationContext());
            }
@@ -83,13 +85,11 @@ public class LoginActivity extends Activity {
             if (deviceKey != null && deviceKey != "") {
                 intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
             }else{
-                boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(this);
-                PreyLogger.d("LoginActivity: canAccessibility:" + canAccessibility);
                 boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
                 PreyLogger.d("LoginActivity: canDrawOverlays:" + canDrawOverlays);
                 boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
                 PreyLogger.d("LoginActivity: isAdminActive:" + isAdminActive);
-                boolean configurated= canDrawOverlays &&isAdminActive&&canAccessibility;
+                boolean configurated= canDrawOverlays &&isAdminActive;
                 if (configurated) {
                     intent = new Intent(LoginActivity.this, SignInActivity.class);
                 } else {

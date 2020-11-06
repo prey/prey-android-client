@@ -41,7 +41,6 @@ import com.prey.events.Event;
 import com.prey.json.actions.Lock;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.UtilConnection;
-import com.prey.receivers.PreyDeviceAdmin;
 
 public class EventFactory {
 
@@ -154,10 +153,7 @@ public class EventFactory {
             }
         }
         if (USER_PRESENT.equals(intent.getAction())) {
-            if(!PreyPermission.isAccessibilityServiceEnabled(ctx)) {
-                PreyLogger.d("EventFactory USER_PRESENT");
-                Lock.sendUnLock(ctx);
-            }
+            PreyLogger.d("EventFactory USER_PRESENT");
             int minuteScheduled = PreyConfig.getPreyConfig(ctx).getMinuteScheduled();
             if(minuteScheduled>0){
                 PreyBetaController.startPrey(ctx,null);
