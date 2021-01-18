@@ -275,15 +275,15 @@
     <string name="warning_android7_re_approve">Aprobar</string>
     <string name="warning_android7_close">Cerrar</string>
     <string name="lock_access_denied">El dispositivo ha sido bloqueado por su propietario en la protección de su privacidad, y la propiedad.\n\nIntroduzca la contraseña para desbloquear.</string>
-    <string name="lock_unlock">DESBLOQUEAR</string>
-
+    <string name="lock_unlock">ACEPTAR</string>
+    <string name="lock_close">CERRAR</string>
     <string name="disable_power_ready">Equipo activamente protegido por Prey</string>
 
     <string name="i_agree_terms_conditions">He leído y acepto los <u>Términos y Condiciones y la Política de Privacidad</u>.</string>
     <string name="i_confirm_i_am_over_16">Declaro ser mayor de 16 años.</string>
     <string name="i_offer">Quiero recibir anuncios de ofertas y promociones de Prey a mi casilla.</string>
 
-    <string name="super_lock">Ingresa tu PIN\n para desbloquear</string>
+    <string name="super_lock">Para apagar el dispositivo ingresa tu PIN y vuelve a intentarlo.</string>
 
     <string name="preferences_block_app_uninstall_summary">Evita la desinstalación de la app y bloquea el móvil con tu PIN Prey. Si hay un patrón o código de bloqueo activo, se utilizará en vez del PIN.</string>
     <string name="preferences_block_app_uninstall_title">Bloquear Desinstalación</string>

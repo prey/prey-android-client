@@ -55,7 +55,6 @@
         android:textColor="#fff"
         android:background="#3C424E"
         android:padding="10dp"
-        android:textColor="#fff"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
