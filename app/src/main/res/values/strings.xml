@@ -281,8 +281,8 @@
 
     <string name="lock_access_denied">The device has been blocked by its owner to protect both privacy and property.\n\nEnter the password to unlock.</string>
 
-    <string name="lock_unlock">UNLOCK</string>
-
+    <string name="lock_unlock">ENTER</string>
+    <string name="lock_close">CLOSE</string>
 
     <string name="disable_power_ready">Device actively protected by Prey</string>
 
@@ -290,7 +290,7 @@
     <string name="i_confirm_i_am_over_16">I confirm that I am over 16 years old</string>
     <string name="i_offer">I want to receive emails regarding offers and promotions from Prey</string>
 
-    <string name="super_lock">Please enter your\n PIN to unlock</string>
+    <string name="super_lock">To turn off the device enter your PIN and try again.</string>
 
     <string name="preferences_block_app_uninstall_summary">Prevents uninstall attempts by locking the phone with your Prey PIN. If a native lock pattern or code is active, it will be used instead.</string>
     <string name="preferences_block_app_uninstall_title">Block App Uninstall</string>

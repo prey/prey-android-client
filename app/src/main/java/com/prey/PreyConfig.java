@@ -208,6 +208,7 @@ public class PreyConfig {
     public static final String CAPS_LOCK_ON="CAPS_LOCK_ON";
     public static final String OVER_LOCK="OVER_LOCK";
     public static final String FIRST="FIRST";
+    public static final String PIN_NUMBER_ACTIVATE="PIN_NUMBER_ACTIVATE";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -928,7 +929,6 @@ public class PreyConfig {
         return getLong(PreyConfig.TIME_SECURE_LOCK, 0);
     }
 
-
     public String getIntervalAware(){
         return getString(PreyConfig.INTERVAL_AWARE,"");
     }
@@ -937,7 +937,6 @@ public class PreyConfig {
 
         this.saveString(PreyConfig.INTERVAL_AWARE, intervalAware);
     }
-
 
     public void setInstallationDate(long installationDate){
         saveLong(PreyConfig.INSTALLATION_DATE, installationDate);
@@ -953,10 +952,6 @@ public class PreyConfig {
 
     public long getLocationLowBatteryDate(){
         return getLong(PreyConfig.LOCATION_LOW_BATTERY_DATE, 0);
-    }
-
-    public boolean isOverOtherApps(){
-        return FileConfigReader.getInstance(ctx).isOverOtherApps();
     }
 
     public boolean isAskForNameBatch(){
@@ -1366,4 +1361,13 @@ public class PreyConfig {
     public void setFirst(boolean first){
         saveBoolean(PreyConfig.FIRST, first);
     }
+
+    public void setPinActivated(String number_activated) {
+        this.saveString(PreyConfig.PIN_NUMBER_ACTIVATE, number_activated);
+    }
+
+    public String getPinActivated() {
+        return getString(PreyConfig.PIN_NUMBER_ACTIVATE, "");
+    }
+
 }
