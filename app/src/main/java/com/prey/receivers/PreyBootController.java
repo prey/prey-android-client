@@ -60,7 +60,7 @@ public class PreyBootController extends BroadcastReceiver {
                         PreyLogger.d("unlockPass:" + unlockPass);
                         if (unlockPass != null && !"".equals(unlockPass)) {
                             if (PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                     ctx.startService(new Intent(ctx, PreyLockHtmlService.class));
                                 }else{
                                     ctx.startService(new Intent(ctx, PreyLockService.class));

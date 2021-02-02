@@ -9,22 +9,24 @@ package com.prey.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
+import com.prey.activities.js.CustomWebView;
 import com.prey.activities.js.WebAppInterface;
 
 public class PasswordHtmlActivity extends Activity {
+
+    private CustomWebView myWebView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.webview);
         PreyLogger.d("PasswordHtmlActivity: onCreate");
-        WebView myWebView = (WebView) findViewById(R.id.install_browser);
+        myWebView = (CustomWebView) findViewById(R.id.install_browser);
         WebSettings settings = myWebView.getSettings();
         myWebView.setBackgroundColor(0x00000000);
         settings.setJavaScriptEnabled(true);
