@@ -5,7 +5,7 @@
     android:background="#1e2938"
      >
 
-    <WebView
+    <com.prey.activities.js.CustomWebView
         android:id="@+id/install_browser"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.Settings;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +30,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.PreyUtils;
 import com.prey.R;
+import com.prey.activities.js.CustomWebView;
 import com.prey.activities.js.WebAppInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.services.PreyOverlayService;
@@ -49,7 +49,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         }
     };
 
-    private WebView myWebView = null;
+    private CustomWebView myWebView = null;
 
     public static int OVERLAY_PERMISSION_REQ_CODE = 5469;
 
@@ -95,7 +95,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
     public void settings() {
         PreyLogger.d("CheckPasswordHtmlActivity: settings");
-        myWebView = (WebView) findViewById(R.id.install_browser);
+        myWebView = (CustomWebView) findViewById(R.id.install_browser);
         WebSettings settings = myWebView.getSettings();
         myWebView.setBackgroundColor(0x00000000);
         settings.setJavaScriptEnabled(true);
@@ -189,16 +189,14 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
                         }
                     }
             } else {
-                boolean permissions=!(canAccessFineLocation||canAccessCoarseLocation) ||  !canAccessCamera
-                        || !canAccessStorage  || !isAdminActive || !canDrawOverlays;
+                boolean permissions=canAccessFineLocation||canAccessCoarseLocation ||  canAccessCamera
+                        || canAccessStorage  || isAdminActive || canDrawOverlays;
                 //TODO:ACCESS
                 //boolean permissions=!(canAccessFineLocation||canAccessCoarseLocation) ||  !canAccessCamera
                 //        || !canAccessStorage  || !isAdminActive || !canDrawOverlays || !canAccessibility;
                 PreyLogger.d("permissions:"+permissions);
                 if (permissions) {
-                    url = URL_ONB + "#/" + lng + "/permissions2";
-                    //TODO:ACCESS
-                    //url = URL_ONB + "#/" + lng + "/permissions";
+                    url = URL_ONB + "#/" + lng + "/permissions";
                 } else {
                     url = URL_ONB + "#/" + lng + "/start";
                 }

@@ -69,7 +69,7 @@ public class LoginActivity extends Activity {
             if (PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() &&
                     (canDrawOverlays)) {
                 PreyLogger.d("Login Boot finished. PreyLockService");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     PreyLogger.d("login 2");
                     intent = new Intent(getApplicationContext(), PreyLockHtmlService.class);
                 } else {

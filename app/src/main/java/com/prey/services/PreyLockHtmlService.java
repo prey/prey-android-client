@@ -18,13 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.activities.CheckPasswordHtmlActivity;
+import com.prey.activities.js.CustomWebView;
 import com.prey.activities.js.WebAppInterface;
 
 public class PreyLockHtmlService extends Service{
@@ -62,7 +62,7 @@ public class PreyLockHtmlService extends Service{
             view = inflater.inflate(R.layout.webview, null);
             PreyConfig.getPreyConfig(ctx).viewLock=view;
 
-            WebView myWebView = (WebView) view.findViewById(R.id.install_browser);
+            CustomWebView myWebView = (CustomWebView) view.findViewById(R.id.install_browser);
             WebSettings settings = myWebView.getSettings();
             myWebView.setBackgroundColor(0x00000000);
             settings.setJavaScriptEnabled(true);

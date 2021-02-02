@@ -210,6 +210,9 @@ public class PreyConfig {
     public static final String FIRST="FIRST";
     public static final String PIN_NUMBER_ACTIVATE="PIN_NUMBER_ACTIVATE";
 
+    public static final String INPUT_WEBVIEW="INPUT_WEBVIEW";
+    public static final String PAGE="PAGE";
+
     private boolean securityPrivilegesAlreadyPrompted;
 
     private Context ctx;
@@ -1368,6 +1371,23 @@ public class PreyConfig {
 
     public String getPinActivated() {
         return getString(PreyConfig.PIN_NUMBER_ACTIVATE, "");
+    }
+
+    public String getInputWebview() {
+        String inputWebview=getString(INPUT_WEBVIEW, "");
+        PreyLogger.d("getInputWebview:"+inputWebview);
+        return inputWebview;
+    }
+    public void setInputWebview(String inputWebview) {
+        saveString(INPUT_WEBVIEW, inputWebview);
+    }
+    public String getPage() {
+        String page=getString(PAGE, "");
+        PreyLogger.d("page:"+page);
+        return page;
+    }
+    public void setPage(String page) {
+        saveString(PAGE, page);
     }
 
 }

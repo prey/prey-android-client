@@ -523,7 +523,6 @@ public class WebAppInterface {
         String error2 = "";
         final Context ctx = mContext;
         String unlock = PreyConfig.getPreyConfig(ctx).getUnlockPass();
-
         PreyLogger.d("lock key:"+key+"  unlock:"+unlock );
 
         if (  unlock == null || "".equals(unlock)   ) {
@@ -533,6 +532,7 @@ public class WebAppInterface {
             return "{\"ok\":\"ok\"}";
         }
         if (unlock != null && !"".equals(unlock) && unlock.equals(key)) {
+            PreyConfig.getPreyConfig(mContext).setInputWebview("");
             PreyConfig.getPreyConfig(ctx).setUnlockPass("");
             PreyConfig.getPreyConfig(ctx).setOpenSecureService(false);
             boolean overLock=PreyConfig.getPreyConfig(ctx).getOverLock();
@@ -848,4 +848,17 @@ public class WebAppInterface {
         PreyLogger.d("rename out:"+out);
         return out;
     }
+
+    @JavascriptInterface
+    public void logger(String mylogger){
+        PreyLogger.d("logger:"+mylogger);
+    }
+
+    @JavascriptInterface
+    public void inputwebview(String inputwebview,String page){
+        PreyLogger.d("inputwebview:"+inputwebview+" page:"+page);
+        PreyConfig.getPreyConfig(mContext).setInputWebview(inputwebview);
+        PreyConfig.getPreyConfig(mContext).setPage(page);
+    }
+
 }

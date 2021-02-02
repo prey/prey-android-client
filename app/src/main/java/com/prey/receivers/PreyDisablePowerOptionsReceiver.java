@@ -49,8 +49,8 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                     boolean isScreenOn = pm.isScreenOn();
                     String reason = intent.getStringExtra("reason");
                     if (isScreenOn && reason != null) {
-                        PreyLogger.d("PreyDisablePowerOptionsReceiver reason:" + reason + " flag:" + flag + " lock:" + flag + " putextra:" + intent.getStringExtra(stringExtra));
                         String extra = intent.getStringExtra(stringExtra);
+                        PreyLogger.d("PreyDisablePowerOptionsReceiver reason:" + reason + " flag:" + flag + " lock:" + flag + " extra:" + extra);
                         long time = PreyConfig.getPreyConfig(context).getTimeSecureLock();
                         long now = new Date().getTime();
                         PreyLogger.d("PreyDisablePowerOptionsReceiver time:" + time + " now:" + now + " " + (now < time));

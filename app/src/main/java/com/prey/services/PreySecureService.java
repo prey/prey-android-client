@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,6 +29,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.R;
+import com.prey.activities.CloseActivity;
 import com.prey.receivers.PreyDisablePowerOptionsReceiver;
 
 import java.util.Calendar;
@@ -108,6 +110,34 @@ public class PreySecureService extends Service{
                     editTextPin.setBackgroundColor(Color.WHITE);
                 }
             });
+            editTextPin.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                    if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                        String pin=editTextPin.getText().toString();
+                        if(pin!=null ){
+                            String pinNumber=PreyConfig.getPreyConfig(getApplicationContext()).getPinNumber();
+                            PreyLogger.d("pinNumber:"+pinNumber+" pin:"+pin );
+                            if(pinNumber.equals(pin)){
+                                PreyConfig.getPreyConfig(getApplicationContext()).setOpenSecureService(false);
+                                PreyConfig.getPreyConfig(getApplicationContext()).setCounterOff(0);
+                                Calendar cal = Calendar.getInstance();
+                                cal.setTimeInMillis(new Date().getTime());
+                                cal.add(Calendar.MINUTE, 1);
+                                PreyConfig.getPreyConfig(getApplicationContext()).setTimeSecureLock(cal.getTimeInMillis());
+                                stopSelf();
+                                Intent intent = new Intent(ctx, CloseActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                ctx.startActivity(intent);
+                            }else{
+                                PreyLogger.d("error"  );
+                                editTextPin.setBackgroundColor(Color.RED);
+                            }
+                        }
+                    }
+                    return false;
+                }
+            });
             button_Super_Lock_Unlock.setOnClickListener(new ButtonPinOnClickListener());
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
             layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
@@ -170,12 +200,16 @@ public class PreySecureService extends Service{
                 String pinNumber=PreyConfig.getPreyConfig(getApplicationContext()).getPinNumber();
                 PreyLogger.d("pinNumber:"+pinNumber+" pin:"+pin );
                 if(pinNumber.equals(pin)){
+                    PreyConfig.getPreyConfig(getApplicationContext()).setOpenSecureService(false);
                     PreyConfig.getPreyConfig(getApplicationContext()).setCounterOff(0);
                     Calendar cal = Calendar.getInstance();
                     cal.setTimeInMillis(new Date().getTime());
                     cal.add(Calendar.MINUTE, 1);
                     PreyConfig.getPreyConfig(getApplicationContext()).setTimeSecureLock(cal.getTimeInMillis());
                     stopSelf();
+                    Intent intent = new Intent(getApplicationContext(), CloseActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplicationContext().startActivity(intent);
                 }else{
                     PreyLogger.d("error"  );
                     editTextPin.setBackgroundColor(Color.RED);

@@ -9,7 +9,6 @@ package com.prey.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;

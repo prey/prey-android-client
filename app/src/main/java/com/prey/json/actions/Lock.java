@@ -115,6 +115,9 @@ public class Lock extends JsonAction {
                     }catch (Exception e){
                         android.os.Process.killProcess(android.os.Process.myPid());
                     }
+                    Intent intent = new Intent(ctx, CloseActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ctx.startActivity(intent);
                 }else{
                     boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(ctx);
                     if(   canAccessibility) {
