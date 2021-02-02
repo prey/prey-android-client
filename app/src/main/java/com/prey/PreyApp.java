@@ -29,6 +29,7 @@ import com.prey.events.receivers.EventReceiver;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.AwareJobService;
+import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyJobService;
 
 import java.util.Date;
@@ -49,17 +50,14 @@ public class PreyApp extends Application {
     public void onCreate() {
         super.onCreate();
         try {
-            if(PreyConfig.getPreyConfig(getApplicationContext()).isFirst()){
-                PreyConfig.getPreyConfig(getApplicationContext()).setUnlockPass("");
-                PreyConfig.getPreyConfig(getApplicationContext()).setFirst(false);
-            }
-            String unlockPass=PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
-            if (unlockPass!=null && !"".equals(unlockPass)) {
+            String unlockPass = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
+            if (unlockPass != null && !"".equals(unlockPass)) {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 getApplicationContext().startActivity(intent);
             }
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
         run(this);
         runReceiver(this);
         try {
@@ -75,24 +73,23 @@ public class PreyApp extends Application {
 
                 @Override
                 public void onInstallConversionFailure(String errorMessage) {
-                    PreyLogger.d( "error getting conversion data: " + errorMessage);
+                    PreyLogger.d("error getting conversion data: " + errorMessage);
                 }
 
                 @Override
                 public void onAppOpenAttribution(Map<String, String> conversionData) {
                     for (String attrName : conversionData.keySet()) {
-                        PreyLogger.d( "attribute: " + attrName + " = " + conversionData.get(attrName));
+                        PreyLogger.d("attribute: " + attrName + " = " + conversionData.get(attrName));
                     }
                 }
 
                 @Override
                 public void onAttributionFailure(String errorMessage) {
-                    PreyLogger.d( "error onAttributionFailure : " + errorMessage);
+                    PreyLogger.d("error onAttributionFailure : " + errorMessage);
                 }
             };
-        }
-        catch (Exception e) {
-            PreyLogger.e("Error PreyApp:"+e.getMessage(),e);
+        } catch (Exception e) {
+            PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
         }
     }
 
@@ -107,8 +104,8 @@ public class PreyApp extends Application {
             String deviceKey = PreyConfig.getPreyConfig(ctx).getDeviceId();
             PreyConfig.getPreyConfig(ctx).setAwareDate("");
             PreyConfig.getPreyConfig(ctx).initTimeC2dm();
-            PreyLogger.d("apiKey:"+apiKey);
-            PreyLogger.d("deviceKey:"+deviceKey);
+            PreyLogger.d("apiKey:" + apiKey);
+            PreyLogger.d("deviceKey:" + deviceKey);
             PreyLogger.d("InstallationDate:" + PreyConfig.getPreyConfig(ctx).getInstallationDate());
             if (PreyConfig.getPreyConfig(ctx).getInstallationDate() == 0) {
                 PreyConfig.getPreyConfig(ctx).setInstallationDate(new Date().getTime());
@@ -117,28 +114,46 @@ public class PreyApp extends Application {
             String sessionId = PreyUtils.randomAlphaNumeric(16);
             PreyLogger.d("#######sessionId:" + sessionId);
             PreyConfig.getPreyConfig(ctx).setSessionId(sessionId);
-            final boolean missing=PreyConfig.getPreyConfig(ctx).isMissing();
+            final boolean missing = PreyConfig.getPreyConfig(ctx).isMissing();
             if (deviceKey != null && !"".equals(deviceKey)) {
                 new Thread() {
                     public void run() {
-                       PreyConfig.getPreyConfig(ctx).registerC2dm();
-                       try {
+                        try {
+                            PreyConfig.getPreyConfig(ctx).registerC2dm();
+                        } catch (Exception e) {
+                        }
+                        try {
                             String email = PreyWebServices.getInstance().getEmail(ctx);
                             PreyConfig.getPreyConfig(ctx).setEmail(email);
-                       }catch (Exception e){
-                           PreyLogger.e("setEmail error:"+e.getMessage(),e);
-                       }
-                       try {PreyStatus.getInstance().getConfig(ctx);}catch (Exception e){}
-                       try {GeofenceController.getInstance().run(ctx);}catch (Exception e){}
-                       try {AwareController.getInstance().init(ctx);}catch (Exception e){}
-                       try {FileretrievalController.getInstance().run(ctx);}catch (Exception e){}
-                       try {TriggerController.getInstance().run(ctx);}catch (Exception e){}
-                       if (missing) {
+                        } catch (Exception e) {
+                            PreyLogger.e("setEmail error:" + e.getMessage(), e);
+                        }
+                        try {
+                            PreyStatus.getInstance().getConfig(ctx);
+                        } catch (Exception e) {
+                        }
+                        try {
+                            GeofenceController.getInstance().run(ctx);
+                        } catch (Exception e) {
+                        }
+                        try {
+                            AwareController.getInstance().init(ctx);
+                        } catch (Exception e) {
+                        }
+                        try {
+                            FileretrievalController.getInstance().run(ctx);
+                        } catch (Exception e) {
+                        }
+                        try {
+                            TriggerController.getInstance().run(ctx);
+                        } catch (Exception e) {
+                        }
+                        if (missing) {
                             if (PreyConfig.getPreyConfig(ctx).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(ctx).getIntervalReport())) {
                                 ReportScheduled.getInstance(ctx).run();
                             }
-                       }
-                       if(!PreyConfig.getPreyConfig(ctx).isChromebook() ) {
+                        }
+                        if (!PreyConfig.getPreyConfig(ctx).isChromebook()) {
                             try {
                                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                     PreyJobService.schedule(ctx);
@@ -149,7 +164,16 @@ public class PreyApp extends Application {
                             if (PreyConfig.getPreyConfig(ctx).isRunBackground()) {
                                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
                             }
-                       }
+                            if (PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()) {
+                                try {
+                                    if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                                        ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
+                                    }
+                                } catch (Exception e) {
+                                    PreyLogger.e("error startService PreyDisablePowerOptionsService : " + e.getMessage(), e);
+                                }
+                            }
+                        }
                     }
                 }.start();
             }
@@ -175,11 +199,11 @@ public class PreyApp extends Application {
         registerReceiver(eventReceiver, USER_PRESENT);
     }
 
-    public static String InstallConversionData =  "";
+    public static String InstallConversionData = "";
     public static int sessionCount = 0;
 
-    public static void setInstallData(Map<String, String> conversionData){
-        if(sessionCount == 0){
+    public static void setInstallData(Map<String, String> conversionData) {
+        if (sessionCount == 0) {
             final String install_type = "Install Type: " + conversionData.get("af_status") + "\n";
             final String media_source = "Media Source: " + conversionData.get("media_source") + "\n";
             final String install_time = "Install Time(GMT): " + conversionData.get("install_time") + "\n";

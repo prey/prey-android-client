@@ -21,6 +21,7 @@ import com.prey.PreyPermission;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.json.actions.Lock;
 import com.prey.services.CheckLockActivated;
+import com.prey.services.PreyLockHtmlService;
 import com.prey.services.PreyLockService;
 
 public class LoginActivity extends Activity {
@@ -58,38 +59,51 @@ public class LoginActivity extends Activity {
 
     private void startup() {
         Intent intent = null;
-        String unlockPass=PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
-        if (unlockPass!=null&&!"".equals(unlockPass)) {
-           if(PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(getApplicationContext())) {
-               PreyLogger.d("Login Boot finished. PreyLockService");
-               getApplicationContext().startService(new Intent(getApplicationContext(), PreyLockService.class));
-               getApplicationContext().startService(new Intent(getApplicationContext(), CheckLockActivated.class));
-           }else{
-               Lock.lockWhenYouNocantDrawOverlays(getApplicationContext());
-           }
+        String unlockPass = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
+        if (unlockPass != null && !"".equals(unlockPass)) {
+            boolean canDrawOverlays = PreyPermission.canDrawOverlays(getApplicationContext());
+            //TODO:ACCESS
+            //boolean accessibility = PreyPermission.isAccessibilityServiceEnabled(getApplicationContext());
+            //if (PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() &&
+            //        (accessibility || canDrawOverlays)) {
+            if (PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() &&
+                    (canDrawOverlays)) {
+                PreyLogger.d("Login Boot finished. PreyLockService");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    PreyLogger.d("login 2");
+                    intent = new Intent(getApplicationContext(), PreyLockHtmlService.class);
+                } else {
+                    PreyLogger.d("login 3");
+                    intent = new Intent(getApplicationContext(), PreyLockService.class);
+                }
+                getApplicationContext().startService(intent);
+                getApplicationContext().startService(new Intent(getApplicationContext(), CheckLockActivated.class));
+            } else {
+                Lock.lockWhenYouNocantDrawOverlays(getApplicationContext());
+            }
         }
-        boolean ready=PreyConfig.getPreyConfig(this).getProtectReady();
-        if (isThereBatchInstallationKey()&&!ready) {
-                showLoginBatch();
+        boolean ready = PreyConfig.getPreyConfig(this).getProtectReady();
+        if (isThereBatchInstallationKey() && !ready) {
+            showLoginBatch();
         } else {
-                showLogin();
+            showLogin();
         }
     }
 
     private void showLogin() {
         Intent intent = null;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);
-        }else {
+        } else {
             String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
             if (deviceKey != null && deviceKey != "") {
                 intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
-            }else{
+            } else {
                 boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
                 PreyLogger.d("LoginActivity: canDrawOverlays:" + canDrawOverlays);
                 boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
                 PreyLogger.d("LoginActivity: isAdminActive:" + isAdminActive);
-                boolean configurated= canDrawOverlays &&isAdminActive;
+                boolean configurated = canDrawOverlays && isAdminActive;
                 if (configurated) {
                     intent = new Intent(LoginActivity.this, SignInActivity.class);
                 } else {

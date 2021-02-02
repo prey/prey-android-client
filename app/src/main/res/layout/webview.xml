@@ -4,10 +4,12 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
-    <WebView
+    <com.prey.activities.js.CustomWebView
         android:id="@+id/install_browser"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         />
 
 </RelativeLayout>
