@@ -16,6 +16,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.Settings;
+import android.view.View;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
@@ -32,21 +34,26 @@ import com.prey.R;
 import com.prey.actions.location.LocationUpdatesService;
 import com.prey.actions.location.PreyLocation;
 import com.prey.activities.CheckPasswordHtmlActivity;
+import com.prey.activities.CloseActivity;
 import com.prey.activities.PanelWebActivity;
+import com.prey.activities.PasswordHtmlActivity;
 import com.prey.activities.PreReportActivity;
 import com.prey.activities.SecurityActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.barcodereader.BarcodeActivity;
 import com.prey.exceptions.PreyException;
+import com.prey.json.UtilJson;
 import com.prey.json.actions.Detach;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
+import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyJobService;
 
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
-
+import java.util.Calendar;
+import java.util.Date;
 
 public class WebAppInterface {
 
@@ -69,6 +76,10 @@ public class WebAppInterface {
         mActivity = activity;
     }
 
+    public WebAppInterface(Context context, PasswordHtmlActivity activity) {
+        mContext = context;
+    }
+
     @JavascriptInterface
     public String getData() {
         String ssid = PreyConfig.getPreyConfig(mContext).getSsid();
@@ -81,6 +92,10 @@ public class WebAppInterface {
         String json = "{\"lat\":\"" + lat + "\",\"lng\":\"" + lng + "\",\"ssid\":\"" + ssid + "\",\"public_ip\":\"" + public_ip + "\",\"imei\":\"" + imei + "\",\"model\": \"" + model + "\"}";
         PreyLogger.d("getData:" + json);
         return json;
+    }
+
+    @JavascriptInterface
+    public void verifyLock() {
     }
 
     @JavascriptInterface
@@ -104,31 +119,36 @@ public class WebAppInterface {
     }
     @JavascriptInterface
     public boolean initDrawOverlay() {
-        boolean canDrawOverlays = true;
-        if(PreyConfig.getPreyConfig(mContext).isOverOtherApps()){
-            canDrawOverlays=PreyPermission.canDrawOverlays(mContext);
-        }
+        boolean canDrawOverlays = PreyPermission.canDrawOverlays(mContext);
         return canDrawOverlays;
     }
 
     @JavascriptInterface
     public boolean initAccessibility() {
-        return false;
+        boolean initAccessibility=PreyPermission.isAccessibilityServiceEnabled(mContext);
+        PreyLogger.d("initAccessibility:"+initAccessibility);
+        return initAccessibility;
     }
 
     @JavascriptInterface
     public boolean initLocation() {
-        return (PreyPermission.canAccessFineLocation(mContext)||PreyPermission.canAccessCoarseLocation(mContext));
+        boolean initLocation = (PreyPermission.canAccessFineLocation(mContext)||PreyPermission.canAccessCoarseLocation(mContext));
+        PreyLogger.d("initLocation:"+initLocation);
+        return initLocation;
     }
 
     @JavascriptInterface
     public boolean initBackgroundLocation() {
-        return PreyPermission.canAccessBackgroundLocation(mContext);
+        boolean initBackgroundLocation =  PreyPermission.canAccessBackgroundLocation(mContext);
+        PreyLogger.d("initBackgroundLocation:"+initBackgroundLocation);
+        return initBackgroundLocation;
     }
 
     @JavascriptInterface
     public boolean initAndroid10OrAbove() {
-        return PreyConfig.getPreyConfig(mContext).isAndroid10OrAbove();
+        boolean isAndroid10OrAbove = PreyConfig.getPreyConfig(mContext).isAndroid10OrAbove();
+        PreyLogger.d("isAndroid10OrAbove:"+isAndroid10OrAbove);
+        return isAndroid10OrAbove;
     }
 
     @JavascriptInterface
@@ -185,7 +205,8 @@ public class WebAppInterface {
         PreyLogger.d("report:");
         Intent intent = new Intent(mContext, PreReportActivity.class);
         mContext.startActivity(intent);
-        mActivity.finish();
+        if(mActivity!=null)
+            mActivity.finish();
     }
 
     @JavascriptInterface
@@ -194,7 +215,8 @@ public class WebAppInterface {
         Intent intent = new Intent(mContext, SecurityActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
-        mActivity.finish();
+        if(mActivity!=null)
+            mActivity.finish();
     }
 
     @JavascriptInterface
@@ -202,7 +224,8 @@ public class WebAppInterface {
         PreyLogger.d("reload:");
         Intent intent = new Intent(mContext, CheckPasswordHtmlActivity.class);
         mContext.startActivity(intent);
-        mActivity.finish();
+        if(mActivity!=null)
+            mActivity.finish();
     }
 
     @JavascriptInterface
@@ -337,7 +360,8 @@ public class WebAppInterface {
                 Intent intent = new Intent(mContext, PanelWebActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 mContext.startActivity(intent);
-                mActivity.finish();
+                if(mActivity!=null)
+                    mActivity.finish();
             }
         }
         return error;
@@ -350,7 +374,8 @@ public class WebAppInterface {
         Intent intent = new Intent(mContext, PanelWebActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         mContext.startActivity(intent);
-        mActivity.finish();
+        if(mActivity!=null)
+            mActivity.finish();
     }
 
     @JavascriptInterface
@@ -466,6 +491,17 @@ public class WebAppInterface {
     @JavascriptInterface
     public void setShieldOf(boolean shieldOf) {
         PreyLogger.d("setShieldOf:" + shieldOf);
+        PreyConfig.getPreyConfig(mContext).setDisablePowerOptions(shieldOf);
+        if (shieldOf) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(new Date().getTime());
+            cal.add(Calendar.MINUTE, -1);
+            PreyConfig.getPreyConfig(mContext).setTimeSecureLock(cal.getTimeInMillis());
+            PreyConfig.getPreyConfig(mContext).setOpenSecureService(false);
+            mContext.startService(new Intent(mContext, PreyDisablePowerOptionsService.class));
+        } else {
+            mContext.stopService(new Intent(mContext, PreyDisablePowerOptionsService.class));
+        }
     }
 
     @JavascriptInterface
@@ -473,7 +509,8 @@ public class WebAppInterface {
         PreyLogger.d("qr");
         Intent intent = new Intent(mContext, BarcodeActivity.class);
         mContext.startActivity(intent);
-        mActivity.finish();
+        if(mActivity!=null)
+            mActivity.finish();
     }
 
     @JavascriptInterface
@@ -483,7 +520,73 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public String lock(String key){
-        return "{\"ok\":\"ok\"}";
+        String error2 = "";
+        final Context ctx = mContext;
+        String unlock = PreyConfig.getPreyConfig(ctx).getUnlockPass();
+        PreyLogger.d("lock key:"+key+"  unlock:"+unlock );
+
+        if (  unlock == null || "".equals(unlock)   ) {
+            PreyConfig.getPreyConfig(ctx).setOverLock(false);
+            int pid = android.os.Process.myPid();
+            android.os.Process.killProcess(pid);
+            return "{\"ok\":\"ok\"}";
+        }
+        if (unlock != null && !"".equals(unlock) && unlock.equals(key)) {
+            PreyConfig.getPreyConfig(mContext).setInputWebview("");
+            PreyConfig.getPreyConfig(ctx).setUnlockPass("");
+            PreyConfig.getPreyConfig(ctx).setOpenSecureService(false);
+            boolean overLock=PreyConfig.getPreyConfig(ctx).getOverLock();
+            final boolean canDrawOverlays=PreyPermission.canDrawOverlays(ctx);
+            PreyLogger.d("lock key:"+key+"  unlock:"+unlock +" overLock:"+overLock  +" canDrawOverlays:"+canDrawOverlays);
+            new Thread() {
+                public void run() {
+                    String reason = "{\"origin\":\"user\"}";
+                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
+                }
+            }.start();
+
+            if(overLock){
+                if((unlock == null || "".equals(unlock))){
+                    PreyLogger.d("lock accc " );
+                    PreyConfig.getPreyConfig(ctx).setOverLock(false);
+                    int pid = android.os.Process.myPid();
+                    android.os.Process.killProcess(pid);
+                }
+            }
+            new Thread() {
+                public void run() {
+                    if(canDrawOverlays) {
+                        try {
+                            View viewLock = PreyConfig.getPreyConfig(ctx).viewLock;
+                            if (viewLock != null) {
+                                WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
+                                wm.removeView(viewLock);
+                            }else{
+                                android.os.Process.killProcess(android.os.Process.myPid());
+                            }
+                        } catch (Exception e) {
+                            android.os.Process.killProcess(android.os.Process.myPid());
+                        }
+                    }
+                    Intent intent = new Intent(ctx, CloseActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ctx.startActivity(intent);
+
+                        try {
+                            Thread.sleep(2000);
+                        } catch (Exception e) {
+                        }
+                        ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
+
+                }
+            }.start();
+            error2="{\"ok\":\"ok\"}";
+
+        }else {
+            error2 = "{\"error\":[\"" + mContext.getString(R.string.password_wrong) + "\"]}";
+        }
+        PreyLogger.d("error2:"+error2);
+        return error2;
     }
 
     @JavascriptInterface
@@ -569,11 +672,11 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void givePermissions() {
-        PreyLogger.i("givePermissions");
+        PreyLogger.d("givePermissions");
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(mContext);
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(mContext);
         boolean canAccessCamera = PreyPermission.canAccessCamera(mContext);
-        boolean canAccessPhone = PreyPermission.canAccessPhone(mContext);
+
         boolean canAccessStorage = PreyPermission.canAccessStorage(mContext);
         boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocation(mContext);
         boolean showFineLocation = PreyPermission.showRequestFineLocation(mActivity);
@@ -582,6 +685,8 @@ public class WebAppInterface {
         boolean showCamera = PreyPermission.showRequestCamera(mActivity);
         boolean showPhone = PreyPermission.showRequestPhone(mActivity);
         boolean showStorage = PreyPermission.showRequestStorage(mActivity);
+        //TODO:ACCESS
+        //boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(mContext);
         boolean showDeniedPermission=false;
         if(!canAccessStorage) {
             if (!showStorage)
@@ -599,15 +704,12 @@ public class WebAppInterface {
             if(!showCamera)
                 showDeniedPermission=true;
         }
-        if(!canAccessPhone){
-            if(!showPhone)
-                showDeniedPermission=true;
-        }
+
         PreyLogger.d("canAccessFineLocation:" + canAccessFineLocation);
         PreyLogger.d("canAccessCoarseLocation:" + canAccessCoarseLocation);
         PreyLogger.d("canAccessBackgroundLocation:" + canAccessBackgroundLocation);
         PreyLogger.d("canAccessCamera:" + canAccessCamera);
-        PreyLogger.d("canAccessPhone:" + canAccessPhone);
+
         PreyLogger.d("canAccessStorage:" + canAccessStorage);
         PreyLogger.d("showBackgroundLocation:" + showBackgroundLocation);
         PreyLogger.d("showFineLocation:" + showFineLocation);
@@ -615,7 +717,9 @@ public class WebAppInterface {
         PreyLogger.d("showCamera:" + showCamera);
         PreyLogger.d("showPhoneState:" + showPhone);
         PreyLogger.d("showWriteStorage:" + showStorage);
-        if(!canAccessStorage&&!canAccessFineLocation&&!canAccessCoarseLocation&&!canAccessCamera&&!canAccessPhone&&
+        //TODO:ACCESS
+        //PreyLogger.d("canAccessibility:" + canAccessibility);
+        if(!canAccessStorage&&!canAccessFineLocation&&!canAccessCoarseLocation&&!canAccessCamera&&
                 !showStorage&&!showFineLocation&&!showCoarseLocation&&!showCamera&&!showPhone){
             showDeniedPermission=false;
         }
@@ -639,7 +743,7 @@ public class WebAppInterface {
             mActivity.deniedPermission();
         } else{
             if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
-                    || !canAccessPhone || !canAccessStorage || !canAccessBackgroundLocation) {
+                    || !canAccessStorage || !canAccessBackgroundLocation) {
                 PreyLogger.d("2:");
                 mActivity.askForPermission();
             } else {
@@ -656,6 +760,12 @@ public class WebAppInterface {
                         mActivity.askForAdminActive();
                     }else{
                         PreyLogger.d("5:");
+                        ///TODO:ACCESS
+                        /*
+                        if(!canAccessibility){
+                            mActivity.accessibility();
+                        }
+                        */
                     }
                 }
             }
@@ -695,12 +805,12 @@ public class WebAppInterface {
                     Intent welcome = new Intent(mContext, CheckPasswordHtmlActivity.class);
                     welcome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(welcome);
-                    mActivity.finish();
+                    if(mActivity!=null)
+                        mActivity.finish();
                 }
             } catch (Exception e) {
             }
         }
-
     }
 
     @JavascriptInterface
@@ -738,4 +848,17 @@ public class WebAppInterface {
         PreyLogger.d("rename out:"+out);
         return out;
     }
+
+    @JavascriptInterface
+    public void logger(String mylogger){
+        PreyLogger.d("logger:"+mylogger);
+    }
+
+    @JavascriptInterface
+    public void inputwebview(String inputwebview,String page){
+        PreyLogger.d("inputwebview:"+inputwebview+" page:"+page);
+        PreyConfig.getPreyConfig(mContext).setInputWebview(inputwebview);
+        PreyConfig.getPreyConfig(mContext).setPage(page);
+    }
+
 }

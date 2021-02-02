@@ -24,7 +24,6 @@ public class PanelWebActivity extends Activity {
     private final Activity activity = this;
     private WebView myWebView = null;
 
-
     public void onBackPressed() {
         Intent intent = null;
         intent = new Intent(getApplication(), CheckPasswordHtmlActivity.class);
@@ -37,7 +36,7 @@ public class PanelWebActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.panelweb);
         this.setContentView(R.layout.activity_webview);
-        myWebView = (WebView) this.findViewById(R.id.install_browser);
+        myWebView = (WebView) findViewById(R.id.install_browser);
     }
 
     @Override

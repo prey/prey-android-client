@@ -111,4 +111,22 @@ public class PreyPermission {
         return false;
     }
 
+    public static boolean isAccessibilityServiceEnabled(Context context) {
+        //TODO:ACCESS
+        /*
+        AccessibilityManager am = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
+        List<AccessibilityServiceInfo> accessibilityServices =
+                am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK);
+        for (AccessibilityServiceInfo info : accessibilityServices) {
+            PreyLogger.d("id:"+info.getId()+" st:"+info.toString());
+            ServiceInfo enabledServiceInfo = info.getResolveInfo().serviceInfo;
+            if (info.getId().indexOf("com.prey")>=0){
+                PreyLogger.d("id:__"+info.getId()+" st:"+info.toString());
+                return true;
+            }
+        }
+        */
+        return false;
+    }
+
 }

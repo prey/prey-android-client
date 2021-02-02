@@ -169,9 +169,11 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mPreview != null) {
-            mPreview.release();
-        }
+        try {
+            if (mPreview != null) {
+                mPreview.release();
+            }
+        }catch (Exception e){}
     }
 
     @Override

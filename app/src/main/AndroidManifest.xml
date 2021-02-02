@@ -30,7 +30,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACTION_SHUTDOWN" />
 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
@@ -237,6 +237,27 @@
             android:configChanges="keyboardHidden|orientation"
             />
 
+        <activity
+            android:name="com.prey.activities.PasswordNativeActivity"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+        <activity
+            android:name="com.prey.activities.PasswordHtmlActivity"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+        <activity
+            android:name="com.prey.activities.PinNativeActivity"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
 
         <receiver
             android:name="com.prey.receivers.PreyBootController"
@@ -339,14 +360,27 @@
         <service android:name="com.prey.actions.aware.AwareIntentService" />
         <service android:name="com.prey.actions.fileretrieval.FileretrievalService" />
         <service android:name="com.prey.services.PreyLockService" />
+        <service android:name="com.prey.services.PreyLockHtmlService" />
         <service android:name="com.prey.services.CheckLockActivated" />
         <service android:name="com.prey.services.PreyOverlayService" />
+
 
         <service android:name="com.prey.services.PreyNotificationForeGroundService" />
 
         <service android:name="com.prey.actions.autoconnect.AutoConnectService" />
 
         <service android:name="com.prey.services.ActivityIntentService" />
+
+        <receiver android:name="com.prey.receivers.AlarmDisablePowerReceiver" />
+
+        <receiver android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver" android:enabled="true" android:exported="false">
+            <intent-filter android:priority="20000">
+                <action android:name="android.intent.action.CLOSE_SYSTEM_DIALOGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <service android:name="com.prey.services.PreyDisablePowerOptionsService" />
+        <service android:name="com.prey.services.PreySecureService" />
 
         <!-- [START firebase_service] -->
         <service
@@ -378,7 +412,15 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
+        <!--
+        <service android:name="com.prey.services.PreyAccessibilityService" />
+        <service android:name="com.prey.services.AppAccessibilityService" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" android:enabled="true">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+            <meta-data android:name="android.accessibilityservice" android:resource="@xml/accessibilityservice"/>
+        </service>
+        -->
     </application>
 
 </manifest>

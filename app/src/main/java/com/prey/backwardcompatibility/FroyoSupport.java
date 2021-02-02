@@ -51,11 +51,21 @@ public class FroyoSupport {
                 boolean isPassOrPinSet= Lock.isPassOrPinSet(ctx);
                 if( !isPatternSet&&!isPassOrPinSet) {
                     try {
-                        policyManager.setPasswordMinimumLength(deviceAdmin, 0);
-                        policyManager.setPasswordQuality(deviceAdmin, DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED);
-                        policyManager.resetPassword(newPass, DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
+                        int length=0;
+                        if(newPass!=null){
+                            length=newPass.length();
+                        }
                         if ("".equals(newPass))
                             android.provider.Settings.System.putInt(ctx.getContentResolver(), android.provider.Settings.System.LOCK_PATTERN_ENABLED, 0);
+                        if(length>=4){
+                            policyManager.setPasswordMinimumLength(deviceAdmin, 0);
+                            policyManager.setPasswordQuality(deviceAdmin, DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED);
+                            policyManager.resetPassword(newPass, DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
+                        }else {
+                            if (lock) {
+                                lockNow();
+                            }
+                        }
                     } catch (Exception e1) {
                         if (lock) {
                             lockNow();
@@ -72,7 +82,6 @@ public class FroyoSupport {
             throw new PreyException("This device couldn't be locked");
         }
     }
-
 
     public void lockNow() {
         if (isAdminActive())
