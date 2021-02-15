@@ -22,7 +22,7 @@ public class Event {
     public static final String DEVICE_RENAMED = "device_renamed";
     public static final String DEVICE_ADDED = "device_added";
     public static final String NATIVE_LOCK = "native_lock";
-
+    public static final String ANDROID_LOCK_PIN = "android_lock_pin";
     private String name;
     private String info;
     private boolean alwaysSend;

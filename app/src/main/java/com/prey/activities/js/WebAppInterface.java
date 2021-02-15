@@ -724,42 +724,33 @@ public class WebAppInterface {
             showDeniedPermission=false;
         }
         if(canAccessFineLocation||canAccessCoarseLocation) {
-            PreyLogger.d("0-0:");
             if (Build.VERSION.SDK_INT == PreyConfig.BUILD_VERSION_CODES_10 && !canAccessBackgroundLocation) {
-                PreyLogger.d("0-1---10:");
                 if (!showBackgroundLocation) {
-                    PreyLogger.d("0-2--10:");
                     showDeniedPermission = true;
                 }
             }
             if (Build.VERSION.SDK_INT == PreyConfig.BUILD_VERSION_CODES_11 && !canAccessBackgroundLocation) {
-                PreyLogger.d("0-1----11:");
                 showDeniedPermission = true;
             }
         }
         PreyLogger.d("showDeniedPermission:" + showDeniedPermission);
         if (showDeniedPermission) {
-            PreyLogger.d("1:");
             mActivity.deniedPermission();
         } else{
             if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
                     || !canAccessStorage || !canAccessBackgroundLocation) {
-                PreyLogger.d("2:");
                 mActivity.askForPermission();
             } else {
                 boolean canDrawOverlays =true;
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                     canDrawOverlays=Settings.canDrawOverlays(mContext);
                 if(!canDrawOverlays){
-                    PreyLogger.d("2:");
                     mActivity.askForPermissionAndroid7();
                 }else{
                     boolean isAdminActive = FroyoSupport.getInstance(mContext).isAdminActive();
                     if (!isAdminActive) {
-                        PreyLogger.d("4:");
                         mActivity.askForAdminActive();
                     }else{
-                        PreyLogger.d("5:");
                         ///TODO:ACCESS
                         /*
                         if(!canAccessibility){
@@ -861,4 +852,13 @@ public class WebAppInterface {
         PreyConfig.getPreyConfig(mContext).setPage(page);
     }
 
+    @JavascriptInterface
+    public void approveLocation(){
+        PreyLogger.d("approveLocation");
+    }
+    
+    @JavascriptInterface
+    public void skipLocation(){
+        PreyLogger.d("skipLocation");
+    }
 }

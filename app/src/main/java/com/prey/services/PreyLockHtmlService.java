@@ -14,10 +14,12 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -63,6 +65,13 @@ public class PreyLockHtmlService extends Service{
             PreyConfig.getPreyConfig(ctx).viewLock=view;
 
             CustomWebView myWebView = (CustomWebView) view.findViewById(R.id.install_browser);
+            myWebView.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                    CustomWebView.callDispatchKeyEvent(getApplicationContext(),keyEvent);
+                    return false;
+                }
+            });
             WebSettings settings = myWebView.getSettings();
             myWebView.setBackgroundColor(0x00000000);
             settings.setJavaScriptEnabled(true);
@@ -95,7 +104,6 @@ public class PreyLockHtmlService extends Service{
                     if(wm != null) {
                         try{
                             wm.addView(view, layoutParams);
-                            PreyConfig.getPreyConfig(this).setOpenSecureService(true);
                             PreyConfig.getPreyConfig(this).setOverLock(true);
                         }catch (Exception e){
                             PreyLogger.e(e.getMessage(),e);

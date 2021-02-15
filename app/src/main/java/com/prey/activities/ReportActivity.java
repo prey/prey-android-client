@@ -75,7 +75,8 @@ public class ReportActivity extends FragmentActivity implements OnMapReadyCallba
 
     public void settings(){
         PreyLogger.d("ReportActivity: settings");
-        myWebView = (WebView) findViewById(R.id.install_browser);
+        myWebView = (WebView) findViewById(R.id.install_browserReport);
+
         WebSettings settings = myWebView.getSettings();
         myWebView.setBackgroundColor(0x00000000);
         settings.setJavaScriptEnabled(true);
