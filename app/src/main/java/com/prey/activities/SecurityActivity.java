@@ -9,6 +9,8 @@ package com.prey.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebSettings;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
+
 import com.prey.activities.js.CustomWebView;
 import com.prey.activities.js.WebAppInterface;
 
@@ -45,6 +48,13 @@ public class SecurityActivity extends AppCompatActivity {
     public void settings() {
         PreyLogger.d("CheckPasswordHtmlActivity: settings");
         myWebView = (CustomWebView) findViewById(R.id.install_browser);
+        myWebView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                CustomWebView.callDispatchKeyEvent(getApplicationContext(),keyEvent);
+                return false;
+            }
+        });
         WebSettings settings = myWebView.getSettings();
         myWebView.setBackgroundColor(0x00000000);
         settings.setJavaScriptEnabled(true);

@@ -91,7 +91,7 @@ public class PreySecureService extends Service{
         button_Super_Lock_Unlock.setTypeface(regularBook);
         button_close.setTypeface(regularBook);
         final String pinNumber= PreyConfig.getPreyConfig(ctx).getPinNumber();
-        if(pinNumber!=null&&!"".equals(pinNumber)) {
+        if(pinNumber!=null&&!"".equals(pinNumber)&&pinNumber.length()==4) {
             try {
                 Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
                 intentClose.putExtra(PreyDisablePowerOptionsReceiver.stringExtra, PreyDisablePowerOptionsReceiver.stringExtra);

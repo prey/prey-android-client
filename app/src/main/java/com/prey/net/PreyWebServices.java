@@ -865,8 +865,10 @@ public class PreyWebServices {
         return jsnobject;
     }
 
-
     public void sendEvent(final Context ctx,final int id  ) {
+    }
+
+    public void sendEvent2(final Context ctx,final int id  ) {
         new Thread() {
             public void run() {
                 PreyPhone phone=new PreyPhone(ctx);
