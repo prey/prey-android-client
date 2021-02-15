@@ -58,14 +58,20 @@ public class CustomWebView extends WebView {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         boolean dispatchFirst = super.dispatchKeyEvent(event);
+        callDispatchKeyEvent(getContext(),event);
+        return dispatchFirst;
+    }
+
+    public static void callDispatchKeyEvent(final Context ctx,KeyEvent event){
+        PreyLogger.d("callDispatchKeyEvent:"+event.getKeyCode());
         if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-            final Context ctx = getContext();
+
             String page = PreyConfig.getPreyConfig(ctx).getPage();
             String apikey = PreyConfig.getPreyConfig(ctx).getApiKey();
             String inputWebview = PreyConfig.getPreyConfig(ctx).getInputWebview();
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-            PreyLogger.i("CustomWebView dispatchKeyEvent Enter page:" + page + " inputWebview:" + inputWebview);
+            PreyLogger.d("CustomWebView dispatchKeyEvent Enter page:" + page + " inputWebview:" + inputWebview);
             if ("setting".equals(page)) {
                 try {
                     boolean isPasswordOk = PreyWebServices.getInstance().checkPassword(ctx, apikey, inputWebview);
@@ -126,9 +132,7 @@ public class CustomWebView extends WebView {
                 }
             }
         }
-        return dispatchFirst;
     }
-
     @Override
     public boolean onCheckIsTextEditor() {
         return true;

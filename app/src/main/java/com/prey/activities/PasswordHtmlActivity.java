@@ -8,7 +8,10 @@ package com.prey.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -27,6 +30,13 @@ public class PasswordHtmlActivity extends Activity {
         setContentView(R.layout.webview);
         PreyLogger.d("PasswordHtmlActivity: onCreate");
         myWebView = (CustomWebView) findViewById(R.id.install_browser);
+        myWebView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                CustomWebView.callDispatchKeyEvent(getApplicationContext(),keyEvent);
+                return false;
+            }
+        });
         WebSettings settings = myWebView.getSettings();
         myWebView.setBackgroundColor(0x00000000);
         settings.setJavaScriptEnabled(true);
