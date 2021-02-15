@@ -19,7 +19,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.Settings;
+import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +33,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.PreyUtils;
 import com.prey.R;
+
 import com.prey.activities.js.CustomWebView;
 import com.prey.activities.js.WebAppInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
@@ -96,6 +100,13 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     public void settings() {
         PreyLogger.d("CheckPasswordHtmlActivity: settings");
         myWebView = (CustomWebView) findViewById(R.id.install_browser);
+        myWebView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                CustomWebView.callDispatchKeyEvent(getApplicationContext(),keyEvent);
+                return false;
+            }
+        });
         WebSettings settings = myWebView.getSettings();
         myWebView.setBackgroundColor(0x00000000);
         settings.setJavaScriptEnabled(true);
@@ -160,7 +171,8 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
             PreyLogger.d("CheckPasswordHtmlActivity: isAdminActive:" + isAdminActive);
             boolean configurated=(canAccessFineLocation||canAccessCoarseLocation) && canAccessBackgroundLocation && canAccessCamera
-                    && canAccessStorage  && isAdminActive && (canDrawOverlays);
+                    && canAccessStorage && isAdminActive && canDrawOverlays;
+
             //TODO:ACCESS
             //boolean configurated=(canAccessFineLocation||canAccessCoarseLocation) && canAccessBackgroundLocation && canAccessCamera
             //        && canAccessStorage  && isAdminActive && (canDrawOverlays && canAccessibility);

@@ -26,7 +26,7 @@
         android:layout_weight="1">
 
         <WebView
-            android:id="@+id/install_browser"
+            android:id="@+id/install_browserReport"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" />
     </RelativeLayout>

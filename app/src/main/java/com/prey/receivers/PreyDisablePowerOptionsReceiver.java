@@ -9,6 +9,8 @@ package com.prey.receivers;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
+import com.prey.events.Event;
+import com.prey.events.manager.EventManagerRunner;
 import com.prey.services.PreySecureService;
 
 import android.annotation.TargetApi;
@@ -19,6 +21,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+
+import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -62,14 +66,25 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                             intentClose.putExtra(stringExtra, stringExtra);
                             context.sendBroadcast(intentClose);
                             String pinNumber = PreyConfig.getPreyConfig(context).getPinNumber();
-                            PreyLogger.d("PreyDisablePowerOptionsReceiver pinNumber:" + pinNumber);
-                            if ("globalactions".equals(reason) && pinNumber != null && !"".equals(pinNumber)) {
+                            boolean isOpenSecureService=PreyConfig.getPreyConfig(context).isOpenSecureService();
+                            PreyLogger.d("PreyDisablePowerOptionsReceiver pinNumber:" + pinNumber+" isOpenSecureService:"+isOpenSecureService);
+                            if ("globalactions".equals(reason) && pinNumber != null && !"".equals(pinNumber) && pinNumber.length()==4 ) {
                                 PreyLogger.d("pinNumber:" + pinNumber);
                                 PreyConfig.getPreyConfig(context).setPinActivated(pinNumber);
-                                if (!PreyConfig.getPreyConfig(context).isOpenSecureService()) {
+                                if (!isOpenSecureService) {
                                     PreyLogger.d("open PreySecureService");
                                     Intent intentLock = new Intent(context, PreySecureService.class);
                                     context.startService(intentLock);
+                                    new Thread() {
+                                        public void run() {
+                                            try {
+                                                JSONObject info = new JSONObject();
+                                                info.put("PIN", pinNumber);
+                                                Event event = new Event(Event.ANDROID_LOCK_PIN, info.toString());
+                                                new Thread(new EventManagerRunner(context, event)).start();
+                                            }catch (Exception e){}
+                                        }
+                                    }.start();
                                 }
                             }
                         }

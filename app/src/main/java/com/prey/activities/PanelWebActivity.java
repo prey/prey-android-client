@@ -10,6 +10,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -18,11 +20,12 @@ import android.webkit.WebViewClient;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
+import com.prey.activities.js.CustomWebView;
 
 public class PanelWebActivity extends Activity {
 
     private final Activity activity = this;
-    private WebView myWebView = null;
+    private CustomWebView myWebView = null;
 
     public void onBackPressed() {
         Intent intent = null;
@@ -36,7 +39,14 @@ public class PanelWebActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.panelweb);
         this.setContentView(R.layout.activity_webview);
-        myWebView = (WebView) findViewById(R.id.install_browser);
+        myWebView = (CustomWebView) findViewById(R.id.install_browser);
+        myWebView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                CustomWebView.callDispatchKeyEvent(getApplicationContext(),keyEvent);
+                return false;
+            }
+        });
     }
 
     @Override
