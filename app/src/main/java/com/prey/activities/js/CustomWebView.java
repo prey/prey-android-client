@@ -9,14 +9,9 @@ package com.prey.activities.js;
 import android.content.Context;
 import android.content.Intent;
 import android.os.StrictMode;
-import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.BaseInputConnection;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
-import android.webkit.WebView;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -27,45 +22,11 @@ import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 import com.prey.services.PreyLockHtmlService;
 
-public class CustomWebView extends WebView {
-    public CustomWebView(Context context) {
-        super(context);
-        init();
-    }
-
-    public CustomWebView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public CustomWebView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    protected void init() {
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-        PreyConfig.getPreyConfig(getContext()).setInputWebview("");
-    }
-
-    @Override
-    public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        BaseInputConnection baseInputConnection = new BaseInputConnection(this, false);
-        return baseInputConnection;
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        boolean dispatchFirst = super.dispatchKeyEvent(event);
-        callDispatchKeyEvent(getContext(),event);
-        return dispatchFirst;
-    }
+public class CustomWebView   {
 
     public static void callDispatchKeyEvent(final Context ctx,KeyEvent event){
         PreyLogger.d("callDispatchKeyEvent:"+event.getKeyCode());
         if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-
             String page = PreyConfig.getPreyConfig(ctx).getPage();
             String apikey = PreyConfig.getPreyConfig(ctx).getApiKey();
             String inputWebview = PreyConfig.getPreyConfig(ctx).getInputWebview();
@@ -132,9 +93,5 @@ public class CustomWebView extends WebView {
                 }
             }
         }
-    }
-    @Override
-    public boolean onCheckIsTextEditor() {
-        return true;
     }
 }
