@@ -14,7 +14,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -29,9 +28,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.appsflyer.AFInAppEventParameterName;
-import com.appsflyer.AFInAppEventType;
-import com.appsflyer.AppsFlyerLib;
 import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
 import com.prey.PreyApp;
@@ -235,11 +231,6 @@ public class SignUpActivity extends Activity {
                 PreyConfig.getPreyConfig(ctx).setRunBackground(true);
                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
                 new PreyApp().run(ctx);
-                try {
-                    Map<String, Object> eventValue = new HashMap<>();
-                    eventValue.put(AFInAppEventParameterName.REGSITRATION_METHOD,"email");
-                    AppsFlyerLib.getInstance().trackEvent(ctx, AFInAppEventType.COMPLETE_REGISTRATION,eventValue);
-                } catch (Exception e1) {}
             } catch (Exception e) {
                 error = e.getMessage();
                 PreyLogger.e("e.getMessage():"+e.getMessage(),e);

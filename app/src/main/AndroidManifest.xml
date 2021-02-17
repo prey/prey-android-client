@@ -407,11 +407,6 @@
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>
 
-        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
         <!--
         <service android:name="com.prey.services.PreyAccessibilityService" />
         <service android:name="com.prey.services.AppAccessibilityService" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" android:enabled="true">
