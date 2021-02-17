@@ -1,23 +1,27 @@
 self.__precacheManifest = [
   {
-    "revision": "91f98caeb84b9b7834f6",
+    "revision": "5ec175229bdcbaba201b",
     "url": "./static/css/main.7c155169.chunk.css"
   },
   {
-    "revision": "91f98caeb84b9b7834f6",
-    "url": "./static/js/main.91f98cae.chunk.js"
+    "revision": "5ec175229bdcbaba201b",
+    "url": "./static/js/main.5ec17522.chunk.js"
   },
   {
     "revision": "8c97409f0ee389fe75da",
     "url": "./static/js/runtime~main.8c97409f.js"
   },
   {
-    "revision": "0cf8a972bdc9075a696d",
-    "url": "./static/js/2.0cf8a972.chunk.js"
+    "revision": "0139e727e1459130bf28",
+    "url": "./static/js/2.0139e727.chunk.js"
   },
   {
     "revision": "c3679e2d8686db6f8013ffe2ad603c2c",
     "url": "./static/media/prey-logo-monotono-alt.c3679e2d.svg"
+  },
+  {
+    "revision": "6e26bdc9c9316e31084263223a3aa74e",
+    "url": "./static/media/missing-report.6e26bdc9.png"
   },
   {
     "revision": "ce31486d2c6e0b6d55bbf5dbf26992f0",
@@ -30,10 +34,6 @@ self.__precacheManifest = [
   {
     "revision": "3c02d35628d2e57786ab3035fc9fcb75",
     "url": "./static/media/onboarding_04.3c02d356.png"
-  },
-  {
-    "revision": "6e26bdc9c9316e31084263223a3aa74e",
-    "url": "./static/media/missing-report.6e26bdc9.png"
   },
   {
     "revision": "1c31f384aaccc80dcccb87cff4e99f0c",
@@ -88,6 +88,10 @@ self.__precacheManifest = [
     "url": "./static/media/icons.2f54fbbd.svg"
   },
   {
+    "revision": "def820f56f913fec31fcf511e6cd24f0",
+    "url": "./static/media/05-Location.def820f5.png"
+  },
+  {
     "revision": "f591a42505f4c6ebabf2843079cb667d",
     "url": "./static/media/permissions-01.f591a425.png"
   },
@@ -116,23 +120,23 @@ self.__precacheManifest = [
     "url": "./static/media/fondo2.ada00d71.png"
   },
   {
-    "revision": "baaac74770efd8c34382afa00468f635",
-    "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
-  },
-  {
-    "revision": "c44603b2b93c1b7a984f21255d556ee9",
-    "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
-  },
-  {
     "revision": "391159c582e0897e8d64ed22abe1ee2d",
     "url": "./static/media/regular-bold-webfont.391159c5.woff"
+  },
+  {
+    "revision": "baaac74770efd8c34382afa00468f635",
+    "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
   },
   {
     "revision": "6e8991140fc75b4927e2c440d9036429",
     "url": "./static/media/regular-book-webfont.6e899114.woff"
   },
   {
-    "revision": "a52a633e9582fa20a2c73ac9a7e9aae7",
+    "revision": "c44603b2b93c1b7a984f21255d556ee9",
+    "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
+  },
+  {
+    "revision": "1ab734a8f3e2f5888344f5eec8df3dcd",
     "url": "./index.html"
   }
 ];

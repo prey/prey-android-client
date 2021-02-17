@@ -358,13 +358,13 @@
     <string name="privacy_info">All of the app functionalities require you to give the permissions needed and to activate your account directly in the control panel.\n\nNone of your data is being sold or sent to third parties for any purpose. It will not be used for any purposes other than to deliver or improve the app functionalities. \n\nAll data is sent through SSL.</string>
     <string name="privacy_home">BACK</string>
     <string name="onboarding01_tit">YOUR SECURITY HUB</string>
-    <string name="onboarding01_body">Protect your phone, laptop and tablet with the one app you can access anywhere.</string>
+    <string name="onboarding01_body">Access your online panel from any place or platform, and perform security actions on your device.</string>
     <string name="onboarding02_tit">TRACK AND FIND</string>
-    <string name="onboarding02_body">Know where you lost your device is and detect when it moves somewhere.</string>
+    <string name="onboarding02_body">Know where your lost device is and detect when it moves somewhere.</string>
     <string name="onboarding03_tit">REACT AND PROTECT</string>
-    <string name="onboarding03_body">Protect your device and its data with security actions like Lock, Wipe and Alarm.</string>
+    <string name="onboarding03_body">Protect your device and its data with remote security actions like Lock, Wipe, and Alarm.</string>
     <string name="onboarding04_tit">RECOVER WITH EVIDENCE</string>
-    <string name="onboarding04_body">Get evidence reports with pictures, screenshots, nearby WiFis, user data and locations.</string>
+    <string name="onboarding04_body">Get evidence reports with pictures, screenshots, nearby WiFis, user data, and locations.</string>
 
     <string name="text_batch">Give this device a name to identify it in Prey.</string>
     <string name="placehoder_batch">Type here</string>

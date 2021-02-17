@@ -351,14 +351,14 @@
     <string name="link_privacy">TU PRIVACIDAD</string>
     <string name="privacy_info">Las funcionalidades de la aplicación solo se activan mediante la activación previa desde el panel de control y requieren que otorgues los permisos correspondientes desde tu dispositivo.\n\nNinguno de tus datos se vende o envía a terceros para ningún propósito. No se utilizarán para ningún otro propósito que no sea entregar o mejorar las funcionalidades de la aplicación.Todos los datos se procesan cifrados por medio de SSL.</string>
     <string name="privacy_home">VOLVER</string>
-    <string name="onboarding01_tit">SU CENTRO DE SEGURIDAD</string>
-    <string name="onboarding01_body">Protege tu teléfono, computadora portátil y tableta con la única aplicación a la que puede acceder desde cualquier lugar.</string>
+    <string name="onboarding01_tit">TU CENTRO DE SEGURIDAD</string>
+    <string name="onboarding01_body">Ingresa a tu panel en línea desde cualquier lugar o plataforma y realiza acciones de seguridad en tu dispositivo.</string>
     <string name="onboarding02_tit">RASTREA Y ENCUENTRA</string>
-    <string name="onboarding02_body">Localiza y sigue a tus dispositivos y detecta cuando se mueve en algún lugar.</string>
-    <string name="onboarding03_tit">PROTEGE Y REACCIONA</string>
-    <string name="onboarding03_body">Protege tus equipos y sus datos con acciones de seguridad como Bloquear, Borrar y Alarma.</string>
-    <string name="onboarding04_tit">RECUPERA CON EVIDENCIA</string>
-    <string name="onboarding04_body">Obtén reportes con evidencia crucial para recuperar el equipo, como fotografías, caputas de pantalla, redes WiFi activas y cercanas, datos de usuario y ubicaciones.</string>
+    <string name="onboarding02_body">Ubica dónde se encuentra tu móvil, laptop o tablet y detecta cuando este se mueve.</string>
+    <string name="onboarding03_tit">REACCIONA Y PROTEGE</string>
+    <string name="onboarding03_body">Protege tus equipos y sus datos con acciones de seguridad remotas como el Bloqueo, el Borrado y la Alarma.</string>
+    <string name="onboarding04_tit">RECUPERAR CON EVIDENCIA</string>
+    <string name="onboarding04_body">Recibe reportes de evidencia con fotos, capturas de pantalla, redes WiFi cercanas, ubicaciones y más.</string>
 
     <string name="text_batch">Da un nombre a este dispositivo para identificarlo en Prey.</string>
     <string name="placehoder_batch">Escribe aquí</string>
