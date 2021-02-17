@@ -53,7 +53,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         }
     };
 
-    private CustomWebView myWebView = null;
+    private WebView myWebView = null;
 
     public static int OVERLAY_PERMISSION_REQ_CODE = 5469;
 
@@ -99,7 +99,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
     public void settings() {
         PreyLogger.d("CheckPasswordHtmlActivity: settings");
-        myWebView = (CustomWebView) findViewById(R.id.install_browser);
+        myWebView = (WebView) findViewById(R.id.install_browser);
         myWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
@@ -269,6 +269,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     }
 
     public void deniedPermission() {
+        PreyLogger.d("deniedPermission");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String permission="";
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
