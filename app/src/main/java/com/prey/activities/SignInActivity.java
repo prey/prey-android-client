@@ -27,9 +27,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.appsflyer.AFInAppEventParameterName;
-import com.appsflyer.AFInAppEventType;
-import com.appsflyer.AppsFlyerLib;
 import com.prey.PreyApp;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
@@ -212,11 +209,6 @@ public class SignInActivity extends Activity {
                 PreyConfig.getPreyConfig(ctx).setRunBackground(true);
                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
                 new PreyApp().run(ctx);
-                try {
-                    Map<String, Object> eventValue = new HashMap<String, Object>();
-                    eventValue.put(AFInAppEventParameterName.SUCCESS,true);
-                    AppsFlyerLib.getInstance().trackEvent(ctx, AFInAppEventType.LOGIN,eventValue);
-                } catch (Exception e1) {}
             } catch (Exception e) {
                 PreyLogger.e("error:"+e.getMessage(),e);
                 error = e.getMessage();

@@ -14,8 +14,6 @@ import android.os.Build;
 
 import androidx.multidex.MultiDex;
 
-import com.appsflyer.AppsFlyerConversionListener;
-
 import com.google.firebase.FirebaseApp;
 
 import com.prey.actions.aware.AwareController;
@@ -62,32 +60,6 @@ public class PreyApp extends Application {
         runReceiver(this);
         try {
             FirebaseApp.initializeApp(this);
-            AppsFlyerConversionListener conversionListener = new AppsFlyerConversionListener() {
-                @Override
-                public void onInstallConversionDataLoaded(Map<String, String> conversionData) {
-                    for (String attrName : conversionData.keySet()) {
-                        PreyLogger.d("attribute: " + attrName + " = " + conversionData.get(attrName));
-                    }
-                    setInstallData(conversionData);
-                }
-
-                @Override
-                public void onInstallConversionFailure(String errorMessage) {
-                    PreyLogger.d("error getting conversion data: " + errorMessage);
-                }
-
-                @Override
-                public void onAppOpenAttribution(Map<String, String> conversionData) {
-                    for (String attrName : conversionData.keySet()) {
-                        PreyLogger.d("attribute: " + attrName + " = " + conversionData.get(attrName));
-                    }
-                }
-
-                @Override
-                public void onAttributionFailure(String errorMessage) {
-                    PreyLogger.d("error onAttributionFailure : " + errorMessage);
-                }
-            };
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
         }
