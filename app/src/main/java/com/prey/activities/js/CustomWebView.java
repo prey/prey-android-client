@@ -27,40 +27,7 @@ import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 import com.prey.services.PreyLockHtmlService;
 
-public class CustomWebView extends WebView {
-    public CustomWebView(Context context) {
-        super(context);
-        init();
-    }
-
-    public CustomWebView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public CustomWebView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    protected void init() {
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-        PreyConfig.getPreyConfig(getContext()).setInputWebview("");
-    }
-
-    @Override
-    public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        BaseInputConnection baseInputConnection = new BaseInputConnection(this, false);
-        return baseInputConnection;
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        boolean dispatchFirst = super.dispatchKeyEvent(event);
-        callDispatchKeyEvent(getContext(),event);
-        return dispatchFirst;
-    }
+public class CustomWebView {
 
     public static void callDispatchKeyEvent(final Context ctx,KeyEvent event){
         PreyLogger.d("callDispatchKeyEvent:"+event.getKeyCode());
@@ -133,8 +100,5 @@ public class CustomWebView extends WebView {
             }
         }
     }
-    @Override
-    public boolean onCheckIsTextEditor() {
-        return true;
-    }
+
 }

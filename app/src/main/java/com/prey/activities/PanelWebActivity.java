@@ -25,7 +25,7 @@ import com.prey.activities.js.CustomWebView;
 public class PanelWebActivity extends Activity {
 
     private final Activity activity = this;
-    private CustomWebView myWebView = null;
+    private WebView myWebView = null;
 
     public void onBackPressed() {
         Intent intent = null;
@@ -39,7 +39,7 @@ public class PanelWebActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.panelweb);
         this.setContentView(R.layout.activity_webview);
-        myWebView = (CustomWebView) findViewById(R.id.install_browser);
+        myWebView = (WebView) findViewById(R.id.install_browser);
         myWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {

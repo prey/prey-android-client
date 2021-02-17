@@ -22,14 +22,14 @@ import com.prey.activities.js.WebAppInterface;
 
 public class PasswordHtmlActivity extends Activity {
 
-    private CustomWebView myWebView = null;
+    private WebView myWebView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.webview);
         PreyLogger.d("PasswordHtmlActivity: onCreate");
-        myWebView = (CustomWebView) findViewById(R.id.install_browser);
+        myWebView = (WebView) findViewById(R.id.install_browser);
         myWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {

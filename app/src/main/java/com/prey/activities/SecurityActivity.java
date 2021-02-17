@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,7 +25,7 @@ import com.prey.activities.js.WebAppInterface;
 
 public class SecurityActivity extends AppCompatActivity {
 
-    private CustomWebView myWebView = null;
+    private WebView myWebView = null;
 
     public void onBackPressed() {
         Intent intent = null;
@@ -47,7 +48,7 @@ public class SecurityActivity extends AppCompatActivity {
 
     public void settings() {
         PreyLogger.d("CheckPasswordHtmlActivity: settings");
-        myWebView = (CustomWebView) findViewById(R.id.install_browser);
+        myWebView = (WebView) findViewById(R.id.install_browser);
         myWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {

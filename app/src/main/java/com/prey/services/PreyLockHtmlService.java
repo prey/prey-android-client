@@ -64,7 +64,7 @@ public class PreyLockHtmlService extends Service{
             view = inflater.inflate(R.layout.webview, null);
             PreyConfig.getPreyConfig(ctx).viewLock=view;
 
-            CustomWebView myWebView = (CustomWebView) view.findViewById(R.id.install_browser);
+            WebView myWebView = (WebView) view.findViewById(R.id.install_browser);
             myWebView.setOnKeyListener(new View.OnKeyListener() {
                 @Override
                 public boolean onKey(View view, int i, KeyEvent keyEvent) {
