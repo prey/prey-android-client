@@ -717,8 +717,8 @@ public class WebAppInterface {
         PreyLogger.d("showCamera:" + showCamera);
         PreyLogger.d("showPhoneState:" + showPhone);
         PreyLogger.d("showWriteStorage:" + showStorage);
-        //TODO:ACCESS
-        //PreyLogger.d("canAccessibility:" + canAccessibility);
+        PreyLogger.d("showDeniedPermission:" + showDeniedPermission);
+            /*
         if(!canAccessStorage&&!canAccessFineLocation&&!canAccessCoarseLocation&&!canAccessCamera&&
                 !showStorage&&!showFineLocation&&!showCoarseLocation&&!showCamera&&!showPhone){
             showDeniedPermission=false;
@@ -732,13 +732,13 @@ public class WebAppInterface {
             if (Build.VERSION.SDK_INT == PreyConfig.BUILD_VERSION_CODES_11 && !canAccessBackgroundLocation) {
                 showDeniedPermission = true;
             }
-        }
+        }*/
         PreyLogger.d("showDeniedPermission:" + showDeniedPermission);
         if (showDeniedPermission) {
             mActivity.deniedPermission();
         } else{
             if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
-                    || !canAccessStorage || !canAccessBackgroundLocation) {
+                    || !canAccessStorage ) {
                 mActivity.askForPermission();
             } else {
                 boolean canDrawOverlays =true;
@@ -827,8 +827,25 @@ public class WebAppInterface {
     @JavascriptInterface
     public String initName() {
         String initName = PreyWebServices.getInstance().getNameDevice(mContext);
+        if(initName!=null&&!"".equals(initName)){
+            PreyConfig.getPreyConfig(mContext).setDeviceName(initName);
+        }else{
+            initName=PreyConfig.getPreyConfig(mContext).getDeviceName();;
+        }
         PreyLogger.d("initName:"+initName);
         return initName;
+    }
+
+    @JavascriptInterface
+    public boolean initUserFree() {
+        boolean initUserFree=false;
+        try {
+            PreyWebServices.getInstance().getProfile(mContext);
+            initUserFree = !PreyConfig.getPreyConfig(mContext).getProAccount();
+        }catch (Exception e){
+        }
+        PreyLogger.d("initUserFree:"+initUserFree);
+        return initUserFree;
     }
 
     @JavascriptInterface
@@ -855,10 +872,66 @@ public class WebAppInterface {
     @JavascriptInterface
     public void approveLocation(){
         PreyLogger.d("approveLocation");
+
+
+
+        boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocation(mContext);
+
+        boolean showBackgroundLocation = PreyPermission.showRequestBackgroundLocation(mActivity);
+
+        //TODO:ACCESS
+        //boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(mContext);
+        boolean showDeniedPermission=false;
+
+
+
+
+        PreyLogger.d("canAccessBackgroundLocation:" + canAccessBackgroundLocation);
+
+        PreyLogger.d("showBackgroundLocation:" + showBackgroundLocation);
+
+
+        //TODO:ACCESS
+
+
+            if (Build.VERSION.SDK_INT == PreyConfig.BUILD_VERSION_CODES_10 && !canAccessBackgroundLocation) {
+                if (!showBackgroundLocation) {
+                    showDeniedPermission = true;
+                }
+            }
+            if (Build.VERSION.SDK_INT == PreyConfig.BUILD_VERSION_CODES_11 && !canAccessBackgroundLocation) {
+                if (!showBackgroundLocation) {
+                    showDeniedPermission = true;
+                }
+            }
+        PreyLogger.d("showDeniedPermission:" + showDeniedPermission);
+
+
+            mActivity.askForPermissionLocation();
+
+
+
     }
     
     @JavascriptInterface
-    public void skipLocation(){
+    public boolean skipLocation(){
         PreyLogger.d("skipLocation");
+        boolean canAccessCamera = PreyPermission.canAccessCamera(mContext);
+        boolean canAccessStorage = PreyPermission.canAccessStorage(mContext);
+        boolean canDrawOverlays = PreyPermission.canDrawOverlays(mContext);
+        boolean isAdminActive = FroyoSupport.getInstance(mContext).isAdminActive();
+        return canAccessCamera&&canAccessStorage&&canDrawOverlays&&canDrawOverlays&&isAdminActive;
+
     }
+
+    @JavascriptInterface
+    public void skipPermissions(){
+        PreyLogger.d("skipPermissions");
+    }
+
+    @JavascriptInterface
+    public void skipPermissionsBg(){
+        PreyLogger.d("skipPermissionsBg");
+    }
+
 }

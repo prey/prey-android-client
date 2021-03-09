@@ -30,6 +30,8 @@ public class CheckPasswordActivity extends PasswordActivity {
         TextView device_ready_h2_text=(TextView)findViewById(R.id.device_ready_h2_text);
         final  TextView textForgotPassword = (TextView) findViewById(R.id.link_forgot_password);
         final  TextView textLink_privacy = (TextView) findViewById(R.id.link_privacy);
+        final  TextView textLink_uninstall_prey = (TextView) findViewById(R.id.link_uninstall_prey);
+
         Button password_btn_login=(Button)findViewById(R.id.password_btn_login);
         EditText password_pass_txt=(EditText)findViewById(R.id.password_pass_txt);
         Typeface titilliumWebRegular = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
@@ -38,6 +40,7 @@ public class CheckPasswordActivity extends PasswordActivity {
         device_ready_h2_text.setTypeface(titilliumWebRegular);
         textForgotPassword.setTypeface(titilliumWebBold);
         textLink_privacy.setTypeface(titilliumWebBold);
+        textLink_uninstall_prey.setTypeface(titilliumWebBold);
         password_btn_login.setTypeface(titilliumWebBold);
         password_pass_txt.setTypeface(magdacleanmonoRegular);
         try {
@@ -62,6 +65,16 @@ public class CheckPasswordActivity extends PasswordActivity {
             });
         } catch (Exception e) {
         }
+
+        textLink_uninstall_prey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                String url=getApplicationContext().getString(R.string.uninstall_prey_link);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
     }
 
     public void onBackPressed() {
