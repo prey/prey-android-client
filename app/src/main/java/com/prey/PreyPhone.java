@@ -63,24 +63,16 @@ public class PreyPhone {
     private void updateHardware() {
         Map<String, String> mapData = getProcessorData();
         hardware = new Hardware();
-        hardware.setUuid(getUuid());
         hardware.setAndroidDeviceId(getAndroidDeviceId());
         hardware.setBiosVendor(Build.MANUFACTURER);
         hardware.setBiosVersion(mapData.get("Revision"));
         hardware.setMbVendor(Build.MANUFACTURER);
-        //	hardware.setMbVersion(Build.BOOTLOADER );
         hardware.setMbModel(Build.BOARD);
-        //hardware.setMbVersion(mbVersion);
         hardware.setCpuModel(mapData.get("Processor"));
         hardware.setCpuSpeed(String.valueOf(maxCPUFreqMHz()));
         hardware.setCpuCores(String.valueOf(getCpuCores()));
         hardware.setRamSize(String.valueOf(getMemoryRamSize()));
-        // hardware.setRamModules(ramModules);
-        hardware.setSerialNumber(getSerialNumber());
-
         initMemory();
-
-
     }
 
     @TargetApi(16)
@@ -89,7 +81,6 @@ public class PreyPhone {
         MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
         activityManager.getMemoryInfo(memoryInfo);
         long totalMemory = totalMemory();
-
         long freeMemory = memoryInfo.availMem / 1048576L;
         long usageMemory = totalMemory - freeMemory;
         hardware.setTotalMemory(totalMemory);

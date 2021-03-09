@@ -99,8 +99,7 @@ public class PreyConfig {
     public static final String PREFS_ACCOUNT_VERIFIED="PREFS_ACCOUNT_VERIFIED";
     public static final String EMAIL="EMAIL";
     public static final String TWO_STEP="TWO_STEP";
-
-
+    public static final String PRO_ACCOUNT="PRO_ACCOUNT";
     public static final String SEND_DATA="SEND_DATA";
     public static final String SCHEDULED="SCHEDULED";
     public static final String MINUTE_SCHEDULED="MINUTE_SCHEDULED2";
@@ -145,6 +144,7 @@ public class PreyConfig {
     public static final String API_KEY="API_KEY";
     public static final String DEVICE_ID = "DEVICE_ID";
     public static final String ACCOUNT = "ACCOUNT";
+    public static final String DEVICE_NAME = "DEVICE_NAME";
 
     public static final String SIM_SERIAL_NUMBER = "SIM_SERIAL_NUMBER";
 
@@ -212,6 +212,7 @@ public class PreyConfig {
 
     public static final String INPUT_WEBVIEW="INPUT_WEBVIEW";
     public static final String PAGE="PAGE";
+    public static final String PERMISSION_LOCATION="PERMISSION_LOCATION";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -453,6 +454,14 @@ public class PreyConfig {
 
     public void setDeviceId(String deviceId){
         this.saveString(PreyConfig.DEVICE_ID, deviceId);
+    }
+
+    public String getDeviceName(){
+        return getString(PreyConfig.DEVICE_NAME, "");
+    }
+
+    public void setDeviceName(String deviceName){
+        this.saveString(PreyConfig.DEVICE_NAME, deviceName);
     }
 
     public String getUnlockPass(){
@@ -803,6 +812,14 @@ public class PreyConfig {
 
     public void setEmail(String email) {
         saveString(PreyConfig.EMAIL, email);
+    }
+
+    public boolean getProAccount() {
+        return getBoolean(PreyConfig.PRO_ACCOUNT, false);
+    }
+
+    public void setProAccount(boolean proAccount) {
+        saveBoolean(PreyConfig.PRO_ACCOUNT, proAccount);
     }
 
     public boolean getTwoStep() {
@@ -1388,6 +1405,14 @@ public class PreyConfig {
     }
     public void setPage(String page) {
         saveString(PAGE, page);
+    }
+
+    public void setPermissionLocation(boolean permission_location) {
+        this.saveBoolean(PreyConfig.PERMISSION_LOCATION, permission_location);
+    }
+
+    public boolean getPermissionLocation() {
+        return getBoolean(PreyConfig.PERMISSION_LOCATION, true);
     }
 
 }

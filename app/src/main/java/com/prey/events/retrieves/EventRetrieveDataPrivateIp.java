@@ -20,15 +20,14 @@ import com.prey.json.actions.PrivateIp;
 public class EventRetrieveDataPrivateIp {
 
     public  void execute(Context context,EventManager manager){
-        HttpDataService privateIpHttpDataService=  new PrivateIp().run(context, null, null);
-
-        String privateIpData=privateIpHttpDataService.getSingleData();
-        JSONObject privateIpJSon = new JSONObject();
         try {
+            HttpDataService privateIpHttpDataService=  new PrivateIp().run(context, null, null);
+            String privateIpData=privateIpHttpDataService.getSingleData();
+            JSONObject privateIpJSon = new JSONObject();
             privateIpJSon.put("private_ip", privateIpData);
-        } catch (JSONException e) {
+            PreyLogger.d("privateIp:"+privateIpData);
+            manager.receivesData(EventManager.PRIVATE_IP, privateIpJSon);
+        } catch (Exception e) {
         }
-        PreyLogger.d("privateIp:"+privateIpData);
-        manager.receivesData(EventManager.PRIVATE_IP, privateIpJSon);
     }
 }

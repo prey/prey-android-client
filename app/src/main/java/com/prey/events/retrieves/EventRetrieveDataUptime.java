@@ -19,14 +19,14 @@ import com.prey.json.actions.Uptime;
 public class EventRetrieveDataUptime {
 
     public  void execute(Context context,EventManager manager){
-        HttpDataService uptimeHttpDataService=  new Uptime().run(context, null, null);
-        String uptimeData=uptimeHttpDataService.getSingleData();
-        JSONObject uptimeJSon = new JSONObject();
         try {
+            HttpDataService uptimeHttpDataService=  new Uptime().run(context, null, null);
+            String uptimeData=uptimeHttpDataService.getSingleData();
+            JSONObject uptimeJSon = new JSONObject();
             uptimeJSon.put("uptime", uptimeData);
-        } catch (JSONException e) {
+            PreyLogger.d("uptime:"+uptimeData);
+            manager.receivesData(EventManager.UPTIME, uptimeJSon);
+        } catch (Exception e) {
         }
-        PreyLogger.d("uptime:"+uptimeData);
-        manager.receivesData(EventManager.UPTIME, uptimeJSon);
     }
 }

@@ -55,28 +55,28 @@ public class LocationService extends Service {
     @Override
     public void onCreate() {
         PreyLogger.d("LocationService is going to be started...");
-
-        androidLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+        try {
+            androidLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
                     || (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
 
-            LocationProvider gpsLocationProvider = androidLocationManager.getProvider(LocationManager.GPS_PROVIDER);
-            LocationProvider networkProvider = androidLocationManager.getProvider(LocationManager.NETWORK_PROVIDER);
-            if (gpsLocationProvider != null && androidLocationManager.isProviderEnabled(gpsLocationProvider.getName())) {
-                androidLocationManager.requestLocationUpdates(gpsLocationProvider.getName(), PreyConfig.UPDATE_INTERVAL, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE,
+                LocationProvider gpsLocationProvider = androidLocationManager.getProvider(LocationManager.GPS_PROVIDER);
+                LocationProvider networkProvider = androidLocationManager.getProvider(LocationManager.NETWORK_PROVIDER);
+                if (gpsLocationProvider != null && androidLocationManager.isProviderEnabled(gpsLocationProvider.getName())) {
+                    androidLocationManager.requestLocationUpdates(gpsLocationProvider.getName(), PreyConfig.UPDATE_INTERVAL, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE,
                             gpsLocationListener);
-                PreyLogger.d("GPS Location provider has been started.");
-            }
-            if (networkProvider != null && androidLocationManager.isProviderEnabled(networkProvider.getName())) {
-                androidLocationManager.requestLocationUpdates(networkProvider.getName(), PreyConfig.UPDATE_INTERVAL / 4, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE,
+                    PreyLogger.d("GPS Location provider has been started.");
+                }
+                if (networkProvider != null && androidLocationManager.isProviderEnabled(networkProvider.getName())) {
+                    androidLocationManager.requestLocationUpdates(networkProvider.getName(), PreyConfig.UPDATE_INTERVAL / 4, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE,
                             networkLocationListener);
-                PreyLogger.d("NETWORK Location provider has been started.");
+                    PreyLogger.d("NETWORK Location provider has been started.");
+                }
+            } else {
+                PreyLogger.d("___________ask for permission LocationService ACCESS_FINE_LOCATION");
             }
-        } else {
-            PreyLogger.d("___________ask for permission LocationService ACCESS_FINE_LOCATION");
-        }
-
+        }catch (Exception e){}
         PreyLogger.d("LocationService has been started...");
     }
 
