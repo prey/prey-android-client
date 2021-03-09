@@ -201,16 +201,26 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
                         }
                     }
             } else {
-                boolean permissions=canAccessFineLocation||canAccessCoarseLocation ||  canAccessCamera
-                        || canAccessStorage  || isAdminActive || canDrawOverlays;
+                boolean permissions=(canAccessFineLocation||canAccessCoarseLocation) && canAccessCamera
+                        && canAccessStorage && isAdminActive && canDrawOverlays;
+
                 //TODO:ACCESS
-                //boolean permissions=!(canAccessFineLocation||canAccessCoarseLocation) ||  !canAccessCamera
-                //        || !canAccessStorage  || !isAdminActive || !canDrawOverlays || !canAccessibility;
+                boolean permissions2=(canAccessFineLocation||canAccessCoarseLocation) ||  canAccessCamera
+                        || canAccessStorage  || isAdminActive ||canDrawOverlays ;
                 PreyLogger.d("permissions:"+permissions);
+                PreyLogger.d("canAccessBackgroundLocation:"+canAccessBackgroundLocation);
                 if (permissions) {
-                    url = URL_ONB + "#/" + lng + "/permissions";
+                    if(canAccessBackgroundLocation) {
+                        url = URL_ONB + "#/" + lng + "/permissions";
+                    }else {
+                        url = URL_ONB + "#/" + lng + "/bgloc";
+                    }
                 } else {
-                    url = URL_ONB + "#/" + lng + "/start";
+                    if(permissions2){
+                        url = URL_ONB + "#/" + lng + "/permissions";
+                    }else{
+                        url = URL_ONB + "#/" + lng + "/start";
+                    }
                 }
             }
         }else{
@@ -226,20 +236,23 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     }
 
     private static final int REQUEST_PERMISSIONS = 5;
+    private static final int REQUEST_PERMISSIONS_LOCATION = 6;
 
     private static final String[] INITIAL_PERMS = {
-            Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.CAMERA,
-            Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
     };
 
-    private static final String[] INITIAL_PERMS_9 = {
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+
+
+    private static final String[] INITIAL_PERMS_LOCATION = {
+
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+
+
+
     };
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -259,13 +272,9 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermission() {
         PreyLogger.d("CheckPasswordHtmlActivity askForPermission");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            PreyLogger.d("CheckPasswordHtmlActivity askForPermission 1");
-            ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, INITIAL_PERMS_9, REQUEST_PERMISSIONS);
-        }else{
             PreyLogger.d("CheckPasswordHtmlActivity askForPermission 2");
             ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, INITIAL_PERMS, REQUEST_PERMISSIONS);
-        }
+
     }
 
     public void deniedPermission() {
@@ -325,7 +334,34 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult");
+        PreyLogger.d("CheckPasswordHtmlActivity onRequestPermissionsResult:"+requestCode);
+        boolean isLocation=false;
+
+        if(requestCode==REQUEST_PERMISSIONS) {
+            for (int i = 0; permissions != null && i < permissions.length; i++) {
+                PreyLogger.d("CheckPasswordHtmlActivity onRequestPermissionsResult:" + permissions[i] + " " + grantResults[i]);
+                if (permissions[i].equals(Manifest.permission.ACCESS_BACKGROUND_LOCATION) && grantResults[i] == -1) {
+                    PreyConfig.getPreyConfig(this).setPermissionLocation(false);
+                }
+                if (permissions[i].equals(Manifest.permission.ACCESS_BACKGROUND_LOCATION) && grantResults[i] == 0) {
+                    PreyConfig.getPreyConfig(this).setPermissionLocation(true);
+                }
+            }
+        }
+        if(requestCode==REQUEST_PERMISSIONS_LOCATION) {
+            for (int i = 0; permissions != null && i < permissions.length; i++) {
+                PreyLogger.d("CheckPasswordHtmlActivity onRequestPermissionsResult:[" + i + "]" + grantResults[i]);
+                if (permissions[i].equals(Manifest.permission.ACCESS_COARSE_LOCATION) && grantResults[i] == -1) {
+                    PreyConfig.getPreyConfig(this).setPermissionLocation(false);
+                }
+                if (permissions[i].equals(Manifest.permission.CAMERA) && grantResults[i] == -1) {
+                    PreyConfig.getPreyConfig(this).setPermissionLocation(true);
+                }
+                if (permissions[i].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) && grantResults[i] == -1) {
+                    PreyConfig.getPreyConfig(this).setPermissionLocation(true);
+                }
+            }
+        }
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
         boolean canAccessCamera = PreyPermission.canAccessCamera(this);
@@ -333,15 +369,21 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         boolean canAccessStorage = PreyPermission.canAccessStorage(this);
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
                 && canAccessPhone && canAccessStorage  ) {
+            PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 1");
             boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
             if (!canDrawOverlays) {
+                PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 2");
                 askForPermissionAndroid7();
                 startOverlayService();
             } else {
+                PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 3");
                 if (!canDrawOverlays) {
+                    PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 4");
                     askForAdminActive();
                 } else {
-                    Intent intent = new Intent(this, CheckPasswordHtmlActivity.class);
+                    PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 5");
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
                 }
@@ -365,6 +407,11 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent2);
         */
+    }
+
+    public void askForPermissionLocation() {
+        PreyLogger.d("CheckPasswordHtmlActivity askForPermissionLocation");
+        ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, REQUEST_PERMISSIONS_LOCATION);
     }
 
 }

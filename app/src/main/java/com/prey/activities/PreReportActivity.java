@@ -346,9 +346,11 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
                     progressDialog.setMessage(getApplicationContext().getText(R.string.pre_report_location).toString());
             } catch (Exception e) {}
             try{
-                preyLocation = LocationUtil.getLocation(getApplicationContext(), null, false);
-                if (preyLocation != null) {
+                preyLocation = LocationUtil.getLocation(getApplicationContext(), null, true);
+                if (preyLocation != null && preyLocation.getLocation()!=null && preyLocation.getLocation().getLatitude() != 0 && preyLocation.getLocation().getLongitude() !=0) {
                     PreyConfig.getPreyConfig(getApplicationContext()).setLocation(preyLocation);
+                }else{
+                    preyLocation=PreyConfig.getPreyConfig(getApplicationContext()).getLocation();
                 }
             } catch (Exception e) {
                 PreyLogger.e("error location:" + e.getMessage(), e);

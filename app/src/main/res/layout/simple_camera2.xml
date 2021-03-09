@@ -13,7 +13,7 @@
             android:orientation="vertical"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="100dp">
 
@@ -24,7 +24,7 @@
                     android:layout_height="100dp"
                     android:text="@string/pre_report_title"
                     android:textColor="#fff"
-                    android:textSize="23sp"
+                    android:textSize="20sp"
 
                     android:gravity="center"
                     />

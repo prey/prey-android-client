@@ -20,7 +20,7 @@ public class EventRetrieveDataOnline {
         JSONObject onlineJSon = new JSONObject();
         try {
             onlineJSon.put("online", true);
-        } catch (JSONException e) {
+        } catch (Exception e) {
         }
         PreyLogger.d("online:true");
         manager.receivesData(EventManager.ONLINE, onlineJSon);

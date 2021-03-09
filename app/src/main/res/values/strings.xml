@@ -348,7 +348,7 @@
     <string name="start">GOT IT</string>
     <string name="permiso_tit">PREY NEEDS PERMISSIONS TO COMPLETELY SECURE YOUR DEVICE</string>
     <string name="permiso_cat1">ACCESS LOCATION, FILES AND MULTIMEDIA CONTENT</string>
-    <string name="permiso_des1"><b>DEVICE\'S LOCATION</b>\nDevice tracking and use of control zones for geofencing require the device location.\n\n<b>TAKE PICTURES AND RECORD VIDEO</b>\nThe images included in evidence reports are taken with front and back cameras.\n\n<b>MAKE AND MANAGE PHONE CALLS</b>\nPrey uses this permission to show the user the device\'s IMEI on evidence reports.\n\n<b>ACCESS PHOTOS, MEDIA AND FILES ON YOUR DEVICE</b>\nThe File Retrieval tool needs this permission to recover files remotely from the device.</string>
+    <string name="permiso_des1"><b>DEVICE\'S LOCATION</b>\nDevice tracking and use of control zones for geofencing require the device location.\n\n<b>TAKE PICTURES AND RECORD VIDEO</b>\nThe images included in evidence reports are taken with front and back cameras.\n\n<b>ACCESS PHOTOS, MEDIA AND FILES ON YOUR DEVICE</b>\nThe File Retrieval tool needs this permission to recover files remotely from the device.</string>
     <string name="permiso_cat2">ACCESS TO DEVICE ADMIN PERMISSION</string>
     <string name="permiso_des2"><b>ACCESS DEVICE ADMIN PERMISSIONS</b>\nPrey can activate extra security tools with the administrator permission, like the Remote Wipe and Lock, or the Block Uninstall setting.</string>
     <string name="permiso_cat3">OVERLAP APP SCREENS</string>
@@ -369,5 +369,7 @@
     <string name="text_batch">Give this device a name to identify it in Prey.</string>
     <string name="placehoder_batch">Type here</string>
     <string name="button_batch">Next</string>
+    <string name="uninstall_prey">How to uninstall Prey?</string>
+    <string name="uninstall_prey_link">https://help.preyproject.com/article/190-how-to-uninstall-prey#android</string>
 
 </resources>

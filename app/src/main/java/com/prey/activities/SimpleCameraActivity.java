@@ -64,12 +64,13 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
                 orientationManager = new OrientationManager(getApplicationContext(), SensorManager.SENSOR_DELAY_NORMAL, this);
                 orientationManager.enable();
             }catch (Exception e){}
-            camera = getCamera(focus);
-            if (camera != null) {
-                try {
+            camera = null;
+            try {
+                camera = getCamera(focus);
+                if (camera != null) {
                     camera.startPreview();
-                } catch (Exception e) {
                 }
+            } catch (Exception e) {
             }
             SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
             mHolder = surfaceView.getHolder();
