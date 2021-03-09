@@ -39,7 +39,7 @@ public class EventRetrieveDataWifi {
             }
             wifiJSon.put("active_access_point", accessElementJSon);
             PreyConfig.getPreyConfig(context).setPreviousSsid(ssid);
-        } catch (JSONException e) {
+        } catch (Exception e) {
         }
         PreyLogger.d("wifi:"+ssid);
         manager.receivesData(EventManager.WIFI, wifiJSon);

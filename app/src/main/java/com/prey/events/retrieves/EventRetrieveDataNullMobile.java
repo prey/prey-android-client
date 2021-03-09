@@ -18,7 +18,7 @@ public class EventRetrieveDataNullMobile {
         JSONObject mobileSon = new JSONObject();
         try {
             mobileSon.put("mobile_internet", "");
-        } catch (JSONException e) {
+        } catch (Exception e) {
         }
         manager.receivesData(EventManager.MOBILE, mobileSon);
     }

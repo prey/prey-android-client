@@ -1023,6 +1023,28 @@ public class PreyWebServices {
         return email;
     }
 
+    public void getProfile(Context ctx) {
+        try {
+            HashMap<String, String> parameters = new HashMap<String, String>();
+            String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
+            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.json");
+            PreyLogger.d("url:" + url);
+            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).getAutentication(url, parameters);
+            if(response!=null) {
+                String out = response.getResponseAsString();
+                PreyLogger.d("out:" + out);
+                JSONObject jsnobject = new JSONObject(out);
+                String email = jsnobject.getString("email");
+                PreyLogger.d("email:" + email);
+                PreyConfig.getPreyConfig(ctx).setEmail(email);
+                boolean pro_account = jsnobject.getBoolean("pro_account");
+                PreyConfig.getPreyConfig(ctx).setProAccount(pro_account);
+            }
+        } catch (Exception e) {
+            PreyLogger.e("error get profile", e);
+        }
+    }
+
     public boolean getTwoStepEnabled(Context ctx) {
         boolean TwoStepEnabled = false;
         try {
@@ -1079,72 +1101,6 @@ public class PreyWebServices {
         String uri =getMissing(ctx).concat("/").concat(estado);
         Map<String, String> params=new HashMap<>();
         return PreyRestHttpClient.getInstance(ctx).postAutentication(uri,params);
-    }
-
-    public PreyLocation geolocate(final Context ctx){
-        PreyLocation location=null;
-        try{
-            String url=PreyConfig.getPreyConfig(ctx).getPreyUrl()+"geo";
-            JSONObject jsonParam=new JSONObject();
-            JSONArray array=new JSONArray();
-            if (PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {
-                HashMap<String, String> parametersMapWifi = new HashMap<String, String>();
-                PreyPhone preyPhone = new PreyPhone(ctx);
-                List<Wifi> listWifi = preyPhone.getListWifi();
-                for (int i = 0; listWifi != null && i < listWifi.size()&& i<15; i++) {
-                    Wifi wifi = listWifi.get(i);
-                    JSONObject jsonRed=new JSONObject();
-                    jsonRed.put("macAddress", wifi.getMacAddress());
-                    jsonRed.put("ssid",  wifi.getSsid());
-                    jsonRed.put("signalStrength", Integer.parseInt(wifi.getSignalStrength()));
-                    jsonRed.put( "channel", Integer.parseInt(wifi.getChannel()));
-                    PreyLogger.d("GEO "+i+" out:" + jsonRed.toString());
-                    array.put(jsonRed);
-                }
-            }
-            jsonParam.put("wifiAccessPoints",array);
-            PreyHttpResponse response=PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url,UtilConnection.REQUEST_METHOD_POST,jsonParam);
-            if(response!=null) {
-                if(response.getStatusCode()==HttpURLConnection.HTTP_OK){
-                    String out = response.getResponseAsString();
-                    JSONObject outJson=new JSONObject(out);
-                    if(!outJson.isNull("geolocation")) {
-                        JSONObject geolocationJson = outJson.getJSONObject("geolocation");
-                        JSONObject locationJSon=geolocationJson.getJSONObject("location");
-                        double lat=locationJSon.getDouble("lat");
-                        double lng=locationJSon.getDouble("lng");
-                        int accuracy=geolocationJson.getInt("accuracy");
-                        location=new PreyLocation();
-                        location.setLat(lat);
-                        location.setLng(lng);
-                        location.setAccuracy(accuracy);
-                        location.setMethod("wifi");
-                    }
-                    if(!outJson.isNull("endpoint")) {
-                        JSONObject endpointJson=outJson.getJSONObject("endpoint");
-                        String urlJson=endpointJson.getString("url");
-                        String userAgentJson=endpointJson.getString("user-agent");
-                        PreyHttpResponse response2=UtilConnection.postJson(urlJson,userAgentJson,jsonParam);
-                        if(response2.getStatusCode()==HttpURLConnection.HTTP_OK){
-                            String out2 = response2.getResponseAsString();
-                            JSONObject outJson2=new JSONObject(out2);
-                            JSONObject locationJSon2=outJson2.getJSONObject("location");
-                            double lat=locationJSon2.getDouble("lat");
-                            double lng=locationJSon2.getDouble("lng");
-                            int accuracy=outJson2.getInt("accuracy");
-                            location=new PreyLocation();
-                            location.setLat(lat);
-                            location.setLng(lng);
-                            location.setAccuracy(accuracy);
-                            location.setMethod("wifi");
-                        }
-                    }
-                }
-            }
-        }catch(Exception e){
-            PreyLogger.d("error geolocate:" + e.getMessage());
-        }
-        return location;
     }
 
     public PreyVerify verifyEmail(Context ctx,String email) throws Exception {

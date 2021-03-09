@@ -19,6 +19,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.beta.actions.PreyBetaController;
 import com.prey.json.actions.Lock;
 import com.prey.services.CheckLockActivated;
 import com.prey.services.PreyLockHtmlService;
@@ -87,6 +88,10 @@ public class LoginActivity extends Activity {
             showLoginBatch();
         } else {
             showLogin();
+        }
+        try{
+            PreyBetaController.startPrey(getApplicationContext());
+        }catch(Exception e){
         }
     }
 

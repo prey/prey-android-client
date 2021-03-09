@@ -75,13 +75,15 @@ public class LocationUtil {
         try {
             preyLocation = getPreyLocationAppService(ctx,method,asynchronous,preyLocation);
         } catch (Exception e) {
-            throw e;
         }
-        if(preyLocation==null&&PreyConfig.getPreyConfig(ctx).isChromebook()){
-            preyLocation=PreyWebServices.getInstance().geolocate(ctx);
+        try {
+            if(preyLocation==null||preyLocation.getLocation()==null||(preyLocation.getLocation().getLatitude()==0&&preyLocation.getLocation().getLongitude()==0)) {
+                preyLocation = getPreyLocationAppServiceOreo(ctx, method, asynchronous, preyLocation);
+            }
+        } catch (Exception e) {
         }
-        if(preyLocation!=null) {
-            PreyLogger.d("preyLocation latt:" + preyLocation.getLat() + " lng:" + preyLocation.getLng());
+        if (preyLocation != null) {
+            PreyLogger.d("preyLocation lat:" + preyLocation.getLat() + " lng:" + preyLocation.getLng());
         }
         return preyLocation;
     }
@@ -122,8 +124,9 @@ public class LocationUtil {
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
     }
 
-    public final static int MAXIMUM_OF_ATTEMPTS=4;
-    public final static int []SLEEP_OF_ATTEMPTS=new int[]{2,2,3,3,4,4,5};
+    public final static int MAXIMUM_OF_ATTEMPTS=6;
+    public final static int MAXIMUM_OF_ATTEMPTS2=6;
+    public final static int []SLEEP_OF_ATTEMPTS=new int[]{2,2,2,3,3,3,4,4,4,5};
 
     public static PreyLocation getPreyLocationPlayService(final Context ctx, String method, boolean asynchronous, PreyLocation preyLocationOld) throws Exception {
         PreyLocation preyLocation = null;
@@ -171,7 +174,7 @@ public class LocationUtil {
             ctx.startService(intent);
             int i = 0;
             PreyLocationManager.getInstance(ctx).setLastLocation(null);
-            while (i < MAXIMUM_OF_ATTEMPTS) {
+            while (i < MAXIMUM_OF_ATTEMPTS2) {
                 PreyLogger.d("getPreyLocationAppServiceOreo[i]:"+i);
                 try {
                     Thread.sleep(SLEEP_OF_ATTEMPTS[i]*1000);
@@ -216,6 +219,7 @@ public class LocationUtil {
                 preyLocation = waitLocation(ctx, method, asynchronous);
             } catch (Exception e) {
                 PreyLogger.e("getPreyLocationAppService e:" + e.getMessage(), e);
+                throw e;
             }  finally {
                 ctx.stopService(intent);
             }

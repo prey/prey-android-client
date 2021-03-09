@@ -35,7 +35,7 @@ public class EventRetrieveDataMobile {
             }
             mobileSon.put("mobile_internet", mobile_internet);
             PreyLogger.d("mobile_internet:"+mobile_internet);
-        } catch (JSONException e) {
+        } catch (Exception e) {
         }
         manager.receivesData(EventManager.MOBILE, mobileSon);
     }

@@ -95,21 +95,27 @@ public class PreyApp extends Application {
                         } catch (Exception e) {
                         }
                         try {
-                            String email = PreyWebServices.getInstance().getEmail(ctx);
-                            PreyConfig.getPreyConfig(ctx).setEmail(email);
+                            PreyWebServices.getInstance().getProfile(ctx);
                         } catch (Exception e) {
-                            PreyLogger.e("setEmail error:" + e.getMessage(), e);
+                            PreyLogger.e("error profile:" + e.getMessage(), e);
                         }
                         try {
                             PreyStatus.getInstance().getConfig(ctx);
                         } catch (Exception e) {
                         }
+                        boolean accessCoarseLocation=PreyPermission.canAccessCoarseLocation(ctx);
+                        boolean accessFineLocation=PreyPermission.canAccessFineLocation(ctx);
+                        boolean canAccessBackgroundLocation=PreyPermission.canAccessBackgroundLocation(ctx);
                         try {
-                            GeofenceController.getInstance().run(ctx);
+                            if((accessCoarseLocation||accessFineLocation)&&canAccessBackgroundLocation) {
+                                GeofenceController.getInstance().run(ctx);
+                            }
                         } catch (Exception e) {
                         }
                         try {
-                            AwareController.getInstance().init(ctx);
+                            if((accessCoarseLocation||accessFineLocation)&&canAccessBackgroundLocation) {
+                                AwareController.getInstance().init(ctx);
+                            }
                         } catch (Exception e) {
                         }
                         try {
