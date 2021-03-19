@@ -22,6 +22,7 @@ import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.report.ReportScheduled;
 import com.prey.actions.triggers.TriggerController;
 import com.prey.activities.LoginActivity;
+import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.factories.EventFactory;
 import com.prey.events.receivers.EventReceiver;
 import com.prey.net.PreyWebServices;
@@ -100,8 +101,20 @@ public class PreyApp extends Application {
                             PreyLogger.e("error profile:" + e.getMessage(), e);
                         }
                         try {
+                            String initName = PreyWebServices.getInstance().getNameDevice(ctx);
+                            if (initName != null && !"".equals(initName)) {
+                                PreyConfig.getPreyConfig(ctx).setDeviceName(initName);
+                            }
+                        }catch (Exception e) {
+                            PreyLogger.e("error nameDevice:" + e.getMessage(), e);
+                        }
+                        try {
                             PreyStatus.getInstance().getConfig(ctx);
                         } catch (Exception e) {
+                        }
+                        try{
+                            PreyBetaController.startPrey(getApplicationContext());
+                        }catch(Exception e){
                         }
                         boolean accessCoarseLocation=PreyPermission.canAccessCoarseLocation(ctx);
                         boolean accessFineLocation=PreyPermission.canAccessFineLocation(ctx);
