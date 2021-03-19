@@ -120,6 +120,7 @@ public class EventFactory {
                 if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
                     PreyLogger.d("getEvent wifiState connected");
                     info.put("connected", "wifi");
+                    PreyBetaController.startPrey(ctx);
                 }
                 if (wifiState == WifiManager.WIFI_STATE_DISABLED) {
                     PreyLogger.d("getEvent mobile connected");
