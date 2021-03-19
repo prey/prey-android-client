@@ -6,9 +6,19 @@
  ******************************************************************************/
 package com.prey.services;
 
-public class PreyAccessibilityService {
-/*
-        extends Service {
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.IBinder;
+
+import com.prey.PreyLogger;
+import com.prey.PreyPermission;
+import com.prey.activities.CheckPasswordHtmlActivity;
+import com.prey.activities.PermissionInformationActivity;
+
+
+public class PreyAccessibilityService extends Service {
 
     public IBinder onBind(Intent intent) {
         return null;
@@ -42,7 +52,7 @@ public class PreyAccessibilityService {
                             stopSelf();
                             break;
                         }
-                        if (i>60){
+                        if (i>40){
                             run=false;
                             stopSelf();
                             break;
@@ -56,6 +66,5 @@ public class PreyAccessibilityService {
         }.start();
     }
 
-*/
 
 }

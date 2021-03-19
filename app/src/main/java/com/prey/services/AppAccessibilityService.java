@@ -6,9 +6,19 @@
  ******************************************************************************/
 package com.prey.services;
 
-public class AppAccessibilityService {
-/*
- extends AccessibilityService {
+import android.accessibilityservice.AccessibilityService;
+import android.content.Intent;
+import android.os.Build;
+import android.view.accessibility.AccessibilityEvent;
+
+import com.prey.PreyConfig;
+import com.prey.PreyLogger;
+import com.prey.PreyPermission;
+import com.prey.activities.PasswordHtmlActivity;
+import com.prey.activities.PasswordNativeActivity;
+
+
+public class AppAccessibilityService extends AccessibilityService {
 
     @Override
     public void onCreate() {
@@ -21,8 +31,7 @@ public class AppAccessibilityService {
         try {
             String unlockPass=PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
             boolean isLock = unlockPass!=null && !"".equals(unlockPass);
-            boolean canDrawOverlays= PreyPermission.canDrawOverlays(getApplicationContext());
-            if (!canDrawOverlays && isLock ) {
+            if ( isLock ) {
                 PreyLogger.d("acc 1");
                 if (accessibilityEvent != null && accessibilityEvent.getPackageName() != null) {
                     String charSequence = accessibilityEvent.getPackageName() != null ? accessibilityEvent.getPackageName().toString() : null;
@@ -50,5 +59,5 @@ public class AppAccessibilityService {
     public void onInterrupt() {
     }
 
-*/
+
 }
