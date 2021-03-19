@@ -63,12 +63,9 @@ public class LoginActivity extends Activity {
         String unlockPass = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
         if (unlockPass != null && !"".equals(unlockPass)) {
             boolean canDrawOverlays = PreyPermission.canDrawOverlays(getApplicationContext());
-            //TODO:ACCESS
-            //boolean accessibility = PreyPermission.isAccessibilityServiceEnabled(getApplicationContext());
-            //if (PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() &&
-            //        (accessibility || canDrawOverlays)) {
+            boolean accessibility = PreyPermission.isAccessibilityServiceEnabled(getApplicationContext());
             if (PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() &&
-                    (canDrawOverlays)) {
+                    (canDrawOverlays||accessibility)) {
                 PreyLogger.d("Login Boot finished. PreyLockService");
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     PreyLogger.d("login 2");
@@ -89,13 +86,12 @@ public class LoginActivity extends Activity {
         } else {
             showLogin();
         }
-        try{
-            PreyBetaController.startPrey(getApplicationContext());
-        }catch(Exception e){
-        }
     }
 
     private void showLogin() {
+
+
+
         Intent intent = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);

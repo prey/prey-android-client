@@ -6,13 +6,18 @@
  ******************************************************************************/
 package com.prey;
 
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.provider.Settings;
+import android.view.accessibility.AccessibilityManager;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.PermissionChecker;
+
+import java.util.List;
 
 public class PreyPermission {
 
@@ -112,8 +117,6 @@ public class PreyPermission {
     }
 
     public static boolean isAccessibilityServiceEnabled(Context context) {
-        //TODO:ACCESS
-        /*
         AccessibilityManager am = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
         List<AccessibilityServiceInfo> accessibilityServices =
                 am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK);
@@ -125,7 +128,6 @@ public class PreyPermission {
                 return true;
             }
         }
-        */
         return false;
     }
 
