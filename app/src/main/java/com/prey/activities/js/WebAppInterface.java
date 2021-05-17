@@ -392,6 +392,12 @@ public class WebAppInterface {
         return initVersion;
     }
 
+    @JavascriptInterface
+    public boolean initXiaomi() {
+        boolean initXiaomi ="Xiaomi".equalsIgnoreCase(Build.MANUFACTURER);
+        PreyLogger.d("Manufacter:" + Build.MANUFACTURER+" initXiaomi:"+initXiaomi);
+        return initXiaomi;
+    }
 
     @JavascriptInterface
     public boolean initVerify() {
