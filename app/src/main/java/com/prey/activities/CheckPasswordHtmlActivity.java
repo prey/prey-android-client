@@ -116,6 +116,15 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         settings.setUseWideViewPort(true);
         settings.setSupportZoom(false);
         settings.setBuiltInZoomControls(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try{
+                myWebView.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
+                myWebView.getSettings().setSavePassword(false);
+                myWebView.clearFormData();
+            }catch (Exception e){
+                PreyLogger.e("Error autofill:"+e.getMessage(),e);
+            }
+        }
     }
 
     public void tryReport() {
