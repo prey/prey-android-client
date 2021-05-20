@@ -23,7 +23,6 @@ import android.os.Bundle;
 public class FeedbackActivity extends PreyActivity {
 
     private static final int SHOW_POPUP = 0;
-
     public static int FLAG_FEEDBACK_INIT = 0;
     public static int FLAG_FEEDBACK_C2DM = 1;
     public static int FLAG_FEEDBACK_SEND = 2;
@@ -37,16 +36,13 @@ public class FeedbackActivity extends PreyActivity {
 
     @Override
     protected Dialog onCreateDialog(int id) {
-
         Dialog popup = null;
         switch (id) {
-
             case SHOW_POPUP:
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.setIcon(R.drawable.info);
                 alert.setTitle(R.string.feedback_principal_title);
                 alert.setMessage(R.string.feedback_principal_message);
-
                 alert.setPositiveButton(R.string.feedback_principal_button1, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -56,7 +52,6 @@ public class FeedbackActivity extends PreyActivity {
                         finish();
                     }
                 });
-
                 alert.setNeutralButton(R.string.feedback_principal_button2, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent popup = new Intent(getApplicationContext(), FormFeedbackActivity.class);
@@ -66,7 +61,6 @@ public class FeedbackActivity extends PreyActivity {
                         finish();
                     }
                 });
-
                 alert.setNegativeButton(R.string.feedback_principal_button3, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         PreyConfig.getPreyConfig(getApplicationContext()).setFlagFeedback(FLAG_FEEDBACK_SEND);
@@ -95,4 +89,5 @@ public class FeedbackActivity extends PreyActivity {
         }
         return false;
     }
+
 }

@@ -6,18 +6,14 @@
  ******************************************************************************/
 package com.prey.services;
 
-import android.app.NotificationManager;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
 import com.prey.PreyConfig;
-import com.prey.PreyLogger;
 import com.prey.actions.ActionsRunnner;
 import com.prey.actions.observer.ActionsController;
-import com.prey.net.PreyWebServices;
 
 /**
  * This class wraps Prey execution as a services, allowing the OS to kill it and
@@ -44,7 +40,6 @@ public class PreyRunnerService extends Service {
 
     @Override
     public void onCreate() {
-        //PreyLogger.d("PreyRunnerService has been started...");
         ActionsRunnner exec = new ActionsRunnner();
         running = true;
         startedAt = System.currentTimeMillis();
@@ -53,12 +48,9 @@ public class PreyRunnerService extends Service {
 
     @Override
     public void onDestroy() {
-        //PreyLogger.d("PreyRunnerService is going to be destroyed");
         PreyConfig preyConfig = PreyConfig.getPreyConfig(PreyRunnerService.this);
-
         ActionsController.getInstance(PreyRunnerService.this).finishRunningJosb();
         running = false;
-        //PreyLogger.d("PreyRunnerService has been destroyed");
     }
 
     @Override
@@ -67,4 +59,3 @@ public class PreyRunnerService extends Service {
     }
 
 }
-

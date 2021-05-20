@@ -24,10 +24,8 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -40,13 +38,11 @@ public class PreyGooglePlayServiceLocation implements
     protected LocationRequest mLocationRequest;
     protected Location mCurrentLocation;
     protected String mLastUpdateTime;
-
     protected Boolean mRequestingLocationUpdates;
     private Context ctx;
 
     public void init(Context ctx) {
         this.ctx = ctx;
-        //PreyLogger.d("init");
         mCurrentLocation = null;
         mLastUpdateTime = null;
         mRequestingLocationUpdates = false;
@@ -62,16 +58,13 @@ public class PreyGooglePlayServiceLocation implements
             "Failed to connect to GoogleApiClient (error code = %d)";
 
     protected synchronized void buildGoogleApiClient() {
-        //PreyLogger.d("Building GoogleApiClient");
         mGoogleApiClient = new GoogleApiClient.Builder(ctx)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-
         ConnectionResult connectionResult = mGoogleApiClient.blockingConnect(
                 GOOGLE_API_CLIENT_TIMEOUT_S, TimeUnit.SECONDS);
-
         if (connectionResult.isSuccess() && mGoogleApiClient.isConnected()) {
             createLocationRequest();
             startLocationUpdates();
@@ -82,33 +75,23 @@ public class PreyGooglePlayServiceLocation implements
     }
 
     protected void createLocationRequest() {
-
         mLocationRequest = new LocationRequest();
-
         mLocationRequest.setInterval(PreyConfig.UPDATE_INTERVAL_IN_MILLISECONDS);
-
         mLocationRequest.setFastestInterval(PreyConfig.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
-
         mLocationRequest.setPriority(PreyConfig.LOCATION_PRIORITY_HIGHT);
-
     }
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        //PreyLogger.d("Connected to GoogleApiClient");
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        //PreyLogger.d("onLocationChanged");
         mCurrentLocation = location;
         if (location != null) {
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            //PreyLogger.d("latitude:" + location.getLatitude() + " longitude:" + location.getLongitude() + " accuracy:" + location.getAccuracy());
             stopLocationUpdates();
         }
-
-
     }
 
     protected void stopLocationUpdates() {
@@ -139,9 +122,6 @@ public class PreyGooglePlayServiceLocation implements
                     PreyLogger.d("Error startLocationUpdates: "+e.getMessage());
             }
         }
-
     }
 
-
 }
-

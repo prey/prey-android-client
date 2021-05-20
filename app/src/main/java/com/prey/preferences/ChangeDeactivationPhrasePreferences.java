@@ -14,12 +14,11 @@ import android.preference.EditTextPreference;
 import android.util.AttributeSet;
 
 import com.prey.PreyLogger;
-import com.prey.net.PreyWebServices;
 import com.prey.R;
+
 public class ChangeDeactivationPhrasePreferences extends EditTextPreference {
 	
-	
-	Context ctx = null;
+	private Context ctx = null;
 	private String error = null;
 	
 	public ChangeDeactivationPhrasePreferences(Context context, AttributeSet attrs, int defStyle) {
@@ -39,7 +38,6 @@ public class ChangeDeactivationPhrasePreferences extends EditTextPreference {
 
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
-		// TODO Auto-generated method stub
 		super.onDialogClosed(positiveResult);
 		if (positiveResult){
 			PreyLogger.d("Deactivation phrase changed to:" + getText());
@@ -51,12 +49,10 @@ public class ChangeDeactivationPhrasePreferences extends EditTextPreference {
 	}
 	
 	private class ChangeDeactivationPhraseTask extends AsyncTask<String, Void, Void> {
-
-		ProgressDialog progressDialog = null;
+		private ProgressDialog progressDialog = null;
 		 
 		@Override
 		protected void onPreExecute() {
-			
 			progressDialog = new ProgressDialog(getContext());
 			progressDialog.setMessage(getContext().getText(R.string.updating_info_message).toString());
 			progressDialog.setIndeterminate(true);
@@ -66,11 +62,6 @@ public class ChangeDeactivationPhrasePreferences extends EditTextPreference {
 
 		@Override
 		protected Void doInBackground(String... data) {
-			/*try {
-				PreyWebServices.getInstance().updateDeactivationPhrase(ctx, getText());
-			} catch (Exception e) {
-				error = e.getMessage();
-			}*/
 			return null;
 		}
 
@@ -78,7 +69,6 @@ public class ChangeDeactivationPhrasePreferences extends EditTextPreference {
 		protected void onPostExecute(Void unused) {
 			progressDialog.dismiss();
 		}
-
 	}
 
 }

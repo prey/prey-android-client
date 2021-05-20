@@ -63,7 +63,7 @@ public class DetachDevicePreferences extends DialogPreference {
         @Override
         protected Void doInBackground(Void... unused) {
             error= Detach.detachDevice(getContext());
-            PreyLogger.d("error:"+error);
+            PreyLogger.d("Error:"+error);
             return null;
         }
 
@@ -74,6 +74,7 @@ public class DetachDevicePreferences extends DialogPreference {
                     progressDialog.dismiss();
                 }
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             try {
                 if (error != null) {
@@ -84,8 +85,9 @@ public class DetachDevicePreferences extends DialogPreference {
                     getContext().startActivity(welcome);
                 }
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
         }
-
     }
+
 }

@@ -4,7 +4,6 @@
  * License: GPLv3
  * Full license at "/LICENSE"
  ******************************************************************************/
-
 package com.prey.actions;
 
 import android.content.Context;
@@ -34,17 +33,12 @@ public class Mp3PlayerAction extends PreyAction {
             int max = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
             final int setVolFlags = AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE | AudioManager.FLAG_VIBRATE;
             audio.setStreamVolume(AudioManager.STREAM_MUSIC, max, setVolFlags);
-
             mp = MediaPlayer.create(ctx, R.raw.siren);
-
             mp.start();
-
             Mp3OnCompletionListener mp3Listener=new Mp3OnCompletionListener();
             // i.e. react on the end of the music-file:
             mp.setOnCompletionListener(mp3Listener);
-
             Thread.sleep(30000);
-
         } catch (Exception e) {
             PreyLogger.e("Error" + e.getMessage(),e);
         }finally{
@@ -74,4 +68,3 @@ public class Mp3PlayerAction extends PreyAction {
     }
 
 }
-

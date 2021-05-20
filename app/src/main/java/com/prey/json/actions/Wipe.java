@@ -38,19 +38,21 @@ public class Wipe {
                 deleteSD = true;
             }
         } catch (Exception e) {
-
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String jobId = null;
         try {
             jobId = parameters.getString(PreyConfig.JOB_ID);
             PreyLogger.d("jobId:"+jobId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         try {
             String factoryReset = parameters.getString("factory_reset");
@@ -62,7 +64,7 @@ public class Wipe {
                 wipe = false;
             }
         } catch (Exception e) {
-
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         try {
             String wipeSim = parameters.getString("wipe_sim");
@@ -74,10 +76,9 @@ public class Wipe {
                 deleteSD = false;
             }
         } catch (Exception e) {
-
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         PreyLogger.i("wipe:" + wipe + " deleteSD:" + deleteSD);
         new WipeThread(ctx, wipe, deleteSD, messageId,jobId).start();
     }
 }
-

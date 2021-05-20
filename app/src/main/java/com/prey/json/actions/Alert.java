@@ -32,6 +32,7 @@ public class Alert extends JsonAction {
         try {
             alert = parameters.getString("parameter");
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         startAlert(ctx, alert,null,null,false);
     }
@@ -44,6 +45,7 @@ public class Alert extends JsonAction {
             try {
                 alert = parameters.getString("message");
             } catch (Exception e2) {
+                PreyLogger.e("Error:"+e2.getMessage(),e2);
             }
         }
         String messageId = null;
@@ -51,18 +53,21 @@ public class Alert extends JsonAction {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String jobId = null;
         try {
             jobId = parameters.getString(PreyConfig.JOB_ID);
             PreyLogger.d("jobId:"+jobId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         boolean fullscreen_notification = false;
         try {
             fullscreen_notification = parameters.getBoolean("fullscreen_notification");
             PreyLogger.d("fullscreen_notification:"+fullscreen_notification);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         startAlert(ctx, alert,messageId,jobId,fullscreen_notification);
     }
@@ -77,5 +82,5 @@ public class Alert extends JsonAction {
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "failed", e.getMessage()));
         }
     }
-}
 
+}

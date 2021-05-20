@@ -15,11 +15,9 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
  * Detects Keyboard Status changes and fires events only once for each change
  */
 public class KeyboardStatusDetector {
+
     KeyboardVisibilityListener visibilityListener;
-
     boolean keyboardVisible = false;
-
-
 
     public void registerActivity(Activity a) {
         registerView(a.getWindow().getDecorView().findViewById(android.R.id.content));
@@ -31,7 +29,6 @@ public class KeyboardStatusDetector {
             public void onGlobalLayout() {
                 Rect r = new Rect();
                 v.getWindowVisibleDisplayFrame(r);
-
                 int heightDiff = v.getRootView().getHeight() - (r.bottom - r.top);
                 if (heightDiff > 100) { // if more than 100 pixels, its probably a keyboard...
                     /** Check this variable to debounce layout events */
@@ -47,7 +44,6 @@ public class KeyboardStatusDetector {
                 }
             }
         });
-
         return this;
     }
 
@@ -55,6 +51,5 @@ public class KeyboardStatusDetector {
         visibilityListener = listener;
         return this;
     }
-
 
 }

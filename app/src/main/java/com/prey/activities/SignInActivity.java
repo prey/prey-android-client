@@ -39,23 +39,17 @@ import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.util.KeyboardStatusDetector;
 import com.prey.util.KeyboardVisibilityListener;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class SignInActivity extends Activity {
-
 
     private static final int NO_MORE_DEVICES_WARNING = 0;
     private static final int ERROR = 3;
     private String error = null;
     private boolean noMoreDeviceError = false;
 
-
     @Override
     public void onResume() {
         PreyLogger.d("onResume of SignInActivity");
         super.onResume();
-
     }
 
     @Override
@@ -76,60 +70,38 @@ public class SignInActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setContentView(R.layout.signin);
         PreyLogger.d("onCreate of SignInActivity");
-
         Button buttonSignin = (Button) findViewById(R.id.buttonSignin);
-
-
         final EditText emailText=((EditText)findViewById(R.id.editTextEmailAddress));
         final EditText passwordText=((EditText)findViewById(R.id.editTextPassword));
-
-
         final Context ctx = this;
-
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-
-
         final int halfHeight=metrics.heightPixels/3;
         final TextView linkSignin=(TextView)findViewById(R.id.linkSignin);
-
-
         Typeface magdacleanmonoRegular = Typeface.createFromAsset(getAssets(), "fonts/MagdaClean/magdacleanmono-regular.ttf");
         Typeface titilliumWebBold = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Bold.ttf");
-
         TextView textViewInit1=(TextView)findViewById(R.id.textViewInit1);
         TextView textViewInit2=(TextView)findViewById(R.id.textViewInit2);
         EditText editTextEmailAddress=(EditText)findViewById(R.id.editTextEmailAddress);
         EditText editTextPassword=(EditText)findViewById(R.id.editTextPassword);
-
         textViewInit1.setTypeface(magdacleanmonoRegular);
         textViewInit2.setTypeface(titilliumWebBold);
         buttonSignin.setTypeface(titilliumWebBold);
-
         linkSignin.setTypeface(titilliumWebBold);
         editTextEmailAddress.setTypeface(magdacleanmonoRegular);
         editTextPassword.setTypeface(magdacleanmonoRegular);
-
-
         KeyboardStatusDetector keyboard = new KeyboardStatusDetector();
-
-        keyboard.registerActivity(this); // or register to an activity
+        keyboard.registerActivity(this);
         keyboard.setVisibilityListener(new KeyboardVisibilityListener() {
-
             @Override
             public void onVisibilityChanged(boolean keyboardVisible) {
                 try {
-
-
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)linkSignin.getLayoutParams();
                     if (keyboardVisible) {
                         PreyLogger.d("key on");
-
                         params.setMargins(20,0,20,halfHeight);
                     } else {
                         PreyLogger.d("key off");
-
                         params.setMargins(20,0,20,20);
                     }
                     linkSignin.setLayoutParams(params);
@@ -138,12 +110,7 @@ public class SignInActivity extends Activity {
                 }
             }
         });
-
-
-
-
         buttonSignin.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 String email = emailText.getText().toString();
@@ -154,10 +121,7 @@ public class SignInActivity extends Activity {
                     new AddDeviceToAccount().execute(email, password, PreyUtils.getDeviceType(ctx));
             }
         });
-
-
         linkSignin.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
@@ -165,8 +129,6 @@ public class SignInActivity extends Activity {
                 finish();
             }
         });
-
-
         ImageView imageViewQr=(ImageView)findViewById(R.id.imageViewQR);
         imageViewQr.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,13 +138,10 @@ public class SignInActivity extends Activity {
                 finish();
             }
         });
-
     }
 
     private class AddDeviceToAccount extends AsyncTask<String, Void, Void> {
-
         ProgressDialog progressDialog = null;
-
         @Override
         protected void onPreExecute() {
             try {
@@ -191,9 +150,10 @@ public class SignInActivity extends Activity {
                 progressDialog.setIndeterminate(true);
                 progressDialog.setCancelable(false);
                 progressDialog.show();
-            }catch (Exception e){}
+            }catch (Exception e){
+                PreyLogger.e("error:"+e.getMessage(),e);
+            }
         }
-
         @Override
         protected Void doInBackground(String... data) {
             try {
@@ -203,7 +163,6 @@ public class SignInActivity extends Activity {
                 final Context ctx=getApplicationContext();
                 PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
                 PreyConfig.getPreyConfig(ctx).registerC2dm();
-                PreyWebServices.getInstance().sendEvent(ctx, PreyConfig.ANDROID_SIGN_IN);
                 String email=PreyWebServices.getInstance().getEmail(ctx);
                 PreyConfig.getPreyConfig(ctx).setEmail(email);
                 PreyConfig.getPreyConfig(ctx).setRunBackground(true);
@@ -215,7 +174,6 @@ public class SignInActivity extends Activity {
             }
             return null;
         }
-
         @Override
         protected void onPostExecute(Void unused) {
             try {
@@ -246,9 +204,9 @@ public class SignInActivity extends Activity {
                     alertDialog.show();
                 }
             } catch (Exception e) {
+                PreyLogger.e("error:"+e.getMessage(),e);
             }
         }
-
     }
 
 }

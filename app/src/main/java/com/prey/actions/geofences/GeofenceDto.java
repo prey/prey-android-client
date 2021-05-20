@@ -15,7 +15,6 @@ import java.util.UUID;
 
 public class GeofenceDto implements Comparable {
 
-
     public String id;
     public String name;
     public double latitude;

@@ -6,6 +6,8 @@
  ******************************************************************************/
 package com.prey.json;
 
+import com.prey.PreyLogger;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ public class UtilJson {
             json.put("target", target);
             json.put("status", status);
         } catch (JSONException e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return json;
     }
@@ -30,6 +33,7 @@ public class UtilJson {
         try {
             json.put("reason", reason);
         } catch (JSONException e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return json;
     }
@@ -48,6 +52,5 @@ public class UtilJson {
             map.put("reason", reason);
         return map;
     }
-
 
 }

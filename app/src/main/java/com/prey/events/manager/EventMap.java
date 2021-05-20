@@ -27,7 +27,6 @@ public class EventMap<K, V> extends HashMap<K, V> {
         return jsonjArray;
     }
 
-
     @SuppressWarnings("rawtypes")
     public JSONObject toJSONObject() {
         JSONObject jsonObject = new JSONObject();
@@ -63,4 +62,3 @@ public class EventMap<K, V> extends HashMap<K, V> {
     }
 
 }
-

@@ -30,6 +30,7 @@ public class Tree {
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String reason = null;
         try {
@@ -39,6 +40,7 @@ public class Tree {
                 reason="{\"device_job_id\":\""+jobId+"\"}";
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         try{
             PreyLogger.d("Tree started");
@@ -74,7 +76,6 @@ public class Tree {
         }catch (Exception e){}
         JSONArray array=new JSONArray();
         try {
-
             for (int i=0;folder!=null&&folder.listFiles()!=null&&i< sizze;i++) {
                 File child=folder.listFiles()[i];
                 String parent = child.getParent().replace(pathBase, "");
@@ -112,4 +113,3 @@ public class Tree {
         return array;
     }
 }
-

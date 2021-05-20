@@ -31,18 +31,21 @@ public class Alarm extends JsonAction {
         try {
             sound = parameters.getString("sound");
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String jobId = null;
         try {
             jobId = parameters.getString(PreyConfig.JOB_ID);
             PreyLogger.d("jobId:"+jobId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         new AlarmThread(ctx, sound,messageId,jobId).start();
     }

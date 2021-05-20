@@ -62,7 +62,6 @@ public class PanelWebActivity extends Activity {
             public void onProgressChanged(WebView view, int progress) {
                 activity.setTitle("Loading...");
                 activity.setProgress(progress * 100);
-
                 if (progress == 100)
                     activity.setTitle(R.string.app_name);
             }
@@ -70,32 +69,26 @@ public class PanelWebActivity extends Activity {
 
         });
         myWebView.setWebViewClient(new WebViewClient() {
-
             @Override
             public void onPageFinished(WebView view, String url) {
                 PreyLogger.d("Finished:"+url);
                 super.onPageFinished(view, url);
             }
-
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 PreyLogger.d("Started:"+url);
                 super.onPageStarted(view, url, favicon);
             }
-
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 PreyLogger.d("OverrideUrl:"+url);
                 return super.shouldOverrideUrlLoading(view, url);
             }
         });
-
         String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelJwt();
-
         String tokenJwt=PreyConfig.getPreyConfig(getApplicationContext()).getTokenJwt();
         PreyLogger.d("tokenJwt:"+tokenJwt);
         String postData = "token="+tokenJwt;
-
         myWebView.postUrl(url, postData.getBytes());
     }
 

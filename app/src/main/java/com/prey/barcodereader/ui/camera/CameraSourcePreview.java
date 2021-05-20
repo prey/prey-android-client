@@ -30,7 +30,6 @@ public class CameraSourcePreview extends ViewGroup {
         mContext = context;
         mStartRequested = false;
         mSurfaceAvailable = false;
-
         mSurfaceView = new SurfaceView(context);
         mSurfaceView.getHolder().addCallback(new SurfaceCallback());
         addView(mSurfaceView);
@@ -41,9 +40,7 @@ public class CameraSourcePreview extends ViewGroup {
         if (cameraSource == null) {
             stop();
         }
-
         mCameraSource = cameraSource;
-
         if (mCameraSource != null) {
             mStartRequested = true;
             startIfReady();
@@ -122,28 +119,22 @@ public class CameraSourcePreview extends ViewGroup {
                 height = size.getHeight();
             }
         }
-
         if (isPortraitMode()) {
             int tmp = width;
             width = height;
             height = tmp;
         }
-
         final int layoutWidth = right - left;
         final int layoutHeight = bottom - top;
-
         int childWidth = layoutWidth;
         int childHeight = (int)(((float) layoutWidth / (float) width) * height);
-
         if (childHeight > layoutHeight) {
             childHeight = layoutHeight;
             childWidth = (int)(((float) layoutHeight / (float) height) * width);
         }
-
         for (int i = 0; i < getChildCount(); ++i) {
             getChildAt(i).layout(0, 0, childWidth, childHeight);
         }
-
         try {
             startIfReady();
         } catch (SecurityException se) {
@@ -161,8 +152,8 @@ public class CameraSourcePreview extends ViewGroup {
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             return true;
         }
-
         PreyLogger.d("isPortraitMode returning false by default");
         return false;
     }
+
 }

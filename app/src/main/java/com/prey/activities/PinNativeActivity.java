@@ -42,43 +42,33 @@ public class PinNativeActivity extends Activity {
         setContentView(R.layout.super_lock);
         PreyLogger.d("PinNativeActivity: onCreate");
         editTextPin = (EditText) findViewById(R.id.editTextPin);
-
         textViewPin = (TextView) findViewById(R.id.textViewPin);
         button_Super_Lock_Unlock = (Button) findViewById(R.id.button_Super_Lock_Unlock);
-
         button_close = (Button) findViewById(R.id.button_close);
-
         Typeface regularBold = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-bold.otf");
         Typeface regularBook = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-book.otf");
-
         editTextPin.setTypeface(regularBold);
         textViewPin.setTypeface(regularBook);
         button_Super_Lock_Unlock.setTypeface(regularBook);
-
         editTextPin.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 editTextPin.setBackgroundColor(Color.WHITE);
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 editTextPin.setBackgroundColor(Color.WHITE);
             }
         });
-
         button_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
-
             }
         });
-
         button_Super_Lock_Unlock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -26,7 +26,6 @@ public class LocationLowBatteryRunner implements Runnable {
 
     private Context ctx = null;
 
-
     public LocationLowBatteryRunner(Context ctx) {
         this.ctx = ctx;
     }
@@ -40,6 +39,7 @@ public class LocationLowBatteryRunner implements Runnable {
                 ActionsController.getInstance(ctx).runActionJson(ctx, jsonObjectList);
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
     }
 

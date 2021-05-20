@@ -26,18 +26,17 @@ import com.prey.services.ReportJobService;
 public class Report {
 
     public void get(Context ctx, List<ActionResult> list, JSONObject parameters) {
-
         String jobId = null;
         try {
             jobId = parameters.getString(PreyConfig.JOB_ID);
             PreyLogger.d("jobId:"+jobId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String reason=null;
         if(jobId!=null&&!"".equals(jobId)){
             reason="{\"device_job_id\":\""+jobId+"\"}";
         }
-
         long lastReportStartDate = new Date().getTime();
         PreyLogger.d("____lastReportStartDate:" + lastReportStartDate);
         PreyConfig.getPreyConfig(ctx).setLastReportStartDate(lastReportStartDate);
@@ -54,28 +53,24 @@ public class Report {
             PreyLogger.d("exclude:" + parameters.getString("exclude"));
             exclude = parameters.getString("exclude");
         } catch (Exception e) {
-
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         PreyConfig.getPreyConfig(ctx).setIntervalReport("" + interval);
         PreyConfig.getPreyConfig(ctx).setExcludeReport(exclude);
-
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("get", "report", "started",reason));
-
-
-
         PreyLogger.d("________start ReportScheduled");
         ReportScheduled.getInstance(ctx).run();
         if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             ReportJobService.schedule(ctx);
         }
     }
-
 
     public void stop(Context ctx, List<ActionResult> list, JSONObject parameters) {
         PreyLogger.d("________stop Report");
@@ -84,14 +79,15 @@ public class Report {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         ReportScheduled.getInstance(ctx).reset();
         PreyConfig.getPreyConfig(ctx).setMissing(false);
         PreyConfig.getPreyConfig(ctx).setIntervalReport("");
         PreyConfig.getPreyConfig(ctx).setExcludeReport("");
         ReportJobService.cancel(ctx);
-
     }
+
     public boolean valida(Context ctx) {
         long lastReportStartDate = PreyConfig.getPreyConfig(ctx).getLastReportStartDate();
         PreyLogger.d("last:" + lastReportStartDate);
@@ -116,9 +112,8 @@ public class Report {
             parameters.put("interval", intervalReport);
             new Report().get(ctx, null, parameters);
         } catch (Exception e) {
-
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
     }
 
 }
-

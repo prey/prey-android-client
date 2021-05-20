@@ -48,11 +48,15 @@ public class TimeTrigger {
                     String hour_from ="";
                     try {
                         hour_from = json.getString("hour_from");
-                    }catch (Exception e){}
+                    }catch (Exception e){
+                        PreyLogger.e("Error:"+e.getMessage(),e);
+                    }
                     String hour_until ="";
                     try {
                         hour_until = json.getString("hour_until");
-                    }catch (Exception e){}
+                    }catch (Exception e){
+                        PreyLogger.e("Error:"+e.getMessage(),e);
+                    }
                     Date hourFrom=null;
                     Date hourUntil=null;
                     if(!"".equals(hour_from)){
@@ -80,7 +84,9 @@ public class TimeTrigger {
                     String until ="";
                     try {
                         until = json.getString("until");
-                    }catch (Exception e){}
+                    }catch (Exception e){
+                        PreyLogger.e("Error:"+e.getMessage(),e);
+                    }
                     if(!"".equals(until)){
                         try {
                             dateUntil = REPEAT_TIME_FORMAT_SDF.parse(until);
@@ -109,11 +115,15 @@ public class TimeTrigger {
                     String from ="";
                     try {
                         from = json.getString("from");
-                    }catch (Exception e){}
+                    }catch (Exception e){
+                        PreyLogger.e("Error:"+e.getMessage(),e);
+                    }
                     String until ="";
                     try {
                         until = json.getString("until");
-                    }catch (Exception e){}
+                    }catch (Exception e){
+                        PreyLogger.e("Error:"+e.getMessage(),e);
+                    }
                     Date dateFrom=null;
                     Date dateUntil=null;
                     if(!"".equals(from)){
@@ -131,7 +141,6 @@ public class TimeTrigger {
                         }
                     }
                     if(dateFrom!=null&&dateUntil!=null){
-
                         String dateUntilSt= REPEAT_TIME_FORMAT_SDF.format(dateUntil);
                         String dateNowSt= REPEAT_TIME_FORMAT_SDF.format(now);
                         String dateFromSt= REPEAT_TIME_FORMAT_SDF.format(dateFrom);
@@ -141,7 +150,6 @@ public class TimeTrigger {
                         PreyLogger.d("Trigger TimeTrigger intUntil:"+intUntil);
                         PreyLogger.d("Trigger TimeTrigger intNow:"+intNow);
                         PreyLogger.d("Trigger TimeTrigger intFrom:"+intFrom);
-
                         if(intNow>intUntil) {
                             throw new TriggerException(4,"The execution range dates doesn't make sense");
                         }
@@ -203,7 +211,9 @@ public class TimeTrigger {
                     String until ="";
                     try {
                         until = json.getString("until");
-                    }catch (Exception e){}
+                    }catch (Exception e){
+                        PreyLogger.e("Error:"+e.getMessage(),e);
+                    }
                     if(!"".equals(until)){
                         Date dateUntil=null;
                         try {
@@ -227,11 +237,17 @@ public class TimeTrigger {
                     String secondSt = json.getString("second");
                     PreyLogger.d("Trigger TimeTrigger hour:" + hourSt + " minute:" + minuteSt + " second:" + secondSt+" until:"+until);
                     int hour =0;
-                    try{hour=Integer.parseInt(hourSt);}catch (Exception e){}
+                    try{hour=Integer.parseInt(hourSt);}catch (Exception e){
+                        PreyLogger.e("Error:"+e.getMessage(),e);
+                    }
                     int minute =0;
-                    try{minute=Integer.parseInt(minuteSt);}catch (Exception e){}
+                    try{minute=Integer.parseInt(minuteSt);}catch (Exception e){
+                        PreyLogger.e("Error:"+e.getMessage(),e);
+                    }
                     int second =0;
-                    try{second=Integer.parseInt(secondSt);}catch (Exception e){}
+                    try{second=Integer.parseInt(secondSt);}catch (Exception e){
+                        PreyLogger.e("Error:"+e.getMessage(),e);
+                    }
                     Intent myIntent = new Intent(ctx, TimeTriggerReceiver.class);
                     myIntent.putExtra("trigger_id", "" + trigger.id);
                     String daysOfWeek = json.getString("days_of_week");

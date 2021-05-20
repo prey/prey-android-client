@@ -49,6 +49,7 @@ public class GeofenceIntentService extends IntentService {
         try{
             locationNow=new PreyLocation(location);
         }catch (Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         GeofenceController.verifyGeozone(context,locationNow);
     }

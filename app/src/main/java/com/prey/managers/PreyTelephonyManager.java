@@ -13,10 +13,8 @@ import com.prey.PreyPhone;
 
 public class PreyTelephonyManager {
 
-
     private Context ctx;
     private static PreyTelephonyManager _instance = null;
-
     private PreyTelephonyManager(Context ctx) {
         this.ctx=ctx;
     }
@@ -31,6 +29,4 @@ public class PreyTelephonyManager {
         return new PreyPhone(ctx).getDataState()==TelephonyManager.DATA_CONNECTED;
     }
 
-
 }
-

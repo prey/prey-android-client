@@ -21,14 +21,13 @@ import com.prey.events.manager.EventManager;
 
 public class EventRetrieveDataBattery {
 
-
     private EventManager manager;
 
     public  void execute(Context context,EventManager manager){
         this.manager=manager;
         try{
             context.getApplicationContext().registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        }catch (Exception e){}
+        }catch (Exception e){PreyLogger.e("Error:"+e.getMessage(),e);}
     }
 
     private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
@@ -47,6 +46,7 @@ public class EventRetrieveDataBattery {
                         batteryElementJSon.put("percentage_remaining",remaining );
                         batteryJSon.put("battery_status", batteryElementJSon);
                     } catch (JSONException e) {
+                        PreyLogger.e("Error put:"+e.getMessage(),e);
                     }
                     PreyLogger.d("battery: state["+state+"] remaining["+remaining+"]");
                     manager.receivesData(EventManager.BATTERY, batteryJSon);
@@ -57,4 +57,5 @@ public class EventRetrieveDataBattery {
             }
         }
     };
+
 }

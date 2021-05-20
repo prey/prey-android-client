@@ -19,7 +19,6 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.backwardcompatibility.FroyoSupport;
-import com.prey.beta.actions.PreyBetaController;
 import com.prey.json.actions.Lock;
 import com.prey.services.CheckLockActivated;
 import com.prey.services.PreyLockHtmlService;
@@ -59,7 +58,7 @@ public class LoginActivity extends Activity {
     }
 
     private void startup() {
-        Intent intent = null;
+        Intent intentLock = null;
         String unlockPass = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
         if (unlockPass != null && !"".equals(unlockPass)) {
             boolean canDrawOverlays = PreyPermission.canDrawOverlays(getApplicationContext());
@@ -69,12 +68,12 @@ public class LoginActivity extends Activity {
                 PreyLogger.d("Login Boot finished. PreyLockService");
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     PreyLogger.d("login 2");
-                    intent = new Intent(getApplicationContext(), PreyLockHtmlService.class);
+                    intentLock = new Intent(getApplicationContext(), PreyLockHtmlService.class);
                 } else {
                     PreyLogger.d("login 3");
-                    intent = new Intent(getApplicationContext(), PreyLockService.class);
+                    intentLock = new Intent(getApplicationContext(), PreyLockService.class);
                 }
-                getApplicationContext().startService(intent);
+                getApplicationContext().startService(intentLock);
                 getApplicationContext().startService(new Intent(getApplicationContext(), CheckLockActivated.class));
             } else {
                 Lock.lockWhenYouNocantDrawOverlays(getApplicationContext());
@@ -89,9 +88,6 @@ public class LoginActivity extends Activity {
     }
 
     private void showLogin() {
-
-
-
         Intent intent = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);
@@ -140,4 +136,3 @@ public class LoginActivity extends Activity {
     }
 
 }
-

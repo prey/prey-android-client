@@ -63,7 +63,9 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
             try {
                 orientationManager = new OrientationManager(getApplicationContext(), SensorManager.SENSOR_DELAY_NORMAL, this);
                 orientationManager.enable();
-            }catch (Exception e){}
+            }catch (Exception e){
+                PreyLogger.e("Error:"+e.getMessage(),e);
+            }
             camera = null;
             try {
                 camera = getCamera(focus);
@@ -71,6 +73,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
                     camera.startPreview();
                 }
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
             mHolder = surfaceView.getHolder();
@@ -88,7 +91,6 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
             Class clsCamera;
             clsCamera = Class.forName("android.hardware.Camera");
             Integer numberOfCamerasInt = getNumberOfCameras();
-
             if (numberOfCamerasInt != null) {
                 if ("front".equals(focus)) {
                     mCamera = getCamera(0, clsCamera);
@@ -107,6 +109,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
                 mCamera = Camera.open();
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return mCamera;
     }
@@ -114,13 +117,13 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
     public static Integer getNumberOfCameras() {
         Integer numberOfCamerasInt = null;
         try {
-
             Class noparams[] = {};
             Class clsCamera;
             clsCamera = Class.forName("android.hardware.Camera");
             Method methodGetNumberOfCameras = clsCamera.getMethod("getNumberOfCameras", noparams);
             numberOfCamerasInt = (Integer) methodGetNumberOfCameras.invoke(null, null);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return numberOfCamerasInt;
     }
@@ -141,8 +144,6 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
         }
         return mCamera;
     }
-
-
 
     public void takePicture(Context ctx, String focus) {
         try {
@@ -166,6 +167,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
                 PreyLogger.d("SimpleCameraActivity open takePicture()");
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
     }
 
@@ -191,7 +193,9 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
                 camera.release();
                 camera = null;
             }
-        }catch (Exception e){}
+        }catch (Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
     }
 
     ShutterCallback shutterCallback = new ShutterCallback() {
@@ -206,7 +210,6 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 
     PictureCallback jpegCallback = new PictureCallback() {
         public void onPictureTaken(byte[] data, Camera camera) {
-
             dataImagen = resizeImage(data);
         }
     };
@@ -217,10 +220,12 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
                 Camera.Parameters parameters = camera.getParameters();
                 camera.setParameters(parameters);
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             try {
                 camera.startPreview();
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
         }
     }
@@ -242,10 +247,12 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
             try {
                 camera.stopPreview();
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             try {
                 camera.release();
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             camera = null;
         }
@@ -315,4 +322,3 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
         }
     }
 }
-

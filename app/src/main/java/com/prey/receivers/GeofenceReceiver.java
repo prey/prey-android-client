@@ -19,7 +19,6 @@ import com.prey.actions.location.PreyLocation;
 
 import java.util.List;
 
-
 public class GeofenceReceiver extends BroadcastReceiver {
 
     @Override
@@ -43,6 +42,7 @@ public class GeofenceReceiver extends BroadcastReceiver {
         try{
             locationNow=new PreyLocation(location);
         }catch (Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         GeofenceController.verifyGeozone(context,locationNow);
     }

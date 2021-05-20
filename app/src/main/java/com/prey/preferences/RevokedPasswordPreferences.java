@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.preferences;
 
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -19,7 +18,6 @@ import com.prey.PreyLogger;
 import com.prey.R;
 
 public class RevokedPasswordPreferences extends EditTextPreference {
-
 
     Context ctx = null;
     private String error = null;
@@ -41,7 +39,6 @@ public class RevokedPasswordPreferences extends EditTextPreference {
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
-        // TODO Auto-generated method stub
         super.onDialogClosed(positiveResult);
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         if (positiveResult) {
@@ -55,7 +52,6 @@ public class RevokedPasswordPreferences extends EditTextPreference {
         }
     }
 
-
     private class RevokedPasswordPhraseTask extends AsyncTask<String, Void, Void> {
 
         ProgressDialog progressDialog = null;
@@ -67,7 +63,6 @@ public class RevokedPasswordPreferences extends EditTextPreference {
 
         @Override
         protected void onPreExecute() {
-
             progressDialog = new ProgressDialog(getContext());
             progressDialog.setMessage(getContext().getText(R.string.preferences_admin_device_setting_uninstallation_password).toString());
             progressDialog.setIndeterminate(true);
@@ -81,8 +76,6 @@ public class RevokedPasswordPreferences extends EditTextPreference {
                 PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
                 PreyLogger.d("password [" + getText() + "]");
                 preyConfig.setRevokedPassword(true, getText());
-
-                //PreyWebServices.getInstance().updateActivationPhrase(getContext(), getText());
             } catch (Exception e) {
                 error = e.getMessage();
             }
@@ -93,7 +86,6 @@ public class RevokedPasswordPreferences extends EditTextPreference {
         protected void onPostExecute(Void unused) {
             progressDialog.dismiss();
         }
-
     }
 
 }

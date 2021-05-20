@@ -17,7 +17,6 @@ import com.prey.PreyPermission;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.PermissionInformationActivity;
 
-
 public class PreyAccessibilityService extends Service {
 
     public IBinder onBind(Intent intent) {
@@ -41,17 +40,18 @@ public class PreyAccessibilityService extends Service {
                         PreyLogger.d("PreyAccessibilityService ["+i+"]"+isAccessibility);
                         if(isAccessibility){
                             run=false;
-                            Intent intentWelcome = null;
+                            Intent intentActivity = null;
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                                intentWelcome = new Intent(ctx, CheckPasswordHtmlActivity.class);
+                                intentActivity = new Intent(ctx, CheckPasswordHtmlActivity.class);
                             }else{
-                                intentWelcome = new Intent(ctx, PermissionInformationActivity.class);
+                                intentActivity = new Intent(ctx, PermissionInformationActivity.class);
                             }
-                            intentWelcome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intentWelcome);
+                            intentActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intentActivity);
                             stopSelf();
                             break;
                         }
+                        //TODO:Waiting time for accessibility to be active
                         if (i>40){
                             run=false;
                             stopSelf();
@@ -65,6 +65,5 @@ public class PreyAccessibilityService extends Service {
             }
         }.start();
     }
-
 
 }

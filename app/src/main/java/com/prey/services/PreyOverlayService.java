@@ -77,4 +77,5 @@ public class PreyOverlayService extends Service {
         }
         return Settings.canDrawOverlays(getApplicationContext());
     }
+
 }

@@ -38,7 +38,9 @@ public class AwareGeofenceReceiver extends BroadcastReceiver {
                     PreyLogger.e("AWARE AwareGeofenceReceiver error:" + e.getMessage(), e);
                 }
             }
-        } catch (Exception e1) {}
+        } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
     }
 
 }

@@ -50,7 +50,6 @@ public class LocationThread extends Thread {
             SmsManager sms = SmsManager.getDefault();
             sms.sendTextMessage(phoneNumber, null, message, null, null);
         }
-
     }
 
 }

@@ -6,6 +6,7 @@
  ******************************************************************************/
 package com.prey.managers;
 
+import com.prey.PreyLogger;
 import com.prey.actions.location.PreyLocation;
 
 import android.content.Context;
@@ -16,7 +17,6 @@ public class PreyLocationManager {
     private PreyLocation lastLocation;
     private static PreyLocationManager _instance = null;
     private LocationManager androidLocationManager = null;
-
 
     private PreyLocationManager(Context ctx) {
         androidLocationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
@@ -40,7 +40,8 @@ public class PreyLocationManager {
         boolean gps_enabled = false;
         try {
             gps_enabled = androidLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return gps_enabled;
     }
@@ -49,15 +50,14 @@ public class PreyLocationManager {
         boolean network_enabled = false;
         try {
             network_enabled = androidLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return network_enabled;
     }
 
     public boolean locationServicesEnabled() {
         return (isGpsLocationServiceActive() || isNetworkLocationServiceActive());
-
     }
 
 }
-

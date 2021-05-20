@@ -8,6 +8,8 @@ package com.prey.actions.sms;
 
 import android.annotation.SuppressLint;
 
+import com.prey.PreyLogger;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,6 +44,7 @@ public class SMSParser {
                 jsonObjectList.add(json);
             }
         } catch (JSONException e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return jsonObjectList;
     }

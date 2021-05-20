@@ -28,7 +28,6 @@ public class CheckLockActivated extends Service {
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         final Context ctx = this;
-
         new Thread() {
             public void run() {
                 boolean run = true;

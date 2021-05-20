@@ -14,17 +14,13 @@ import android.content.Intent;
 import java.util.Calendar;
 
 import com.prey.receivers.AlarmScheduledReceiver;
-import com.prey.services.PreyJobService;
 
 public class PreyScheduled {
 
     private static PreyScheduled instance = null;
     private Context context = null;
-
-
     private AlarmManager alarmMgr = null;
     private PendingIntent alarmIntent = null;
-
     private PreyScheduled(Context context) {
         this.context = context;
     }
@@ -63,4 +59,3 @@ public class PreyScheduled {
     }
 
 }
-

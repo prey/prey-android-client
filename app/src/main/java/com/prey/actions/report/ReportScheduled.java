@@ -6,11 +6,6 @@
  ******************************************************************************/
 package com.prey.actions.report;
 
-
-
-
-
-
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.receivers.AlarmReportReceiver;
@@ -20,7 +15,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-
 public class ReportScheduled {
 
 	private static ReportScheduled instance = null;
@@ -28,10 +22,8 @@ public class ReportScheduled {
 	private AlarmManager alarmMgr = null;
 	private PendingIntent pendingIntent = null;
 
-
 	private ReportScheduled(Context context) {
 		this.context = context;
-
 	}
 
 	public synchronized static ReportScheduled getInstance(Context context) {
@@ -41,21 +33,13 @@ public class ReportScheduled {
 		return instance;
 	}
 
-
 	public void run() {
 		  try {
 			  int minute = Integer.parseInt(PreyConfig.getPreyConfig(context).getIntervalReport());
-
 			  PreyLogger.d("----------ReportScheduled start minute:"+ minute);
-
-
 			  Intent intent = new Intent(context, AlarmReportReceiver.class);
-
 			  pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
 			  alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-
 			  if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
 				  PreyLogger.d("----------setRepeating");
 				  alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * minute, pendingIntent);
@@ -63,13 +47,10 @@ public class ReportScheduled {
 				  PreyLogger.d("----------setInexactRepeating");
 				  alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() , 1000 * 60 * minute, pendingIntent);
 			  }
-
-
 			  PreyLogger.d("----------start report [" + minute + "] ReportScheduled");
 		  }catch(Exception e){
 			  PreyLogger.d("----------Error ReportScheduled :"+e.getMessage());
 		  }
-
 	}
 
 	public void reset() {

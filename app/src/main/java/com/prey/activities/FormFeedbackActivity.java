@@ -6,8 +6,6 @@
  ******************************************************************************/
 package com.prey.activities;
 
-
-
 import com.prey.FileConfigReader;
 import com.prey.PreyUtils;
 import com.prey.R;
@@ -36,35 +34,23 @@ public class FormFeedbackActivity extends PreyActivity {
 
     @Override
     protected Dialog onCreateDialog(int id) {
-
         Dialog popup = null;
         switch (id) {
-
             case SHOW_POPUP:
-
                 LayoutInflater factory = LayoutInflater.from(this);
                 final View textEntryView = factory.inflate(R.layout.dialog_signin, null);
-
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
                 alert.setIcon(R.drawable.info);
                 alert.setTitle(R.string.feedback_form_title);
                 alert.setMessage(R.string.feedback_form_message);
                 alert.setView(textEntryView);
-
-
                 final EditText input = (EditText) textEntryView.findViewById(R.id.feedback_form_field_comment);
-
                 alert.setPositiveButton(R.string.feedback_form_button2, new DialogInterface.OnClickListener() {
-
                     public void onClick(DialogInterface dialog, int id) {
                         finish();
                     }
                 });
-
                 alert.setNegativeButton(R.string.feedback_form_button1, new DialogInterface.OnClickListener() {
-
-
                     public void onClick(DialogInterface dialog, int id) {
                         if (input != null) {
                             Context ctx = getApplicationContext();
@@ -83,7 +69,6 @@ public class FormFeedbackActivity extends PreyActivity {
                         finish();
                     }
                 });
-
                 popup = alert.create();
         }
         return popup;

@@ -76,6 +76,7 @@ public class ReportService extends IntentService {
 					}
 				}
 			} catch (Exception e) {
+				PreyLogger.e("Error:"+e.getMessage(),e);
 			}
 			int parms = 0;
 			for (int i = 0; listData != null && i < listData.size(); i++) {

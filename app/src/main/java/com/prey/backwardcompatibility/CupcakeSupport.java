@@ -19,10 +19,6 @@ public class CupcakeSupport {
         msgs = new SmsMessage[pdus.length];
         for (int i = 0; i < msgs.length; i++) {
             msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-            // str += "SMS from " + msgs[i].getOriginatingAddress();
-            // str += " :";
-            // str += msgs[i].getMessageBody().toString();
-            // str += "\n";
             smsMessages.add(msgs[i].getMessageBody().toString());
         }
         return smsMessages;

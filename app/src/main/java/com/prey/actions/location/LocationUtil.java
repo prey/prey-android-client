@@ -75,12 +75,14 @@ public class LocationUtil {
         try {
             preyLocation = getPreyLocationAppService(ctx,method,asynchronous,preyLocation);
         } catch (Exception e) {
+            PreyLogger.e("Error PreyLocationApp:"+e.getMessage(),e);
         }
         try {
             if(preyLocation==null||preyLocation.getLocation()==null||(preyLocation.getLocation().getLatitude()==0&&preyLocation.getLocation().getLongitude()==0)) {
                 preyLocation = getPreyLocationAppServiceOreo(ctx, method, asynchronous, preyLocation);
             }
         } catch (Exception e) {
+            PreyLogger.e("Error AppServiceOreo:"+e.getMessage(),e);
         }
         if (preyLocation != null) {
             PreyLogger.d("preyLocation lat:" + preyLocation.getLat() + " lng:" + preyLocation.getLng());
@@ -169,9 +171,9 @@ public class LocationUtil {
 
     public static PreyLocation getPreyLocationAppServiceOreo(final Context ctx ,String method, boolean asynchronous, PreyLocation preyLocationOld){
         PreyLocation preyLocation = null;
-        Intent intent = new Intent(ctx, LocationUpdatesService.class);
+        Intent intentLocation = new Intent(ctx, LocationUpdatesService.class);
         try {
-            ctx.startService(intent);
+            ctx.startService(intentLocation);
             int i = 0;
             PreyLocationManager.getInstance(ctx).setLastLocation(null);
             while (i < MAXIMUM_OF_ATTEMPTS2) {
@@ -191,7 +193,7 @@ public class LocationUtil {
             PreyLogger.e("Error getPreyLocationAppServiceOreo:"+e.getMessage(),e);
             throw e;
         } finally {
-            ctx.stopService(intent);
+            ctx.stopService(intentLocation);
         }
         return preyLocation;
     }
@@ -213,15 +215,15 @@ public class LocationUtil {
                     });
             preyLocation = waitLocation(ctx, method, asynchronous);
         } else {
-            Intent intent = new Intent(ctx, LocationService.class);
+            Intent intentLocation = new Intent(ctx, LocationService.class);
             try {
-                ctx.startService(intent);
+                ctx.startService(intentLocation);
                 preyLocation = waitLocation(ctx, method, asynchronous);
             } catch (Exception e) {
                 PreyLogger.e("getPreyLocationAppService e:" + e.getMessage(), e);
                 throw e;
             }  finally {
-                ctx.stopService(intent);
+                ctx.stopService(intentLocation);
             }
         }
         return preyLocation;
@@ -240,7 +242,6 @@ public class LocationUtil {
                 preyLocation=location;
                 preyLocation.setMethod(method);
                 PreyLogger.d("getPreyLocationAppService["+i+"]:"+preyLocation.toString());
-                //preyLocationOld = sendLocation(ctx, asynchronous, preyLocationOld, preyLocation);
                 if(!asynchronous)
                     i=MAXIMUM_OF_ATTEMPTS;
             }
@@ -292,7 +293,7 @@ public class LocationUtil {
         parametersMap.put(ACC, Float.toString(Math.round(lastLocation.getAccuracy())));
         parametersMap.put(METHOD, lastLocation.getMethod() );
         data.addDataListAll(parametersMap);
-        PreyLogger.d("lat:"+lastLocation.getLat()+" lng:"+lastLocation.getLng()+" acc:"+lastLocation.getAccuracy()+" met:"+lastLocation.getMethod());
+        PreyLogger.d(String.format("lat:%.2f lng:%.2f acc:%.2f method:%s",lastLocation.getLat(),lastLocation.getLng(),lastLocation.getAccuracy(),lastLocation.getMethod()));
         return data;
     }
 

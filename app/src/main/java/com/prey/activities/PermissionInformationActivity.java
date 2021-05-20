@@ -13,31 +13,24 @@ import android.content.pm.ActivityInfo;
 
 import com.prey.PreyConfig;
 import com.prey.PreyPermission;
-import com.prey.R;
 
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
 
 import com.prey.PreyLogger;
 import com.prey.actions.aware.AwareController;
 import com.prey.backwardcompatibility.FroyoSupport;
-import com.prey.net.PreyWebServices;
 import com.prey.services.PreyOverlayService;
 
 public class PermissionInformationActivity extends PreyActivity {
 
     private static final int SECURITY_PRIVILEGES = 10;
     private String congratsMessage;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +41,6 @@ public class PermissionInformationActivity extends PreyActivity {
 
     @Override
     public void onBackPressed() {
-
     }
 
     @Override
@@ -79,16 +71,16 @@ public class PermissionInformationActivity extends PreyActivity {
             }
         }
         if (FroyoSupport.getInstance(this).isAdminActive()) {
-                Intent intent = null;
+                Intent intentPermission = null;
                 boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
                 if(!canDrawOverlays) {
                     askForPermissionAndroid7();
                     startOverlayService();
                 }else{
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        intent = new Intent(PermissionInformationActivity.this, CheckPasswordHtmlActivity.class);
+                        intentPermission = new Intent(PermissionInformationActivity.this, CheckPasswordHtmlActivity.class);
                     } else {
-                        intent = new Intent(PermissionInformationActivity.this, LoginActivity.class);
+                        intentPermission = new Intent(PermissionInformationActivity.this, LoginActivity.class);
                     }
                 }
                 PreyConfig.getPreyConfig(PermissionInformationActivity.this).setProtectReady(true);
@@ -97,26 +89,22 @@ public class PermissionInformationActivity extends PreyActivity {
                         try{
                             AwareController.getInstance().init(getApplicationContext());
                         }catch(Exception e){
+                            PreyLogger.e("Error:"+e.getMessage(),e);
                         }
                     }
                 }.start();
                 try {
-                    if(intent!=null) {
-                        startActivity(intent);
+                    if(intentPermission!=null) {
+                        startActivity(intentPermission);
                     }
-                }catch (Exception e){}
+                }catch (Exception e){
+                    PreyLogger.e("Error:"+e.getMessage(),e);
+                }
                 finish();
             } else {
-
-
-                        Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
-                        startActivityForResult(intent, SECURITY_PRIVILEGES);
-                        PreyWebServices.getInstance().sendEvent(getApplicationContext(), PreyConfig.ANDROID_PRIVILEGES_GIVEN);
-
-
-
+                Intent intentPrivileges = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
+                startActivityForResult(intentPrivileges, SECURITY_PRIVILEGES);
             }
-
     }
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermission() {
@@ -167,7 +155,6 @@ public class PermissionInformationActivity extends PreyActivity {
                             intent = new Intent(this, CheckPasswordActivity.class);
                         }
                         startActivity(intent);
-
                 }
             }
         }
@@ -175,14 +162,13 @@ public class PermissionInformationActivity extends PreyActivity {
 
     private void startOverlayService() {
         PreyLogger.d("PermissionInformationActivity: startOverlayService");
-        Intent intent = new Intent(getApplicationContext(), PreyOverlayService.class);
-        startService(intent);
+        Intent intentOverlay = new Intent(getApplicationContext(), PreyOverlayService.class);
+        startService(intentOverlay);
     }
 
     public void askForAdminActive() {
-        Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
-        startActivityForResult(intent, SECURITY_PRIVILEGES);
+        Intent intentPrivileges = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
+        startActivityForResult(intentPrivileges, SECURITY_PRIVILEGES);
     }
 
 }
-

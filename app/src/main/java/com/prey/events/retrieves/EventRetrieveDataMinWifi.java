@@ -38,6 +38,7 @@ public class EventRetrieveDataMinWifi {
             wifiJSon.put("active_access_point", accessElementJSon);
             PreyConfig.getPreyConfig(context).setPreviousSsid(ssid);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         PreyLogger.d("wifi:"+ssid);
         manager.receivesData(EventManager.WIFI, wifiJSon);
