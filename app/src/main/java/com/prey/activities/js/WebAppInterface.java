@@ -722,9 +722,7 @@ public class WebAppInterface {
                 mActivity.askForPermission();
             } else {
                 boolean isAdminActive = FroyoSupport.getInstance(mContext).isAdminActive();
-                if (!isAdminActive) {
-                    mActivity.askForAdminActive();
-                }else{
+                if (isAdminActive) {
                     if(canAccessibility){
                         boolean canDrawOverlays =true;
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
@@ -735,6 +733,8 @@ public class WebAppInterface {
                     }else{
                         mActivity.accessibility();
                     }
+                }else{
+                    mActivity.askForAdminActive();
                 }
             }
         }
