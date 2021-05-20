@@ -725,15 +725,15 @@ public class WebAppInterface {
                 if (!isAdminActive) {
                     mActivity.askForAdminActive();
                 }else{
-                    if(!canAccessibility){
-                        mActivity.accessibility();
-                    }else{
+                    if(canAccessibility){
                         boolean canDrawOverlays =true;
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                             canDrawOverlays=Settings.canDrawOverlays(mContext);
                         if(!canDrawOverlays){
                             mActivity.askForPermissionAndroid7();
                         }
+                    }else{
+                        mActivity.accessibility();
                     }
                 }
             }
