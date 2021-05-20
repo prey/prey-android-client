@@ -45,7 +45,6 @@ public class LocationNotifierAction extends PreyAction {
     @Override
     public String textToNotifyUserOnEachReport(Context ctx) {
         String prefix = ctx.getText(R.string.location_notification_prefix).toString();
-
         String latToShow = "";
         String lonToShow = "";
         try {

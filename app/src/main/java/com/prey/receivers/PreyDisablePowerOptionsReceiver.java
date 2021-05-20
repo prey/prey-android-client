@@ -37,14 +37,14 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         boolean disablePowerOptions = PreyConfig.getPreyConfig(context).isDisablePowerOptions();
         boolean canDrawOverlays = PreyPermission.canDrawOverlays(context);
-        PreyLogger.d("PreyDisablePowerOptionsReceiver disablePowerOptions:" + disablePowerOptions + " canDrawOverlays:" + canDrawOverlays);
+        PreyLogger.d(String.format("PreyDisablePowerOptionsReceiver disablePowerOptions:%s canDrawOverlays: %s",disablePowerOptions,canDrawOverlays));
         if (canDrawOverlays && disablePowerOptions) {
             if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
                 Bundle bundle = intent.getExtras();
                 if (bundle != null) {
                     for (String key : bundle.keySet()) {
                         Object value = bundle.get(key);
-                        PreyLogger.d("PreyDisablePowerOptionsReceiver disablePowerOptions key:" + key + " value:" + value);
+                        PreyLogger.d(String.format("PreyDisablePowerOptionsReceiver disablePowerOptions key:%s value:%s",key,value));
                     }
                 }
                 boolean flag = ((KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE)).inKeyguardRestrictedInputMode();
@@ -54,10 +54,10 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                     String reason = intent.getStringExtra("reason");
                     if (isScreenOn && reason != null) {
                         String extra = intent.getStringExtra(stringExtra);
-                        PreyLogger.d("PreyDisablePowerOptionsReceiver reason:" + reason + " flag:" + flag + " lock:" + flag + " extra:" + extra);
+                        PreyLogger.d(String.format("PreyDisablePowerOptionsReceiver reason:%s flag:%s extra:%s",reason,flag,extra));
                         long time = PreyConfig.getPreyConfig(context).getTimeSecureLock();
                         long now = new Date().getTime();
-                        PreyLogger.d("PreyDisablePowerOptionsReceiver time:" + time + " now:" + now + " " + (now < time));
+                        PreyLogger.d(String.format("PreyDisablePowerOptionsReceiver time:%s now:%s <%s",time,now,(now<time)));
                         if (now < time) {
                             extra = "";
                         }
@@ -67,7 +67,7 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                             context.sendBroadcast(intentClose);
                             String pinNumber = PreyConfig.getPreyConfig(context).getPinNumber();
                             boolean isOpenSecureService=PreyConfig.getPreyConfig(context).isOpenSecureService();
-                            PreyLogger.d("PreyDisablePowerOptionsReceiver pinNumber:" + pinNumber+" isOpenSecureService:"+isOpenSecureService);
+                            PreyLogger.d(String.format("PreyDisablePowerOptionsReceiver pinNumber:%s isOpenSecureService:%s",pinNumber,isOpenSecureService));
                             if ("globalactions".equals(reason) && pinNumber != null && !"".equals(pinNumber) && pinNumber.length()==4 ) {
                                 PreyLogger.d("pinNumber:" + pinNumber);
                                 PreyConfig.getPreyConfig(context).setPinActivated(pinNumber);
@@ -82,7 +82,9 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                                                 info.put("PIN", pinNumber);
                                                 Event event = new Event(Event.ANDROID_LOCK_PIN, info.toString());
                                                 new Thread(new EventManagerRunner(context, event)).start();
-                                            }catch (Exception e){}
+                                            }catch (Exception e){
+                                                PreyLogger.e("Error send Lock:"+e.getMessage(),e);
+                                            }
                                         }
                                     }.start();
                                 }

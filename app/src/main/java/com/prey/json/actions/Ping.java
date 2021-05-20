@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-
 public class Ping extends JsonAction {
 
     @Override
@@ -36,4 +35,5 @@ public class Ping extends JsonAction {
         }
         return null;
     }
+
 }

@@ -14,7 +14,6 @@ import android.view.WindowManager;
 public class PreyWindowsManager {
 
     private static PreyWindowsManager _instance = null;
-
     private WindowManager window=null;
     private int width = 0;
     private int height = 0;
@@ -25,6 +24,7 @@ public class PreyWindowsManager {
         }
         return _instance;
     }
+
     private PreyWindowsManager(Context ctx) {
         window = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
         Display display = window.getDefaultDisplay();
@@ -41,4 +41,3 @@ public class PreyWindowsManager {
     }
 
 }
-

@@ -28,9 +28,7 @@ public abstract class JsonAction {
             ActionResult result = new ActionResult();
             result.setDataToSend(data);
             list.add(result);
-
             dataToBeSent.add(data);
-
         } catch (Exception e) {
             PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
         }

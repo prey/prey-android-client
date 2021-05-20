@@ -9,14 +9,9 @@ package com.prey.activities.js;
 import android.content.Context;
 import android.content.Intent;
 import android.os.StrictMode;
-import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.BaseInputConnection;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
-import android.webkit.WebView;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -32,7 +27,6 @@ public class CustomWebView {
     public static void callDispatchKeyEvent(final Context ctx,KeyEvent event){
         PreyLogger.d("callDispatchKeyEvent:"+event.getKeyCode());
         if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-
             String page = PreyConfig.getPreyConfig(ctx).getPage();
             String apikey = PreyConfig.getPreyConfig(ctx).getApiKey();
             String inputWebview = PreyConfig.getPreyConfig(ctx).getInputWebview();
@@ -44,11 +38,12 @@ public class CustomWebView {
                     boolean isPasswordOk = PreyWebServices.getInstance().checkPassword(ctx, apikey, inputWebview);
                     if (isPasswordOk) {
                         PreyConfig.getPreyConfig(ctx).setUnlockPass("");
-                        Intent intent2 = new Intent(ctx, SecurityActivity.class);
-                        intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        ctx.startActivity(intent2);
+                        Intent intentSecurity = new Intent(ctx, SecurityActivity.class);
+                        intentSecurity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        ctx.startActivity(intentSecurity);
                     }
                 } catch (Exception e) {
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
             }
             if ("login".equals(page)) {
@@ -56,11 +51,12 @@ public class CustomWebView {
                     boolean isPasswordOk = PreyWebServices.getInstance().checkPassword(ctx, apikey, inputWebview);
                     if (isPasswordOk) {
                         PreyConfig.getPreyConfig(ctx).setUnlockPass("");
-                        Intent intent2 = new Intent(ctx, PanelWebActivity.class);
-                        intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        ctx.startActivity(intent2);
+                        Intent intentPanelWeb = new Intent(ctx, PanelWebActivity.class);
+                        intentPanelWeb.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        ctx.startActivity(intentPanelWeb);
                     }
                 } catch (Exception e) {
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
             }
             if ("lock".equals(page)) {
@@ -82,9 +78,9 @@ public class CustomWebView {
                             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
                         }
                     }.start();
-                    Intent intent2 = new Intent(ctx, CloseActivity.class);
-                    intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ctx.startActivity(intent2);
+                    Intent intentClose = new Intent(ctx, CloseActivity.class);
+                    intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ctx.startActivity(intentClose);
                     try {
                         View viewLock = PreyConfig.getPreyConfig(ctx).viewLock;
                         if (viewLock != null) {

@@ -60,15 +60,11 @@ public class ChangePinPreferences extends DialogPreference {
     public void onClick(DialogInterface dialog, int which) {
         super.onClick(dialog, which);
         if (changePin != null && which == DialogInterface.BUTTON_POSITIVE) {
-
             final String pinEdit = ((EditText) changePin.findViewById(R.id.pin_edit)).getText().toString();
-
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
                 new ChangePin().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,pinEdit);
             else
                 new ChangePin().execute(pinEdit);
-
         }
     }
 
@@ -100,7 +96,8 @@ public class ChangePinPreferences extends DialogPreference {
                         Event event = new Event(Event.PIN_CHANGED, info.toString());
                         new EventManagerRunner(getContext(), event).run();
                     }
-                } catch (Exception e1) {
+                } catch (Exception e) {
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
             } catch (Exception e) {
                 PreyConfig.getPreyConfig(getContext()).setPinNumber("");
@@ -127,8 +124,6 @@ public class ChangePinPreferences extends DialogPreference {
                 showDialog(new Bundle());
             }
         }
-
     }
 
 }
-

@@ -53,7 +53,6 @@ public class PasswordNativeActivity extends Activity {
         final View contentView = findViewById(android.R.id.content);
         contentView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             private int mPreviousHeight;
-
             @Override
             public void onGlobalLayout() {
                 int newHeight = contentView.getHeight();
@@ -74,12 +73,10 @@ public class PasswordNativeActivity extends Activity {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 text.setText(R.string.lock_access_denied);
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
             }
@@ -108,11 +105,11 @@ public class PasswordNativeActivity extends Activity {
                         }
                     }
                 } catch (Exception e) {
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
             }
         });
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -125,7 +122,6 @@ public class PasswordNativeActivity extends Activity {
             finish();
         }
     }
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);

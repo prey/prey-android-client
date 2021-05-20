@@ -164,7 +164,6 @@ public class BarcodeActivity extends Activity   {
                     if (accountData != null) {
                         PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
                         PreyConfig.getPreyConfig(ctx).registerC2dm();
-                        PreyWebServices.getInstance().sendEvent(ctx, PreyConfig.ANDROID_SIGN_IN);
                         String email=PreyWebServices.getInstance().getEmail(ctx);
                         PreyConfig.getPreyConfig(ctx).setEmail(email);
                         PreyConfig.getPreyConfig(ctx).setRunBackground(true);
@@ -174,9 +173,11 @@ public class BarcodeActivity extends Activity   {
                         new Thread() {
                             public void run() {
                                 try {
-                                    PreyStatus.getInstance().getConfig(getApplicationContext());
+                                    PreyStatus.getInstance().initConfig(getApplicationContext());
                                     AwareController.getInstance().init(ctx);
-                                }catch (Exception e){}
+                                }catch (Exception e){
+                                    PreyLogger.e("Error:"+e.getMessage(),e);
+                                }
                             }
                         }.start();
                     }
@@ -193,6 +194,7 @@ public class BarcodeActivity extends Activity   {
             try {
                 progressDialog.dismiss();
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             PreyLogger.d("error[" + error + "]");
             if (error == null) {
@@ -220,18 +222,15 @@ public class BarcodeActivity extends Activity   {
     protected Dialog onCreateDialog(int id) {
         Dialog pass = null;
         switch (id) {
-
             case ERROR:
                 return new AlertDialog.Builder(BarcodeActivity.this).setIcon(R.drawable.error).setTitle(R.string.error_title).setMessage(error)
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                             }
                         }).setCancelable(false).create();
-
             case NO_MORE_DEVICES_WARNING:
                 return new AlertDialog.Builder(BarcodeActivity.this).setIcon(R.drawable.info).setTitle(R.string.set_old_user_no_more_devices_title).setMessage(error)
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-
                             public void onClick(DialogInterface dialog, int which) {
                             }
                         }).setCancelable(false).create();
@@ -243,7 +242,6 @@ public class BarcodeActivity extends Activity   {
     protected void onPrepareDialog(int id, Dialog dialog) {
         AlertDialog ad = null;
         switch (id) {
-
             case ERROR:
                 ad = (AlertDialog) dialog;
                 ad.setIcon(R.drawable.error);
@@ -255,7 +253,6 @@ public class BarcodeActivity extends Activity   {
                 });
                 ad.setCancelable(false);
                 break;
-
             case NO_MORE_DEVICES_WARNING:
                 ad = (AlertDialog) dialog;
                 ad.setIcon(R.drawable.info);

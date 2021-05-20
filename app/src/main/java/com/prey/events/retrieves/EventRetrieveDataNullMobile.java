@@ -7,9 +7,10 @@
 package com.prey.events.retrieves;
 
 import android.content.Context;
+
+import com.prey.PreyLogger;
 import com.prey.events.manager.EventManager;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class EventRetrieveDataNullMobile {
@@ -19,7 +20,9 @@ public class EventRetrieveDataNullMobile {
         try {
             mobileSon.put("mobile_internet", "");
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         manager.receivesData(EventManager.MOBILE, mobileSon);
     }
+
 }

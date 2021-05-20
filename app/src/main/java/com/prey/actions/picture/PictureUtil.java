@@ -74,14 +74,13 @@ public class PictureUtil {
                         }
                 }
             }
-            Intent intent2 = new Intent(ctx, SimpleCameraActivity.class);
-            intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intentCamera = new Intent(ctx, SimpleCameraActivity.class);
+            intentCamera.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Bundle myKillerBundle = new Bundle();
             myKillerBundle.putInt("kill",1);
-            intent2.putExtras(myKillerBundle);
-            ctx.startActivity(intent2);
+            intentCamera.putExtras(myKillerBundle);
+            ctx.startActivity(intentCamera);
             ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
-
         } catch (Exception e) {
             PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
         }
@@ -93,10 +92,10 @@ public class PictureUtil {
         SimpleCameraActivity.dataImagen = null;
         int streamType = AudioManager.STREAM_SYSTEM;
         SimpleCameraActivity.activity = null;
-        Intent intent = new Intent(ctx, SimpleCameraActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("focus", focus);
-        ctx.startActivity(intent);
+        Intent intentCamera = new Intent(ctx, SimpleCameraActivity.class);
+        intentCamera.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intentCamera.putExtra("focus", focus);
+        ctx.startActivity(intentCamera);
         int i = 0;
         mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
         try {
@@ -108,11 +107,13 @@ public class PictureUtil {
                 mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 0, setVolFlags);
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:" + e.getMessage(),e);
         }
         while (SimpleCameraActivity.activity == null&& i < 10) {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
+                PreyLogger.e("Error sleep:" + e.getMessage(),e);
             }
             i++;
         }
@@ -122,6 +123,7 @@ public class PictureUtil {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
+            PreyLogger.e("Error sleep:" + e.getMessage(),e);
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             mgr.setRingerMode(AudioManager.RINGER_MODE_NORMAL);

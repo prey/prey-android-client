@@ -21,8 +21,8 @@ import com.prey.actions.aware.AwareController;
 
 @TargetApi(21)
 public class AutoconnectJobService extends JobService {
-    private static final int JOB_ID = 126;
 
+    private static final int JOB_ID = 126;
 
     public static void schedule(Context ctx ) {
         JobScheduler jobScheduler = null;
@@ -38,7 +38,6 @@ public class AutoconnectJobService extends JobService {
             PreyLogger.d("AUTO resulCode failed");
         }
     }
-
 
     public static void cancel(Context ctx) {
         JobScheduler jobScheduler =null;
@@ -65,4 +64,5 @@ public class AutoconnectJobService extends JobService {
         jobFinished(jobParameters, false);
         return false;
     }
+
 }

@@ -46,9 +46,7 @@ public class WelcomeActivity extends FragmentActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         PreyLogger.d("onCreate of WelcomeActivity");
         menu();
-
     }
-
 
     public void menu() {
         PreyLogger.d("menu WelcomeActivity");
@@ -84,6 +82,7 @@ public class WelcomeActivity extends FragmentActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         PreyLogger.d("requestCode:" + requestCode + " resultCode:" + resultCode);
         if (requestCode == SECURITY_PRIVILEGES) {
             menu();
@@ -95,9 +94,5 @@ public class WelcomeActivity extends FragmentActivity {
         Intent intent = FroyoSupport.getInstance(getApplicationContext()).getAskForAdminPrivilegesIntent();
         startActivityForResult(intent, SECURITY_PRIVILEGES);
     }
-
-
-
-
 
 }

@@ -32,7 +32,6 @@ public class VideoActivity extends Activity implements SurfaceHolder.Callback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         recorder = new MediaRecorder();
         initRecorder();
         setContentView(R.layout.activity_video);
@@ -42,59 +41,41 @@ public class VideoActivity extends Activity implements SurfaceHolder.Callback {
         holder.addCallback(this);
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         activity = this;
-
     }
 
-
     private void initRecorder() {
-
         recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
         recorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        //recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         recorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         recorder.setOutputFile(filePath);
-        //recorder.setMaxDuration(5000);
-        //recorder.setMaxFileSize(5000000);
         recorder.setVideoFrameRate(30);
         recorder.setVideoSize(720, 480);
-
     }
 
     private void prepareRecorder() {
         recorder.setPreviewDisplay(holder.getSurface());
-
         try {
             recorder.prepare();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            finish();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
             finish();
         }
     }
 
     public void start() {
-
         prepareRecorder();
         recording = true;
         recorder.start();
-
     }
 
     public void stop() {
         PreyLogger.d("stop");
         recorder.stop();
         recording = false;
-
-        // Let's initRecorder so we can record again
         initRecorder();
-
-
     }
-
 
     public void surfaceCreated(SurfaceHolder holder) {
     }
@@ -113,4 +94,3 @@ public class VideoActivity extends Activity implements SurfaceHolder.Callback {
     }
 
 }
-

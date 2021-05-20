@@ -38,46 +38,31 @@ public class PreyConfig {
 
     //Set false in production
     public static final boolean LOG_DEBUG_ENABLED = false;
-
     private static PreyConfig cachedInstance = null;
-
     public static final String TAG = "PREY";
-
     private static final String HTTP="https://";
-
     public static final String VERSION_PREY_DEFAULT="2.3.5";
-
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
-
     // Set to 1000 * 60 in production.
     public static final long DELAY_MULTIPLIER = 60 * 1000;
-
     // the minimum time interval for GPS notifications, in milliseconds (default 60000).
     public static final long UPDATE_INTERVAL = 60 * MILLISECONDS_PER_SECOND;
-
     // the minimum distance interval for GPS notifications, in meters (default 20)
     public static final float LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE = 20;
-
     // max "age" in ms of last location (default 120000).
     public static final long LAST_LOCATION_MAX_AGE = 30 * MILLISECONDS_PER_SECOND;
-
     public static final int LOCATION_PRIORITY_HIGHT = LocationRequest.PRIORITY_HIGH_ACCURACY;
-
     public static final long FASTEST_INTERVAL  =  40 * MILLISECONDS_PER_SECOND;
-
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10 * MILLISECONDS_PER_SECOND;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =  UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-
     public static final String PROTECT_ACCOUNT="PROTECT_ACCOUNT";
     public static final String PROTECT_PRIVILEGES="PROTECT_PRIVILEGES";
     public static final String PROTECT_TOUR="PROTECT_TOUR";
     public static final String PROTECT_READY="PROTECT_READY";
-
     public static final String PREFS_SIM_SERIAL_NUMBER = "PREFS_SIM_SERIAL_NUMBER";
     public static final String PREFS_SECURITY_PROMPT_SHOWN = "PREFS_SECURITY_PROMPT_SHOWN";
     public static final String PREFS_IS_MISSING="PREFS_IS_MISSING";
-
     public static final String PREFS_DISABLE_POWER_OPTIONS="PREFS_DISABLE_POWER_OPTIONS";
     public static final String PREFS_BLOCK_APP_UNINSTALL="PREFS_BLOCK_APP_UNINSTALL";
     public static final String PREFS_RUN_BACKGROUND="PREFS_RUN_BACKGROUND";
@@ -86,16 +71,12 @@ public class PreyConfig {
     public static final String NEXT_ALERT="NEXT_ALERT";
     public static final String IS_CAMOUFLAGE_SET="IS_CAMOUFLAGE_SET";
     public static final String PREFS_RINGTONE="PREFS_RINGTONE";
-
     public static final String LAST_EVENT="LAST_EVENT";
     public static final String LOW_BATTERY_DATE="LOW_BATTERY_DATE";
     public static final String PREVIOUS_SSID="PREVIOUS_SSID";
-
     public static final String ERROR="ERROR";
-
     public static final String FLAG_FEEDBACK="FLAG_FEEDBACK";
     public static final String INSTALLATION_DATE="INSTALLATION_DATE";
-
     public static final String PREFS_ACCOUNT_VERIFIED="PREFS_ACCOUNT_VERIFIED";
     public static final String EMAIL="EMAIL";
     public static final String TWO_STEP="TWO_STEP";
@@ -103,7 +84,6 @@ public class PreyConfig {
     public static final String SEND_DATA="SEND_DATA";
     public static final String SCHEDULED="SCHEDULED";
     public static final String MINUTE_SCHEDULED="MINUTE_SCHEDULED2";
-
     public static final String IS_REVOKED_PASSWORD="IS_REVOKED_PASSWORD";
     public static final String REVOKED_PASSWORD="REVOKED_PASSWORD";
     public static final String NOTIFICATION_ID="NOTIFICATION_ID";
@@ -114,16 +94,12 @@ public class PreyConfig {
     public static final String INTERVAL_AWARE="INTERVAL_AWARE";
     public static final String TIME_SECURE_LOCK="TIME_SECURE_LOCK";
     public static final String LAST_TIME_SECURE_LOCK="LAST_TIME_SECURE_LOCK";
-
     public static final String LOCATION_LOW_BATTERY_DATE="LOCATION_LOW_BATTERY_DATE";
     public static final String SESSION_ID="SESSION_ID";
-
     public static final String PIN_NUMBER2="PIN_NUMBER2";
     public static final String SMS_COMMAND="SMS_COMMAND";
     public static final String PREFERENCE_LOCATION_LOW_BATTERY="PREFERENCE_LOCATION_LOW_BATTERY";
-
     public static final String TOKEN_JWT="TOKEN_JWT";
-
     public static final int ANDROID_INIT = 2000;
     public static final int ANDROID_SIGN_UP = 2001;
     public static final int ANDROID_TOUR_SCREEN = 2002;
@@ -135,55 +111,33 @@ public class PreyConfig {
     public static final int ANDROID_VERSION_UPDATED = 2009;
     public static final int ANDROID_ONBOARDING_INIT = 2010;
     public static final int ANDROID_ONBOARDING_COMPLETED = 2011;
-
-
-
-
-
     public static final String PREY_VERSION="PREY_VERSION";
     public static final String API_KEY="API_KEY";
     public static final String DEVICE_ID = "DEVICE_ID";
     public static final String ACCOUNT = "ACCOUNT";
     public static final String DEVICE_NAME = "DEVICE_NAME";
-
     public static final String SIM_SERIAL_NUMBER = "SIM_SERIAL_NUMBER";
-
-
     public static final String CAN_ACCESS_FINE_LOCATION = "CAN_ACCESS_FINE_LOCATION";
     public static final String CAN_ACCESS_COARSE_LOCATION = "CAN_ACCESS_COARSE_LOCATION";
     public static final String CAN_ACCESS_CAMARA = "CAN_ACCESS_CAMARA";
     public static final String CAN_ACCESS_READ_PHONE_STATE = "CAN_ACCESS_READ_PHONE_STATE";
     public static final String CAN_ACCESS_EXTERNAL_STORAGE= "CAN_ACCESS_EXTERNAL_STORAGE";
-
     public static final String TIME_PASSWORD_OK = "TIME_PASSWORD_OK";
     public static final String TIME_TWO_STEP = "TIME_TWO_STEP";
     public static final String TIME_C2DM = "TIME_C2DM";
     public static final String TIME_LOCATION_AWARE = "TIME_LOCATION_AWARE";
-
     public static final int BUILD_VERSION_CODES_10 = 29;
     public static final int BUILD_VERSION_CODES_11 = 30;
-
     public static final int NOTIFY_ANDROID_6 = 6;
     public static final String NOTIFICATION_POPUP_ID = "NOTIFICATION_POPUP_ID";
-
-
     public static final String SENT_UUID_SERIAL_NUMBER = "SENT_UUID_SERIAL_NUMBER";
-
     public static final String LAST_EVENT_GEO = "LAST_EVENT_GEO";
-
     public static final String MESSAGE_ID="messageID";
-
     public static final String JOB_ID="device_job_id";
-
     public static final String UNLOCK_PASS="unlock_pass";
-
     public static final String NOTIFICATION_ANDROID_7="notify_android_7";
-
     public static final String JOB_ID_LOCK="job_id_lock";
-
     public static final String COUNTER_OFF="counter_off";
-
-
     public static final String SSID="SSID";
     public static final String IMEI="IMEI";
     public static final String MODEL="MODEL";
@@ -194,43 +148,30 @@ public class PreyConfig {
     public static final String AWARE_LNG="AWARE_LNG";
     public static final String AWARE_ACC="AWARE_ACC";
     public static final String AWARE_DATE="AWARE_DATE";
-
     public static final String AUTO_CONNECT="auto_connect";
     public static final String AWARE="aware";
-
     public static final String TIME_BLOCK_APP_UNINSTALL= "TIME_BLOCK_APP_UNINSTALL";
-
     public static final String REPORT_NUMBER= "REPORT_NUMBER";
     public static final String PREFS_BIOMETRIC="PREFS_BIOMETRIC";
     public static final String INSTALLATION_STATUS="INSTALLATION_STATUS";
-
     public static final String LOCATION_INFO="LOCATION_INFO";
     public static final String CAPS_LOCK_ON="CAPS_LOCK_ON";
     public static final String OVER_LOCK="OVER_LOCK";
     public static final String FIRST="FIRST";
     public static final String PIN_NUMBER_ACTIVATE="PIN_NUMBER_ACTIVATE";
-
     public static final String INPUT_WEBVIEW="INPUT_WEBVIEW";
     public static final String PAGE="PAGE";
     public static final String PERMISSION_LOCATION="PERMISSION_LOCATION";
-
     private boolean securityPrivilegesAlreadyPrompted;
-
     private Context ctx;
-
-
     public static String postUrl = null;
-
-
     private long installationDate;
     private boolean run;
     private boolean registerC2dm=false;
-
     private boolean scheduled;
     private int minuteScheduled;
     private int timeoutReport;
     private boolean runOnce;
-
     private boolean disablePowerOptions;
     private String version;
 
@@ -239,19 +180,29 @@ public class PreyConfig {
         try {
             this.scheduled = getBoolean(PreyConfig.SCHEDULED, FileConfigReader.getInstance(ctx).isScheduled());
         } catch ( Exception e) {
-        } catch ( NoClassDefFoundError e) {}
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        } catch ( NoClassDefFoundError e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
         try {
             this.timeoutReport = getInt(PreyConfig.TIMEOUT_REPORT, FileConfigReader.getInstance(ctx).getTimeoutReport());
         } catch ( Exception e){
-        } catch ( NoClassDefFoundError e) {}
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        } catch ( NoClassDefFoundError e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
         try {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
             this.disablePowerOptions = settings.getBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, false);
         } catch ( Exception e){
-        } catch ( NoClassDefFoundError e) {}
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        } catch ( NoClassDefFoundError e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
         try {
             version =getString(PreyConfig.PREY_VERSION, getInfoPreyVersion(ctx));
         }catch ( Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
     }
 
@@ -281,7 +232,9 @@ public class PreyConfig {
             SharedPreferences.Editor editor = settings.edit();
             editor.putString(key, value);
             editor.commit();
-        }catch(Exception e){}
+        }catch(Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
     }
 
     private String getString(String key,String defaultValue){
@@ -295,7 +248,9 @@ public class PreyConfig {
             SharedPreferences.Editor editor = settings.edit();
             editor.putInt(key, value);
             editor.commit();
-        }catch(Exception e){}
+        }catch(Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
     }
 
     private int getInt(String key,int defaultValue){
@@ -309,7 +264,9 @@ public class PreyConfig {
             SharedPreferences.Editor editor = settings.edit();
             editor.putBoolean(key, value);
             editor.commit();
-        }catch(Exception e){}
+        }catch(Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
     }
 
     public boolean getBoolean(String key,boolean defaultValue){
@@ -323,7 +280,7 @@ public class PreyConfig {
             SharedPreferences.Editor editor = settings.edit();
             editor.putLong(key, value);
             editor.commit();
-        }catch(Exception e){}
+        }catch(Exception e){PreyLogger.e("Error:"+e.getMessage(),e);}
     }
 
     private void saveFloat(String key, float value){
@@ -332,7 +289,9 @@ public class PreyConfig {
             SharedPreferences.Editor editor = settings.edit();
             editor.putFloat(key, value);
             editor.commit();
-        }catch(Exception e){}
+        }catch(Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
     }
 
     private void removeKey(String key){
@@ -388,12 +347,9 @@ public class PreyConfig {
         return getBoolean(PreyConfig.PROTECT_TOUR, false);
     }
 
-
-
     public void setCanAccessFineLocation(boolean canAccessFineLocation) {
         this.saveBoolean(PreyConfig.CAN_ACCESS_FINE_LOCATION, canAccessFineLocation);
     }
-
 
     public String getError() {
         return getString(PreyConfig.ERROR, null);
@@ -402,7 +358,6 @@ public class PreyConfig {
     public void setError(String error) {
         this.saveString(PreyConfig.ERROR, error);
     }
-
 
     public boolean canAccessFineLocation() {
         return getBoolean(PreyConfig.CAN_ACCESS_FINE_LOCATION, false);
@@ -498,6 +453,7 @@ public class PreyConfig {
             PackageInfo pinfo =ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
             versionName = pinfo.versionName;
         }catch(Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return versionName;
     }
@@ -670,7 +626,6 @@ public class PreyConfig {
     private boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(ctx);
         if (resultCode != ConnectionResult.SUCCESS) {
-
             return false;
         }
         return true;
@@ -684,9 +639,8 @@ public class PreyConfig {
             unregIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0));
             this.ctx.startService(unregIntent);
         }catch(Exception e){
-
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
-
     }
 
     public boolean isDisablePowerOptions(){
@@ -713,7 +667,6 @@ public class PreyConfig {
         saveBoolean(PreyConfig.PREFS_RUN_BACKGROUND, disablePowerOptions);
         saveBoolean(PreyConfig.PREFS_BACKGROUND, disablePowerOptions);
     }
-
 
     public void setLock(boolean locked) {
         saveBoolean(PreyConfig.IS_LOCK_SET, locked);
@@ -754,7 +707,6 @@ public class PreyConfig {
     public String getPreyUrl() {
         String subdomain = FileConfigReader.getInstance(this.ctx).getPreySubdomain();
         return HTTP.concat(subdomain).concat(".").concat(getPreyDomain()).concat("/");
-
     }
 
     public String getPreyDomain() {
@@ -830,11 +782,9 @@ public class PreyConfig {
         saveBoolean(PreyConfig.TWO_STEP, twoStep);
     }
 
-
     public void setAccountVerified() {
         saveBoolean(PreyConfig.PREFS_ACCOUNT_VERIFIED, true);
     }
-
 
     public boolean isSendData(){
         return getBoolean(PreyConfig.SEND_DATA, false);
@@ -855,7 +805,6 @@ public class PreyConfig {
         return getBoolean(PreyConfig.ACCOUNT, false);
     }
 
-
     public boolean isMissing() {
         return getBoolean(PreyConfig.PREFS_IS_MISSING, false);
     }
@@ -873,39 +822,28 @@ public class PreyConfig {
     }
 
     public void wipeData() {
-
         long installationDate=getLong(PreyConfig.INSTALLATION_DATE, 0);
-
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         SharedPreferences.Editor editor = settings.edit();
         editor.clear();
         editor.commit();
-
         if(installationDate>0) {
             saveLong(PreyConfig.INSTALLATION_DATE, installationDate);
         }
     }
 
-
-
-
     public void setRevokedPassword(boolean isRevokedPassword, String revokedPassword) {
-
         saveBoolean(PreyConfig.IS_REVOKED_PASSWORD, isRevokedPassword);
         saveString(PreyConfig.REVOKED_PASSWORD, revokedPassword);
-
     }
-
 
     public void setNotificationId(String notificationId) {
         saveString(PreyConfig.NOTIFICATION_ID, notificationId);
     }
 
     public String getNotificationId(){
-
         return getString(PreyConfig.NOTIFICATION_ID, "");
     }
-
 
     public void setRegisterC2dm(boolean registerC2dm){
         this.registerC2dm=registerC2dm;
@@ -914,13 +852,11 @@ public class PreyConfig {
         return registerC2dm;
     }
 
-
     public String getIntervalReport(){
         return getString(PreyConfig.INTERVAL_REPORT,"");
     }
 
     public void setIntervalReport(String intervalReport) {
-
         this.saveString(PreyConfig.INTERVAL_REPORT, intervalReport);
     }
 
@@ -940,7 +876,6 @@ public class PreyConfig {
         return getLong(PreyConfig.LAST_REPORT_START_DATE, 0);
     }
 
-
     public void setTimeSecureLock(long timeSecureLock){
         saveLong(PreyConfig.TIME_SECURE_LOCK, timeSecureLock);
     }
@@ -954,7 +889,6 @@ public class PreyConfig {
     }
 
     public void setIntervalAware(String intervalAware) {
-
         this.saveString(PreyConfig.INTERVAL_AWARE, intervalAware);
     }
 
@@ -1167,7 +1101,6 @@ public class PreyConfig {
         saveString(PreyConfig.AWARE_DATE, awareDate);
     }
 
-
     public PreyLocation getLocationAware(){
         try{
             float lat=getFloat(PreyConfig.AWARE_LAT,0);
@@ -1272,8 +1205,6 @@ public class PreyConfig {
     public void setModel(String model) {
         saveString(MODEL, model);
     }
-
-
 
     public void setTimeTwoStep(){
         Calendar cal= Calendar.getInstance();

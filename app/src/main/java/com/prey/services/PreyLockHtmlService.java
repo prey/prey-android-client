@@ -63,7 +63,6 @@ public class PreyLockHtmlService extends Service{
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.webview, null);
             PreyConfig.getPreyConfig(ctx).viewLock=view;
-
             WebView myWebView = (WebView) view.findViewById(R.id.install_browser);
             myWebView.setOnKeyListener(new View.OnKeyListener() {
                 @Override
@@ -80,14 +79,11 @@ public class PreyLockHtmlService extends Service{
             settings.setUseWideViewPort(true);
             settings.setSupportZoom(false);
             settings.setBuiltInZoomControls(false);
-
             String lng = PreyUtils.getLanguage();
             String url = CheckPasswordHtmlActivity.URL_ONB + "#/" + lng + "/lock";
-
             myWebView.addJavascriptInterface(new WebAppInterface(this), CheckPasswordHtmlActivity.JS_ALIAS);
             myWebView.loadUrl(url);
             myWebView.loadUrl("javascript:window.location.reload(true)");
-
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
             layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
             layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;

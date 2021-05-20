@@ -9,13 +9,10 @@ package com.prey.actions.fileretrieval;
 import android.content.Context;
 
 import com.prey.PreyLogger;
-import com.prey.actions.geofences.GeofenceDto;
-import com.prey.actions.geofences.GeofenceOpenHelper;
 
 import java.util.List;
 
 public class FileretrievalDatasource {
-
 
     private FileretrievalOpenHelper dbHelper;
 

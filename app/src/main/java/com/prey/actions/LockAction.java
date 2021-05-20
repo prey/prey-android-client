@@ -35,8 +35,8 @@ public class LockAction extends PreyAction {
             try{
                 FroyoSupport.getInstance(ctx).changePasswordAndLock(getConfig().get("unlock_pass"),true);
             }catch (PreyException e){
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
-
         }
     }
 
@@ -58,6 +58,7 @@ public class LockAction extends PreyAction {
             try{
                 FroyoSupport.getInstance(ctx).changePasswordAndLock("",true);
             }catch (PreyException e){
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
         }
     }
@@ -67,4 +68,3 @@ public class LockAction extends PreyAction {
     }
 
 }
-

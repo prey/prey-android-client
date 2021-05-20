@@ -74,6 +74,7 @@ public class PreyJobService extends JobService {
         try {
             PreyBetaActionsRunner.getInstructionsNewThread(getApplicationContext(), null,false);
         } catch (Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return true;
     }

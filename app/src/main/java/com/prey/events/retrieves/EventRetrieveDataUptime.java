@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.events.retrieves;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -27,6 +26,8 @@ public class EventRetrieveDataUptime {
             PreyLogger.d("uptime:"+uptimeData);
             manager.receivesData(EventManager.UPTIME, uptimeJSon);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
     }
+
 }

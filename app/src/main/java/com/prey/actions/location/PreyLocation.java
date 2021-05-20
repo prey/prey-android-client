@@ -19,7 +19,6 @@ public class PreyLocation {
     private Location location;
 
     public PreyLocation() {
-
     }
 
     public PreyLocation(Location loc) {
@@ -39,7 +38,6 @@ public class PreyLocation {
             this.method = method;
         }
     }
-
 
     public String getMethod() {
         return method;
@@ -71,7 +69,7 @@ public class PreyLocation {
 
     @Override
     public String toString() {
-        return "lat: " + lat + " - lng: " + lng + " - acc: "+accuracy + " - method: " + method;
+        return String.format("lat:%s - lng:%s - acc:%s - method:%s",lat,lng,accuracy,method);
     }
 
     public boolean isValid() {
@@ -103,4 +101,3 @@ public class PreyLocation {
     public void setLocation(Location location) { this.location = location; }
 
 }
-

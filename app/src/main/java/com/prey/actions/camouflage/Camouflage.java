@@ -16,9 +16,7 @@ import com.prey.actions.observer.ActionResult;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.PackageManager;
 
 public class Camouflage {
 
@@ -28,6 +26,7 @@ public class Camouflage {
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String reason = null;
         try {
@@ -37,11 +36,10 @@ public class Camouflage {
                 reason="{\"device_job_id\":\""+jobId+"\"}";
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "camouflage", "started",reason));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(true);
-
-
         PreyLogger.d("stopped hide");
         PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_hide");
     }
@@ -52,6 +50,7 @@ public class Camouflage {
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String reason = null;
         try {
@@ -61,13 +60,12 @@ public class Camouflage {
                 reason="{\"device_job_id\":\""+jobId+"\"}";
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "camouflage", "stopped",reason));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(false);
-
-
         PreyLogger.d("stopped unhide");
         PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_unhide");
     }
-}
 
+}

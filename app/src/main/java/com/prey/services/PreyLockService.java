@@ -56,18 +56,18 @@ public class PreyLockService extends Service {
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.lock_android7, null);
             Typeface regularMedium = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-medium.ttf");
-            TextView textView1 = (TextView) view.findViewById(R.id.TextView_Lock_AccessDenied);
-            textView1.setTypeface(regularMedium);
+            TextView textViewLockAccessDenied = (TextView) view.findViewById(R.id.TextView_Lock_AccessDenied);
+            textViewLockAccessDenied.setTypeface(regularMedium);
             Typeface regularBold = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-bold.ttf");
-            EditText editText1 = (EditText) view.findViewById(R.id.EditText_Lock_Password);
-            editText1.setTypeface(regularMedium);
-            final TextView textView8 = (TextView) view.findViewById(R.id.textView8);
-            textView8.setTypeface(regularBold);
+            EditText editTextLockPassword = (EditText) view.findViewById(R.id.EditText_Lock_Password);
+            editTextLockPassword.setTypeface(regularMedium);
+            final TextView textViewWarning = (TextView) view.findViewById(R.id.textView8);
+            textViewWarning.setTypeface(regularBold);
             final EditText editText = (EditText) this.view.findViewById(R.id.EditText_Lock_Password);
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    textView8.setText("");
+                    textViewWarning.setText("");
                 }
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -117,7 +117,7 @@ public class PreyLockService extends Service {
                             }.start();
                         } else {
                             editText.setText("");
-                            textView8.setText(ctx.getString(R.string.password_wrong));
+                            textViewWarning.setText(ctx.getString(R.string.password_wrong));
                         }
                     } catch (Exception e) {
                     }

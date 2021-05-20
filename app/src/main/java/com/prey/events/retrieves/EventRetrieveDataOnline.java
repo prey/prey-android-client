@@ -11,7 +11,6 @@ import android.content.Context;
 import com.prey.PreyLogger;
 import com.prey.events.manager.EventManager;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class EventRetrieveDataOnline {
@@ -21,8 +20,10 @@ public class EventRetrieveDataOnline {
         try {
             onlineJSon.put("online", true);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         PreyLogger.d("online:true");
         manager.receivesData(EventManager.ONLINE, onlineJSon);
     }
+
 }

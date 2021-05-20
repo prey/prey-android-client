@@ -42,16 +42,13 @@ public class PreyBetaActionsRunner implements Runnable {
     }
 
     public void execute() {
-
         if (PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey(true)) {
             PreyTelephonyManager preyTelephony = PreyTelephonyManager.getInstance(ctx);
             PreyConnectivityManager preyConnectivity = PreyConnectivityManager.getInstance(ctx);
             boolean connection = false;
             try {
                 List<JSONObject> jsonObject = null;
-
                 connection = preyTelephony.isDataConnectivityEnabled() || preyConnectivity.isConnected();
-
                 if (connection) {
                     try {
                         if (cmd == null || "".equals(cmd)) {
@@ -60,6 +57,7 @@ public class PreyBetaActionsRunner implements Runnable {
                             jsonObject = getInstructionsNewThread(ctx, cmd,true);
                         }
                     } catch (Exception e) {
+                        PreyLogger.e("Error:"+e.getMessage(),e);
                     }
                     if (jsonObject == null || jsonObject.size() == 0) {
                         PreyLogger.d("nothing");
@@ -72,7 +70,6 @@ public class PreyBetaActionsRunner implements Runnable {
                 PreyLogger.e("Error, because:" + e.getMessage(), e);
             }
             PreyLogger.d("Prey execution has finished!!");
-
         }
         ctx.stopService(new Intent(ctx, PreyBetaRunnerService.class));
     }
@@ -116,4 +113,3 @@ public class PreyBetaActionsRunner implements Runnable {
     }
 
 }
-

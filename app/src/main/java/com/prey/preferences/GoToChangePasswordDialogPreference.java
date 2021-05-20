@@ -20,20 +20,16 @@ public class GoToChangePasswordDialogPreference extends DialogPreference {
 
     public GoToChangePasswordDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        // TODO Auto-generated constructor stub
     }
 
     public GoToChangePasswordDialogPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
         super.onClick(dialog, which);
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            // String url =
-            // PreyWebServices.getInstance().getDeviceWebControlPanelUrl(getContext());
             String url = PreyConfig.getPreyConfig(getContext()).getPreyUrl() + "profile";
             PreyLogger.d("url change password:" + url);
             Intent internetIntent = new Intent(Intent.ACTION_VIEW);

@@ -32,6 +32,7 @@ public class Camouflage extends JsonAction {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String reason = null;
         try {
@@ -41,6 +42,7 @@ public class Camouflage extends JsonAction {
                 reason="{\"device_job_id\":\""+jobId+"\"}";
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "camouflage", "failed","Not available"));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(false);
@@ -53,6 +55,7 @@ public class Camouflage extends JsonAction {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String reason = null;
         try {
@@ -62,6 +65,7 @@ public class Camouflage extends JsonAction {
                 reason="{\"device_job_id\":\""+jobId+"\"}";
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("stop", "camouflage", "failed","Not available"));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(false);

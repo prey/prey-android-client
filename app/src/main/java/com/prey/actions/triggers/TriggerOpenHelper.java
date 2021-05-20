@@ -20,16 +20,12 @@ import java.util.List;
 public class TriggerOpenHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 3;
-
     private static final String DATABASE_NAME = "Trigger.db";
-
     public static final String TRIGGER_TABLE_NAME = "trigger";
-
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_NAME = "_name";
     public static final String COLUMN_EVENTS = "_events";
     public static final String COLUMN_ACTIONS = "_actions";
-
     private static final String TRIGGER_TABLE_CREATE =
             "CREATE TABLE " + TRIGGER_TABLE_NAME + " (" +
                     COLUMN_ID + " TEXT PRIMARY KEY, " +
@@ -85,7 +81,6 @@ public class TriggerOpenHelper extends SQLiteOpenHelper {
         database.update(TRIGGER_TABLE_NAME, values, selection, selectionArgs);
         database.close();
     }
-
 
     public void deleteTrigger(String id) {
         SQLiteDatabase database = this.getWritableDatabase();

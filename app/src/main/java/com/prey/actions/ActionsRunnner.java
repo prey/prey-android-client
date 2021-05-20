@@ -18,17 +18,14 @@ import com.prey.util.PreyTime;
 public class ActionsRunnner {
 
     protected boolean running = false;
-
     Thread myActionsRunnerThread = null;
 
     public ActionsRunnner() {
-
     }
 
     public void run(Context ctx) {
         this.myActionsRunnerThread = new Thread(new ActionsRunner(ctx));
         this.myActionsRunnerThread.start();
-
     }
 
     class ActionsRunner implements Runnable {
@@ -38,7 +35,6 @@ public class ActionsRunnner {
 
         public ActionsRunner(Context context) {
             this.ctx = context;
-
         }
 
         public void run() {
@@ -49,15 +45,12 @@ public class ActionsRunnner {
                     try {
                         preyConfig.setRunOnce(false);
                         preyConfig.setMissing(true);
-                        //PreyWebServices.getInstance().setMissing(ctx, true);
                         boolean isMissing = getInstructionsAndRun(waitNotify, true);
                         PreyRunnerService.interval = preyControlStatus.getDelay();
                         PreyRunnerService.pausedAt = System.currentTimeMillis();
                         PreyLogger.d("Prey is set to run once. Waiting for the report to be sent (if any), then finishing");
                         if (isMissing) //Have to wait for the report being sent.
                             waitNotify.doWait();
-
-                        //PreyWebServices.getInstance().setMissing(ctx, false);
                     } catch (PreyException e) {
                         PreyLogger.e("Error while running once: ",e);
                     }
@@ -65,7 +58,6 @@ public class ActionsRunnner {
                 else {
                     boolean isMissing = true;
                     preyConfig.setMissing(isMissing);
-                    //PreyWebServices.getInstance().setMissing(ctx, isMissing);
                     while (preyConfig.isMissing()) {
                         try {
                             isMissing = getInstructionsAndRun(waitNotify, false);
@@ -80,9 +72,6 @@ public class ActionsRunnner {
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
                         } catch (PreyException e) {
-                            //PreyWebServices.getInstance().setMissing(ctx, false);
-                            //preyConfig.setMissing(false);
-                            //break;
                             PreyLogger.e("Error while running on interval: ",e);
                         }
                     }
@@ -94,11 +83,8 @@ public class ActionsRunnner {
         }
 
         private boolean getInstructionsAndRun(PreyExecutionWaitNotify waitNotify, boolean runIfNotMissing) throws PreyException{
-
             return false;
         }
-
     }
 
 }
-

@@ -122,6 +122,7 @@ public class LocationUpdatesService  extends Service {
         try{
             finalValue = (Double)df.parse(formate) ;
         } catch (Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return finalValue;
     }
@@ -131,15 +132,14 @@ public class LocationUpdatesService  extends Service {
         try {
             if(mLocationCallback!=null)
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-
         } catch (Exception e) {
             PreyLogger.e( "error." + e.getMessage(),e);
         }
-
         try {
             stopSelf();
         } catch (Exception e) {
             PreyLogger.e( "error." + e.getMessage(),e);
         }
     }
+
 }

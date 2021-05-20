@@ -25,4 +25,3 @@ public class SetupActivity extends PreyActivity {
     }
 
 }
-

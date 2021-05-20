@@ -23,7 +23,7 @@ import com.prey.R;
 
 public class ChangePasswordPreferences extends DialogPreference {
 
-    View changePassword = null;
+    private View changePassword = null;
 
     public ChangePasswordPreferences(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -44,11 +44,9 @@ public class ChangePasswordPreferences extends DialogPreference {
     public void onClick(DialogInterface dialog, int which) {
         super.onClick(dialog, which);
         if (changePassword != null && which == DialogInterface.BUTTON_POSITIVE) {
-
             final String old_password = ((EditText) changePassword.findViewById(R.id.old_password)).getText().toString();
             final String password = ((EditText) changePassword.findViewById(R.id.password)).getText().toString();
             final String repassword = ((EditText) changePassword.findViewById(R.id.password_confirm)).getText().toString();
-
             if (password.equals("")) {
                 Toast.makeText(getContext(), R.string.preferences_password_length_error, Toast.LENGTH_LONG).show();
                 showDialog(new Bundle());
@@ -65,7 +63,6 @@ public class ChangePasswordPreferences extends DialogPreference {
     }
 
     private class ChangePassword extends AsyncTask<String, Void, Void> {
-
         private String error = null;
         ProgressDialog progressDialog = null;
 
@@ -80,14 +77,6 @@ public class ChangePasswordPreferences extends DialogPreference {
 
         @Override
         protected Void doInBackground(String... passwords) {
-            /*try {
-				String email = PreyConfig.getPreyConfig(getContext()).getEmail();
-				PreyWebServices.getInstance().changePassword(getContext(), email,passwords[0], passwords[1]);
-
-			} catch (PreyException e) {
-				e.printStackTrace();
-				error = e.getMessage();
-			}*/
             return null;
         }
 
@@ -101,6 +90,6 @@ public class ChangePasswordPreferences extends DialogPreference {
                 showDialog(new Bundle());
             }
         }
-
     }
+
 }

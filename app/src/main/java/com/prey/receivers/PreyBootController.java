@@ -42,6 +42,7 @@ public class PreyBootController extends BroadcastReceiver {
                             ctx.stopService(new Intent(ctx, PreyDisablePowerOptionsService.class));
                         }
                     } catch (Exception e) {
+                        PreyLogger.e("Error:"+e.getMessage(),e);
                     }
                     try {
                         boolean runBackground = PreyConfig.getPreyConfig(ctx).isRunBackground();
@@ -51,6 +52,7 @@ public class PreyBootController extends BroadcastReceiver {
                             RunBackgroundCheckBoxPreference.notifyCancel(ctx);
                         }
                     } catch (Exception e) {
+                        PreyLogger.e("Error:"+e.getMessage(),e);
                     }
                 }
             }.start();
@@ -69,6 +71,7 @@ public class PreyBootController extends BroadcastReceiver {
                             }
                         }
                     } catch (Exception e) {
+                        PreyLogger.e("Error:"+e.getMessage(),e);
                     }
                 }
             }.start();
@@ -77,11 +80,13 @@ public class PreyBootController extends BroadcastReceiver {
                     try {
                         PreyBetaController.startPrey(ctx);
                     } catch (Exception e) {
+                        PreyLogger.e("Error:"+e.getMessage(),e);
                     }
                 }
             }.start();
-        } else
+        } else {
             PreyLogger.e("Received unexpected intent " + intent.toString(), null);
+        }
     }
 
 }

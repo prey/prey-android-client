@@ -23,7 +23,7 @@ This code is taken from Rafael Sanches' blog.
 http://blog.rafaelsanches.com/2011/01/29/upload-using-multipart-post-using-httpclient-in-android/
 */
 
- 
+import com.prey.PreyLogger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,13 +35,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Random;
 
-
-
 public class SimpleMultipartEntity   {
     private final static char[] MULTIPART_CHARS = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-
     private String boundary = null;
-
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     boolean isSetLast = false;
     boolean isSetFirst = false;
@@ -53,7 +49,6 @@ public class SimpleMultipartEntity   {
             buf.append(MULTIPART_CHARS[rand.nextInt(MULTIPART_CHARS.length)]);
         }
         this.boundary = buf.toString();
-
     }
 
     public void writeFirstBoundaryIfNeeds(){
@@ -64,7 +59,6 @@ public class SimpleMultipartEntity   {
                 e.printStackTrace();
             }
         }
-
         isSetFirst = true;
     }
 
@@ -72,13 +66,11 @@ public class SimpleMultipartEntity   {
         if(isSetLast){
             return;
         }
-
         try {
             out.write(("\r\n--" + boundary + "--\r\n").getBytes());
         } catch (final IOException e) {
-            e.printStackTrace();
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
-
         isSetLast = true;
     }
 
@@ -91,7 +83,7 @@ public class SimpleMultipartEntity   {
             	out.write(("\r\n--" + boundary + "\r\n").getBytes());
         	}
         } catch (final IOException e) {
-            e.printStackTrace();
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
     }
 
@@ -119,18 +111,20 @@ public class SimpleMultipartEntity   {
             out.flush();
             outputStream.flush();
         } catch (final IOException e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         } finally {
             if (outputStream != null) {
                 try {
                     outputStream.close();
                 } catch (IOException e) {
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
-
             }
             if (fin != null) {
                 try {
                     fin.close();
                 } catch (final IOException e) {
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
             }
         }
@@ -141,45 +135,35 @@ public class SimpleMultipartEntity   {
         try {
             addPart(key, value.getName(), new FileInputStream(value), isLast);
         } catch (final FileNotFoundException e) {
-            e.printStackTrace();
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
     }
-
  
     public long getContentLength() {
         writeLastBoundaryIfNeeds();
         return out.toByteArray().length;
     }
-
  
     public String getContentType() {
         return   "multipart/form-data; boundary=" + boundary;
     }
-
  
     public boolean isChunked() {
         return false;
     }
-
  
     public boolean isRepeatable() {
         return false;
     }
 
- 
     public boolean isStreaming() {
         return false;
     }
-
  
     public void writeTo(final OutputStream outstream) throws IOException {
         outstream.write(out.toByteArray());
     }
 
-  
-
-
- 
     public void consumeContent() throws IOException,
     UnsupportedOperationException {
         if (isStreaming()) {
@@ -188,9 +172,9 @@ public class SimpleMultipartEntity   {
         }
     }
 
- 
     public InputStream getContent() throws IOException,
     UnsupportedOperationException {
         return new ByteArrayInputStream(out.toByteArray());
     }
+
 }

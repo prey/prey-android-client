@@ -29,25 +29,20 @@ public class CameraActivity extends PreyActivity {
         if (bundle != null) {
             this.message = bundle.getString("webcam_message");
         }
-
         showDialog(SHOW_POPUP);
     }
 
     @Override
     protected Dialog onCreateDialog(int id) {
-
         Dialog popup = null;
         switch (id) {
-
             case SHOW_POPUP:
                 popup = new AlertDialog.Builder(CameraActivity.this).setIcon(R.drawable.info).setTitle(R.string.popup_alert_title).setMessage(this.message)
                         .setCancelable(true).create();
-
                 popup.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     public void onDismiss(DialogInterface dialog) {
                         PreyLogger.d("CameraActivity onDismiss");
                         PreyStatus.getInstance().setTakenPicture(true);
-
                         finish();
                     }
                 });

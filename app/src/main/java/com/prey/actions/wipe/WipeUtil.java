@@ -13,6 +13,7 @@ import android.os.Environment;
 import com.prey.PreyLogger;
 
 public class WipeUtil {
+
     public static void deleteSD() {
         String accessable = Environment.getExternalStorageState();
         PreyLogger.d("Deleting folder: " + accessable + " from SD");
@@ -21,7 +22,6 @@ public class WipeUtil {
             File dir = new File(Environment.getExternalStorageDirectory() + "");
             deleteRecursive(dir);
         }
-
     }
 
     public static void deleteRecursive(File fileOrDirectory) {
@@ -31,4 +31,5 @@ public class WipeUtil {
                 deleteRecursive(child);
         fileOrDirectory.delete();
     }
+
 }

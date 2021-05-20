@@ -9,9 +9,9 @@ package com.prey.actions.triggers;
 import java.util.List;
 
 public class TriggerDto {
+
     public int id;
     public String name;
-
     public String events;
     public String actions;
     public List<TriggerEventDto> listEvents;
@@ -61,4 +61,5 @@ public class TriggerDto {
     public void setActions(String actions) {
         this.actions = actions;
     }
+
 }

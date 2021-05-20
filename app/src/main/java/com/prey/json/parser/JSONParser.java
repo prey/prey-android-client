@@ -15,7 +15,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyRestHttpClient;
@@ -29,20 +28,16 @@ public class JSONParser {
     private final static String COMMAND = "\"command\"";
     private final static String TARGET  = "\"target\"";
 
-    // constructor
     public JSONParser() {
-
     }
 
     public List<JSONObject> getJSONFromUrl(Context ctx, String uri) {
         PreyLogger.d("getJSONFromUrl:" + uri);
         String sb=null;
         String json=null;
-
-
         try{
             PreyHttpResponse response=PreyRestHttpClient.getInstance(ctx).get(uri,null);
-            try{sb=response.getResponseAsString();}catch(Exception e){}
+            try{sb=response.getResponseAsString();}catch(Exception e){PreyLogger.e("Error:"+e.getMessage(),e);}
             if (sb!=null)
                 json = sb.trim();
         }catch(Exception e){
@@ -88,7 +83,6 @@ public class JSONParser {
         //json = "[{\"command\":\"start\",\"target\":\"browser\" }]";
         //json = "[{\"command\":\"get\",\"target\":\"report\",\"options\":{\"interval\":\"2\",\"exclude\":[\"picture\",false]}}]";
         //json = "[{\"command\":\"start\",\"target\": \"detach\",\"options\": {}}]";
-
         if ("[]".equals(json)) {
             return null;
         }
@@ -110,7 +104,7 @@ public class JSONParser {
                 listaJson.add(explrObject);
             }
         }catch(Exception e){
-            //PreyLogger.e("error in parser:"+e.getMessage(), e);
+            PreyLogger.e("error in parser:"+e.getMessage(), e);
         }
         return listaJson;
     }
