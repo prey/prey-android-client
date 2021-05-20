@@ -76,24 +76,22 @@ public class LocationService extends Service {
             } else {
                 PreyLogger.d("___________ask for permission LocationService ACCESS_FINE_LOCATION");
             }
-        }catch (Exception e){}
+        }catch (Exception e){
+            PreyLogger.e("Error LocationService.onCreate"+e.getMessage(),e);
+        }
         PreyLogger.d("LocationService has been started...");
     }
 
     @Override
     public void onDestroy() {
-
         if (androidLocationManager != null) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
                     || (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
                     androidLocationManager.removeUpdates(gpsLocationListener);
                     androidLocationManager.removeUpdates(networkLocationListener);
-
             }
-
         }
-
     }
 
     @Override
@@ -107,7 +105,6 @@ public class LocationService extends Service {
 
     private void setNewLocation(Location newLocation) {
         PreyLogger.d("[" + newLocation.getProvider() + "] Fix found!. Accuracy: [" + newLocation.getAccuracy() + "]");
-
         if (lastRegisteredLocation == null) {
             //PreyLogger.d("-----> First fix. Set as last location!");
             lastRegisteredLocation = newLocation;

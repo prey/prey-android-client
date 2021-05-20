@@ -26,7 +26,6 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
-import com.prey.actions.triggers.TriggerGeoReceiver;
 import com.prey.events.Event;
 import com.prey.events.manager.EventThread;
 import com.prey.json.UtilJson;
@@ -47,10 +46,8 @@ public class GeofenceController {
     private List<GeofenceDto> listWeb = null;
     private Map<String, GeofenceDto> mapBD = null;
     private Map<String, GeofenceDto> mapWeb = null;
-
     public static final String GEOFENCING_OUT="geofencing_out";
     public static final String GEOFENCING_IN="geofencing_in";
-
 
     public static GeofenceController getInstance() {
         if (INSTANCE == null) {
@@ -58,7 +55,6 @@ public class GeofenceController {
         }
         return INSTANCE;
     }
-
 
     public void run(Context ctx) {
         try {
@@ -68,7 +64,7 @@ public class GeofenceController {
             try {listWeb = GeofecenceParse.getJSONFromUrl(ctx); } catch (Exception e) {}
             updateZones(ctx,listWeb,listBD,dataSource);
         } catch (Exception e) {
-            PreyLogger.e("error run"+e.getMessage(),e);
+            PreyLogger.e("error GeofenceController run"+e.getMessage(),e);
         }
     }
 
@@ -189,7 +185,6 @@ public class GeofenceController {
             }
         }
         info += "]";
-
         final String extraInfo = info;
         PreyLogger.d("GEO info:" + extraInfo);
         GeofencingRequest.Builder builderEnter = new GeofencingRequest.Builder();
@@ -239,6 +234,7 @@ public class GeofenceController {
                 }
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
     }
 

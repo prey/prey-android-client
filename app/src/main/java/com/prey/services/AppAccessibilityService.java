@@ -6,9 +6,17 @@
  ******************************************************************************/
 package com.prey.services;
 
-public class AppAccessibilityService {
-/*
- extends AccessibilityService {
+import android.accessibilityservice.AccessibilityService;
+import android.content.Intent;
+import android.os.Build;
+import android.view.accessibility.AccessibilityEvent;
+
+import com.prey.PreyConfig;
+import com.prey.PreyLogger;
+import com.prey.activities.PasswordHtmlActivity;
+import com.prey.activities.PasswordNativeActivity;
+
+public class AppAccessibilityService extends AccessibilityService {
 
     @Override
     public void onCreate() {
@@ -21,8 +29,7 @@ public class AppAccessibilityService {
         try {
             String unlockPass=PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
             boolean isLock = unlockPass!=null && !"".equals(unlockPass);
-            boolean canDrawOverlays= PreyPermission.canDrawOverlays(getApplicationContext());
-            if (!canDrawOverlays && isLock ) {
+            if ( isLock ) {
                 PreyLogger.d("acc 1");
                 if (accessibilityEvent != null && accessibilityEvent.getPackageName() != null) {
                     String charSequence = accessibilityEvent.getPackageName() != null ? accessibilityEvent.getPackageName().toString() : null;
@@ -30,19 +37,20 @@ public class AppAccessibilityService {
                     } else {
                         if(isLock) {
                             PreyLogger.d("acc 2");
-                            Intent intent = null;
+                            Intent intentPasswordActivity = null;
                             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                intent = new Intent(getApplicationContext(), PasswordHtmlActivity.class);
+                                intentPasswordActivity = new Intent(getApplicationContext(), PasswordHtmlActivity.class);
                             }else{
-                                intent = new Intent(getApplicationContext(), PasswordNativeActivity.class);
+                                intentPasswordActivity = new Intent(getApplicationContext(), PasswordNativeActivity.class);
                             }
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            getApplicationContext().startActivity(intent);
+                            intentPasswordActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            getApplicationContext().startActivity(intentPasswordActivity);
                         }
                     }
                 }
             }
         }catch (Exception e){
+            PreyLogger.e("Error onAccessibilityEvent:"+e.getMessage(),e);
         }
     }
 
@@ -50,5 +58,4 @@ public class AppAccessibilityService {
     public void onInterrupt() {
     }
 
-*/
 }

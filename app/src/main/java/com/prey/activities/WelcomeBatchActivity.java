@@ -14,12 +14,10 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-
 import android.os.AsyncTask;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -40,7 +38,6 @@ public class WelcomeBatchActivity extends FragmentActivity {
     public void onResume() {
         PreyLogger.d("onResume of WelcomeBatchActivity");
         super.onResume();
-
     }
 
     @Override
@@ -60,13 +57,14 @@ public class WelcomeBatchActivity extends FragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         menu();
-
         if(PreyConfig.getPreyConfig(this).isAskForNameBatch()){
             setContentView(R.layout.welcomebatch2);
             try {
                 EditText editTextBatch2 = findViewById(R.id.editTextBatch2);
                 editTextBatch2.setText(PreyUtils.getNameDevice(this));
-            }catch (Exception e){}
+            }catch (Exception e){
+                PreyLogger.e("Error:"+e.getMessage(),e);
+            }
             menu();
             Button buttonBatch2=(Button)findViewById(R.id.buttonBatch2);
             buttonBatch2.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +88,6 @@ public class WelcomeBatchActivity extends FragmentActivity {
 
     public void menu() {
         PreyLogger.d("menu ready:" + PreyConfig.getPreyConfig(this).getProtectReady());
-
         String email = PreyConfig.getPreyConfig(this).getEmail();
         if (email == null || "".equals(email)) {
             PreyConfig.getPreyConfig(this).setProtectReady(false);
@@ -117,7 +114,9 @@ public class WelcomeBatchActivity extends FragmentActivity {
                 progressDialog.setIndeterminate(true);
                 progressDialog.setCancelable(false);
                 progressDialog.show();
-            }catch (Exception e){}
+            }catch (Exception e){
+                PreyLogger.e("Error:"+e.getMessage(),e);
+            }
         }
 
         @Override
@@ -125,17 +124,14 @@ public class WelcomeBatchActivity extends FragmentActivity {
             try {
                 error = null;
                 Context ctx=getApplicationContext();
-
                 if(!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
                     PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, data[0], data[1], data[2],data[3]);
                     PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
                     PreyConfig.getPreyConfig(ctx).registerC2dm();
-                    PreyWebServices.getInstance().sendEvent(ctx,PreyConfig.ANDROID_SIGN_UP);
                     PreyConfig.getPreyConfig(ctx).setRunBackground(true);
                     RunBackgroundCheckBoxPreference.notifyReady(ctx);
                     new PreyApp().run(ctx);
                 }
-
             } catch (Exception e) {
                 error = e.getMessage();
             }
@@ -151,14 +147,12 @@ public class WelcomeBatchActivity extends FragmentActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString("message", message);
                 PreyConfig.getPreyConfig(WelcomeBatchActivity.this).setCamouflageSet(true);
-                Intent intent = new Intent(WelcomeBatchActivity.this, PermissionInformationActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-
+                Intent intentPermission = new Intent(WelcomeBatchActivity.this, PermissionInformationActivity.class);
+                intentPermission.putExtras(bundle);
+                startActivity(intentPermission);
                 finish();
             }
         }
     }
-
 
 }

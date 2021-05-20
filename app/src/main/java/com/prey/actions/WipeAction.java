@@ -33,7 +33,6 @@ public class WipeAction extends PreyAction {
     @Override
     public void execute(ActionJob actionJob, Context ctx) throws PreyException {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-
         String formatSim = getConfig().get("format_sim");
         PreyLogger.d("format_sim:"+formatSim);
         try {
@@ -41,8 +40,8 @@ public class WipeAction extends PreyAction {
                 WipeUtil.deleteSD();
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
-
         try {
             if (preyConfig.isFroyoOrAbove()) {
                 PreyLogger.d("Wiping the device!!");
@@ -51,7 +50,6 @@ public class WipeAction extends PreyAction {
         } catch (Exception e) {
             PreyLogger.e("Error:" + e.getMessage(), e);
         }
-
     }
 
     @Override
@@ -65,4 +63,3 @@ public class WipeAction extends PreyAction {
     }
 
 }
-

@@ -28,32 +28,25 @@ public class Wifi extends JsonAction {
         HttpDataService data = new HttpDataService("wifi");
         try {
             data.setList(true);
-
             PreyPhone phone = new PreyPhone(ctx);
             com.prey.PreyPhone.Wifi wifiPhone = phone.getWifi();
-
             HashMap<String, String> parametersMap = new HashMap<String, String>();
-
             parametersMap.put(SSID, wifiPhone.getSsid());
             parametersMap.put("mac_address", wifiPhone.getMacAddress());
             parametersMap.put("security", wifiPhone.getSecurity());
             parametersMap.put("signal_strength", wifiPhone.getSignalStrength());
             parametersMap.put("channel", wifiPhone.getChannel());
-
             parametersMap.put("interfaceType", wifiPhone.getInterfaceType());
             parametersMap.put("model", wifiPhone.getModel());
             parametersMap.put("vendor", wifiPhone.getVendor());
             parametersMap.put("ipAddress", wifiPhone.getIpAddress());
             parametersMap.put("gatewayIp", wifiPhone.getGatewayIp());
             parametersMap.put("netmask", wifiPhone.getNetmask());
-
             data.addDataListAll(parametersMap);
-
         } catch (Exception e) {
-            PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
+            PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
         }
         return data;
     }
 
 }
-

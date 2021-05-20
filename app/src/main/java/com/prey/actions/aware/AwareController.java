@@ -156,7 +156,6 @@ public class AwareController {
         }
     }
 
-
     public static PreyLocation sendAware(Context ctx, PreyLocation locationAware) throws Exception{
         //get location
         PreyLocation locationNow = locationAware;
@@ -172,7 +171,6 @@ public class AwareController {
                 }
             }else{
                 PreyLogger.d("AWARE locationOld__is null");
-
             }
             PreyLogger.d("AWARE setLocationAware__ "+locationAware.toString());
             PreyConfig.getPreyConfig(ctx).setLocationAware(locationAware);
@@ -213,9 +211,6 @@ public class AwareController {
             json.put("method", method);
             JSONObject location = new JSONObject();
             location.put("location", json);
-
-            //createNotification(ctx,locationNow);
-
             if (android.os.Build.VERSION.SDK_INT > 9) {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
@@ -232,7 +227,6 @@ public class AwareController {
         }
     }
 
-
     private static void createNotification(Context ctx,PreyLocation locationNow){
         String CHANNEL_ID="CHANNEL_AWARE_ID";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -245,9 +239,7 @@ public class AwareController {
             NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-
         int NOTIFICATION_ID=AwareConfig.getAwareConfig(ctx).getNotificationId();
-
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
                 .setSmallIcon(R.drawable.icon2)
                 .setContentTitle("AWARE")

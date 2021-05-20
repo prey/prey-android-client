@@ -72,7 +72,6 @@ public class PreyConnectivityManager {
         }
     }
 
-
     public boolean isWifiAvailable(){
         android.net.NetworkInfo wifi =connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         return wifi.isAvailable();
@@ -82,5 +81,5 @@ public class PreyConnectivityManager {
         android.net.NetworkInfo wifi =connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         return wifi.isConnected();
     }
-}
 
+}

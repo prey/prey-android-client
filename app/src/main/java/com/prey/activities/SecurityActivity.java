@@ -40,7 +40,9 @@ public class SecurityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         try {
             getSupportActionBar().hide();
-        }catch (Exception e){}
+        }catch (Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
         setContentView(R.layout.webview);
         PreyLogger.d("SecurityActivity: onCreate");
         security();

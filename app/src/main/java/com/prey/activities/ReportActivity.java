@@ -41,7 +41,6 @@ public class ReportActivity extends FragmentActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.report);
         PreyLogger.d("ReportActivity: onCreate");
         loadUrl();
@@ -60,6 +59,7 @@ public class ReportActivity extends FragmentActivity implements OnMapReadyCallba
             lat=extras.getDouble("lat");
             lng=extras.getDouble("lng");
         }catch (Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         LatLng UPV = new LatLng(lat,lng);
         map.addMarker(new MarkerOptions().position(UPV));
@@ -76,7 +76,6 @@ public class ReportActivity extends FragmentActivity implements OnMapReadyCallba
     public void settings(){
         PreyLogger.d("ReportActivity: settings");
         myWebView = (WebView) findViewById(R.id.install_browserReport);
-
         WebSettings settings = myWebView.getSettings();
         myWebView.setBackgroundColor(0x00000000);
         settings.setJavaScriptEnabled(true);

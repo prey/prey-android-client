@@ -22,21 +22,16 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
 
     public static abstract class Graphic {
         private GraphicOverlay mOverlay;
-
         public Graphic(GraphicOverlay overlay) {
             mOverlay = overlay;
         }
-
         public abstract void draw(Canvas canvas);
-
         public float scaleX(float horizontal) {
             return horizontal * mOverlay.mWidthScaleFactor;
         }
-
         public float scaleY(float vertical) {
             return vertical * mOverlay.mHeightScaleFactor;
         }
-
         public float translateX(float x) {
             if (mOverlay.mFacing == CameraSource.CAMERA_FACING_FRONT) {
                 return mOverlay.getWidth() - scaleX(x);
@@ -44,11 +39,9 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
                 return scaleX(x);
             }
         }
-
         public float translateY(float y) {
             return scaleY(y);
         }
-
         public void postInvalidate() {
             mOverlay.postInvalidate();
         }
@@ -104,16 +97,15 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         synchronized (mLock) {
             if ((mPreviewWidth != 0) && (mPreviewHeight != 0)) {
                 mWidthScaleFactor = (float) canvas.getWidth() / (float) mPreviewWidth;
                 mHeightScaleFactor = (float) canvas.getHeight() / (float) mPreviewHeight;
             }
-
             for (Graphic graphic : mGraphics) {
                 graphic.draw(canvas);
             }
         }
     }
+
 }

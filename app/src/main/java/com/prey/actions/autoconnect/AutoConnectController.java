@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2018 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.autoconnect;
 
 import android.content.Context;
@@ -9,7 +15,6 @@ import com.prey.services.AutoconnectJobService;
 
 public class AutoConnectController {
 
-
     private static AutoConnectController INSTANCE;
 
     public static AutoConnectController getInstance() {
@@ -18,7 +23,6 @@ public class AutoConnectController {
         }
         return INSTANCE;
     }
-
 
     public void initJob(Context ctx) {
         try{
@@ -33,4 +37,5 @@ public class AutoConnectController {
             PreyLogger.e("AUTO error:" + e.getMessage(), e);
         }
     }
+
 }

@@ -44,12 +44,14 @@ public class Location extends JsonAction{
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String jobId = null;
         try {
             jobId = parameters.getString(PreyConfig.JOB_ID);
             PreyLogger.d("jobId:"+jobId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String reason=null;
         if(jobId!=null&&!"".equals(jobId)){
@@ -58,8 +60,6 @@ public class Location extends JsonAction{
         PreyLocationManager.getInstance(ctx).setLastLocation(null);
         PreyConfig.getPreyConfig(ctx).setLocationInfo("");
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("get", "location", "started",reason));
-
-
         PreyLogger.d(this.getClass().getName());
         HttpDataService data = LocationUtil.dataLocation(ctx,messageId,true);
         if (data==null){
@@ -85,32 +85,13 @@ public class Location extends JsonAction{
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         HttpDataService data = LocationUtil.dataLocation(ctx,messageId,false);
         return data;
     }
 
     public void sms(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        /*PreyLogger.d("Ejecuting sms Location Data.");
-        String phoneNumber = null;
-        if (parameters != null) {
-            try {
-                phoneNumber = parameters.getString("parameter");
-            } catch (Exception e) {
-                try {
-                    phoneNumber = parameters.getString("phoneNumber");
-                } catch (Exception e1) {
-                    PreyLogger.e("Error, causa:" + e1.getMessage(), e1);
-                }
-            }
-            try {
-                if (phoneNumber != null && !"".equals(phoneNumber)) {
-                    new LocationThread(ctx, phoneNumber).start();
-                }
-            } catch (Exception e) {
-                PreyLogger.e("Error, causa:" + e.getMessage(), e);
-            }
-        }*/
     }
 
     public  List<HttpDataService> start_location_aware(Context ctx, List<ActionResult> list, JSONObject parameters) {
@@ -120,4 +101,3 @@ public class Location extends JsonAction{
     }
 
 }
-

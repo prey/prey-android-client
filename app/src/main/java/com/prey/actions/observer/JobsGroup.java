@@ -42,10 +42,6 @@ public class JobsGroup {
     private JobsQueue queue;
     private Context ctx;
 
-    // public JobsGroup() {
-    // this.initialize();
-    // }
-
     public JobsGroup(ArrayList<PreyAction> actions, Context ctx) {
         this.initialize(ctx);
         for (PreyAction preyAction : actions) {
@@ -102,22 +98,6 @@ public class JobsGroup {
 
         }
         waitNotifyPriority.doNotify();
-		/*
-		while (actionModulesJobId.hasMoreElements()) {
-			jobId = (Long) actionModulesJobId.nextElement();
-			new Thread((ActionJob) this.actionModules.get(jobId)).start();
-		}
-		if (isMissing){
-			Enumeration<Long> reportModulesJobId = this.reportModules.keys();
-			Long syncJobId;
-			while (reportModulesJobId.hasMoreElements()) {
-				syncJobId = (Long) reportModulesJobId.nextElement();
-					Thread actionJobRun = new Thread((ActionJob) this.reportModules.get(syncJobId), syncJobId.toString());
-				actionJobRun.start();
-				// Only syncjobs are added to the running jobs list
-				this.runningJobs.put(syncJobId, actionJobRun);
-			}
-		}*/
     }
 
     public void jobFinished(ActionJob job) {
@@ -171,7 +151,6 @@ public class JobsGroup {
             this.ctx=ctx;
             this.waitNotifyPriority=waitNotifyPriority;
         }
-
         public void run() {
             try {
                 PreyAction action=actionJob.getAction();
@@ -182,7 +161,6 @@ public class JobsGroup {
                 PreyLogger.e("Error:"+e.getMessage(),e);
             }
         }
-
     }
 
 }

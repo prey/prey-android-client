@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "4cce660ba505cea8196e",
+    "revision": "88200d459cb19ae67602",
     "url": "./static/css/main.7c155169.chunk.css"
   },
   {
-    "revision": "4cce660ba505cea8196e",
-    "url": "./static/js/main.4cce660b.chunk.js"
+    "revision": "88200d459cb19ae67602",
+    "url": "./static/js/main.88200d45.chunk.js"
   },
   {
     "revision": "8c97409f0ee389fe75da",
@@ -136,7 +136,7 @@ self.__precacheManifest = [
     "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
   },
   {
-    "revision": "65b43d333a3341a810c948b940f6155a",
+    "revision": "9d745610a72faf083c7fe6b56abeffa0",
     "url": "./index.html"
   }
 ];

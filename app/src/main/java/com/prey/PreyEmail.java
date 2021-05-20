@@ -53,14 +53,11 @@ public class PreyEmail {
             }else{
                 PreyLogger.d("account nulo");
             }
-
         }else{
             PreyLogger.d("sdk menor");
         }
         return null;
-
     }
-
 
     @SuppressLint("NewApi")
     private static Account getAccount(Context context,AccountManager accountManager) {
@@ -76,5 +73,5 @@ public class PreyEmail {
         }
         return null;
     }
-}
 
+}

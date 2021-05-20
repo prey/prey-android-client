@@ -20,7 +20,6 @@ public class ReportActionResponse {
     private String postUrl;
 
     public void addAction(String actionName, String active) {
-
         PreyAction action = PreyAction.getActionFromName(actionName);
         if (action != null)
             this.actionsToPerform.put(actionName, action);
@@ -62,7 +61,5 @@ public class ReportActionResponse {
     public void setPostUrl(String postUrl) {
         this.postUrl = postUrl;
     }
-
-
 
 }

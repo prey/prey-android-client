@@ -40,32 +40,24 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
     private View mBackupContent;
     private Button mSecondDialogButton;
     private Button mFirstDialogButton;
-
     private EditText mPassword;
     private EditText mPassword2;
     private TextView password_description;
     private TextView password_description2;
     private TextView fingerprint_description;
-
     private String from="";
-
     private FingerprintHelper mFingerprintUiHelper = null;
     private FingerprintManager fingerprintManager = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View v = inflater.inflate(R.layout.fingerprint_dialog_container, container, false);
-
         Bundle bundle=getArguments();
         from=bundle.getString("from");
         PreyLogger.d("from:"+from);
         mFingerprintUiHelper=null;
-
-
         mStage = Stage.PASSWORD;
-
         mFirstDialogButton = (Button) v.findViewById(R.id.first_dialog_button);
         mFirstDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +71,6 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
                 }
             }
         });
-
         mSecondDialogButton = (Button) v.findViewById(R.id.second_dialog_button);
         mSecondDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,17 +82,13 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
                 }
             }
         });
-
         mFingerprintContent = v.findViewById(R.id.fingerprint_container);
         mBackupContent = v.findViewById(R.id.backup_container);
-
         mPassword = (EditText) v.findViewById(R.id.password);
         mPassword2 = (EditText) v.findViewById(R.id.password2);
         password_description = (TextView) v.findViewById(R.id.password_description);
         password_description2 = (TextView) v.findViewById(R.id.password_description2);
         fingerprint_description = (TextView) v.findViewById(R.id.fingerprint_description);
-
-
         Typeface regularBold= Typeface.createFromAsset(getActivity().getAssets(), "fonts/Regular/regular-bold.otf");
         password_description.setTypeface(regularBold);
         password_description2.setTypeface(regularBold);
@@ -110,7 +97,6 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
         mSecondDialogButton.setTypeface(regularBold);
         mFirstDialogButton.setTypeface(regularBold);
         fingerprint_description.setTypeface(regularBold);
-
         updateStage();
         return v;
     }
@@ -164,6 +150,7 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
         else
             new CheckPassword(getActivity()).execute(passwordtyped,passwordtyped2);
     }
+
     private void goToBackup() {
         mStage = Stage.PASSWORD;
         updateStage();
@@ -234,7 +221,6 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
         CheckPassword(Context ctx){
             mCtx =ctx;
         }
-
         ProgressDialog progressDialog = null;
         boolean isPasswordOk = false;
         String error = null;
@@ -274,6 +260,7 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
                     progressDialog.dismiss();
                 }
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             if (error != null)
                 Toast.makeText(mCtx, error, Toast.LENGTH_LONG).show();
@@ -302,4 +289,5 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
             }
         }
     }
+
 }

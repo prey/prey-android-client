@@ -16,7 +16,6 @@ public class AlertConfig {
 
     private AlertConfig(Context ctx) {
         this.ctx = ctx;
-
     }
 
     public static synchronized AlertConfig getAlertConfig(Context ctx) {
@@ -33,6 +32,5 @@ public class AlertConfig {
         notificationId = notificationId + 1;
         return notificationId;
     }
-
 
 }

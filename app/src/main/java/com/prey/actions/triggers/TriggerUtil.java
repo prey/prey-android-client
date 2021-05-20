@@ -76,6 +76,7 @@ public class TriggerUtil {
                     PreyLogger.d("fecha<=until");
                 }
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             boolean isDay = false;
             for (int i = 0; parts != null && i < parts.length; i++) {
@@ -93,7 +94,6 @@ public class TriggerUtil {
                 if (hour_from <= hora) {
                     PreyLogger.d("a:");
                     a = true;
-
                 }
                 boolean b = false;
                 if (hour_until >= hora) {
@@ -150,6 +150,7 @@ public class TriggerUtil {
                     Date date = TimeTrigger.EXACT_TIME_FORMAT_SDF.parse(dateTime);
                     valid=validDateAroundMinutes(date,3);
                 } catch (Exception e) {
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
                 return valid;
             }
@@ -167,11 +168,11 @@ public class TriggerUtil {
                     String minuteSt = json.getString("minute");
                     String secondSt = json.getString("second");
                     int hour =0;
-                    try{hour=Integer.parseInt(hourSt);}catch (Exception e){}
+                    try{hour=Integer.parseInt(hourSt);}catch (Exception e){PreyLogger.e("Error:"+e.getMessage(),e);}
                     int minute =0;
-                    try{minute=Integer.parseInt(minuteSt);}catch (Exception e){}
+                    try{minute=Integer.parseInt(minuteSt);}catch (Exception e){PreyLogger.e("Error:"+e.getMessage(),e);}
                     int second =0;
-                    try{second=Integer.parseInt(secondSt);}catch (Exception e){}
+                    try{second=Integer.parseInt(secondSt);}catch (Exception e){PreyLogger.e("Error:"+e.getMessage(),e);}
                     Calendar calender = Calendar.getInstance();
                     calender.set(Calendar.HOUR_OF_DAY, hour);
                     calender.set(Calendar.MINUTE, minute);
@@ -194,6 +195,7 @@ public class TriggerUtil {
                     }
                     return valid;
                 } catch (Exception e) {
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
             }
         }

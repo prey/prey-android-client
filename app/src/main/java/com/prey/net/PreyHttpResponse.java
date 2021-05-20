@@ -42,7 +42,6 @@ public class PreyHttpResponse {
     }
 
     public PreyHttpResponse(int  statusCode,String responseAsString) {
-
         try {
             this.response=null;
             this.statusCode = statusCode;
@@ -54,9 +53,7 @@ public class PreyHttpResponse {
         }
     }
 
-
     public PreyHttpResponse(int  statusCode,String responseAsString,Map<String, List<String>> mapHeaderFields) {
-
         try {
             this.response=null;
             this.statusCode = statusCode;
@@ -68,8 +65,6 @@ public class PreyHttpResponse {
             this.responseAsString = "";
         }
     }
-
-
 
     private String convertStreamToString(InputStream is) {
         String out=null;
@@ -84,10 +79,9 @@ public class PreyHttpResponse {
             rd.close();
             out=response.toString();
         }catch(Exception e){
-
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return out;
-
     }
 
     public int getStatusCode() {
@@ -100,9 +94,7 @@ public class PreyHttpResponse {
 
     @Override
     public String toString() {
-
         return statusCode + " " + responseAsString;
-
     }
 
     public HttpURLConnection getResponse() {

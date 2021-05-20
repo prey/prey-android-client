@@ -11,7 +11,6 @@ public class PreyStatus {
     private static PreyStatus instance=null;
 
     private PreyStatus(){
-
     }
 
     public static PreyStatus getInstance(){

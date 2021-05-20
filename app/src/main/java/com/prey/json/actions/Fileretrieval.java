@@ -13,7 +13,6 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.fileretrieval.FileretrievalDatasource;
 import com.prey.actions.fileretrieval.FileretrievalDto;
-import com.prey.actions.fileretrieval.FileretrievalOpenHelper;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
@@ -33,6 +32,7 @@ public class Fileretrieval {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
             PreyLogger.d("messageId:"+messageId);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         String reason = null;
         try {
@@ -42,6 +42,7 @@ public class Fileretrieval {
                 reason="{\"device_job_id\":\""+jobId+"\"}";
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         try {
             PreyLogger.d("Fileretrieval started");

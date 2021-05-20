@@ -25,27 +25,21 @@ public class PreyGcmListenerService extends GcmListenerService {
         PreyLogger.d("PUSH_______________");
         Context ctx = getApplicationContext();
         PreyConfig config = PreyConfig.getPreyConfig(ctx);
-
         Set<String> set = data.keySet();
         Iterator<String> ite = set.iterator();
         while (ite.hasNext()) {
             String key = ite.next();
             PreyLogger.d("___[" + key + "]" + data.getString(key));
         }
-
         String body = data.getString("body");
         String version = data.getString("version");
-
         String api_key = data.getString("api_key");
         String remote_email = data.getString("remote_email");
-
         String cmd = data.getString("cmd");
-
         if ((api_key != null && !"".equals(api_key)) || (body != null && body.indexOf("api_key") > 0)) {
             registrationPlanB(ctx, api_key, remote_email, body);
         } else {
             handleMessageBeta(ctx, body, version, cmd);
-
         }
     }
 

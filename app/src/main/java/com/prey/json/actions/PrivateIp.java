@@ -36,16 +36,11 @@ public class PrivateIp extends JsonAction {
         PreyPhone phone = new PreyPhone(ctx);
         HttpDataService data = new HttpDataService("private_ip");
         HashMap<String, String> parametersMap = new HashMap<String, String>();
-
         String privateIp = phone.getWifi().getIpAddress();
         parametersMap.put(privateIp, privateIp);
         PreyLogger.d("privateIp:" + privateIp);
-        ;
-
         data.setSingleData(privateIp);
-
         return data;
     }
 
 }
-

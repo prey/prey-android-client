@@ -20,8 +20,8 @@ import com.prey.actions.report.ReportService;
 
 @TargetApi(21)
 public class ReportJobService extends JobService {
-    private static final int JOB_ID = 124;
 
+    private static final int JOB_ID = 124;
 
     public static void schedule(Context ctx ) {
         JobScheduler jobScheduler = null;

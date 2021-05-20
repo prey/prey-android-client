@@ -65,7 +65,6 @@ public class ActionsController {
             }
         } else
             this.lastReceivedActions = actions;
-
     }
 
     /**
@@ -98,17 +97,15 @@ public class ActionsController {
 
     public List<HttpDataService> runActionJson(Context ctx, List<JSONObject> jsonObjectList) {
         List<HttpDataService> listData=new ArrayList<HttpDataService>();
-
         int size=jsonObjectList==null?-1:jsonObjectList.size();
         PreyLogger.d("runActionJson size:"+size);
-
         try {
             for(int i=0;jsonObjectList!=null&&i<jsonObjectList.size();i++){
                 JSONObject jsonObject=jsonObjectList.get(i);
                 try {
                     jsonObject = jsonObject.getJSONObject("cmd");
                 }catch(Exception e){
-
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
                 PreyLogger.d("jsonObject:"+jsonObject);
                 String nameAction = jsonObject.getString("target");
@@ -117,7 +114,7 @@ public class ActionsController {
                 try{
                     parametersAction = jsonObject.getJSONObject("options");
                 }catch(JSONException e){
-
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
                 if (parametersAction==null){
                     parametersAction=new JSONObject();
@@ -125,21 +122,13 @@ public class ActionsController {
                 try {
                     String messageId = jsonObject.getString(PreyConfig.MESSAGE_ID);
                     parametersAction.put(PreyConfig.MESSAGE_ID, messageId);
-                }catch (Exception e){}
+                }catch (Exception e){
+                    PreyLogger.e("Error:"+e.getMessage(),e);
+                }
                 PreyLogger.d("nameAction:"+nameAction+" methodAction:"+methodAction+" parametersAction:"+parametersAction);
-
                 List<ActionResult> lista = new ArrayList<ActionResult>();
                 listData=ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction,listData);
-                         /*if (lista!=null&&lista.size() > 0) {
-                                 for (ActionResult result : lista) {
-                                         dataToBeSent.add(result.getDataToSend());
-                                 }
-                         }*/
             }
-                 /*if(dataToBeSent!=null&&dataToBeSent.size()>0){
-                         PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
-                 }*/
-
             return listData;
         } catch (JSONException e) {
             PreyLogger.e("Error, causa:" + e.getMessage(), e);
@@ -148,4 +137,3 @@ public class ActionsController {
     }
 
 }
-

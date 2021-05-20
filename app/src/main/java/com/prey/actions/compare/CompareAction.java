@@ -13,7 +13,6 @@ import com.prey.actions.observer.ActionJob;
 
 public class CompareAction implements Comparator<ActionJob> {
 
-
     public int compare(ActionJob o1, ActionJob o2) {
         if (o1 == null) {
             return 1;

@@ -43,7 +43,6 @@ public class PreyBetaRunnerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
     }
 
     @Override
@@ -52,7 +51,9 @@ public class PreyBetaRunnerService extends Service {
         String cmd=null;
         try{
             cmd=intent.getExtras().getString("cmd");
-        }catch(Exception e){}
+        }catch(Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
         PreyLogger.d("PreyRunnerService has been started...:"+cmd);
         PreyBetaActionsRunnner exec = new PreyBetaActionsRunnner(cmd);
         running = true;
@@ -61,11 +62,8 @@ public class PreyBetaRunnerService extends Service {
 
     @Override
     public void onDestroy() {
-
-
         ActionsController.getInstance(PreyBetaRunnerService.this).finishRunningJosb();
         running = false;
-
     }
 
     @Override
@@ -73,6 +71,4 @@ public class PreyBetaRunnerService extends Service {
         return mBinder;
     }
 
-
 }
-

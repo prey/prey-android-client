@@ -8,11 +8,6 @@ package com.prey.actions.aware;
 
 import android.content.Context;
 
-import com.prey.PreyLogger;
-import com.prey.net.PreyWebServices;
-
-import org.json.JSONObject;
-
 public class AwareConfig {
 
     private static AwareConfig cachedInstance = null;
@@ -21,7 +16,6 @@ public class AwareConfig {
 
     private AwareConfig(Context ctx) {
         this.ctx = ctx;
-
     }
 
     public static synchronized AwareConfig getAwareConfig(Context ctx) {

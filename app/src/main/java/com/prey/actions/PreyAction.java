@@ -21,8 +21,6 @@ import com.prey.exceptions.PreyException;
 public abstract class PreyAction {
 
     public final String ID = "";
-
-
     public final int RINGTONE_PRIORITY=-1;
     public final int CALLLOG_PRIORITY=-1;
     public final int GEO_PRIORITY=1;
@@ -31,7 +29,6 @@ public abstract class PreyAction {
     public final int LOCK_PRIORITY=5;
     public final int POPUPALERT_PRIORITY=4;
     public final int WIPE_PRIORITY=6;
-
     private static HashMap<String, PreyAction> preyActions = null;
     protected HashMap<String, String> config = new HashMap<String, String>();
 
@@ -95,11 +92,8 @@ public abstract class PreyAction {
     }
 
     public void killAnyInstanceRunning(Context ctx) {
-
-
     }
 
     public abstract int getPriority();
 
 }
-

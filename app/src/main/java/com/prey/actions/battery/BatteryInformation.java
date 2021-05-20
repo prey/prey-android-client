@@ -37,10 +37,8 @@ public class BatteryInformation {
             String technology = intent.getExtras().getString(BatteryManager.EXTRA_TECHNOLOGY);
             int temperature = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0);
             int voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0);
-
             boolean charging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
                     status == BatteryManager.BATTERY_STATUS_FULL;
-
             battery = new Battery();
             battery.setHealth(health);
             battery.setIconSmall(iconSmall);
@@ -54,20 +52,14 @@ public class BatteryInformation {
             battery.setVoltage(voltage);
             battery.setCharging(charging);
             PreyLogger.d("voltage:" + voltage + " status:" + status + " technology:" + technology + " temperature:" + voltage);
-
             arg0.unregisterReceiver(mBatInfoReceiver);
         }
 
     };
 
-
     public HttpDataService getInformation(Context ctx) {
-
         battery = null;
-
-
         ctx.getApplicationContext().registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-
         try {
             int i = 0;
             while (battery == null && i < 10) {
@@ -77,10 +69,7 @@ public class BatteryInformation {
         } catch (InterruptedException e) {
             PreyLogger.d("Error, causa:" + e.getMessage());
         }
-
         HttpDataService data = null;
-
-
         if (battery != null) {
             data = new HttpDataService("battery_status");
             HashMap<String, String> parametersMap = new HashMap<String, String>();
@@ -89,9 +78,6 @@ public class BatteryInformation {
             data.getDataList().putAll(parametersMap);
             data.setList(true);
         }
-
-        //	ctx.getApplicationContext().unregisterReceiver(batteryInfoReceiver);
-
         return data;
     }
 
@@ -109,10 +95,8 @@ public class BatteryInformation {
             String technology = intent.getExtras().getString(BatteryManager.EXTRA_TECHNOLOGY);
             int temperature = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0);
             int voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0);
-
             boolean charging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
                     status == BatteryManager.BATTERY_STATUS_FULL;
-
             battery = new Battery();
             battery.setHealth(health);
             battery.setIconSmall(iconSmall);
@@ -140,10 +124,8 @@ public class BatteryInformation {
         String technology = intent.getExtras().getString(BatteryManager.EXTRA_TECHNOLOGY);
         int temperature = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0);
         int voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0);
-
         boolean charging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
                 status == BatteryManager.BATTERY_STATUS_FULL;
-
         Battery battery = new Battery();
         battery.setHealth(health);
         battery.setIconSmall(iconSmall);
@@ -160,4 +142,3 @@ public class BatteryInformation {
     }
 
 }
-

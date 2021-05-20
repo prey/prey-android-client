@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.events.retrieves;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -15,7 +14,6 @@ import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.events.manager.EventManager;
 import com.prey.json.actions.PrivateIp;
-
 
 public class EventRetrieveDataPrivateIp {
 
@@ -28,6 +26,8 @@ public class EventRetrieveDataPrivateIp {
             PreyLogger.d("privateIp:"+privateIpData);
             manager.receivesData(EventManager.PRIVATE_IP, privateIpJSon);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
     }
+
 }

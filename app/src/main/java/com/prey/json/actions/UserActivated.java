@@ -35,6 +35,7 @@ public class UserActivated  extends JsonAction {
             RunBackgroundCheckBoxPreference.notifyReady(ctx);
             new PreyApp().run(ctx);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         Intent intent = new Intent(ctx, CheckPasswordHtmlActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

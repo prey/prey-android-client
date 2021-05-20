@@ -15,7 +15,6 @@ import org.json.JSONObject;
 public class PreyStatus {
 
     private PreyStatus() {
-
     }
 
     private static PreyStatus instance = null;
@@ -100,7 +99,6 @@ public class PreyStatus {
         } catch (Exception e) {
             PreyLogger.e("STATUS Error:" + e.getMessage(), e);
         }
-
     }
-}
 
+}

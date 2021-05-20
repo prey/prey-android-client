@@ -36,24 +36,20 @@ public class FileretrievalController {
 
     public void run(Context ctx){
         PreyLogger.d("______________ FileretrievalController run _____________________");
-
         boolean connect = false;
-
         int j=0;
         do {
             connect = (PreyConfig.getPreyConfig(ctx).isConnectionExists()|| PreyWifiManager.getInstance(ctx).isOnline());
-
-            PreyLogger.d("______________ FileretrievalController connect2+"+connect+" _____________________");
+            PreyLogger.d("______________ FileretrievalController connect:+"+connect);
             if (connect) {
                 break;
             } else {
-                try{Thread.sleep(4000);}catch(Exception e){}
+                try{Thread.sleep(4000);}catch(Exception e){PreyLogger.e("Error:"+e.getMessage(),e);}
             }
             j++;
         }while(j<5);
         if (connect) {
             FileretrievalDatasource datasource = new FileretrievalDatasource(ctx);
-
             List<FileretrievalDto> list = datasource.getAllFileretrieval();
             for (int i = 0; list != null && i < list.size(); i++) {
                 FileretrievalDto dto = list.get(i);
@@ -69,7 +65,6 @@ public class FileretrievalController {
                         long total = dtoStatus.getTotal();
                         File file = new File(Environment.getExternalStorageDirectory() + "/" + dto.getPath());
                         PreyLogger.d("total:"+total+" size:"+dtoStatus.getSize()+" length:"+file.length());
-
                         int responseCode = PreyWebServices.getInstance().uploadFile(ctx, file, fileId, total);
                         PreyLogger.d("responseCode:" + responseCode);
                         if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
@@ -81,9 +76,7 @@ public class FileretrievalController {
                     }
                 } catch (Exception e) {
                     PreyLogger.e("FileretrievalController Error:" + e.getMessage(),e);
-
                 }
-
             }
         }
     }
@@ -92,4 +85,5 @@ public class FileretrievalController {
         FileretrievalDatasource datasource = new FileretrievalDatasource(ctx);
         datasource.deleteAllFileretrieval();
     }
+
 }

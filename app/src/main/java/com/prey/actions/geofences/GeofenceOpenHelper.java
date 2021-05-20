@@ -20,11 +20,8 @@ import java.util.List;
 public class GeofenceOpenHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 8;
-
     private static final String DATABASE_NAME = "Geofence.db";
-
     public static final String GEOFENCE_TABLE_NAME = "geofence";
-
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_NAME = "_name";
     public static final String COLUMN_LATITUDE = "_latitude";
@@ -32,7 +29,6 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
     public static final String COLUMN_RADIUS = "_radius";
     public static final String COLUMN_TYPE = "_type";
     public static final String COLUMN_EXPIRES = "_expires";
-
     private static final String GEOFENCE_TABLE_CREATE =
             "CREATE TABLE " + GEOFENCE_TABLE_NAME + " (" +
                     COLUMN_ID + " TEXT PRIMARY KEY, " +
@@ -182,5 +178,5 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
         }
         return geofence;
     }
-}
 
+}
