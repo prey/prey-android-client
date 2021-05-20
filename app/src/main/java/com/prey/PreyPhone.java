@@ -111,18 +111,22 @@ public class PreyPhone {
             }
             totalMemory = Long.parseLong(line) / 1024;
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         } finally {
             try {
                 br.close();
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             try {
                 ir.close();
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             try {
                 fi.close();
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
         }
         return totalMemory;
@@ -151,29 +155,28 @@ public class PreyPhone {
             try {
                 br.close();
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             try {
                 ir.close();
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             try {
                 fi.close();
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
         }
         return cpuMaxFreq;
     }
-
 
     private void updateWifi() {
         wifi = new Wifi();
         try {
             WifiManager wifiMgr = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
             WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-
-
             wifi.setWifiEnabled(wifiMgr.isWifiEnabled());
-
             int ipAddress = wifiInfo.getIpAddress();
             wifi.setIpAddress(formatterIp(ipAddress));
             wifi.setMacAddress(wifiInfo.getMacAddress());
@@ -194,17 +197,16 @@ public class PreyPhone {
             try {
                 ssid = ssid.replaceAll("\"", "");
             } catch (Exception e) {
-
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             wifi.setSsid(ssid);
-
             for (int i = 0; listWifi != null && i < listWifi.size(); i++) {
                 Wifi _wifi = listWifi.get(i);
                 ssid = _wifi.getSsid();
                 try {
                     ssid = ssid.replaceAll("\"", "");
                 } catch (Exception e) {
-
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
                 if (ssid.equals(wifi.getSsid())) {
                     wifi.setSecurity(_wifi.getSecurity());
@@ -214,9 +216,9 @@ public class PreyPhone {
                 }
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
     }
-
 
     private String formatterIp(int ipAddress) {
         return String.format("%d.%d.%d.%d",
@@ -228,7 +230,6 @@ public class PreyPhone {
 
     private void updateListWifi() {
         listWifi = new ArrayList<PreyPhone.Wifi>();
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
                 || (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
@@ -243,7 +244,6 @@ public class PreyPhone {
                 _wifi.setSignalStrength(String.valueOf(scan.level));
                 _wifi.setChannel(String.valueOf(getChannelFromFrequency(scan.frequency)));
                 listWifi.add(_wifi);
-
             }
         }
     }
@@ -429,9 +429,7 @@ public class PreyPhone {
         private String gatewayIp;
         private String netmask;
         private String macAddress;
-
         private String ssid;
-
         private String signalStrength;
         private String channel;
         private String security;
@@ -554,10 +552,8 @@ public class PreyPhone {
         ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo mInfo = new ActivityManager.MemoryInfo();
         activityManager.getMemoryInfo(mInfo);
-
         String[] args = {"/system/bin/cat", "/proc/cpuinfo"};
         ProcessBuilder pb = new ProcessBuilder(args);
-
         Process process;
         Map<String, String> mapData = new HashMap<String, String>();
         try {
@@ -570,12 +566,14 @@ public class PreyPhone {
                 try {
                     mapData.put(data[0].trim(), data[1].trim());
                 } catch (Exception e) {
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
             }
             if (br != null) {
                 br.close();
             }
         } catch (IOException e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return mapData;
     }
@@ -593,19 +591,17 @@ public class PreyPhone {
         }
     }
 
-
     public String getIPAddress() {
         String ip = "";
         try {
             ip = PreyWebServices.getInstance().getIPAddress(ctx);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return ip;
     }
 
     private static final int REQUEST_READ_PHONE_STATE_PERMISSION = 225;
-
-
 
     private String getAndroidDeviceId() {
         return android.provider.Settings.Secure.getString(ctx.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
@@ -681,4 +677,3 @@ public class PreyPhone {
     }
 
 }
-

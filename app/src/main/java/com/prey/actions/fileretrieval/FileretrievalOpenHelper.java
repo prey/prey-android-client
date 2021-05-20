@@ -20,11 +20,8 @@ import java.util.List;
 public class FileretrievalOpenHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 2;
-
     private static final String DATABASE_NAME = "Fileretrieval.db";
-
     public static final String FILERETRIEVAL_TABLE_NAME = "fileretrieval";
-
     public static final String COLUMN_FILEID = "_file_id";
     public static final String COLUMN_PATH = "_path";
     public static final String COLUMN_SIZE = "_size";
@@ -68,7 +65,6 @@ public class FileretrievalOpenHelper extends SQLiteOpenHelper {
         values.put(COLUMN_PATH, dto.getPath());
         values.put(COLUMN_SIZE, dto.getSize());
         values.put(COLUMN_STATUS, dto.getStatus());
-
         PreyLogger.d("___db insert:" + dto.toString());
         database.insert(FILERETRIEVAL_TABLE_NAME, null, values);
         database.close();
@@ -77,11 +73,9 @@ public class FileretrievalOpenHelper extends SQLiteOpenHelper {
     public void updateFileretrieval(FileretrievalDto dto) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-
         values.put(COLUMN_PATH, dto.getPath());
         values.put(COLUMN_SIZE, dto.getSize());
         values.put(COLUMN_STATUS, dto.getStatus());
-
         String selection = COLUMN_FILEID + " = ?";
         String[] selectionArgs = {dto.getFileId()};
         PreyLogger.d("___db update:" + dto.toString());
@@ -123,7 +117,7 @@ public class FileretrievalOpenHelper extends SQLiteOpenHelper {
                 } while (cursor.moveToNext());
             }
         }catch (Exception e){
-
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }finally {
             if(cursor!=null){
                 try{cursor.close();}catch (Exception e1){}
@@ -149,7 +143,7 @@ public class FileretrievalOpenHelper extends SQLiteOpenHelper {
                 } while (cursor.moveToNext());
             }
         }catch (Exception e){
-
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }finally {
             if(cursor!=null){
                 try{cursor.close();}catch (Exception e1){}
@@ -157,4 +151,5 @@ public class FileretrievalOpenHelper extends SQLiteOpenHelper {
         }
         return dto;
     }
+
 }

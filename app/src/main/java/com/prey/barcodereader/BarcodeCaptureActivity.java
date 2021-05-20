@@ -173,7 +173,9 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
             if (mPreview != null) {
                 mPreview.release();
             }
-        }catch (Exception e){}
+        }catch (Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
     }
 
     @Override

@@ -40,13 +40,8 @@ public class CameraSource {
     public static final int CAMERA_FACING_BACK = CameraInfo.CAMERA_FACING_BACK;
     @SuppressLint("InlinedApi")
     public static final int CAMERA_FACING_FRONT = CameraInfo.CAMERA_FACING_FRONT;
-
-
     private static final int DUMMY_TEXTURE_NAME = 100;
-
-
     private static final float ASPECT_RATIO_TOLERANCE = 0.01f;
-
     @StringDef({
         Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE,
         Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO,
@@ -58,7 +53,6 @@ public class CameraSource {
     })
     @Retention(RetentionPolicy.SOURCE)
     private @interface FocusMode {}
-
     @StringDef({
         Camera.Parameters.FLASH_MODE_ON,
         Camera.Parameters.FLASH_MODE_OFF,
@@ -68,42 +62,26 @@ public class CameraSource {
     })
     @Retention(RetentionPolicy.SOURCE)
     private @interface FlashMode {}
-
     private Context mContext;
-
     private final Object mCameraLock = new Object();
-
-
     private Camera mCamera;
-
     private int mFacing = CAMERA_FACING_BACK;
-
-
     private int mRotation;
-
     private Size mPreviewSize;
-
     private float mRequestedFps = 30.0f;
     private int mRequestedPreviewWidth = 1024;
     private int mRequestedPreviewHeight = 768;
-
-
     private String mFocusMode = null;
     private String mFlashMode = null;
-
     private SurfaceView mDummySurfaceView;
     private SurfaceTexture mDummySurfaceTexture;
-
-
     private Thread mProcessingThread;
     private FrameProcessingRunnable mFrameProcessor;
-
     private Map<byte[], ByteBuffer> mBytesToByteBuffer = new HashMap<>();
 
     public static class Builder {
         private final Detector<?> mDetector;
         private CameraSource mCameraSource = new CameraSource();
-
 
         public Builder(Context context, Detector<?> detector) {
             if (context == null) {
@@ -160,7 +138,6 @@ public class CameraSource {
     }
 
     public interface ShutterCallback {
-
         void onShutter();
     }
 
@@ -189,10 +166,7 @@ public class CameraSource {
             if (mCamera != null) {
                 return this;
             }
-
             mCamera = createCamera();
-
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 mDummySurfaceTexture = new SurfaceTexture(DUMMY_TEXTURE_NAME);
                 mCamera.setPreviewTexture(mDummySurfaceTexture);
@@ -201,7 +175,6 @@ public class CameraSource {
                 mCamera.setPreviewDisplay(mDummySurfaceView.getHolder());
             }
             mCamera.startPreview();
-
             mProcessingThread = new Thread(mFrameProcessor);
             mFrameProcessor.setActive(true);
             mProcessingThread.start();
@@ -215,11 +188,9 @@ public class CameraSource {
             if (mCamera != null) {
                 return this;
             }
-
             mCamera = createCamera();
             mCamera.setPreviewDisplay(surfaceHolder);
             mCamera.startPreview();
-
             mProcessingThread = new Thread(mFrameProcessor);
             mFrameProcessor.setActive(true);
             mProcessingThread.start();
@@ -238,17 +209,13 @@ public class CameraSource {
                 }
                 mProcessingThread = null;
             }
-
             mBytesToByteBuffer.clear();
-
             if (mCamera != null) {
                 mCamera.stopPreview();
                 mCamera.setPreviewCallbackWithBuffer(null);
                 try {
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                         mCamera.setPreviewTexture(null);
-
                     } else {
                         mCamera.setPreviewDisplay(null);
                     }
@@ -282,7 +249,6 @@ public class CameraSource {
                 return currentZoom;
             }
             maxZoom = parameters.getMaxZoom();
-
             currentZoom = parameters.getZoom() + 1;
             float newZoom;
             if (scale > 1) {
@@ -331,7 +297,6 @@ public class CameraSource {
                     return true;
                 }
             }
-
             return false;
         }
     }
@@ -341,7 +306,6 @@ public class CameraSource {
     public String getFlashMode() {
         return mFlashMode;
     }
-
 
     public boolean setFlashMode(@FlashMode String mode) {
         synchronized (mCameraLock) {
@@ -358,7 +322,6 @@ public class CameraSource {
             return false;
         }
     }
-
 
     public void autoFocus(@Nullable AutoFocusCallback cb) {
         synchronized (mCameraLock) {
@@ -386,7 +349,6 @@ public class CameraSource {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             return false;
         }
-
         synchronized (mCameraLock) {
             if (mCamera != null) {
                 CameraAutoFocusMoveCallback autoFocusMoveCallback = null;
@@ -397,7 +359,6 @@ public class CameraSource {
                 mCamera.setAutoFocusMoveCallback(autoFocusMoveCallback);
             }
         }
-
         return true;
     }
 
@@ -406,7 +367,6 @@ public class CameraSource {
 
     private class PictureStartCallback implements Camera.ShutterCallback {
         private ShutterCallback mDelegate;
-
         @Override
         public void onShutter() {
             if (mDelegate != null) {
@@ -461,33 +421,26 @@ public class CameraSource {
             throw new RuntimeException("Could not find requested camera.");
         }
         Camera camera = Camera.open(requestedCameraId);
-
         SizePair sizePair = selectSizePair(camera, mRequestedPreviewWidth, mRequestedPreviewHeight);
         if (sizePair == null) {
             throw new RuntimeException("Could not find suitable preview size.");
         }
         Size pictureSize = sizePair.pictureSize();
         mPreviewSize = sizePair.previewSize();
-
         int[] previewFpsRange = selectPreviewFpsRange(camera, mRequestedFps);
         if (previewFpsRange == null) {
             throw new RuntimeException("Could not find suitable preview frames per second range.");
         }
-
         Camera.Parameters parameters = camera.getParameters();
-
         if (pictureSize != null) {
             parameters.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());
         }
-
         parameters.setPreviewSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
         parameters.setPreviewFpsRange(
                 previewFpsRange[Camera.Parameters.PREVIEW_FPS_MIN_INDEX],
                 previewFpsRange[Camera.Parameters.PREVIEW_FPS_MAX_INDEX]);
         parameters.setPreviewFormat(ImageFormat.NV21);
-
         setRotation(camera, parameters, requestedCameraId);
-
         if (mFocusMode != null) {
             if (parameters.getSupportedFocusModes().contains(
                     mFocusMode)) {
@@ -496,9 +449,7 @@ public class CameraSource {
                 PreyLogger.d("Camera focus mode: " + mFocusMode + " is not supported on this device.");
             }
         }
-
         mFocusMode = parameters.getFocusMode();
-
         if (mFlashMode != null) {
             if (parameters.getSupportedFlashModes().contains(
                     mFlashMode)) {
@@ -507,18 +458,13 @@ public class CameraSource {
                 PreyLogger.d("Camera flash mode: " + mFlashMode + " is not supported on this device.");
             }
         }
-
         mFlashMode = parameters.getFlashMode();
-
         camera.setParameters(parameters);
-
-
         camera.setPreviewCallbackWithBuffer(new CameraPreviewCallback());
         camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
         camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
         camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
         camera.addCallbackBuffer(createPreviewBuffer(mPreviewSize));
-
         return camera;
     }
 
@@ -535,7 +481,6 @@ public class CameraSource {
 
     private static SizePair selectSizePair(Camera camera, int desiredWidth, int desiredHeight) {
         List<SizePair> validPreviewSizes = generateValidPreviewSizeList(camera);
-
         SizePair selectedPair = null;
         int minDiff = Integer.MAX_VALUE;
         for (SizePair sizePair : validPreviewSizes) {
@@ -547,14 +492,12 @@ public class CameraSource {
                 minDiff = diff;
             }
         }
-
         return selectedPair;
     }
 
     private static class SizePair {
         private Size mPreview;
         private Size mPicture;
-
         public SizePair(Camera.Size previewSize,
                         Camera.Size pictureSize) {
             mPreview = new Size(previewSize.width, previewSize.height);
@@ -562,7 +505,6 @@ public class CameraSource {
                 mPicture = new Size(pictureSize.width, pictureSize.height);
             }
         }
-
         public Size previewSize() {
             return mPreview;
         }
@@ -582,7 +524,6 @@ public class CameraSource {
         List<SizePair> validPreviewSizes = new ArrayList<>();
         for (Camera.Size previewSize : supportedPreviewSizes) {
             float previewAspectRatio = (float) previewSize.width / (float) previewSize.height;
-
             for (Camera.Size pictureSize : supportedPictureSizes) {
                 float pictureAspectRatio = (float) pictureSize.width / (float) pictureSize.height;
                 if (Math.abs(previewAspectRatio - pictureAspectRatio) < ASPECT_RATIO_TOLERANCE) {
@@ -591,20 +532,17 @@ public class CameraSource {
                 }
             }
         }
-
         if (validPreviewSizes.size() == 0) {
             PreyLogger.d("No preview sizes have a corresponding same-aspect-ratio picture size");
             for (Camera.Size previewSize : supportedPreviewSizes) {
                 validPreviewSizes.add(new SizePair(previewSize, null));
             }
         }
-
         return validPreviewSizes;
     }
 
     private int[] selectPreviewFpsRange(Camera camera, float desiredPreviewFps) {
         int desiredPreviewFpsScaled = (int) (desiredPreviewFps * 1000.0f);
-
         int[] selectedFpsRange = null;
         int minDiff = Integer.MAX_VALUE;
         List<int[]> previewFpsRangeList = camera.getParameters().getSupportedPreviewFpsRange();
@@ -641,10 +579,8 @@ public class CameraSource {
             default:
                 PreyLogger.d("Bad rotation value: " + rotation);
         }
-
         CameraInfo cameraInfo = new CameraInfo();
         Camera.getCameraInfo(cameraId, cameraInfo);
-
         int angle;
         int displayAngle;
         if (cameraInfo.facing == CameraInfo.CAMERA_FACING_FRONT) {
@@ -654,9 +590,7 @@ public class CameraSource {
             angle = (cameraInfo.orientation - degrees + 360) % 360;
             displayAngle = angle;
         }
-
         mRotation = angle / 90;
-
         camera.setDisplayOrientation(displayAngle);
         parameters.setRotation(angle);
     }
@@ -665,13 +599,11 @@ public class CameraSource {
         int bitsPerPixel = ImageFormat.getBitsPerPixel(ImageFormat.NV21);
         long sizeInBits = previewSize.getHeight() * previewSize.getWidth() * bitsPerPixel;
         int bufferSize = (int) Math.ceil(sizeInBits / 8.0d) + 1;
-
         byte[] byteArray = new byte[bufferSize];
         ByteBuffer buffer = ByteBuffer.wrap(byteArray);
         if (!buffer.hasArray() || (buffer.array() != byteArray)) {
             throw new IllegalStateException("Failed to create valid buffer for camera source.");
         }
-
         mBytesToByteBuffer.put(byteArray, buffer);
         return byteArray;
     }
@@ -686,46 +618,38 @@ public class CameraSource {
     private class FrameProcessingRunnable implements Runnable {
         private Detector<?> mDetector;
         private long mStartTimeMillis = SystemClock.elapsedRealtime();
-
         private final Object mLock = new Object();
         private boolean mActive = true;
-
         private long mPendingTimeMillis;
         private int mPendingFrameId = 0;
         private ByteBuffer mPendingFrameData;
-
         FrameProcessingRunnable(Detector<?> detector) {
             mDetector = detector;
         }
-
         @SuppressLint("Assert")
         void release() {
             assert (mProcessingThread.getState() == State.TERMINATED);
             mDetector.release();
             mDetector = null;
         }
-
         void setActive(boolean active) {
             synchronized (mLock) {
                 mActive = active;
                 mLock.notifyAll();
             }
         }
-
         void setNextFrame(byte[] data, Camera camera) {
             synchronized (mLock) {
                 if (mPendingFrameData != null) {
                     camera.addCallbackBuffer(mPendingFrameData.array());
                     mPendingFrameData = null;
                 }
-
                 if (!mBytesToByteBuffer.containsKey(data)) {
                     PreyLogger.d(
                         "Skipping frame.  Could not find ByteBuffer associated with the image " +
                         "data from the camera.");
                     return;
                 }
-
                 mPendingTimeMillis = SystemClock.elapsedRealtime() - mStartTimeMillis;
                 mPendingFrameId++;
                 mPendingFrameData = mBytesToByteBuffer.get(data);
@@ -733,12 +657,10 @@ public class CameraSource {
                 mLock.notifyAll();
             }
         }
-
         @Override
         public void run() {
             Frame outputFrame;
             ByteBuffer data;
-
             while (true) {
                 synchronized (mLock) {
                     while (mActive && (mPendingFrameData == null)) {
@@ -749,11 +671,9 @@ public class CameraSource {
                             return;
                         }
                     }
-
                     if (!mActive) {
                         return;
                     }
-
                     outputFrame = new Frame.Builder()
                             .setImageData(mPendingFrameData, mPreviewSize.getWidth(),
                                     mPreviewSize.getHeight(), ImageFormat.NV21)
@@ -761,12 +681,9 @@ public class CameraSource {
                             .setTimestampMillis(mPendingTimeMillis)
                             .setRotation(mRotation)
                             .build();
-
                     data = mPendingFrameData;
                     mPendingFrameData = null;
                 }
-
-
                 try {
                     mDetector.receiveFrame(outputFrame);
                 } catch (Throwable t) {
@@ -777,4 +694,5 @@ public class CameraSource {
             }
         }
     }
+
 }

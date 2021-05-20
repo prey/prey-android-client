@@ -9,9 +9,10 @@ package com.prey.managers;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+
+import com.prey.PreyLogger;
 
 public class PreyWifiManager {
 
@@ -50,7 +51,9 @@ public class PreyWifiManager {
         try{
             if(wifiMgr!=null)
                 return wifiMgr.getConnectionInfo();
-        }catch(Exception e){}
+        }catch(Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
         return null;
     }
 
@@ -65,6 +68,4 @@ public class PreyWifiManager {
         return null;
     }
 
-
 }
-

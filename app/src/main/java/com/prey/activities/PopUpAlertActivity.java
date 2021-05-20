@@ -25,8 +25,8 @@ public class PopUpAlertActivity extends PreyActivity {
     private static final int SHOW_POPUP = 0;
     private String message = null;
     private int notificationId = 0;
-
     public static final String POPUP_PREY = "popup_prey";
+
     private final BroadcastReceiver close_prey_receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -88,4 +88,3 @@ public class PopUpAlertActivity extends PreyActivity {
     }
 
 }
-

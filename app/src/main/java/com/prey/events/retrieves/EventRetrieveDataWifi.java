@@ -8,7 +8,6 @@ package com.prey.events.retrieves;
 
 import java.util.Map;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.prey.PreyConfig;
@@ -40,10 +39,10 @@ public class EventRetrieveDataWifi {
             wifiJSon.put("active_access_point", accessElementJSon);
             PreyConfig.getPreyConfig(context).setPreviousSsid(ssid);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         PreyLogger.d("wifi:"+ssid);
         manager.receivesData(EventManager.WIFI, wifiJSon);
     }
 
 }
-

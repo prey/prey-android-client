@@ -9,7 +9,6 @@ package com.prey.activities;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -42,7 +41,6 @@ public class PreyConfigurationActivity extends PreferenceActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         if (!PreyStatus.getInstance().isPreyConfigurationActivityResume()) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -50,17 +48,14 @@ public class PreyConfigurationActivity extends PreferenceActivity {
             try {
                 startActivity(intent);
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             finish();
-
         }
-
         PreyConfig preyConfig = PreyConfig.getPreyConfig(getApplicationContext());
-
         Preference p = findPreference("PREFS_ADMIN_DEVICE");
         try {
             if (preyConfig.isFroyoOrAbove()) {
-
                 if (FroyoSupport.getInstance(getApplicationContext()).isAdminActive()) {
                     p.setTitle(R.string.preferences_admin_enabled_title);
                     p.setSummary(R.string.preferences_admin_enabled_summary);
@@ -71,18 +66,13 @@ public class PreyConfigurationActivity extends PreferenceActivity {
             } else
                 p.setEnabled(false);
         }catch(Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
-
-
-
         p = findPreference("PREFS_ABOUT");
         p.setSummary("Version " + preyConfig.getPreyVersion() + " - Prey Inc.");
-
         Preference pGo = findPreference("PREFS_GOTO_WEB_CONTROL_PANEL");
         pGo.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-
             public boolean onPreferenceClick(Preference preference) {
-
                 String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelUrl();
                 PreyLogger.d("url control:" + url);
                 Intent internetIntent = new Intent(Intent.ACTION_VIEW);
@@ -91,20 +81,17 @@ public class PreyConfigurationActivity extends PreferenceActivity {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(intent);
                 } catch (Exception e) {
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
                 return false;
             }
         });
         PreyStatus.getInstance().setPreyConfigurationActivityResume(false);
-
     }
-
 
     @Override
     protected void onPause() {
         super.onPause();
     }
 
-
 }
-

@@ -26,15 +26,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } catch (Exception e) {
                 cmd = null;
             }
-            /*
-            cmd="{\"command\":\"start\",\"target\":\"alert\",\"options\":{\"alert_message\":\"oso\"}}";
-            android.os.Handler handler = new  android.os.Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(),cmd,Toast.LENGTH_LONG).show();
-                }
-            });*/
             PreyLogger.d("FIREBASE cmd:"+cmd);
             PreyBetaController.startPrey(this,cmd);
         }

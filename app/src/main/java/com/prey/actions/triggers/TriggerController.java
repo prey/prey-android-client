@@ -48,11 +48,12 @@ public class TriggerController {
                 try {
                     listWeb = TriggerParse.getJSONFromUrl(ctx);
                 } catch (Exception e) {
+                    PreyLogger.e("error TriggerController get json:"+e.getMessage(),e);
                 }
                 updateTriggers(ctx, listWeb, listBD, dataSource);
             }
         } catch (Exception e) {
-            PreyLogger.e("error run"+e.getMessage(),e);
+            PreyLogger.e("error TriggerController run:"+e.getMessage(),e);
         }
     }
 
@@ -157,7 +158,6 @@ public class TriggerController {
         return map;
     }
 
-
     public void cancelAlarm(Context ctx, List<TriggerDto> list) {
         AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(ctx.ALARM_SERVICE);
         for (int i = 0; list != null && i < list.size(); i++) {
@@ -203,4 +203,5 @@ public class TriggerController {
             }
         }.start();
     }
+
 }

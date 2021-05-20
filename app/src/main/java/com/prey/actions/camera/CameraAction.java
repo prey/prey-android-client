@@ -12,6 +12,7 @@ import java.util.Map;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.PreyAction;
 import com.prey.actions.observer.ActionJob;
@@ -48,12 +49,12 @@ public class CameraAction extends PreyAction {
             try {
                 SimpleCameraActivity.camera.stopPreview();
             } catch (Exception e) {
-
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             try {
                 SimpleCameraActivity.camera.release();
             } catch (Exception e) {
-
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             SimpleCameraActivity.camera = null;
             SimpleCameraActivity.mHolder = null;
@@ -89,4 +90,3 @@ public class CameraAction extends PreyAction {
     }
 
 }
-

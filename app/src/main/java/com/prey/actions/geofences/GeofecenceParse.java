@@ -24,6 +24,7 @@ public class GeofecenceParse {
         try {
             json = PreyWebServices.getInstance().geofencing(ctx);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return getJSONFromTxt(ctx, json);
     }
@@ -50,4 +51,5 @@ public class GeofecenceParse {
         }
         return listGeofence;
     }
+
 }

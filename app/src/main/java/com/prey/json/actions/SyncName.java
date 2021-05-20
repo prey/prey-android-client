@@ -31,6 +31,7 @@ public class SyncName {
                     try {
                         name = Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_name");
                     } catch (Exception e) {
+                        PreyLogger.e("Error:"+e.getMessage(),e);
                     }
                     if (name != null && !"".equals(name)) {
                         newName = name;
@@ -49,8 +50,10 @@ public class SyncName {
                     Event event = new Event(Event.DEVICE_RENAMED, info.toString());
                     new EventManagerRunner(ctx, event).run();
                 } catch (Exception e) {
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
             }
         }.start();
     }
+
 }

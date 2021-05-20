@@ -83,6 +83,7 @@ public abstract class TriggerReceiver extends BroadcastReceiver {
                             parametersAction = jsonObject.getJSONObject("options");
                             PreyLogger.d("Trigger triggerName parametersAction:" + parametersAction);
                         } catch (JSONException e) {
+                            PreyLogger.e("Error:"+e.getMessage(),e);
                         }
                         if (parametersAction == null) {
                             parametersAction = new JSONObject();
@@ -91,6 +92,7 @@ public abstract class TriggerReceiver extends BroadcastReceiver {
                             String messageId = jsonObject.getString(PreyConfig.MESSAGE_ID);
                             parametersAction.put(PreyConfig.MESSAGE_ID, messageId);
                         } catch (Exception e) {
+                            PreyLogger.e("Error:"+e.getMessage(),e);
                         }
                         PreyLogger.d("Trigger nameAction:" + nameAction + " methodAction:" + methodAction + " parametersAction:" + parametersAction);
                         List<ActionResult> lista = new ArrayList<ActionResult>();

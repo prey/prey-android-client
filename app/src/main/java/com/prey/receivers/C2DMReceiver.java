@@ -21,13 +21,9 @@ import android.os.Build;
 import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.PreyUtils;
 import com.prey.beta.actions.PreyBetaController;
-import com.prey.exceptions.PreyException;
-import com.prey.json.UtilJson;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
-
 
 public class C2DMReceiver extends BroadcastReceiver {
 
@@ -43,14 +39,12 @@ public class C2DMReceiver extends BroadcastReceiver {
     private void handleMessage(Context context, Intent intent) {
         PreyLogger.d("PUSH_______________");
         PreyConfig config=PreyConfig.getPreyConfig(context);
-
         Set<String> set=intent.getExtras().keySet();
         Iterator<String> ite=set.iterator();
         while(ite.hasNext()) {
             String key = ite.next();
             PreyLogger.d("___[" + key + "]" + intent.getExtras().get(key));
         }
-
         String cmd=null;
         try {
             if(intent.getExtras().containsKey("cmd")) {
@@ -66,6 +60,7 @@ public class C2DMReceiver extends BroadcastReceiver {
                 }
             }
         } catch(Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         PreyBetaController.startPrey(context,cmd);
     }
@@ -93,7 +88,6 @@ public class C2DMReceiver extends BroadcastReceiver {
         }
     }
 
-
     private class UpdateCD2MId extends AsyncTask<Object, Void, Void> {
 
         @Override
@@ -116,4 +110,3 @@ public class C2DMReceiver extends BroadcastReceiver {
     }
 
 }
-

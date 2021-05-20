@@ -9,7 +9,6 @@ package com.prey.actions.triggers;
 public class TriggerException  extends Exception {
 
     private static final long serialVersionUID = 1L;
-
     public int code=-1;
 
     public TriggerException(String detailMessage, Throwable throwable) {

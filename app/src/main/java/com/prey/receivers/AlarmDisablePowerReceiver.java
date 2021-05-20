@@ -21,6 +21,7 @@ public class AlarmDisablePowerReceiver extends BroadcastReceiver {
         try {
             context.startService(new Intent(context, PreyDisablePowerOptionsService.class));
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
     }
 

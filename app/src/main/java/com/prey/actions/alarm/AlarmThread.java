@@ -45,7 +45,6 @@ public class AlarmThread extends Thread {
             int max = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
             final int setVolFlags = AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE | AudioManager.FLAG_VIBRATE;
             audio.setStreamVolume(AudioManager.STREAM_MUSIC, max, setVolFlags);
-
             if ("alarm".equals(sound))
                 mp = MediaPlayer.create(ctx, R.raw.alarm);
             else if ("ring".equals(sound))
@@ -54,7 +53,6 @@ public class AlarmThread extends Thread {
                 mp = MediaPlayer.create(ctx, R.raw.modem);
             else
                 mp = MediaPlayer.create(ctx, R.raw.siren);
-
             mp.start();
             Mp3OnCompletionListener mp3Listener = new Mp3OnCompletionListener();
             mp.setOnCompletionListener(mp3Listener);

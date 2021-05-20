@@ -15,7 +15,6 @@ import com.prey.PreyLogger;
 import com.prey.PreyPhone;
 import com.prey.events.manager.EventManager;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class EventRetrieveDataMobile {
@@ -31,12 +30,15 @@ public class EventRetrieveDataMobile {
                     mobile_internet=PreyPhone.getNetworkClass(context);
                     PreyConfig.getPreyConfig(context).setPreviousSsid(mobile_internet);
                 } catch (Exception e) {
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
             }
             mobileSon.put("mobile_internet", mobile_internet);
             PreyLogger.d("mobile_internet:"+mobile_internet);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         manager.receivesData(EventManager.MOBILE, mobileSon);
     }
+
 }

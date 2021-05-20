@@ -12,14 +12,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
-
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 
@@ -33,11 +32,8 @@ import static com.google.android.gms.location.LocationServices.FusedLocationApi;
  */
 public class UtilityService extends IntentService {
 
-
-
     private static final String ACTION_LOCATION_UPDATED = "location_updated";
     private static final String ACTION_REQUEST_LOCATION = "request_location";
-
 
     /*
      * Constants for location update parameters
@@ -59,9 +55,9 @@ public class UtilityService extends IntentService {
     }
 
     public static void requestLocation(Context context) {
-        Intent intent = new Intent(context, UtilityService.class);
-        intent.setAction(UtilityService.ACTION_REQUEST_LOCATION);
-        context.startService(intent);
+        Intent intentUtility = new Intent(context, UtilityService.class);
+        intentUtility.setAction(UtilityService.ACTION_REQUEST_LOCATION);
+        context.startService(intentUtility);
     }
 
     public UtilityService() {
@@ -82,7 +78,6 @@ public class UtilityService extends IntentService {
     public static final String GOOGLE_API_CLIENT_ERROR_MSG =
             "Failed to connect to GoogleApiClient (error code = %d)";
 
-
     /**
      * Called when a location update is requested
      */
@@ -91,17 +86,13 @@ public class UtilityService extends IntentService {
         GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .build();
-
         // It's OK to use blockingConnect() here as we are running in an
         // IntentService that executes work on a separate (background) thread.
         ConnectionResult connectionResult = googleApiClient.blockingConnect(
                 GOOGLE_API_CLIENT_TIMEOUT_S, TimeUnit.SECONDS);
-
         if (connectionResult.isSuccess() && googleApiClient.isConnected()) {
-
             Intent locationUpdatedIntent = new Intent(this, UtilityService.class);
             locationUpdatedIntent.setAction(ACTION_LOCATION_UPDATED);
-
             // Send last known location out first if available
             Location location = FusedLocationApi.getLastLocation(googleApiClient);
             if (location != null) {
@@ -110,15 +101,12 @@ public class UtilityService extends IntentService {
                         FusedLocationProviderApi.KEY_LOCATION_CHANGED, location);
                 startService(lastLocationIntent);
             }
-
             // Request new location
             LocationRequest mLocationRequest = new LocationRequest()
                     .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
             FusedLocationApi.requestLocationUpdates(
                     googleApiClient, mLocationRequest,
                     PendingIntent.getService(this, 0, locationUpdatedIntent, 0));
-
-
             googleApiClient.disconnect();
         } else {
             PreyLogger.d(String.format(GOOGLE_API_CLIENT_ERROR_MSG,
@@ -131,18 +119,13 @@ public class UtilityService extends IntentService {
      */
     private void locationUpdated(Intent intent) {
         PreyLogger.d( ACTION_LOCATION_UPDATED);
-
         // Extra new location
         Location location =
                 intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
-
-
     }
-
 
     public Location getLastLocation() {
         return null;
     }
 
 }
-

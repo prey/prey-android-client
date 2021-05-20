@@ -173,7 +173,9 @@ public class EventManager {
                                 new Thread(new LocationLowBatteryRunner(ctx)).start();
                                 try{
                                     jsonObjectStatus.put("locationLowBattery",true);
-                                }catch(Exception e){}
+                                }catch(Exception e){
+                                    PreyLogger.e("Error put:"+e.getMessage(),e);
+                                }
                             }
                         }
                     }
@@ -185,7 +187,6 @@ public class EventManager {
                         PreyLogger.d("event name[" + this.event.getName() + "], info[" + this.event.getInfo() + "]");
                         new EventThread(ctx, event, jsonObjectStatus).start();
                     }
-
             }
         }
     }
@@ -195,4 +196,3 @@ public class EventManager {
     }
 
 }
-

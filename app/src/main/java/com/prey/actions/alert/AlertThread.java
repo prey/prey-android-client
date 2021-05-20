@@ -77,7 +77,6 @@ public class AlertThread extends Thread {
             String NOTIFICATION_CHANNEL_ID = "10002";
             PreyLogger.d("started alert");
             PreyLogger.d("description:" + description);
-
             String CHANNEL_ID = "CHANNEL_ALERT_ID";
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 CharSequence name = "prey_alert";
@@ -92,22 +91,22 @@ public class AlertThread extends Thread {
                 reason = "{\"device_job_id\":\"" + jobId + "\"}";
             }
             PreyLogger.d("notificationId:" + notificationId);
-            Intent buttonIntent2 = new Intent(ctx, AlertReceiver.class);
-            buttonIntent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            buttonIntent2.setAction("" + notificationId);
-            buttonIntent2.putExtra("notificationId", notificationId);
-            buttonIntent2.putExtra("messageId", messageId);
-            buttonIntent2.putExtra("reason", reason);
-            PendingIntent btPendingIntent2 = PendingIntent.getBroadcast(ctx, 0, buttonIntent2, 0);
+            Intent buttonIntent = new Intent(ctx, AlertReceiver.class);
+            buttonIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            buttonIntent.setAction("" + notificationId);
+            buttonIntent.putExtra("notificationId", notificationId);
+            buttonIntent.putExtra("messageId", messageId);
+            buttonIntent.putExtra("reason", reason);
+            PendingIntent btPendingIntent = PendingIntent.getBroadcast(ctx, 0, buttonIntent, 0);
             NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
             if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx)
                         .setSmallIcon(R.drawable.icon2)
                         .setContentTitle(ctx.getString(R.string.title_alert))
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
-                        .addAction(R.drawable.xx2, ctx.getString(R.string.close_alert), btPendingIntent2)
-                        .setDeleteIntent(btPendingIntent2)
-                        .setContentIntent(btPendingIntent2)
+                        .addAction(R.drawable.xx2, ctx.getString(R.string.close_alert), btPendingIntent)
+                        .setDeleteIntent(btPendingIntent)
+                        .setContentIntent(btPendingIntent)
                         .setAutoCancel(true);
                 notificationManager.notify(notificationId, builder.build());
             }else {
@@ -125,7 +124,7 @@ public class AlertThread extends Thread {
                     }
                 }
                 RemoteViews contentViewSmall = new RemoteViews(ctx.getPackageName(),R.layout.custom_notification_small);
-                contentViewBig.setOnClickPendingIntent(R.id.noti_button, btPendingIntent2);
+                contentViewBig.setOnClickPendingIntent(R.id.noti_button, btPendingIntent);
                 String regularBold= "fonts/Regular/regular-bold.otf";
                 String regularBook= "fonts/Regular/regular-book.otf";
                 String title_alert=ctx.getString(R.string.title_alert);
@@ -155,7 +154,7 @@ public class AlertThread extends Thread {
                             .setSmallIcon(R.drawable.icon2)
                             .setCustomContentView(contentViewSmall)
                             .setCustomBigContentView(contentViewBig)
-                            .setDeleteIntent(btPendingIntent2)
+                            .setDeleteIntent(btPendingIntent)
                             .setAutoCancel(true);
                     notificationManager.notify(notificationId, notification.build());
                 } else {
@@ -163,7 +162,7 @@ public class AlertThread extends Thread {
                             .setSmallIcon(R.drawable.icon2)
                             .setCustomContentView(contentViewSmall)
                             .setCustomBigContentView(contentViewBig)
-                            .setDeleteIntent(btPendingIntent2)
+                            .setDeleteIntent(btPendingIntent)
                             .setAutoCancel(true);
                     notificationManager.notify(notificationId, builder.build());
                 }
@@ -197,12 +196,13 @@ public class AlertThread extends Thread {
                     public void run() {
                         String reason = null;
                         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "started", reason));
-                        try{sleep(2000);}catch (Exception e){}
+                        try{sleep(2000);}catch (Exception e){PreyLogger.e("Error sleep:"+e.getMessage(),e);}
                         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "stopped", reason));
                     }
                 }.start();
             }
         } catch (Exception e) {
+            PreyLogger.e("Error PopUpAlert:"+e.getMessage(),e);
         }
     }
 

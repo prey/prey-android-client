@@ -42,6 +42,7 @@ public class AccessPointsList extends JsonAction {
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         try {
             if (PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {

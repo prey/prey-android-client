@@ -50,9 +50,9 @@ public class HttpDataService {
             key = null;
         } else
             parameters.put(" "+key+" ", singleData);
-
         return parameters;
     }
+
     public HashMap<String, String> getDataAsParameters() {
         HashMap<String, String> parameters = new HashMap<String, String>();
         if (isList()) {
@@ -69,13 +69,11 @@ public class HttpDataService {
             key = null;
         } else
             parameters.put(key, singleData);
-
         return parameters;
     }
 
     public String getDataAsString() {
         StringBuffer sb = new StringBuffer();
-
         if (isList()) {
             for (String valueKey : dataList.keySet()) {
                 String valueData = dataList.get(key);
@@ -86,7 +84,6 @@ public class HttpDataService {
                 sb.append(valueData);
                 sb.append("&");
             }
-
         } else
             sb.append(key).append("=").append(singleData).append("&");
         return sb.toString();
@@ -144,7 +141,6 @@ public class HttpDataService {
         this.url = url;
     }
 
-
     public void addEntityFile(EntityFile entityFile) {
         entityFiles.add(entityFile);
     }
@@ -156,9 +152,5 @@ public class HttpDataService {
     public void setEntityFiles(List<EntityFile> entityFiles) {
         this.entityFiles = entityFiles;
     }
-
-
-
-
 
 }

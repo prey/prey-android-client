@@ -47,10 +47,12 @@ public class PreyUtils {
         try {
             vendor = AboveCupcakeSupport.getDeviceVendor();
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         try{
             name= Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_name");
         }catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         if (name != null && !"".equals(name)) {
             newName = name;

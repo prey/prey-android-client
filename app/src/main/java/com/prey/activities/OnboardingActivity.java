@@ -66,8 +66,6 @@ public class OnboardingActivity extends AppCompatActivity {
                     R.layout.onb03,
                     R.layout.onb04};
         }
-
-
         addBottomDots(0);
         changeStatusBarColor();
         myViewPagerAdapter = new MyViewPagerAdapter();
@@ -132,7 +130,6 @@ public class OnboardingActivity extends AppCompatActivity {
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
         }
-
         @Override
         public void onPageScrollStateChanged(int arg0) {
         }
@@ -148,10 +145,8 @@ public class OnboardingActivity extends AppCompatActivity {
 
     public class MyViewPagerAdapter extends PagerAdapter {
         private LayoutInflater layoutInflater;
-
         public MyViewPagerAdapter() {
         }
-
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -159,21 +154,19 @@ public class OnboardingActivity extends AppCompatActivity {
             container.addView(view);
             return view;
         }
-
         @Override
         public int getCount() {
             return layouts.length;
         }
-
         @Override
         public boolean isViewFromObject(View view, Object obj) {
             return view == obj;
         }
-
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             View view = (View) object;
             container.removeView(view);
         }
     }
+
 }

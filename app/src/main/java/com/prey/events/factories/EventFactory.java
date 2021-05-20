@@ -74,6 +74,7 @@ public class EventFactory {
                         info.put("sim_serial_number", simSerial);
                     }
                 } catch (Exception e) {
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
                 new SimTriggerReceiver().onReceive(ctx, intent);
                 if (UtilConnection.isInternetAvailable(ctx)) {
@@ -87,10 +88,7 @@ public class EventFactory {
                 ){
             new Thread() {
                 public void run() {
-                    try {
-                        sendLocationAware(ctx);
-                    }catch (Exception e3){
-                    }
+                    sendLocationAware(ctx);
                 }
             }.start();
         }
@@ -120,12 +118,14 @@ public class EventFactory {
                 if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
                     PreyLogger.d("getEvent wifiState connected");
                     info.put("connected", "wifi");
+                    PreyBetaController.startPrey(ctx);
                 }
                 if (wifiState == WifiManager.WIFI_STATE_DISABLED) {
                     PreyLogger.d("getEvent mobile connected");
                     info.put("connected", "mobile");
                 }
             } catch (Exception e) {
+                PreyLogger.e("Error getEvent:"+e.getMessage(),e);
             }
             return new Event(Event.WIFI_CHANGED, info.toString());
         }
@@ -163,20 +163,19 @@ public class EventFactory {
         return null;
     }
 
-
     public static void sendLocationAware(final Context ctx) {
+        try {
             boolean isTimeLocationAware=PreyConfig.getPreyConfig(ctx).isTimeLocationAware();
             PreyLogger.d("sendLocation isTimeLocationAware:"+isTimeLocationAware);
             if (!isTimeLocationAware) {
-                try {
                     PreyLocation locationNow = LocationUtil.getLocation(ctx, null, false);
                     AwareController.sendAware(ctx, locationNow);
                     GeofenceController.verifyGeozone(ctx, locationNow);
                     PreyConfig.getPreyConfig(ctx).setTimeLocationAware();
-                } catch (Exception e){
-                    PreyLogger.e("Error sendLocation:"+e.getMessage(),e);
-                }
             }
+        } catch (Exception e){
+            PreyLogger.e("Error sendLocation:"+e.getMessage(),e);
+        }
     }
 
     public static boolean isAirplaneModeOn(Context context) {
@@ -206,7 +205,6 @@ public class EventFactory {
         }
     }
 
-
     public static void notification(Context ctx) {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey(false)) {
@@ -215,13 +213,13 @@ public class EventFactory {
                 PreyConfig.getPreyConfig(ctx).setCanAccessFineLocation(PreyPermission.canAccessFineLocation(ctx));
                 PreyConfig.getPreyConfig(ctx).setCanAccessReadPhoneState(PreyPermission.canAccessPhone(ctx));
                 if (!PreyPermission.canAccessCamera(ctx) || !PreyPermission.canAccessCoarseLocation(ctx) || !PreyPermission.canAccessFineLocation(ctx) || !PreyPermission.canAccessPhone(ctx)) {
-                    Intent intent3 = new Intent(ctx, CheckPasswordHtmlActivity.class);
-                    intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                    Intent intentPassword = new Intent(ctx, CheckPasswordHtmlActivity.class);
+                    intentPassword.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     PendingIntent pendingIntent = PendingIntent.getActivity(
                             ctx,
                             0,
-                            intent3,
+                            intentPassword,
                             PendingIntent.FLAG_UPDATE_CURRENT);
                     NotificationManager nManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -238,4 +236,3 @@ public class EventFactory {
         }
     }
 }
-

@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
@@ -35,7 +34,6 @@ public class PasswordActivity extends PreyActivity {
         Button checkPasswordOkButton = (Button) findViewById(R.id.password_btn_login);
         final EditText pass1 = ((EditText) findViewById(R.id.password_pass_txt));
         checkPasswordOkButton.setOnClickListener(new View.OnClickListener() {
-
             public void onClick(View v) {
                 final String passwordtyped = pass1.getText().toString();
                 final Context ctx = getApplicationContext();
@@ -51,7 +49,6 @@ public class PasswordActivity extends PreyActivity {
                             new CheckPassword().execute(passwordtyped);
                     }
                 }
-
             }
         });
         EditText password = (EditText) findViewById(R.id.password_pass_txt);
@@ -60,12 +57,10 @@ public class PasswordActivity extends PreyActivity {
     }
 
     protected class CheckPassword extends AsyncTask<String, Void, Void> {
-
         ProgressDialog progressDialog = null;
         boolean isPasswordOk = false;
         boolean keepAsking = true;
         String error = null;
-
         @Override
         protected void onPreExecute() {
             try {
@@ -77,23 +72,17 @@ public class PasswordActivity extends PreyActivity {
             } catch (Exception e) {
             }
         }
-
         @Override
         protected Void doInBackground(String... password) {
             try {
                 String apikey = getPreyConfig().getApiKey();
                 PreyLogger.d("apikey:"+apikey+" password[0]:"+password[0]);
                 isPasswordOk = PreyWebServices.getInstance().checkPassword(PasswordActivity.this, apikey, password[0]);
-                if(isPasswordOk)
-                    PreyWebServices.getInstance().sendEvent(getApplication(), PreyConfig.ANDROID_LOGIN_SETTINGS);
-                else
-                    PreyWebServices.getInstance().sendEvent(getApplication(), PreyConfig.ANDROID_FAILED_LOGIN_SETTINGS);
             } catch (PreyException e) {
                 error = e.getMessage();
             }
             return null;
         }
-
         @Override
         protected void onPostExecute(Void unused) {
             try {
@@ -101,6 +90,7 @@ public class PasswordActivity extends PreyActivity {
                     progressDialog.dismiss();
                 }
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
             if (error != null)
                 Toast.makeText(PasswordActivity.this, error, Toast.LENGTH_LONG).show();
@@ -113,11 +103,10 @@ public class PasswordActivity extends PreyActivity {
                 } else {
                     Toast.makeText(PasswordActivity.this, R.string.password_wrong, Toast.LENGTH_SHORT).show();
                 }
-
             } else {
-                Intent intent = new Intent(PasswordActivity.this, PreyConfigurationActivity.class);
+                Intent intentConfiguration = new Intent(PasswordActivity.this, PreyConfigurationActivity.class);
                 PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
-                startActivity(intent);
+                startActivity(intentConfiguration);
                 new Thread(new EventManagerRunner(PasswordActivity.this, new Event(Event.APPLICATION_OPENED))).start();
             }
         }

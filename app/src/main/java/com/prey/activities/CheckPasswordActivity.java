@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.prey.PreyConfig;
+import com.prey.PreyLogger;
 import com.prey.R;
 
 public class CheckPasswordActivity extends PasswordActivity {
@@ -31,7 +32,6 @@ public class CheckPasswordActivity extends PasswordActivity {
         final  TextView textForgotPassword = (TextView) findViewById(R.id.link_forgot_password);
         final  TextView textLink_privacy = (TextView) findViewById(R.id.link_privacy);
         final  TextView textLink_uninstall_prey = (TextView) findViewById(R.id.link_uninstall_prey);
-
         Button password_btn_login=(Button)findViewById(R.id.password_btn_login);
         EditText password_pass_txt=(EditText)findViewById(R.id.password_pass_txt);
         Typeface titilliumWebRegular = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Regular.ttf");
@@ -45,7 +45,6 @@ public class CheckPasswordActivity extends PasswordActivity {
         password_pass_txt.setTypeface(magdacleanmonoRegular);
         try {
             textForgotPassword.setOnClickListener(new View.OnClickListener() {
-
                 public void onClick(View v) {
                     try {
                         String url = PreyConfig.getPreyConfig(getApplicationContext()).getPreyPanelUrl();
@@ -58,14 +57,13 @@ public class CheckPasswordActivity extends PasswordActivity {
             textLink_privacy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     startActivity(new Intent(getApplicationContext(), PrivacyActivity.class));
                     finish();
                 }
             });
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
-
         textLink_uninstall_prey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

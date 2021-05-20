@@ -21,8 +21,8 @@ import com.prey.actions.aware.AwareController;
 
 @TargetApi(21)
 public class AwareJobService extends JobService {
-    private static final int JOB_ID = 123;
 
+    private static final int JOB_ID = 123;
 
     public static void schedule(Context ctx ) {
         JobScheduler jobScheduler = null;

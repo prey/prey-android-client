@@ -28,7 +28,6 @@ public class Event {
     private boolean alwaysSend;
 
     public Event() {
-
     }
 
     public Event(String name) {
@@ -36,7 +35,6 @@ public class Event {
         this.info = "";
         this.alwaysSend= false;
     }
-
 
     public Event(String name, String info) {
         this.name = name;
@@ -66,5 +64,5 @@ public class Event {
     public void setAlwaysSend(boolean alwaysSend) {
         this.alwaysSend = alwaysSend;
     }
-}
 
+}

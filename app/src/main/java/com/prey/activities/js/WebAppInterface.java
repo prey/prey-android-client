@@ -239,11 +239,9 @@ public class WebAppInterface {
         PreyLogger.d("log:" + log);
     }
 
-
     @JavascriptInterface
     public String mylogin(final String email,final String password) {
-        PreyLogger.d("mylogin email:" + email + " password:" + password);
-
+        PreyLogger.d(String.format("mylogin email:%s password:%s",email,password));
         try {
             noMoreDeviceError = false;
             error = null;
@@ -279,7 +277,6 @@ public class WebAppInterface {
                 }
             }else {
                 PreyConfig.getPreyConfig(mContext).registerC2dm();
-                PreyWebServices.getInstance().sendEvent(mContext, PreyConfig.ANDROID_SIGN_IN);
                 PreyConfig.getPreyConfig(mContext).setEmail(email);
                 PreyConfig.getPreyConfig(mContext).setRunBackground(true);
                 RunBackgroundCheckBoxPreference.notifyReady(mContext);
@@ -290,11 +287,10 @@ public class WebAppInterface {
             PreyLogger.d("mylogin error1:" + e.getMessage());
             error = e.getMessage();
         }
-
         if (error == null) {
             error = "";
         }
-        PreyLogger.d("mylogin error2:" + error);
+        PreyLogger.d("mylogin out error:" + error);
         return error;
     }
 
@@ -318,7 +314,6 @@ public class WebAppInterface {
         from = tipo;
         error = null;
         boolean isPasswordOk = false;
-
         try {
             String apikey = PreyConfig.getPreyConfig(mContext).getApiKey();
             boolean twoStep = PreyConfig.getPreyConfig(mContext).getTwoStep();
@@ -367,8 +362,6 @@ public class WebAppInterface {
         return error;
     }
 
-
-
     @JavascriptInterface
     public void openPanelWeb() {
         Intent intent = new Intent(mContext, PanelWebActivity.class);
@@ -392,6 +385,12 @@ public class WebAppInterface {
         return initVersion;
     }
 
+    @JavascriptInterface
+    public boolean initXiaomi() {
+        boolean initXiaomi ="Xiaomi".equalsIgnoreCase(Build.MANUFACTURER);
+        PreyLogger.d("Manufacter:" + Build.MANUFACTURER+" initXiaomi:"+initXiaomi);
+        return initXiaomi;
+    }
 
     @JavascriptInterface
     public boolean initVerify() {
@@ -524,7 +523,6 @@ public class WebAppInterface {
         final Context ctx = mContext;
         String unlock = PreyConfig.getPreyConfig(ctx).getUnlockPass();
         PreyLogger.d("lock key:"+key+"  unlock:"+unlock );
-
         if (  unlock == null || "".equals(unlock)   ) {
             PreyConfig.getPreyConfig(ctx).setOverLock(false);
             int pid = android.os.Process.myPid();
@@ -540,11 +538,13 @@ public class WebAppInterface {
             PreyLogger.d("lock key:"+key+"  unlock:"+unlock +" overLock:"+overLock  +" canDrawOverlays:"+canDrawOverlays);
             new Thread() {
                 public void run() {
-                    String reason = "{\"origin\":\"user\"}";
-                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
+                        String reason = "{\"origin\":\"user\"}";
+                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
                 }
             }.start();
-
+            try{
+                Thread.sleep(2000);
+            }catch(Exception e){PreyLogger.e("Error sleep:"+e.getMessage(),e);}
             if(overLock){
                 if((unlock == null || "".equals(unlock))){
                     PreyLogger.d("lock accc " );
@@ -568,13 +568,13 @@ public class WebAppInterface {
                             android.os.Process.killProcess(android.os.Process.myPid());
                         }
                     }
-                    Intent intent = new Intent(ctx, CloseActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ctx.startActivity(intent);
-
+                    Intent intentClose = new Intent(ctx, CloseActivity.class);
+                    intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ctx.startActivity(intentClose);
                         try {
                             Thread.sleep(2000);
                         } catch (Exception e) {
+                            PreyLogger.e("Error sleep:"+e.getMessage(),e);
                         }
                         ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
 
@@ -643,11 +643,10 @@ public class WebAppInterface {
             PreyLogger.d("Response creating account: " + accountData.toString());
             PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
             PreyConfig.getPreyConfig(ctx).registerC2dm();
-            PreyWebServices.getInstance().sendEvent(ctx, PreyConfig.ANDROID_SIGN_UP);
             PreyConfig.getPreyConfig(ctx).setEmail(email);
             PreyConfig.getPreyConfig(ctx).setRunBackground(true);
             PreyConfig.getPreyConfig(ctx).setInstallationStatus("Pending");
-
+            new PreyApp().run(ctx);
         } catch (Exception e) {
             error = e.getMessage();
             PreyLogger.e("error:" + error, e);
@@ -657,6 +656,7 @@ public class WebAppInterface {
                 error = "";
             }
         } catch (Exception e) {
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         PreyLogger.d("signup out:" + error);
         return error;
@@ -676,7 +676,6 @@ public class WebAppInterface {
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(mContext);
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(mContext);
         boolean canAccessCamera = PreyPermission.canAccessCamera(mContext);
-
         boolean canAccessStorage = PreyPermission.canAccessStorage(mContext);
         boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocation(mContext);
         boolean showFineLocation = PreyPermission.showRequestFineLocation(mActivity);
@@ -685,8 +684,7 @@ public class WebAppInterface {
         boolean showCamera = PreyPermission.showRequestCamera(mActivity);
         boolean showPhone = PreyPermission.showRequestPhone(mActivity);
         boolean showStorage = PreyPermission.showRequestStorage(mActivity);
-        //TODO:ACCESS
-        //boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(mContext);
+        boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(mContext);
         boolean showDeniedPermission=false;
         if(!canAccessStorage) {
             if (!showStorage)
@@ -704,12 +702,10 @@ public class WebAppInterface {
             if(!showCamera)
                 showDeniedPermission=true;
         }
-
         PreyLogger.d("canAccessFineLocation:" + canAccessFineLocation);
         PreyLogger.d("canAccessCoarseLocation:" + canAccessCoarseLocation);
         PreyLogger.d("canAccessBackgroundLocation:" + canAccessBackgroundLocation);
         PreyLogger.d("canAccessCamera:" + canAccessCamera);
-
         PreyLogger.d("canAccessStorage:" + canAccessStorage);
         PreyLogger.d("showBackgroundLocation:" + showBackgroundLocation);
         PreyLogger.d("showFineLocation:" + showFineLocation);
@@ -718,22 +714,6 @@ public class WebAppInterface {
         PreyLogger.d("showPhoneState:" + showPhone);
         PreyLogger.d("showWriteStorage:" + showStorage);
         PreyLogger.d("showDeniedPermission:" + showDeniedPermission);
-            /*
-        if(!canAccessStorage&&!canAccessFineLocation&&!canAccessCoarseLocation&&!canAccessCamera&&
-                !showStorage&&!showFineLocation&&!showCoarseLocation&&!showCamera&&!showPhone){
-            showDeniedPermission=false;
-        }
-        if(canAccessFineLocation||canAccessCoarseLocation) {
-            if (Build.VERSION.SDK_INT == PreyConfig.BUILD_VERSION_CODES_10 && !canAccessBackgroundLocation) {
-                if (!showBackgroundLocation) {
-                    showDeniedPermission = true;
-                }
-            }
-            if (Build.VERSION.SDK_INT == PreyConfig.BUILD_VERSION_CODES_11 && !canAccessBackgroundLocation) {
-                showDeniedPermission = true;
-            }
-        }*/
-        PreyLogger.d("showDeniedPermission:" + showDeniedPermission);
         if (showDeniedPermission) {
             mActivity.deniedPermission();
         } else{
@@ -741,23 +721,20 @@ public class WebAppInterface {
                     || !canAccessStorage ) {
                 mActivity.askForPermission();
             } else {
-                boolean canDrawOverlays =true;
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    canDrawOverlays=Settings.canDrawOverlays(mContext);
-                if(!canDrawOverlays){
-                    mActivity.askForPermissionAndroid7();
-                }else{
-                    boolean isAdminActive = FroyoSupport.getInstance(mContext).isAdminActive();
-                    if (!isAdminActive) {
-                        mActivity.askForAdminActive();
-                    }else{
-                        ///TODO:ACCESS
-                        /*
-                        if(!canAccessibility){
-                            mActivity.accessibility();
+                boolean isAdminActive = FroyoSupport.getInstance(mContext).isAdminActive();
+                if (isAdminActive) {
+                    if(canAccessibility){
+                        boolean canDrawOverlays =true;
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                            canDrawOverlays=Settings.canDrawOverlays(mContext);
+                        if(!canDrawOverlays){
+                            mActivity.askForPermissionAndroid7();
                         }
-                        */
+                    }else{
+                        mActivity.accessibility();
                     }
+                }else{
+                    mActivity.askForAdminActive();
                 }
             }
         }
@@ -800,6 +777,7 @@ public class WebAppInterface {
                         mActivity.finish();
                 }
             } catch (Exception e) {
+                PreyLogger.e("Error:"+e.getMessage(),e);
             }
         }
     }
@@ -826,11 +804,11 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public String initName() {
-        String initName = PreyWebServices.getInstance().getNameDevice(mContext);
-        if(initName!=null&&!"".equals(initName)){
-            PreyConfig.getPreyConfig(mContext).setDeviceName(initName);
-        }else{
-            initName=PreyConfig.getPreyConfig(mContext).getDeviceName();;
+        String initName = "";
+        try {
+            initName = PreyConfig.getPreyConfig(mContext).getDeviceName();
+        }catch (Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         PreyLogger.d("initName:"+initName);
         return initName;
@@ -840,9 +818,9 @@ public class WebAppInterface {
     public boolean initUserFree() {
         boolean initUserFree=false;
         try {
-            PreyWebServices.getInstance().getProfile(mContext);
             initUserFree = !PreyConfig.getPreyConfig(mContext).getProAccount();
         }catch (Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         PreyLogger.d("initUserFree:"+initUserFree);
         return initUserFree;
@@ -864,7 +842,6 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void inputwebview(String inputwebview,String page){
-        PreyLogger.d("inputwebview:"+inputwebview+" page:"+page);
         PreyConfig.getPreyConfig(mContext).setInputWebview(inputwebview);
         PreyConfig.getPreyConfig(mContext).setPage(page);
     }
@@ -872,45 +849,23 @@ public class WebAppInterface {
     @JavascriptInterface
     public void approveLocation(){
         PreyLogger.d("approveLocation");
-
-
-
         boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocation(mContext);
-
         boolean showBackgroundLocation = PreyPermission.showRequestBackgroundLocation(mActivity);
-
-        //TODO:ACCESS
-        //boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(mContext);
         boolean showDeniedPermission=false;
-
-
-
-
         PreyLogger.d("canAccessBackgroundLocation:" + canAccessBackgroundLocation);
-
         PreyLogger.d("showBackgroundLocation:" + showBackgroundLocation);
-
-
-        //TODO:ACCESS
-
-
-            if (Build.VERSION.SDK_INT == PreyConfig.BUILD_VERSION_CODES_10 && !canAccessBackgroundLocation) {
+        if (Build.VERSION.SDK_INT == PreyConfig.BUILD_VERSION_CODES_10 && !canAccessBackgroundLocation) {
                 if (!showBackgroundLocation) {
                     showDeniedPermission = true;
                 }
-            }
-            if (Build.VERSION.SDK_INT == PreyConfig.BUILD_VERSION_CODES_11 && !canAccessBackgroundLocation) {
+        }
+        if (Build.VERSION.SDK_INT == PreyConfig.BUILD_VERSION_CODES_11 && !canAccessBackgroundLocation) {
                 if (!showBackgroundLocation) {
                     showDeniedPermission = true;
                 }
-            }
+        }
         PreyLogger.d("showDeniedPermission:" + showDeniedPermission);
-
-
-            mActivity.askForPermissionLocation();
-
-
-
+        mActivity.askForPermissionLocation();
     }
     
     @JavascriptInterface
@@ -921,7 +876,6 @@ public class WebAppInterface {
         boolean canDrawOverlays = PreyPermission.canDrawOverlays(mContext);
         boolean isAdminActive = FroyoSupport.getInstance(mContext).isAdminActive();
         return canAccessCamera&&canAccessStorage&&canDrawOverlays&&canDrawOverlays&&isAdminActive;
-
     }
 
     @JavascriptInterface

@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.actions.sms;
 
-
 import android.content.Context;
 
 import com.prey.PreyConfig;

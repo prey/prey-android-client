@@ -96,7 +96,9 @@ public class PreySecureService extends Service{
                 Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
                 intentClose.putExtra(PreyDisablePowerOptionsReceiver.stringExtra, PreyDisablePowerOptionsReceiver.stringExtra);
                 this.sendBroadcast(intentClose);
-            }catch (Exception e){}
+            }catch (Exception e){
+                PreyLogger.e("Error CLOSE_SYSTEM:"+e.getMessage(),e);
+            }
             editTextPin.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -166,7 +168,7 @@ public class PreySecureService extends Service{
                 Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
                 intentClose.putExtra(PreyDisablePowerOptionsReceiver.stringExtra, PreyDisablePowerOptionsReceiver.stringExtra);
                 this.sendBroadcast(intentClose);
-            }catch (Exception e){}
+            }catch (Exception e){PreyLogger.e("Error intentClose:"+e.getMessage(),e);}
         }else{
             if(view != null){
                 WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -187,7 +189,7 @@ public class PreySecureService extends Service{
         if(view != null){
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
             if(wm != null) {
-                try{wm.removeView(view);}catch (Exception e){}
+                try{wm.removeView(view);}catch (Exception e){PreyLogger.e("Error:"+e.getMessage(),e);}
             }
             view = null;
         }

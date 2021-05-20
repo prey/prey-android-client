@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2018 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.autoconnect;
 
 import com.prey.PreyLogger;
@@ -6,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AutoConnectBlacklist {
-
 
     private static AutoConnectBlacklist instance=null;
     private AutoConnectBlacklist(){
@@ -24,6 +29,7 @@ public class AutoConnectBlacklist {
     public boolean contains(String ssid){
         return blackList.contains(ssid);
     }
+
     public void add(String ssid){
         blackList.add(ssid);
     }

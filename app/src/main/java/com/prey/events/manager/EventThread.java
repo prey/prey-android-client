@@ -10,7 +10,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.events.Event;
 import com.prey.net.PreyHttpResponse;
@@ -58,4 +57,3 @@ public class EventThread extends Thread {
     }
 
 }
-

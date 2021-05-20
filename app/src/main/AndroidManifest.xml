@@ -407,7 +407,6 @@
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>
 
-        <!--
         <service android:name="com.prey.services.PreyAccessibilityService" />
         <service android:name="com.prey.services.AppAccessibilityService" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" android:enabled="true">
             <intent-filter>
@@ -415,7 +414,7 @@
             </intent-filter>
             <meta-data android:name="android.accessibilityservice" android:resource="@xml/accessibilityservice"/>
         </service>
-        -->
+
     </application>
 
 </manifest>
