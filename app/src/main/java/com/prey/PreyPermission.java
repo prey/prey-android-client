@@ -74,11 +74,7 @@ public class PreyPermission {
     }
 
     public static boolean canAccessPhone(Context ctx) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            return true;
-        }else{
-            return canPermissionGranted(ctx,android.Manifest.permission.READ_PHONE_STATE);
-        }
+        return true;
     }
 
     public static boolean showRequestPhone(Activity activity) {
