@@ -135,6 +135,7 @@ public class PreyConfig {
     public static final String MESSAGE_ID="messageID";
     public static final String JOB_ID="device_job_id";
     public static final String UNLOCK_PASS="unlock_pass";
+    public static final String LOCK_MESSAGE="lock_message";
     public static final String NOTIFICATION_ANDROID_7="notify_android_7";
     public static final String JOB_ID_LOCK="job_id_lock";
     public static final String COUNTER_OFF="counter_off";
@@ -425,6 +426,14 @@ public class PreyConfig {
 
     public void setUnlockPass(String unlockPass){
         this.saveString(PreyConfig.UNLOCK_PASS, unlockPass);
+    }
+
+    public String getLockMessage(){
+        return getString(PreyConfig.LOCK_MESSAGE, null);
+    }
+
+    public void setLockMessage(String unlockPass){
+        this.saveString(PreyConfig.LOCK_MESSAGE, unlockPass);
     }
 
     public void deleteUnlockPass(){

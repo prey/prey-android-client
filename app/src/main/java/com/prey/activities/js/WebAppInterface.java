@@ -888,4 +888,10 @@ public class WebAppInterface {
         PreyLogger.d("skipPermissionsBg");
     }
 
+    @JavascriptInterface
+    public String verificateAlert(){
+        String verificateAlert = PreyConfig.getPreyConfig(mContext).getLockMessage();
+        PreyLogger.d("verificateAlert:["+verificateAlert+"]");
+        return verificateAlert;
+    }
 }
