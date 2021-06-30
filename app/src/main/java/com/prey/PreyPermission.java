@@ -73,10 +73,6 @@ public class PreyPermission {
         return shouldShowRequestPermission(activity,android.Manifest.permission.CAMERA);
     }
 
-    public static boolean canAccessPhone(Context ctx) {
-        return true;
-    }
-
     public static boolean showRequestPhone(Activity activity) {
         return shouldShowRequestPermission(activity,android.Manifest.permission.READ_PHONE_STATE);
     }

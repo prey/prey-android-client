@@ -287,12 +287,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
                 permission += ", ";
             permission += this.getString(R.string.permission_camera);
         }
-        boolean canAccessReadPhoneState = PreyPermission.canAccessPhone(this);
-        if(!canAccessReadPhoneState) {
-            if(!"".equals(permission))
-                permission += ", ";
-            permission += this.getString(R.string.permission_phone);
-        }
         boolean canAccessWriteExternalStorage = PreyPermission.canAccessStorage(this);
         if(!canAccessWriteExternalStorage) {
             if(!"".equals(permission))
@@ -354,10 +348,9 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
         boolean canAccessCamera = PreyPermission.canAccessCamera(this);
-        boolean canAccessPhone = PreyPermission.canAccessPhone(this);
         boolean canAccessStorage = PreyPermission.canAccessStorage(this);
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
-                && canAccessPhone && canAccessStorage  ) {
+                && canAccessStorage  ) {
             PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 1");
             boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
             if (!canDrawOverlays) {
