@@ -157,11 +157,6 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
-    public boolean initReadPhone() {
-        return PreyPermission.canAccessPhone(mContext);
-    }
-
-    @JavascriptInterface
     public boolean initWriteStorage() {
         return PreyPermission.canAccessStorage(mContext);
     }
