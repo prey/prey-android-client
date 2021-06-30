@@ -157,11 +157,6 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
-    public boolean initReadPhone() {
-        return PreyPermission.canAccessPhone(mContext);
-    }
-
-    @JavascriptInterface
     public boolean initWriteStorage() {
         return PreyPermission.canAccessStorage(mContext);
     }
@@ -888,4 +883,10 @@ public class WebAppInterface {
         PreyLogger.d("skipPermissionsBg");
     }
 
+    @JavascriptInterface
+    public String verificateAlert(){
+        String verificateAlert = PreyConfig.getPreyConfig(mContext).getLockMessage();
+        PreyLogger.d("verificateAlert:["+verificateAlert+"]");
+        return verificateAlert;
+    }
 }

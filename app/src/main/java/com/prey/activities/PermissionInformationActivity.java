@@ -62,10 +62,9 @@ public class PermissionInformationActivity extends PreyActivity {
             boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
             boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
             boolean canAccessCamera = PreyPermission.canAccessCamera(this);
-            boolean canAccessPhone = PreyPermission.canAccessPhone(this);
             boolean canAccessStorage = PreyPermission.canAccessStorage(this);
             boolean configurated=canAccessFineLocation&&canAccessCoarseLocation && canAccessCamera
-                    && canAccessPhone && canAccessStorage ;
+                    && canAccessStorage ;
             if(!configurated){
                 askForPermission();
             }
@@ -135,10 +134,9 @@ public class PermissionInformationActivity extends PreyActivity {
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
         boolean canAccessCamera = PreyPermission.canAccessCamera(this);
-        boolean canAccessPhone = PreyPermission.canAccessPhone(this);
         boolean canAccessStorage = PreyPermission.canAccessStorage(this);
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
-                && canAccessPhone && canAccessStorage  ) {
+                && canAccessStorage  ) {
             boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
             if (!canDrawOverlays) {
                 askForPermissionAndroid7();

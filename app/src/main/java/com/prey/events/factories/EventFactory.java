@@ -69,12 +69,12 @@ public class EventFactory {
             if ("ABSENT".equals(state)) {
                 JSONObject info = new JSONObject();
                 try {
-                    String simSerial=PreyConfig.getPreyConfig(ctx).getSimSerialNumber();
+                    String simSerial = PreyConfig.getPreyConfig(ctx).getSimSerialNumber();
                     if (simSerial != null && !"".equals(simSerial)) {
                         info.put("sim_serial_number", simSerial);
                     }
                 } catch (Exception e) {
-                    PreyLogger.e("Error:"+e.getMessage(),e);
+                    PreyLogger.e("Error:" + e.getMessage(), e);
                 }
                 new SimTriggerReceiver().onReceive(ctx, intent);
                 if (UtilConnection.isInternetAvailable(ctx)) {
@@ -84,8 +84,8 @@ public class EventFactory {
                 }
             }
         }
-        if(LOCATION_PROVIDERS_CHANGED.equals(intent.getAction())||LOCATION_MODE_CHANGED.equals(intent.getAction())
-                ){
+        if (LOCATION_PROVIDERS_CHANGED.equals(intent.getAction()) || LOCATION_MODE_CHANGED.equals(intent.getAction())
+        ) {
             new Thread() {
                 public void run() {
                     sendLocationAware(ctx);
@@ -125,7 +125,7 @@ public class EventFactory {
                     info.put("connected", "mobile");
                 }
             } catch (Exception e) {
-                PreyLogger.e("Error getEvent:"+e.getMessage(),e);
+                PreyLogger.e("Error getEvent:" + e.getMessage(), e);
             }
             return new Event(Event.WIFI_CHANGED, info.toString());
         }
@@ -155,8 +155,8 @@ public class EventFactory {
         if (USER_PRESENT.equals(intent.getAction())) {
             PreyLogger.d("EventFactory USER_PRESENT");
             int minuteScheduled = PreyConfig.getPreyConfig(ctx).getMinuteScheduled();
-            if(minuteScheduled>0){
-                PreyBetaController.startPrey(ctx,null);
+            if (minuteScheduled > 0) {
+                PreyBetaController.startPrey(ctx, null);
             }
             return null;
         }
@@ -165,16 +165,16 @@ public class EventFactory {
 
     public static void sendLocationAware(final Context ctx) {
         try {
-            boolean isTimeLocationAware=PreyConfig.getPreyConfig(ctx).isTimeLocationAware();
-            PreyLogger.d("sendLocation isTimeLocationAware:"+isTimeLocationAware);
+            boolean isTimeLocationAware = PreyConfig.getPreyConfig(ctx).isTimeLocationAware();
+            PreyLogger.d("sendLocation isTimeLocationAware:" + isTimeLocationAware);
             if (!isTimeLocationAware) {
-                    PreyLocation locationNow = LocationUtil.getLocation(ctx, null, false);
-                    AwareController.sendAware(ctx, locationNow);
-                    GeofenceController.verifyGeozone(ctx, locationNow);
-                    PreyConfig.getPreyConfig(ctx).setTimeLocationAware();
+                PreyLocation locationNow = LocationUtil.getLocation(ctx, null, false);
+                AwareController.sendAware(ctx, locationNow);
+                GeofenceController.verifyGeozone(ctx, locationNow);
+                PreyConfig.getPreyConfig(ctx).setTimeLocationAware();
             }
-        } catch (Exception e){
-            PreyLogger.e("Error sendLocation:"+e.getMessage(),e);
+        } catch (Exception e) {
+            PreyLogger.e("Error sendLocation:" + e.getMessage(), e);
         }
     }
 
@@ -211,8 +211,9 @@ public class EventFactory {
                 PreyConfig.getPreyConfig(ctx).setCanAccessCamara(PreyPermission.canAccessCamera(ctx));
                 PreyConfig.getPreyConfig(ctx).setCanAccessCoarseLocation(PreyPermission.canAccessCoarseLocation(ctx));
                 PreyConfig.getPreyConfig(ctx).setCanAccessFineLocation(PreyPermission.canAccessFineLocation(ctx));
-                PreyConfig.getPreyConfig(ctx).setCanAccessReadPhoneState(PreyPermission.canAccessPhone(ctx));
-                if (!PreyPermission.canAccessCamera(ctx) || !PreyPermission.canAccessCoarseLocation(ctx) || !PreyPermission.canAccessFineLocation(ctx) || !PreyPermission.canAccessPhone(ctx)) {
+                boolean warning = !PreyPermission.canAccessCamera(ctx) || !PreyPermission.canAccessCoarseLocation(ctx) || !PreyPermission.canAccessFineLocation(ctx);
+                PreyLogger.d("notification warning:" + warning);
+                if (warning) {
                     Intent intentPassword = new Intent(ctx, CheckPasswordHtmlActivity.class);
                     intentPassword.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                             Intent.FLAG_ACTIVITY_CLEAR_TASK);
