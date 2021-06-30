@@ -68,6 +68,12 @@ public class Lock extends JsonAction {
                 unlock = parameters.getString(PreyConfig.UNLOCK_PASS);
                 PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
             }
+            if (parameters!=null&&parameters.has(PreyConfig.LOCK_MESSAGE)) {
+                String lockMessage = parameters.getString(PreyConfig.LOCK_MESSAGE);
+                PreyConfig.getPreyConfig(ctx).setLockMessage(lockMessage);
+            }else{
+                PreyConfig.getPreyConfig(ctx).setLockMessage("");
+            }
             lock(ctx, unlock, messageId, reason,jobId);
         } catch (Exception e) {
             PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
@@ -93,6 +99,7 @@ public class Lock extends JsonAction {
                 reason="{\"device_job_id\":\""+jobIdLock+"\",\"origin\":\"panel\"}";
                 PreyConfig.getPreyConfig(ctx).setJobIdLock("");
             }
+            PreyConfig.getPreyConfig(ctx).setLockMessage("");
             PreyConfig.getPreyConfig(ctx).setLock(false);
             PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
             if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove()){
