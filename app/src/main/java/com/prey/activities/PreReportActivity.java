@@ -150,7 +150,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
             PreyLogger.d("PreReportActivity camera jpegCallback");
             dataImagen = resizeImage(data);
             try {
-                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Prey/";
+                String path = getExternalFilesDir(null).toString()  + "/Prey/";
                 PreyLogger.d("PreReportActivity path:" + path);
                 try {
                     new File(path).mkdir();
@@ -285,7 +285,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
             try {
                 firstPicture = false;
                 secondPicture = false;
-                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Prey/";
+                String path = getExternalFilesDir(null).toString()  + "/Prey/";
                 File file1 = new File(path + "" + FRONT + ".jpg");
                 file1.delete();
                 File file2 = new File(path + "" + BACK + ".jpg");
