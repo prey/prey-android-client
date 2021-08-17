@@ -4,45 +4,34 @@
     android:installLocation="internalOnly"
   >
 
-
     <uses-feature android:name="android.hardware.location.network" android:required="true" />
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
     <uses-feature android:name="android.hardware.location" android:required="true" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
-
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
     <uses-feature android:name="android.hardware.camera.flash" android:required="false"/>
     <uses-feature android:name="android.hardware.camera.front" android:required="false"/>
-
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
 
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR"/>
-
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACTION_SHUTDOWN" />
-
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
 
     <!-- This app has permission to register and receive message -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -53,7 +42,6 @@
 
     <!-- This app has permission to camera -->
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
@@ -89,10 +77,10 @@
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleInstance"
             android:noHistory="true"
+            android:exported="true"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -144,7 +132,6 @@
             android:name="com.prey.activities.SignInActivity"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
-
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
             />
 
@@ -152,16 +139,13 @@
             android:name="com.prey.activities.SignUpActivity"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
-
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
             />
-
 
         <activity
             android:name="com.prey.activities.DeviceReadyActivity"
             android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
-
             />
 
         <activity
@@ -191,30 +175,38 @@
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
               />
+
+        <activity
+            android:name="com.prey.activities.ChromeActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+
         <activity
             android:name="com.prey.activities.PreyConfigurationActivity"
             android:configChanges="orientation|keyboardHidden"
-
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
             android:noHistory="true"
             android:theme="@android:style/Theme.NoTitleBar" />
+
         <activity
             android:name="com.prey.activities.PopUpAlertActivity"
-
             android:clearTaskOnLaunch="true"
             android:noHistory = "true"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask" />
+
         <activity
             android:name="com.prey.activities.FeedbackActivity"
-
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask" />
+
         <activity
             android:name="com.prey.activities.FormFeedbackActivity"
-
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask" />
@@ -223,8 +215,8 @@
             android:name="com.prey.activities.CameraActivity"
             android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
-
             android:launchMode="singleTask" />
+
         <activity
             android:name="com.prey.activities.SimpleCameraActivity"
             android:theme="@style/Theme.Transparent"
@@ -262,51 +254,34 @@
         <receiver
             android:name="com.prey.receivers.PreyBootController"
             android:enabled="true"
-            android:exported="false"
+            android:exported="true"
             android:label="PreyBootController" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-
         <receiver
             android:name="com.prey.events.receivers.EventReceiver"
-
-
+            android:exported="true"
             >
             <intent-filter android:priority="20000">
-
                 <!-- TURNED ON/OFF -->
-
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
-
                 <action android:name="android.intent.action.QUICKBOOT_POWEROFF" />
-
                 <!-- BATTERY LOW -->
-
                 <action android:name="android.intent.action.BATTERY_LOW" />
-
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-
                 <!--   BOOT COMPLETED -->
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-
                 <action android:name="android.location.MODE_CHANGED" />
-
                 <action android:name="android.location.PROVIDERS_CHANGED" />
-
                 <action android:name="android.intent.action.SIM_STATE_CHANGED" />
-
                 <action android:name="android.os.action.POWER_SAVE_MODE_CHANGED"/>
-
                 <action android:name="android.intent.action.ACTION_REQUEST_SHUTDOWN"/>
-
                 <action android:name="android.intent.action.USER_PRESENT"/>
-
             </intent-filter>
-
         </receiver>
 
         <receiver android:name="com.prey.receivers.AlarmReportReceiver" />
@@ -334,6 +309,7 @@
         <receiver
             android:name="com.prey.receivers.PreyDeviceAdmin"
             android:label="@string/device_admin_label"
+            android:exported="true"
             android:permission="android.permission.BIND_DEVICE_ADMIN" >
             <meta-data
                 android:name="android.app.device_admin"
@@ -363,17 +339,16 @@
         <service android:name="com.prey.services.PreyLockHtmlService" />
         <service android:name="com.prey.services.CheckLockActivated" />
         <service android:name="com.prey.services.PreyOverlayService" />
-
-
         <service android:name="com.prey.services.PreyNotificationForeGroundService" />
-
         <service android:name="com.prey.actions.autoconnect.AutoConnectService" />
-
         <service android:name="com.prey.services.ActivityIntentService" />
 
         <receiver android:name="com.prey.receivers.AlarmDisablePowerReceiver" />
 
-        <receiver android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver" android:enabled="true" android:exported="false">
+        <receiver
+            android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver"
+            android:enabled="true"
+            android:exported="true" >
             <intent-filter android:priority="20000">
                 <action android:name="android.intent.action.CLOSE_SYSTEM_DIALOGS" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -384,7 +359,8 @@
 
         <!-- [START firebase_service] -->
         <service
-            android:name="com.prey.services.MyFirebaseMessagingService">
+            android:name="com.prey.services.MyFirebaseMessagingService"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
@@ -408,7 +384,12 @@
             android:exported="true"/>
 
         <service android:name="com.prey.services.PreyAccessibilityService" />
-        <service android:name="com.prey.services.AppAccessibilityService" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" android:enabled="true">
+        <service
+            android:name="com.prey.services.AppAccessibilityService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:enabled="true"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService"/>
             </intent-filter>
