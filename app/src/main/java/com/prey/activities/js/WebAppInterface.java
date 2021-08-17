@@ -388,6 +388,13 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
+    public boolean initHuawei() {
+        boolean initHuawei ="huawei".equalsIgnoreCase(Build.MANUFACTURER);
+        PreyLogger.d("Manufacter:" + Build.MANUFACTURER+" initHuawei:"+initHuawei);
+        return initHuawei;
+    }
+
+    @JavascriptInterface
     public boolean initVerify() {
         PreyLogger.d("initVerify users:");
         return false;
