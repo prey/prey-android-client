@@ -150,6 +150,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
             PreyLogger.d("PreReportActivity camera jpegCallback");
             dataImagen = resizeImage(data);
             try {
+                //Get route with Android 12 support
                 String path = getExternalFilesDir(null).toString()  + "/Prey/";
                 PreyLogger.d("PreReportActivity path:" + path);
                 try {
@@ -285,6 +286,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
             try {
                 firstPicture = false;
                 secondPicture = false;
+                //Get route with Android 12 support
                 String path = getExternalFilesDir(null).toString()  + "/Prey/";
                 File file1 = new File(path + "" + FRONT + ".jpg");
                 file1.delete();
