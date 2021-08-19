@@ -387,6 +387,10 @@ public class WebAppInterface {
         return initXiaomi;
     }
 
+    /**
+     * Method to obtain device is Huawei
+     * @return true if the device is Huawei, false otherwise
+     */
     @JavascriptInterface
     public boolean initHuawei() {
         boolean initHuawei ="huawei".equalsIgnoreCase(Build.MANUFACTURER);
