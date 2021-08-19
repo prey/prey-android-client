@@ -83,12 +83,14 @@
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <!-- Exported added for android 12 -->
         <activity
             android:name="com.prey.activities.LoginActivity"
             android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleInstance"
             android:noHistory="true"
+            android:exported="true"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -191,6 +193,16 @@
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
               />
+
+        <!-- New Activity for Chromebook -->
+        <activity
+            android:name="com.prey.activities.ChromeActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+
         <activity
             android:name="com.prey.activities.PreyConfigurationActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -259,21 +271,21 @@
             android:configChanges="keyboardHidden|orientation"
             />
 
+        <!-- Exported added for android 12 -->
         <receiver
             android:name="com.prey.receivers.PreyBootController"
             android:enabled="true"
-            android:exported="false"
+            android:exported="true"
             android:label="PreyBootController" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-
+        <!-- Exported added for android 12 -->
         <receiver
             android:name="com.prey.events.receivers.EventReceiver"
-
-
+            android:exported="true"
             >
             <intent-filter android:priority="20000">
 
@@ -331,9 +343,11 @@
             </intent-filter>
         </receiver>
 
+        <!-- Exported added for android 12 -->
         <receiver
             android:name="com.prey.receivers.PreyDeviceAdmin"
             android:label="@string/device_admin_label"
+            android:exported="true"
             android:permission="android.permission.BIND_DEVICE_ADMIN" >
             <meta-data
                 android:name="android.app.device_admin"
@@ -373,7 +387,11 @@
 
         <receiver android:name="com.prey.receivers.AlarmDisablePowerReceiver" />
 
-        <receiver android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver" android:enabled="true" android:exported="false">
+        <!-- Exported added for android 12 -->
+        <receiver
+            android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver"
+            android:enabled="true"
+            android:exported="true" >
             <intent-filter android:priority="20000">
                 <action android:name="android.intent.action.CLOSE_SYSTEM_DIALOGS" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -382,9 +400,11 @@
         <service android:name="com.prey.services.PreyDisablePowerOptionsService" />
         <service android:name="com.prey.services.PreySecureService" />
 
+        <!-- Exported added for android 12 -->
         <!-- [START firebase_service] -->
         <service
-            android:name="com.prey.services.MyFirebaseMessagingService">
+            android:name="com.prey.services.MyFirebaseMessagingService"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
@@ -408,7 +428,14 @@
             android:exported="true"/>
 
         <service android:name="com.prey.services.PreyAccessibilityService" />
-        <service android:name="com.prey.services.AppAccessibilityService" android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" android:enabled="true">
+
+        <!-- Exported added for android 12 -->
+        <service
+            android:name="com.prey.services.AppAccessibilityService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:enabled="true"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService"/>
             </intent-filter>

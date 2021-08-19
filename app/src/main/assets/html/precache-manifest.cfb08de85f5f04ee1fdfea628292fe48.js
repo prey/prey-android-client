@@ -1,31 +1,31 @@
 self.__precacheManifest = [
   {
-    "revision": "38f962d28fbd679b1e1c",
+    "revision": "c1aa6443cdff76c5b77d",
     "url": "./static/css/main.104a486e.chunk.css"
   },
   {
-    "revision": "38f962d28fbd679b1e1c",
-    "url": "./static/js/main.38f962d2.chunk.js"
+    "revision": "c1aa6443cdff76c5b77d",
+    "url": "./static/js/main.c1aa6443.chunk.js"
   },
   {
     "revision": "8c97409f0ee389fe75da",
     "url": "./static/js/runtime~main.8c97409f.js"
   },
   {
-    "revision": "637a8e7e2ac2a5e42bef",
-    "url": "./static/js/2.637a8e7e.chunk.js"
+    "revision": "2267c83143f3a43e6852",
+    "url": "./static/js/2.2267c831.chunk.js"
   },
   {
     "revision": "c3679e2d8686db6f8013ffe2ad603c2c",
     "url": "./static/media/prey-logo-monotono-alt.c3679e2d.svg"
   },
   {
-    "revision": "6e26bdc9c9316e31084263223a3aa74e",
-    "url": "./static/media/missing-report.6e26bdc9.png"
-  },
-  {
     "revision": "ce31486d2c6e0b6d55bbf5dbf26992f0",
     "url": "./static/media/prey-iso-monotono-alt.ce31486d.svg"
+  },
+  {
+    "revision": "6e26bdc9c9316e31084263223a3aa74e",
+    "url": "./static/media/missing-report.6e26bdc9.png"
   },
   {
     "revision": "6dd5ae67bb0dc9ae0c9886ef62c28dca",
@@ -124,19 +124,19 @@ self.__precacheManifest = [
     "url": "./static/media/regular-book-webfont.6e899114.woff"
   },
   {
-    "revision": "391159c582e0897e8d64ed22abe1ee2d",
-    "url": "./static/media/regular-bold-webfont.391159c5.woff"
+    "revision": "c44603b2b93c1b7a984f21255d556ee9",
+    "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
   },
   {
     "revision": "baaac74770efd8c34382afa00468f635",
     "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
   },
   {
-    "revision": "c44603b2b93c1b7a984f21255d556ee9",
-    "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
+    "revision": "391159c582e0897e8d64ed22abe1ee2d",
+    "url": "./static/media/regular-bold-webfont.391159c5.woff"
   },
   {
-    "revision": "45ced7ded14ae220febed2c0e161271e",
+    "revision": "9345119d8e4a20c097de732164495ca4",
     "url": "./index.html"
   }
 ];
