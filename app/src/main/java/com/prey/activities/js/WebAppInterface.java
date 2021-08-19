@@ -387,6 +387,17 @@ public class WebAppInterface {
         return initXiaomi;
     }
 
+    /**
+     * Method to obtain device is Huawei
+     * @return true if the device is Huawei, false otherwise
+     */
+    @JavascriptInterface
+    public boolean initHuawei() {
+        boolean initHuawei ="huawei".equalsIgnoreCase(Build.MANUFACTURER);
+        PreyLogger.d(String.format("Manufacter:%s initHuawei:%b",Build.MANUFACTURER,initHuawei));
+        return initHuawei;
+    }
+
     @JavascriptInterface
     public boolean initVerify() {
         PreyLogger.d("initVerify users:");
