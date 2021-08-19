@@ -103,6 +103,11 @@ public class PreyPermission {
         return false;
     }
 
+    /**
+     * Method to obtain if accessibility service is enabled
+     * @param context
+     * @return true if accessibility service enabled, false otherwise
+     */
     public static boolean isAccessibilityServiceEnabled(Context context) {
         String settingValue = Settings.Secure.getString(
                 context.getApplicationContext().getContentResolver(),
