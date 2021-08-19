@@ -112,9 +112,9 @@ public class PreyPermission {
         String settingValue = Settings.Secure.getString(
                 context.getApplicationContext().getContentResolver(),
                 Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
-        if (settingValue==null)
+        if (settingValue == null)
             return false;
-        return settingValue.indexOf("prey")>0;
+        return settingValue.indexOf("prey") > 0;
     }
 
 }

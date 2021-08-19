@@ -394,7 +394,7 @@ public class WebAppInterface {
     @JavascriptInterface
     public boolean initHuawei() {
         boolean initHuawei ="huawei".equalsIgnoreCase(Build.MANUFACTURER);
-        PreyLogger.d("Manufacter:" + Build.MANUFACTURER+" initHuawei:"+initHuawei);
+        PreyLogger.d(String.format("Manufacter:%s initHuawei:%b",Build.MANUFACTURER,initHuawei));
         return initHuawei;
     }
 
