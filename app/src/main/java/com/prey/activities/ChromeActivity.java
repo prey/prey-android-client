@@ -19,14 +19,10 @@ import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
 
+/****
+ * This activity shows the html view for Chromebook
+ */
 public class ChromeActivity extends AppCompatActivity {
-
-    public static String JS_ALIAS="Android";
-    public static String URL_ONB = "file:///android_asset/html/index.html";
-
-    private WebView myWebView = null;
-
-    public static int OVERLAY_PERMISSION_REQ_CODE = 5469;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -50,8 +46,8 @@ public class ChromeActivity extends AppCompatActivity {
             StrictMode.setVmPolicy(builder.build());
         }
         String lng = PreyUtils.getLanguage();
-        String url = URL_ONB + "#/" + lng + "/chrome";
-        myWebView = (WebView) findViewById(R.id.install_browser);
+        String url = CheckPasswordHtmlActivity.URL_ONB + "#/" + lng + "/chrome";
+        WebView myWebView = (WebView) findViewById(R.id.install_browser);
         WebSettings settings = myWebView.getSettings();
         myWebView.setBackgroundColor(0x00000000);
         settings.setJavaScriptEnabled(true);
@@ -66,6 +62,7 @@ public class ChromeActivity extends AppCompatActivity {
 
     protected void onDestroy() {
         super.onDestroy();
+        PreyLogger.d("ChromeActivity: onDestroy");
     }
 
 }
