@@ -51,7 +51,7 @@ public class PasswordHtmlActivity extends Activity {
         if (lockMessage != null && !"".equals(lockMessage)) {
             url = String.format(url, CheckPasswordHtmlActivity.URL_ONB, lng, "lockmessage");
         } else {
-            url = String.format(url, CheckPasswordHtmlActivity.URL_ONB, lng, "lock");;
+            url = String.format(url, CheckPasswordHtmlActivity.URL_ONB, lng, "lock");
         }
         myWebView.addJavascriptInterface(new WebAppInterface(this, this), CheckPasswordHtmlActivity.JS_ALIAS);
         myWebView.loadUrl(url);
