@@ -447,21 +447,12 @@ public class WebAppInterface {
     }
     @JavascriptInterface
     public boolean getTwoStepEnabled() {
-        return false;
-    }
-
-    @JavascriptInterface
-    public boolean getTwoStepEnabled2() {
-        PreyLogger.d("!PreyConfig.getPreyConfig(mContext).isTimeTwoStep():" + !PreyConfig.getPreyConfig(mContext).isTimeTwoStep());
         if (!PreyConfig.getPreyConfig(mContext).isTimeTwoStep()) {
-            PreyLogger.d("!PreyConfig.getPreyConfig(mContext).isTimeTwoStep() dentro");
             boolean twoStepEnabled = PreyWebServices.getInstance().getTwoStepEnabled(mContext);
             PreyConfig.getPreyConfig(mContext).setTwoStep(twoStepEnabled);
             PreyConfig.getPreyConfig(mContext).setTimeTwoStep();
         }
-        boolean twoStepEnabled = PreyConfig.getPreyConfig(mContext).getTwoStep();
-        PreyLogger.d("twoStepEnabled isTimeTwoStep:" + twoStepEnabled);
-        return twoStepEnabled;
+        return PreyConfig.getPreyConfig(mContext).getTwoStep();
     }
 
     @JavascriptInterface
