@@ -194,7 +194,7 @@ public class GeofenceController {
         final Context ctx2=ctx;
         try {
             if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                PendingIntent pendingIntent=PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, GeofenceReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent=PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, GeofenceReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
                 LocationServices.getGeofencingClient(ctx).addGeofences(geofencingRequest,pendingIntent)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override

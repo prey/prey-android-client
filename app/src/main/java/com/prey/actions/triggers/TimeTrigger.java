@@ -180,7 +180,7 @@ public class TimeTrigger {
                         PreyLogger.d("TimeTrigger format:" + EXACT_TIME_FORMAT_SDF.format(calendar.getTime()));
                         Intent intent = new Intent(ctx, TimeTriggerReceiver.class);
                         intent.putExtra("trigger_id", "" + trigger.id);
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, (trigger.id + ADD_TRIGGER_ID), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, (trigger.id + ADD_TRIGGER_ID), intent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
                         AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(ctx.ALARM_SERVICE);
                         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
                             PreyLogger.d("TimeTrigger----------set");
@@ -266,7 +266,7 @@ public class TimeTrigger {
                         calender.set(Calendar.DAY_OF_WEEK, day);
                         Intent intent = new Intent(ctx, TimeTriggerReceiver.class);
                         intent.putExtra("trigger_id", "" + trigger.id);
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, (trigger.id * ADD_TRIGGER_ID  +   day), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, (trigger.id * ADD_TRIGGER_ID  +   day), intent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
                         AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(ctx.ALARM_SERVICE);
                         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calender.getTimeInMillis(), AlarmManager.INTERVAL_DAY * 7, pendingIntent);
                     }

@@ -106,7 +106,7 @@ public class UtilityService extends IntentService {
                     .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
             FusedLocationApi.requestLocationUpdates(
                     googleApiClient, mLocationRequest,
-                    PendingIntent.getService(this, 0, locationUpdatedIntent, 0));
+                    PendingIntent.getService(this, 0, locationUpdatedIntent, PendingIntent.FLAG_MUTABLE));
             googleApiClient.disconnect();
         } else {
             PreyLogger.d(String.format(GOOGLE_API_CLIENT_ERROR_MSG,
