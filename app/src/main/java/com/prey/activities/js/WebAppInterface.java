@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
@@ -41,16 +42,21 @@ import com.prey.activities.PreReportActivity;
 import com.prey.activities.SecurityActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.barcodereader.BarcodeActivity;
-import com.prey.exceptions.PreyException;
 import com.prey.json.UtilJson;
 import com.prey.json.actions.Detach;
+import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyJobService;
+import com.prey.services.PreyLockHtmlService;
+import com.prey.services.PreySecureService;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
+import java.io.File;
 import java.net.HttpURLConnection;
 import java.util.Calendar;
 import java.util.Date;
@@ -63,6 +69,8 @@ public class WebAppInterface {
     private boolean noMoreDeviceError = false;
     private String from = "setting";
     private CheckPasswordHtmlActivity mActivity;
+    private PreySecureService preySecureService=null;
+    private PreyLockHtmlService preyLockHtmlService=null;
 
     public WebAppInterface() {
     }
@@ -78,6 +86,16 @@ public class WebAppInterface {
 
     public WebAppInterface(Context context, PasswordHtmlActivity activity) {
         mContext = context;
+    }
+
+    public WebAppInterface(Context context, PreyLockHtmlService preyLockHtmlService) {
+        mContext = context;
+        this.preyLockHtmlService=preyLockHtmlService;
+    }
+
+    public WebAppInterface(Context context, PreySecureService service) {
+        mContext = context;
+        this.preySecureService=service;
     }
 
     @JavascriptInterface
@@ -249,7 +267,7 @@ public class WebAppInterface {
                         PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceToAccount(ctx, email, password, PreyUtils.getDeviceType(ctx));
                         PreyConfig.getPreyConfig(mContext).saveAccount(accountData);
                     } catch (Exception e) {
-                        PreyLogger.d("mylogin error2:" + e.getMessage());
+                        PreyLogger.d(String.format("mylogin error2:%s", e.getMessage()));
                         PreyConfig.getPreyConfig(mContext).setError(e.getMessage());
                     }
                 }
@@ -260,15 +278,17 @@ public class WebAppInterface {
                 Thread.sleep(1000);
                 errorConfig= PreyConfig.getPreyConfig(mContext).getError();
                 isAccount=PreyConfig.getPreyConfig(mContext).isAccount();
-                PreyLogger.d("mylogin ["+i+"] isAccount:" +isAccount);
+                PreyLogger.d(String.format("mylogin [%d] isAccount:%s", i, isAccount));
                 i++;
             }while(i<30&&!isAccount&&errorConfig==null);
             isAccount=PreyConfig.getPreyConfig(mContext).isAccount();
             if(!isAccount){
-                if(errorConfig!=null&&!"".equals(errorConfig)){
-                    error=errorConfig;
-                }else {
-                    error = "{\"error\":[\"" + ctx.getText(R.string.error_communication_exception).toString() + "\"]}";
+                if (errorConfig != null && !"".equals(errorConfig)) {
+                    error = errorConfig;
+                } else {
+                    JSONObject json = new JSONObject();
+                    json.put("error", new JSONArray().put(mContext.getString(R.string.error_communication_exception)));
+                    error = json.toString();
                 }
             }else {
                 PreyConfig.getPreyConfig(mContext).registerC2dm();
@@ -279,13 +299,13 @@ public class WebAppInterface {
                 new PreyApp().run(mContext);
             }
         } catch (Exception e) {
-            PreyLogger.d("mylogin error1:" + e.getMessage());
+            PreyLogger.d(String.format("mylogin error1:%s", e.getMessage()));
             error = e.getMessage();
         }
         if (error == null) {
             error = "";
         }
-        PreyLogger.d("mylogin out error:" + error);
+        PreyLogger.d(String.format("mylogin out error:%s", error));
         return error;
     }
 
@@ -298,61 +318,70 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public String newName(String name){
-        PreyLogger.d("newName:" + name);
-        PreyWebServices.getInstance().validateName(mContext,name);
+        PreyLogger.d(String.format("newName:%s", name));
+        PreyWebServices.getInstance().validateName(mContext, name);
         return "";
     }
 
     @JavascriptInterface
     public String login_tipo(String password, String password2, String tipo) {
-        PreyLogger.d("login_tipo2 password:" + password + " password2:" + password2 + " tipo:" + tipo);
+        PreyLogger.d(String.format("login_tipo2 password:%s password2:%s tipo:%s", password, password2, tipo));
         from = tipo;
         error = null;
         boolean isPasswordOk = false;
         try {
             String apikey = PreyConfig.getPreyConfig(mContext).getApiKey();
             boolean twoStep = PreyConfig.getPreyConfig(mContext).getTwoStep();
-            PreyLogger.d("login_tipo twoStep:" + twoStep);
+            PreyLogger.d(String.format("login_tipo twoStep:%b", twoStep));
             if (twoStep) {
-                PreyLogger.d("login_tipo apikey:" + apikey + " password:" + password + " password2:" + password2);
+                PreyLogger.d(String.format("login_tipo apikey:%s password:%s password2:%s", apikey, password, password2));
                 isPasswordOk = PreyWebServices.getInstance().checkPassword2(mContext, apikey, password, password2);
             } else {
-                PreyLogger.d("login_tipo apikey:" + apikey + " password:" + password);
+                PreyLogger.d(String.format("login_tipo apikey:%s password:%s", apikey, password));
                 isPasswordOk = PreyWebServices.getInstance().checkPassword(mContext, apikey, password);
             }
             if (isPasswordOk) {
                 PreyConfig.getPreyConfig(mContext).setTimePasswordOk();
             }
-        } catch (PreyException  e1) {
-            PreyLogger.e("login_tipo error1:" + e1.getMessage(), e1);
-            error=e1.getMessage();
-        } catch (Exception e) {
-            PreyLogger.e("login_tipo error:" + e.getMessage(), e);
-            error = e.getMessage();
+        } catch (Exception e1) {
+            PreyLogger.e(String.format("login_tipo error1:%s", e1.getMessage()), e1);
+            error = e1.getMessage();
         }
-        PreyLogger.d("login_tipo isPasswordOk:" + isPasswordOk);
-        PreyLogger.d("login_tipo error:" + error);
-        if (error != null)
-            return error;
-        else if (!isPasswordOk) {
-            wrongPasswordIntents++;
-            if (wrongPasswordIntents == 3) {
-                error = "{\"error\":[\"" + mContext.getString(R.string.password_intents_exceed) + "\"]}";
+        PreyLogger.d(String.format("login_tipo isPasswordOk:%b", isPasswordOk));
+        PreyLogger.d(String.format("login_tipo error:%s", error));
+        try {
+            if (error != null) {
+                if (!error.contains("{")) {
+                    JSONObject json = new JSONObject();
+                    json.put("error", new JSONArray().put(error));
+                    error = json.toString();
+                }
+                return error;
+            } else if (!isPasswordOk) {
+                wrongPasswordIntents++;
+                JSONObject json = new JSONObject();
+                if (wrongPasswordIntents == 3) {
+                    json.put("error", new JSONArray().put(mContext.getString(R.string.password_intents_exceed)));
+                } else {
+                    json.put("error", new JSONArray().put(mContext.getString(R.string.password_wrong)));
+                }
+                error = json.toString();
             } else {
-                error = "{\"error\":[\"" + mContext.getString(R.string.password_wrong) + "\"]}";
+                PreyLogger.d(String.format("login_tipo from:%s", from));
+                if ("setting".equals(from) || "rename".equals(from)) {
+                    JSONObject json = new JSONObject();
+                    json.put("result", true);
+                    return json.toString();
+                } else {
+                    Intent intent = new Intent(mContext, PanelWebActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    mContext.startActivity(intent);
+                    if (mActivity != null)
+                        mActivity.finish();
+                }
             }
-        } else {
-            PreyLogger.d("login_tipo from:" + from);
-            if ("setting".equals(from)||"rename".equals(from)) {
-                //new Thread(new EventManagerRunner(mContext, new Event(Event.APPLICATION_OPENED))).start();
-                return "{\"result\":true}";
-            } else {
-                Intent intent = new Intent(mContext, PanelWebActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                mContext.startActivity(intent);
-                if(mActivity!=null)
-                    mActivity.finish();
-            }
+        } catch (Exception e) {
+            PreyLogger.e(String.format("error:%s", e.getMessage()), e);
         }
         return error;
     }
@@ -546,20 +575,27 @@ public class WebAppInterface {
                 if((unlock == null || "".equals(unlock))){
                     PreyLogger.d("lock accc " );
                     PreyConfig.getPreyConfig(ctx).setOverLock(false);
-                    int pid = android.os.Process.myPid();
-                    android.os.Process.killProcess(pid);
+                    if (preyLockHtmlService != null) {
+                        preyLockHtmlService.stop();
+                    } else {
+                        int pid = android.os.Process.myPid();
+                        android.os.Process.killProcess(pid);
+                    }
                 }
             }
             new Thread() {
                 public void run() {
                     if(canDrawOverlays) {
                         try {
-                            View viewLock = PreyConfig.getPreyConfig(ctx).viewLock;
-                            if (viewLock != null) {
-                                WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
-                                wm.removeView(viewLock);
-                            }else{
-                                android.os.Process.killProcess(android.os.Process.myPid());
+                            if (preyLockHtmlService != null) {
+                                preyLockHtmlService.stop();
+                                View viewLock = PreyConfig.getPreyConfig(ctx).viewLock;
+                                if (viewLock != null) {
+                                    WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
+                                    wm.removeView(viewLock);
+                                } else {
+                                    android.os.Process.killProcess(android.os.Process.myPid());
+                                }
                             }
                         } catch (Exception e) {
                             android.os.Process.killProcess(android.os.Process.myPid());
@@ -824,17 +860,26 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
-    public String rename2(String newName){
-        PreyLogger.d("rename:"+newName);
-        PreyName preyName =PreyWebServices.getInstance().renameName(mContext,newName);
-        String out="{\"code\":" + preyName.getCode() + ",\"error\":\"" + preyName.getError() + "\",\"name\":\"" + preyName.getName() + "\"}";
-        PreyLogger.d("rename out:"+out);
+    public String rename2(String newName) {
+        PreyLogger.d(String.format("rename:%s", newName));
+        String out = null;
+        try {
+            PreyName preyName = PreyWebServices.getInstance().renameName(mContext, newName);
+            JSONObject json = new JSONObject();
+            json.put("code", preyName.getCode());
+            json.put("error", preyName.getError());
+            json.put("name", preyName.getName());
+            out = json.toString();
+            PreyLogger.d(String.format("rename out:%s", out));
+        } catch (Exception e) {
+            PreyLogger.e(String.format("rename error:%s", e.getMessage()), e);
+        }
         return out;
     }
 
     @JavascriptInterface
     public void logger(String mylogger){
-        PreyLogger.d("logger:"+mylogger);
+        PreyLogger.d(String.format("logger:%s", mylogger));
     }
 
     @JavascriptInterface
@@ -886,9 +931,221 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
-    public String verificateAlert(){
-        String verificateAlert = PreyConfig.getPreyConfig(mContext).getLockMessage();
-        PreyLogger.d("verificateAlert:["+verificateAlert+"]");
-        return verificateAlert;
+    public String verificateAlert() {
+        return PreyConfig.getPreyConfig(mContext).getLockMessage();
     }
+
+    /**
+     * Method that returns if it should show disable power button
+     *
+     * @return should show disable power button
+     */
+    @JavascriptInterface
+    public boolean initOpenPin() {
+        boolean openPin = false;
+        try {
+            openPin = FileConfigReader.getInstance(mContext).getOpenPin();
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+        }
+        return false;
+    }
+
+    /**
+     * Method to open screen disable power button
+     */
+    @JavascriptInterface
+    public void openPin() {
+        long time = PreyConfig.getPreyConfig(mContext).getTimeSecureLock();
+        long now = new Date().getTime();
+        String extra = null;
+        if (now < time) {
+            extra = "";
+            return;
+        }
+        String pinNumber = PreyConfig.getPreyConfig(mContext).getPinNumber();
+        boolean disablePowerOptions = PreyConfig.getPreyConfig(mContext).getDisablePowerOptions();
+        if (pinNumber == null || "".equals(pinNumber)) {
+            extra = "";
+            return;
+        }
+        if (!disablePowerOptions) {
+            extra = "";
+            return;
+        }
+        if (extra == null) {
+            try {
+                PreyConfig.getPreyConfig(mContext).setViewSecure(true);
+                Intent intentLock = new Intent(mContext, PreySecureService.class);
+                mContext.startService(intentLock);
+                mActivity.finish();
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error CLOSE_SYSTEM:%s", e.getMessage()), e);
+            }
+        }
+    }
+
+    /**
+     * Method to close screen disable power button
+     */
+    @JavascriptInterface
+    public void closePin() {
+        try {
+            if (preySecureService == null) {
+                android.os.Process.killProcess(android.os.Process.myPid());
+            } else {
+                this.preySecureService.stop();
+            }
+        } catch (Exception e) {
+            PreyLogger.e(String.format("closePin error :%s", e.getMessage()), e);
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }
+    }
+
+    /**
+     * Method to unlock off the screen disable the power button
+     *
+     * @param pinNumber
+     * @return returns an empty json if it is ok and if not the error
+     */
+    @JavascriptInterface
+    public String unpin(String pinNumber) {
+        String out = "";
+        try {
+            JSONObject json = new JSONObject();
+            PreyLogger.d(String.format("unpin:%s", pinNumber));
+            String _pinNumber = PreyConfig.getPreyConfig(mContext).getPinNumber();
+            if (_pinNumber.equals(pinNumber)) {
+                PreyConfig.getPreyConfig(mContext).setPinActivated("");
+                PreyConfig.getPreyConfig(mContext).setOpenSecureService(false);
+                PreyConfig.getPreyConfig(mContext).setCounterOff(0);
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(new Date().getTime());
+                cal.add(Calendar.MINUTE, 2);
+                PreyConfig.getPreyConfig(mContext).setTimeSecureLock(cal.getTimeInMillis());
+                closePin();
+                out = json.toString();
+            } else {
+                PreyLogger.d("error");
+                json.put("error", new JSONArray().put(mContext.getString(R.string.password_wrong)));
+                out = json.toString();
+            }
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error unpin:%s", e.getMessage()), e);
+        }
+        return out;
+    }
+
+    /**
+     * Method that returns if it should show help
+     *
+     * @return returns if it should show help
+     */
+    @JavascriptInterface
+    public boolean initHelpFormForFree() {
+        boolean initHelpFormForFree = false;
+        try {
+            initHelpFormForFree = PreyConfig.getPreyConfig(mContext).getHelpFormForFree();
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+        }
+        return initHelpFormForFree;
+    }
+
+    /**
+     * Method to initialize help file
+     */
+    @JavascriptInterface
+    public void clickInitHelp() {
+        PreyConfig.getPreyConfig(mContext).setFileHelp("");
+    }
+
+    /**
+     * Method to send the help
+     *
+     * @param subject Possible values: Issues,Questions or Other
+     * @param message Help message
+     * @return returns a json with the result
+     */
+    @JavascriptInterface
+    public String sendHelp(String subject, String message) {
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(mContext);
+        String fileHelp = preyConfig.getHelpFile();
+        PreyLogger.d(String.format("help subject:%s message:%s fileHelp:%s", subject, message, fileHelp));
+        String out = "";
+        try {
+            boolean error = false;
+            JSONObject errorJson = new JSONObject();
+            if ("-1".equals(subject)) {
+                error = true;
+                errorJson.put("subject", new JSONArray().put(mContext.getString(R.string.help_error_subject)));
+            }
+            if (message == null || "".equals(message) || message.length() < 10) {
+                error = true;
+                errorJson.put("message", new JSONArray().put(mContext.getString(R.string.help_error_message)));
+            }
+            if (fileHelp != null && !"".equals(fileHelp)) {
+                PreyLogger.d("fileHelp:" + fileHelp);
+                File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), PreyConfig.HELP_DIRECTORY);
+                File file = new File(dir, fileHelp);
+                long fileSizeInBytes = file.length();
+                long fileSizeInKB = fileSizeInBytes / 1024;
+                long fileSizeInMB = fileSizeInKB / 1024;
+                PreyLogger.d("img fileSizeInMB:" + fileSizeInMB);
+                if (fileSizeInMB > 5) {
+                    error = true;
+                    errorJson.put("attachment", new JSONArray().put(mContext.getString(R.string.help_error_attachment)));
+                }
+            }
+            PreyLogger.d(String.format("error:%s errorJon:%s", error, errorJson));
+            if (error) {
+                out = errorJson.toString();
+            } else {
+                PreyHttpResponse response = PreyWebServices.getInstance().sendHelp(mContext, subject, message);
+                PreyLogger.d(String.format("response sendHelp:%s", response==null?"":response.toString()));
+            }
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error sendHelp:%s", e.getMessage()), e);
+        }
+        return out;
+    }
+
+    /**
+     * Method that opens popup to select image to send
+     */
+    @JavascriptInterface
+    public void searchHelpFile() {
+        PreyConfig.getPreyConfig(mContext).setFileHelp("");
+        mActivity.openImageChooserActivity();
+    }
+
+    /**
+     * Method method that returns if help file exists
+     *
+     * @return return help file exists
+     */
+    @JavascriptInterface
+    public boolean existsHelpFile() {
+        String displayName = PreyConfig.getPreyConfig(mContext).getHelpFile();
+        if ("".equals(displayName)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Method method that returns help file
+     *
+     * @return return help file
+     */
+    @JavascriptInterface
+    public String getHelpFile() {
+        String displayName = PreyConfig.getPreyConfig(mContext).getHelpFile();
+        if (!existsHelpFile()) {
+            displayName = mContext.getString(R.string.help_no_file_chosen);
+        }
+        return displayName;
+    }
+
 }

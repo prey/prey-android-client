@@ -9,15 +9,19 @@ package com.prey.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
+import android.provider.OpenableColumns;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
@@ -40,6 +44,10 @@ import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.services.PreyAccessibilityService;
 import com.prey.services.PreyOverlayService;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
 public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
     public static String JS_ALIAS="Android";
@@ -57,6 +65,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     private WebView myWebView = null;
 
     public static int OVERLAY_PERMISSION_REQ_CODE = 5469;
+    public static int FILE_CHOOSER_RESULT_CODE = 6969;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -70,13 +79,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         setContentView(R.layout.webview);
         PreyLogger.d("CheckPasswordHtmlActivity: onCreate");
         registerReceiver(close_prey_receiver, new IntentFilter(CLOSE_PREY));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        PreyConfig.getPreyConfig(this).setCapsLockOn(false);
-        PreyLogger.d("CheckPasswordHtmlActivity: onResume");
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
@@ -94,6 +96,13 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         } else {
             loadUrl();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PreyConfig.getPreyConfig(this).setCapsLockOn(false);
+        PreyLogger.d("CheckPasswordHtmlActivity: onResume");
     }
 
     protected void onDestroy() {
@@ -161,6 +170,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         String lng = PreyUtils.getLanguage();
         String url = "";
         String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
+        boolean registered = PreyConfig.getPreyConfig(this).isThisDeviceAlreadyRegisteredWithPrey();
         PreyLogger.d("CheckPasswordHtmlActivity deviceKey:" + deviceKey);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PreyLogger.d("CheckPasswordHtmlActivity: Build.VERSION_CODES >=M" );
@@ -185,7 +195,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             String installationStatus=PreyConfig.getPreyConfig(this).getInstallationStatus();
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: configurated:%s installationStatus:%s",configurated,installationStatus));
             if (configurated) {
-                    if (deviceKey != null && !"".equals(deviceKey)) {
+                    if (registered) {
                         if ("".equals(installationStatus)) {
                             url = URL_ONB + "#/" + lng + "/";
                         }else{
@@ -227,7 +237,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             }
         }else{
             PreyLogger.d("CheckPasswordHtmlActivity: Build.VERSION_CODES <M" );
-            if (deviceKey != null && deviceKey != ""  ) {
+            if (registered) {
                 url = URL_ONB + "#/" + lng + "/";
             } else {
                 url = URL_ONB + "#/" + lng + "/signin";
@@ -319,10 +329,11 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        PreyLogger.d("CheckPasswordHtmlActivity onRequestPermissionsResult:"+requestCode);
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        PreyLogger.d(String.format("CheckPasswordHtmlActivity onRequestPermissionsResult:%s", requestCode));
         if(requestCode==REQUEST_PERMISSIONS) {
             for (int i = 0; permissions != null && i < permissions.length; i++) {
-                PreyLogger.d("CheckPasswordHtmlActivity onRequestPermissionsResult:" + permissions[i] + " " + grantResults[i]);
+                PreyLogger.d(String.format("CheckPasswordHtmlActivity onRequestPermissionsResult:%s %s", permissions[i], grantResults[i]));
                 if (permissions[i].equals(Manifest.permission.ACCESS_BACKGROUND_LOCATION) && grantResults[i] == -1) {
                     PreyConfig.getPreyConfig(this).setPermissionLocation(false);
                 }
@@ -333,7 +344,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         }
         if(requestCode==REQUEST_PERMISSIONS_LOCATION) {
             for (int i = 0; permissions != null && i < permissions.length; i++) {
-                PreyLogger.d("CheckPasswordHtmlActivity onRequestPermissionsResult:[" + i + "]" + grantResults[i]);
+                PreyLogger.d(String.format("CheckPasswordHtmlActivity onRequestPermissionsResult[%d]: %s", i, grantResults[i]));
                 if (permissions[i].equals(Manifest.permission.ACCESS_COARSE_LOCATION) && grantResults[i] == -1) {
                     PreyConfig.getPreyConfig(this).setPermissionLocation(false);
                 }
@@ -391,6 +402,93 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     public void askForPermissionLocation() {
         PreyLogger.d("CheckPasswordHtmlActivity askForPermissionLocation");
         ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, REQUEST_PERMISSIONS_LOCATION);
+    }
+
+    /**
+     * Method that open the image Chooser
+     */
+    public void openImageChooserActivity() {
+        PreyLogger.d("CheckPasswordHtmlActivity openImageChooserActivity");
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        startActivityForResult(Intent.createChooser(i, "Image Chooser"), FILE_CHOOSER_RESULT_CODE);
+    }
+
+    /**
+     * Method activity result
+     * @param requestCode
+     * @param resultCode
+     * @param intent
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == FILE_CHOOSER_RESULT_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri uri = intent.getData();
+                if (uri != null && uri.toString().startsWith("content:")) {
+                    String fileName = getFileNameHelp(getApplicationContext(), uri);
+                    PreyConfig.getPreyConfig(this).setFileHelp(fileName);
+                }
+            }
+        }
+    }
+
+    /**
+     * Method get selected image
+     *
+     * @param ctx
+     * @param uri
+     * @return image
+     */
+    @SuppressLint("Range")
+    public String getFileNameHelp(Context ctx, Uri uri) {
+        String fileNameHelp = null;
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                String displayName = cursor.getString(columnIndex);
+                File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), PreyConfig.HELP_DIRECTORY);
+                if (!dir.exists()) {
+                    dir.mkdir();
+                }
+                File newFile = new File(dir, displayName);
+                if (newFile.exists()) {
+                    newFile.delete();
+                    newFile = new File(dir, displayName);
+                }
+                FileOutputStream out = null;
+                InputStream in = null;
+                try {
+                    out = new FileOutputStream(newFile);
+                    in = getApplicationContext().getContentResolver().openInputStream(uri);
+                    PreyUtils.copyFile(in, out);
+                    fileNameHelp = displayName;
+                } catch (Exception e) {
+                    PreyLogger.d(String.format("Error getFileNameHelp:%s", e.getMessage()));
+                } finally {
+                    if (out != null) {
+                        try {
+                            out.close();
+                        } catch (Exception e) {
+                            PreyLogger.d(String.format("Error getFileNameHelp:%s", e.getMessage()));
+                        }
+                    }
+                    if (in != null) {
+                        try {
+                            in.close();
+                        } catch (Exception e) {
+                            PreyLogger.d(String.format("Error getFileNameHelp:%s" , e.getMessage()));
+                        }
+                    }
+                }
+            }
+        } finally {
+            cursor.close();
+        }
+        return fileNameHelp;
     }
 
 }
