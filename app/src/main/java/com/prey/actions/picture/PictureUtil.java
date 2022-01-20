@@ -47,8 +47,9 @@ public class PictureUtil {
                     EntityFile entityFile = new EntityFile();
                     entityFile.setFile(file);
                     entityFile.setMimeType("image/png");
-                    entityFile.setName("picture.jpg");
-                    entityFile.setType("picture");
+                    entityFile.setFilename("picture.jpg");
+                    entityFile.setName("picture");
+                    entityFile.setType("image/png");
                     entityFile.setIdFile(sdf.format(new Date()) + "_" + entityFile.getType());
                     entityFile.setLength(frontPicture.length);
                     data.addEntityFile(entityFile);
@@ -66,8 +67,9 @@ public class PictureUtil {
                             EntityFile entityFile = new EntityFile();
                             entityFile.setFile(file);
                             entityFile.setMimeType("image/png");
-                            entityFile.setName("screenshot.jpg");
-                            entityFile.setType("screenshot");
+                            entityFile.setFilename("screenshot.jpg");
+                            entityFile.setName("screenshot");
+                            entityFile.setType("image/png");
                             entityFile.setIdFile(sdf.format(new Date()) + "_" + entityFile.getType());
                             entityFile.setLength(backPicture.length);
                             data.addEntityFile(entityFile);

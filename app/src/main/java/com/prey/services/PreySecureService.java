@@ -220,4 +220,7 @@ public class PreySecureService extends Service{
         }
     }
 
+    public void stop(){
+        stopSelf();
+    }
 }

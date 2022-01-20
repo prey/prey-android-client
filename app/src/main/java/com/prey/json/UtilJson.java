@@ -53,4 +53,68 @@ public class UtilJson {
         return map;
     }
 
+    /**
+     * Method get JSONObject
+     *
+     * @param jsonObject
+     * @param key
+     * @return value for key
+     * @throws JSONException
+     */
+    public static JSONObject getJSONObject(JSONObject jsonObject, String key) throws JSONException {
+        JSONObject out = null;
+        if (jsonObject != null && jsonObject.has(key)) {
+            out = jsonObject.getJSONObject(key);
+        }
+        return out;
+    }
+
+    /**
+     * Method get string
+     *
+     * @param jsonObject
+     * @param key
+     * @return value for key
+     * @throws JSONException
+     */
+    public static String getString(JSONObject jsonObject, String key) throws JSONException {
+        String out = null;
+        if (jsonObject != null && jsonObject.has(key)) {
+            out = jsonObject.getString(key);
+        }
+        return out;
+    }
+
+    /**
+     * Method get boolean
+     *
+     * @param jsonObject
+     * @param key
+     * @return value for key
+     * @throws JSONException
+     */
+    public static boolean getBoolean(JSONObject jsonObject, String key) throws JSONException {
+        boolean out = false;
+        if (jsonObject != null && jsonObject.has(key)) {
+            out = jsonObject.getBoolean(key);
+        }
+        return out;
+    }
+
+    /**
+     * Method get int
+     *
+     * @param jsonObject
+     * @param key
+     * @return value for key
+     * @throws JSONException
+     */
+    public static int getInt(JSONObject jsonObject, String key) throws JSONException {
+        int out = 0;
+        if (jsonObject != null && jsonObject.has(key)) {
+            out = jsonObject.getInt(key);
+        }
+        return out;
+    }
+
 }

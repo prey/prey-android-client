@@ -19,6 +19,7 @@ import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.PreyAction;
 import com.prey.actions.PreyExecutionWaitNotify;
+import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 import com.prey.util.ClassUtil;
 
@@ -96,38 +97,43 @@ public class ActionsController {
     }
 
     public List<HttpDataService> runActionJson(Context ctx, List<JSONObject> jsonObjectList) {
-        List<HttpDataService> listData=new ArrayList<HttpDataService>();
-        int size=jsonObjectList==null?-1:jsonObjectList.size();
-        PreyLogger.d("runActionJson size:"+size);
+        List<HttpDataService> listData = new ArrayList<HttpDataService>();
+        int size = jsonObjectList == null ? -1 : jsonObjectList.size();
+        PreyLogger.d(String.format("runActionJson size:%s", size));
         try {
-            for(int i=0;jsonObjectList!=null&&i<jsonObjectList.size();i++){
-                JSONObject jsonObject=jsonObjectList.get(i);
+            for (int i = 0; jsonObjectList != null && i < jsonObjectList.size(); i++) {
+                JSONObject jsonObject = jsonObjectList.get(i);
                 try {
-                    jsonObject = jsonObject.getJSONObject("cmd");
-                }catch(Exception e){
-                    PreyLogger.e("Error:"+e.getMessage(),e);
+                    JSONObject jsonCmd = UtilJson.getJSONObject(jsonObject, "cmd");
+                    if (jsonCmd != null) {
+                        jsonObject = jsonCmd;
+                    }
+                } catch (Exception e) {
+                    PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
                 }
-                PreyLogger.d("jsonObject:"+jsonObject);
-                String nameAction = jsonObject.getString("target");
-                String methodAction = jsonObject.getString("command");
-                JSONObject parametersAction =null;
-                try{
-                    parametersAction = jsonObject.getJSONObject("options");
-                }catch(JSONException e){
-                    PreyLogger.e("Error:"+e.getMessage(),e);
+                PreyLogger.d(String.format("jsonObject:%s", jsonObject));
+                String nameAction = UtilJson.getString(jsonObject, "target");
+                String methodAction = UtilJson.getString(jsonObject, "command");
+                JSONObject parametersAction = null;
+                try {
+                    parametersAction = UtilJson.getJSONObject(jsonObject, "options");
+                } catch (JSONException e) {
+                    PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
                 }
-                if (parametersAction==null){
-                    parametersAction=new JSONObject();
+                if (parametersAction == null) {
+                    parametersAction = new JSONObject();
                 }
                 try {
-                    String messageId = jsonObject.getString(PreyConfig.MESSAGE_ID);
-                    parametersAction.put(PreyConfig.MESSAGE_ID, messageId);
-                }catch (Exception e){
-                    PreyLogger.e("Error:"+e.getMessage(),e);
+                    String messageId = UtilJson.getString(jsonObject, PreyConfig.MESSAGE_ID);
+                    if (messageId != null) {
+                        parametersAction.put(PreyConfig.MESSAGE_ID, messageId);
+                    }
+                } catch (Exception e) {
+                    PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
                 }
-                PreyLogger.d("nameAction:"+nameAction+" methodAction:"+methodAction+" parametersAction:"+parametersAction);
+                PreyLogger.d(String.format("nameAction:%s methodAction:%s parametersAction:%s", nameAction, methodAction, parametersAction));
                 List<ActionResult> lista = new ArrayList<ActionResult>();
-                listData=ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction,listData);
+                listData = ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction, listData);
             }
             return listData;
         } catch (JSONException e) {

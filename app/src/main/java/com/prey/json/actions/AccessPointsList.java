@@ -40,9 +40,9 @@ public class AccessPointsList extends JsonAction {
         HttpDataService dataWifi = new HttpDataService("access_points_list");
         String messageId = null;
         try {
-            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID);
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e("Error:" + e.getMessage(), e);
         }
         try {
             if (PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {

@@ -16,6 +16,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.observer.ActionResult;
 import com.prey.actions.wipe.WipeThread;
+import com.prey.json.UtilJson;
 
 public class Wipe {
 
@@ -31,32 +32,35 @@ public class Wipe {
         boolean wipe = false;
         boolean deleteSD = false;
         try {
-            String sd = parameters.getString("parameter");
-            PreyLogger.d("sd:" + sd);
+            String sd = null;
+            if (parameters != null && parameters.has("parameter")) {
+                sd = parameters.getString("parameter");
+                PreyLogger.d(String.format("sd:%s", sd));
+            }
             if (sd != null && "sd".equals(sd)) {
                 wipe = false;
                 deleteSD = true;
             }
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         String messageId = null;
         try {
-            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
-            PreyLogger.d("messageId:"+messageId);
+            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID);
+            PreyLogger.d(String.format("messageId:%s", messageId));
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         String jobId = null;
         try {
-            jobId = parameters.getString(PreyConfig.JOB_ID);
-            PreyLogger.d("jobId:"+jobId);
+            jobId = UtilJson.getString(parameters, PreyConfig.JOB_ID);
+            PreyLogger.d(String.format("jobId:%s", jobId));
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         try {
-            String factoryReset = parameters.getString("factory_reset");
-            PreyLogger.i("factoryReset:" + factoryReset);
+            String factoryReset = UtilJson.getString(parameters, "factory_reset");
+            PreyLogger.i(String.format("factoryReset:%s", factoryReset));
             if ("on".equals(factoryReset) || "y".equals(factoryReset) || "true".equals(factoryReset)) {
                 wipe = true;
             }
@@ -64,11 +68,11 @@ public class Wipe {
                 wipe = false;
             }
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         try {
-            String wipeSim = parameters.getString("wipe_sim");
-            PreyLogger.i("wipeSim:" + wipeSim);
+            String wipeSim = UtilJson.getString(parameters, "wipe_sim");
+            PreyLogger.i(String.format("wipeSim:%s", wipeSim));
             if ("on".equals(wipeSim) || "y".equals(wipeSim) || "true".equals(wipeSim)) {
                 deleteSD = true;
             }
@@ -76,9 +80,9 @@ public class Wipe {
                 deleteSD = false;
             }
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:", e.getMessage()), e);
         }
-        PreyLogger.i("wipe:" + wipe + " deleteSD:" + deleteSD);
+        PreyLogger.i(String.format("wipe:%b deleteSD%b:", wipe, deleteSD));
         new WipeThread(ctx, wipe, deleteSD, messageId,jobId).start();
     }
 }

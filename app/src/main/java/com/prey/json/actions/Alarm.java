@@ -19,6 +19,7 @@ import com.prey.actions.HttpDataService;
 import com.prey.actions.alarm.AlarmThread;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
+import com.prey.json.UtilJson;
 
 public class Alarm extends JsonAction {
 
@@ -29,25 +30,25 @@ public class Alarm extends JsonAction {
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
         String sound = null;
         try {
-            sound = parameters.getString("sound");
+            sound = UtilJson.getString(parameters, "sound");
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s" , e.getMessage()), e);
         }
         String messageId = null;
         try {
-            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
-            PreyLogger.d("messageId:"+messageId);
+            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID);
+            PreyLogger.d("messageId:" + messageId);
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s" , e.getMessage()), e);
         }
         String jobId = null;
         try {
-            jobId = parameters.getString(PreyConfig.JOB_ID);
-            PreyLogger.d("jobId:"+jobId);
+            jobId = UtilJson.getString(parameters, PreyConfig.JOB_ID);
+            PreyLogger.d("jobId:" + jobId);
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s" , e.getMessage()), e);
         }
-        new AlarmThread(ctx, sound,messageId,jobId).start();
+        new AlarmThread(ctx, sound, messageId, jobId).start();
     }
 
     public void stop(Context ctx, List<ActionResult> list, JSONObject options) {

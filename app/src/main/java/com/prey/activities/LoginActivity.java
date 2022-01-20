@@ -92,14 +92,14 @@ public class LoginActivity extends Activity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);
         } else {
-            String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
-            if (deviceKey != null && deviceKey != "") {
+            boolean registered = PreyConfig.getPreyConfig(this).isThisDeviceAlreadyRegisteredWithPrey();
+            if (registered) {
                 intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
             } else {
                 boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
-                PreyLogger.d("LoginActivity: canDrawOverlays:" + canDrawOverlays);
+                PreyLogger.d(String.format("LoginActivity: canDrawOverlays:%b", canDrawOverlays));
                 boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
-                PreyLogger.d("LoginActivity: isAdminActive:" + isAdminActive);
+                PreyLogger.d(String.format("LoginActivity: isAdminActive:%b", isAdminActive));
                 boolean configurated = canDrawOverlays && isAdminActive;
                 if (configurated) {
                     intent = new Intent(LoginActivity.this, SignInActivity.class);
@@ -107,6 +107,9 @@ public class LoginActivity extends Activity {
                     intent = new Intent(LoginActivity.this, OnboardingActivity.class);
                 }
             }
+        }
+        if (PreyConfig.getPreyConfig(this).isChromebook()) {
+            intent = new Intent(LoginActivity.this, ChromeActivity.class);
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
