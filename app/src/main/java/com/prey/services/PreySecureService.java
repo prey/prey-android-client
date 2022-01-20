@@ -9,42 +9,35 @@ package com.prey.services;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
+import com.prey.PreyUtils;
 import com.prey.R;
-import com.prey.activities.CloseActivity;
+import com.prey.activities.CheckPasswordHtmlActivity;
+import com.prey.activities.js.CustomWebView;
+import com.prey.activities.js.WebAppInterface;
 import com.prey.receivers.PreyDisablePowerOptionsReceiver;
 
-import java.util.Calendar;
 import java.util.Date;
 
-public class PreySecureService extends Service{
+public class PreySecureService extends Service {
 
     private WindowManager windowManager;
     private View view;
-    Button button_close=null;
-    Button button_Super_Lock_Unlock=null;
-    TextView textViewPin=null;
-    EditText editTextPin =null;
 
-    public PreySecureService(){
+    public PreySecureService() {
     }
 
     public IBinder onBind(Intent intent) {
@@ -56,91 +49,65 @@ public class PreySecureService extends Service{
         PreyLogger.d("PreySecureService onCreate");
     }
 
+    private WebView myWebView = null;
+
     public void onStart(Intent intent, int startId) {
-        super.onStart(intent,startId);
-        final Context ctx=this;
+        super.onStart(intent, startId);
+        final Context ctx = this;
         PreyLogger.d("PreySecureService onStart");
-        boolean canDrawOverlays= PreyPermission.canDrawOverlays(ctx);
-        if(!canDrawOverlays){
+        boolean canDrawOverlays = PreyPermission.canDrawOverlays(ctx);
+        if (!canDrawOverlays) {
             stopSelf();
             return;
         }
+        long time = PreyConfig.getPreyConfig(this).getTimeSecureLock();
+        long now = new Date().getTime();
+        PreyLogger.d(String.format("PreyDisablePowerOptionsReceiver time:%s now:%s <%s", time, now, (now < time)));
+        if (now < time) {
+            PreyLogger.d("PreySecureService close");
+            stopSelf();
+            return;
+        }
+        boolean viewSecure = PreyConfig.getPreyConfig(this).getViewSecure();
+        if (!viewSecure) {
+            PreyLogger.d("PreySecureService viewSecure stopSelf");
+            stopSelf();
+            return;
+        }
+        PreyConfig.getPreyConfig(this).setViewSecure(false);
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        view = inflater.inflate(R.layout.super_lock, null);
-        editTextPin = (EditText) view.findViewById(R.id.editTextPin);
-        textViewPin= (TextView) view.findViewById(R.id.textViewPin);
-        button_Super_Lock_Unlock= (Button)view.findViewById(R.id.button_Super_Lock_Unlock);
-        button_close= (Button)view.findViewById(R.id.button_close);
-        button_close.setOnClickListener(new View.OnClickListener() {
+        view = inflater.inflate(R.layout.webview, null);
+        myWebView = (WebView) view.findViewById(R.id.install_browser);
+        PreyConfig.getPreyConfig(this).viewSecure = myWebView;
+        myWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public void onClick(View v) {
-                if(view != null){
-                    WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-                    if(wm != null) {
-                        wm.removeView(view);
-                    }
-                    view = null;
-                }
-                stopSelf();
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                CustomWebView.callDispatchKeyEvent(getApplicationContext(), keyEvent);
+                return false;
             }
         });
-        Typeface regularBold= Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-bold.otf");
-        Typeface regularBook = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-book.otf");
-        editTextPin.setTypeface(regularBold);
-        textViewPin.setTypeface(regularBook);
-        button_Super_Lock_Unlock.setTypeface(regularBook);
-        button_close.setTypeface(regularBook);
-        final String pinNumber= PreyConfig.getPreyConfig(ctx).getPinNumber();
-        if(pinNumber!=null&&!"".equals(pinNumber)&&pinNumber.length()==4) {
+        WebSettings settings = myWebView.getSettings();
+        myWebView.setBackgroundColor(0x00000000);
+        settings.setJavaScriptEnabled(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setLoadsImagesAutomatically(true);
+        settings.setUseWideViewPort(true);
+        settings.setSupportZoom(false);
+        settings.setBuiltInZoomControls(false);
+        String lng = PreyUtils.getLanguage();
+        String url = CheckPasswordHtmlActivity.URL_ONB + "#/" + lng + "/pin";
+        myWebView.addJavascriptInterface(new WebAppInterface(this, this), CheckPasswordHtmlActivity.JS_ALIAS);
+        myWebView.loadUrl(url);
+        myWebView.loadUrl("javascript:window.location.reload(true)");
+        final String pinNumber = PreyConfig.getPreyConfig(ctx).getPinNumber();
+        if (pinNumber != null && !"".equals(pinNumber) && pinNumber.length() == 4) {
             try {
                 Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
                 intentClose.putExtra(PreyDisablePowerOptionsReceiver.stringExtra, PreyDisablePowerOptionsReceiver.stringExtra);
                 this.sendBroadcast(intentClose);
-            }catch (Exception e){
-                PreyLogger.e("Error CLOSE_SYSTEM:"+e.getMessage(),e);
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error CLOSE_SYSTEM:%s", e.getMessage()), e);
             }
-            editTextPin.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    editTextPin.setBackgroundColor(Color.WHITE);
-                }
-                @Override
-                public void afterTextChanged(Editable s) {
-                    editTextPin.setBackgroundColor(Color.WHITE);
-                }
-            });
-            editTextPin.setOnKeyListener(new View.OnKeyListener() {
-                @Override
-                public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                    if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                        String pin=editTextPin.getText().toString();
-                        if(pin!=null ){
-                            String pinNumber=PreyConfig.getPreyConfig(getApplicationContext()).getPinNumber();
-                            PreyLogger.d("pinNumber:"+pinNumber+" pin:"+pin );
-                            if(pinNumber.equals(pin)){
-                                PreyConfig.getPreyConfig(getApplicationContext()).setOpenSecureService(false);
-                                PreyConfig.getPreyConfig(getApplicationContext()).setCounterOff(0);
-                                Calendar cal = Calendar.getInstance();
-                                cal.setTimeInMillis(new Date().getTime());
-                                cal.add(Calendar.MINUTE, 1);
-                                PreyConfig.getPreyConfig(getApplicationContext()).setTimeSecureLock(cal.getTimeInMillis());
-                                stopSelf();
-                                Intent intent = new Intent(ctx, CloseActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                                ctx.startActivity(intent);
-                            }else{
-                                PreyLogger.d("error"  );
-                                editTextPin.setBackgroundColor(Color.RED);
-                            }
-                        }
-                    }
-                    return false;
-                }
-            });
-            button_Super_Lock_Unlock.setOnClickListener(new ButtonPinOnClickListener());
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
             layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
             layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
@@ -154,12 +121,12 @@ public class PreySecureService extends Service{
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
                 if (Settings.canDrawOverlays(this)) {
-                    if(wm != null) {
-                        try{
+                    if (wm != null) {
+                        try {
                             wm.addView(view, layoutParams);
                             PreyConfig.getPreyConfig(this).setOpenSecureService(true);
-                        }catch (Exception e){
-                            PreyLogger.e(e.getMessage(),e);
+                        } catch (Exception e) {
+                            PreyLogger.e(e.getMessage(), e);
                         }
                     }
                 }
@@ -168,11 +135,13 @@ public class PreySecureService extends Service{
                 Intent intentClose = new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS");
                 intentClose.putExtra(PreyDisablePowerOptionsReceiver.stringExtra, PreyDisablePowerOptionsReceiver.stringExtra);
                 this.sendBroadcast(intentClose);
-            }catch (Exception e){PreyLogger.e("Error intentClose:"+e.getMessage(),e);}
-        }else{
-            if(view != null){
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error intentClose:%s", e.getMessage()), e);
+            }
+        } else {
+            if (view != null) {
                 WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-                if(wm != null) {
+                if (wm != null) {
                     wm.removeView(view);
                 }
                 view = null;
@@ -186,41 +155,26 @@ public class PreySecureService extends Service{
         super.onDestroy();
         PreyLogger.d("PreySecureService onDestroy");
         PreyConfig.getPreyConfig(this).setOpenSecureService(false);
-        if(view != null){
+        if (view != null) {
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-            if(wm != null) {
-                try{wm.removeView(view);}catch (Exception e){PreyLogger.e("Error:"+e.getMessage(),e);}
+            if (wm != null) {
+                try {
+                    wm.removeView(view);
+                } catch (Exception e) {
+                    PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+                }
             }
             view = null;
         }
     }
 
-    public class ButtonPinOnClickListener implements View.OnClickListener {
-        @Override public void onClick(View v) {
-            String pin=editTextPin.getText().toString();
-            if(pin!=null ){
-                String pinNumber=PreyConfig.getPreyConfig(getApplicationContext()).getPinNumber();
-                PreyLogger.d("pinNumber:"+pinNumber+" pin:"+pin );
-                if(pinNumber.equals(pin)){
-                    PreyConfig.getPreyConfig(getApplicationContext()).setOpenSecureService(false);
-                    PreyConfig.getPreyConfig(getApplicationContext()).setCounterOff(0);
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTimeInMillis(new Date().getTime());
-                    cal.add(Calendar.MINUTE, 1);
-                    PreyConfig.getPreyConfig(getApplicationContext()).setTimeSecureLock(cal.getTimeInMillis());
-                    stopSelf();
-                    Intent intent = new Intent(getApplicationContext(), CloseActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getApplicationContext().startActivity(intent);
-                }else{
-                    PreyLogger.d("error"  );
-                    editTextPin.setBackgroundColor(Color.RED);
-                }
-            }
-        }
+    public void stop() {
+        close();
     }
 
-    public void stop(){
+    public void close() {
+        PreyLogger.d("PreySecureService close");
         stopSelf();
     }
+
 }
