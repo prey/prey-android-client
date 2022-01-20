@@ -41,7 +41,7 @@ public class PreyConfig {
     private static PreyConfig cachedInstance = null;
     public static final String TAG = "PREY";
     private static final String HTTP="https://";
-    public static final String VERSION_PREY_DEFAULT="2.3.10";
+    public static final String VERSION_PREY_DEFAULT="2.3.12";
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
     // Set to 1000 * 60 in production.
@@ -163,6 +163,10 @@ public class PreyConfig {
     public static final String INPUT_WEBVIEW="INPUT_WEBVIEW";
     public static final String PAGE="PAGE";
     public static final String PERMISSION_LOCATION="PERMISSION_LOCATION";
+    public static final String HELP_FILE="HELP_FILE";
+    public static final String CONTACT_FORM_FOR_FREE="CONTACT_FORM_FOR_FREE";
+    public static final String VIEW_SECURE="VIEW_SECURE";
+    public static final String HELP_DIRECTORY="preyHelp";
     private boolean securityPrivilegesAlreadyPrompted;
     private Context ctx;
     public static String postUrl = null;
@@ -645,7 +649,7 @@ public class PreyConfig {
             if (updatePrey)
                 PreyWebServices.getInstance().setPushRegistrationId(ctx, "");
             Intent unregIntent = new Intent("com.google.android.c2dm.intent.UNREGISTER");
-            unregIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), 0));
+            unregIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), PendingIntent.FLAG_IMMUTABLE));
             this.ctx.startService(unregIntent);
         }catch(Exception e){
             PreyLogger.e("Error:"+e.getMessage(),e);
@@ -740,11 +744,11 @@ public class PreyConfig {
         return FileConfigReader.getInstance(this.ctx).getPreyUninstallEs();
     }
     public String getApiKeyBatch() {
-        return FileConfigReader.getInstance(this.ctx).getApiKeyBatch();
+        return PreyBatch.getInstance(this.ctx).getApiKeyBatch();
     }
 
     public String getEmailBatch() {
-        return FileConfigReader.getInstance(this.ctx).getEmailBatch();
+        return PreyBatch.getInstance(this.ctx).getEmailBatch();
     }
 
     public int getFlagFeedback() {
@@ -918,7 +922,7 @@ public class PreyConfig {
     }
 
     public boolean isAskForNameBatch(){
-        return FileConfigReader.getInstance(ctx).isAskForNameBatch();
+        return PreyBatch.getInstance(ctx).isAskForNameBatch();
     }
 
     public void setScheduled(boolean scheduled){
@@ -1355,4 +1359,27 @@ public class PreyConfig {
         return getBoolean(PreyConfig.PERMISSION_LOCATION, true);
     }
 
+    public String getHelpFile() {
+        return getString(HELP_FILE, "");
+    }
+
+    public void setFileHelp(String fileHelp) {
+        saveString(HELP_FILE, fileHelp);
+    }
+
+    public boolean getHelpFormForFree() {
+        return getBoolean(PreyConfig.CONTACT_FORM_FOR_FREE, false);
+    }
+
+    public void setContactFormForFree(boolean contactFree) {
+        saveBoolean(PreyConfig.CONTACT_FORM_FOR_FREE, contactFree);
+    }
+
+    public boolean getViewSecure(){
+        return getBoolean(PreyConfig.VIEW_SECURE, false);
+    }
+
+    public void setViewSecure(boolean viewSecure){
+        saveBoolean(PreyConfig.VIEW_SECURE, viewSecure);
+    }
 }

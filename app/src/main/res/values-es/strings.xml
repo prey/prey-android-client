@@ -365,5 +365,9 @@
     <string name="button_batch">Siguiente</string>
     <string name="uninstall_prey">¿Cómo desinstalar Prey?</string>
     <string name="uninstall_prey_link">https://ayuda.preyproject.com/article/226-como-desinstalar-prey#android</string>
+    <string name="help_error_subject">Por favor selecciona un asunto.</string>
+    <string name="help_error_message">El mensaje debe tener mín. 10 caracteres.</string>
+    <string name="help_error_attachment">El archivo seleccionado excede el tamaño máximo.</string>
+    <string name="help_no_file_chosen">No se eligió archivo</string>
 
 </resources>

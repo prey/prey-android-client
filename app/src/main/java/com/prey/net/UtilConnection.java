@@ -163,7 +163,9 @@ public class UtilConnection {
                     if (correlationId != null) {
                         connection.addRequestProperty("X-Prey-Correlation-ID", correlationId);
                         PreyLogger.d("X-Prey-Correlation-ID:" + correlationId);
-                        String deviceId = preyConfig.getDeviceId();
+                    }
+                    String deviceId = preyConfig.getDeviceId();
+                    if (deviceId != null) {
                         connection.addRequestProperty("X-Prey-Device-ID", deviceId);
                         PreyLogger.d("X-Prey-Device-ID:" + deviceId);
                         connection.addRequestProperty("X-Prey-State", status);
@@ -172,6 +174,7 @@ public class UtilConnection {
 
                     connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
                     PreyLogger.d("User-Agent:" + getUserAgent(preyConfig));
+                    connection.addRequestProperty("Origin", "android:com.prey");
                     if (entityFiles == null && (params != null && params.size() > 0)) {
                         OutputStream os = connection.getOutputStream();
                         DataOutputStream dos = new DataOutputStream(os);
@@ -193,7 +196,7 @@ public class UtilConnection {
                         for (int i = 0; entityFiles != null && i < entityFiles.size(); i++) {
                             EntityFile entityFile = entityFiles.get(i);
                             boolean isLast = ((i + 1) == entityFiles.size() ? true : false);
-                            ByteArrayOutputStream outputStream = multiple.addPart(entityFile.getType(), entityFile.getName(), entityFile.getFile(), entityFile.getMimeType(), isLast);
+                            ByteArrayOutputStream outputStream = multiple.addPart(entityFile.getName(), entityFile.getFilename(), entityFile.getFile(), entityFile.getType(), isLast);
                             listOutputStream.add(outputStream);
                         }
                         connection.setRequestProperty("Content-Length", "" + multiple.getContentLength());
@@ -387,7 +390,7 @@ public class UtilConnection {
     public static HttpURLConnection connectionJson(PreyConfig preyConfig, String uri, String method, JSONObject jsonParam) {
         return connectionJson(preyConfig,uri,REQUEST_METHOD_POST,jsonParam,null);
     }
-    
+
     public static HttpURLConnection connectionJsonAuthorization(PreyConfig preyConfig,String uri,String method, JSONObject jsonParam) {
         return connectionJson(preyConfig,uri,method,jsonParam,"Basic " + getCredentials(preyConfig.getApiKey(), "X"));
     }
