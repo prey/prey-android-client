@@ -28,19 +28,19 @@ public class Tree {
     public void get(Context ctx, List<ActionResult> list, JSONObject parameters) {
         String messageId = null;
         try {
-            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
+            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID);
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         String reason = null;
         try {
-            String jobId = parameters.getString(PreyConfig.JOB_ID);
-            PreyLogger.d("jobId:"+jobId);
-            if(jobId!=null&&!"".equals(jobId)){
-                reason="{\"device_job_id\":\""+jobId+"\"}";
+            String jobId = UtilJson.getString(parameters, PreyConfig.JOB_ID);
+            PreyLogger.d(String.format("jobId:%s", jobId));
+            if (jobId != null && !"".equals(jobId)) {
+                reason = "{\"device_job_id\":\"" + jobId + "\"}";
             }
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         try{
             PreyLogger.d("Tree started");
@@ -60,7 +60,7 @@ public class Tree {
             JSONObject jsonTree = new JSONObject();
             jsonTree.put("tree", array.toString());
             PreyHttpResponse response=PreyWebServices.getInstance().sendTree(ctx, jsonTree);
-            PreyLogger.d("Tree stopped response"+response.getStatusCode());
+            PreyLogger.d(String.format("Tree stopped response:%d", response.getStatusCode()));
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get", "tree", "stopped",reason));
             PreyLogger.d("Tree stopped");
         } catch (Exception e) {

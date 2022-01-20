@@ -41,21 +41,21 @@ public class Location extends JsonAction{
         PreyLogger.d("Ejecuting Location Get.");
         String messageId = null;
         try {
-            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
-            PreyLogger.d("messageId:"+messageId);
+            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID);
+            PreyLogger.d(String.format("messageId:%s", messageId));
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         String jobId = null;
         try {
-            jobId = parameters.getString(PreyConfig.JOB_ID);
-            PreyLogger.d("jobId:"+jobId);
+            jobId = UtilJson.getString(parameters, PreyConfig.JOB_ID);
+            PreyLogger.d(String.format("jobId:%s", jobId));
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s" + e.getMessage()), e);
         }
-        String reason=null;
-        if(jobId!=null&&!"".equals(jobId)){
-            reason="{\"device_job_id\":\""+jobId+"\"}";
+        String reason = null;
+        if (jobId != null && !"".equals(jobId)) {
+            reason = "{\"device_job_id\":\"" + jobId + "\"}";
         }
         PreyLocationManager.getInstance(ctx).setLastLocation(null);
         PreyConfig.getPreyConfig(ctx).setLocationInfo("");
@@ -82,12 +82,12 @@ public class Location extends JsonAction{
     public HttpDataService run(Context ctx, List<ActionResult> list, JSONObject parameters){
         String messageId = null;
         try {
-            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
-            PreyLogger.d("messageId:"+messageId);
+            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID);
+            PreyLogger.d(String.format("messageId:%s", messageId));
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
-        HttpDataService data = LocationUtil.dataLocation(ctx,messageId,false);
+        HttpDataService data = LocationUtil.dataLocation(ctx, messageId, false);
         return data;
     }
 

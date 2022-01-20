@@ -100,9 +100,7 @@ public class LocationUpdatesService  extends Service {
                             PreyLogger.d( "LocationUpdatesService onComplete" );
                             if (task.isSuccessful() && task.getResult() != null) {
                                 mLocation = task.getResult();
-
                                 PreyLogger.d("LocationUpdatesService mLocation lat :"+round(mLocation.getLatitude())+" lng:"+round(mLocation.getLongitude())+" acc:"+round(mLocation.getAccuracy()));
-
                                 PreyLocationManager.getInstance(ctx).setLastLocation(new PreyLocation(mLocation));
                             } else {
                                 PreyLogger.d("LocationUpdatesService Failed to get location.");
@@ -116,13 +114,18 @@ public class LocationUpdatesService  extends Service {
     }
 
     public static double round(double value){
-        double finalValue=0;
-        DecimalFormat df=new DecimalFormat("0.000000");
-        String formate = df.format(value);
-        try{
-            finalValue = (Double)df.parse(formate) ;
-        } catch (Exception e){
-            PreyLogger.e("Error:"+e.getMessage(),e);
+        double finalValue = 0;
+        DecimalFormat df = new DecimalFormat("0.000000");
+        String format = df.format(value);
+        try {
+            finalValue = (Double) df.parse(format);
+        } catch (Exception e1) {
+            try {
+                Long finalValue2 = (Long) df.parse(format);
+                finalValue = finalValue2.doubleValue();
+            } catch (Exception e) {
+                PreyLogger.e("Error:" + e.getMessage(), e);
+            }
         }
         return finalValue;
     }

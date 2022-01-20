@@ -100,7 +100,7 @@ public class PreyApp extends Application {
                             PreyLogger.d("initName:" + initName);
                             PreyConfig.getPreyConfig(ctx).setDeviceName(initName);
                         }
-                        PreyStatus.getInstance().getConfig(ctx);
+                        PreyStatus.getInstance().initConfig(ctx);
                         boolean accessCoarseLocation=PreyPermission.canAccessCoarseLocation(ctx);
                         boolean accessFineLocation=PreyPermission.canAccessFineLocation(ctx);
                         boolean canAccessBackgroundLocation=PreyPermission.canAccessBackgroundLocation(ctx);

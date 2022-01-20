@@ -50,7 +50,9 @@ public class PreyBetaRunnerService extends Service {
         super.onStart(intent, startId);
         String cmd=null;
         try{
-            cmd=intent.getExtras().getString("cmd");
+            if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey("cmd")) {
+                cmd = intent.getExtras().getString("cmd");
+            }
         }catch(Exception e){
             PreyLogger.e("Error:"+e.getMessage(),e);
         }

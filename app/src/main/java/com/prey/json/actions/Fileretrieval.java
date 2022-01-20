@@ -26,23 +26,23 @@ import java.util.List;
 public class Fileretrieval {
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        int responseCode=0;
+        int responseCode = 0;
         String messageId = null;
         try {
-            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
-            PreyLogger.d("messageId:"+messageId);
+            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID);
+            PreyLogger.d(String.format("messageId:%s", messageId));
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         String reason = null;
         try {
-            String jobId = parameters.getString(PreyConfig.JOB_ID);
-            PreyLogger.d("jobId:"+jobId);
-            if(jobId!=null&&!"".equals(jobId)){
-                reason="{\"device_job_id\":\""+jobId+"\"}";
+            String jobId = UtilJson.getString(parameters, PreyConfig.JOB_ID);
+            PreyLogger.d(String.format("jobId:%s", jobId));
+            if (jobId != null && !"".equals(jobId)) {
+                reason = "{\"device_job_id\":\"" + jobId + "\"}";
             }
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         try {
             PreyLogger.d("Fileretrieval started");
@@ -62,7 +62,7 @@ public class Fileretrieval {
             datasource.createFileretrieval(fileDto);
             PreyLogger.d("Fileretrieval started uploadFile");
             responseCode=PreyWebServices.getInstance().uploadFile(ctx, file, fileId,0);
-            PreyLogger.d("Fileretrieval responseCode uploadFile :"+responseCode);
+            PreyLogger.d(String.format("Fileretrieval responseCode uploadFile :%d", responseCode));
             if(responseCode==HttpURLConnection.HTTP_OK||responseCode==HttpURLConnection.HTTP_CREATED) {
                 datasource.deleteFileretrieval(fileId);
             }
@@ -70,7 +70,7 @@ public class Fileretrieval {
             PreyLogger.d("Fileretrieval stopped");
         }catch(Exception e){
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "fileretrieval", "failed", e.getMessage()));
-            PreyLogger.d("Fileretrieval failed:"+e.getMessage());
+            PreyLogger.d(String.format("Fileretrieval failed:%s", e.getMessage()));
         }
     }
 }
