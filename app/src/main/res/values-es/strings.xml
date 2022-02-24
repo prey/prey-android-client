@@ -369,5 +369,6 @@
     <string name="help_error_message">El mensaje debe tener mín. 10 caracteres.</string>
     <string name="help_error_attachment">El archivo seleccionado excede el tamaño máximo.</string>
     <string name="help_no_file_chosen">No se eligió archivo</string>
+    <string name="error_token">La identificación de cuenta ha expirado o ha sido revocado, por favor contacta a tu administrador.</string>
 
 </resources>

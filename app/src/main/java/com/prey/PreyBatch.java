@@ -57,4 +57,12 @@ public class PreyBatch {
         return Boolean.parseBoolean(properties.getProperty("ask-for-name-batch"));
     }
 
+    /**
+     * Method get token
+     * @return
+     */
+    public String getToken() {
+        return properties.getProperty("token");
+    }
+
 }
