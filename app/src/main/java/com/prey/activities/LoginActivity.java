@@ -118,7 +118,7 @@ public class LoginActivity extends Activity {
 
     private void showLoginBatch() {
         Intent intent = null;
-        intent = new Intent(LoginActivity.this, WelcomeBatchActivity.class);
+        intent = new Intent(LoginActivity.this, SplashBatchActivity.class);
         startActivity(intent);
         finish();
     }

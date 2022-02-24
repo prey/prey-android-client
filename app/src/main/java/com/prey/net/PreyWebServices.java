@@ -1210,4 +1210,27 @@ public class PreyWebServices {
         return response;
     }
 
+    /**
+     * Method to valid token
+     *
+     * @param ctx
+     * @param token
+     * @return result
+     * @throws Exception
+     */
+    public boolean validToken(Context ctx, String token) throws Exception {
+        JSONObject json = new JSONObject();
+        json.put("token", token);
+        json.put("action", "deploy");
+        String uri = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("token/v2/check");
+        PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).validToken(ctx, uri, json);
+        int statusCode = -1;
+        try {
+            statusCode = response.getStatusCode();
+        } catch (Exception e) {
+            PreyLogger.e("Error validateToken:" + e.getMessage(), e);
+        }
+        return statusCode == 200;
+    }
+
 }
