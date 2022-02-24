@@ -69,26 +69,39 @@ public class Tree {
         }
     }
 
-    private JSONArray getFilesRecursiveJSON(String pathBase, File folder,int depth) {
-        int sizze=0;
+    /**
+     * Method to get a list of files
+     *
+     * @param pathBase
+     * @param folder
+     * @param depth
+     * @return jsonArray
+     */
+    private JSONArray getFilesRecursiveJSON(String pathBase, File folder, int depth) {
+        depth = 0;
+        int length = 0;
+        File[] arrayFile = null;
         try {
-            sizze = folder.listFiles().length;
-        }catch (Exception e){}
-        JSONArray array=new JSONArray();
+            arrayFile = folder.listFiles();
+            length = arrayFile.length;
+        } catch (Exception e) {
+        }
+        JSONArray array = new JSONArray();
         try {
-            for (int i=0;folder!=null&&folder.listFiles()!=null&&i< sizze;i++) {
-                File child=folder.listFiles()[i];
+            for (int i = 0; folder != null && arrayFile != null && i < length; i++) {
+                File child = arrayFile[i];
                 String parent = child.getParent().replace(pathBase, "");
                 JSONObject json = new JSONObject();
-                int size=0;
+                int size = 0;
                 try {
                     size = child.listFiles().length;
-                }catch(Exception e){}
-                if (child.isDirectory()&&size>0) {
+                } catch (Exception e) {
+                }
+                if (child.isDirectory() && size > 0) {
                     json.put("name", child.getName());
-                    json.put("path", parent+"/"+child.getName());
-                    JSONArray listChildren =new JSONArray ();
-                    if(depth>0) {
+                    json.put("path", parent + "/" + child.getName());
+                    JSONArray listChildren = new JSONArray();
+                    if (depth > 0) {
                         listChildren = getFilesRecursiveJSON(pathBase, child, depth - 1);
                         json.put("children", listChildren);
                     }
@@ -99,7 +112,7 @@ public class Tree {
                     String extension = MimeTypeMap.getFileExtensionFromUrl(child.getName());
                     MimeTypeMap mime = MimeTypeMap.getSingleton();
                     json.put("name", child.getName());
-                    json.put("path", parent+"/"+child.getName());
+                    json.put("path", parent + "/" + child.getName());
                     json.put("mimetype", mime.getMimeTypeFromExtension(extension));
                     json.put("size", child.length());
                     json.put("isFile", true);
@@ -108,7 +121,7 @@ public class Tree {
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("Error getFilesRecursiveJSON:"+e.getMessage(),e);
+            PreyLogger.e("Error getFilesRecursiveJSON:" + e.getMessage(), e);
         }
         return array;
     }
