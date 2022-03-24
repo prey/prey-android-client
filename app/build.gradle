@@ -12,8 +12,8 @@ android {
 
         targetSdkVersion 32
 
-        versionCode 283
-        versionName '2.3.13'
+        versionCode 290
+        versionName '2.4.0'
 
         multiDexEnabled true
     }
