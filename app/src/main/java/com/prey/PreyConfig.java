@@ -40,8 +40,8 @@ public class PreyConfig {
     public static final boolean LOG_DEBUG_ENABLED = false;
     private static PreyConfig cachedInstance = null;
     public static final String TAG = "PREY";
-    private static final String HTTP="https://";
-    public static final String VERSION_PREY_DEFAULT="2.3.12";
+    private static final String HTTP = "https://";
+    public static final String VERSION_PREY_DEFAULT = "2.4.0";
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
     // Set to 1000 * 60 in production.
@@ -53,53 +53,53 @@ public class PreyConfig {
     // max "age" in ms of last location (default 120000).
     public static final long LAST_LOCATION_MAX_AGE = 30 * MILLISECONDS_PER_SECOND;
     public static final int LOCATION_PRIORITY_HIGHT = LocationRequest.PRIORITY_HIGH_ACCURACY;
-    public static final long FASTEST_INTERVAL  =  40 * MILLISECONDS_PER_SECOND;
+    public static final long FASTEST_INTERVAL = 40 * MILLISECONDS_PER_SECOND;
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10 * MILLISECONDS_PER_SECOND;
-    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =  UPDATE_INTERVAL_IN_MILLISECONDS / 2;
-    public static final String PROTECT_ACCOUNT="PROTECT_ACCOUNT";
-    public static final String PROTECT_PRIVILEGES="PROTECT_PRIVILEGES";
-    public static final String PROTECT_TOUR="PROTECT_TOUR";
-    public static final String PROTECT_READY="PROTECT_READY";
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    public static final String PROTECT_ACCOUNT = "PROTECT_ACCOUNT";
+    public static final String PROTECT_PRIVILEGES = "PROTECT_PRIVILEGES";
+    public static final String PROTECT_TOUR = "PROTECT_TOUR";
+    public static final String PROTECT_READY = "PROTECT_READY";
     public static final String PREFS_SIM_SERIAL_NUMBER = "PREFS_SIM_SERIAL_NUMBER";
     public static final String PREFS_SECURITY_PROMPT_SHOWN = "PREFS_SECURITY_PROMPT_SHOWN";
-    public static final String PREFS_IS_MISSING="PREFS_IS_MISSING";
-    public static final String PREFS_DISABLE_POWER_OPTIONS="PREFS_DISABLE_POWER_OPTIONS";
-    public static final String PREFS_BLOCK_APP_UNINSTALL="PREFS_BLOCK_APP_UNINSTALL";
-    public static final String PREFS_RUN_BACKGROUND="PREFS_RUN_BACKGROUND";
-    public static final String PREFS_BACKGROUND="PREFS_BACKGROUND";
-    public static final String IS_LOCK_SET="IS_LOCK_SET";
-    public static final String NEXT_ALERT="NEXT_ALERT";
-    public static final String IS_CAMOUFLAGE_SET="IS_CAMOUFLAGE_SET";
-    public static final String PREFS_RINGTONE="PREFS_RINGTONE";
-    public static final String LAST_EVENT="LAST_EVENT";
-    public static final String LOW_BATTERY_DATE="LOW_BATTERY_DATE";
-    public static final String PREVIOUS_SSID="PREVIOUS_SSID";
-    public static final String ERROR="ERROR";
-    public static final String FLAG_FEEDBACK="FLAG_FEEDBACK";
-    public static final String INSTALLATION_DATE="INSTALLATION_DATE";
-    public static final String PREFS_ACCOUNT_VERIFIED="PREFS_ACCOUNT_VERIFIED";
-    public static final String EMAIL="EMAIL";
-    public static final String TWO_STEP="TWO_STEP";
-    public static final String PRO_ACCOUNT="PRO_ACCOUNT";
-    public static final String SEND_DATA="SEND_DATA";
-    public static final String SCHEDULED="SCHEDULED";
-    public static final String MINUTE_SCHEDULED="MINUTE_SCHEDULED2";
-    public static final String IS_REVOKED_PASSWORD="IS_REVOKED_PASSWORD";
-    public static final String REVOKED_PASSWORD="REVOKED_PASSWORD";
-    public static final String NOTIFICATION_ID="NOTIFICATION_ID";
-    public static final String INTERVAL_REPORT="INTERVAL_REPORT";
-    public static final String EXCLUDE_REPORT="EXCLUDE_REPORT";
-    public static final String LAST_REPORT_START_DATE="LAST_REPORT_START_DATE";
-    public static final String TIMEOUT_REPORT="TIMEOUT_REPORT";
-    public static final String INTERVAL_AWARE="INTERVAL_AWARE";
-    public static final String TIME_SECURE_LOCK="TIME_SECURE_LOCK";
-    public static final String LAST_TIME_SECURE_LOCK="LAST_TIME_SECURE_LOCK";
-    public static final String LOCATION_LOW_BATTERY_DATE="LOCATION_LOW_BATTERY_DATE";
-    public static final String SESSION_ID="SESSION_ID";
-    public static final String PIN_NUMBER2="PIN_NUMBER2";
-    public static final String SMS_COMMAND="SMS_COMMAND";
-    public static final String PREFERENCE_LOCATION_LOW_BATTERY="PREFERENCE_LOCATION_LOW_BATTERY";
-    public static final String TOKEN_JWT="TOKEN_JWT";
+    public static final String PREFS_IS_MISSING = "PREFS_IS_MISSING";
+    public static final String PREFS_DISABLE_POWER_OPTIONS = "PREFS_DISABLE_POWER_OPTIONS";
+    public static final String PREFS_BLOCK_APP_UNINSTALL = "PREFS_BLOCK_APP_UNINSTALL";
+    public static final String PREFS_RUN_BACKGROUND = "PREFS_RUN_BACKGROUND";
+    public static final String PREFS_BACKGROUND = "PREFS_BACKGROUND";
+    public static final String IS_LOCK_SET = "IS_LOCK_SET";
+    public static final String NEXT_ALERT = "NEXT_ALERT";
+    public static final String IS_CAMOUFLAGE_SET = "IS_CAMOUFLAGE_SET";
+    public static final String PREFS_RINGTONE = "PREFS_RINGTONE";
+    public static final String LAST_EVENT = "LAST_EVENT";
+    public static final String LOW_BATTERY_DATE = "LOW_BATTERY_DATE";
+    public static final String PREVIOUS_SSID = "PREVIOUS_SSID";
+    public static final String ERROR = "ERROR";
+    public static final String FLAG_FEEDBACK = "FLAG_FEEDBACK";
+    public static final String INSTALLATION_DATE = "INSTALLATION_DATE";
+    public static final String PREFS_ACCOUNT_VERIFIED = "PREFS_ACCOUNT_VERIFIED";
+    public static final String EMAIL = "EMAIL";
+    public static final String TWO_STEP = "TWO_STEP";
+    public static final String PRO_ACCOUNT = "PRO_ACCOUNT";
+    public static final String SEND_DATA = "SEND_DATA";
+    public static final String SCHEDULED = "SCHEDULED";
+    public static final String MINUTE_SCHEDULED = "MINUTE_SCHEDULED2";
+    public static final String IS_REVOKED_PASSWORD = "IS_REVOKED_PASSWORD";
+    public static final String REVOKED_PASSWORD = "REVOKED_PASSWORD";
+    public static final String NOTIFICATION_ID = "NOTIFICATION_ID";
+    public static final String INTERVAL_REPORT = "INTERVAL_REPORT";
+    public static final String EXCLUDE_REPORT = "EXCLUDE_REPORT";
+    public static final String LAST_REPORT_START_DATE = "LAST_REPORT_START_DATE";
+    public static final String TIMEOUT_REPORT = "TIMEOUT_REPORT";
+    public static final String INTERVAL_AWARE = "INTERVAL_AWARE";
+    public static final String TIME_SECURE_LOCK = "TIME_SECURE_LOCK";
+    public static final String LAST_TIME_SECURE_LOCK = "LAST_TIME_SECURE_LOCK";
+    public static final String LOCATION_LOW_BATTERY_DATE = "LOCATION_LOW_BATTERY_DATE";
+    public static final String SESSION_ID = "SESSION_ID";
+    public static final String PIN_NUMBER2 = "PIN_NUMBER2";
+    public static final String SMS_COMMAND = "SMS_COMMAND";
+    public static final String PREFERENCE_LOCATION_LOW_BATTERY = "PREFERENCE_LOCATION_LOW_BATTERY";
+    public static final String TOKEN_JWT = "TOKEN_JWT";
     public static final int ANDROID_INIT = 2000;
     public static final int ANDROID_SIGN_UP = 2001;
     public static final int ANDROID_TOUR_SCREEN = 2002;
@@ -111,8 +111,8 @@ public class PreyConfig {
     public static final int ANDROID_VERSION_UPDATED = 2009;
     public static final int ANDROID_ONBOARDING_INIT = 2010;
     public static final int ANDROID_ONBOARDING_COMPLETED = 2011;
-    public static final String PREY_VERSION="PREY_VERSION";
-    public static final String API_KEY="API_KEY";
+    public static final String PREY_VERSION = "PREY_VERSION";
+    public static final String API_KEY = "API_KEY";
     public static final String DEVICE_ID = "DEVICE_ID";
     public static final String ACCOUNT = "ACCOUNT";
     public static final String DEVICE_NAME = "DEVICE_NAME";
@@ -121,7 +121,7 @@ public class PreyConfig {
     public static final String CAN_ACCESS_COARSE_LOCATION = "CAN_ACCESS_COARSE_LOCATION";
     public static final String CAN_ACCESS_CAMARA = "CAN_ACCESS_CAMARA";
     public static final String CAN_ACCESS_READ_PHONE_STATE = "CAN_ACCESS_READ_PHONE_STATE";
-    public static final String CAN_ACCESS_EXTERNAL_STORAGE= "CAN_ACCESS_EXTERNAL_STORAGE";
+    public static final String CAN_ACCESS_EXTERNAL_STORAGE = "CAN_ACCESS_EXTERNAL_STORAGE";
     public static final String TIME_PASSWORD_OK = "TIME_PASSWORD_OK";
     public static final String TIME_TWO_STEP = "TIME_TWO_STEP";
     public static final String TIME_C2DM = "TIME_C2DM";
@@ -132,41 +132,43 @@ public class PreyConfig {
     public static final String NOTIFICATION_POPUP_ID = "NOTIFICATION_POPUP_ID";
     public static final String SENT_UUID_SERIAL_NUMBER = "SENT_UUID_SERIAL_NUMBER";
     public static final String LAST_EVENT_GEO = "LAST_EVENT_GEO";
-    public static final String MESSAGE_ID="messageID";
-    public static final String JOB_ID="device_job_id";
-    public static final String UNLOCK_PASS="unlock_pass";
-    public static final String LOCK_MESSAGE="lock_message";
-    public static final String NOTIFICATION_ANDROID_7="notify_android_7";
-    public static final String JOB_ID_LOCK="job_id_lock";
-    public static final String COUNTER_OFF="counter_off";
-    public static final String SSID="SSID";
-    public static final String IMEI="IMEI";
-    public static final String MODEL="MODEL";
-    public static final String PUBLIC_IP="PUBLIC_IP";
-    public static final String LOCATION_LAT="LOCATION_LAT";
-    public static final String LOCATION_LNG="LOCATION_LNG";
-    public static final String AWARE_LAT="AWARE_LAT";
-    public static final String AWARE_LNG="AWARE_LNG";
-    public static final String AWARE_ACC="AWARE_ACC";
-    public static final String AWARE_DATE="AWARE_DATE";
-    public static final String AUTO_CONNECT="auto_connect";
-    public static final String AWARE="aware";
-    public static final String TIME_BLOCK_APP_UNINSTALL= "TIME_BLOCK_APP_UNINSTALL";
-    public static final String REPORT_NUMBER= "REPORT_NUMBER";
-    public static final String PREFS_BIOMETRIC="PREFS_BIOMETRIC";
-    public static final String INSTALLATION_STATUS="INSTALLATION_STATUS";
-    public static final String LOCATION_INFO="LOCATION_INFO";
-    public static final String CAPS_LOCK_ON="CAPS_LOCK_ON";
-    public static final String OVER_LOCK="OVER_LOCK";
-    public static final String FIRST="FIRST";
-    public static final String PIN_NUMBER_ACTIVATE="PIN_NUMBER_ACTIVATE";
-    public static final String INPUT_WEBVIEW="INPUT_WEBVIEW";
-    public static final String PAGE="PAGE";
-    public static final String PERMISSION_LOCATION="PERMISSION_LOCATION";
-    public static final String HELP_FILE="HELP_FILE";
-    public static final String CONTACT_FORM_FOR_FREE="CONTACT_FORM_FOR_FREE";
-    public static final String VIEW_SECURE="VIEW_SECURE";
-    public static final String HELP_DIRECTORY="preyHelp";
+    public static final String MESSAGE_ID = "messageID";
+    public static final String JOB_ID = "device_job_id";
+    public static final String UNLOCK_PASS = "unlock_pass";
+    public static final String LOCK_MESSAGE = "lock_message";
+    public static final String NOTIFICATION_ANDROID_7 = "notify_android_7";
+    public static final String JOB_ID_LOCK = "job_id_lock";
+    public static final String COUNTER_OFF = "counter_off";
+    public static final String SSID = "SSID";
+    public static final String IMEI = "IMEI";
+    public static final String MODEL = "MODEL";
+    public static final String PUBLIC_IP = "PUBLIC_IP";
+    public static final String LOCATION_LAT = "LOCATION_LAT";
+    public static final String LOCATION_LNG = "LOCATION_LNG";
+    public static final String AWARE_LAT = "AWARE_LAT";
+    public static final String AWARE_LNG = "AWARE_LNG";
+    public static final String AWARE_ACC = "AWARE_ACC";
+    public static final String AWARE_DATE = "AWARE_DATE";
+    public static final String AUTO_CONNECT = "auto_connect";
+    public static final String AWARE = "aware";
+    public static final String TIME_BLOCK_APP_UNINSTALL = "TIME_BLOCK_APP_UNINSTALL";
+    public static final String REPORT_NUMBER = "REPORT_NUMBER";
+    public static final String PREFS_BIOMETRIC = "PREFS_BIOMETRIC";
+    public static final String INSTALLATION_STATUS = "INSTALLATION_STATUS";
+    public static final String LOCATION_INFO = "LOCATION_INFO";
+    public static final String CAPS_LOCK_ON = "CAPS_LOCK_ON";
+    public static final String OVER_LOCK = "OVER_LOCK";
+    public static final String FIRST = "FIRST";
+    public static final String PIN_NUMBER_ACTIVATE = "PIN_NUMBER_ACTIVATE";
+    public static final String INPUT_WEBVIEW = "INPUT_WEBVIEW";
+    public static final String PAGE = "PAGE";
+    public static final String PERMISSION_LOCATION = "PERMISSION_LOCATION";
+    public static final String HELP_FILE = "HELP_FILE";
+    public static final String CONTACT_FORM_FOR_FREE = "CONTACT_FORM_FOR_FREE";
+    public static final String VIEW_SECURE = "VIEW_SECURE";
+    public static final String HELP_DIRECTORY = "preyHelp";
+    public static final String TIME_NEXT_ACCESSIBILITY = "TIME_NEXT_ACCESSIBILITY";
+    public static final String ACCESSIBILITY_DENIED = "ACCESSIBILITY_DENIED";
     private boolean securityPrivilegesAlreadyPrompted;
     private Context ctx;
     public static String postUrl = null;
@@ -544,8 +546,8 @@ public class PreyConfig {
     }
 
     public boolean isThisDeviceAlreadyRegisteredWithPrey() {
-        String deviceID=getDeviceId();
-        return deviceID!=null&&!"".equals(deviceID);
+        String deviceID = getDeviceId();
+        return deviceID != null && !"".equals(deviceID);
     }
 
     public String getSimSerialNumber(){
@@ -1382,4 +1384,30 @@ public class PreyConfig {
     public void setViewSecure(boolean viewSecure){
         saveBoolean(PreyConfig.VIEW_SECURE, viewSecure);
     }
+
+    public void setTimeNextAccessibility(){
+        Calendar cal= Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MINUTE,1);
+        saveLong(TIME_NEXT_ACCESSIBILITY,cal.getTimeInMillis());
+    }
+
+    public boolean isTimeNextAccessibility(){
+        long timeLocationAware=getLong(TIME_NEXT_ACCESSIBILITY,0);
+        long timeNow=new Date().getTime();
+        if (timeNow<timeLocationAware){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void setAccessibilityDenied(boolean denied) {
+        saveBoolean(PreyConfig.ACCESSIBILITY_DENIED, denied);
+    }
+
+    public boolean getAccessibilityDenied() {
+        return getBoolean(PreyConfig.ACCESSIBILITY_DENIED, false);
+    }
+
 }

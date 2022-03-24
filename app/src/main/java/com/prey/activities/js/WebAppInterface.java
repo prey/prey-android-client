@@ -1148,4 +1148,22 @@ public class WebAppInterface {
         return displayName;
     }
 
+    @JavascriptInterface
+    public void accessibilitySkip(){
+        PreyLogger.d("accessibilitySkip");
+        PreyConfig.getPreyConfig(mContext).setTimeNextAccessibility();
+    }
+
+    @JavascriptInterface
+    public void accessibilityDeny(){
+        PreyLogger.d("accessibilityDeny");
+        PreyConfig.getPreyConfig(mContext).setAccessibilityDenied(true);
+    }
+
+    @JavascriptInterface
+    public void accessibilityAgree(){
+        PreyLogger.d("accessibilityAgree");
+        mActivity.accessibility();
+    }
+
 }
