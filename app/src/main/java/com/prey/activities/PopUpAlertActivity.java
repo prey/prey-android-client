@@ -71,8 +71,12 @@ public class PopUpAlertActivity extends PreyActivity {
             }
         });
         popup.show();
-        registerReceiver(close_prey_receiver, new IntentFilter(CheckPasswordHtmlActivity.CLOSE_PREY));
-        registerReceiver(popup_prey_receiver, new IntentFilter(POPUP_PREY + "_" + notificationId));
+        try {
+            registerReceiver(close_prey_receiver, new IntentFilter(CheckPasswordHtmlActivity.CLOSE_PREY));
+            registerReceiver(popup_prey_receiver, new IntentFilter(POPUP_PREY + "_" + notificationId));
+        } catch (Exception e) {
+            PreyLogger.d(String.format("Error receiver:%s", e.getMessage()));
+        }
     }
 
     @Override

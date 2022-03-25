@@ -16,6 +16,23 @@ public class EntityFile {
     private String mimeType;
     private InputStream file;
     private int length;
+    private String fileName;
+
+    /**
+     * Method return the file name
+     * @return file name
+     */
+    public String getFilename() {
+        return fileName;
+    }
+
+    /**
+     * Method update the file name
+     * @param fileName
+     */
+    public void setFilename(String fileName) {
+        this.fileName = fileName;
+    }
 
     public int getLength() {
         return length;

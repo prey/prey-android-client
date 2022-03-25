@@ -37,7 +37,7 @@ public class PreyScheduled {
         if (minute > 0) {
             reset();
             Intent intent = new Intent(context, AlarmScheduledReceiver.class);
-            alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+            alarmIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
             alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());

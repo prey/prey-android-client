@@ -108,24 +108,12 @@ public class FileConfigReader {
         return properties.getProperty("api-v2");
     }
 
-    public String getApiKeyBatch() {
-        return properties.getProperty("api-key-batch");
-    }
-
-    public String getEmailBatch() {
-        return properties.getProperty("email-batch");
-    }
-
     public boolean isScheduled() {
         return Boolean.parseBoolean(properties.getProperty("scheduled"));
     }
 
     public boolean isOverOtherApps() {
         return Boolean.parseBoolean(properties.getProperty("over-other-apps"));
-    }
-
-    public boolean isAskForNameBatch() {
-        return Boolean.parseBoolean(properties.getProperty("ask-for-name-batch"));
     }
 
     public int getMinuteScheduled() {
@@ -186,5 +174,13 @@ public class FileConfigReader {
 
     public String getPreyForgot() {
         return properties.getProperty("prey-forgot");
+    }
+
+    /**
+     * Method if it should show pin
+     * @return true o false
+     */
+    public boolean getOpenPin() {
+        return Boolean.parseBoolean(properties.getProperty("open-pin"));
     }
 }

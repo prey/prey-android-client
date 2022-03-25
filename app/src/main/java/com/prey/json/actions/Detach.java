@@ -19,6 +19,7 @@ import com.prey.actions.report.ReportScheduled;
 import com.prey.activities.LoginActivity;
 import com.prey.activities.WelcomeBatchActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
@@ -32,13 +33,13 @@ public class Detach {
         PreyLogger.i("Detach");
         boolean expired=false;
         try {
-            expired= parameters.getBoolean("expired");
+            expired = UtilJson.getBoolean(parameters, "expired");
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s" , e.getMessage()), e);
         }
         if(expired) {
             PreyConfig.getPreyConfig(ctx).setInstallationStatus("DEL");
-            PreyLogger.d("Detach expired:" + expired);
+            PreyLogger.d(String.format("Detach expired:%b" , expired));
             Detach.detachDevice(ctx,true,false,false,expired);
         }else {
             Detach.detachDevice(ctx);
@@ -60,14 +61,14 @@ public class Detach {
         try {
             PreyConfig.getPreyConfig(ctx).setSecurityPrivilegesAlreadyPrompted(false);
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
-        PreyLogger.d("1:"+error);
+        PreyLogger.d(String.format("1:%s", error));
         try {   PreyConfig.getPreyConfig(ctx).setProtectAccount(false);} catch (Exception e) {error += e.getMessage();}
         try {   PreyConfig.getPreyConfig(ctx).setProtectPrivileges(false);} catch (Exception e) {error += e.getMessage();}
         try {   PreyConfig.getPreyConfig(ctx).setProtectTour(false);} catch (Exception e) {error += e.getMessage();}
         try {   PreyConfig.getPreyConfig(ctx).setProtectReady(false);} catch (Exception e) {error += e.getMessage();}
-        PreyLogger.d("2:"+error);
+        PreyLogger.d(String.format("2:%s", error));
         try {
             if(removePermissions) {
                 FroyoSupport fSupport = FroyoSupport.getInstance(ctx);
@@ -76,40 +77,40 @@ public class Detach {
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         try {
             RunBackgroundCheckBoxPreference.notifyCancel(ctx);
             PreyConfig.getPreyConfig(ctx).removeLocationAware();
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
-        PreyLogger.d("3:"+error);
+        PreyLogger.d(String.format("3:%s", error));
         try {
             PreyConfig.getPreyConfig(ctx).setAware(false);
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s" + e.getMessage()), e);
         }
         try {
             GeofenceController.getInstance().deleteAllZones(ctx);
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
-        PreyLogger.d("4:"+error);
+        PreyLogger.d(String.format("4:%s", error));
         try {
             FileretrievalController.getInstance().deleteAll(ctx);
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         PreyConfig.getPreyConfig(ctx).setPrefsBiometric(false);
-        PreyLogger.d("5:"+error);
+        PreyLogger.d(String.format("5:%s", error));
         try { ReportScheduled.getInstance(ctx).reset();} catch (Exception e) {error += e.getMessage();}
         try {
             PreyWebServices.getInstance().deleteDevice(ctx);
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
-        PreyLogger.d("6:"+error);
+        PreyLogger.d(String.format("6:%s", error));
         if(removeCache) {
             try {
                 PreyConfig.getPreyConfig(ctx).wipeData();
@@ -122,10 +123,10 @@ public class Detach {
         try { PreyConfig.getPreyConfig(ctx).removeApiKey();} catch (Exception e) {PreyLogger.e("Error:"+e.getMessage(),e);}
         try { PreyConfig.getPreyConfig(ctx).setPinNumber("");} catch (Exception e) {error = e.getMessage();}
         try { PreyConfig.getPreyConfig(ctx).setEmail("");} catch (Exception e) {error = e.getMessage();}
-        PreyLogger.d("7:"+error);
+        PreyLogger.d(String.format("7:%s", error));
         try { PreyConfig.getPreyConfig(ctx).setDeviceId("");} catch (Exception e) {error = e.getMessage();}
         try { PreyConfig.getPreyConfig(ctx).setApiKey("");} catch (Exception e) {error = e.getMessage();}
-        PreyLogger.d("8:"+error);
+        PreyLogger.d(String.format("8:%s", error));
         if(!expired) {
             try {
                 PreyConfig.getPreyConfig(ctx).setInstallationStatus("");
@@ -133,14 +134,14 @@ public class Detach {
                 error = e.getMessage();
             }
         }
-        PreyLogger.d("Email:"+PreyConfig.getPreyConfig(ctx).getEmail());
-        PreyLogger.d("DeviceId:"+PreyConfig.getPreyConfig(ctx).getDeviceId());
-        PreyLogger.d("ApiKey:"+PreyConfig.getPreyConfig(ctx).getApiKey());
+        PreyLogger.d(String.format("Email:%s", PreyConfig.getPreyConfig(ctx).getEmail()));
+        PreyLogger.d(String.format("DeviceId:%s", PreyConfig.getPreyConfig(ctx).getDeviceId()));
+        PreyLogger.d(String.format("ApiKey:%s", PreyConfig.getPreyConfig(ctx).getApiKey()));
         if(removeCache) {
             try {
                 PreyConfig.deleteCacheInstance(ctx);
             } catch (Exception e) {
-                PreyLogger.e("Error:"+e.getMessage(),e);
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
             }
         }
         try {
@@ -151,7 +152,7 @@ public class Detach {
                 ctx.startActivity(intent);
             }
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         return error;
     }

@@ -177,4 +177,36 @@ public class PreyRestHttpClient {
         return response;
     }
 
+    /**
+     * Method to send the help
+     *
+     * @param ctx
+     * @param uri
+     * @param params
+     * @param entityFiles
+     * @return  help result
+     * @throws Exception
+     */
+    public PreyHttpResponse sendHelp(Context ctx, String uri, Map<String, String> params, List<EntityFile> entityFiles) throws Exception {
+        String correlationId = null;
+        String status = null;
+        String authorization = UtilConnection.getAuthorization(PreyConfig.getPreyConfig(ctx));
+        String requestMethod = UtilConnection.REQUEST_METHOD_POST;
+        String contentType = CONTENT_TYPE_URL_ENCODED;
+        return UtilConnection.connection(PreyConfig.getPreyConfig(ctx), uri, params, requestMethod, contentType, authorization, status, entityFiles, correlationId);
+    }
+
+    /**
+     * Method to valid token
+     *
+     * @param ctx
+     * @param uri
+     * @param json
+     * @return result
+     * @throws Exception
+     */
+    public PreyHttpResponse validToken(Context ctx, String uri, JSONObject json) throws Exception {
+        HttpURLConnection connection = UtilConnection.connectionJson(PreyConfig.getPreyConfig(ctx), uri, UtilConnection.REQUEST_METHOD_POST, json);
+        return new PreyHttpResponse(connection);
+    }
 }

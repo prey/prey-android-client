@@ -87,7 +87,7 @@ public class PreyLockHtmlService extends Service{
             } else {
                 url = String.format(url, CheckPasswordHtmlActivity.URL_ONB, lng, "lock");
             }
-            myWebView.addJavascriptInterface(new WebAppInterface(this), CheckPasswordHtmlActivity.JS_ALIAS);
+            myWebView.addJavascriptInterface(new WebAppInterface(this, this), CheckPasswordHtmlActivity.JS_ALIAS);
             myWebView.loadUrl(url);
             myWebView.loadUrl("javascript:window.location.reload(true)");
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();

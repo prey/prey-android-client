@@ -371,5 +371,10 @@
     <string name="button_batch">Next</string>
     <string name="uninstall_prey">How to uninstall Prey?</string>
     <string name="uninstall_prey_link">https://help.preyproject.com/article/190-how-to-uninstall-prey#android</string>
+    <string name="help_error_subject">Please select a subject.</string>
+    <string name="help_error_message">Message must have 10 characters minimum.</string>
+    <string name="help_error_attachment">File size exceeds maximum limit.</string>
+    <string name="help_no_file_chosen">No file chosen</string>
+    <string name="error_token">The account identification has expired or has been revoked, please contact your administrator.</string>
 
 </resources>

@@ -221,7 +221,7 @@ public class EventFactory {
                             ctx,
                             0,
                             intentPassword,
-                            PendingIntent.FLAG_UPDATE_CURRENT);
+                            PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
                     NotificationManager nManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
                     NotificationCompat.Builder mBuilder =

@@ -71,7 +71,11 @@ public class PreyStatus {
         this.preyPopUpOnclick = preyPopUpOnclick;
     }
 
-    public void getConfig(Context ctx){
+    /**
+     * Method initialize device state
+     * @param ctx
+     */
+    public void initConfig(Context ctx){
         boolean aware = false;
         boolean autoconnect = false;
         try {

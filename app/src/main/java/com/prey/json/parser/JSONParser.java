@@ -86,6 +86,9 @@ public class JSONParser {
         if ("[]".equals(json)) {
             return null;
         }
+        if ("Invalid.".equals(json)) {
+            return null;
+        }
         return getJSONFromTxt(ctx, json);
     }
 

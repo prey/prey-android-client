@@ -38,7 +38,7 @@ public class ReportScheduled {
 			  int minute = Integer.parseInt(PreyConfig.getPreyConfig(context).getIntervalReport());
 			  PreyLogger.d("----------ReportScheduled start minute:"+ minute);
 			  Intent intent = new Intent(context, AlarmReportReceiver.class);
-			  pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			  pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
 			  alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 			  if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
 				  PreyLogger.d("----------setRepeating");

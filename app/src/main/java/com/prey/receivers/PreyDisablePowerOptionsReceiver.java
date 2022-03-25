@@ -73,6 +73,7 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                                 PreyConfig.getPreyConfig(context).setPinActivated(pinNumber);
                                 if (!isOpenSecureService) {
                                     PreyLogger.d("open PreySecureService");
+                                    PreyConfig.getPreyConfig(context).setViewSecure(true);
                                     Intent intentLock = new Intent(context, PreySecureService.class);
                                     context.startService(intentLock);
                                     new Thread() {

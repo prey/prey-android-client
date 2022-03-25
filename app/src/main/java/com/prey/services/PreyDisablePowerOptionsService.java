@@ -82,7 +82,7 @@ public class PreyDisablePowerOptionsService extends Service {
     private void schedule() {
         PreyLogger.d("PreyDisablePowerOptionsService  schedule_________");
         Intent intent = new Intent(getApplicationContext(), AlarmDisablePowerReceiver.class);
-        PendingIntent alarmDisablePower = PendingIntent.getBroadcast(getApplicationContext(), 1, intent, 0);
+        PendingIntent alarmDisablePower = PendingIntent.getBroadcast(getApplicationContext(), 1, intent, PendingIntent.FLAG_MUTABLE);
         AlarmManager alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             alarmMgr.set(AlarmManager.RTC, SystemClock.elapsedRealtime() + 7000L, alarmDisablePower);

@@ -166,7 +166,7 @@ public class TriggerController {
             if (events.indexOf(TimeTrigger.EXACT_TIME) > 0) {
                 Intent intent = new Intent(ctx, TimeTriggerReceiver.class);
                 intent.putExtra("trigger_id", "" + trigger.id);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, (trigger.id * TimeTrigger.ADD_TRIGGER_ID), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, (trigger.id * TimeTrigger.ADD_TRIGGER_ID), intent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
                 alarmManager.cancel(pendingIntent);
             }
             if (events.indexOf(TimeTrigger.REPEAT_TIME) > 0) {
@@ -181,7 +181,7 @@ public class TriggerController {
                                 int day = array.getInt(x);
                                 Intent intent = new Intent(ctx, TimeTriggerReceiver.class);
                                 intent.putExtra("trigger_id", "" + trigger.id);
-                                PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, (trigger.id * TimeTrigger.ADD_TRIGGER_ID + day), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, (trigger.id * TimeTrigger.ADD_TRIGGER_ID + day), intent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
                                 alarmManager.cancel(pendingIntent);
                             }
                         } catch (Exception e) {

@@ -6,10 +6,15 @@
  ******************************************************************************/
 package com.prey.net;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -20,7 +25,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Build;
-import android.provider.Settings;
+import android.os.Environment;
 
 import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
@@ -34,13 +39,11 @@ import com.prey.PreyUtils;
 import com.prey.PreyVerify;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.fileretrieval.FileretrievalDto;
-import com.prey.actions.location.PreyLocation;
 import com.prey.actions.observer.ActionsController;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 import com.prey.events.Event;
 import com.prey.exceptions.PreyException;
 import com.prey.json.parser.JSONParser;
-import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.http.EntityFile;
 import com.prey.R;
 
@@ -306,7 +309,7 @@ public class PreyWebServices {
         return response;
     }
 
-    public boolean checkPassword(Context ctx, String apikey, String password) throws PreyException {
+    public boolean checkPassword(Context ctx, String apikey, String password) throws Exception {
         PreyHttpResponse response= this.checkPassword(apikey, password, ctx);
         if(response!=null) {
             String xml = response.getResponseAsString();
@@ -317,8 +320,8 @@ public class PreyWebServices {
         return false;
     }
 
-    public boolean checkPassword2(Context ctx, String apikey, String password, String password2) throws PreyException {
-        PreyLogger.d("checkPassword2 password:"+password+" password2:"+password2);
+    public boolean checkPassword2(Context ctx, String apikey, String password, String password2) throws Exception {
+        PreyLogger.d(String.format("checkPassword2 password:%s password2:%s", password, password2));
         String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
         String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("authenticate");
         HashMap<String, String> parameters = new HashMap<String, String>();
@@ -330,10 +333,10 @@ public class PreyWebServices {
         try {
             response=PreyRestHttpClient.getInstance(ctx).postAutentication(url,parameters);
         }catch (Exception e){
-            PreyLogger.e("error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("error:%s", e.getMessage()), e);
         }
         if(response!=null){
-            PreyLogger.d("authenticate:" + response.getResponseAsString());
+            PreyLogger.d(String.format("authenticate:%s", response.getResponseAsString()));
             if(response.getStatusCode()==HttpURLConnection.HTTP_OK) {
                 String tokenJwt ="";
                 try {
@@ -364,9 +367,9 @@ public class PreyWebServices {
                     }
                     json=json2;
                 } catch (Exception e) {
-                    PreyLogger.e("error:"+e.getMessage(),e);
+                    PreyLogger.e(String.format("error:%s", e.getMessage()), e);
                 }
-                throw new PreyException(json+ " [" + response.getStatusCode() + "]" );
+                throw new PreyException(json);
             }
         }else {
             throw new PreyException(ctx.getText(R.string.password_wrong).toString());
@@ -958,18 +961,24 @@ public class PreyWebServices {
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.json");
             PreyLogger.d("url:" + url);
             PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).getAutentication(url, parameters);
-            if(response!=null) {
+            if (response != null) {
                 String out = response.getResponseAsString();
-                PreyLogger.d("out:" + out);
+                PreyLogger.d(String.format("out:%s", out));
                 JSONObject jsnobject = new JSONObject(out);
                 String email = jsnobject.getString("email");
-                PreyLogger.d("email:" + email);
+                PreyLogger.d(String.format("email:%s", email));
                 PreyConfig.getPreyConfig(ctx).setEmail(email);
                 boolean pro_account = jsnobject.getBoolean("pro_account");
                 PreyConfig.getPreyConfig(ctx).setProAccount(pro_account);
+                boolean twoStepEnabled = jsnobject.getBoolean("two_step_enabled?");
+                PreyConfig.getPreyConfig(ctx).setTwoStep(twoStepEnabled);
+                if (jsnobject.has("contact_form_for_free")) {
+                    boolean contactFormForFree = jsnobject.getBoolean("contact_form_for_free");
+                    PreyConfig.getPreyConfig(ctx).setContactFormForFree(contactFormForFree);
+                }
             }
         } catch (Exception e) {
-            PreyLogger.e("error get profile", e);
+            PreyLogger.e(String.format("error get profile:%s", e.getMessage()), e);
         }
     }
 
@@ -1076,29 +1085,30 @@ public class PreyWebServices {
     }
 
     public PreyName renameName(final Context ctx, String name){
-        PreyName preyName=new PreyName();
-        try{
+        PreyName preyName = new PreyName();
+        try {
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-            PreyConfig config=PreyConfig.getPreyConfig(ctx);
+            PreyConfig config = PreyConfig.getPreyConfig(ctx);
             String deviceKey = config.getDeviceId();
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey).concat(".json");
-            JSONObject jsonParam=new JSONObject();
+            JSONObject jsonParam = new JSONObject();
             jsonParam.put("name", name);
             jsonParam.put("lang", Locale.getDefault().getLanguage());
-            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url,UtilConnection.REQUEST_METHOD_PUT,jsonParam);
-            PreyLogger.d("renameName:"+response.getStatusCode());
+            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url, UtilConnection.REQUEST_METHOD_PUT, jsonParam);
+            PreyLogger.d(String.format("renameName:%s", response.getStatusCode()));
             preyName.setCode(response.getStatusCode());
-            if(response.getStatusCode()==HttpURLConnection.HTTP_OK) {
+            if (response.getStatusCode() == HttpURLConnection.HTTP_OK) {
                 String out = response.getResponseAsString();
-                PreyLogger.d("renameName:"+out);
+                PreyConfig.getPreyConfig(ctx).setDeviceName(name);
+                PreyLogger.d(String.format("renameName:%s", out));
             }
-            if(response.getStatusCode()==422) {
+            if (response.getStatusCode() == 422) {
                 String out = response.getResponseAsString();
-                PreyLogger.d("renameName:"+out);
+                PreyLogger.d(String.format("renameName:%s", out));
                 JSONObject outJson = new JSONObject(out);
-                String name_available_error="";
-                String name_available="";
-                if(out.indexOf("\"title\"")>0){
+                String name_available_error = "";
+                String name_available = "";
+                if (out.indexOf("\"title\"") > 0) {
                     JSONArray array2 = outJson.getJSONArray("title");
                     for (int i = 0; array2 != null && i < array2.length(); i++) {
                         try {
@@ -1109,11 +1119,11 @@ public class PreyWebServices {
                             } else {
                                 name_available_error += ", " + outJson1;
                             }
-                        }catch (Exception e){
-                            name_available_error=e.getMessage();
+                        } catch (Exception e) {
+                            name_available_error = e.getMessage();
                         }
                     }
-                }else {
+                } else {
                     JSONArray array1 = outJson.getJSONArray("name_available_error");
                     for (int i = 0; array1 != null && i < array1.length(); i++) {
                         try {
@@ -1123,8 +1133,8 @@ public class PreyWebServices {
                             } else {
                                 name_available_error += ", " + outJson1;
                             }
-                        }catch (Exception e){
-                            name_available_error=e.getMessage();
+                        } catch (Exception e) {
+                            name_available_error = e.getMessage();
                         }
                     }
                     JSONArray array2 = outJson.getJSONArray("name_available");
@@ -1136,18 +1146,91 @@ public class PreyWebServices {
                             } else {
                                 name_available += ", " + outJson2;
                             }
-                        }catch (Exception e){
-                            name_available_error=e.getMessage();
+                        } catch (Exception e) {
+                            name_available_error = e.getMessage();
                         }
                     }
                 }
                 preyName.setError(name_available_error);
                 preyName.setName(name_available);
             }
-        }catch(Exception e){
-            PreyLogger.d("error validate:" + e.getMessage());
+        } catch (Exception e) {
+            PreyLogger.d(String.format("error validate:%s", e.getMessage()));
         }
         return preyName;
+    }
+
+    /**
+     * Method to send the help
+     *
+     * @param ctx
+     * @param subject
+     * @param message
+     * @return help result
+     * @throws Exception
+     */
+    public PreyHttpResponse sendHelp(Context ctx, String subject, String message) throws Exception {
+        Map<String, String> params = new HashMap<>();
+        params.put("support_category", "support");
+        params.put("message", message);
+        params.put("support_topic", subject);
+        List<EntityFile> entityFiles = null;
+        try {
+            PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+            File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "preyHelp");
+            String displayName = preyConfig.getHelpFile();
+            PreyLogger.d(String.format("displayName:%s", displayName));
+            if (displayName != null && !"".equals(displayName)) {
+                entityFiles = new ArrayList<>();
+                File initialFile = new File(dir, displayName);
+                InputStream inputStream =
+                        new DataInputStream(new FileInputStream(initialFile));
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmZ");
+                EntityFile entityFile = new EntityFile();
+                entityFile.setFile(inputStream);
+                entityFile.setMimeType("image/jpeg");
+                entityFile.setName("file");
+                entityFile.setFilename(displayName);
+                entityFile.setType("image/jpeg");
+                entityFile.setIdFile(sdf.format(new Date()) + "_" + entityFile.getType());
+                entityFiles.add(entityFile);
+            }
+        } catch (Exception e) {
+            PreyLogger.d(String.format("Error contact:%s", e.getMessage()));
+        }
+        String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
+        String uri = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("contact");
+        PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).sendHelp(ctx, uri, params, entityFiles);
+        File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), PreyConfig.HELP_DIRECTORY);
+        File[] files = dir.listFiles();
+        for (int i = 0; files != null && i < files.length; i++) {
+            File file = files[i];
+            file.delete();
+        }
+        return response;
+    }
+
+    /**
+     * Method to valid token
+     *
+     * @param ctx
+     * @param token
+     * @return result
+     * @throws Exception
+     */
+    public boolean validToken(Context ctx, String token) throws Exception {
+        JSONObject json = new JSONObject();
+        json.put("token", token);
+        json.put("action", "deploy");
+        String uri = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("token/v2/check");
+        PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).validToken(ctx, uri, json);
+        int statusCode = -1;
+        try {
+            statusCode = response.getStatusCode();
+        } catch (Exception e) {
+            PreyLogger.e("Error validateToken:" + e.getMessage(), e);
+        }
+        return statusCode == 200;
     }
 
 }

@@ -76,9 +76,9 @@ public class PasswordActivity extends PreyActivity {
         protected Void doInBackground(String... password) {
             try {
                 String apikey = getPreyConfig().getApiKey();
-                PreyLogger.d("apikey:"+apikey+" password[0]:"+password[0]);
+                PreyLogger.d(String.format("apikey:%s password:%s", apikey, password[0]));
                 isPasswordOk = PreyWebServices.getInstance().checkPassword(PasswordActivity.this, apikey, password[0]);
-            } catch (PreyException e) {
+            } catch (Exception e) {
                 error = e.getMessage();
             }
             return null;
