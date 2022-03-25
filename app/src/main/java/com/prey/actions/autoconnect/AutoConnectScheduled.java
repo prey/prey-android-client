@@ -39,7 +39,7 @@ public class AutoConnectScheduled {
             if (PreyConfig.getPreyConfig(context).getAutoConnect() && minuteSt != null && !"".equals(minuteSt)) {
                 int minute = Integer.parseInt(minuteSt);
                 Intent intent = new Intent(context, AutoConnectAlarmReceiver.class);
-                pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
                 alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
                     PreyLogger.d("----------AutoConnect Scheduled setRepeating AutoConnect: " + minute);

@@ -117,4 +117,21 @@ public class PreyPermission {
         return settingValue.indexOf("prey") > 0;
     }
 
+    public static boolean isAccessibilityServiceView(Context ctx) {
+        boolean isAccessibilityServiceEnabled = isAccessibilityServiceEnabled(ctx);
+        PreyLogger.d(String.format("isAccessibilityServiceEnabled:%s", isAccessibilityServiceEnabled));
+        if (isAccessibilityServiceEnabled) {
+            return isAccessibilityServiceEnabled;
+        } else {
+            boolean accessibilityDenied = PreyConfig.getPreyConfig(ctx).getAccessibilityDenied();
+            PreyLogger.d(String.format("accessibilityDenied:%s", accessibilityDenied));
+            if (accessibilityDenied) {
+                return accessibilityDenied;
+            } else {
+                boolean isTimeNextAccessibility = PreyConfig.getPreyConfig(ctx).isTimeNextAccessibility();
+                PreyLogger.d(String.format("isTimeNextAccessibility:%s", isTimeNextAccessibility));
+                return isTimeNextAccessibility;
+            }
+        }
+    }
 }

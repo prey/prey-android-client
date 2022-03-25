@@ -97,7 +97,7 @@ public class AlertThread extends Thread {
             buttonIntent.putExtra("notificationId", notificationId);
             buttonIntent.putExtra("messageId", messageId);
             buttonIntent.putExtra("reason", reason);
-            PendingIntent btPendingIntent = PendingIntent.getBroadcast(ctx, 0, buttonIntent, 0);
+            PendingIntent btPendingIntent = PendingIntent.getBroadcast(ctx, 0, buttonIntent, PendingIntent.FLAG_MUTABLE);
             NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
             if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx)

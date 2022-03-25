@@ -32,44 +32,65 @@ public class Alert extends JsonAction {
         try {
             alert = parameters.getString("parameter");
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         startAlert(ctx, alert,null,null,false);
+    }
+
+    /**
+     * Method cancel
+     *
+     * @param ctx
+     * @param list
+     * @param parameters
+     */
+    public void cancel(Context ctx, List<ActionResult> list, JSONObject parameters) {
+        String messageId = null;
+        try {
+            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID);
+        } catch (Exception e) {
+            PreyLogger.d(String.format("Error:%s", e.getMessage()));
+        }
+        try {
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("cancel", "alert", "stopped", null));
+        } catch (Exception e) {
+            PreyLogger.d(String.format("Error:%s", e.getMessage()));
+        }
     }
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
         String alert = "";
         try {
-            alert = parameters.getString("alert_message");
+            alert = UtilJson.getString(parameters, "alert_message");
         } catch (Exception e) {
             try {
-                alert = parameters.getString("message");
+                alert = UtilJson.getString(parameters, "message");
             } catch (Exception e2) {
-                PreyLogger.e("Error:"+e2.getMessage(),e2);
+                PreyLogger.e(String.format("Error:%s", e2.getMessage()), e2);
             }
         }
         String messageId = null;
         try {
-            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
-            PreyLogger.d("messageId:"+messageId);
+            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID);
+            PreyLogger.d(String.format("messageId:%s", messageId));
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         String jobId = null;
         try {
-            jobId = parameters.getString(PreyConfig.JOB_ID);
-            PreyLogger.d("jobId:"+jobId);
+            jobId = UtilJson.getString(parameters, PreyConfig.JOB_ID);
+            PreyLogger.d(String.format("jobId:%s", jobId));
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         boolean fullscreen_notification = false;
         try {
-            fullscreen_notification = parameters.getBoolean("fullscreen_notification");
-            PreyLogger.d("fullscreen_notification:"+fullscreen_notification);
+            fullscreen_notification = UtilJson.getBoolean(parameters, "fullscreen_notification");
+            PreyLogger.d(String.format("fullscreen_notification:%s", fullscreen_notification));
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
-        startAlert(ctx, alert,messageId,jobId,fullscreen_notification);
+        startAlert(ctx, alert, messageId, jobId, fullscreen_notification);
     }
 
     public void startAlert(Context ctx, String alert, String messageId,String jobId,boolean fullscreen_notification) {
@@ -78,7 +99,7 @@ public class Alert extends JsonAction {
                 new AlertThread(ctx, alert, messageId,jobId,fullscreen_notification).start();
             }
         } catch (Exception e) {
-            PreyLogger.e("Error, causa:" + e.getMessage(), e);
+            PreyLogger.e(String.format("Error, causa:%s" , e.getMessage()), e);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "failed", e.getMessage()));
         }
     }

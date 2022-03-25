@@ -6,6 +6,9 @@
  ******************************************************************************/
 package com.prey;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
@@ -121,6 +124,26 @@ public class PreyUtils {
                 }
             }
         });
+    }
+
+    private static final int EOF = -1;
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+    /**
+     * Method copy files
+     * @param input
+     * @param output
+     * @return quantity copied
+     * @throws IOException
+     */
+    public static long copyFile(InputStream input, OutputStream output) throws IOException {
+        long count = 0;
+        int n;
+        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        while (EOF != (n = input.read(buffer))) {
+            output.write(buffer, 0, n);
+            count += n;
+        }
+        return count;
     }
 
 }

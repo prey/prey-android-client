@@ -28,39 +28,39 @@ public class Report {
     public void get(Context ctx, List<ActionResult> list, JSONObject parameters) {
         String jobId = null;
         try {
-            jobId = parameters.getString(PreyConfig.JOB_ID);
-            PreyLogger.d("jobId:"+jobId);
+            jobId = UtilJson.getString(parameters, PreyConfig.JOB_ID);
+            PreyLogger.d(String.format("jobId:%s", jobId));
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
-        String reason=null;
-        if(jobId!=null&&!"".equals(jobId)){
-            reason="{\"device_job_id\":\""+jobId+"\"}";
+        String reason = null;
+        if (jobId != null && !"".equals(jobId)) {
+            reason = "{\"device_job_id\":\"" + jobId + "\"}";
         }
         long lastReportStartDate = new Date().getTime();
-        PreyLogger.d("____lastReportStartDate:" + lastReportStartDate);
+        PreyLogger.d(String.format("____lastReportStartDate:%s", lastReportStartDate));
         PreyConfig.getPreyConfig(ctx).setLastReportStartDate(lastReportStartDate);
         PreyConfig.getPreyConfig(ctx).setMissing(true);
         int interval = 0;
         try {
-            PreyLogger.d("interval:" + parameters.getString("interval"));
-            interval = parameters.getInt("interval");
+            interval = UtilJson.getInt(parameters, "interval");
+            PreyLogger.d(String.format("interval:%s", interval));
         } catch (Exception e) {
             interval = 0;
         }
         String exclude = "";
         try {
-            PreyLogger.d("exclude:" + parameters.getString("exclude"));
-            exclude = parameters.getString("exclude");
+            exclude = UtilJson.getString(parameters, "exclude");
+            PreyLogger.d(String.format("exclude:%s", exclude));
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:s", e.getMessage()), e);
         }
         String messageId = null;
         try {
-            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
-            PreyLogger.d("messageId:"+messageId);
+            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID);
+            PreyLogger.d(String.format("messageId:%s", messageId));
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         PreyConfig.getPreyConfig(ctx).setIntervalReport("" + interval);
         PreyConfig.getPreyConfig(ctx).setExcludeReport(exclude);
@@ -76,10 +76,10 @@ public class Report {
         PreyLogger.d("________stop Report");
         String messageId = null;
         try {
-            messageId = parameters.getString(PreyConfig.MESSAGE_ID);
-            PreyLogger.d("messageId:"+messageId);
+            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID);
+            PreyLogger.d(String.format("messageId:%s", messageId));
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         ReportScheduled.getInstance(ctx).reset();
         PreyConfig.getPreyConfig(ctx).setMissing(false);
@@ -90,17 +90,17 @@ public class Report {
 
     public boolean valida(Context ctx) {
         long lastReportStartDate = PreyConfig.getPreyConfig(ctx).getLastReportStartDate();
-        PreyLogger.d("last:" + lastReportStartDate);
+        PreyLogger.d(String.format("last:%s", lastReportStartDate));
         if (lastReportStartDate != 0) {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(lastReportStartDate);
             cal.add(Calendar.MINUTE, 1);
             long timeMore = cal.getTimeInMillis();
-            PreyLogger.d("timM:" + timeMore);
+            PreyLogger.d(String.format("timM:%d", timeMore));
             Date nowDate = new Date();
             long now = nowDate.getTime();
-            PreyLogger.d("now_:" + now);
-            PreyLogger.d("now>=timeMore:" + (now >= timeMore));
+            PreyLogger.d(String.format("now_:%d", now));
+            PreyLogger.d(String.format("now>=timeMore:%d", (now >= timeMore)));
             return (now >= timeMore);
         }
         return true;

@@ -178,6 +178,13 @@
             android:noHistory="true"
             />
 
+        <!-- New Activity for validate token -->
+        <activity
+            android:name=".activities.SplashBatchActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:noHistory="true"
+            />
+
         <activity
             android:name="com.prey.activities.CheckPasswordActivity"
             android:launchMode="singleInstance"

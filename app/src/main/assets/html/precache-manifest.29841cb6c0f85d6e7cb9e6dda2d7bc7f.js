@@ -1,19 +1,19 @@
 self.__precacheManifest = [
   {
-    "revision": "08ad952be4b85599d408",
-    "url": "./static/css/main.104a486e.chunk.css"
+    "revision": "5996adc6f95c185d03e5",
+    "url": "./static/css/main.a3f40dee.chunk.css"
   },
   {
-    "revision": "08ad952be4b85599d408",
-    "url": "./static/js/main.08ad952b.chunk.js"
+    "revision": "5996adc6f95c185d03e5",
+    "url": "./static/js/main.5996adc6.chunk.js"
   },
   {
     "revision": "8c97409f0ee389fe75da",
     "url": "./static/js/runtime~main.8c97409f.js"
   },
   {
-    "revision": "5bc91404bda134a911c6",
-    "url": "./static/js/2.5bc91404.chunk.js"
+    "revision": "a033e566f753ffb79102",
+    "url": "./static/js/2.a033e566.chunk.js"
   },
   {
     "revision": "c3679e2d8686db6f8013ffe2ad603c2c",
@@ -88,6 +88,10 @@ self.__precacheManifest = [
     "url": "./static/media/icons.2f54fbbd.svg"
   },
   {
+    "revision": "20155d963e7854778195e4f24cd3b77b",
+    "url": "./static/media/ico-help.20155d96.svg"
+  },
+  {
     "revision": "def820f56f913fec31fcf511e6cd24f0",
     "url": "./static/media/05-Location.def820f5.png"
   },
@@ -120,23 +124,23 @@ self.__precacheManifest = [
     "url": "./static/media/fondo2.ada00d71.png"
   },
   {
-    "revision": "6e8991140fc75b4927e2c440d9036429",
-    "url": "./static/media/regular-book-webfont.6e899114.woff"
-  },
-  {
-    "revision": "391159c582e0897e8d64ed22abe1ee2d",
-    "url": "./static/media/regular-bold-webfont.391159c5.woff"
-  },
-  {
     "revision": "baaac74770efd8c34382afa00468f635",
     "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
+  },
+  {
+    "revision": "6e8991140fc75b4927e2c440d9036429",
+    "url": "./static/media/regular-book-webfont.6e899114.woff"
   },
   {
     "revision": "c44603b2b93c1b7a984f21255d556ee9",
     "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
   },
   {
-    "revision": "c197571000cef62406ac9443f8921ca5",
+    "revision": "391159c582e0897e8d64ed22abe1ee2d",
+    "url": "./static/media/regular-bold-webfont.391159c5.woff"
+  },
+  {
+    "revision": "5a47574cbbef8983773fb5644a9f9e09",
     "url": "./index.html"
   }
 ];

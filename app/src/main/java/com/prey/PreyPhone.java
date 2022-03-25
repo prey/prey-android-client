@@ -22,6 +22,7 @@ import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.PreyWebServices;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
@@ -69,7 +70,11 @@ public class PreyPhone {
         hardware.setMbVendor(Build.MANUFACTURER);
         hardware.setMbModel(Build.BOARD);
         hardware.setCpuModel(mapData.get("Processor"));
-        hardware.setCpuSpeed(String.valueOf(maxCPUFreqMHz()));
+        try {
+            hardware.setCpuSpeed(String.valueOf(maxCPUFreqMHz()));
+        } catch (Exception e) {
+            PreyLogger.d(String.format("Error setCpuSpeed:%s", e.getMessage()));
+        }
         hardware.setCpuCores(String.valueOf(getCpuCores()));
         hardware.setRamSize(String.valueOf(getMemoryRamSize()));
         initMemory();
@@ -179,7 +184,6 @@ public class PreyPhone {
             wifi.setWifiEnabled(wifiMgr.isWifiEnabled());
             int ipAddress = wifiInfo.getIpAddress();
             wifi.setIpAddress(formatterIp(ipAddress));
-            wifi.setMacAddress(wifiInfo.getMacAddress());
             DhcpInfo dhcpInfo = wifiMgr.getDhcpInfo();
             wifi.setNetmask(formatterIp(dhcpInfo.netmask));
             wifi.setGatewayIp(formatterIp(dhcpInfo.serverAddress));
@@ -562,11 +566,13 @@ public class PreyPhone {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String aLine;
             while ((aLine = br.readLine()) != null) {
-                String[] data = aLine.split(":");
-                try {
-                    mapData.put(data[0].trim(), data[1].trim());
-                } catch (Exception e) {
-                    PreyLogger.e("Error:"+e.getMessage(),e);
+                if (!"".equals(aLine)) {
+                    try {
+                        String[] data = aLine.split(":");
+                        mapData.put(data[0].trim(), data[1].trim());
+                    } catch (Exception e) {
+                        PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+                    }
                 }
             }
             if (br != null) {
@@ -581,14 +587,6 @@ public class PreyPhone {
     private int getCpuCores() {
         Runtime runtime = Runtime.getRuntime();
         return runtime.availableProcessors();
-    }
-
-    private String getSerialNumber() {
-        try{
-            return getUuid();
-        } catch(Exception e) {
-            return "";
-        }
     }
 
     public String getIPAddress() {
@@ -607,26 +605,6 @@ public class PreyPhone {
         return android.provider.Settings.Secure.getString(ctx.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
     }
 
-    private String getUuid() {
-        String uuid="";
-        TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-        try {
-            if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-                return uuid;
-            }
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ctx.checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                    uuid=tManager.getDeviceId();
-                }
-            }else {
-                uuid = tManager.getDeviceId();
-            }
-        }catch (Exception e){
-            PreyLogger.e("Error getUuid:"+e.getMessage(),e);
-        }
-        return uuid;
-    }
-
     public int getDataState(){
         TelephonyManager tManager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
         int dataState =-1;
@@ -643,7 +621,8 @@ public class PreyPhone {
         }
         return dataState;
     }
-    
+
+    @SuppressLint("MissingPermission")
     public static String getNetworkClass(Context ctx) {
         try{
             TelephonyManager mTelephonyManager = (TelephonyManager)
