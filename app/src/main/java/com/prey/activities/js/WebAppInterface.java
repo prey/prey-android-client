@@ -523,7 +523,9 @@ public class WebAppInterface {
             cal.add(Calendar.MINUTE, -1);
             PreyConfig.getPreyConfig(mContext).setTimeSecureLock(cal.getTimeInMillis());
             PreyConfig.getPreyConfig(mContext).setOpenSecureService(false);
-            mContext.startService(new Intent(mContext, PreyDisablePowerOptionsService.class));
+            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                mContext.startService(new Intent(mContext, PreyDisablePowerOptionsService.class));
+            }
         } else {
             mContext.stopService(new Intent(mContext, PreyDisablePowerOptionsService.class));
         }
