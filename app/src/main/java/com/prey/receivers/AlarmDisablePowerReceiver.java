@@ -19,9 +19,11 @@ public class AlarmDisablePowerReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         PreyLogger.d("______AlarmDisablePowerReceiver  onReceive_________");
         try {
-            context.startService(new Intent(context, PreyDisablePowerOptionsService.class));
+            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                context.startService(new Intent(context, PreyDisablePowerOptionsService.class));
+            }
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e("Error:" + e.getMessage(), e);
         }
     }
 

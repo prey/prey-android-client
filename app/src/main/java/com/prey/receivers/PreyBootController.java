@@ -37,7 +37,9 @@ public class PreyBootController extends BroadcastReceiver {
                     try {
                         boolean disablePowerOptions = PreyConfig.getPreyConfig(ctx).isDisablePowerOptions();
                         if (disablePowerOptions) {
-                            ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
+                            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                                ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
+                            }
                         } else {
                             ctx.stopService(new Intent(ctx, PreyDisablePowerOptionsService.class));
                         }
