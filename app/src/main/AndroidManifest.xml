@@ -35,8 +35,8 @@
 
     <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
 
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -276,6 +276,13 @@
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
             />
+        <activity
+            android:name="com.prey.activities.OpenSettingsActivity"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
 
         <!-- Exported added for android 12 -->
         <receiver
@@ -434,6 +441,9 @@
             android:exported="true"/>
 
         <service android:name="com.prey.services.PreyAccessibilityService" />
+        <service android:name="com.prey.services.PreyStorageService" />
+        <service android:name="com.prey.services.PreyPermissionService" />
+        <service android:name="com.prey.services.PreyCloseNotificationService" />
 
         <!-- Exported added for android 12 -->
         <service

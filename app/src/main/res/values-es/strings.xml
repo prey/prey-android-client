@@ -229,7 +229,7 @@
     <string name="preferences_location_low_battery_options_summary">Obtiene la ubicación de su dispositivo cuando la batería se encuentra baja</string>
 
     <!-- Warning Alert  -->
-    <string name="warning_notification_title">¡Atención!Prey necesita permisos</string>
+    <string name="warning_notification_title">¡Atención! Prey necesita permisos</string>
     <string name="warning_notification_body">Toca aquí para otorgar permisos </string>
 
     <string name="warning_title">Prey requiere múltiples permisos de Android para funcionar al máximo, estos son:</string>

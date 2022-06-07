@@ -10,6 +10,8 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -41,8 +43,10 @@ import com.prey.R;
 import com.prey.activities.js.CustomWebView;
 import com.prey.activities.js.WebAppInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.events.factories.EventFactory;
 import com.prey.services.PreyAccessibilityService;
 import com.prey.services.PreyOverlayService;
+import com.prey.services.PreyStorageService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -179,7 +183,14 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
             boolean canAccessCamera = PreyPermission.canAccessCamera(this);
             boolean canAccessStorage = PreyPermission.canAccessStorage(this);
-            boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocation(this);
+            boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocationView(this);
+            boolean verifyNotification = EventFactory.verifyNotification(ctx);
+            if (verifyNotification) {
+                EventFactory.notification(ctx);
+            } else {
+                NotificationManager manager = (NotificationManager) ctx.getSystemService(Service.NOTIFICATION_SERVICE);
+                manager.cancel(EventFactory.NOTIFICATION_ID);
+            }
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessFineLocation:%s", canAccessFineLocation));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessCoarseLocation:%s", canAccessCoarseLocation));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessCamera:%s", canAccessCamera));
@@ -191,8 +202,10 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessibility:%s", canAccessibility));
             boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: isAdminActive:%s", isAdminActive));
+            boolean isStorage = PreyPermission.isExternalStorageManagerView(this);
+            PreyLogger.d(String.format("CheckPasswordHtmlActivity: isStorage:%s", isStorage));
             boolean configurated = (canAccessFineLocation || canAccessCoarseLocation) && canAccessBackgroundLocation && canAccessCamera
-                    && canAccessStorage && isAdminActive && canDrawOverlays && canAccessibility;
+                    && canAccessStorage && isAdminActive && canDrawOverlays && canAccessibility && isStorage;
             String installationStatus = PreyConfig.getPreyConfig(this).getInstallationStatus();
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: configurated:%s installationStatus:%s", configurated, installationStatus));
             if (configurated) {
@@ -216,29 +229,32 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                boolean permissions = (canAccessFineLocation || canAccessCoarseLocation) && canAccessCamera
-                        && canAccessStorage && isAdminActive && canDrawOverlays && canAccessibility;
-                boolean permissions3 = (canAccessFineLocation || canAccessCoarseLocation) && canAccessCamera
-                        && canAccessStorage && isAdminActive && canDrawOverlays;
-                boolean permissions2 = (canAccessFineLocation || canAccessCoarseLocation) || canAccessCamera
-                        || canAccessStorage || isAdminActive || canDrawOverlays || canAccessibility;
-                PreyLogger.d(String.format("CheckPasswordHtmlActivity permissions:%s", permissions));
-                PreyLogger.d(String.format("CheckPasswordHtmlActivity canAccessBackgroundLocation:%s", canAccessBackgroundLocation));
-                if (permissions) {
-                    if (canAccessBackgroundLocation) {
-                        url.append(URL_ONB).append("#/").append(lng).append("/permissions");
-                    } else {
-                        url.append(URL_ONB).append("#/").append(lng).append("/bgloc");
-                    }
+                boolean permissionsAndBasic = (canAccessFineLocation || canAccessCoarseLocation) && canAccessCamera
+                        && canAccessStorage && isAdminActive && canDrawOverlays ;
+                boolean permissionsOrBasic = canAccessFineLocation || canAccessCoarseLocation || canAccessCamera
+                        || canAccessStorage || isAdminActive || canDrawOverlays ;
+                if (!permissionsOrBasic) {
+                    url.append(URL_ONB).append("#/").append(lng).append("/start");
                 } else {
-                    if (permissions2) {
-                        if (permissions3) {
+                    if (permissionsAndBasic) {
+                        if (!canAccessibility) {
+                            PreyLogger.d(String.format("CheckPasswordHtmlActivity !canAccessibility"));
                             url.append(URL_ONB).append("#/").append(lng).append("/accessibility");
                         } else {
-                            url.append(URL_ONB).append("#/").append(lng).append("/permissions");
+                            if (!canAccessBackgroundLocation) {
+                                PreyLogger.d(String.format("CheckPasswordHtmlActivity !canAccessBackgroundLocation"));
+                                url.append(URL_ONB).append("#/").append(lng).append("/bgloc");
+                            } else {
+                                if (!isStorage) {
+                                    PreyLogger.d(String.format("CheckPasswordHtmlActivity !isStorage"));
+                                    url.append(URL_ONB).append("#/").append(lng).append("/allfiles");
+                                } else {
+                                    url.append(URL_ONB).append("#/").append(lng).append("/permissions");
+                                }
+                            }
                         }
-                    } else {
-                        url.append(URL_ONB).append("#/").append(lng).append("/start");
+                    }else{
+                        url.append(URL_ONB).append("#/").append(lng).append("/permissions");
                     }
                 }
             }
@@ -496,6 +512,24 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             cursor.close();
         }
         return fileNameHelp;
+    }
+
+    /**
+     * Method for requesting storage permission
+     */
+    public void allFiles() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Environment.isExternalStorageManager()) {
+                PreyLogger.i("todo when permission is granted");
+            } else {
+                Intent intentService = new Intent(getApplicationContext(), PreyStorageService.class);
+                startService(intentService);
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        }
     }
 
 }
