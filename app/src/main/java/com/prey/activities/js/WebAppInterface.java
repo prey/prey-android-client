@@ -36,6 +36,7 @@ import com.prey.actions.location.LocationUpdatesService;
 import com.prey.actions.location.PreyLocation;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.CloseActivity;
+import com.prey.activities.LoginActivity;
 import com.prey.activities.PanelWebActivity;
 import com.prey.activities.PasswordHtmlActivity;
 import com.prey.activities.PreReportActivity;
@@ -54,7 +55,6 @@ import com.prey.services.PreySecureService;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
 import java.io.File;
 import java.net.HttpURLConnection;
@@ -927,9 +927,14 @@ public class WebAppInterface {
         PreyLogger.d("skipPermissions");
     }
 
+    /**
+     * Method to bypass background location permission
+     */
     @JavascriptInterface
     public void skipPermissionsBg(){
         PreyLogger.d("skipPermissionsBg");
+        PreyConfig.getPreyConfig(mContext).setLocationBgDenied(true);
+        refresh();
     }
 
     @JavascriptInterface
@@ -1150,22 +1155,96 @@ public class WebAppInterface {
         return displayName;
     }
 
+    /**
+     * Method to bypass accessibility permission
+     */
     @JavascriptInterface
     public void accessibilitySkip(){
         PreyLogger.d("accessibilitySkip");
         PreyConfig.getPreyConfig(mContext).setTimeNextAccessibility();
+        refresh();
     }
 
+    /**
+     * Method to deny accessibility permission
+     */
     @JavascriptInterface
     public void accessibilityDeny(){
         PreyLogger.d("accessibilityDeny");
         PreyConfig.getPreyConfig(mContext).setAccessibilityDenied(true);
+        refresh();
     }
 
+    /**
+     * Method to grant accessibility permission
+     */
     @JavascriptInterface
     public void accessibilityAgree(){
         PreyLogger.d("accessibilityAgree");
         mActivity.accessibility();
     }
 
+    /**
+     * Method to refresh view
+     */
+    @JavascriptInterface
+    public void refresh(){
+        PreyLogger.d("refresh");
+        Intent intentLogin = new Intent(mContext, LoginActivity.class);
+        intentLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        mContext.startActivity(intentLogin);
+        mActivity.finish();
+    }
+
+    /**
+     * Method to bypass storage permission
+     */
+    @JavascriptInterface
+    public void allFilesSkip(){
+        PreyLogger.d("allFilesSkip");
+        PreyConfig.getPreyConfig(mContext).setTimeNextAllFiles();
+        refresh();
+    }
+
+    /**
+     * Method to deny storage permission
+     */
+    @JavascriptInterface
+    public void allFilesDeny(){
+        PreyLogger.d("allFilesDeny");
+        PreyConfig.getPreyConfig(mContext).setAllFilesDenied(true);
+        refresh();
+    }
+
+    /**
+     * Method to grant storage permission
+     */
+    @JavascriptInterface
+    public void allFilesAgree(){
+        PreyLogger.d("allFilesAgree");
+        mActivity.allFiles();
+    }
+
+    /**
+     * Method to verify that permissions are not removed
+     */
+    @JavascriptInterface
+    public void appIsntUsed() {
+        PreyLogger.d("appIsntUsed");
+        Intent intentSetting = new Intent();
+        intentSetting.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", mContext.getPackageName(), null);
+        intentSetting.setData(uri);
+        mContext.startActivity(intentSetting);
+    }
+
+    /**
+     * Method that returns if the version is velvet
+     *
+     * @return version is velvet
+     */
+    @JavascriptInterface
+    public boolean versionIsRedVelvetCake() {
+        return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.R;
+    }
 }

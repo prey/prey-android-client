@@ -232,7 +232,7 @@
 
 
     <!-- Warning Alert  -->
-    <string name="warning_notification_title">Warning!Prey needs permissions</string>
+    <string name="warning_notification_title">Warning! Prey needs permissions</string>
     <string name="warning_notification_body">Tap to provide permissions.</string>
 
     <string name="warning_title">Prey requires multiple privileges from Android to work at maximum capacity, these are:</string>

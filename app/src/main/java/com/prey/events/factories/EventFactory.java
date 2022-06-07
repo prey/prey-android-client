@@ -13,10 +13,13 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -24,6 +27,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -35,12 +40,12 @@ import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
 import com.prey.actions.triggers.BatteryTriggerReceiver;
 import com.prey.actions.triggers.SimTriggerReceiver;
-import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.Event;
-import com.prey.json.actions.Lock;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.UtilConnection;
+import com.prey.services.PreyCloseNotificationService;
+import com.prey.services.PreyPermissionService;
 
 public class EventFactory {
 
@@ -56,6 +61,7 @@ public class EventFactory {
     public static final String ACTION_POWER_DISCONNECTED = "android.intent.action.ACTION_POWER_DISCONNECTED";
     public static final String LOCATION_MODE_CHANGED = "android.location.MODE_CHANGED";
     public static final String LOCATION_PROVIDERS_CHANGED = "android.location.PROVIDERS_CHANGED";
+    public static final int NOTIFICATION_ID = 888;
 
     public static Event getEvent(final Context ctx, Intent intent) {
         String message = "getEvent[" + intent.getAction() + "]";
@@ -205,35 +211,89 @@ public class EventFactory {
         }
     }
 
+    /**
+     * Method that returns if it has all the permissions
+     *
+     * @param ctx context
+     * @return if you have all permissions
+     */
+    public static boolean verifyNotification(Context ctx) {
+        boolean canAccessCamera = PreyPermission.canAccessCamera(ctx);
+        boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(ctx);
+        boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(ctx);
+        boolean canAccessStorage = PreyPermission.canAccessStorage(ctx);
+        return canAccessCamera && (canAccessCoarseLocation || canAccessFineLocation) && canAccessStorage;
+    }
+
+    /**
+     * Method that opens the notification missing permissions
+     *
+     * @param ctx context
+     */
     public static void notification(Context ctx) {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey(false)) {
-                PreyConfig.getPreyConfig(ctx).setCanAccessCamara(PreyPermission.canAccessCamera(ctx));
-                PreyConfig.getPreyConfig(ctx).setCanAccessCoarseLocation(PreyPermission.canAccessCoarseLocation(ctx));
-                PreyConfig.getPreyConfig(ctx).setCanAccessFineLocation(PreyPermission.canAccessFineLocation(ctx));
-                boolean warning = !PreyPermission.canAccessCamera(ctx) || !PreyPermission.canAccessCoarseLocation(ctx) || !PreyPermission.canAccessFineLocation(ctx);
-                PreyLogger.d("notification warning:" + warning);
-                if (warning) {
-                    Intent intentPassword = new Intent(ctx, CheckPasswordHtmlActivity.class);
-                    intentPassword.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(
-                            ctx,
-                            0,
-                            intentPassword,
-                            PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
-                    NotificationManager nManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-
-                    NotificationCompat.Builder mBuilder =
-                            new NotificationCompat.Builder(ctx)
-                                    .setSmallIcon(R.drawable.icon2)
-                                    .setContentTitle(ctx.getResources().getString(R.string.warning_notification_title))
-                                    .setContentText(ctx.getResources().getString(R.string.warning_notification_body));
-                    mBuilder.setContentIntent(pendingIntent);
-                    mBuilder.setAutoCancel(true);
-                    nManager.notify(PreyConfig.TAG, PreyConfig.NOTIFY_ANDROID_6, mBuilder.build());
+                String channelId = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    channelId = "channelPrey2";
+                    CharSequence channelName = "Prey2";
+                    int channelImportance = NotificationManager.IMPORTANCE_HIGH;
+                    boolean channelEnableVibrate = false;
+                    int channelLockscreenVisibility = NotificationCompat.VISIBILITY_PRIVATE;
+                    NotificationChannel notificationChannel =
+                            new NotificationChannel(channelId, channelName, channelImportance);
+                    notificationChannel.enableVibration(channelEnableVibrate);
+                    notificationChannel.setLockscreenVisibility(channelLockscreenVisibility);
+                    NotificationManager notificationManager =
+                            (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.createNotificationChannel(notificationChannel);
                 }
+                Intent permissionIntent = new Intent(ctx, PreyPermissionService.class);
+                permissionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                PendingIntent permissionPendingIntent = PendingIntent.getService(ctx, 0, permissionIntent, PendingIntent.FLAG_IMMUTABLE);
+                NotificationCompat.Action permissionAction =
+                        new NotificationCompat.Action.Builder(
+                                R.drawable.icon,
+                                ctx.getResources().getString(R.string.warning_re_approve),
+                                permissionPendingIntent)
+                                .build();
+                Intent closeIntent = new Intent(ctx, PreyCloseNotificationService.class);
+                closeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                PendingIntent closePendingIntent = PendingIntent.getService(ctx, 0, closeIntent, PendingIntent.FLAG_IMMUTABLE);
+                NotificationCompat.Action closeAction =
+                        new NotificationCompat.Action.Builder(
+                                R.drawable.icon,
+                                ctx.getResources().getString(R.string.warning_close),
+                                closePendingIntent)
+                                .build();
+                NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle()
+                        .bigText(ctx.getResources().getString(R.string.warning_notification_body))
+                        .setBigContentTitle(ctx.getResources().getString(R.string.warning_notification_title))
+                        .setSummaryText(ctx.getResources().getString(R.string.warning_notification_body));
+                NotificationCompat.Builder notificationCompatBuilder =
+                        new NotificationCompat.Builder(
+                                ctx, channelId);
+                Notification notification = notificationCompatBuilder
+                        .setStyle(bigTextStyle)
+                        .setContentTitle(ctx.getResources().getString(R.string.warning_notification_title))
+                        .setContentText(ctx.getResources().getString(R.string.warning_notification_body))
+                        .setSmallIcon(R.drawable.icon2)
+                        .setLargeIcon(BitmapFactory.decodeResource(
+                                ctx.getResources(),
+                                R.drawable.icon2))
+                        .setDefaults(NotificationCompat.DEFAULT_ALL)
+                        .setColor(ContextCompat.getColor(ctx, R.color.colorPrimary))
+                        .setCategory(Notification.CATEGORY_REMINDER)
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        .addAction(permissionAction)
+                        .addAction(closeAction)
+                        .build();
+                NotificationManagerCompat mNotificationManagerCompat = NotificationManagerCompat.from(ctx);
+                mNotificationManagerCompat.notify(NOTIFICATION_ID, notification);
+
             }
         }
     }
+
 }
