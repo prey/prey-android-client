@@ -49,13 +49,11 @@ public class PreyStorageService extends Service {
                             intentActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intentActivity);
                             stopSelf();
-                            break;
                         }
                         //TODO:Waiting time for storage to be active
-                        if (i > 40) {
+                        if (run && i > 40) {
                             run = false;
                             stopSelf();
-                            break;
                         }
                         i++;
                     } catch (Exception e) {
