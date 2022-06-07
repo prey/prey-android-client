@@ -149,11 +149,7 @@ public class PreyPermission {
      */
     public static boolean isExternalStorageManager(Context ctx){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (Environment.isExternalStorageManager()) {
-                return true;
-            }else{
-                return false;
-            }
+            return Environment.isExternalStorageManager();
         }else{
             return true;
         }
