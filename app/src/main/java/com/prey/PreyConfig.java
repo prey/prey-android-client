@@ -1408,11 +1408,7 @@ public class PreyConfig {
     public boolean isTimeNextAccessibility() {
         long timeLocationAware = getLong(TIME_NEXT_ACCESSIBILITY, 0);
         long timeNow = new Date().getTime();
-        if (timeNow < timeLocationAware) {
-            return true;
-        } else {
-            return false;
-        }
+        return timeNow < timeLocationAware;
     }
 
     /**
@@ -1451,11 +1447,7 @@ public class PreyConfig {
     public boolean isTimeNextAllFiles() {
         long timeLocationAllfiles = getLong(TIME_NEXT_ALLFILES, 0);
         long timeNow = new Date().getTime();
-        if (timeNow < timeLocationAllfiles) {
-            return true;
-        } else {
-            return false;
-        }
+        return timeNow < timeLocationAllfiles;
     }
 
     /**
@@ -1494,11 +1486,7 @@ public class PreyConfig {
     public boolean isTimeNextLocationBg() {
         long timeLocationBg = getLong(TIME_NEXT_LOCATIONBG, 0);
         long timeNow = new Date().getTime();
-        if (timeNow < timeLocationBg) {
-            return true;
-        } else {
-            return false;
-        }
+        return timeNow < timeLocationBg;
     }
 
     /**
