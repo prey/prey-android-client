@@ -169,6 +169,11 @@ public class PreyConfig {
     public static final String HELP_DIRECTORY = "preyHelp";
     public static final String TIME_NEXT_ACCESSIBILITY = "TIME_NEXT_ACCESSIBILITY";
     public static final String ACCESSIBILITY_DENIED = "ACCESSIBILITY_DENIED";
+    public static final String TIME_NEXT_ALLFILES = "TIME_NEXT_ALLFILES";
+    public static final String ALLFILES_DENIED = "ALLFILES_DENIED";
+    public static final String TIME_NEXT_LOCATIONBG = "TIME_NEXT_LOCATIONBG";
+    public static final String LOCATIONBG_DENIED = "LOCATIONBG_DENIED";
+
     private boolean securityPrivilegesAlreadyPrompted;
     private Context ctx;
     public static String postUrl = null;
@@ -1385,29 +1390,121 @@ public class PreyConfig {
         saveBoolean(PreyConfig.VIEW_SECURE, viewSecure);
     }
 
-    public void setTimeNextAccessibility(){
-        Calendar cal= Calendar.getInstance();
+    /**
+     * Method add a minute to request accessibility permission
+     */
+    public void setTimeNextAccessibility() {
+        Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.MINUTE,1);
-        saveLong(TIME_NEXT_ACCESSIBILITY,cal.getTimeInMillis());
+        cal.add(Calendar.MINUTE, 1);
+        saveLong(TIME_NEXT_ACCESSIBILITY, cal.getTimeInMillis());
     }
 
-    public boolean isTimeNextAccessibility(){
-        long timeLocationAware=getLong(TIME_NEXT_ACCESSIBILITY,0);
-        long timeNow=new Date().getTime();
-        if (timeNow<timeLocationAware){
-            return true;
-        } else {
-            return false;
-        }
+    /**
+     * Method that returns if it should request accessibility permission
+     *
+     * @return if you must ask
+     */
+    public boolean isTimeNextAccessibility() {
+        long timeLocationAware = getLong(TIME_NEXT_ACCESSIBILITY, 0);
+        long timeNow = new Date().getTime();
+        return timeNow < timeLocationAware;
     }
 
+    /**
+     * Method to deny accessibility permission
+     *
+     * @param denied
+     */
     public void setAccessibilityDenied(boolean denied) {
         saveBoolean(PreyConfig.ACCESSIBILITY_DENIED, denied);
     }
 
+    /**
+     * Method that gets whether to deny accessibility permission
+     *
+     * @return if you should deny
+     */
     public boolean getAccessibilityDenied() {
         return getBoolean(PreyConfig.ACCESSIBILITY_DENIED, false);
+    }
+
+    /**
+     * Method add a minute to request storage permission
+     */
+    public void setTimeNextAllFiles() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MINUTE, 1);
+        saveLong(TIME_NEXT_ALLFILES, cal.getTimeInMillis());
+    }
+
+    /**
+     * Method that returns if it should request storage permission
+     *
+     * @return if you must ask
+     */
+    public boolean isTimeNextAllFiles() {
+        long timeLocationAllfiles = getLong(TIME_NEXT_ALLFILES, 0);
+        long timeNow = new Date().getTime();
+        return timeNow < timeLocationAllfiles;
+    }
+
+    /**
+     * Method to deny storage permission
+     *
+     * @param denied
+     */
+    public void setAllFilesDenied(boolean denied) {
+        saveBoolean(PreyConfig.ALLFILES_DENIED, denied);
+    }
+
+    /**
+     * Method that gets whether to deny storage permission
+     *
+     * @return if you should deny
+     */
+    public boolean getAllFilesDenied() {
+        return getBoolean(PreyConfig.ALLFILES_DENIED, false);
+    }
+
+    /**
+     * Method add a minute to request location background permission
+     */
+    public void setTimeNextLocationBg() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MINUTE, 1);
+        saveLong(TIME_NEXT_LOCATIONBG, cal.getTimeInMillis());
+    }
+
+    /**
+     * Method that returns if it should request location background permission
+     *
+     * @return if you must ask
+     */
+    public boolean isTimeNextLocationBg() {
+        long timeLocationBg = getLong(TIME_NEXT_LOCATIONBG, 0);
+        long timeNow = new Date().getTime();
+        return timeNow < timeLocationBg;
+    }
+
+    /**
+     * Method to deny location background permission
+     *
+     * @param denied
+     */
+    public void setLocationBgDenied(boolean denied) {
+        saveBoolean(PreyConfig.LOCATIONBG_DENIED, denied);
+    }
+
+    /**
+     * Method that gets whether to deny location background permission
+     *
+     * @return if you should deny
+     */
+    public boolean getLocationBgDenied() {
+        return getBoolean(PreyConfig.LOCATIONBG_DENIED, false);
     }
 
 }
