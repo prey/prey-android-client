@@ -56,14 +56,14 @@ public class PreyApp extends Application {
                 getApplicationContext().startActivity(intent);
             }
         } catch (Exception e) {
-            PreyLogger.e("Error call intent LoginActivity:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error call intent LoginActivity: %s", e.getMessage()), e);
         }
         run(this);
         runReceiver(this);
         try {
             FirebaseApp.initializeApp(this);
         } catch (Exception e) {
-            PreyLogger.e("Error FirebaseApp:" + e.getMessage(), e);
+            PreyLogger.e(String.format("Error FirebaseApp: %s", e.getMessage()), e);
         }
         PreyBetaController.startPrey(getApplicationContext());
     }
@@ -79,17 +79,17 @@ public class PreyApp extends Application {
             String deviceKey = PreyConfig.getPreyConfig(ctx).getDeviceId();
             PreyConfig.getPreyConfig(ctx).setAwareDate("");
             PreyConfig.getPreyConfig(ctx).initTimeC2dm();
-            PreyLogger.d("apiKey:" + apiKey);
-            PreyLogger.d("deviceKey:" + deviceKey);
-            PreyLogger.d("InstallationDate:" + PreyConfig.getPreyConfig(ctx).getInstallationDate());
+            PreyLogger.d(String.format("apiKey: %s", apiKey));
+            PreyLogger.d(String.format("deviceKey: %s", deviceKey));
+            PreyLogger.d(String.format("InstallationDate: %s", PreyConfig.getPreyConfig(ctx).getInstallationDate()));
             if (PreyConfig.getPreyConfig(ctx).getInstallationDate() == 0) {
                 PreyConfig.getPreyConfig(ctx).setInstallationDate(new Date().getTime());
             }
             String sessionId = PreyUtils.randomAlphaNumeric(16);
-            PreyLogger.d("#######sessionId:" + sessionId);
+            PreyLogger.d(String.format("#######sessionId: %s", sessionId));
             PreyConfig.getPreyConfig(ctx).setSessionId(sessionId);
             final boolean missing = PreyConfig.getPreyConfig(ctx).isMissing();
-            PreyLogger.d("missing:" + missing);
+            PreyLogger.d(String.format("missing: %b", missing));
             if (deviceKey != null && !"".equals(deviceKey)) {
                 new Thread() {
                     public void run() {
@@ -97,14 +97,18 @@ public class PreyApp extends Application {
                         PreyWebServices.getInstance().getProfile(ctx);
                         String initName = PreyWebServices.getInstance().getNameDevice(ctx);
                         if (initName != null && !"".equals(initName)) {
-                            PreyLogger.d("initName:" + initName);
+                            PreyLogger.d(String.format("initName: %s", initName));
                             PreyConfig.getPreyConfig(ctx).setDeviceName(initName);
                         }
                         PreyStatus.getInstance().initConfig(ctx);
-                        boolean accessCoarseLocation=PreyPermission.canAccessCoarseLocation(ctx);
-                        boolean accessFineLocation=PreyPermission.canAccessFineLocation(ctx);
-                        boolean canAccessBackgroundLocation=PreyPermission.canAccessBackgroundLocation(ctx);
-                        if((accessCoarseLocation||accessFineLocation)&&canAccessBackgroundLocation) {
+                        boolean accessCoarseLocation = PreyPermission.canAccessCoarseLocation(ctx);
+                        boolean accessFineLocation = PreyPermission.canAccessFineLocation(ctx);
+                        boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocation(ctx);
+                        boolean verifyNotification = EventFactory.verifyNotification(ctx);
+                        if (!verifyNotification) {
+                            EventFactory.notification(ctx);
+                        }
+                        if ((accessCoarseLocation || accessFineLocation) && canAccessBackgroundLocation) {
                             GeofenceController.getInstance().run(ctx);
                             AwareController.getInstance().init(ctx);
                         }
@@ -122,7 +126,7 @@ public class PreyApp extends Application {
                                     AwareJobService.schedule(ctx);
                                 }
                             } catch (Exception e) {
-                                PreyLogger.e("error jobService.schedule : " + e.getMessage(), e);
+                                PreyLogger.e(String.format("error jobService.schedule : %s", e.getMessage()), e);
                             }
                             if (PreyConfig.getPreyConfig(ctx).isRunBackground()) {
                                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
@@ -133,7 +137,7 @@ public class PreyApp extends Application {
                                         ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
                                     }
                                 } catch (Exception e) {
-                                    PreyLogger.e("error startService PreyDisablePowerOptionsService : " + e.getMessage(), e);
+                                    PreyLogger.e(String.format("error startService PreyDisablePowerOptionsService : %s", e.getMessage()), e);
                                 }
                             }
                         }
@@ -141,7 +145,7 @@ public class PreyApp extends Application {
                 }.start();
             }
         } catch (Exception e) {
-            PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
+            PreyLogger.e(String.format("Error PreyApp: %s", e.getMessage()), e);
         }
     }
 

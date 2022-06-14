@@ -9,6 +9,7 @@ package com.prey;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.Settings;
 
 import androidx.core.app.ActivityCompat;
@@ -117,6 +118,12 @@ public class PreyPermission {
         return settingValue.indexOf("prey") > 0;
     }
 
+    /**
+     * Method that validates if the accessibility method should request it
+     *
+     * @param ctx context
+     * @return true if accessibility method should request it, false otherwise
+     */
     public static boolean isAccessibilityServiceView(Context ctx) {
         boolean isAccessibilityServiceEnabled = isAccessibilityServiceEnabled(ctx);
         PreyLogger.d(String.format("isAccessibilityServiceEnabled:%s", isAccessibilityServiceEnabled));
@@ -134,4 +141,66 @@ public class PreyPermission {
             }
         }
     }
+
+    /**
+     * Method to obtain if storage is enabled
+     * @param ctx context
+     * @return true if storage enabled, false otherwise
+     */
+    public static boolean isExternalStorageManager(Context ctx){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        }else{
+            return true;
+        }
+    }
+
+    /**
+     * Method that validates if the storage method should request it
+     *
+     * @param ctx context
+     * @return true if storage method should request it, false otherwise
+     */
+    public static boolean isExternalStorageManagerView(Context ctx) {
+        boolean isExternalStorageManager = isExternalStorageManager(ctx);
+        PreyLogger.d(String.format("isExternalStorageManager:%s", isExternalStorageManager));
+        if (isExternalStorageManager) {
+            return isExternalStorageManager;
+        } else {
+            boolean allFilesDenied = PreyConfig.getPreyConfig(ctx).getAllFilesDenied();
+            PreyLogger.d(String.format("allFilesDenied:%s", allFilesDenied));
+            if (allFilesDenied) {
+                return allFilesDenied;
+            } else {
+                boolean isTimeNextAllFiles = PreyConfig.getPreyConfig(ctx).isTimeNextAllFiles();
+                PreyLogger.d(String.format("isTimeNextAllFiles:%s", isTimeNextAllFiles));
+                return isTimeNextAllFiles;
+            }
+        }
+    }
+
+    /**
+     * Method that validates if the background location method should request it
+     *
+     * @param ctx context
+     * @return true if background location method should request it, false otherwise
+     */
+    public static boolean canAccessBackgroundLocationView(Context ctx) {
+        boolean canAccessBackgroundLocation = canAccessBackgroundLocation(ctx);
+        PreyLogger.d(String.format("canAccessBackgroundLocation:%s", canAccessBackgroundLocation));
+        if (canAccessBackgroundLocation) {
+            return canAccessBackgroundLocation;
+        } else {
+            boolean locatinBgDenied = PreyConfig.getPreyConfig(ctx).getLocationBgDenied();
+            PreyLogger.d(String.format("locatinBgDenied:%s", locatinBgDenied));
+            if (locatinBgDenied) {
+                return locatinBgDenied;
+            } else {
+                boolean isTimeNextLocationBg = PreyConfig.getPreyConfig(ctx).isTimeNextLocationBg();
+                PreyLogger.d(String.format("isTimeNextLocationBg:%s", isTimeNextLocationBg));
+                return isTimeNextLocationBg;
+            }
+        }
+    }
+
 }
