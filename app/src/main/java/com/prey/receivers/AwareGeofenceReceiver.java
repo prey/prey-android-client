@@ -23,6 +23,10 @@ public class AwareGeofenceReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         try {
             GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+            if (geofencingEvent==null) {
+                PreyLogger.d( "AWARE AwareGeofenceReceiver geofencingEvent null");
+                return;
+            }
             if (geofencingEvent.hasError()) {
                 PreyLogger.d( "AWARE AwareGeofenceReceiver hasError:" +geofencingEvent.toString());
                 return;
