@@ -148,11 +148,7 @@ public class PreyPermission {
      * @return true if storage enabled, false otherwise
      */
     public static boolean isExternalStorageManager(Context ctx){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            return Environment.isExternalStorageManager();
-        }else{
-            return true;
-        }
+        return true;
     }
 
     /**
@@ -162,21 +158,7 @@ public class PreyPermission {
      * @return true if storage method should request it, false otherwise
      */
     public static boolean isExternalStorageManagerView(Context ctx) {
-        boolean isExternalStorageManager = isExternalStorageManager(ctx);
-        PreyLogger.d(String.format("isExternalStorageManager:%s", isExternalStorageManager));
-        if (isExternalStorageManager) {
-            return isExternalStorageManager;
-        } else {
-            boolean allFilesDenied = PreyConfig.getPreyConfig(ctx).getAllFilesDenied();
-            PreyLogger.d(String.format("allFilesDenied:%s", allFilesDenied));
-            if (allFilesDenied) {
-                return allFilesDenied;
-            } else {
-                boolean isTimeNextAllFiles = PreyConfig.getPreyConfig(ctx).isTimeNextAllFiles();
-                PreyLogger.d(String.format("isTimeNextAllFiles:%s", isTimeNextAllFiles));
-                return isTimeNextAllFiles;
-            }
-        }
+        return true;
     }
 
     /**
