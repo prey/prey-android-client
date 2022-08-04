@@ -231,7 +231,8 @@ public class EventFactory {
      * @param ctx context
      */
     public static void notification(Context ctx) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        boolean verifyNotification = EventFactory.verifyNotification(ctx);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !verifyNotification) {
             if (PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey(false)) {
                 String channelId = null;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
