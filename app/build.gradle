@@ -10,7 +10,7 @@ android {
         applicationId "com.prey"
         minSdkVersion 21
 
-        targetSdkVersion 33
+        targetSdkVersion 32
 
         versionCode 293
         versionName '2.4.2'
