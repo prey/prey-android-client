@@ -9,6 +9,8 @@ package com.prey.managers;
 import android.content.Context;
 import android.net.ConnectivityManager;
 
+import com.prey.PreyLogger;
+
 public class PreyConnectivityManager {
 
     private ConnectivityManager connectivity = null;
@@ -78,8 +80,13 @@ public class PreyConnectivityManager {
     }
 
     public boolean isWifiConnected(){
-        android.net.NetworkInfo wifi =connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        return wifi.isConnected();
+        try {
+            android.net.NetworkInfo wifi = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            return wifi.isConnected();
+        } catch (Exception e) {
+            PreyLogger.d("Error isWifiConnected:" + e.getMessage());
+            return false;
+        }
     }
 
 }
