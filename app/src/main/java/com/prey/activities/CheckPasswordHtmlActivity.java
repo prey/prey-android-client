@@ -245,12 +245,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
                                 PreyLogger.d(String.format("CheckPasswordHtmlActivity !canAccessBackgroundLocation"));
                                 url.append(URL_ONB).append("#/").append(lng).append("/bgloc");
                             } else {
-                                if (!isStorage) {
-                                    PreyLogger.d(String.format("CheckPasswordHtmlActivity !isStorage"));
-                                    url.append(URL_ONB).append("#/").append(lng).append("/allfiles");
-                                } else {
-                                    url.append(URL_ONB).append("#/").append(lng).append("/permissions");
-                                }
+                               url.append(URL_ONB).append("#/").append(lng).append("/permissions");
                             }
                         }
                     }else{
@@ -280,15 +275,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
     };
 
-    private static final String[] INITIAL_PERMS_TIRAMISU = {
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.CAMERA,
-            Manifest.permission.READ_MEDIA_IMAGES,
-            Manifest.permission.READ_MEDIA_AUDIO,
-            Manifest.permission.READ_MEDIA_VIDEO
-    };
-
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermissionAndroid7() {
         PreyLogger.d("CheckPasswordHtmlActivity: askForPermissionAndroid7");
@@ -306,11 +292,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermission() {
         PreyLogger.d("CheckPasswordHtmlActivity askForPermission");
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, INITIAL_PERMS, REQUEST_PERMISSIONS);
-        }else {
-            ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, INITIAL_PERMS_TIRAMISU, REQUEST_PERMISSIONS);
-        }
+        ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, INITIAL_PERMS, REQUEST_PERMISSIONS);
     }
 
     public void deniedPermission() {

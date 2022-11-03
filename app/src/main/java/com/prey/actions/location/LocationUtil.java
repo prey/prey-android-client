@@ -172,7 +172,11 @@ public class LocationUtil {
         PreyLocation preyLocation = null;
         Intent intentLocation = new Intent(ctx, LocationUpdatesService.class);
         try {
-            ctx.startService(intentLocation);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ctx.startService(intentLocation);
+            } else {
+                ctx.startService(intentLocation);
+            }
             int i = 0;
             PreyLocationManager.getInstance(ctx).setLastLocation(null);
             while (i < MAXIMUM_OF_ATTEMPTS2) {
