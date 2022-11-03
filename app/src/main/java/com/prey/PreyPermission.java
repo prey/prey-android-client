@@ -74,14 +74,7 @@ public class PreyPermission {
     }
 
     public static boolean canAccessStorage(Context ctx) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            return canPermissionGranted(ctx, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        } else {
-            boolean image = canPermissionGranted(ctx, android.Manifest.permission.READ_MEDIA_IMAGES);
-            boolean audio = canPermissionGranted(ctx, android.Manifest.permission.READ_MEDIA_AUDIO);
-            boolean video = canPermissionGranted(ctx, android.Manifest.permission.READ_MEDIA_VIDEO);
-            return image && audio && video;
-        }
+        return canPermissionGranted(ctx, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     public static boolean showRequestStorage(Activity activity) {
