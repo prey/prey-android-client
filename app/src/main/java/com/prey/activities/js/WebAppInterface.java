@@ -1247,4 +1247,14 @@ public class WebAppInterface {
     public boolean versionIsRedVelvetCake() {
         return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.R;
     }
+
+    @JavascriptInterface
+    public boolean initContactFormForFree() {
+        return PreyConfig.getPreyConfig(mContext).getHelpFormForFree();
+    }
+
+    @JavascriptInterface
+    public void handleClickHelp(){
+        PreyConfig.getPreyConfig(mContext).setFileHelp("");
+    }
 }

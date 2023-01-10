@@ -275,6 +275,15 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
     };
 
+    private static final String[] INITIAL_PERMS_TIRAMISU = {
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.CAMERA,
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.READ_MEDIA_AUDIO,
+            Manifest.permission.READ_MEDIA_VIDEO
+    };
+
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermissionAndroid7() {
         PreyLogger.d("CheckPasswordHtmlActivity: askForPermissionAndroid7");
@@ -292,7 +301,11 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermission() {
         PreyLogger.d("CheckPasswordHtmlActivity askForPermission");
-        ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, INITIAL_PERMS, REQUEST_PERMISSIONS);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, INITIAL_PERMS, REQUEST_PERMISSIONS);
+        }else {
+            ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, INITIAL_PERMS_TIRAMISU, REQUEST_PERMISSIONS);
+        }
     }
 
     public void deniedPermission() {
