@@ -41,17 +41,17 @@ public class LocationUtil {
     public static final String METHOD = "method";
 
     public static HttpDataService dataLocation(final Context ctx, String messageId, boolean asynchronous) {
+        return dataLocation(ctx, messageId, asynchronous, MAXIMUM_OF_ATTEMPTS);
+    }
+
+    public static HttpDataService dataLocation(final Context ctx, String messageId, boolean asynchronous, int maximum) {
         HttpDataService data = null;
         try {
-            final PreyLocation preyLocation = getLocation(ctx, messageId, asynchronous);
+            final PreyLocation preyLocation = getLocation(ctx, messageId, asynchronous, maximum);
             if (preyLocation != null && (preyLocation.getLat() != 0 && preyLocation.getLng() != 0)) {
                 PreyLogger.d(String.format("locationData:%s %s %s", preyLocation.getLat(), preyLocation.getLng(), preyLocation.getAccuracy()));
+                PreyConfig.getPreyConfig(ctx).setLocation(preyLocation);
                 data = convertData(preyLocation);
-                new Thread() {
-                    public void run() {
-                        GeofenceController.verifyGeozone(ctx, preyLocation);
-                    }
-                }.start();
             } else {
                 PreyLogger.d("locationData else:");
                 return null;
@@ -63,6 +63,10 @@ public class LocationUtil {
     }
 
     public static PreyLocation getLocation(Context ctx, String messageId, boolean asynchronous) throws Exception{
+        return getLocation(ctx, messageId, asynchronous, MAXIMUM_OF_ATTEMPTS);
+    }
+
+    public static PreyLocation getLocation(Context ctx, String messageId, boolean asynchronous, int maximum) throws Exception{
         PreyLocation preyLocation = null;
         boolean isGpsEnabled = PreyLocationManager.getInstance(ctx).isGpsLocationServiceActive();
         boolean isNetworkEnabled = PreyLocationManager.getInstance(ctx).isNetworkLocationServiceActive();
@@ -73,7 +77,7 @@ public class LocationUtil {
         PreyLogger.d(locationInfo);
         String method = getMethod(isGpsEnabled, isNetworkEnabled);
         try {
-            preyLocation = getPreyLocationAppService(ctx,method,asynchronous,preyLocation);
+            preyLocation = getPreyLocationAppService(ctx, method, asynchronous, preyLocation, maximum);
         } catch (Exception e) {
             PreyLogger.e("Error PreyLocationApp:"+e.getMessage(),e);
         }
@@ -87,6 +91,12 @@ public class LocationUtil {
         if (preyLocation != null) {
             PreyLogger.d("preyLocation lat:" + preyLocation.getLat() + " lng:" + preyLocation.getLng());
         }
+        final PreyLocation location = preyLocation;
+        new Thread() {
+            public void run() {
+                GeofenceController.verifyGeozone(ctx, location);
+            }
+        }.start();
         return preyLocation;
     }
 
@@ -203,7 +213,7 @@ public class LocationUtil {
         return preyLocation;
     }
 
-    private static PreyLocation getPreyLocationAppService(final Context ctx, String method, boolean asynchronous, PreyLocation preyLocationOld) throws Exception {
+    private static PreyLocation getPreyLocationAppService(final Context ctx, String method, boolean asynchronous, PreyLocation preyLocationOld, int maximum) throws Exception {
         PreyLocation preyLocation = null;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M &&
                 (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
@@ -219,7 +229,7 @@ public class LocationUtil {
                                 }
                             }
                         });
-                preyLocation = waitLocation(ctx, method, asynchronous);
+                preyLocation = waitLocation(ctx, method, asynchronous, maximum);
             } catch (Exception e) {
                 PreyLogger.e(String.format("getPreyLocationAppService e:%s", e.getMessage()), e);
             }
@@ -227,7 +237,7 @@ public class LocationUtil {
             Intent intentLocation = new Intent(ctx, LocationService.class);
             try {
                 ctx.startService(intentLocation);
-                preyLocation = waitLocation(ctx, method, asynchronous);
+                preyLocation = waitLocation(ctx, method, asynchronous, maximum);
             } catch (Exception e) {
                 PreyLogger.e(String.format("getPreyLocationAppService e:%s", e.getMessage()), e);
                 throw e;
@@ -238,10 +248,10 @@ public class LocationUtil {
         return preyLocation;
     }
 
-    public static PreyLocation waitLocation(final Context ctx, String method, boolean asynchronous) {
+    public static PreyLocation waitLocation(final Context ctx, String method, boolean asynchronous, int maximum) {
         PreyLocation preyLocation = null;
         int i = 0;
-        while (i < MAXIMUM_OF_ATTEMPTS) {
+        while (i < maximum) {
             try {
                 Thread.sleep(SLEEP_OF_ATTEMPTS[i] * 1000);
             } catch (Exception e) {

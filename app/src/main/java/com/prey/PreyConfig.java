@@ -145,6 +145,7 @@ public class PreyConfig {
     public static final String PUBLIC_IP = "PUBLIC_IP";
     public static final String LOCATION_LAT = "LOCATION_LAT";
     public static final String LOCATION_LNG = "LOCATION_LNG";
+    public static final String LOCATION_ACCURACY = "LOCATION_ACCURACY";
     public static final String AWARE_LAT = "AWARE_LAT";
     public static final String AWARE_LNG = "AWARE_LNG";
     public static final String AWARE_ACC = "AWARE_ACC";
@@ -1086,14 +1087,17 @@ public class PreyConfig {
         if(location!=null) {
             saveFloat(PreyConfig.LOCATION_LAT, (float) location.getLat().floatValue());
             saveFloat(PreyConfig.LOCATION_LNG, (float) location.getLng().floatValue());
+            saveFloat(PreyConfig.LOCATION_ACCURACY, (float) location.getAccuracy());
         }
     }
     public PreyLocation getLocation(){
         PreyLocation location=new PreyLocation();
-        float lat= getFloat(PreyConfig.LOCATION_LAT ,0);
-        float lng= getFloat(PreyConfig.LOCATION_LNG,0 );
+        float lat = getFloat(PreyConfig.LOCATION_LAT, 0);
+        float lng = getFloat(PreyConfig.LOCATION_LNG, 0);
+        float accuracy = getFloat(PreyConfig.LOCATION_ACCURACY, 0);
         location.setLat(lat);
         location.setLng(lng);
+        location.setAccuracy(accuracy);
         return location;
     }
 
