@@ -41,7 +41,7 @@ public class PreyConfig {
     private static PreyConfig cachedInstance = null;
     public static final String TAG = "PREY";
     private static final String HTTP = "https://";
-    public static final String VERSION_PREY_DEFAULT = "2.4.4";
+    public static final String VERSION_PREY_DEFAULT = "2.4.5";
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
     // Set to 1000 * 60 in production.
