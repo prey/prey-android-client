@@ -1257,4 +1257,15 @@ public class WebAppInterface {
     public void handleClickHelp(){
         PreyConfig.getPreyConfig(mContext).setFileHelp("");
     }
+
+    @JavascriptInterface
+    public boolean initMspAccount() {
+        boolean initMspAccount = false;
+        try {
+            initMspAccount = PreyConfig.getPreyConfig(mContext).getMspAccount();
+        } catch (Exception e) {
+            PreyLogger.e("Error initMspAccount:" + e.getMessage(), e);
+        }
+        return initMspAccount;
+    }
 }
