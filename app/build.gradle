@@ -12,7 +12,7 @@ android {
 
         targetSdkVersion 33
 
-        versionCode 306
+        versionCode 309
         versionName '2.4.5'
 
         multiDexEnabled true
@@ -39,7 +39,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     implementation 'com.google.android.material:material:1.7.0'
@@ -52,7 +52,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-iid:21.1.0'
     implementation 'com.google.firebase:firebase-messaging:23.1.1'
     implementation 'com.google.firebase:firebase-analytics:21.2.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.3'
     implementation 'com.google.firebase:firebase-database:20.1.0'
 
     implementation 'com.android.installreferrer:installreferrer:2.2'
