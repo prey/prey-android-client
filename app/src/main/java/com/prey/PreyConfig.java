@@ -174,6 +174,7 @@ public class PreyConfig {
     public static final String ALLFILES_DENIED = "ALLFILES_DENIED";
     public static final String TIME_NEXT_LOCATIONBG = "TIME_NEXT_LOCATIONBG";
     public static final String LOCATIONBG_DENIED = "LOCATIONBG_DENIED";
+    public static final String MSP_ACCOUNT = "MSP_ACCOUNT";
 
     private boolean securityPrivilegesAlreadyPrompted;
     private Context ctx;
@@ -1509,6 +1510,14 @@ public class PreyConfig {
      */
     public boolean getLocationBgDenied() {
         return getBoolean(PreyConfig.LOCATIONBG_DENIED, false);
+    }
+
+    public boolean getMspAccount() {
+        return getBoolean(PreyConfig.MSP_ACCOUNT, false);
+    }
+
+    public void setMspAccount(boolean mspAccount) {
+        saveBoolean(PreyConfig.MSP_ACCOUNT, mspAccount);
     }
 
 }
