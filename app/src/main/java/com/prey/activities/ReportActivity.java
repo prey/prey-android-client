@@ -17,7 +17,9 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.OnMapsSdkInitializedCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -27,7 +29,7 @@ import com.prey.activities.js.WebAppInterface;
 
 import java.util.Locale;
 
-public class ReportActivity extends FragmentActivity implements OnMapReadyCallback {
+public class ReportActivity extends FragmentActivity implements OnMapReadyCallback, OnMapsSdkInitializedCallback {
     private WebView myWebView = null;
 
     public void onBackPressed() {
@@ -41,6 +43,7 @@ public class ReportActivity extends FragmentActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, this);
         setContentView(R.layout.report);
         PreyLogger.d("ReportActivity: onCreate");
         loadUrl();
@@ -65,6 +68,18 @@ public class ReportActivity extends FragmentActivity implements OnMapReadyCallba
         map.addMarker(new MarkerOptions().position(UPV));
         map.moveCamera(CameraUpdateFactory.newLatLng(UPV));
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(UPV, 17f));
+    }
+
+    @Override
+    public void onMapsSdkInitialized(MapsInitializer.Renderer renderer) {
+        switch (renderer) {
+            case LATEST:
+                PreyLogger.d("Maps The latest version of the renderer is used.");
+                break;
+            case LEGACY:
+                PreyLogger.d("Maps The legacy version of the renderer is used.");
+                break;
+        }
     }
 
     public void loadUrl(){
