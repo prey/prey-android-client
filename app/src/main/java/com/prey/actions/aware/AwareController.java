@@ -104,6 +104,7 @@ public class AwareController {
         PreyLogger.d("AWARE AwareController run");
         try {
             int loiteringDelay= FileConfigReader.getInstance(ctx).getGeofenceLoiteringDelay();
+            int notificationResponsiveness= FileConfigReader.getInstance(ctx).getGeofenceNotificationResponsiveness();
             int radiusAware= FileConfigReader.getInstance(ctx).getRadiusAware();
             //remove
             List<String> listRemove = new ArrayList<String>();
@@ -126,7 +127,7 @@ public class AwareController {
                         .setExpirationDuration(Geofence.NEVER_EXPIRE)
                         .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
                         .setLoiteringDelay(loiteringDelay)
-                        .setNotificationResponsiveness(0)
+                        .setNotificationResponsiveness(notificationResponsiveness)
                         .build());
                 GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
                 builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_EXIT | GeofencingRequest.INITIAL_TRIGGER_ENTER);
@@ -134,7 +135,7 @@ public class AwareController {
                 GeofencingRequest geofencingRequest = builder.build();
                 if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     //Added for android 12
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, AwareGeofenceReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, AwareGeofenceReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
                     LocationServices.getGeofencingClient(ctx).addGeofences(geofencingRequest, pendingIntent)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override

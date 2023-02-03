@@ -41,7 +41,7 @@ public class PreyConfig {
     private static PreyConfig cachedInstance = null;
     public static final String TAG = "PREY";
     private static final String HTTP = "https://";
-    public static final String VERSION_PREY_DEFAULT = "2.4.3";
+    public static final String VERSION_PREY_DEFAULT = "2.4.5";
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
     // Set to 1000 * 60 in production.
@@ -145,6 +145,7 @@ public class PreyConfig {
     public static final String PUBLIC_IP = "PUBLIC_IP";
     public static final String LOCATION_LAT = "LOCATION_LAT";
     public static final String LOCATION_LNG = "LOCATION_LNG";
+    public static final String LOCATION_ACCURACY = "LOCATION_ACCURACY";
     public static final String AWARE_LAT = "AWARE_LAT";
     public static final String AWARE_LNG = "AWARE_LNG";
     public static final String AWARE_ACC = "AWARE_ACC";
@@ -173,6 +174,7 @@ public class PreyConfig {
     public static final String ALLFILES_DENIED = "ALLFILES_DENIED";
     public static final String TIME_NEXT_LOCATIONBG = "TIME_NEXT_LOCATIONBG";
     public static final String LOCATIONBG_DENIED = "LOCATIONBG_DENIED";
+    public static final String MSP_ACCOUNT = "MSP_ACCOUNT";
 
     private boolean securityPrivilegesAlreadyPrompted;
     private Context ctx;
@@ -1086,14 +1088,17 @@ public class PreyConfig {
         if(location!=null) {
             saveFloat(PreyConfig.LOCATION_LAT, (float) location.getLat().floatValue());
             saveFloat(PreyConfig.LOCATION_LNG, (float) location.getLng().floatValue());
+            saveFloat(PreyConfig.LOCATION_ACCURACY, (float) location.getAccuracy());
         }
     }
     public PreyLocation getLocation(){
         PreyLocation location=new PreyLocation();
-        float lat= getFloat(PreyConfig.LOCATION_LAT ,0);
-        float lng= getFloat(PreyConfig.LOCATION_LNG,0 );
+        float lat = getFloat(PreyConfig.LOCATION_LAT, 0);
+        float lng = getFloat(PreyConfig.LOCATION_LNG, 0);
+        float accuracy = getFloat(PreyConfig.LOCATION_ACCURACY, 0);
         location.setLat(lat);
         location.setLng(lng);
+        location.setAccuracy(accuracy);
         return location;
     }
 
@@ -1505,6 +1510,14 @@ public class PreyConfig {
      */
     public boolean getLocationBgDenied() {
         return getBoolean(PreyConfig.LOCATIONBG_DENIED, false);
+    }
+
+    public boolean getMspAccount() {
+        return getBoolean(PreyConfig.MSP_ACCOUNT, false);
+    }
+
+    public void setMspAccount(boolean mspAccount) {
+        saveBoolean(PreyConfig.MSP_ACCOUNT, mspAccount);
     }
 
 }
