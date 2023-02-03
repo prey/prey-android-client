@@ -1247,4 +1247,25 @@ public class WebAppInterface {
     public boolean versionIsRedVelvetCake() {
         return android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.R;
     }
+
+    @JavascriptInterface
+    public boolean initContactFormForFree() {
+        return PreyConfig.getPreyConfig(mContext).getHelpFormForFree();
+    }
+
+    @JavascriptInterface
+    public void handleClickHelp(){
+        PreyConfig.getPreyConfig(mContext).setFileHelp("");
+    }
+
+    @JavascriptInterface
+    public boolean initMspAccount() {
+        boolean initMspAccount = false;
+        try {
+            initMspAccount = PreyConfig.getPreyConfig(mContext).getMspAccount();
+        } catch (Exception e) {
+            PreyLogger.e("Error initMspAccount:" + e.getMessage(), e);
+        }
+        return initMspAccount;
+    }
 }

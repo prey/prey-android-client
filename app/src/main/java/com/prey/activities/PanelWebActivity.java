@@ -55,12 +55,14 @@ public class PanelWebActivity extends Activity {
         WebSettings settings = myWebView.getSettings();
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
+        settings.setDomStorageEnabled(true);
         settings.setJavaScriptEnabled(true);
         myWebView.setVerticalScrollBarEnabled(false);
         myWebView.setHorizontalScrollBarEnabled(false);
         myWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
             public void onProgressChanged(WebView view, int progress) {
-                activity.setTitle("Loading...");
+                activity.setTitle(getText(R.string.loading).toString());
                 activity.setProgress(progress * 100);
                 if (progress == 100)
                     activity.setTitle(R.string.app_name);

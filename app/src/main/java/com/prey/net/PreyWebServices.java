@@ -976,6 +976,10 @@ public class PreyWebServices {
                     boolean contactFormForFree = jsnobject.getBoolean("contact_form_for_free");
                     PreyConfig.getPreyConfig(ctx).setContactFormForFree(contactFormForFree);
                 }
+                if (jsnobject.has("msp_account")) {
+                    boolean mspAccount = jsnobject.getBoolean("msp_account");
+                    PreyConfig.getPreyConfig(ctx).setMspAccount(mspAccount);
+                }
             }
         } catch (Exception e) {
             PreyLogger.e(String.format("error get profile:%s", e.getMessage()), e);

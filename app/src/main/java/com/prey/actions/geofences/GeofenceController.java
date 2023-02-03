@@ -194,7 +194,7 @@ public class GeofenceController {
         final Context ctx2=ctx;
         try {
             if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                PendingIntent pendingIntent=PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, GeofenceReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
+                PendingIntent pendingIntent=PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, GeofenceReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_MUTABLE);
                 LocationServices.getGeofencingClient(ctx).addGeofences(geofencingRequest,pendingIntent)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -248,7 +248,6 @@ public class GeofenceController {
             } else {
                 transition = GEOFENCING_IN;
             }
-            dataSource.updateGeofenceType(geo.id, transition);
             PreyLogger.d("GEO validateGeozone name:"+geo.name+" type:"+geo.getType()+" transition:" + transition);
             if (!transition.equals(geo.getType())) {
                 if(GEOFENCING_IN.equals(transition)||(GEOFENCING_OUT.equals(transition) )) {
@@ -264,6 +263,7 @@ public class GeofenceController {
                         event.setInfo(info.toString());
                         JSONObject jsonObjectStatus = new JSONObject();
                         PreyLogger.d("GEO name:"+geo.name+" event:" + transition.toString()+" _ "+info.toString());
+                        dataSource.updateGeofenceType(geo.id, transition);
                         new EventThread(ctx, event, jsonObjectStatus, transition).start();
                     } catch (Exception e) {
                         PreyLogger.e("GEO error:" + e.getMessage(), e);
