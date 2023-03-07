@@ -24,6 +24,7 @@ import com.prey.json.parser.JSONParser;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.managers.PreyTelephonyManager;
 import com.prey.net.PreyWebServices;
+import com.prey.net.UtilConnection;
 
 public class PreyBetaActionsRunner implements Runnable {
 
@@ -43,12 +44,10 @@ public class PreyBetaActionsRunner implements Runnable {
 
     public void execute() {
         if (PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey(true)) {
-            PreyTelephonyManager preyTelephony = PreyTelephonyManager.getInstance(ctx);
-            PreyConnectivityManager preyConnectivity = PreyConnectivityManager.getInstance(ctx);
             boolean connection = false;
             try {
                 List<JSONObject> jsonObject = null;
-                connection = preyTelephony.isDataConnectivityEnabled() || preyConnectivity.isConnected();
+                connection = UtilConnection.isInternetAvailable();
                 if (connection) {
                     try {
                         if (cmd == null || "".equals(cmd)) {

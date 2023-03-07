@@ -396,33 +396,35 @@ public class UtilConnection {
     }
 
     public static HttpURLConnection connectionJson(PreyConfig preyConfig, String uri, String method, JSONObject jsonParam, String authorization) {
-        HttpURLConnection connection=null;
+        HttpURLConnection connection = null;
         int httpResult = -1;
         try {
-            URL url = new URL(uri);
-            PreyLogger.d("postJson page:" + uri);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod(method);
-            connection.setUseCaches(USE_CACHES);
-            connection.setConnectTimeout(CONNECT_TIMEOUT);
-            connection.setReadTimeout(READ_TIMEOUT);
-            connection.setRequestProperty("Content-Type", "application/json");
-            if (authorization!=null)
-                connection.addRequestProperty("Authorization", authorization);
-            connection.addRequestProperty("User-Agent",getUserAgent(preyConfig));
-            connection.addRequestProperty("Origin", "android:com.prey");
-            connection.connect();
-            if(jsonParam!=null) {
-                PreyLogger.d("jsonParam.toString():" + jsonParam.toString());
-                OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-                out.write(jsonParam.toString());
-                out.close();
+            if (isInternetAvailable()) {
+                URL url = new URL(uri);
+                PreyLogger.d(String.format("postJson page: %s", uri));
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setDoOutput(true);
+                connection.setRequestMethod(method);
+                connection.setUseCaches(USE_CACHES);
+                connection.setConnectTimeout(CONNECT_TIMEOUT);
+                connection.setReadTimeout(READ_TIMEOUT);
+                connection.setRequestProperty("Content-Type", "application/json");
+                if (authorization != null)
+                    connection.addRequestProperty("Authorization", authorization);
+                connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
+                connection.addRequestProperty("Origin", "android:com.prey");
+                connection.connect();
+                if (jsonParam != null) {
+                    PreyLogger.d(String.format("jsonParam.toString():%s", jsonParam.toString()));
+                    OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
+                    out.write(jsonParam.toString());
+                    out.close();
+                }
+                httpResult = connection.getResponseCode();
+                PreyLogger.d(String.format("postJson responseCode:%s", httpResult));
             }
-            httpResult = connection.getResponseCode();
-            PreyLogger.d("postJson responseCode:"+httpResult);
         } catch (Exception e) {
-            PreyLogger.e("postJson error:" + e.getMessage(), e);
+            PreyLogger.e(String.format("postJson error:%s", e.getMessage()), e);
         }
         return connection;
     }
@@ -550,22 +552,17 @@ public class UtilConnection {
     }
 
     public static boolean isInternetAvailable(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (activeNetwork == null) return false;
-        switch (activeNetwork.getType()) {
-            case ConnectivityManager.TYPE_WIFI:
-                if (activeNetwork.getState() == NetworkInfo.State.CONNECTED ||
-                        activeNetwork.getState() == NetworkInfo.State.CONNECTING)
-                    return true;
-                break;
-            case ConnectivityManager.TYPE_MOBILE:
-                if (activeNetwork.getState() == NetworkInfo.State.CONNECTED ||
-                        activeNetwork.getState() == NetworkInfo.State.CONNECTING)
-                    return true;
-                break;
-            default:
-                return false;
+        return isInternetAvailable();
+    }
+
+    public static boolean isInternetAvailable() {
+        try {
+            String command = "ping -c 1 google.com";
+            boolean isInternetAvailable= (Runtime.getRuntime().exec(command).waitFor() == 0);
+            PreyLogger.d(String.format("command:%s - %b",command,isInternetAvailable));
+            return isInternetAvailable;
+        } catch (Exception e) {
+            PreyLogger.e(String.format("isInternetAvailable error:%s", e.getMessage()), e);
         }
         return false;
     }
