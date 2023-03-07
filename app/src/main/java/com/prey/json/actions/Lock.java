@@ -322,11 +322,15 @@ public class Lock extends JsonAction {
      * @return true if pattern set, false if not (or if an issue when checking)
      */
     public static boolean isPatternSet(Context ctx) {
-        ContentResolver cr = ctx.getContentResolver();
-        try {
-            int lockPatternEnable = Settings.Secure.getInt(cr, Settings.Secure.LOCK_PATTERN_ENABLED);
-            return lockPatternEnable == 1;
-        } catch (Settings.SettingNotFoundException e) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ContentResolver cr = ctx.getContentResolver();
+            try {
+                int lockPatternEnable = Settings.Secure.getInt(cr, Settings.Secure.LOCK_PATTERN_ENABLED);
+                return lockPatternEnable == 1;
+            } catch (Settings.SettingNotFoundException e) {
+                return false;
+            }
+        } else {
             return false;
         }
     }
