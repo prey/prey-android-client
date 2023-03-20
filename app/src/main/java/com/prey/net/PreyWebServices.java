@@ -621,7 +621,7 @@ public class PreyWebServices {
             String url = getDataUrlJson(ctx);
             if (UtilConnection.isInternetAvailable(ctx)) {
                 preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
-                PreyLogger.d("Data sent_: " + (preyHttpResponse == null ? "" : preyHttpResponse.getResponseAsString()));
+                PreyLogger.d(String.format("Data sent_: %s", (preyHttpResponse == null ? "" : preyHttpResponse.getResponseAsString())));
             }
         } catch (Exception e) {
             PreyLogger.e("Data wasn't send", e);
