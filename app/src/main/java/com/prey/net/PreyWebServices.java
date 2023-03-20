@@ -396,6 +396,13 @@ public class PreyWebServices {
         if(response!=null&&response.getStatusCode()== HttpURLConnection.HTTP_UNAUTHORIZED){
             throw new PreyException(json);
         }
+        //StatusCode 500-504
+        if (response != null && (response.getStatusCode() >= HttpURLConnection.HTTP_INTERNAL_ERROR &&
+                response.getStatusCode() <= HttpURLConnection.HTTP_GATEWAY_TIMEOUT)) {
+            CharSequence err = "" + ctx.getText(R.string.error_communication_500);
+            json = "{\"error\":[\"" + err + "\"]}";
+            throw new PreyException(json);
+        }
         try {
             PreyLogger.d("____[token]_________________apikey:"+apikey+" password:"+password);
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
