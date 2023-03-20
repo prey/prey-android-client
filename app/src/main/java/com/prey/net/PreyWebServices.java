@@ -613,6 +613,22 @@ public class PreyWebServices {
         return preyHttpResponse;
     }
 
+    public PreyHttpResponse sendPreyHttpDataName(Context ctx, String nameDevice) {
+        Map<String, String> parameters = new HashMap<String, String>();
+        PreyHttpResponse preyHttpResponse = null;
+        parameters.put("name", nameDevice);
+        try {
+            String url = getDataUrlJson(ctx);
+            if (UtilConnection.isInternetAvailable(ctx)) {
+                preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
+                PreyLogger.d("Data sent_: " + (preyHttpResponse == null ? "" : preyHttpResponse.getResponseAsString()));
+            }
+        } catch (Exception e) {
+            PreyLogger.e("Data wasn't send", e);
+        }
+        return preyHttpResponse;
+    }
+
     public PreyVerify verifyUsers(Context ctx) throws Exception {
         String apiKey= PreyConfig.getPreyConfig(ctx).getApiKey();
         String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
