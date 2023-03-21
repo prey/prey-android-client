@@ -399,7 +399,7 @@ public class PreyWebServices {
         //StatusCode 500-504
         if (response != null && (response.getStatusCode() >= HttpURLConnection.HTTP_INTERNAL_ERROR &&
                 response.getStatusCode() <= HttpURLConnection.HTTP_GATEWAY_TIMEOUT)) {
-            CharSequence err = "" + ctx.getText(R.string.error_communication_500);
+            CharSequence err = ctx.getText(R.string.error_communication_500);
             json = new StringBuffer("{\"error\":[\"").append(err).append("\"]}").toString();
             throw new PreyException(json);
         }
