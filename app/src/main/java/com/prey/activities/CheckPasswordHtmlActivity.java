@@ -233,7 +233,8 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
                         && canAccessStorage && isAdminActive && canDrawOverlays ;
                 boolean permissionsOrBasic = canAccessFineLocation || canAccessCoarseLocation || canAccessCamera
                         || canAccessStorage || isAdminActive || canDrawOverlays ;
-                if (!permissionsOrBasic) {
+                boolean start = PreyConfig.getPreyConfig(this).getStart();
+                if (start || !permissionsOrBasic) {
                     url.append(URL_ONB).append("#/").append(lng).append("/start");
                 } else {
                     if (permissionsAndBasic) {
