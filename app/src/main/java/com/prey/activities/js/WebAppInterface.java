@@ -829,6 +829,7 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public boolean initConfigure() {
+        PreyConfig.getPreyConfig(mContext).setStart(false);
         String deviceKey = PreyConfig.getPreyConfig(mContext).getDeviceId();
         if (deviceKey != null && !"".equals(deviceKey)) {
             return true;
@@ -1267,5 +1268,28 @@ public class WebAppInterface {
             PreyLogger.e("Error initMspAccount:" + e.getMessage(), e);
         }
         return initMspAccount;
+    }
+
+    @JavascriptInterface
+    public void uninstall() {
+        PreyLogger.d("uninstall");
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage(R.string.preferences_uninstall_summary)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        PreyLogger.d("uninstall run:");
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                            new DetachDevice().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        else
+                            new DetachDevice().execute();
+                        PreyConfig.getPreyConfig(mContext).setStart(true);
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        Dialog popup = builder.create();
+        popup.show();
     }
 }
