@@ -130,6 +130,7 @@
 
     <string name="error_title">We have a situation!</string> 
     <string name="error_communication_exception">Check your settings and try again.</string> 
+    <string name="error_communication_500">We couldn\'t reach our servers due to a connection error. please ensure you have a stable connection.</string>
     <string name="error_cant_add_this_device">Can\'t add this device to your prey account. Please check again the email and password provided. %s</string>
      <string name="error_registered_password_has_changed">Can\'t change password. The current password entered is invalid.</string>
      <string name="error_cant_report_forgotten_password">Can\'t report forgotten password. Please try again later.</string>
@@ -376,5 +377,6 @@
     <string name="help_error_attachment">File size exceeds maximum limit.</string>
     <string name="help_no_file_chosen">No file chosen</string>
     <string name="error_token">The account identification has expired or has been revoked, please contact your administrator.</string>
+    <string name="preferences_uninstall_summary">Do you want to continue with the process of removing Prey permissions on this device? Remember to reboot and then uninstall.</string>
 
 </resources>

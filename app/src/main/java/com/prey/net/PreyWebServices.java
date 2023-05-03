@@ -396,6 +396,13 @@ public class PreyWebServices {
         if(response!=null&&response.getStatusCode()== HttpURLConnection.HTTP_UNAUTHORIZED){
             throw new PreyException(json);
         }
+        //StatusCode 500-504
+        if (response != null && (response.getStatusCode() >= HttpURLConnection.HTTP_INTERNAL_ERROR &&
+                response.getStatusCode() <= HttpURLConnection.HTTP_GATEWAY_TIMEOUT)) {
+            CharSequence err = ctx.getText(R.string.error_communication_500);
+            json = new StringBuffer("{\"error\":[\"").append(err).append("\"]}").toString();
+            throw new PreyException(json);
+        }
         try {
             PreyLogger.d("____[token]_________________apikey:"+apikey+" password:"+password);
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
@@ -609,6 +616,22 @@ public class PreyWebServices {
             } catch (Exception e) {
                 PreyLogger.e("Data wasn't send", e);
             }
+        }
+        return preyHttpResponse;
+    }
+
+    public PreyHttpResponse sendPreyHttpDataName(Context ctx, String nameDevice) {
+        Map<String, String> parameters = new HashMap<String, String>();
+        PreyHttpResponse preyHttpResponse = null;
+        parameters.put("name", nameDevice);
+        try {
+            String url = getDataUrlJson(ctx);
+            if (UtilConnection.isInternetAvailable(ctx)) {
+                preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
+                PreyLogger.d(String.format("Data sent_: %s", (preyHttpResponse == null ? "" : preyHttpResponse.getResponseAsString())));
+            }
+        } catch (Exception e) {
+            PreyLogger.e("Data wasn't send", e);
         }
         return preyHttpResponse;
     }
