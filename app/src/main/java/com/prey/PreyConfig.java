@@ -41,7 +41,7 @@ public class PreyConfig {
     private static PreyConfig cachedInstance = null;
     public static final String TAG = "PREY";
     private static final String HTTP = "https://";
-    public static final String VERSION_PREY_DEFAULT = "2.4.6";
+    public static final String VERSION_PREY_DEFAULT = "2.4.7";
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
     // Set to 1000 * 60 in production.
@@ -175,6 +175,7 @@ public class PreyConfig {
     public static final String TIME_NEXT_LOCATIONBG = "TIME_NEXT_LOCATIONBG";
     public static final String LOCATIONBG_DENIED = "LOCATIONBG_DENIED";
     public static final String MSP_ACCOUNT = "MSP_ACCOUNT";
+    public static final String START = "START";
 
     private boolean securityPrivilegesAlreadyPrompted;
     private Context ctx;
@@ -1520,4 +1521,11 @@ public class PreyConfig {
         saveBoolean(PreyConfig.MSP_ACCOUNT, mspAccount);
     }
 
+    public boolean getStart() {
+        return getBoolean(PreyConfig.START, true);
+    }
+
+    public void setStart(boolean start) {
+        saveBoolean(PreyConfig.START, start);
+    }
 }

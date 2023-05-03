@@ -12,9 +12,11 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.provider.Settings;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyUtils;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.aware.AwareController;
@@ -70,6 +72,20 @@ public class Location extends JsonAction{
         ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
         dataToBeSent.add(data);
         PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
+        try {
+            String nameDevice = Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_name");
+            if (nameDevice != null && !"".equals(nameDevice)) {
+                PreyLogger.d(String.format("nameDevice: %s", nameDevice));
+                PreyWebServices.getInstance().sendPreyHttpDataName(ctx, nameDevice);
+                String nameDeviceInfo = PreyWebServices.getInstance().getNameDevice(ctx);
+                if (nameDeviceInfo != null && !"".equals(nameDeviceInfo)) {
+                    PreyLogger.d(String.format("nameDeviceInfo: %s", nameDeviceInfo));
+                    PreyConfig.getPreyConfig(ctx).setDeviceName(nameDeviceInfo);
+                }
+            }
+        } catch (Exception e) {
+            PreyLogger.d(String.format("Data wasn't send: %s", e.getMessage()));
+        }
         return dataToBeSent;
     }
 
