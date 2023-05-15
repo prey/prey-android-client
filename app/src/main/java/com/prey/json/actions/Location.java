@@ -63,15 +63,54 @@ public class Location extends JsonAction{
         PreyConfig.getPreyConfig(ctx).setLocationInfo("");
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("get", "location", "started",reason));
         PreyLogger.d(this.getClass().getName());
-        HttpDataService data = LocationUtil.dataLocation(ctx,messageId,true);
+        int i = 0;
+        int maximum = LocationUtil.MAXIMUM_OF_ATTEMPTS;
+        HttpDataService data = null;
+        ArrayList<HttpDataService> dataToBeSent = null;
+        float accuracy = -1;
+        boolean enviar;
+        while (i < maximum) {
+            enviar = false;
+            try {
+                data = LocationUtil.dataLocation(ctx, messageId, true);
+                dataToBeSent = new ArrayList<HttpDataService>();
+                dataToBeSent.add(data);
+                String acc = data.getDataListKey(LocationUtil.ACC);
+                if (acc != null && !acc.equals("")) {
+                    float newAccuracy = 0;
+                    try {
+                        newAccuracy = Float.parseFloat(acc);
+                        PreyLogger.d(String.format("accuracy_:%s newAccuracy:%s", accuracy, newAccuracy));
+                    } catch (Exception e) {
+                    }
+                    if (newAccuracy > 0) {
+                        if (accuracy == -1 || accuracy > newAccuracy) {
+                            enviar = true;
+                            accuracy = newAccuracy;
+                        }
+                    }
+                }
+                if (enviar) {
+                    PreyLogger.d(String.format("enviar [%s]:%s", i, accuracy));
+                    PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
+                }
+                try {
+                    Thread.sleep(LocationUtil.SLEEP_OF_ATTEMPTS[i] * 1000);
+                } catch (Exception e) {
+                    i = LocationUtil.MAXIMUM_OF_ATTEMPTS;
+                    break;
+                }
+            } catch (Exception e) {
+                i = LocationUtil.MAXIMUM_OF_ATTEMPTS;
+                break;
+            }
+            i++;
+        }
         if (data==null){
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"failed", messageId, UtilJson.makeMapParam("get", "location", "failed",PreyConfig.getPreyConfig(ctx).getLocationInfo()));
         }else{
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("get", "location", "stopped",reason));
         }
-        ArrayList<HttpDataService> dataToBeSent = new ArrayList<HttpDataService>();
-        dataToBeSent.add(data);
-        PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
         try {
             String nameDevice = Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_name");
             if (nameDevice != null && !"".equals(nameDevice)) {
