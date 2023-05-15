@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPermission;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.alert.AlertThread;
 import com.prey.actions.observer.ActionResult;
@@ -89,6 +90,9 @@ public class Alert extends JsonAction {
             PreyLogger.d(String.format("fullscreen_notification:%s", fullscreen_notification));
         } catch (Exception e) {
             PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+        }
+        if (!PreyPermission.areNotificationsEnabled(ctx)) {
+            fullscreen_notification = true;
         }
         startAlert(ctx, alert, messageId, jobId, fullscreen_notification);
     }
