@@ -68,9 +68,9 @@ public class Location extends JsonAction{
         HttpDataService data = null;
         ArrayList<HttpDataService> dataToBeSent = null;
         float accuracy = -1;
-        boolean enviar;
+        boolean send;
         while (i < maximum) {
-            enviar = false;
+            send = false;
             try {
                 data = LocationUtil.dataLocation(ctx, messageId, true);
                 dataToBeSent = new ArrayList<HttpDataService>();
@@ -85,13 +85,13 @@ public class Location extends JsonAction{
                     }
                     if (newAccuracy > 0) {
                         if (accuracy == -1 || accuracy > newAccuracy) {
-                            enviar = true;
+                            send = true;
                             accuracy = newAccuracy;
                         }
                     }
                 }
-                if (enviar) {
-                    PreyLogger.d(String.format("enviar [%s]:%s", i, accuracy));
+                if (send) {
+                    PreyLogger.d(String.format("send [%s]:%s", i, accuracy));
                     PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
                 }
                 try {
