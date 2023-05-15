@@ -127,12 +127,6 @@ public class AlertThread extends Thread {
                 contentViewBig.setOnClickPendingIntent(R.id.noti_button, btPendingIntent);
                 String regularBold= "fonts/Regular/regular-bold.otf";
                 String regularBook= "fonts/Regular/regular-book.otf";
-                String title_alert=ctx.getString(R.string.title_alert);
-                PreyLogger.d("title_alert:"+title_alert);
-                SpannableStringBuilder notiTitle = new SpannableStringBuilder(title_alert);
-                notiTitle.setSpan (new CustomTypefaceSpan(ctx,regularBold), 0, notiTitle.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-                contentViewBig.setTextViewText(R.id.noti_title, notiTitle);
-                contentViewSmall.setTextViewText(R.id.noti_title, notiTitle);
                 SpannableStringBuilder notiBody = new SpannableStringBuilder(description);
                 notiBody.setSpan (new CustomTypefaceSpan(ctx,regularBook), 0, notiBody.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
                 contentViewBig.setTextViewText(R.id.noti_body, notiBody);
