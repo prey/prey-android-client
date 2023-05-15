@@ -34,6 +34,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.barcodereader.BarcodeActivity;
+import com.prey.json.actions.Location;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.util.KeyboardStatusDetector;
@@ -168,6 +169,7 @@ public class SignInActivity extends Activity {
                 PreyConfig.getPreyConfig(ctx).setRunBackground(true);
                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
                 new PreyApp().run(ctx);
+                new Location().get(ctx, null, null);
             } catch (Exception e) {
                 PreyLogger.e("error:"+e.getMessage(),e);
                 error = e.getMessage();

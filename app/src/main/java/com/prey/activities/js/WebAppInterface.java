@@ -45,6 +45,7 @@ import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.barcodereader.BarcodeActivity;
 import com.prey.json.UtilJson;
 import com.prey.json.actions.Detach;
+import com.prey.json.actions.Location;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
@@ -297,6 +298,7 @@ public class WebAppInterface {
                 RunBackgroundCheckBoxPreference.notifyReady(mContext);
                 PreyConfig.getPreyConfig(mContext).setInstallationStatus("");
                 new PreyApp().run(mContext);
+                new Location().get(mContext, null, null);
             }
         } catch (Exception e) {
             PreyLogger.d(String.format("mylogin error1:%s", e.getMessage()));
@@ -682,6 +684,7 @@ public class WebAppInterface {
             PreyConfig.getPreyConfig(ctx).setRunBackground(true);
             PreyConfig.getPreyConfig(ctx).setInstallationStatus("Pending");
             new PreyApp().run(ctx);
+            new Location().get(ctx, null, null);
         } catch (Exception e) {
             error = e.getMessage();
             PreyLogger.e("error:" + error, e);
