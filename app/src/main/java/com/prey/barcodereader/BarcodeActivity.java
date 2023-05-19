@@ -35,6 +35,7 @@ import com.prey.actions.aware.AwareController;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.LoginActivity;
 import com.prey.activities.PermissionInformationActivity;
+import com.prey.json.actions.Location;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
@@ -175,6 +176,7 @@ public class BarcodeActivity extends Activity   {
                                 try {
                                     PreyStatus.getInstance().initConfig(getApplicationContext());
                                     AwareController.getInstance().init(ctx);
+                                    new Location().get(ctx, null, null);
                                 }catch (Exception e){
                                     PreyLogger.e("Error:"+e.getMessage(),e);
                                 }
