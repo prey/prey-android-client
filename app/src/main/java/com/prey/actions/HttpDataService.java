@@ -105,6 +105,14 @@ public class HttpDataService {
         this.dataList = dataList;
     }
 
+    public String getDataListKey(String key) {
+        String value = "";
+        if (dataList != null && dataList.containsKey(key)) {
+            value = dataList.get(key);
+        }
+        return value;
+    }
+
     public String getSingleData() {
         return singleData;
     }

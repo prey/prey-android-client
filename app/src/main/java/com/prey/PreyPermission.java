@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.provider.Settings;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.PermissionChecker;
 
 public class PreyPermission {
@@ -192,4 +193,7 @@ public class PreyPermission {
         }
     }
 
+    public static boolean areNotificationsEnabled(Context context){
+        return NotificationManagerCompat.from(context).areNotificationsEnabled();
+    }
 }

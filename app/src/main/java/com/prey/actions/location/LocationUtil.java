@@ -138,7 +138,7 @@ public class LocationUtil {
 
     public final static int MAXIMUM_OF_ATTEMPTS=6;
     public final static int MAXIMUM_OF_ATTEMPTS2=6;
-    public final static int []SLEEP_OF_ATTEMPTS=new int[]{2,2,2,3,3,3,4,4,4,5};
+    public final static int []SLEEP_OF_ATTEMPTS=new int[]{1,1,1,1,2,2,2,2,2,2};
 
     public static PreyLocation getPreyLocationPlayService(final Context ctx, String method, boolean asynchronous, PreyLocation preyLocationOld) throws Exception {
         PreyLocation preyLocation = null;
@@ -153,20 +153,10 @@ public class LocationUtil {
             }).start();
             Location currentLocation = null;
             PreyLocationManager manager = PreyLocationManager.getInstance(ctx);
-            int i = 0;
-            while (i < MAXIMUM_OF_ATTEMPTS) {
-                try {
-                    Thread.sleep(SLEEP_OF_ATTEMPTS[i] * 1000);
-                } catch (InterruptedException e) {
-                }
-                currentLocation = play.getLastLocation(ctx);
-                PreyLogger.d("currentLocation:%s" + currentLocation == null ? "" : currentLocation.toString());
-                if (currentLocation != null) {
-                    preyLocation = new PreyLocation(currentLocation, method);
-                    if (!asynchronous)
-                        i = MAXIMUM_OF_ATTEMPTS;
-                }
-                i++;
+            currentLocation = play.getLastLocation(ctx);
+            if (currentLocation != null) {
+                PreyLogger.d(String.format("currentLocation:%s", currentLocation.toString()));
+                preyLocation = new PreyLocation(currentLocation, method);
             }
         } catch (Exception e) {
             PreyLogger.d(String.format("Error getPreyLocationPlayService:%s", e.getMessage()));
@@ -250,23 +240,11 @@ public class LocationUtil {
 
     public static PreyLocation waitLocation(final Context ctx, String method, boolean asynchronous, int maximum) {
         PreyLocation preyLocation = null;
-        int i = 0;
-        while (i < maximum) {
-            try {
-                Thread.sleep(SLEEP_OF_ATTEMPTS[i] * 1000);
-            } catch (Exception e) {
-                i = MAXIMUM_OF_ATTEMPTS;
-                break;
-            }
-            PreyLocation location = PreyLocationManager.getInstance(ctx).getLastLocation();
-            if (location != null && location.isValid()) {
-                preyLocation = location;
-                preyLocation.setMethod(method);
-                PreyLogger.d(String.format("getPreyLocationAppService[%d]:%s", i, preyLocation.toString()));
-                if (!asynchronous)
-                    i = MAXIMUM_OF_ATTEMPTS;
-            }
-            i++;
+        PreyLocation location = PreyLocationManager.getInstance(ctx).getLastLocation();
+        if (location != null && location.isValid()) {
+            preyLocation = location;
+            preyLocation.setMethod(method);
+            PreyLogger.d(String.format("getPreyLocationAppService:%s", preyLocation.toString()));
         }
         return preyLocation;
     }
