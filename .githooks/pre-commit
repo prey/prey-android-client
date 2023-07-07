@@ -1,0 +1,21 @@
+@@ -0,0 +1,22 @@
+#!/usr/bin/env bash
+LC_ALL=C
+
+local_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+valid_branch_regex="^(feat|fix|docs|style|refactor|perf|test|chore)\/[a-z0-9._-]+$"
+
+message1="There is something wrong with your branch name."
+message2="Branch names must start with one of these words: $valid_branch_regex"
+message3="You should rename your branch using: git branch -m BRANCH-NAME"
+
+if [[ ! $local_branch =~ $valid_branch_regex ]]
+then
+		echo "$message1"
+		echo "$message2"
+		echo "$message3"
+    exit 1
+fi
+
+exit 0
