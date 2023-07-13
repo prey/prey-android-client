@@ -31,49 +31,75 @@ import com.prey.net.http.EntityFile;
 
 public class PictureUtil {
 
+    public static String FRONT = "front";
+    public static String BACK = "back";
     public static HttpDataService getPicture(Context ctx) {
         HttpDataService data = null;
+        int currentVolume = 0;
+        AudioManager mgr = null;
         try {
             SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmZ");
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
                     || ActivityCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                     ) {
-                byte[] frontPicture = getPicture(ctx, "front");
+                int attempts = 0;
+                int maximum = 4;
+                mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+                currentVolume = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+                PreyConfig.getPreyConfig(ctx).setVolume(currentVolume);
                 data = new HttpDataService(CameraAction.DATA_ID);
                 data.setList(true);
-                if (frontPicture != null) {
-                    PreyLogger.d("front data length=" + frontPicture.length);
-                    InputStream file = new ByteArrayInputStream(frontPicture);
-                    EntityFile entityFile = new EntityFile();
-                    entityFile.setFile(file);
-                    entityFile.setMimeType("image/png");
-                    entityFile.setFilename("picture.jpg");
-                    entityFile.setName("picture");
-                    entityFile.setType("image/png");
-                    entityFile.setIdFile(sdf.format(new Date()) + "_" + entityFile.getType());
-                    entityFile.setLength(frontPicture.length);
-                    data.addEntityFile(entityFile);
-                }
-                Integer numberOfCameras = SimpleCameraActivity.getNumberOfCameras();
-                if (numberOfCameras != null && numberOfCameras > 1) {
-                    int reportNumber=PreyConfig.getPreyConfig(ctx).getReportNumber();
-                    PreyConfig.getPreyConfig(ctx).setReportNumber(reportNumber+1);
-                        Thread.sleep(1000);
-                        PreyLogger.d("1 seg");
-                        byte[] backPicture = getPicture(ctx, "back");
-                        if (backPicture != null) {
-                            PreyLogger.d("back data length=" + backPicture.length);
-                            InputStream file = new ByteArrayInputStream(backPicture);
+                do {
+                    try {
+                        SimpleCameraActivity.dataImagen = null;
+                        PreyLogger.d("report front attempts FRONT:" + attempts);
+                        byte[] frontPicture = getPicture(ctx, BACK);
+                        if (frontPicture != null) {
+                            PreyLogger.d("report data length front=" + frontPicture.length);
+                            InputStream file = new ByteArrayInputStream(frontPicture);
                             EntityFile entityFile = new EntityFile();
                             entityFile.setFile(file);
                             entityFile.setMimeType("image/png");
-                            entityFile.setFilename("screenshot.jpg");
-                            entityFile.setName("screenshot");
+                            entityFile.setFilename("picture.jpg");
+                            entityFile.setName("picture");
                             entityFile.setType("image/png");
                             entityFile.setIdFile(sdf.format(new Date()) + "_" + entityFile.getType());
-                            entityFile.setLength(backPicture.length);
+                            entityFile.setLength(frontPicture.length);
                             data.addEntityFile(entityFile);
+                            attempts = maximum;
                         }
+                    } catch (Exception e) {
+                        PreyLogger.e("report error:" + e.getMessage(), e);
+                    }
+                    attempts++;
+                } while (attempts < maximum);
+                Integer numberOfCameras = SimpleCameraActivity.getNumberOfCameras(ctx);
+                if (numberOfCameras != null && numberOfCameras > 1) {
+                    attempts = 0;
+                    do {
+                        try {
+                            SimpleCameraActivity.dataImagen = null;
+                            PreyLogger.d("report back attempts BACK:" + attempts);
+                            byte[] backPicture = getPicture(ctx, FRONT);
+                            if (backPicture != null) {
+                                PreyLogger.d("report data length back=" + backPicture.length);
+                                InputStream file = new ByteArrayInputStream(backPicture);
+                                EntityFile entityFile = new EntityFile();
+                                entityFile.setFile(file);
+                                entityFile.setMimeType("image/png");
+                                entityFile.setFilename("screenshot.jpg");
+                                entityFile.setName("screenshot");
+                                entityFile.setType("image/png");
+                                entityFile.setIdFile(sdf.format(new Date()) + "_" + entityFile.getType());
+                                entityFile.setLength(backPicture.length);
+                                data.addEntityFile(entityFile);
+                                attempts = maximum;
+                            }
+                        } catch (Exception e) {
+                            PreyLogger.e("report error:" + attempts, e);
+                        }
+                        attempts++;
+                    } while (attempts < maximum);
                 }
             }
             Intent intentCamera = new Intent(ctx, SimpleCameraActivity.class);
@@ -85,6 +111,15 @@ public class PictureUtil {
             ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
         } catch (Exception e) {
             PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
+        } finally {
+            try {
+                currentVolume = PreyConfig.getPreyConfig(ctx).getVolume();
+                if (currentVolume > 0) {
+                    mgr.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, AudioManager.FLAG_PLAY_SOUND);
+                }
+            } catch (Exception e) {
+                PreyLogger.e("report error:" + e.getMessage(), e);
+            }
         }
         return data;
     }
@@ -100,13 +135,16 @@ public class PictureUtil {
         ctx.startActivity(intentCamera);
         int i = 0;
         mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+        int currentVolume = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
         try {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                mgr.setStreamMute(streamType, true);
-            }else{
-                final int setVolFlags = AudioManager.FLAG_PLAY_SOUND;
-                mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 0, setVolFlags);
+            if (currentVolume > 0) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                    mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    mgr.setStreamMute(streamType, true);
+                } else {
+                    final int setVolFlags = AudioManager.FLAG_PLAY_SOUND;
+                    mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 0, setVolFlags);
+                }
             }
         } catch (Exception e) {
             PreyLogger.e("Error:" + e.getMessage(),e);
@@ -120,12 +158,7 @@ public class PictureUtil {
             i++;
         }
         if (SimpleCameraActivity.activity != null) {
-            SimpleCameraActivity.activity.takePicture(ctx,focus);
-        }
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            PreyLogger.e("Error sleep:" + e.getMessage(),e);
+            SimpleCameraActivity.activity.takePicture(ctx);
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             mgr.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
@@ -138,6 +171,11 @@ public class PictureUtil {
                 i++;
             }
         } catch (InterruptedException e) {
+            PreyLogger.e("report error:" + e.getMessage(), e);
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
             PreyLogger.e("Error:" + e.getMessage(),e);
         }
         byte[] out=null;
@@ -146,6 +184,14 @@ public class PictureUtil {
             SimpleCameraActivity.activity.finish();
             SimpleCameraActivity.activity=null;
             SimpleCameraActivity.dataImagen=null;
+        }
+        try {
+            currentVolume = PreyConfig.getPreyConfig(ctx).getVolume();
+            if (currentVolume > 0) {
+                mgr.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, AudioManager.FLAG_PLAY_SOUND);
+            }
+        } catch (Exception e) {
+            PreyLogger.e("report error:" + e.getMessage(), e);
         }
         return out;
     }
