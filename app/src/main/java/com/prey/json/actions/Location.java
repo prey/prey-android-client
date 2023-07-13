@@ -69,12 +69,11 @@ public class Location extends JsonAction{
         ArrayList<HttpDataService> dataToBeSent = null;
         float accuracy = -1;
         boolean send;
+        boolean first = true;
         while (i < maximum) {
             send = false;
             try {
                 data = LocationUtil.dataLocation(ctx, messageId, true);
-                dataToBeSent = new ArrayList<HttpDataService>();
-                dataToBeSent.add(data);
                 String acc = data.getDataListKey(LocationUtil.ACC);
                 if (acc != null && !acc.equals("")) {
                     float newAccuracy = 0;
@@ -91,8 +90,16 @@ public class Location extends JsonAction{
                     }
                 }
                 if (send) {
+                    HttpDataService dataToast = new HttpDataService("skip_toast");
+                    dataToast.setList(false);
+                    dataToast.setKey("skip_toast");
+                    dataToast.setSingleData(Boolean.toString(! first));
+                    dataToBeSent = new ArrayList<HttpDataService>();
+                    dataToBeSent.add(data);
+                    dataToBeSent.add(dataToast);
                     PreyLogger.d(String.format("send [%s]:%s", i, accuracy));
                     PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
+                    first = false;
                 }
                 try {
                     Thread.sleep(LocationUtil.SLEEP_OF_ATTEMPTS[i] * 1000);
