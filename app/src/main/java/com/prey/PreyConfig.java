@@ -177,6 +177,9 @@ public class PreyConfig {
     public static final String MSP_ACCOUNT = "MSP_ACCOUNT";
     public static final String START = "START";
 
+    public static final String VOLUME= "VOLUME";
+    public static final String DENY_NOTIFICATION= "DENY_NOTIFICATION";
+    public static final String TIME_NEXT_PING = "TIME_NEXT_PING";
     private boolean securityPrivilegesAlreadyPrompted;
     private Context ctx;
     public static String postUrl = null;
@@ -1527,5 +1530,41 @@ public class PreyConfig {
 
     public void setStart(boolean start) {
         saveBoolean(PreyConfig.START, start);
+    }
+
+    public void setTimeNextPing() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MINUTE, 1);
+        saveLong(TIME_NEXT_PING, cal.getTimeInMillis());
+    }
+
+    /**
+     * Method that returns if it should request location background permission
+     *
+     * @return if you must ask
+     */
+    public boolean isTimeNextPing() {
+        long timePing = getLong(TIME_NEXT_PING, 0);
+        long timeNow = new Date().getTime();
+        return timeNow < timePing;
+    }
+
+    public int getVolume() {
+        return getInt(PreyConfig.VOLUME, 0);
+    }
+
+    public void setVolume(int volume) {
+        saveInt(PreyConfig.VOLUME, volume);
+    }
+
+    public void setDenyNotification(boolean denyNotification) {
+        this.saveBoolean(PreyConfig.DENY_NOTIFICATION, denyNotification);
+    }
+
+    public boolean getDenyNotification() {
+        boolean deny = getBoolean(PreyConfig.DENY_NOTIFICATION, false);
+        PreyLogger.d("CheckPasswordHtmlActivity deny:" + deny);
+        return deny;
     }
 }
