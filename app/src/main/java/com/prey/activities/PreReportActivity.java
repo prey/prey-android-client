@@ -54,6 +54,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
     static final int CODE_REVERSED_LANDSCAPE=3;
     static final int CODE_LANDSCAPE=4;
     OrientationManager orientationManager=null;
+    static final int MAX_RETRIES = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,10 +164,12 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
                 bos.write(dataImagen);
                 bos.flush();
                 bos.close();
-                if (FRONT.equals(focus)) {
-                    firstPicture = true;
-                } else {
-                    secondPicture = true;
+                if(dataImagen!=null) {
+                    if (FRONT.equals(focus)) {
+                        firstPicture = true;
+                    } else {
+                        secondPicture = true;
+                    }
                 }
             } catch (Exception e) {
                 PreyLogger.e("PreReportActivity camera jpegCallback err" + e.getMessage(), e);
@@ -295,25 +298,32 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
                 File file3 = new File(path + "map.jpg");
                 file3.delete();
                 focus = FRONT;
-                Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-                Camera.getCameraInfo(0, cameraInfo);
-                camera = Camera.open(0);
-                if (camera != null) {
-                    try {
-                        camera.setPreviewDisplay(mHolder);
-                        camera.startPreview();
-                    } catch (Exception e) {
-                        PreyLogger.e("Error:"+e.getMessage(),e);
+                int f = 0;
+                while (f < MAX_RETRIES) {
+                    Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+                    Camera.getCameraInfo(0, cameraInfo);
+                    camera = Camera.open(0);
+                    if (camera != null) {
+                        try {
+                            camera.setPreviewDisplay(mHolder);
+                            camera.startPreview();
+                        } catch (Exception e) {
+                            PreyLogger.e("Error:"+e.getMessage(), e);
+                        }
                     }
+                    takePicture(getApplicationContext(), focus);
+                    int i = 0;
+                    while (i < 20 && !firstPicture) {
+                        Thread.sleep(500);
+                        i++;
+                    }
+                    camera.stopPreview();
+                    camera.release();
+                    if (firstPicture) {
+                        f = MAX_RETRIES;
+                    }
+                    f++;
                 }
-                takePicture(getApplicationContext(), focus);
-                int i = 0;
-                while (i < 20 && !firstPicture) {
-                    Thread.sleep(500);
-                    i++;
-                }
-                camera.stopPreview();
-                camera.release();
                 PreyLogger.d("PreReportActivity Camera 1 size:" + (dataImagen == null ? -1 : dataImagen.length));
             } catch (Exception e) {
                 PreyLogger.e("Camera 1 error:" + e.getMessage(), e);
@@ -327,22 +337,29 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
                     PreyLogger.e("Error:"+e.getMessage(),e);
                 }
                 focus = BACK;
-                Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-                Camera.getCameraInfo(1, cameraInfo);
-                camera = Camera.open(1);
-                if (camera != null) {
-                    try {
-                        camera.setPreviewDisplay(mHolder);
-                        camera.startPreview();
-                    } catch (Exception e) {
-                        PreyLogger.e("Error:"+e.getMessage(),e);
+                int b = 0;
+                while (b < MAX_RETRIES) {
+                    Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+                    Camera.getCameraInfo(1, cameraInfo);
+                    camera = Camera.open(1);
+                    if (camera != null) {
+                        try {
+                            camera.setPreviewDisplay(mHolder);
+                            camera.startPreview();
+                        } catch (Exception e) {
+                            PreyLogger.e("Error:"+e.getMessage(),e);
+                        }
                     }
-                }
-                takePicture(getApplicationContext(), focus);
-                int i = 0;
-                while (i < 20 && !secondPicture) {
-                    Thread.sleep(500);
-                    i++;
+                    takePicture(getApplicationContext(), focus);
+                    int i = 0;
+                    while (i < 20 && !secondPicture) {
+                        Thread.sleep(500);
+                        i++;
+                    }
+                    if (secondPicture) {
+                        b = MAX_RETRIES;
+                    }
+                    b++;
                 }
                 PreyLogger.d("PreReportActivity Camera 2 size:" + (dataImagen == null ? -1 : dataImagen.length));
             } catch (Exception e) {

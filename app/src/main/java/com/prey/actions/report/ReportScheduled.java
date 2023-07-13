@@ -55,10 +55,14 @@ public class ReportScheduled {
 
 	public void reset() {
 		if (alarmMgr != null) {
-			int minute =  Integer.parseInt(PreyConfig.getPreyConfig(context).getIntervalReport());
-			PreyLogger.d("_________________shutdown report [" + minute + "] alarmIntent");
-			alarmMgr.cancel(pendingIntent);
-			minute = 0;
+			try {
+				int minute = Integer.parseInt(PreyConfig.getPreyConfig(context).getIntervalReport());
+				PreyLogger.d("_________________shutdown report [" + minute + "] alarmIntent");
+				alarmMgr.cancel(pendingIntent);
+				minute = 0;
+			} catch (Exception e) {
+				PreyLogger.d("----------Error ReportScheduled :" + e.getMessage());
+			}
 		}
 	}
 
