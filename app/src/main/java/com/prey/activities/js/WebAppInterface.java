@@ -1295,4 +1295,24 @@ public class WebAppInterface {
         Dialog popup = builder.create();
         popup.show();
     }
+
+    @JavascriptInterface
+    public boolean showNotification() {
+        boolean showNotification = false;
+        try {
+            if (PreyConfig.getPreyConfig(mContext).getDenyNotification()) {
+                showNotification = false;
+            } else {
+                showNotification = !PreyPermission.areNotificationsEnabled(mContext);
+            }
+        } catch (Exception e) {
+            PreyLogger.e("Error showNotification:" + e.getMessage(), e);
+        }
+        return showNotification;
+    }
+
+    @JavascriptInterface
+    public void turnOnNotifications() {
+        mActivity.askForPermissionNotification();
+    }
 }

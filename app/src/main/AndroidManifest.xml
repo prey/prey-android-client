@@ -59,6 +59,7 @@
 
     <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -73,6 +74,7 @@
         android:supportsRtl = "true"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
+        android:largeHeap="true"
         android:theme="@style/Theme.AppCompat" >
 
         <meta-data
