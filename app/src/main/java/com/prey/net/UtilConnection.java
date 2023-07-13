@@ -399,7 +399,7 @@ public class UtilConnection {
         HttpURLConnection connection = null;
         int httpResult = -1;
         try {
-            if (isInternetAvailable()) {
+            if (isInternetAvailable(preyConfig.getContext())) {
                 URL url = new URL(uri);
                 PreyLogger.d(String.format("postJson page: %s", uri));
                 connection = (HttpURLConnection) url.openConnection();
@@ -552,14 +552,17 @@ public class UtilConnection {
     }
 
     public static boolean isInternetAvailable(Context context) {
-        return isInternetAvailable();
-    }
-
-    public static boolean isInternetAvailable() {
         try {
+            boolean isTimeNextPing = PreyConfig.getPreyConfig(context).isTimeNextPing();
+            if (isTimeNextPing) {
+                return true;
+            }
             String command = "ping -c 1 google.com";
             boolean isInternetAvailable= (Runtime.getRuntime().exec(command).waitFor() == 0);
             PreyLogger.d(String.format("command:%s - %b",command,isInternetAvailable));
+            if (isInternetAvailable) {
+                PreyConfig.getPreyConfig(context).setTimeNextPing();
+            }
             return isInternetAvailable;
         } catch (Exception e) {
             PreyLogger.e(String.format("isInternetAvailable error:%s", e.getMessage()), e);

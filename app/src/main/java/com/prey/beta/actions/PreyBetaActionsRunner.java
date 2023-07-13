@@ -47,7 +47,7 @@ public class PreyBetaActionsRunner implements Runnable {
             boolean connection = false;
             try {
                 List<JSONObject> jsonObject = null;
-                connection = UtilConnection.isInternetAvailable();
+                connection = UtilConnection.isInternetAvailable(ctx);
                 if (connection) {
                     try {
                         if (cmd == null || "".equals(cmd)) {
