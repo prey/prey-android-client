@@ -1296,6 +1296,11 @@ public class WebAppInterface {
         popup.show();
     }
 
+    /**
+     * Method to valid if it should ask for notification permission
+     *
+     * @return returns should ask
+     */
     @JavascriptInterface
     public boolean showNotification() {
         boolean showNotification = false;
@@ -1311,6 +1316,9 @@ public class WebAppInterface {
         return showNotification;
     }
 
+    /**
+     * Method to request notification permission
+     */
     @JavascriptInterface
     public void turnOnNotifications() {
         mActivity.askForPermissionNotification();
