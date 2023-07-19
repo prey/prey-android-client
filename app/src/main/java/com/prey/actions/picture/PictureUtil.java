@@ -33,6 +33,12 @@ public class PictureUtil {
 
     public static String FRONT = "front";
     public static String BACK = "back";
+
+    /**
+     * Method obtains the images of the cameras with retry of 4 times per camera
+     *
+     * @return pictures
+     */
     public static HttpDataService getPicture(Context ctx) {
         HttpDataService data = null;
         int currentVolume = 0;
@@ -124,6 +130,11 @@ public class PictureUtil {
         return data;
     }
 
+    /**
+     * Method gets the image from a camera, in the process it gets the initial volume, it is muted and at the end it returns to the initial volume
+     *
+     * @return byte array
+     */
     private static byte[] getPicture(Context ctx, String focus) {
         AudioManager mgr = null;
         SimpleCameraActivity.dataImagen = null;
