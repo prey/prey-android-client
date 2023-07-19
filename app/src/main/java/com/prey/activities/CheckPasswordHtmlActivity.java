@@ -415,6 +415,9 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
                 }
             }
         }
+        /*
+        Set notification permission response
+        */
         if (requestCode == REQUEST_PERMISSIONS_POST_NOTIFICATIONS) {
             PreyLogger.d("CheckPasswordHtmlActivity: setPostNotification");
             for (int i = 0; permissions != null && i < permissions.length; i++) {
@@ -539,6 +542,9 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     public void allFiles() {
     }
 
+    /**
+     * Method for requesting notification permission
+     */
     public void askForPermissionNotification() {
         PreyLogger.d("CheckPasswordHtmlActivity askForPermissionNotification");
         ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_PERMISSIONS_POST_NOTIFICATIONS);

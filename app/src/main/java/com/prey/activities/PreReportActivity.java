@@ -284,6 +284,10 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
             } catch (Exception e) {
             }
         }
+        /**
+         * Method that generates a pre-report and when obtaining the images from the cameras it is retried 5 times
+         *
+         */
         @Override
         protected Void doInBackground(String... data) {
             try {
