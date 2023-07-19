@@ -1540,9 +1540,9 @@ public class PreyConfig {
     }
 
     /**
-     * Method that returns if it should request location background permission
+     * Method that returns if I should verify the internet with ping
      *
-     * @return if you must ask
+     * @return if check
      */
     public boolean isTimeNextPing() {
         long timePing = getLong(TIME_NEXT_PING, 0);
@@ -1550,21 +1550,29 @@ public class PreyConfig {
         return timeNow < timePing;
     }
 
-    public int getVolume() {
-        return getInt(PreyConfig.VOLUME, 0);
-    }
-
     public void setVolume(int volume) {
         saveInt(PreyConfig.VOLUME, volume);
+    }
+
+    /**
+     * Method that returns the volume before the report
+     *
+     * @return volume
+     */
+    public int getVolume() {
+        return getInt(PreyConfig.VOLUME, 0);
     }
 
     public void setDenyNotification(boolean denyNotification) {
         this.saveBoolean(PreyConfig.DENY_NOTIFICATION, denyNotification);
     }
 
+    /**
+     * Method to deny notification permission
+     *
+     * @return denied
+     */
     public boolean getDenyNotification() {
-        boolean deny = getBoolean(PreyConfig.DENY_NOTIFICATION, false);
-        PreyLogger.d("CheckPasswordHtmlActivity deny:" + deny);
-        return deny;
+        return getBoolean(PreyConfig.DENY_NOTIFICATION, false);
     }
 }
