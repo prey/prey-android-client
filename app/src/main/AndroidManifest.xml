@@ -74,7 +74,6 @@
         android:supportsRtl = "true"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
-        android:largeHeap="true"
         android:theme="@style/Theme.AppCompat" >
 
         <meta-data
