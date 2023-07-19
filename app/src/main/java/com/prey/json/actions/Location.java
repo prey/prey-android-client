@@ -90,6 +90,7 @@ public class Location extends JsonAction{
                     }
                 }
                 if (send) {
+                    //It is added if it is the first time the location is sent
                     HttpDataService dataToast = new HttpDataService("skip_toast");
                     dataToast.setList(false);
                     dataToast.setKey("skip_toast");
