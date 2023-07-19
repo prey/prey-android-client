@@ -551,6 +551,11 @@ public class UtilConnection {
         return responseCode;
     }
 
+    /**
+     * Method check if you have internet
+     *
+     * @return available
+     */
     public static boolean isInternetAvailable(Context context) {
         try {
             boolean isTimeNextPing = PreyConfig.getPreyConfig(context).isTimeNextPing();
