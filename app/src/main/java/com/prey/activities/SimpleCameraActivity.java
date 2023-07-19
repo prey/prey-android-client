@@ -47,6 +47,9 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+/****
+ * This activity gets the pictures from the cameras
+ */
 public class SimpleCameraActivity extends Activity implements OrientationManager.OrientationListener {
     private TextureView textureView;
     private String cameraId;
@@ -77,10 +80,12 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
         } catch (Exception e) {
             PreyLogger.e("report error:" + e.getMessage(), e);
         }
-        PreyLogger.d("Kill:"+kill);
-        if(kill==1){
+        PreyLogger.d("Kill:" + kill);
+        if (kill == 1) {
+            //if finish the activity
             finish();
-        }else {
+        } else {
+            //gets the camera to use
             if (extras != null) {
                 focus = extras.getString("focus");
             } else {
@@ -99,6 +104,11 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
         activity = this;
     }
 
+    /**
+     * Method obtains camera numbers
+     *
+     * @return camera numbers
+     */
     public static Integer getNumberOfCameras(Context ctx) {
         Integer numberOfCamerasInt = null;
         try {
@@ -108,7 +118,7 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
             Method methodGetNumberOfCameras = clsCamera.getMethod("getNumberOfCameras", noparams);
             numberOfCamerasInt = (Integer) methodGetNumberOfCameras.invoke(null, null);
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e("report error:" + e.getMessage(), e);
         }
         return numberOfCamerasInt;
     }
@@ -152,12 +162,18 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
         }
     };
 
+    /**
+     * Method start jobs on the background
+     */
     protected void startBackgroundThread() {
         mBackgroundThread = new HandlerThread("Camera Background");
         mBackgroundThread.start();
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
     }
 
+    /**
+     * Method stop jobs on the background
+     */
     protected void stopBackgroundThread() {
         mBackgroundThread.quitSafely();
         try {
@@ -169,6 +185,9 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
         }
     }
 
+    /**
+     * Method take picture
+     */
     public void takePicture(Context ctx) {
         if (null == cameraDevice) {
             openCamera();
@@ -177,10 +196,6 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
         try {
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraDevice.getId());
             StreamConfigurationMap streamConfigurationMap = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-            Size[] jpegSizes = null;
-            if (characteristics != null) {
-                jpegSizes = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(ImageFormat.JPEG);
-            }
             int width = 240;
             int height = 320;
             ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
@@ -190,7 +205,6 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
             final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
-            int rotation = getWindowManager().getDefaultDisplay().getRotation();
             if (PictureUtil.FRONT.equals(focus)) {
                 SparseIntArray ORIENTATIONS = new SparseIntArray();
                 ORIENTATIONS.append(Surface.ROTATION_0, 270);
@@ -243,7 +257,7 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
                     try {
                         session.capture(captureBuilder.build(), captureListener, mBackgroundHandler);
                     } catch (Exception e) {
-                        PreyLogger.e("error", e);
+                        PreyLogger.e("report error:" + e.getMessage(), e);
                     }
                 }
 
@@ -252,7 +266,7 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
                 }
             }, mBackgroundHandler);
         } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e("report error:" + e.getMessage(), e);
         }
     }
 
@@ -283,6 +297,9 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
         }
     }
 
+    /**
+     * Method open camera
+     */
     private void openCamera() {
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
@@ -315,6 +332,9 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
         }
     }
 
+    /**
+     * Method close camera
+     */
     private void closeCamera() {
         if (null != cameraDevice) {
             cameraDevice.close();
@@ -344,6 +364,9 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
         super.onPause();
     }
 
+    /**
+     * Method set orientation
+     */
     @Override
     public void onOrientationChange(OrientationManager.ScreenOrientation screenOrientation) {
         switch (screenOrientation) {
@@ -362,6 +385,9 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
         }
     }
 
+    /**
+     * Method to compress image
+     */
     public byte[] getCompressedBitmap(byte[] bytes) {
         float maxHeight = 1920.0f;
         float maxWidth = 1080.0f;
@@ -444,6 +470,11 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
         return out.toByteArray();
     }
 
+    /**
+     * Method calculates the size of the image
+     *
+     * @return size
+     */
     private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;
         final int width = options.outWidth;
