@@ -51,6 +51,7 @@ public class PictureUtil {
                 int attempts = 0;
                 int maximum = 4;
                 mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+                //get current volume
                 currentVolume = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
                 PreyConfig.getPreyConfig(ctx).setVolume(currentVolume);
                 data = new HttpDataService(CameraAction.DATA_ID);
@@ -121,6 +122,7 @@ public class PictureUtil {
             try {
                 currentVolume = PreyConfig.getPreyConfig(ctx).getVolume();
                 if (currentVolume > 0) {
+                    //set old volume
                     mgr.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, AudioManager.FLAG_PLAY_SOUND);
                 }
             } catch (Exception e) {
@@ -146,6 +148,7 @@ public class PictureUtil {
         ctx.startActivity(intentCamera);
         int i = 0;
         mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+        //get current volume
         int currentVolume = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
         try {
             if (currentVolume > 0) {
@@ -158,13 +161,13 @@ public class PictureUtil {
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("Error:" + e.getMessage(),e);
+            PreyLogger.e("report error:" + e.getMessage(),e);
         }
         while (SimpleCameraActivity.activity == null&& i < 10) {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
-                PreyLogger.e("Error sleep:" + e.getMessage(),e);
+                PreyLogger.e("report error:" + e.getMessage(),e);
             }
             i++;
         }
@@ -187,7 +190,7 @@ public class PictureUtil {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            PreyLogger.e("Error:" + e.getMessage(),e);
+            PreyLogger.e("report error:" + e.getMessage(),e);
         }
         byte[] out=null;
         if (SimpleCameraActivity.activity != null) {
@@ -199,6 +202,7 @@ public class PictureUtil {
         try {
             currentVolume = PreyConfig.getPreyConfig(ctx).getVolume();
             if (currentVolume > 0) {
+                //set old volume
                 mgr.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, AudioManager.FLAG_PLAY_SOUND);
             }
         } catch (Exception e) {
