@@ -47,8 +47,8 @@ public class PictureUtil {
         AudioManager mgr = null;
         FirebaseApp.initializeApp(ctx);
         FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
-        crashlytics.setCustomKey("devicekey", PreyConfig.getPreyConfig(ctx).getApiKey());
-        crashlytics.setCustomKey("apikey", PreyConfig.getPreyConfig(ctx).getDeviceId());
+        crashlytics.setCustomKey("devicekey", PreyConfig.getPreyConfig(ctx).getDeviceId());
+        crashlytics.setCustomKey("apikey", PreyConfig.getPreyConfig(ctx).getApiKey());
         try {
             SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmZ");
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
