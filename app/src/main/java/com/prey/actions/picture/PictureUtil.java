@@ -21,14 +21,13 @@ import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.camera.CameraAction;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.SimpleCameraActivity;
+import com.prey.exceptions.PreyFirebaseCrashlytics;
 import com.prey.net.http.EntityFile;
 
 public class PictureUtil {
@@ -45,10 +44,6 @@ public class PictureUtil {
         HttpDataService data = null;
         int currentVolume = 0;
         AudioManager mgr = null;
-        FirebaseApp.initializeApp(ctx);
-        FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
-        crashlytics.setCustomKey("devicekey", PreyConfig.getPreyConfig(ctx).getDeviceId());
-        crashlytics.setCustomKey("apikey", PreyConfig.getPreyConfig(ctx).getApiKey());
         try {
             SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmZ");
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
@@ -83,7 +78,7 @@ public class PictureUtil {
                         }
                     } catch (Exception e) {
                         PreyLogger.e("report error:" + e.getMessage(), e);
-                        crashlytics.recordException(e);
+                        PreyFirebaseCrashlytics.getInstance(ctx).recordException(e);
                     }
                     attempts++;
                 } while (attempts < maximum);
@@ -111,7 +106,7 @@ public class PictureUtil {
                             }
                         } catch (Exception e) {
                             PreyLogger.e("report error:" + attempts, e);
-                            crashlytics.recordException(e);
+                            PreyFirebaseCrashlytics.getInstance(ctx).recordException(e);
                         }
                         attempts++;
                     } while (attempts < maximum);
@@ -126,7 +121,7 @@ public class PictureUtil {
             ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
         } catch (Exception e) {
             PreyLogger.e("report error:" + e.getMessage(), e);
-            crashlytics.recordException(e);
+            PreyFirebaseCrashlytics.getInstance(ctx).recordException(e);
         } finally {
             try {
                 currentVolume = PreyConfig.getPreyConfig(ctx).getVolume();
@@ -136,7 +131,7 @@ public class PictureUtil {
                 }
             } catch (Exception e) {
                 PreyLogger.e("report error:" + e.getMessage(), e);
-                crashlytics.recordException(e);
+                PreyFirebaseCrashlytics.getInstance(ctx).recordException(e);
             }
         }
         return data;
