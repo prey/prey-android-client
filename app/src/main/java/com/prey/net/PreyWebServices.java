@@ -205,7 +205,7 @@ public class PreyWebServices {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         HashMap<String, String> parameters = new HashMap<String, String>();
         PreyHttpResponse response = null;
-        String json;
+        String json = null;
         try {
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
             String lang = Locale.getDefault().getLanguage();
@@ -213,8 +213,10 @@ public class PreyWebServices {
             PreyLogger.d("_____url:" + url);
             response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, email, password);
             PreyLogger.d("response:" + response);
-            json = response.getResponseAsString();
-            PreyLogger.d("json:" + json);
+            if (response != null) {
+                json = response.getResponseAsString();
+                PreyLogger.d("json:" + json);
+            }
         } catch (Exception e) {
             PreyLogger.e("Error!"+e.getMessage(), e);
             throw new PreyException("{\"error\":[\""+ctx.getText(R.string.error_communication_exception).toString()+"\"]}" );
@@ -223,7 +225,7 @@ public class PreyWebServices {
         if (response != null  ) {
             status = "[" + response.getStatusCode() + "]";
         }
-        if (!json.contains("key")) {
+        if (json == null || !json.contains("key")) {
             PreyLogger.d("no key");
             throw new PreyException(json );
         }
@@ -946,9 +948,11 @@ public class PreyWebServices {
             PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).getAutentication(uri, null);
             if(response!=null) {
                 String out = response.getResponseAsString();
-                PreyLogger.d("getNameDevice:"+out);
-                JSONObject jsnobject = new JSONObject(out);
-                name = jsnobject.getString("name");
+                if (out != null && !"".equals(out) && out.indexOf("Invalid") < 0) {
+                    PreyLogger.d("getNameDevice:" + out);
+                    JSONObject jsnobject = new JSONObject(out);
+                    name = jsnobject.getString("name");
+                }
             }
         } catch (Exception e) {
             PreyLogger.e("error getNameDevice:" + e.getMessage(), e);
