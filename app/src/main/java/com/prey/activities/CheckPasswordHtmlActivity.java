@@ -268,7 +268,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
     private static final int REQUEST_PERMISSIONS = 5;
     private static final int REQUEST_PERMISSIONS_LOCATION = 6;
-
+    private static final int REQUEST_PERMISSIONS_POST_NOTIFICATIONS = 12;
     private static final String[] INITIAL_PERMS = {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -276,6 +276,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
     };
 
+    @TargetApi(Build.VERSION_CODES.TIRAMISU)
     private static final String[] INITIAL_PERMS_TIRAMISU = {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -414,6 +415,18 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
                 }
             }
         }
+        /*
+        Set notification permission response
+        */
+        if (requestCode == REQUEST_PERMISSIONS_POST_NOTIFICATIONS) {
+            PreyLogger.d("CheckPasswordHtmlActivity: setPostNotification");
+            for (int i = 0; permissions != null && i < permissions.length; i++) {
+                PreyLogger.d(String.format("CheckPasswordHtmlActivity onRequestPermissionsResult:%s %s", permissions[i], grantResults[i]));
+                if (permissions[i].equals(Manifest.permission.POST_NOTIFICATIONS) && grantResults[i] == -1) {
+                    PreyConfig.getPreyConfig(this).setDenyNotification(true);
+                }
+            }
+        }
     }
 
     private static final int SECURITY_PRIVILEGES = 10;
@@ -529,4 +542,11 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     public void allFiles() {
     }
 
+    /**
+     * Method for requesting notification permission
+     */
+    public void askForPermissionNotification() {
+        PreyLogger.d("CheckPasswordHtmlActivity askForPermissionNotification");
+        ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_PERMISSIONS_POST_NOTIFICATIONS);
+    }
 }

@@ -41,7 +41,7 @@ public class PreyConfig {
     private static PreyConfig cachedInstance = null;
     public static final String TAG = "PREY";
     private static final String HTTP = "https://";
-    public static final String VERSION_PREY_DEFAULT = "2.4.8";
+    public static final String VERSION_PREY_DEFAULT = "2.4.9";
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
     // Set to 1000 * 60 in production.
@@ -177,6 +177,9 @@ public class PreyConfig {
     public static final String MSP_ACCOUNT = "MSP_ACCOUNT";
     public static final String START = "START";
 
+    public static final String VOLUME= "VOLUME";
+    public static final String DENY_NOTIFICATION= "DENY_NOTIFICATION";
+    public static final String TIME_NEXT_PING = "TIME_NEXT_PING";
     private boolean securityPrivilegesAlreadyPrompted;
     private Context ctx;
     public static String postUrl = null;
@@ -1527,5 +1530,49 @@ public class PreyConfig {
 
     public void setStart(boolean start) {
         saveBoolean(PreyConfig.START, start);
+    }
+
+    public void setTimeNextPing() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MINUTE, 1);
+        saveLong(TIME_NEXT_PING, cal.getTimeInMillis());
+    }
+
+    /**
+     * Method that returns if I should verify the internet with ping
+     *
+     * @return if check
+     */
+    public boolean isTimeNextPing() {
+        long timePing = getLong(TIME_NEXT_PING, 0);
+        long timeNow = new Date().getTime();
+        return timeNow < timePing;
+    }
+
+    public void setVolume(int volume) {
+        saveInt(PreyConfig.VOLUME, volume);
+    }
+
+    /**
+     * Method that returns the volume before the report
+     *
+     * @return volume
+     */
+    public int getVolume() {
+        return getInt(PreyConfig.VOLUME, 0);
+    }
+
+    public void setDenyNotification(boolean denyNotification) {
+        this.saveBoolean(PreyConfig.DENY_NOTIFICATION, denyNotification);
+    }
+
+    /**
+     * Method to deny notification permission
+     *
+     * @return denied
+     */
+    public boolean getDenyNotification() {
+        return getBoolean(PreyConfig.DENY_NOTIFICATION, false);
     }
 }
