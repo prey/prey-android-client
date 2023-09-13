@@ -372,5 +372,7 @@
     <string name="help_no_file_chosen">No se eligió archivo</string>
     <string name="error_token">La identificación de cuenta ha expirado o ha sido revocado, por favor contacta a tu administrador.</string>
     <string name="preferences_uninstall_summary">¿Deseas continuar con el proceso de remover los permisos de Prey en este dipositivo? Recuerda reiniciar y luego desintalar.</string>
+    <string name="finger_title">Ingresar con huella</string>
+    <string name="finger_description">Permite a Prey usar tu huella digital para acceder a la configuración de aplicación.</string>
 
 </resources>

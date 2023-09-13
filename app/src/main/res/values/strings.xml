@@ -378,5 +378,7 @@
     <string name="help_no_file_chosen">No file chosen</string>
     <string name="error_token">The account identification has expired or has been revoked, please contact your administrator.</string>
     <string name="preferences_uninstall_summary">Do you want to continue with the process of removing Prey permissions on this device? Remember to reboot and then uninstall.</string>
+    <string name="finger_title">Login with fingerprint</string>
+    <string name="finger_description">Allows Prey to enter the app configuration using only your fingerprint.</string>
 
 </resources>

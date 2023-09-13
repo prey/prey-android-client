@@ -405,26 +405,33 @@ public class PreyWebServices {
             json = new StringBuffer("{\"error\":[\"").append(err).append("\"]}").toString();
             throw new PreyException(json);
         }
-        try {
-            PreyLogger.d("____[token]_________________apikey:"+apikey+" password:"+password);
-            String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-            String uri2=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("get_token.json");
-            PreyHttpResponse response2 = PreyRestHttpClient.getInstance(ctx).get(uri2, parameters, apikey, password,"application/json");
-            if(response2!=null) {
-                PreyLogger.d("get_token:" + response2.getResponseAsString());
-                JSONObject jsnobject = new JSONObject(response2.getResponseAsString());
-                String tokenJwt = jsnobject.getString("token");
-                PreyLogger.d("tokenJwt:" + tokenJwt);
-                PreyConfig.getPreyConfig(ctx).setTokenJwt(tokenJwt);
-            }else{
-                PreyLogger.d("token: nulo");
-            }
 
+        PreyLogger.d("____[token]_________________apikey:"+apikey+" password:"+password);
+        getToken(ctx,apikey,password);
+
+        return response;
+    }
+
+    public String getToken(Context ctx, String apikey, String password){
+        String tokenJwt = "";
+        try {
+        HashMap<String, String> parameters = new HashMap<String, String>();
+        String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
+        String uri2=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("get_token.json");
+        PreyHttpResponse response2 = PreyRestHttpClient.getInstance(ctx).get(uri2, parameters, apikey, password,"application/json");
+        if(response2!=null) {
+            PreyLogger.d("get_token:" + response2.getResponseAsString());
+            JSONObject jsnobject = new JSONObject(response2.getResponseAsString());
+            tokenJwt = jsnobject.getString("token");
+            PreyLogger.d("tokenJwt:" + tokenJwt);
+            PreyConfig.getPreyConfig(ctx).setTokenJwt(tokenJwt);
+        }else{
+            PreyLogger.d("token: nulo");
+        }
         } catch (Exception e) {
             PreyLogger.e("error:"+e.getMessage(),e);
-
         }
-        return response;
+        return tokenJwt;
     }
 
     private static String getJson(String strEncoded) throws UnsupportedEncodingException{
