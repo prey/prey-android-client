@@ -160,30 +160,44 @@ public class AwareController {
 
     public static PreyLocation sendAware(Context ctx, PreyLocation locationAware) throws Exception{
         //get location
-        PreyLocation locationNow = locationAware;
-        if (locationNow != null) {
-            PreyLocation locationOld = PreyConfig.getPreyConfig(ctx).getLocationAware();
-            if (locationOld != null) {
-                //compare
-                int maxDistance=PreyConfig.getPreyConfig(ctx).getDistanceAware();
-                double distance = LocationUtil.distance(locationNow, locationOld);
-                PreyLogger.d("AWARE distance:"+distance +" <= " + maxDistance);
-                if (distance <= maxDistance){
-                    locationNow=null;
-                }
-            }else{
-                PreyLogger.d("AWARE locationOld__is null");
-            }
-            PreyLogger.d("AWARE setLocationAware__ "+locationAware.toString());
-            PreyConfig.getPreyConfig(ctx).setLocationAware(locationAware);
-        }else {
-            PreyLogger.d("AWARE locationNow__ is null");
-        }
+        PreyLocation oldLocation = PreyConfig.getPreyConfig(ctx).getLocationAware();
+        int distanceAware = PreyConfig.getPreyConfig(ctx).getDistanceAware();
+        boolean mustSendAware = mustSendAware(ctx, oldLocation, locationAware, distanceAware);
         //send aware
-        if (locationNow != null) {
-            sendNowAware(ctx,locationNow);
+        if (mustSendAware) {
+            sendNowAware(ctx, locationAware);
+            return locationAware;
+        } else {
+            return null;
         }
-        return locationAware;
+    }
+
+    /**
+     * Method to if location must send
+     * @param ctx Context
+     * @param oldLocation Old location
+     * @param newLocation New location
+     * @param distanceAware Minimum difference between locations
+     * @return returns if to send
+     */
+    public static boolean mustSendAware(Context ctx, PreyLocation oldLocation, PreyLocation newLocation, int distanceAware) {
+        boolean sendAware = false;
+        if (oldLocation == null) {
+            if (newLocation != null) {
+                sendAware = true;
+                PreyConfig.getPreyConfig(ctx).setLocationAware(newLocation);
+            }
+        } else {
+            if (newLocation != null) {
+                double distance = LocationUtil.distance(oldLocation, newLocation);
+                PreyLogger.d("AWARE distance:" + distance + " > " + distanceAware);
+                if (distance > distanceAware) {
+                    sendAware = true;
+                    PreyConfig.getPreyConfig(ctx).setLocationAware(newLocation);
+                }
+            }
+        }
+        return sendAware;
     }
 
     public static void getSendNowAware(Context ctx) throws Exception{
@@ -192,10 +206,17 @@ public class AwareController {
         sendNowAware(ctx,locationNow);
     }
 
-    private static void sendNowAware(Context ctx, PreyLocation locationNow) throws Exception {
-        if(locationNow.getLat()==0|| locationNow.getLng()==0 ) {
+    /**
+     * Method that sends the location
+     * @param ctx Context
+     * @param locationNow  location
+     * @return returns PreyHttpResponse
+     */
+    public static PreyHttpResponse sendNowAware(Context ctx, PreyLocation locationNow) throws Exception {
+        PreyHttpResponse preyResponse = null;
+        if (locationNow == null || locationNow.getLat() == 0 || locationNow.getLng() == 0) {
             PreyLogger.d("AWARE sendNowAware is zero");
-            return;
+            return preyResponse;
         }
         boolean isLocationAware = PreyConfig.getPreyConfig(ctx).getAware();
         PreyLogger.d("AWARE sendNowAware isLocationAware:"+isLocationAware);
@@ -217,7 +238,7 @@ public class AwareController {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
             }
-            PreyHttpResponse preyResponse = PreyWebServices.getInstance().sendLocation(ctx, location);
+            preyResponse = PreyWebServices.getInstance().sendLocation(ctx, location);
             if (preyResponse != null) {
                 PreyLogger.d("AWARE getStatusCode :"+preyResponse.getStatusCode());
                 if (preyResponse.getStatusCode() == HttpURLConnection.HTTP_CREATED) {
@@ -227,30 +248,7 @@ public class AwareController {
                 PreyLogger.d("AWARE sendNowAware:" + locationNow.toString());
             }
         }
-    }
-
-    private static void createNotification(Context ctx,PreyLocation locationNow){
-        String CHANNEL_ID="CHANNEL_AWARE_ID";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "prey_aware";
-            String description = "aware";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-
-            NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-        int NOTIFICATION_ID=AwareConfig.getAwareConfig(ctx).getNotificationId();
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
-                .setSmallIcon(R.drawable.icon2)
-                .setContentTitle("AWARE")
-                .setContentText("lt:" +LocationUpdatesService.round(locationNow.getLat())+" lg:"+LocationUpdatesService.round(locationNow.getLng())+" a:"+LocationUpdatesService.round(locationNow.getAccuracy()))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-                .setAutoCancel(true);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ctx);
-        notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        return preyResponse;
     }
 
 }

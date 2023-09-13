@@ -7,6 +7,7 @@
 package com.prey.actions.location;
 
 import android.location.Location;
+import android.location.LocationManager;
 
 public class PreyLocation {
 
@@ -37,6 +38,22 @@ public class PreyLocation {
         if (loc != null) {
             this.method = method;
         }
+    }
+
+    public PreyLocation(double latitude, double longitude,float accuracy,float altitude, long time, String method) {
+        Location location=new Location(LocationManager.GPS_PROVIDER);
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        location.setAccuracy(accuracy);
+        location.setAltitude(altitude);
+        location.setTime(time);
+        this.lat = location.getLatitude();
+        this.lng = location.getLongitude();
+        this.accuracy = location.getAccuracy();
+        this.altitude = location.getAltitude();
+        this.timestamp = location.getTime();
+        this.location = location;
+        this.method = method;
     }
 
     public String getMethod() {
