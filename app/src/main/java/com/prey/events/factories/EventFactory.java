@@ -218,10 +218,10 @@ public class EventFactory {
      * @return if you have all permissions
      */
     public static boolean verifyNotification(Context ctx) {
-        boolean canAccessCamera = PreyPermission.canAccessCamera(ctx);
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(ctx);
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(ctx);
-        return canAccessCamera && (canAccessCoarseLocation || canAccessFineLocation);
+        boolean canAccessStorage = PreyPermission.canAccessStorage(ctx);
+        return (canAccessCoarseLocation || canAccessFineLocation) && canAccessStorage;
     }
 
     /**
