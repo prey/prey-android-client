@@ -221,8 +221,7 @@ public class EventFactory {
         boolean canAccessCamera = PreyPermission.canAccessCamera(ctx);
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(ctx);
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(ctx);
-        boolean canAccessStorage = PreyPermission.canAccessStorage(ctx);
-        return canAccessCamera && (canAccessCoarseLocation || canAccessFineLocation) && canAccessStorage;
+        return canAccessCamera && (canAccessCoarseLocation || canAccessFineLocation);
     }
 
     /**
