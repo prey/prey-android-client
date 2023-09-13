@@ -16,11 +16,22 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyProperties;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.biometric.BiometricPrompt;
+import androidx.fragment.app.FragmentActivity;
 
 import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
@@ -59,8 +70,18 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.net.HttpURLConnection;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.spec.ECGenParameterSpec;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
+import java.util.concurrent.Executor;
 
 public class WebAppInterface {
 
@@ -122,6 +143,20 @@ public class WebAppInterface {
         boolean initBackground = PreyConfig.getPreyConfig(mContext).getRunBackground();
         PreyLogger.d("initBackground:" + initBackground);
         return initBackground;
+    }
+
+    @JavascriptInterface
+    public boolean initUseBiometric() {
+        boolean useBiometric = PreyConfig.getPreyConfig(mContext).getUseBiometric();
+        PreyLogger.d("useBiometric:" + useBiometric);
+        return useBiometric;
+    }
+
+    @JavascriptInterface
+    public boolean initShowBiometric() {
+        boolean showBiometric = PreyPermission.checkBiometricSupport(mContext);
+        PreyLogger.d("showBiometric:" + showBiometric);
+        return showBiometric;
     }
 
     @JavascriptInterface
@@ -390,6 +425,8 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void openPanelWeb() {
+        String apikey=PreyConfig.getPreyConfig(mContext).getApiKey();
+        PreyWebServices.getInstance().getToken(mContext,apikey,"X");
         Intent intent = new Intent(mContext, PanelWebActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         mContext.startActivity(intent);
@@ -443,6 +480,11 @@ public class WebAppInterface {
             RunBackgroundCheckBoxPreference.notifyCancel(mContext);
         }
         PreyConfig.getPreyConfig(mContext).setRunBackground(background);
+    }
+
+    @JavascriptInterface
+    public void setUseBiometric(boolean useBiometric) {
+        PreyConfig.getPreyConfig(mContext).setUseBiometric(useBiometric);
     }
 
     @JavascriptInterface
@@ -1323,4 +1365,25 @@ public class WebAppInterface {
     public void turnOnNotifications() {
         mActivity.askForPermissionNotification();
     }
+
+    @JavascriptInterface
+    public void openBiometric(String typeBiometric){
+        PreyConfig.getPreyConfig(mContext).setTypeBiometric(typeBiometric);
+        mActivity.abrir();
+    }
+
+    @JavascriptInterface
+    public boolean verificateBiometric(){
+        return PreyConfig.getPreyConfig(mContext).getVerificateBiometric();
+    }
+    @JavascriptInterface
+    public String typeBiometric(){
+        return PreyConfig.getPreyConfig(mContext).getTypeBiometric();
+    }
+
+    @JavascriptInterface
+    public void close(){
+        PreyConfig.getPreyConfig(mContext).removeTimePasswordOk();
+    }
+
 }
