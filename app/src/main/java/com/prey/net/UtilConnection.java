@@ -562,11 +562,28 @@ public class UtilConnection {
             if (isTimeNextPing) {
                 return true;
             }
-            String command = "ping -c 1 google.com";
-            boolean isInternetAvailable= (Runtime.getRuntime().exec(command).waitFor() == 0);
-            PreyLogger.d(String.format("command:%s - %b",command,isInternetAvailable));
-            if (isInternetAvailable) {
-                PreyConfig.getPreyConfig(context).setTimeNextPing();
+            boolean isInternetAvailable = false;
+            ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivity != null) {
+                NetworkInfo[] info = connectivity.getAllNetworkInfo();
+                if (info != null) {
+                    for (int i = 0; i < info.length; i++) {
+                        if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                            try {
+                                HttpURLConnection urlGoogle = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
+                                urlGoogle.setRequestProperty("User-Agent", "Test");
+                                urlGoogle.setRequestProperty("Connection", "close");
+                                urlGoogle.setConnectTimeout(500); //choose your own timeframe
+                                urlGoogle.setReadTimeout(500); //choose your own timeframe
+                                urlGoogle.connect();
+                                isInternetAvailable = (urlGoogle.getResponseCode() == HttpsURLConnection.HTTP_OK);
+                            } catch (IOException e) {
+                                PreyLogger.e(String.format("isInternetAvailable error:%s", e.getMessage()), e);
+                                isInternetAvailable = false;  //connectivity exists, but no internet.
+                            }
+                        }
+                    }
+                }
             }
             return isInternetAvailable;
         } catch (Exception e) {
