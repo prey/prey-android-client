@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -218,10 +219,11 @@ public class EventFactory {
      * @return if you have all permissions
      */
     public static boolean verifyNotification(Context ctx) {
+        boolean canAccessCamera = PreyPermission.canAccessCamera(ctx);
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(ctx);
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(ctx);
         boolean canAccessStorage = PreyPermission.canAccessStorage(ctx);
-        return (canAccessCoarseLocation || canAccessFineLocation) && canAccessStorage;
+        return canAccessCamera && (canAccessCoarseLocation || canAccessFineLocation) && canAccessStorage;
     }
 
     /**

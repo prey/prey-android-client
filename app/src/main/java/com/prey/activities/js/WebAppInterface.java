@@ -795,7 +795,7 @@ public class WebAppInterface {
         PreyLogger.d("showWriteStorage:" + showStorage);
         PreyLogger.d("showDeniedPermission:" + showDeniedPermission);
         if (showDeniedPermission) {
-            mActivity.deniedPermission();
+            mActivity.openSettings();
         } else{
             if (!canAccessFineLocation || !canAccessCoarseLocation || !canAccessCamera
                     || !canAccessStorage ) {
@@ -1369,7 +1369,7 @@ public class WebAppInterface {
     @JavascriptInterface
     public void openBiometric(String typeBiometric){
         PreyConfig.getPreyConfig(mContext).setTypeBiometric(typeBiometric);
-        mActivity.abrir();
+        mActivity.openBiometric();
     }
 
     @JavascriptInterface
