@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 
+import androidx.biometric.BiometricManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.PermissionChecker;
@@ -109,7 +110,7 @@ public class PreyPermission {
     }
 
     public static  boolean checkBiometricSupport(Context ctx) {
-        return false;
+        return BiometricManager.from(ctx).canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS;
     }
 
     /**

@@ -10,8 +10,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,17 +20,27 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.provider.OpenableColumns;
 import android.provider.Settings;
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyProperties;
+import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricPrompt;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -43,14 +51,22 @@ import com.prey.R;
 import com.prey.activities.js.CustomWebView;
 import com.prey.activities.js.WebAppInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
-import com.prey.events.factories.EventFactory;
 import com.prey.services.PreyAccessibilityService;
 import com.prey.services.PreyOverlayService;
-import com.prey.services.PreyStorageService;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.spec.ECGenParameterSpec;
+import java.util.UUID;
+import java.util.concurrent.Executor;
 
 public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
@@ -106,6 +122,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         PreyConfig.getPreyConfig(this).setCapsLockOn(false);
+        PreyConfig.getPreyConfig(getApplicationContext()).setVerificateBiometric(false);
         PreyLogger.d("CheckPasswordHtmlActivity: onResume");
     }
 
@@ -155,6 +172,18 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         myWebView.loadUrl("javascript:window.location.reload(true)");
     }
 
+    public void security() {
+        PreyLogger.d("CheckPasswordHtmlActivity: security");
+        String lng = PreyUtils.getLanguage();
+        StringBuffer url = new StringBuffer("");
+        url.append(URL_ONB).append("#/").append(lng).append("/security");
+        settings();
+        PreyLogger.d(String.format("_url:%s", url.toString()));
+        myWebView.addJavascriptInterface(new WebAppInterface(this, this), JS_ALIAS);
+        myWebView.loadUrl(url.toString());
+        myWebView.loadUrl("javascript:window.location.reload(true)");
+    }
+
     public void loadUrl() {
         PreyLogger.d("CheckPasswordHtmlActivity: loadUrl");
         settings();
@@ -184,13 +213,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             boolean canAccessCamera = PreyPermission.canAccessCamera(this);
             boolean canAccessStorage = PreyPermission.canAccessStorage(this);
             boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocationView(this);
-            boolean verifyNotification = EventFactory.verifyNotification(ctx);
-            if (verifyNotification) {
-                EventFactory.notification(ctx);
-            } else {
-                NotificationManager manager = (NotificationManager) ctx.getSystemService(Service.NOTIFICATION_SERVICE);
-                manager.cancel(EventFactory.NOTIFICATION_ID);
-            }
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessFineLocation:%s", canAccessFineLocation));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessCoarseLocation:%s", canAccessCoarseLocation));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessCamera:%s", canAccessCamera));
@@ -310,6 +332,20 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method opens settings
+     */
+    @TargetApi(Build.VERSION_CODES.M)
+    public void openSettings() {
+        PreyLogger.d("openSettings");
+        Intent intentSetting = new Intent();
+        intentSetting.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intentSetting.setData(uri);
+        intentSetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intentSetting);
+        finish();
+    }
     public void deniedPermission() {
         PreyLogger.d("deniedPermission");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -548,5 +584,143 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     public void askForPermissionNotification() {
         PreyLogger.d("CheckPasswordHtmlActivity askForPermissionNotification");
         ActivityCompat.requestPermissions(CheckPasswordHtmlActivity.this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_PERMISSIONS_POST_NOTIFICATIONS);
+    }
+
+    private String mToBeSignedMessage;
+    public static final String KEY_NAME = UUID.randomUUID().toString();
+    private Executor executor;
+
+    public void showBiometricPrompt(Signature signature,int attempts) {
+        executor = ContextCompat.getMainExecutor(this);
+        BiometricPrompt.AuthenticationCallback authenticationCallback = getAuthenticationCallback();
+        BiometricPrompt mBiometricPrompt = new BiometricPrompt((FragmentActivity) CheckPasswordHtmlActivity.this, executor, authenticationCallback);
+        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setDescription(getResources().getString(R.string.finger_description))
+                .setTitle(getResources().getString(R.string.finger_title))
+                .setNegativeButtonText(getResources().getString(R.string.cancel))
+                .build();
+        if (signature != null) {
+            try {
+                mBiometricPrompt.authenticate(promptInfo, new BiometricPrompt.CryptoObject(signature));
+            }catch (Exception e){
+                if(attempts>0) {
+                    try {
+                        Thread.sleep(200);
+                        showBiometricPrompt(signature, attempts - 1);
+                    } catch (Exception e1) {
+                        PreyLogger.e("error Show biometric prompt:"+e1.getMessage(),e1);
+                    }
+                }
+            }
+        }
+    }
+
+    private BiometricPrompt.AuthenticationCallback getAuthenticationCallback() {
+        return new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                if (result.getCryptoObject() != null &&
+                        result.getCryptoObject().getSignature() != null) {
+                    try {
+                        Signature signature = result.getCryptoObject().getSignature();
+                        signature.update(mToBeSignedMessage.getBytes());
+                        String signatureString = Base64.encodeToString(signature.sign(), Base64.URL_SAFE);
+                        PreyLogger.d(signatureString);
+                        PreyConfig.getPreyConfig(getApplicationContext()).setVerificateBiometric(true);
+                    } catch (SignatureException e) {
+                        throw new RuntimeException();
+                    }
+                }
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+            }
+        };
+    }
+
+    private Executor getMainThreadExecutor() {
+        return new MainThreadExecutor();
+    }
+    private static class MainThreadExecutor implements Executor {
+        private final Handler handler = new Handler(Looper.getMainLooper());
+
+        @Override
+        public void execute(@NonNull Runnable r) {
+            handler.post(r);
+        }
+    }
+
+    public KeyPair generateKeyPair(String keyName, boolean invalidatedByBiometricEnrollment) throws Exception {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore");
+        KeyGenParameterSpec.Builder builder = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            builder = new KeyGenParameterSpec.Builder(keyName,
+                    KeyProperties.PURPOSE_SIGN)
+                    .setAlgorithmParameterSpec(new ECGenParameterSpec("secp256r1"))
+                    .setDigests(KeyProperties.DIGEST_SHA256,
+                            KeyProperties.DIGEST_SHA384,
+                            KeyProperties.DIGEST_SHA512)
+                    .setUserAuthenticationRequired(true);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            builder.setInvalidatedByBiometricEnrollment(invalidatedByBiometricEnrollment);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            keyPairGenerator.initialize(builder.build());
+        }
+        return keyPairGenerator.generateKeyPair();
+    }
+
+    @Nullable
+    public Signature initSignature (String keyName) throws Exception {
+        KeyPair keyPair = getKeyPair(keyName);
+        if (keyPair != null) {
+            Signature signature = Signature.getInstance("SHA256withECDSA");
+            signature.initSign(keyPair.getPrivate());
+            return signature;
+        }
+        return null;
+    }
+
+    @Nullable
+    public KeyPair getKeyPair(String keyName) throws Exception {
+        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+        keyStore.load(null);
+        if (keyStore.containsAlias(keyName)) {
+            PublicKey publicKey = keyStore.getCertificate(keyName).getPublicKey();
+            PrivateKey privateKey = (PrivateKey) keyStore.getKey(keyName, null);
+            return new KeyPair(publicKey, privateKey);
+        }
+        return null;
+    }
+
+    /**
+     * Method opens biometric
+     */
+    public void openBiometric(){
+        if (PreyPermission.checkBiometricSupport(this)) {  // Check whether this device can authenticate with biometrics
+            Signature signature;
+            try {
+                KeyPair keyPair =  generateKeyPair(KEY_NAME, true);
+                mToBeSignedMessage = Base64.encodeToString(keyPair.getPublic().getEncoded(), Base64.URL_SAFE) +
+                        ":" +
+                        KEY_NAME ;
+                       // ":" +
+                        // Generated by the server to protect against replay attack
+                       // "";
+                signature =  initSignature(KEY_NAME);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            showBiometricPrompt(signature,2);
+        }
     }
 }
