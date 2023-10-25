@@ -66,6 +66,7 @@ public class PreyConfig {
     public static final String PREFS_DISABLE_POWER_OPTIONS = "PREFS_DISABLE_POWER_OPTIONS";
     public static final String PREFS_BLOCK_APP_UNINSTALL = "PREFS_BLOCK_APP_UNINSTALL";
     public static final String PREFS_RUN_BACKGROUND = "PREFS_RUN_BACKGROUND";
+    public static final String PREFS_USE_BIOMETRIC = "PREFS_USE_BIOMETRIC";
     public static final String PREFS_BACKGROUND = "PREFS_BACKGROUND";
     public static final String IS_LOCK_SET = "IS_LOCK_SET";
     public static final String NEXT_ALERT = "NEXT_ALERT";
@@ -158,6 +159,8 @@ public class PreyConfig {
     public static final String INSTALLATION_STATUS = "INSTALLATION_STATUS";
     public static final String LOCATION_INFO = "LOCATION_INFO";
     public static final String CAPS_LOCK_ON = "CAPS_LOCK_ON";
+    public static final String VERIFICATE_BIOMETRIC = "VERIFICATE_BIOMETRIC";
+    public static final String TYPE_BIOMETRIC = "TYPE_BIOMETRIC";
     public static final String OVER_LOCK = "OVER_LOCK";
     public static final String FIRST = "FIRST";
     public static final String PIN_NUMBER_ACTIVATE = "PIN_NUMBER_ACTIVATE";
@@ -689,6 +692,14 @@ public class PreyConfig {
         return getBoolean(PreyConfig.PREFS_RUN_BACKGROUND, false);
     }
 
+    public boolean getUseBiometric() {
+        return getBoolean(PreyConfig.PREFS_USE_BIOMETRIC, false);
+    }
+
+    public void setUseBiometric(boolean useBiometric) {
+        saveBoolean(PreyConfig.PREFS_USE_BIOMETRIC, useBiometric);
+    }
+
     public void setRunBackground(boolean disablePowerOptions) {
         saveBoolean(PreyConfig.PREFS_RUN_BACKGROUND, disablePowerOptions);
         saveBoolean(PreyConfig.PREFS_BACKGROUND, disablePowerOptions);
@@ -1023,6 +1034,12 @@ public class PreyConfig {
         saveString(PreyConfig.TOKEN_JWT, tokenJwt);
     }
 
+    public void removeTimePasswordOk(){
+        Calendar cal= Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MINUTE,-3);
+        saveLong(TIME_PASSWORD_OK,cal.getTimeInMillis());
+    }
     public void setTimePasswordOk(){
         Calendar cal= Calendar.getInstance();
         cal.setTime(new Date());
@@ -1324,6 +1341,24 @@ public class PreyConfig {
 
     public void setCapsLockOn(boolean capsLockOn){
         saveBoolean(PreyConfig.CAPS_LOCK_ON, capsLockOn);
+    }
+
+    public boolean getVerificateBiometric(){
+        boolean verificateBiometric = getBoolean(PreyConfig.VERIFICATE_BIOMETRIC, false);
+        if(verificateBiometric){
+            setVerificateBiometric(false);
+        }
+        return verificateBiometric;
+    }
+    public void setVerificateBiometric(boolean verificateBiometric){
+        saveBoolean(PreyConfig.VERIFICATE_BIOMETRIC, verificateBiometric);
+    }
+
+    public String getTypeBiometric() {
+        return getString(PreyConfig.TYPE_BIOMETRIC, "");
+    }
+    public void setTypeBiometric(String typeBiometric){
+        saveString(PreyConfig.TYPE_BIOMETRIC, typeBiometric);
     }
 
     public boolean getOverLock(){

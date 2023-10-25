@@ -1,19 +1,19 @@
 self.__precacheManifest = [
   {
-    "revision": "d0b4e24f0f6d76434e18",
-    "url": "./static/css/main.cfa80321.chunk.css"
+    "revision": "16a5ad274a2b089fbccc",
+    "url": "./static/css/main.cb793387.chunk.css"
   },
   {
-    "revision": "d0b4e24f0f6d76434e18",
-    "url": "./static/js/main.d0b4e24f.chunk.js"
+    "revision": "16a5ad274a2b089fbccc",
+    "url": "./static/js/main.16a5ad27.chunk.js"
   },
   {
     "revision": "8c97409f0ee389fe75da",
     "url": "./static/js/runtime~main.8c97409f.js"
   },
   {
-    "revision": "d9125aade798dfff92ba",
-    "url": "./static/js/2.d9125aad.chunk.js"
+    "revision": "63e74b669fd320806725",
+    "url": "./static/js/2.63e74b66.chunk.js"
   },
   {
     "revision": "c3679e2d8686db6f8013ffe2ad603c2c",
@@ -120,14 +120,6 @@ self.__precacheManifest = [
     "url": "./static/media/fondo2.ada00d71.png"
   },
   {
-    "revision": "c44603b2b93c1b7a984f21255d556ee9",
-    "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
-  },
-  {
-    "revision": "6e8991140fc75b4927e2c440d9036429",
-    "url": "./static/media/regular-book-webfont.6e899114.woff"
-  },
-  {
     "revision": "391159c582e0897e8d64ed22abe1ee2d",
     "url": "./static/media/regular-bold-webfont.391159c5.woff"
   },
@@ -136,7 +128,15 @@ self.__precacheManifest = [
     "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
   },
   {
-    "revision": "b64cf56cd685186f876003de76209dce",
+    "revision": "6e8991140fc75b4927e2c440d9036429",
+    "url": "./static/media/regular-book-webfont.6e899114.woff"
+  },
+  {
+    "revision": "c44603b2b93c1b7a984f21255d556ee9",
+    "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
+  },
+  {
+    "revision": "9dc5ec24d97ba2a714a76374f9a85bea",
     "url": "./index.html"
   }
 ];
