@@ -116,8 +116,9 @@ public class FileretrievalOpenHelper extends SQLiteOpenHelper {
                     list.add(dto);
                 } while (cursor.moveToNext());
             }
+            database.close();
         }catch (Exception e){
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }finally {
             if(cursor!=null){
                 try{cursor.close();}catch (Exception e1){}
@@ -142,8 +143,9 @@ public class FileretrievalOpenHelper extends SQLiteOpenHelper {
                     dto.setStatus(cursor.getInt(3));
                 } while (cursor.moveToNext());
             }
+            database.close();
         }catch (Exception e){
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }finally {
             if(cursor!=null){
                 try{cursor.close();}catch (Exception e1){}
