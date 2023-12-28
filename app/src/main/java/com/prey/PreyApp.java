@@ -95,7 +95,6 @@ public class PreyApp extends Application {
                 new Thread() {
                     public void run() {
                         PreyConfig.getPreyConfig(ctx).registerC2dm();
-                        LoggerController.getInstance(ctx).setSequence(PreyConfig.getPreyConfig(ctx).getLoggerId());
                         PreyWebServices.getInstance().getProfile(ctx);
                         String initName = PreyWebServices.getInstance().getNameDevice(ctx);
                         if (initName != null && !"".equals(initName)) {

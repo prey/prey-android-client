@@ -49,18 +49,15 @@ public class LoggerController {
         } catch (Exception e) {
             maxLogger = 500;
         }
+        sequence = PreyConfig.getPreyConfig(context).getLoggerId();
     }
 
-    private static int sequence = 1;
+    private int sequence = 1;
 
-    public synchronized static int getSequence(Context context) {
+    public synchronized int getSequence(Context context) {
         sequence++;
         PreyConfig.getPreyConfig(context).setLoggerId(sequence);
         return sequence;
-    }
-
-    public void setSequence(int sequence) {
-        this.sequence = sequence;
     }
 
     /**
@@ -77,9 +74,14 @@ public class LoggerController {
         dto.setLoggerId(loggerID);
         dto.setTime(new Date().toGMTString());
         LoggerDatasource datasource = new LoggerDatasource(ctx);
-        datasource.createLogger(dto);
-        datasource.deleteMinorsLogger(loggerID - maxLogger);
-        PreyConfig.getPreyConfig(ctx).setLoggerId(loggerID);
+        try {
+            datasource.createLogger(dto);
+        } catch (Exception e) {
+            PreyLogger.e(String.format("logger error:%s", e.getMessage()), e);
+        }
+        if (loggerID > maxLogger) {
+            datasource.deleteMinorsLogger(loggerID - maxLogger);
+        }
         PreyLogger.d(String.format("logger dto:%s", dto.toString()));
     }
 
@@ -113,7 +115,11 @@ public class LoggerController {
     }
 
     public void addGeofencing(String json) {
-        addLogger(GEOFENCING, json.toString());
+        try {
+            addLogger(GEOFENCING, json.toString());
+        } catch (Exception e) {
+            addLogger(GEOFENCING, json);
+        }
     }
 
     public void addUpload(File file, int responseCode) {

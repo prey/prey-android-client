@@ -1323,9 +1323,7 @@ public class PreyWebServices {
      * @throws Exception
      */
     public PreyHttpResponse uploadLogger(final Context ctx, String text) throws Exception {
-        String url = PreyConfig.getPreyConfig(ctx).getPreyUrl();
-        url.concat("upload/log?deviceKey=");
-        url.concat(PreyConfig.getPreyConfig(ctx).getDeviceId());
+        String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat("upload/log?deviceKey=").concat(PreyConfig.getPreyConfig(ctx).getDeviceId());
         PreyLogger.d(String.format("url%s:", url));
         PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).uploadLogger(ctx, url, text);
         int statusCode = -1;
