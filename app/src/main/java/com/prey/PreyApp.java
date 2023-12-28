@@ -19,6 +19,7 @@ import com.google.firebase.FirebaseApp;
 import com.prey.actions.aware.AwareController;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
+import com.prey.actions.logger.LoggerController;
 import com.prey.actions.report.ReportScheduled;
 import com.prey.actions.triggers.TriggerController;
 import com.prey.activities.LoginActivity;
@@ -94,6 +95,7 @@ public class PreyApp extends Application {
                 new Thread() {
                     public void run() {
                         PreyConfig.getPreyConfig(ctx).registerC2dm();
+                        LoggerController.getInstance(ctx).setSequence(PreyConfig.getPreyConfig(ctx).getLoggerId());
                         PreyWebServices.getInstance().getProfile(ctx);
                         String initName = PreyWebServices.getInstance().getNameDevice(ctx);
                         if (initName != null && !"".equals(initName)) {

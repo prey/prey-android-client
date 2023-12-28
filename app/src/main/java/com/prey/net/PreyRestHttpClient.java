@@ -170,6 +170,18 @@ public class PreyRestHttpClient {
         return UtilConnection.uploadFile(PreyConfig.getPreyConfig(ctx), url, file,total);
     }
 
+    /**
+     * Method to upload logger
+     *
+     * @param ctx
+     * @param url
+     * @param text
+     * @return PreyHttpResponse
+     */
+    public PreyHttpResponse uploadLogger(Context ctx, String url, String text) {
+        return UtilConnection.uploadLogger(ctx, url, text);
+    }
+
     public PreyHttpResponse connectionPostAuthorizationCorrelationId(String url, String status, Map<String, String> params,String correlationId) throws Exception {
         PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString()+" status:"+status+" correlationId:"+correlationId);
         PreyHttpResponse response=UtilConnection.connectionPostAuthorizationCorrelationId(PreyConfig.getPreyConfig(ctx),url,params,CONTENT_TYPE_URL_ENCODED,status,correlationId);

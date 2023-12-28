@@ -13,6 +13,7 @@ import android.net.NetworkInfo;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
+import com.prey.actions.logger.LoggerController;
 import com.prey.net.http.EntityFile;
 import com.prey.net.http.SimpleMultipartEntity;
 
@@ -41,6 +42,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -548,6 +551,7 @@ public class UtilConnection {
                 connection.disconnect();
             }
         }
+        LoggerController.getInstance(preyConfig.getContext()).addUpload(file, responseCode);
         return responseCode;
     }
 
@@ -631,6 +635,97 @@ public class UtilConnection {
             }
             if (conn!=null){
                 try{conn.disconnect();} catch (Exception e) {}
+            }
+        }
+        return response;
+    }
+
+    /**
+     * Method to upload logger
+     *
+     * @param ctx
+     * @param uri
+     * @param text
+     * @return PreyHttpResponse
+     */
+    public static PreyHttpResponse uploadLogger(Context ctx, String uri, String text) {
+        BufferedWriter writer = null;
+        OutputStream os = null;
+        PreyHttpResponse response = null;
+        HttpURLConnection conn = null;
+        InputStream input = null;
+        FileInputStream fileInput = null;
+        ByteArrayOutputStream out = null;
+        try {
+            PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+            try {
+                ZipEntry e1 = new ZipEntry("prey.log");
+                out = new ByteArrayOutputStream();
+                ZipOutputStream zs = new ZipOutputStream(out);
+                zs.putNextEntry(e1);
+                zs.write(text.getBytes());
+                zs.close();
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+            }
+            PreyLogger.d(String.format("uri:%s", uri));
+            URL url = new URL(uri);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.addRequestProperty("Origin", "android:com.prey");
+            conn.addRequestProperty("User-Agent", getUserAgent(preyConfig));
+            conn.addRequestProperty("Authorization", getAuthorization(preyConfig));
+            conn.addRequestProperty("Content-Type", "multipart/form-data;boundary=logs.zip");
+            os = conn.getOutputStream();
+            ByteArrayInputStream inStream = new ByteArrayInputStream(out.toByteArray());
+            int maxByte = 4096;
+            byte[] buffer = new byte[maxByte];
+            int length;
+            while ((length = inStream.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+            os.flush();
+            conn.connect();
+            response = new PreyHttpResponse(conn);
+            PreyLogger.d(String.format("statusCode:%s", response.getStatusCode()));
+            PreyLogger.d(String.format("response:%s", response.getResponseAsString()));
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+        } finally {
+            try {
+                if (input != null) {
+                    input.close();
+                }
+            } catch (IOException e) {
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+            }
+            try {
+                if (fileInput != null) {
+                    fileInput.close();
+                }
+            } catch (IOException e) {
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+            }
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+            }
+            try {
+                if (os != null) {
+                    os.close();
+                }
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+            }
+            try {
+                if (conn != null) {
+                    conn.disconnect();
+                }
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
             }
         }
         return response;

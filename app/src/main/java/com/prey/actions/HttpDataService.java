@@ -11,7 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.prey.PreyLogger;
 import com.prey.net.http.EntityFile;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class HttpDataService {
 
@@ -70,6 +74,30 @@ public class HttpDataService {
         } else
             parameters.put(key, singleData);
         return parameters;
+    }
+
+    /**
+     * Method to transform parameter list into json
+     *
+     * @return json
+     */
+    public JSONObject getDataJson() {
+        JSONObject json = new JSONObject();
+        try {
+            if (isList()) {
+                JSONObject jsonList = new JSONObject();
+                for (String valueKey : dataList.keySet()) {
+                    String valueData = dataList.get(valueKey);
+                    jsonList.put(valueKey, valueData);
+                }
+                json.put(key, jsonList);
+            } else {
+                json.put(key, singleData);
+            }
+        } catch (JSONException e) {
+            PreyLogger.e(String.format("error getDataJson:%s", e.getMessage()), e);
+        }
+        return json;
     }
 
     public String getDataAsString() {

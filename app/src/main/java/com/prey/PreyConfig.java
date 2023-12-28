@@ -1610,4 +1610,15 @@ public class PreyConfig {
     public boolean getDenyNotification() {
         return getBoolean(PreyConfig.DENY_NOTIFICATION, false);
     }
+
+    public static final String LOGGER_ID = "LOGGER_ID";
+
+    public void setLoggerId(int loggerId){
+        saveInt(PreyConfig.LOGGER_ID, loggerId);
+    }
+
+    public int getLoggerId(){
+        return getInt(PreyConfig.LOGGER_ID, 1);
+    }
+
 }

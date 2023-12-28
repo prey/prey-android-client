@@ -26,12 +26,15 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPermission;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.json.UtilJson;
 import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyWebServices;
 import com.prey.services.LocationService;
+
+import org.json.JSONObject;
 
 public class LocationUtil {
 
@@ -71,10 +74,18 @@ public class LocationUtil {
         boolean isGpsEnabled = PreyLocationManager.getInstance(ctx).isGpsLocationServiceActive();
         boolean isNetworkEnabled = PreyLocationManager.getInstance(ctx).isNetworkLocationServiceActive();
         boolean isWifiEnabled = PreyWifiManager.getInstance(ctx).isWifiEnabled();
-        boolean isGooglePlayServicesAvailable=isGooglePlayServicesAvailable(ctx);
-        String locationInfo="{\"gps\":" + isGpsEnabled + ",\"net\":" + isNetworkEnabled + ",\"wifi\":" + isWifiEnabled+",\"play\":"+isGooglePlayServicesAvailable+"}";
-        PreyConfig.getPreyConfig(ctx).setLocationInfo(locationInfo);
-        PreyLogger.d(locationInfo);
+        boolean isGooglePlayServicesAvailable = isGooglePlayServicesAvailable(ctx);
+        boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocationView(ctx);
+        boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(ctx);
+        boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(ctx);
+        JSONObject json = new JSONObject();
+        json.put("location", (canAccessFineLocation || canAccessCoarseLocation));
+        json.put("location_background", canAccessBackgroundLocation);
+        json.put("gps", isGpsEnabled);
+        json.put("net", isNetworkEnabled);
+        json.put("wifi", isWifiEnabled);
+        json.put("play", isGooglePlayServicesAvailable);
+        PreyConfig.getPreyConfig(ctx).setLocationInfo(json.toString());
         String method = getMethod(isGpsEnabled, isNetworkEnabled);
         try {
             preyLocation = getPreyLocationAppService(ctx, method, asynchronous, preyLocation, maximum);

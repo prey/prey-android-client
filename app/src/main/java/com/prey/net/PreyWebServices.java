@@ -32,6 +32,7 @@ import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyName;
+import com.prey.PreyPermission;
 import com.prey.PreyPhone;
 import com.prey.PreyPhone.Hardware;
 import com.prey.PreyPhone.Wifi;
@@ -39,10 +40,12 @@ import com.prey.PreyUtils;
 import com.prey.PreyVerify;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.fileretrieval.FileretrievalDto;
+import com.prey.actions.logger.LoggerController;
 import com.prey.actions.observer.ActionsController;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 import com.prey.events.Event;
 import com.prey.exceptions.PreyException;
+import com.prey.json.UtilJson;
 import com.prey.json.parser.JSONParser;
 import com.prey.net.http.EntityFile;
 import com.prey.R;
@@ -590,14 +593,18 @@ public class PreyWebServices {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         Map<String, String> parameters = new HashMap<String, String>();
         List<EntityFile> entityFiles = new ArrayList<EntityFile>();
+        JSONObject json = new JSONObject();
         for (HttpDataService httpDataService : dataToSend) {
             if (httpDataService != null) {
+                JSONObject jsonData = httpDataService.getDataJson();
+                json = UtilJson.merge(json, jsonData);
                 parameters.putAll(httpDataService.getDataAsParameters());
                 if (httpDataService.getEntityFiles() != null && httpDataService.getEntityFiles().size() > 0) {
                     entityFiles.addAll(httpDataService.getEntityFiles());
                 }
             }
         }
+        LoggerController.getInstance(ctx).addData(json);
         PreyHttpResponse preyHttpResponse = null;
         if(parameters.size()>0||entityFiles.size()>0) {
             Hardware hardware = new PreyPhone(ctx).getHardware();
@@ -674,9 +681,10 @@ public class PreyWebServices {
             parameters.put("name", event.getName());
             parameters.put("info", event.getInfo());
             parameters.put("status", jsonObject.toString());
-            PreyLogger.d("EVENT sendPreyHttpEvent url:" + url);
-            PreyLogger.d("EVENT name:" + event.getName() + " info:" + event.getInfo());
-            PreyLogger.d("EVENT status:" + jsonObject.toString());
+            PreyLogger.d(String.format("EVENT sendPreyHttpEvent url:%s", url));
+            PreyLogger.d(String.format("EVENT name:%s info:%s", event.getName(), event.getInfo()));
+            PreyLogger.d(String.format("EVENT status:%s", jsonObject.toString()));
+            LoggerController.getInstance(ctx).addEvents(event, jsonObject);
             String status = jsonObject.toString();
             preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters);
             if(preyHttpResponse!=null) {
@@ -715,6 +723,7 @@ public class PreyWebServices {
         new Thread() {
             public void run() {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+        LoggerController.getInstance(ctx).addActionResult(status, params);
         String response = null;
         try {
             String url = getResponseUrlJson(ctx);
@@ -732,14 +741,46 @@ public class PreyWebServices {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         HashMap<String, String> parameters = new HashMap<String, String>();
         List<EntityFile> entityFiles = new ArrayList<EntityFile>();
+        JSONObject json = new JSONObject();
         for (HttpDataService httpDataService : dataToSend) {
             if (httpDataService != null) {
+                JSONObject jsonData = httpDataService.getDataJson();
+                json = UtilJson.merge(json, jsonData);
                 parameters.putAll(httpDataService.getReportAsParameters());
                 if (httpDataService.getEntityFiles() != null && httpDataService.getEntityFiles().size() > 0) {
-                    entityFiles.addAll(httpDataService.getEntityFiles());
+                    List<EntityFile> listFiles = httpDataService.getEntityFiles();
+                    entityFiles.addAll(listFiles);
+                    JSONArray array = new JSONArray();
+                    try {
+                        for (int i = 0; listFiles != null && i < listFiles.size(); i++) {
+                            EntityFile file = listFiles.get(i);
+                            JSONObject jsonFile = new JSONObject();
+                            jsonFile.put("name", file.getName());
+                            jsonFile.put("fileName", file.getFilename());
+                            jsonFile.put("mimeType", file.getMimeType());
+                            array.put(jsonFile);
+                        }
+                        json = UtilJson.merge(json, "files", array);
+                    } catch (Exception e) {
+                        PreyLogger.e(String.format("error:%s", e.getMessage()), e);
+                    }
                 }
             }
         }
+        boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(ctx);
+        boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(ctx);
+        boolean canAccessCamera = PreyPermission.canAccessCamera(ctx);
+        boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocationView(ctx);
+        try {
+            JSONObject info = new JSONObject();
+            info.put("location", (canAccessFineLocation || canAccessCoarseLocation));
+            info.put("location_background", canAccessBackgroundLocation);
+            info.put("camera", canAccessCamera);
+            json.put("permissions", info);
+        } catch (Exception e) {
+            PreyLogger.e(String.format("error:%s", e.getMessage()), e);
+        }
+        LoggerController.getInstance(ctx).addReport(json);
         PreyHttpResponse preyHttpResponse = null;
         try {
             String url = getReportUrlJson(ctx);
@@ -842,6 +883,7 @@ public class PreyWebServices {
                         sb = sb.trim();
                 }
             }
+            LoggerController.getInstance(ctx).addGeofencing(sb);
         }catch(Exception e){
             PreyLogger.e("Error, causa:" + e.getMessage(), e);
             return null;
@@ -873,8 +915,9 @@ public class PreyWebServices {
         return jsnobject;
     }
 
-    public PreyHttpResponse sendTree(final Context ctx,JSONObject json  ) throws PreyException{
+    public PreyHttpResponse sendTree(final Context ctx, JSONObject json) throws PreyException{
         String uri = getDeviceUrlApiv2(ctx).concat("/data.json");
+        LoggerController.getInstance(ctx).addData(json);
         return PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(uri,UtilConnection.REQUEST_METHOD_POST,json);
     }
 
@@ -1269,6 +1312,31 @@ public class PreyWebServices {
             PreyLogger.e("Error validateToken:" + e.getMessage(), e);
         }
         return statusCode == 200;
+    }
+
+    /**
+     * Method to upload logger
+     *
+     * @param ctx
+     * @param text
+     * @return PreyHttpResponse
+     * @throws Exception
+     */
+    public PreyHttpResponse uploadLogger(final Context ctx, String text) throws Exception {
+        String url = PreyConfig.getPreyConfig(ctx).getPreyUrl();
+        url.concat("upload/log?deviceKey=");
+        url.concat(PreyConfig.getPreyConfig(ctx).getDeviceId());
+        PreyLogger.d(String.format("url%s:", url));
+        PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).uploadLogger(ctx, url, text);
+        int statusCode = -1;
+        try {
+            statusCode = response.getStatusCode();
+            PreyLogger.d(String.format("statusCode%s:", statusCode));
+            PreyLogger.d(String.format("uploadString%s:", response.getResponseAsString()));
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error uploadString:%s", e.getMessage()), e);
+        }
+        return response;
     }
 
 }
