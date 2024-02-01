@@ -183,4 +183,13 @@ public class FileConfigReader {
     public boolean getOpenPin() {
         return Boolean.parseBoolean(properties.getProperty("open-pin"));
     }
+
+    /**
+     * Method returns logger maximum
+     * @return logger_max
+     */
+    public int getLoggerMax() {
+        return Integer.parseInt(properties.getProperty("logger-max"));
+    }
+
 }

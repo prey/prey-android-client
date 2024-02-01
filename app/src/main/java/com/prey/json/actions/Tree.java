@@ -12,6 +12,8 @@ import android.webkit.MimeTypeMap;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPermission;
+import com.prey.actions.logger.LoggerController;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyHttpResponse;
@@ -58,14 +60,23 @@ public class Tree {
             File dir = new File(pathBase+path);
             JSONArray array = getFilesRecursiveJSON(pathBase, dir, depth-1);
             JSONObject jsonTree = new JSONObject();
-            jsonTree.put("tree", array.toString());
+            jsonTree.put("tree", array);
+            boolean canAccessStorage = PreyPermission.canAccessStorage(ctx);
+            try {
+                JSONObject info = new JSONObject();
+                info.put("storage", canAccessStorage);
+                jsonTree.put("permissions", info);
+            } catch (Exception e) {
+                PreyLogger.e(String.format("error:%s", e.getMessage()), e);
+            }
+            LoggerController.getInstance(ctx).addTree(jsonTree);
             PreyHttpResponse response=PreyWebServices.getInstance().sendTree(ctx, jsonTree);
             PreyLogger.d(String.format("Tree stopped response:%d", response.getStatusCode()));
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get", "tree", "stopped",reason));
             PreyLogger.d("Tree stopped");
         } catch (Exception e) {
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "tree", "failed", e.getMessage()));
-            PreyLogger.d("Tree failed:"+e.getMessage());
+            PreyLogger.e(String.format("Tree failed:%s", e.getMessage()), e);
         }
     }
 

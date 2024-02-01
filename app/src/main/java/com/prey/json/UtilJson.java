@@ -9,8 +9,10 @@ package com.prey.json;
 import com.prey.PreyLogger;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -115,6 +117,43 @@ public class UtilJson {
             out = jsonObject.getInt(key);
         }
         return out;
+    }
+
+    /**
+     * Method merge the json
+     *
+     * @param json1
+     * @param json2
+     * @return json merge
+     */
+    public static JSONObject merge(JSONObject json1, JSONObject json2) {
+        try {
+            Iterator<String> it = json2.keys();
+            while (it.hasNext()) {
+                String key = it.next();
+                json1.put(key, json2.get(key));
+            }
+        } catch (Exception e) {
+            PreyLogger.e(String.format("error merge:%s", e.getMessage()), e);
+        }
+        return json1;
+    }
+
+    /**
+     * Method add json2 in json1 with key name
+     *
+     * @param json1
+     * @param name
+     * @param json2
+     * @return json merge
+     */
+    public static JSONObject merge(JSONObject json1, String name, JSONArray json2) {
+        try {
+            json1.put(name, json2);
+        } catch (Exception e) {
+            PreyLogger.e(String.format("error merge:%s", e.getMessage()), e);
+        }
+        return json1;
     }
 
 }

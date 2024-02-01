@@ -140,8 +140,9 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
                     list.add(geofence);
                 } while (cursor.moveToNext());
             }
+            database.close();
         }catch (Exception e){
-            PreyLogger.e("error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("error:%s", e.getMessage()), e);
         }finally {
             if(cursor!=null){
                 try{cursor.close();}catch (Exception e1){}
@@ -169,8 +170,9 @@ public class GeofenceOpenHelper extends SQLiteOpenHelper {
                     geofence.setExpires(cursor.getInt(6));
                 } while (cursor.moveToNext());
             }
+            database.close();
         }catch (Exception e){
-            PreyLogger.e("error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("error:%s", e.getMessage()), e);
         }finally {
             if(cursor!=null){
                 try{cursor.close();}catch (Exception e1){}

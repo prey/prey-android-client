@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.prey.PreyLogger;
+import com.prey.actions.logger.LoggerController;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyRestHttpClient;
 
@@ -48,6 +49,8 @@ public class JSONParser {
             PreyLogger.d("_______cmd________");
             PreyLogger.d(sb);
         }
+        //json = "[{\"command\":\"get\",\"target\":\"logretrieval\",\"options\":{}}]";
+        //json = "[{\"command\":\"start\",\"target\":\"list_permissions\",\"options\":{}}]";
         //json = "[{\"command\":\"history\",\"target\":\"call\",\"options\":{}}]";
         //json = "[{\"command\":\"history\",\"target\":\"sms\",\"options\":{}}]";
         //json = "[{\"command\":\"history\",\"target\":\"contact\",\"options\":{}}]";
@@ -89,6 +92,7 @@ public class JSONParser {
         if ("Invalid.".equals(json)) {
             return null;
         }
+        LoggerController.getInstance(ctx).addComands(json);
         return getJSONFromTxt(ctx, json);
     }
 

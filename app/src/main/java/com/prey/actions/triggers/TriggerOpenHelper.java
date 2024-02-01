@@ -115,8 +115,9 @@ public class TriggerOpenHelper extends SQLiteOpenHelper {
                     list.add(trigger);
                 } while (cursor.moveToNext());
             }
+            database.close();
         } catch (Exception e) {
-            PreyLogger.e("error:" + e.getMessage(), e);
+            PreyLogger.e(String.format("error:%s", e.getMessage()), e);
         } finally {
             if (cursor != null) {
                 try {
@@ -144,8 +145,9 @@ public class TriggerOpenHelper extends SQLiteOpenHelper {
                     trigger.setActions(cursor.getString(3));
                 } while (cursor.moveToNext());
             }
+            database.close();
         } catch (Exception e) {
-            PreyLogger.e("error:" + e.getMessage(), e);
+            PreyLogger.e(String.format("error:%s", e.getMessage()), e);
         } finally {
             if (cursor != null) {
                 try {

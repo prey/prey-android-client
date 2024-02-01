@@ -127,6 +127,7 @@ public class PictureUtil {
                 currentVolume = PreyConfig.getPreyConfig(ctx).getVolume();
                 if (currentVolume > 0) {
                     //set old volume
+                    mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
                     mgr.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, AudioManager.FLAG_PLAY_SOUND);
                 }
             } catch (Exception e) {

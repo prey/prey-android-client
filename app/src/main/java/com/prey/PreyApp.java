@@ -19,6 +19,7 @@ import com.google.firebase.FirebaseApp;
 import com.prey.actions.aware.AwareController;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
+import com.prey.actions.logger.LoggerController;
 import com.prey.actions.report.ReportScheduled;
 import com.prey.actions.triggers.TriggerController;
 import com.prey.activities.LoginActivity;

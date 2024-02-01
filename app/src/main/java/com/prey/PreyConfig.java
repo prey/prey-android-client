@@ -41,7 +41,7 @@ public class PreyConfig {
     private static PreyConfig cachedInstance = null;
     public static final String TAG = "PREY";
     private static final String HTTP = "https://";
-    public static final String VERSION_PREY_DEFAULT = "2.4.9";
+    public static final String VERSION_PREY_DEFAULT = "2.5.2";
     // Milliseconds per second
     private static final int MILLISECONDS_PER_SECOND = 1000;
     // Set to 1000 * 60 in production.
@@ -1610,4 +1610,15 @@ public class PreyConfig {
     public boolean getDenyNotification() {
         return getBoolean(PreyConfig.DENY_NOTIFICATION, false);
     }
+
+    public static final String LOGGER_ID = "LOGGER_ID";
+
+    public void setLoggerId(int loggerId){
+        saveInt(PreyConfig.LOGGER_ID, loggerId);
+    }
+
+    public int getLoggerId(){
+        return getInt(PreyConfig.LOGGER_ID, 1);
+    }
+
 }
