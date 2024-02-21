@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "16a5ad274a2b089fbccc",
+    "revision": "4a2fa15eca1644f5ec42",
     "url": "./static/css/main.cb793387.chunk.css"
   },
   {
-    "revision": "16a5ad274a2b089fbccc",
-    "url": "./static/js/main.16a5ad27.chunk.js"
+    "revision": "4a2fa15eca1644f5ec42",
+    "url": "./static/js/main.4a2fa15e.chunk.js"
   },
   {
     "revision": "8c97409f0ee389fe75da",
@@ -124,10 +124,6 @@ self.__precacheManifest = [
     "url": "./static/media/regular-bold-webfont.391159c5.woff"
   },
   {
-    "revision": "baaac74770efd8c34382afa00468f635",
-    "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
-  },
-  {
     "revision": "6e8991140fc75b4927e2c440d9036429",
     "url": "./static/media/regular-book-webfont.6e899114.woff"
   },
@@ -136,7 +132,11 @@ self.__precacheManifest = [
     "url": "./static/media/magdaclean-regular-webfont.c44603b2.woff"
   },
   {
-    "revision": "9dc5ec24d97ba2a714a76374f9a85bea",
+    "revision": "baaac74770efd8c34382afa00468f635",
+    "url": "./static/media/magdaclean-bold-webfont.baaac747.woff"
+  },
+  {
+    "revision": "b6f91dd5a265cfd9c9209d7eefbaeb33",
     "url": "./index.html"
   }
 ];

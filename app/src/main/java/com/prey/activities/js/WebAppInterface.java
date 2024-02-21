@@ -1386,4 +1386,33 @@ public class WebAppInterface {
         PreyConfig.getPreyConfig(mContext).removeTimePasswordOk();
     }
 
+    @JavascriptInterface
+    public boolean isAccessibilityInformationType(String type) {
+        return getAccessibilityInformationType().equals(type);
+    }
+
+    /**
+     * Method that returns what type of accessibility information to show
+     *
+     * @return type
+     */
+    private String getAccessibilityInformationType() {
+        if (isVendor("google") || isVendor("poco") || isVendor("xiaomi") || isVendor("realme")) {
+            return "downloaded_apps";
+        }
+        if (isVendor("samsung")) {
+            return "installed_apps";
+        }
+        if (isVendor("oneplus")) {
+            return "more";
+        }
+        return "downloaded_services";
+    }
+
+    private boolean isVendor(String vendor) {
+        String manufacturer = android.os.Build.MANUFACTURER;
+        String brand = android.os.Build.BRAND;
+        return manufacturer.toLowerCase().contains(vendor) || brand.toLowerCase().contains(vendor);
+    }
+
 }
