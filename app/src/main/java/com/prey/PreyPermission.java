@@ -134,6 +134,11 @@ public class PreyPermission {
      * @return true if accessibility method should request it, false otherwise
      */
     public static boolean isAccessibilityServiceView(Context ctx) {
+        boolean isThereBatchInstallationKey = PreyBatch.isThereBatchInstallationKey(ctx);
+        //If it is batch, do not request accessibility
+        if (isThereBatchInstallationKey) {
+            return isThereBatchInstallationKey;
+        }
         boolean isAccessibilityServiceEnabled = isAccessibilityServiceEnabled(ctx);
         PreyLogger.d(String.format("isAccessibilityServiceEnabled:%s", isAccessibilityServiceEnabled));
         if (isAccessibilityServiceEnabled) {
