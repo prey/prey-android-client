@@ -65,4 +65,12 @@ public class PreyBatch {
         return properties.getProperty("token");
     }
 
+    /**
+     * Method returns if it has apikey batch
+     * @return
+     */
+    public static boolean isThereBatchInstallationKey(Context ctx) {
+        String apiKeyBatch = _instance.getApiKeyBatch();
+        return (apiKeyBatch != null && !"".equals(apiKeyBatch));
+    }
 }
