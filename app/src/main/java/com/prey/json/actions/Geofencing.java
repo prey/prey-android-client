@@ -19,13 +19,9 @@ import java.util.List;
 public class Geofencing {
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("starting Geofencing");
-        GeofenceController.getInstance().run(ctx);
     }
 
     public void stop(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("stop Geofencing");
-        GeofenceController.getInstance().run(ctx);
     }
 
 }

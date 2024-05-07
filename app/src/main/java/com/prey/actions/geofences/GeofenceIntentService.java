@@ -45,13 +45,6 @@ public class GeofenceIntentService extends IntentService {
     }
 
     private void notifyGeofenceTransition(Context context, int geofenceTransition, List<Geofence> triggeringGeofences, Location location) {
-        PreyLocation locationNow=null;
-        try{
-            locationNow=new PreyLocation(location);
-        }catch (Exception e){
-            PreyLogger.e("Error:"+e.getMessage(),e);
-        }
-        GeofenceController.verifyGeozone(context,locationNow);
     }
 
 }
