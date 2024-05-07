@@ -7,6 +7,7 @@
 package com.prey;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
@@ -201,5 +202,20 @@ public class PreyPermission {
 
     public static boolean areNotificationsEnabled(Context context){
         return NotificationManagerCompat.from(context).areNotificationsEnabled();
+    }
+
+    /**
+     * Method that validates whether exact alarms can be programmed
+     *
+     * @param ctx context
+     * @return true if the caller can schedule exact alarms, false otherwise.
+     */
+    public static boolean canScheduleExactAlarms(Context ctx){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            AlarmManager alarmMgr = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+            return alarmMgr.canScheduleExactAlarms();
+        } else {
+            return true;
+        }
     }
 }

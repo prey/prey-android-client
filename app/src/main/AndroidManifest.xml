@@ -32,6 +32,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACTION_SHUTDOWN" />
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -341,6 +343,7 @@
         </receiver>
 
         <receiver android:name="com.prey.receivers.AlarmReportReceiver" />
+        <receiver android:name="com.prey.actions.aware.AlarmAwareReceiver" />
         <receiver android:name="com.prey.receivers.AlarmScheduledReceiver" />
 
         <receiver
