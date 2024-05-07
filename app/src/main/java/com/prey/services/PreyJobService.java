@@ -24,11 +24,8 @@ import com.prey.beta.actions.PreyBetaActionsRunner;
 public class PreyJobService extends JobService {
     private static final int JOB_ID = 321;
 
-    private static int[]arrayScheduled=new int[]{0,1,2,5,10,20,30};
-
     public static int getMinuteScheduled(Context ctx){
-        int minuteScheduled = PreyConfig.getPreyConfig(ctx).getMinuteScheduled();
-        int minutes = arrayScheduled[minuteScheduled];
+        int minutes = 15;
         return minutes;
     }
     public static void schedule(Context ctx ) {
