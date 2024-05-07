@@ -20,6 +20,12 @@ public class Triggers {
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
         PreyLogger.d("starting Triggers");
+        try {
+            //Wait before executing.
+            Thread.sleep(2000);
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+        }
         TriggerController.getInstance().run(ctx);
     }
 
