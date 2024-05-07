@@ -42,29 +42,6 @@ public class PreyNotificationForeGroundService extends Service {
     }
 
     private void startForegroundService() {
-        PreyLogger.d("Start foreground service.");
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification.Builder builder;
-        String channelId = "channelId";
-        String channelName = "Prey";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW);
-            channel.enableVibration(false);
-            channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-            notificationManager.createNotificationChannel(channel);
-            builder = new Notification.Builder(this, channelId);
-        } else {
-            builder = new Notification.Builder(this);
-        }
-        builder.setWhen(System.currentTimeMillis());
-        builder.setSmallIcon(R.drawable.icon2);
-        builder.setContentTitle(getString(R.string.disable_power_ready));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            builder.setPriority(Notification.PRIORITY_MIN);
-            builder.setOngoing(false);
-            Notification notification = builder.build();
-            startForeground(1, notification);
-        }
     }
 
     private void stopForegroundService() {
