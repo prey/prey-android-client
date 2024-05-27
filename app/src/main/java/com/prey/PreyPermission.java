@@ -135,7 +135,7 @@ public class PreyPermission {
      * @return true if accessibility method should request it, false otherwise
      */
     public static boolean isAccessibilityServiceView(Context ctx) {
-        boolean isThereBatchInstallationKey = PreyBatch.isThereBatchInstallationKey(ctx);
+        boolean isThereBatchInstallationKey = PreyBatch.getInstance(ctx).isThereBatchInstallationKey();
         //If it is batch, do not request accessibility
         if (isThereBatchInstallationKey) {
             return isThereBatchInstallationKey;
