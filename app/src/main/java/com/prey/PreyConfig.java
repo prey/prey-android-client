@@ -1610,4 +1610,15 @@ public class PreyConfig {
     public boolean getDenyNotification() {
         return getBoolean(PreyConfig.DENY_NOTIFICATION, false);
     }
+
+    public static final String DAILY_LOCATION = "DAILY_LOCATION";
+
+    public String getDailyLocation(){
+        return getString(PreyConfig.DAILY_LOCATION, "");
+    }
+
+    public void setDailyLocation(String dailyLocation){
+        PreyLogger.d(String.format("DAILY setDailyLocation [%s]", dailyLocation));
+        saveString(PreyConfig.DAILY_LOCATION, dailyLocation);
+    }
 }

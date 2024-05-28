@@ -345,6 +345,7 @@
         <receiver android:name="com.prey.receivers.AlarmReportReceiver" />
         <receiver android:name="com.prey.actions.aware.AlarmAwareReceiver" />
         <receiver android:name="com.prey.receivers.AlarmScheduledReceiver" />
+        <receiver android:name="com.prey.actions.location.daily.AlarmLocationReceiver" />
 
         <receiver
             android:name="com.prey.receivers.GeofenceReceiver"
