@@ -20,6 +20,7 @@ import com.prey.actions.aware.AwareController;
 import com.prey.actions.aware.AwareScheduled;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
+import com.prey.actions.location.daily.LocationScheduled;
 import com.prey.actions.report.ReportScheduled;
 import com.prey.actions.report.ReportService;
 import com.prey.actions.triggers.TriggerController;
@@ -114,6 +115,7 @@ public class PreyApp extends Application {
                             GeofenceController.getInstance().run(ctx);
                             AwareController.getInstance().init(ctx);
                             AwareScheduled.getInstance(ctx).run();
+                            LocationScheduled.getInstance().run(ctx);
                         }
                         FileretrievalController.getInstance().run(ctx);
                         TriggerController.getInstance().run(ctx);
