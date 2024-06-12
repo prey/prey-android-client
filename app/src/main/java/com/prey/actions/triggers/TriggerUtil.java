@@ -146,11 +146,12 @@ public class TriggerUtil {
                     JSONObject json = new JSONObject(event.info);
                     String dateTime = null;
                     dateTime = json.getString("date");
-                    PreyLogger.d("TimeTrigger dateTime:" + dateTime);
+                    PreyLogger.d(String.format("TimeTrigger dateTime:%s", dateTime));
                     Date date = TimeTrigger.EXACT_TIME_FORMAT_SDF.parse(dateTime);
-                    valid=validDateAroundMinutes(date,3);
+                    //increased to 15
+                    valid = validDateAroundMinutes(date, 15);
                 } catch (Exception e) {
-                    PreyLogger.e("Error:"+e.getMessage(),e);
+                    PreyLogger.e(String.format("Error :%s", e.getMessage()), e);
                 }
                 return valid;
             }
@@ -189,8 +190,9 @@ public class TriggerUtil {
                             PreyLogger.d("TimeTrigger day==dayNow");
                         }
                     }
-                    if(valid){
-                        valid=validDateAroundMinutes(dateTime,3);
+                    if (valid) {
+                        //increased to 15
+                        valid = validDateAroundMinutes(dateTime, 15);
                         PreyLogger.d("TimeTrigger validDateAroundMinutes");
                     }
                     return valid;

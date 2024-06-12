@@ -57,86 +57,12 @@ public class GeofenceController {
     }
 
     public void run(Context ctx) {
-        try {
-            GeofenceDataSource dataSource = new GeofenceDataSource(ctx);
-            listBD = dataSource.getAllGeofences();
-            listWeb =null;
-            try {listWeb = GeofecenceParse.getJSONFromUrl(ctx); } catch (Exception e) {}
-            updateZones(ctx,listWeb,listBD,dataSource);
-        } catch (Exception e) {
-            PreyLogger.e("error GeofenceController run"+e.getMessage(),e);
-        }
     }
 
     private void updateZones( Context ctx,List<GeofenceDto> listWeb ,List<GeofenceDto> listBD,GeofenceDataSource dataSource){
-        try {
-            List<GeofenceDto> listDelete=new ArrayList<>();
-            List<GeofenceDto> listUpdate=new ArrayList<>();
-            Map<String, GeofenceDto> mapBD = convertMap(listBD);
-            Map<String, GeofenceDto> mapWeb = convertMap(listWeb);
-            List<String> removeList = new ArrayList<String>();
-            List<String> listRemove = new ArrayList<String>();
-            List<GeofenceDto> listAdd = new ArrayList<GeofenceDto>();
-            for(int i=0;listBD!=null&&i<listBD.size();i++){
-                GeofenceDto dto=listBD.get(i);
-                if(mapWeb!=null&&!mapWeb.containsKey(dto.getId())){
-                    removeList.add(dto.getId());
-                    listRemove.add(dto.getId());
-                    dataSource.deleteGeofence(dto.getId());
-                }
-            }
-            if(listRemove!=null&&listRemove.size()>0) {
-                LocationServices.getGeofencingClient(ctx).removeGeofences(listRemove);
-            }
-            if (removeList != null && removeList.size() > 0) {
-                String infoDelete = "[";
-                for (int i = 0; removeList != null && i < removeList.size(); i++) {
-                    infoDelete += removeList.get(i);
-                    if (i + 1 < removeList.size()) {
-                        infoDelete += ",";
-                    }
-                }
-                infoDelete += "]";
-                PreyLogger.d("GEO infoDelete:" + infoDelete);
-                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "stopped", infoDelete));
-            }
-            for(int i=0;listWeb!=null&&i<listWeb.size();i++) {
-                GeofenceDto geo = listWeb.get(i);
-                if(mapBD.containsKey(geo.getId())){
-                    dataSource.updateGeofence(geo);
-                }else{
-                    dataSource.createGeofence(geo);
-                    listAdd.add(geo);
-                }
-            }
-            String infoAdd = "[";
-            for(int i=0;listAdd!=null&&i<listAdd.size();i++) {
-                GeofenceDto geo = listAdd.get(i);
-                infoAdd += geo.id;
-                if (i + 1 < listAdd.size()) {
-                    infoAdd += ",";
-                }
-            }
-            infoAdd += "]";
-            if(listAdd!=null&&listAdd.size()>0) {
-                sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "started", infoAdd));
-            }
-            List list=dataSource.getAllGeofences();
-            if(list!=null&&list.size()>0) {
-                initList(ctx, list);
-            }
-        } catch (Exception e) {
-            PreyLogger.e("error run"+e.getMessage(),e);
-        }
     }
 
     public void deleteAllZones(Context ctx){
-        GeofenceDataSource dataSource = new GeofenceDataSource(ctx);
-        listBD = dataSource.getAllGeofences();
-        for(int i=0;listBD!=null&&i<listBD.size();i++) {
-            GeofenceDto dto = listBD.get(i);
-            dataSource.deleteGeofence(dto.getId());
-        }
     }
 
     private Map<String, GeofenceDto> convertMap(List<GeofenceDto> list) {
@@ -152,124 +78,14 @@ public class GeofenceController {
     }
 
     public void sendNotify(final Context ctx, final Map<String, String> params) {
-        new Thread() {
-            public void run() {
-                try{
-                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, params);
-                } catch (Exception e) {
-                }
-            }
-        }.start();
     }
 
     public void initList(final Context ctx,List<GeofenceDto> listBD) {
-        int loiteringDelay= FileConfigReader.getInstance(ctx).getGeofenceLoiteringDelay();
-        List<com.google.android.gms.location.Geofence> mGeofenceList  = new ArrayList<Geofence>();
-        final List<GeofenceDto> listToBdAdd = new ArrayList<GeofenceDto>();
-        String info = "[";
-        for (int i = 0; listBD != null && i < listBD.size(); i++) {
-            GeofenceDto geo = listBD.get(i);
-            listToBdAdd.add(geo);
-            PreyLogger.d("GEO START id:" + geo.name + " lat:" + geo.latitude + " long:" + geo.longitude + " ra:" + geo.radius +" type:"+ geo.type+ " expires:" + geo.expires);
-            mGeofenceList.add(new com.google.android.gms.location.Geofence.Builder()
-                    .setRequestId(geo.id)
-                    .setCircularRegion(geo.latitude, geo.longitude, geo.radius)
-                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER|Geofence.GEOFENCE_TRANSITION_EXIT)
-                    .setLoiteringDelay(loiteringDelay) //30 seconds
-                     .setNotificationResponsiveness(0)  //0 seconds
-                    .build());
-            info += geo.id;
-            if (i + 1 < listBD.size()) {
-                info += ",";
-            }
-        }
-        info += "]";
-        final String extraInfo = info;
-        PreyLogger.d("GEO info:" + extraInfo);
-        GeofencingRequest.Builder builderEnter = new GeofencingRequest.Builder();
-        builderEnter.setInitialTrigger( GeofencingRequest.INITIAL_TRIGGER_ENTER|GeofencingRequest.INITIAL_TRIGGER_EXIT);
-        builderEnter.addGeofences(mGeofenceList );
-        GeofencingRequest geofencingRequest = builderEnter.build();
-        final Context ctx2=ctx;
-        try {
-            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                PendingIntent pendingIntent=PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, GeofenceReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_MUTABLE);
-                LocationServices.getGeofencingClient(ctx).addGeofences(geofencingRequest,pendingIntent)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        PreyLogger.d("GEO saveGeofence");
-                                        LocationUtil.dataLocation(ctx,null,true);
-                                    }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        PreyLogger.d("GEO saveGeofence failed: " + e.getMessage());
-                                        sendNotify(ctx2, UtilJson.makeMapParam("start", "geofencing", "failed", "status:" + e.getMessage()));
-                                    }
-                        });
-            }//if
-        } catch (Exception e) {
-            PreyLogger.e("GEO error:" + e.getMessage(), e);
-            sendNotify(ctx, UtilJson.makeMapParam("start", "geofencing", "failed", "error:" + e.getMessage()));
-        }
     }
 
     public static void verifyGeozone(Context ctx,PreyLocation locationNow){
-        PreyLogger.d("GEO verifyGeozone");
-        if(locationNow!=null) {
-            PreyLogger.d("GEO connection verifyGeozone lat:" + locationNow.getLat() + " lng:" + locationNow.getLng());
-        }
-        try{
-            if(locationNow!=null && (locationNow.getLat()!=null && locationNow.getLat()!=0 && locationNow.getLng()!=null && locationNow.getLng()!=0)) {
-                GeofenceDataSource dataSource = new GeofenceDataSource(ctx);
-                List<GeofenceDto> listBD = dataSource.getAllGeofences();
-                PreyLogger.d("GEO listBD size:" + (listBD == null ? 0 : listBD.size()));
-                int maximumAccuracy = PreyConfig.getPreyConfig(ctx).getGeofenceMaximumAccuracy();
-                for (int i = 0; listBD != null && i < listBD.size(); i++) {
-                    GeofenceDto geo = listBD.get(i);
-                    validateGeozone(ctx, geo, maximumAccuracy, locationNow, dataSource);
-                }
-            }
-        } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
-        }
     }
 
     public static void validateGeozone(Context ctx,GeofenceDto geo,int maximumAccuracy,PreyLocation locationNow,GeofenceDataSource dataSource){
-        if(locationNow!=null&&locationNow.getAccuracy() < maximumAccuracy) {
-            PreyLocation locationGeo = geo.getPreyLocation();
-            double distance = LocationUtil.distance(locationNow,locationGeo);
-            String transition="";
-            if (distance > geo.getRadius()) {
-                transition = GEOFENCING_OUT;
-            } else {
-                transition = GEOFENCING_IN;
-            }
-            PreyLogger.d("GEO validateGeozone name:"+geo.name+" type:"+geo.getType()+" transition:" + transition);
-            if (!transition.equals(geo.getType())) {
-                if(GEOFENCING_IN.equals(transition)||(GEOFENCING_OUT.equals(transition) )) {
-                    try {
-                        JSONObject info = new JSONObject();
-                        info.put("id", "" + geo.id);
-                        info.put("lat", locationNow.getLat());
-                        info.put("lng", locationNow.getLng());
-                        info.put("accuracy", locationNow.getAccuracy());
-                        info.put("method", locationNow.getMethod());
-                        Event event = new Event();
-                        event.setName(transition);
-                        event.setInfo(info.toString());
-                        JSONObject jsonObjectStatus = new JSONObject();
-                        PreyLogger.d("GEO name:"+geo.name+" event:" + transition.toString()+" _ "+info.toString());
-                        dataSource.updateGeofenceType(geo.id, transition);
-                        new EventThread(ctx, event, jsonObjectStatus, transition).start();
-                    } catch (Exception e) {
-                        PreyLogger.e("GEO error:" + e.getMessage(), e);
-                    }
-                }
-            }
-        }
     }
 }

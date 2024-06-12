@@ -17,9 +17,12 @@ import androidx.multidex.MultiDex;
 import com.google.firebase.FirebaseApp;
 
 import com.prey.actions.aware.AwareController;
+import com.prey.actions.aware.AwareScheduled;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
+import com.prey.actions.location.daily.LocationScheduled;
 import com.prey.actions.report.ReportScheduled;
+import com.prey.actions.report.ReportService;
 import com.prey.actions.triggers.TriggerController;
 import com.prey.activities.LoginActivity;
 import com.prey.beta.actions.PreyBetaController;
@@ -111,12 +114,15 @@ public class PreyApp extends Application {
                         if ((accessCoarseLocation || accessFineLocation) && canAccessBackgroundLocation) {
                             GeofenceController.getInstance().run(ctx);
                             AwareController.getInstance().init(ctx);
+                            AwareScheduled.getInstance(ctx).run();
+                            LocationScheduled.getInstance().run(ctx);
                         }
                         FileretrievalController.getInstance().run(ctx);
                         TriggerController.getInstance().run(ctx);
                         if (missing) {
                             if (PreyConfig.getPreyConfig(ctx).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(ctx).getIntervalReport())) {
                                 ReportScheduled.getInstance(ctx).run();
+                                new ReportService().run(ctx);
                             }
                         }
                         if (!PreyConfig.getPreyConfig(ctx).isChromebook()) {
