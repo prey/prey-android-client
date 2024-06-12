@@ -69,7 +69,7 @@ public class PreyBatch {
      * Method returns if it has apikey batch
      * @return
      */
-    public static boolean isThereBatchInstallationKey(Context ctx) {
+    public boolean isThereBatchInstallationKey() {
         String apiKeyBatch = _instance.getApiKeyBatch();
         return (apiKeyBatch != null && !"".equals(apiKeyBatch));
     }

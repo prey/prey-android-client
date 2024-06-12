@@ -7,6 +7,8 @@
 package com.prey.actions.report;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -14,17 +16,22 @@ import org.json.JSONObject;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPermission;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.net.http.EntityFile;
+import com.prey.receivers.AlarmReportReceiver;
 import com.prey.util.ClassUtil;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 public class ReportService extends IntentService {
 
@@ -51,6 +58,18 @@ public class ReportService extends IntentService {
 				interval = Integer.parseInt(PreyConfig.getPreyConfig(ctx).getIntervalReport());
 			}catch (Exception ee){
 				interval=10;
+			}
+			//If it is Android 12 and you have alarm permission, run at the exact time
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+				if (PreyPermission.canScheduleExactAlarms(ctx)) {
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTimeInMillis(new Date().getTime());
+					calendar.add(Calendar.MINUTE, interval);
+					Intent intent = new Intent(ctx, AlarmReportReceiver.class);
+					PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+					AlarmManager alarmMgr = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+					alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+				}
 			}
 			String exclude=PreyConfig.getPreyConfig(ctx).getExcludeReport();
 			JSONArray jsonArray = new JSONArray();

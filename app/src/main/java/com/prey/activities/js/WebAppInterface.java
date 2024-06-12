@@ -764,7 +764,8 @@ public class WebAppInterface {
         boolean showCamera = PreyPermission.showRequestCamera(mActivity);
         boolean showPhone = PreyPermission.showRequestPhone(mActivity);
         boolean showStorage = PreyPermission.showRequestStorage(mActivity);
-        boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(mContext);
+        boolean canAccessibility = PreyPermission.isAccessibilityServiceView(mContext);
+        boolean canScheduleExactAlarms = PreyPermission.canScheduleExactAlarms(mContext);
         boolean showDeniedPermission=false;
         if(!canAccessStorage) {
             if (!showStorage)
@@ -787,6 +788,7 @@ public class WebAppInterface {
         PreyLogger.d("canAccessBackgroundLocation:" + canAccessBackgroundLocation);
         PreyLogger.d("canAccessCamera:" + canAccessCamera);
         PreyLogger.d("canAccessStorage:" + canAccessStorage);
+        PreyLogger.d("canScheduleExactAlarms:" + canScheduleExactAlarms);
         PreyLogger.d("showBackgroundLocation:" + showBackgroundLocation);
         PreyLogger.d("showFineLocation:" + showFineLocation);
         PreyLogger.d("showCoarseLocation:" + showCoarseLocation);
@@ -815,6 +817,9 @@ public class WebAppInterface {
                     }
                 }else{
                     mActivity.askForAdminActive();
+                }
+                if(!canScheduleExactAlarms){
+                    mActivity.alarms();
                 }
             }
         }
@@ -1277,6 +1282,14 @@ public class WebAppInterface {
     @JavascriptInterface
     public void appIsntUsed() {
         PreyLogger.d("appIsntUsed");
+        openSettings();
+    }
+
+    /**
+     * Method open prey settings
+     */
+    public void openSettings() {
+        PreyLogger.d("openSettings");
         Intent intentSetting = new Intent();
         intentSetting.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", mContext.getPackageName(), null);
@@ -1363,7 +1376,11 @@ public class WebAppInterface {
      */
     @JavascriptInterface
     public void turnOnNotifications() {
-        mActivity.askForPermissionNotification();
+        try {
+            mActivity.askForPermissionNotification();
+        }catch (Exception e){
+            openSettings();
+        }
     }
 
     @JavascriptInterface
@@ -1415,4 +1432,10 @@ public class WebAppInterface {
         return manufacturer.toLowerCase().contains(vendor) || brand.toLowerCase().contains(vendor);
     }
 
+    @JavascriptInterface
+    public boolean initAlarms() {
+        boolean initAlarms = PreyPermission.canScheduleExactAlarms(mContext);
+        PreyLogger.d(String.format("initAlarms:%s", initAlarms));
+        return initAlarms;
+    }
 }

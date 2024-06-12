@@ -89,7 +89,7 @@ public class LocationUtil {
             PreyLogger.e("Error AppServiceOreo:"+e.getMessage(),e);
         }
         if (preyLocation != null) {
-            PreyLogger.d("preyLocation lat:" + preyLocation.getLat() + " lng:" + preyLocation.getLng());
+            PreyLogger.d(String.format("preyLocation lat:%s lng:%s acc:%s", preyLocation.getLat(), preyLocation.getLng(), preyLocation.getAccuracy()));
         }
         final PreyLocation location = preyLocation;
         new Thread() {
@@ -136,9 +136,9 @@ public class LocationUtil {
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms);
     }
 
-    public final static int MAXIMUM_OF_ATTEMPTS=6;
-    public final static int MAXIMUM_OF_ATTEMPTS2=6;
-    public final static int []SLEEP_OF_ATTEMPTS=new int[]{1,1,1,1,2,2,2,2,2,2};
+    public final static int MAXIMUM_OF_ATTEMPTS = 3;
+    public final static int MAXIMUM_OF_ATTEMPTS2 = 3;
+    public final static int[] SLEEP_OF_ATTEMPTS = new int[]{1, 2, 3, 3};
 
     public static PreyLocation getPreyLocationPlayService(final Context ctx, String method, boolean asynchronous, PreyLocation preyLocationOld) throws Exception {
         PreyLocation preyLocation = null;
@@ -190,7 +190,6 @@ public class LocationUtil {
                 preyLocation = PreyLocationManager.getInstance(ctx).getLastLocation();
                 if (preyLocation != null) {
                     preyLocation.setMethod(method);
-                    break;
                 }
                 i++;
             }

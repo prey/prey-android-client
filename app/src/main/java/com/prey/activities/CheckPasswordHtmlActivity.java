@@ -98,7 +98,11 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         }
         setContentView(R.layout.webview);
         PreyLogger.d("CheckPasswordHtmlActivity: onCreate");
-        registerReceiver(close_prey_receiver, new IntentFilter(CLOSE_PREY));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(close_prey_receiver, new IntentFilter(CLOSE_PREY), RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(close_prey_receiver, new IntentFilter(CLOSE_PREY));
+        }
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
@@ -213,11 +217,13 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             boolean canAccessCamera = PreyPermission.canAccessCamera(this);
             boolean canAccessStorage = PreyPermission.canAccessStorage(this);
             boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocationView(this);
+            boolean canScheduleExactAlarms = PreyPermission.canScheduleExactAlarms(this);
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessFineLocation:%s", canAccessFineLocation));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessCoarseLocation:%s", canAccessCoarseLocation));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessCamera:%s", canAccessCamera));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessStorage:%s", canAccessStorage));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessBackgroundLocation:%s", canAccessBackgroundLocation));
+            PreyLogger.d(String.format("CheckPasswordHtmlActivity: canScheduleExactAlarms:%s", canScheduleExactAlarms));
             boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canDrawOverlays:%s", canDrawOverlays));
             boolean canAccessibility = PreyPermission.isAccessibilityServiceView(this);
@@ -227,6 +233,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             boolean isStorage = PreyPermission.isExternalStorageManagerView(this);
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: isStorage:%s", isStorage));
             boolean configurated = (canAccessFineLocation || canAccessCoarseLocation) && canAccessBackgroundLocation && canAccessCamera
+                    && canScheduleExactAlarms
                     && canAccessStorage && isAdminActive && canDrawOverlays && canAccessibility && isStorage;
             String installationStatus = PreyConfig.getPreyConfig(this).getInstallationStatus();
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: configurated:%s installationStatus:%s", configurated, installationStatus));
@@ -272,7 +279,11 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
                             }
                         }
                     }else{
-                        url.append(URL_ONB).append("#/").append(lng).append("/permissions");
+                        if (!canAccessibility) {
+                            url.append(URL_ONB).append("#/").append(lng).append("/accessibility");
+                        } else {
+                            url.append(URL_ONB).append("#/").append(lng).append("/permissions");
+                        }
                     }
                 }
             }
@@ -471,6 +482,17 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         startActivityForResult(intentAskForAdmin, SECURITY_PRIVILEGES);
     }
 
+    /**
+     * Method that requests alarm permission from the user.
+     */
+    public void alarms() {
+        PreyLogger.d("CheckPasswordHtmlActivity alarms");
+        startActivity(new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + getPackageName())));
+    }
+
+    /**
+     * Method that requests accessibility permission from the user.
+     */
     public void accessibility() {
         PreyLogger.d("CheckPasswordHtmlActivity accessibility");
         Intent intentService = new Intent(getApplicationContext(), PreyAccessibilityService.class);

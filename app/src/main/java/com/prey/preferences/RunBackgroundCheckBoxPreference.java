@@ -45,17 +45,6 @@ public class RunBackgroundCheckBoxPreference extends CheckBoxPreference {
     }
 
     public static void notifyReady(Context ctx){
-        if(!PreyUtils.isChromebook(ctx)) {
-            try{
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    ctx.startForegroundService(new Intent(ctx, PreyNotificationForeGroundService.class));
-                } else {
-                    ctx.startService(new Intent(ctx, PreyNotificationForeGroundService.class));
-                }
-            }catch(Exception e){
-                PreyLogger.e("notifyReady:"+e.getMessage(),e);
-            }
-        }
     }
 
     public static void notifyCancel(Context ctx){
