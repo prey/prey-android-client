@@ -39,6 +39,8 @@ import com.prey.PreyUtils;
 import com.prey.PreyVerify;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.fileretrieval.FileretrievalDto;
+import com.prey.actions.location.PreyLocation;
+import com.prey.actions.location.PreyLocationManager;
 import com.prey.actions.observer.ActionsController;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 import com.prey.events.Event;
@@ -1269,6 +1271,80 @@ public class PreyWebServices {
             PreyLogger.e("Error validateToken:" + e.getMessage(), e);
         }
         return statusCode == 200;
+    }
+
+    /**
+     * Method returns the location using WiFi networks
+     *
+     * @param ctx
+     * @param listWifi
+     * @return PreyLocation
+     */
+    public PreyLocation getLocationWithWifi(final Context ctx, List<Wifi> listWifi) {
+        PreyLocation location = null;
+        try {
+            JSONObject jsonParam = new JSONObject();
+            JSONArray array = new JSONArray();
+            for (int i = 0; listWifi != null && i < listWifi.size() && i < 15; i++) {
+                Wifi wifi = listWifi.get(i);
+                JSONObject jsonRed = new JSONObject();
+                jsonRed.put("macAddress", wifi.getMacAddress());
+                jsonRed.put("ssid", wifi.getSsid());
+                jsonRed.put("signalStrength", Integer.parseInt(wifi.getSignalStrength()));
+                jsonRed.put("channel", Integer.parseInt(wifi.getChannel()));
+                array.put(jsonRed);
+            }
+            jsonParam.put("wifiAccessPoints", array);
+            if (array != null && array.length() > 0) {
+                String url = PreyConfig.getPreyConfig(ctx).getPreyUrl() + "geo";
+                PreyLogger.d(String.format("url:%s", url));
+                PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url, UtilConnection.REQUEST_METHOD_POST, jsonParam);
+                if (response != null) {
+                    if (response.getStatusCode() == HttpURLConnection.HTTP_OK) {
+                        String out = response.getResponseAsString();
+                        JSONObject outJson = new JSONObject(out);
+                        if (!outJson.isNull("geolocation")) {
+                            JSONObject geolocationJson = outJson.getJSONObject("geolocation");
+                            JSONObject locationJSon = geolocationJson.getJSONObject("location");
+                            double lat = locationJSon.getDouble("lat");
+                            double lng = locationJSon.getDouble("lng");
+                            int accuracy = geolocationJson.getInt("accuracy");
+                            location = new PreyLocation();
+                            location.setLat(lat);
+                            location.setLng(lng);
+                            location.setAccuracy(accuracy);
+                            location.setMethod("wifi");
+                        }
+                        if (!outJson.isNull("endpoint")) {
+                            JSONObject endpointJson = outJson.getJSONObject("endpoint");
+                            String urlJson = endpointJson.getString("url");
+                            String userAgentJson = endpointJson.getString("user-agent");
+                            PreyHttpResponse response2 = UtilConnection.postJson(urlJson, userAgentJson, jsonParam);
+                            if (response2.getStatusCode() == HttpURLConnection.HTTP_OK) {
+                                String outEndpoint = response2.getResponseAsString();
+                                JSONObject outJsonEndpoint = new JSONObject(outEndpoint);
+                                JSONObject locationJsonEndpoint = outJsonEndpoint.getJSONObject("location");
+                                double lat = locationJsonEndpoint.getDouble("lat");
+                                double lng = locationJsonEndpoint.getDouble("lng");
+                                int accuracy = outJsonEndpoint.getInt("accuracy");
+                                location = new PreyLocation();
+                                location.setLat(lat);
+                                location.setLng(lng);
+                                location.setAccuracy(accuracy);
+                                location.setMethod("wifi");
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+        }
+        if (location != null) {
+            PreyLocationManager.getInstance(ctx).setLastLocation(location);
+            PreyConfig.getPreyConfig(ctx).setLocation(location);
+        }
+        return location;
     }
 
 }
