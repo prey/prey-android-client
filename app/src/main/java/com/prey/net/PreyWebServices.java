@@ -574,6 +574,7 @@ public class PreyWebServices {
         parameters.put(prefix + "[cpu_cores]", hardware.getCpuCores());
         parameters.put(prefix + "[ram_size]", "" + hardware.getTotalMemory());
         parameters.put(prefix + "[serial_number]", hardware.getSerialNumber());
+        parameters.put(prefix + "[google_services]", String.valueOf(PreyUtils.isGooglePlayServicesAvailable(ctx)));
         int nic = 0;
         Wifi wifi = phone.getWifi();
         if (wifi != null) {

@@ -78,6 +78,7 @@ public class PreyStatus {
     public void initConfig(Context ctx){
         boolean aware = false;
         boolean autoconnect = false;
+        int secondsToQueryServer;
         try {
             JSONObject jsnobject = PreyWebServices.getInstance().getStatus(ctx);
             if (jsnobject != null) {
@@ -97,11 +98,18 @@ public class PreyStatus {
                 }
                 PreyConfig.getPreyConfig(ctx).setAware(aware);
                 PreyConfig.getPreyConfig(ctx).setAutoConnect(autoconnect);
-                PreyLogger.d("STATUS aware :" + aware);
-                PreyLogger.d("STATUS autoconnect :" + autoconnect);
+                PreyLogger.d(String.format("STATUS aware :%b", aware));
+                PreyLogger.d(String.format("STATUS autoconnect :%b", autoconnect));
+                try {
+                    secondsToQueryServer = jsnobject.getInt("seconds_to_query_server");
+                } catch (Exception e) {
+                    secondsToQueryServer = PreyConfig.getPreyConfig(ctx).getSecondsToQueryServer();
+                }
+                PreyConfig.getPreyConfig(ctx).setSecondsToQueryServer(secondsToQueryServer);
+                PreyLogger.d(String.format("STATUS secondsToQueryServer :%s", secondsToQueryServer));
             }
         } catch (Exception e) {
-            PreyLogger.e("STATUS Error:" + e.getMessage(), e);
+            PreyLogger.e(String.format("STATUS Error:%s", e.getMessage()), e);
         }
     }
 
