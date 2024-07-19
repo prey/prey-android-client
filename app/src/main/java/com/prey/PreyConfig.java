@@ -1622,14 +1622,14 @@ public class PreyConfig {
         saveString(PreyConfig.DAILY_LOCATION, dailyLocation);
     }
 
-    public static final String SECONDS_TO_QUERY_SERVER = "SECONDS_TO_QUERY_SERVER";
+    public static final String MINUTES_TO_QUERY_SERVER = "MINUTES_TO_QUERY_SERVER";
 
-    public int getSecondsToQueryServer() {
-        return getInt(PreyConfig.SECONDS_TO_QUERY_SERVER, 15);
+    public int getMinutesToQueryServer() {
+        return getInt(PreyConfig.MINUTES_TO_QUERY_SERVER, 15);
     }
 
-    public void setSecondsToQueryServer(int secondsToQueryServer) {
-        PreyLogger.d(String.format("setSecondsToQueryServer [%s]", secondsToQueryServer));
-        saveInt(PreyConfig.SECONDS_TO_QUERY_SERVER, secondsToQueryServer);
+    public void setMinutesToQueryServer(int minutesToQueryServer) {
+        PreyLogger.d(String.format("setMinutesToQueryServer [%s]", minutesToQueryServer));
+        saveInt(PreyConfig.MINUTES_TO_QUERY_SERVER, minutesToQueryServer);
     }
 }
