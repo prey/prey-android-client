@@ -29,7 +29,7 @@ public class PreyJobService extends JobService {
         int minutes = 15;
         boolean isGooglePlayServicesAvailable = PreyUtils.isGooglePlayServicesAvailable(ctx);
         if (!isGooglePlayServicesAvailable) {
-            minutes = 2;
+            minutes = PreyConfig.getPreyConfig(ctx).getSecondsToQueryServer();
         }
         return minutes;
     }
