@@ -111,7 +111,8 @@ public class PreyApp extends Application {
                         if (!verifyNotification) {
                             EventFactory.notification(ctx);
                         }
-                        if ((accessCoarseLocation || accessFineLocation) && canAccessBackgroundLocation) {
+                        boolean isGooglePlayServicesAvailable = PreyUtils.isGooglePlayServicesAvailable(ctx);
+                        if (isGooglePlayServicesAvailable && (accessCoarseLocation || accessFineLocation) && canAccessBackgroundLocation) {
                             GeofenceController.getInstance().run(ctx);
                             AwareController.getInstance().init(ctx);
                             AwareScheduled.getInstance(ctx).run();
@@ -129,7 +130,9 @@ public class PreyApp extends Application {
                             try {
                                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                     PreyJobService.schedule(ctx);
-                                    AwareJobService.schedule(ctx);
+                                    if (isGooglePlayServicesAvailable) {
+                                        AwareJobService.schedule(ctx);
+                                    }
                                 }
                             } catch (Exception e) {
                                 PreyLogger.e(String.format("error jobService.schedule : %s", e.getMessage()), e);

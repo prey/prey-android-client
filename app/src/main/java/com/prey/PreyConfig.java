@@ -1621,4 +1621,15 @@ public class PreyConfig {
         PreyLogger.d(String.format("DAILY setDailyLocation [%s]", dailyLocation));
         saveString(PreyConfig.DAILY_LOCATION, dailyLocation);
     }
+
+    public static final String MINUTES_TO_QUERY_SERVER = "MINUTES_TO_QUERY_SERVER";
+
+    public int getMinutesToQueryServer() {
+        return getInt(PreyConfig.MINUTES_TO_QUERY_SERVER, 15);
+    }
+
+    public void setMinutesToQueryServer(int minutesToQueryServer) {
+        PreyLogger.d(String.format("setMinutesToQueryServer [%s]", minutesToQueryServer));
+        saveInt(PreyConfig.MINUTES_TO_QUERY_SERVER, minutesToQueryServer);
+    }
 }

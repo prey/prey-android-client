@@ -63,6 +63,8 @@ public class LocationService extends Service {
 
                 LocationProvider gpsLocationProvider = androidLocationManager.getProvider(LocationManager.GPS_PROVIDER);
                 LocationProvider networkProvider = androidLocationManager.getProvider(LocationManager.NETWORK_PROVIDER);
+                LocationProvider passiveProvider = androidLocationManager.getProvider(LocationManager.PASSIVE_PROVIDER);
+                LocationProvider fusedProvider = androidLocationManager.getProvider(LocationManager.FUSED_PROVIDER);
                 if (gpsLocationProvider != null && androidLocationManager.isProviderEnabled(gpsLocationProvider.getName())) {
                     androidLocationManager.requestLocationUpdates(gpsLocationProvider.getName(), PreyConfig.UPDATE_INTERVAL, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE,
                             gpsLocationListener);
@@ -72,6 +74,16 @@ public class LocationService extends Service {
                     androidLocationManager.requestLocationUpdates(networkProvider.getName(), PreyConfig.UPDATE_INTERVAL / 4, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE,
                             networkLocationListener);
                     PreyLogger.d("NETWORK Location provider has been started.");
+                }
+                if (passiveProvider != null && androidLocationManager.isProviderEnabled(passiveProvider.getName())) {
+                    androidLocationManager.requestLocationUpdates(passiveProvider.getName(), PreyConfig.UPDATE_INTERVAL, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE,
+                            passiveLocationListener);
+                    PreyLogger.d("Passive Location provider has been started.");
+                }
+                if (fusedProvider != null && androidLocationManager.isProviderEnabled(fusedProvider.getName())) {
+                    androidLocationManager.requestLocationUpdates(fusedProvider.getName(), PreyConfig.UPDATE_INTERVAL, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE,
+                            fusedLocationListener);
+                    PreyLogger.d("Fused Location provider has been started.");
                 }
             } else {
                 PreyLogger.d("___________ask for permission LocationService ACCESS_FINE_LOCATION");
@@ -90,6 +102,8 @@ public class LocationService extends Service {
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
                     androidLocationManager.removeUpdates(gpsLocationListener);
                     androidLocationManager.removeUpdates(networkLocationListener);
+                    androidLocationManager.removeUpdates(passiveLocationListener);
+                    androidLocationManager.removeUpdates(fusedLocationListener);
             }
         }
     }
@@ -166,6 +180,55 @@ public class LocationService extends Service {
 
         public void onProviderDisabled(String provider) {
             PreyLogger.d("[LocationService] Network Location Provider has been disabled: " + provider);
+        }
+
+        public void onLocationChanged(Location location) {
+            setNewLocation(location);
+        }
+    };
+
+    private LocationListener passiveLocationListener = new LocationListener() {
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            String statusAsString = "Available";
+            if (status == LocationProvider.OUT_OF_SERVICE)
+                statusAsString = "Out of service";
+            else if (status == LocationProvider.TEMPORARILY_UNAVAILABLE)
+                statusAsString = "Temporarily Unavailable";
+            PreyLogger.d(String.format("[LocationService] Network Location provider status has changed: [%s].", statusAsString));
+        }
+
+        public void onProviderEnabled(String provider) {
+            PreyLogger.d(String.format("[LocationService] Passive Location Provider has been enabled: %s", provider));
+        }
+
+        public void onProviderDisabled(String provider) {
+            PreyLogger.d(String.format("[LocationService] Passive Location Provider has been disabled: %s", provider));
+        }
+
+        public void onLocationChanged(Location location) {
+            setNewLocation(location);
+        }
+    };
+
+
+    private LocationListener fusedLocationListener = new LocationListener() {
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            String statusAsString = "Available";
+            if (status == LocationProvider.OUT_OF_SERVICE)
+                statusAsString = "Out of service";
+            else if (status == LocationProvider.TEMPORARILY_UNAVAILABLE)
+                statusAsString = "Temporarily Unavailable";
+            PreyLogger.d(String.format("[LocationService] Network Location provider status has changed: [%s].", statusAsString));
+        }
+
+        public void onProviderEnabled(String provider) {
+            PreyLogger.d(String.format("[LocationService] Fused Location Provider has been enabled: %s", provider));
+        }
+
+        public void onProviderDisabled(String provider) {
+            PreyLogger.d(String.format("[LocationService] Fused Location Provider has been disabled: %s", provider));
         }
 
         public void onLocationChanged(Location location) {

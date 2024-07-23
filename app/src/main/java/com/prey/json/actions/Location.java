@@ -16,12 +16,10 @@ import android.provider.Settings;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.PreyUtils;
 import com.prey.actions.HttpDataService;
-import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.aware.AwareController;
-import com.prey.actions.location.LocationThread;
 import com.prey.actions.location.LocationUtil;
+import com.prey.actions.location.PreyLocation;
 import com.prey.actions.location.PreyLocationManager;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
@@ -60,6 +58,7 @@ public class Location extends JsonAction{
             reason = "{\"device_job_id\":\"" + jobId + "\"}";
         }
         PreyLocationManager.getInstance(ctx).setLastLocation(null);
+        PreyConfig.getPreyConfig(ctx).setLocation(null);
         PreyConfig.getPreyConfig(ctx).setLocationInfo("");
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("get", "location", "started",reason));
         PreyLogger.d(this.getClass().getName());
@@ -73,40 +72,48 @@ public class Location extends JsonAction{
         while (i < maximum) {
             send = false;
             try {
-                data = LocationUtil.dataLocation(ctx, messageId, true);
-                String acc = data.getDataListKey(LocationUtil.ACC);
-                if (acc != null && !acc.equals("")) {
-                    float newAccuracy = 0;
-                    try {
-                        newAccuracy = Float.parseFloat(acc);
-                        PreyLogger.d(String.format("accuracy_:%s newAccuracy:%s", accuracy, newAccuracy));
-                    } catch (Exception e) {
-                    }
-                    if (newAccuracy > 0) {
-                        if (accuracy == -1 || accuracy > newAccuracy) {
-                            send = true;
-                            accuracy = newAccuracy;
+                LocationUtil.dataLocation(ctx, messageId, true);
+                PreyLocation location = PreyConfig.getPreyConfig(ctx).getLocation();
+                if (location != null) {
+                    data = LocationUtil.convertData(location);
+                    String acc = data.getDataListKey(LocationUtil.ACC);
+                    if (acc != null && !acc.equals("")) {
+                        float newAccuracy = 0;
+                        try {
+                            newAccuracy = Float.parseFloat(acc);
+                            PreyLogger.d(String.format("accuracy_:%s newAccuracy:%s", accuracy, newAccuracy));
+                        } catch (Exception e) {
+                            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+                        }
+                        if (newAccuracy > 0) {
+                            if (accuracy == -1 || accuracy > newAccuracy) {
+                                send = true;
+                                accuracy = newAccuracy;
+                            }
                         }
                     }
+                    if (send) {
+                        //It is added if it is the first time the location is sent
+                        HttpDataService dataToast = new HttpDataService("skip_toast");
+                        dataToast.setList(false);
+                        dataToast.setKey("skip_toast");
+                        dataToast.setSingleData(Boolean.toString(!first));
+                        dataToBeSent = new ArrayList<HttpDataService>();
+                        dataToBeSent.add(data);
+                        dataToBeSent.add(dataToast);
+                        PreyLogger.d(String.format("send [%s]:%s", i, accuracy));
+                        PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
+                        first = false;
+                        i = LocationUtil.MAXIMUM_OF_ATTEMPTS;
+                    }
                 }
-                if (send) {
-                    //It is added if it is the first time the location is sent
-                    HttpDataService dataToast = new HttpDataService("skip_toast");
-                    dataToast.setList(false);
-                    dataToast.setKey("skip_toast");
-                    dataToast.setSingleData(Boolean.toString(! first));
-                    dataToBeSent = new ArrayList<HttpDataService>();
-                    dataToBeSent.add(data);
-                    dataToBeSent.add(dataToast);
-                    PreyLogger.d(String.format("send [%s]:%s", i, accuracy));
-                    PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
-                    first = false;
-                }
-                try {
-                    Thread.sleep(LocationUtil.SLEEP_OF_ATTEMPTS[i] * 1000);
-                } catch (Exception e) {
-                    i = LocationUtil.MAXIMUM_OF_ATTEMPTS;
-                    break;
+                if (i < maximum) {
+                    try {
+                        Thread.sleep(LocationUtil.SLEEP_OF_ATTEMPTS[i] * 1000);
+                    } catch (Exception e) {
+                        i = LocationUtil.MAXIMUM_OF_ATTEMPTS;
+                        break;
+                    }
                 }
             } catch (Exception e) {
                 i = LocationUtil.MAXIMUM_OF_ATTEMPTS;

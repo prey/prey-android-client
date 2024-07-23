@@ -8,6 +8,7 @@ package com.prey.actions.location;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.Manifest;
@@ -21,17 +22,18 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPhone;
+import com.prey.PreyUtils;
 import com.prey.actions.HttpDataService;
-import com.prey.actions.geofences.GeofenceController;
 import com.prey.json.UtilJson;
 import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyWebServices;
 import com.prey.services.LocationService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LocationUtil {
 
@@ -51,6 +53,7 @@ public class LocationUtil {
             if (preyLocation != null && (preyLocation.getLat() != 0 && preyLocation.getLng() != 0)) {
                 PreyLogger.d(String.format("locationData:%s %s %s", preyLocation.getLat(), preyLocation.getLng(), preyLocation.getAccuracy()));
                 PreyConfig.getPreyConfig(ctx).setLocation(preyLocation);
+                PreyLocationManager.getInstance(ctx).setLastLocation(preyLocation);
                 data = convertData(preyLocation);
             } else {
                 PreyLogger.d("locationData else:");
@@ -71,32 +74,39 @@ public class LocationUtil {
         boolean isGpsEnabled = PreyLocationManager.getInstance(ctx).isGpsLocationServiceActive();
         boolean isNetworkEnabled = PreyLocationManager.getInstance(ctx).isNetworkLocationServiceActive();
         boolean isWifiEnabled = PreyWifiManager.getInstance(ctx).isWifiEnabled();
-        boolean isGooglePlayServicesAvailable=isGooglePlayServicesAvailable(ctx);
-        String locationInfo="{\"gps\":" + isGpsEnabled + ",\"net\":" + isNetworkEnabled + ",\"wifi\":" + isWifiEnabled+",\"play\":"+isGooglePlayServicesAvailable+"}";
+        boolean isGooglePlayServicesAvailable = PreyUtils.isGooglePlayServicesAvailable(ctx);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("gps", isGpsEnabled);
+            json.put("net", isNetworkEnabled);
+            json.put("wifi", isWifiEnabled);
+            json.put("play", isGooglePlayServicesAvailable);
+        } catch (JSONException e) {
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+        }
+        String locationInfo = json.toString();
         PreyConfig.getPreyConfig(ctx).setLocationInfo(locationInfo);
         PreyLogger.d(locationInfo);
         String method = getMethod(isGpsEnabled, isNetworkEnabled);
         try {
             preyLocation = getPreyLocationAppService(ctx, method, asynchronous, preyLocation, maximum);
         } catch (Exception e) {
-            PreyLogger.e("Error PreyLocationApp:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error PreyLocationApp:%s", e.getMessage()), e);
         }
         try {
-            if(preyLocation==null||preyLocation.getLocation()==null||(preyLocation.getLocation().getLatitude()==0&&preyLocation.getLocation().getLongitude()==0)) {
+            if (preyLocation == null || preyLocation.getLocation() == null || (preyLocation.getLocation().getLatitude() == 0 && preyLocation.getLocation().getLongitude() == 0)) {
                 preyLocation = getPreyLocationAppServiceOreo(ctx, method, asynchronous, preyLocation);
             }
         } catch (Exception e) {
-            PreyLogger.e("Error AppServiceOreo:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error AppServiceOreo:%s", e.getMessage()), e);
+        }
+        if (!isGooglePlayServicesAvailable && (preyLocation == null || preyLocation.getLocation() == null || (preyLocation.getLocation().getLatitude() == 0 && preyLocation.getLocation().getLongitude() == 0))) {
+            List<PreyPhone.Wifi> listWifi = new PreyPhone(ctx).getListWifi();
+            preyLocation = PreyWebServices.getInstance().getLocationWithWifi(ctx, listWifi);
         }
         if (preyLocation != null) {
             PreyLogger.d(String.format("preyLocation lat:%s lng:%s acc:%s", preyLocation.getLat(), preyLocation.getLng(), preyLocation.getAccuracy()));
         }
-        final PreyLocation location = preyLocation;
-        new Thread() {
-            public void run() {
-                GeofenceController.verifyGeozone(ctx, location);
-            }
-        }.start();
         return preyLocation;
     }
 
@@ -207,22 +217,6 @@ public class LocationUtil {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M &&
                 (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                         && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
-            try {
-                FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(ctx);
-                fusedLocationProviderClient.getLastLocation()
-                        .addOnSuccessListener(new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if (location != null) {
-                                    PreyLocationManager.getInstance(ctx).setLastLocation(new PreyLocation(location));
-                                }
-                            }
-                        });
-                preyLocation = waitLocation(ctx, method, asynchronous, maximum);
-            } catch (Exception e) {
-                PreyLogger.e(String.format("getPreyLocationAppService e:%s", e.getMessage()), e);
-            }
-        } else {
             Intent intentLocation = new Intent(ctx, LocationService.class);
             try {
                 ctx.startService(intentLocation);

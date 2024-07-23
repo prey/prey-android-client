@@ -18,6 +18,7 @@ import android.text.format.DateUtils;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyScheduled;
+import com.prey.PreyUtils;
 import com.prey.beta.actions.PreyBetaActionsRunner;
 
 @TargetApi(21)
@@ -26,6 +27,10 @@ public class PreyJobService extends JobService {
 
     public static int getMinuteScheduled(Context ctx){
         int minutes = 15;
+        boolean isGooglePlayServicesAvailable = PreyUtils.isGooglePlayServicesAvailable(ctx);
+        if (!isGooglePlayServicesAvailable) {
+            minutes = PreyConfig.getPreyConfig(ctx).getMinutesToQueryServer();
+        }
         return minutes;
     }
     public static void schedule(Context ctx ) {
@@ -36,8 +41,6 @@ public class PreyJobService extends JobService {
             cancel(ctx);
         } else {
             PreyScheduled.getInstance(ctx).run(minutes);
-            if(minutes<20)
-                minutes=15;
             JobScheduler jobScheduler = null;
             jobScheduler = (JobScheduler) ctx.getSystemService(Context.JOB_SCHEDULER_SERVICE);
             JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, new ComponentName(ctx, PreyJobService.class.getName()));
