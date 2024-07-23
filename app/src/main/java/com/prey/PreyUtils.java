@@ -21,6 +21,8 @@ import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 
 public class PreyUtils {
@@ -144,6 +146,19 @@ public class PreyUtils {
             count += n;
         }
         return count;
+    }
+
+    public static boolean isGooglePlayServicesAvailable(Context context) {
+        boolean isGooglePlayServicesAvailable;
+        try {
+            GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+            int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
+            isGooglePlayServicesAvailable = (resultCode == ConnectionResult.SUCCESS);
+        } catch (Exception e) {
+            isGooglePlayServicesAvailable = false;
+        }
+        PreyLogger.d(String.format("isGooglePlayServicesAvailable:%s", isGooglePlayServicesAvailable));
+        return isGooglePlayServicesAvailable;
     }
 
 }
