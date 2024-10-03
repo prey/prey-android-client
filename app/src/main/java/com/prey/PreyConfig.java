@@ -17,12 +17,17 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.prey.actions.location.PreyLocation;
 import com.prey.activities.FeedbackActivity;
 import com.prey.managers.PreyConnectivityManager;
@@ -616,7 +621,22 @@ public class PreyConfig {
                                 }
                             });
                         } catch (Exception ex) {
-                            PreyLogger.e("registerC2dm error2:" + ex.getMessage(), ex);
+                            try {
+                                FirebaseMessaging.getInstance().getToken()
+                                        .addOnCompleteListener(new OnCompleteListener<String>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<String> task) {
+                                                if (!task.isSuccessful()) {
+                                                    PreyLogger.e(String.format("registerC2dm error:%s", task.getException().getMessage()), task.getException());
+                                                }
+                                                String token = task.getResult();
+                                                PreyLogger.d(String.format("registerC2dm token:%s", token));
+                                                sendToken(ctx, token);
+                                            }
+                                        });
+                            } catch (Exception exception) {
+                                PreyLogger.e(String.format("registerC2dm error:%s", exception.getMessage()), exception);
+                            }
                         }
                     }
                  }
@@ -1125,15 +1145,15 @@ public class PreyConfig {
 
     public void setLocationAware(PreyLocation location){
         if(location!=null) {
-            saveFloat(PreyConfig.AWARE_LAT, location.getLat().floatValue());
-            saveFloat(PreyConfig.AWARE_LNG, location.getLng().floatValue());
+            saveString(PreyConfig.AWARE_LAT, location.getLat().toString());
+            saveString(PreyConfig.AWARE_LNG, location.getLng().toString());
             saveFloat(PreyConfig.AWARE_ACC, location.getAccuracy());
         }
     }
 
     public void removeLocationAware(){
-        saveFloat(PreyConfig.AWARE_LAT, 0);
-        saveFloat(PreyConfig.AWARE_LNG, 0);
+        saveString(PreyConfig.AWARE_LAT, "");
+        saveString(PreyConfig.AWARE_LNG, "");
         saveFloat(PreyConfig.AWARE_ACC, 0);
         saveString(PreyConfig.AWARE_DATE, "");
     }
@@ -1149,15 +1169,21 @@ public class PreyConfig {
 
     public PreyLocation getLocationAware(){
         try{
-            float lat=getFloat(PreyConfig.AWARE_LAT,0);
-            float lng=getFloat(PreyConfig.AWARE_LNG,0);
-            float acc=getFloat(PreyConfig.AWARE_ACC,0);
-            if(lat==0||lng==0){
+            String lat="";
+            String lng="";
+            try {
+                lat = getString(PreyConfig.AWARE_LAT, "");
+                lng = getString(PreyConfig.AWARE_LNG, "");
+            }catch (Exception e){
+
+            }
+            float acc=getFloat(PreyConfig.AWARE_ACC,0f);
+            if(lat==null||"".equals(lat)||lng==null||"".equals(lng)){
                 return null;
             }
             PreyLocation location= new PreyLocation();
-            location.setLat(lat);
-            location.setLng(lng);
+            location.setLat(Double.parseDouble(lat));
+            location.setLng(Double.parseDouble(lng));
             location.setAccuracy(acc);
             return location;
         }catch(Exception e){
@@ -1632,4 +1658,27 @@ public class PreyConfig {
         PreyLogger.d(String.format("setMinutesToQueryServer [%s]", minutesToQueryServer));
         saveInt(PreyConfig.MINUTES_TO_QUERY_SERVER, minutesToQueryServer);
     }
+
+    public static final String AWARE_TIME = "AWARE_TIME";
+
+    public void setAwareTime() {
+        //the date is saved 10 minutes in the future
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MINUTE ,10);
+        long dateTimeLong=cal.getTimeInMillis();
+        PreyLogger.d(String.format("AWARE WORK AwareTime [%s]", dateTimeLong));
+        saveLong(PreyConfig.AWARE_TIME, dateTimeLong);
+    }
+
+    public boolean isTimeNextAware() {
+        //validates if the saved date is old
+        long awareTime = getLong(AWARE_TIME, 0);
+        if (awareTime == 0)
+            return true;
+        long timeNow = new Date().getTime();
+        PreyLogger.d(String.format("AWARE WORK AwareTime difference [%s] current[%s] > save[%s] ", (timeNow - awareTime), timeNow, awareTime));
+        return timeNow > awareTime;
+    }
+
 }
