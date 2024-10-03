@@ -7,8 +7,6 @@
 package com.prey.net;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -387,46 +385,73 @@ public class UtilConnection {
         return new PreyHttpResponse(responseCode,sb.toString(),mapHeaderFields);
     }
 
-    public static HttpURLConnection connectionJson(PreyConfig preyConfig, String uri, String method, JSONObject jsonParam) {
+    public static PreyHttpResponse connectionJson(PreyConfig preyConfig, String uri, String method, JSONObject jsonParam) {
         return connectionJson(preyConfig,uri,REQUEST_METHOD_POST,jsonParam,null);
     }
 
-    public static HttpURLConnection connectionJsonAuthorization(PreyConfig preyConfig,String uri,String method, JSONObject jsonParam) {
+    public static PreyHttpResponse connectionJsonAuthorization(PreyConfig preyConfig,String uri,String method, JSONObject jsonParam) {
         return connectionJson(preyConfig,uri,method,jsonParam,"Basic " + getCredentials(preyConfig.getApiKey(), "X"));
     }
 
-    public static HttpURLConnection connectionJson(PreyConfig preyConfig, String uri, String method, JSONObject jsonParam, String authorization) {
+    public static PreyHttpResponse connectionJson(PreyConfig preyConfig, String uri, String method, JSONObject jsonParam, String authorization) {
+        PreyHttpResponse response = null;
         HttpURLConnection connection = null;
-        int httpResult = -1;
         try {
             if (isInternetAvailable(preyConfig.getContext())) {
-                URL url = new URL(uri);
-                PreyLogger.d(String.format("postJson page: %s", uri));
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setDoOutput(true);
-                connection.setRequestMethod(method);
-                connection.setUseCaches(USE_CACHES);
-                connection.setConnectTimeout(CONNECT_TIMEOUT);
-                connection.setReadTimeout(READ_TIMEOUT);
-                connection.setRequestProperty("Content-Type", "application/json");
-                if (authorization != null)
-                    connection.addRequestProperty("Authorization", authorization);
-                connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
-                connection.addRequestProperty("Origin", "android:com.prey");
-                connection.connect();
-                if (jsonParam != null) {
-                    PreyLogger.d(String.format("jsonParam.toString():%s", jsonParam.toString()));
-                    OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-                    out.write(jsonParam.toString());
-                    out.close();
-                }
-                httpResult = connection.getResponseCode();
-                PreyLogger.d(String.format("postJson responseCode:%s", httpResult));
+                boolean delay = false;
+                int retry = 0;
+                do {
+                    if (delay) {
+                        Thread.sleep(ARRAY_RETRY_DELAY_MS[retry] * 1000);
+                    }
+                    URL url = new URL(uri);
+                    if (uri.indexOf("https:") >= 0) {
+                        connection = (HttpsURLConnection) url.openConnection();
+                    } else {
+                        connection = (HttpURLConnection) url.openConnection();
+                    }
+                    connection.setDoOutput(true);
+                    connection.setRequestMethod(method);
+                    connection.setUseCaches(USE_CACHES);
+                    connection.setConnectTimeout(CONNECT_TIMEOUT);
+                    connection.setReadTimeout(READ_TIMEOUT);
+                    connection.setRequestProperty("Content-Type", "application/json");
+                    if (authorization != null)
+                        connection.addRequestProperty("Authorization", authorization);
+                    connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
+                    connection.addRequestProperty("Origin", "android:com.prey");
+                    connection.connect();
+                    if (jsonParam != null) {
+                        PreyLogger.d(String.format("jsonParam.toString():%s", jsonParam.toString()));
+                        OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
+                        out.write(jsonParam.toString());
+                        out.close();
+                    }
+                    int responseCode = connection.getResponseCode();
+                    switch (responseCode) {
+                        case HttpURLConnection.HTTP_CREATED:
+                            response = convertPreyHttpResponse(responseCode, connection);
+                            retry = RETRIES;
+                            break;
+                        case HttpURLConnection.HTTP_OK:
+                            response = convertPreyHttpResponse(responseCode, connection);
+                            retry = RETRIES;
+                            break;
+                        default:
+                            break;
+                    }
+                    connection.disconnect();
+                    retry++;
+                    if (retry <= RETRIES) {
+                        PreyLogger.d("AWARE WORK Failed retry " + retry + "/" + RETRIES);
+                    }
+                    delay = true;
+                } while (retry < RETRIES);
             }
         } catch (Exception e) {
             PreyLogger.e(String.format("postJson error:%s", e.getMessage()), e);
         }
-        return connection;
+        return response;
     }
 
     private static String getPostDataString(Map<String, String> params) throws UnsupportedEncodingException{

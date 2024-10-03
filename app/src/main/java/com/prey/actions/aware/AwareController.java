@@ -7,8 +7,6 @@
 package com.prey.actions.aware;
 
 import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -18,8 +16,6 @@ import android.os.StrictMode;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
@@ -30,7 +26,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.R;
 import com.prey.actions.location.LocationUpdatesService;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
@@ -185,7 +180,6 @@ public class AwareController {
         if (oldLocation == null) {
             if (newLocation != null) {
                 sendAware = true;
-                PreyConfig.getPreyConfig(ctx).setLocationAware(newLocation);
             }
         } else {
             if (newLocation != null) {
@@ -193,7 +187,6 @@ public class AwareController {
                 PreyLogger.d("AWARE distance:" + distance + " > " + distanceAware);
                 if (distance > distanceAware) {
                     sendAware = true;
-                    PreyConfig.getPreyConfig(ctx).setLocationAware(newLocation);
                 }
             }
         }
@@ -240,12 +233,17 @@ public class AwareController {
             }
             preyResponse = PreyWebServices.getInstance().sendLocation(ctx, location);
             if (preyResponse != null) {
-                PreyLogger.d("AWARE getStatusCode :"+preyResponse.getStatusCode());
-                if (preyResponse.getStatusCode() == HttpURLConnection.HTTP_CREATED) {
-                    PreyConfig.getPreyConfig(ctx).setAware(false);
+                int statusCode = preyResponse.getStatusCode();
+                String response = preyResponse.getResponseAsString();
+                PreyLogger.d(String.format("AWARE statusCode:%s response:%s", statusCode, response));
+                if (statusCode == HttpURLConnection.HTTP_CREATED || statusCode == HttpURLConnection.HTTP_OK) {
+                    PreyConfig.getPreyConfig(ctx).setLocationAware(locationNow);
+                    PreyConfig.getPreyConfig(ctx).setAwareTime();
+                    if ("OK".equals(response)) {
+                        PreyConfig.getPreyConfig(ctx).setAwareDate(PreyConfig.FORMAT_SDF_AWARE.format(new Date()));
+                        PreyLogger.d(String.format("AWARE sendNowAware:%s", locationNow.toString()));
+                    }
                 }
-                PreyConfig.getPreyConfig(ctx).setAwareDate(PreyConfig.FORMAT_SDF_AWARE.format(new Date()));
-                PreyLogger.d("AWARE sendNowAware:" + locationNow.toString());
             }
         }
         return preyResponse;
