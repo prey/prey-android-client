@@ -15,8 +15,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.RestrictionsManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -42,15 +44,22 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.prey.PreyAccountData;
+import com.prey.PreyApp;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
+import com.prey.PreyStatus;
 import com.prey.PreyUtils;
 import com.prey.R;
 
+import com.prey.actions.aware.AwareController;
 import com.prey.activities.js.CustomWebView;
 import com.prey.activities.js.WebAppInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.json.actions.Location;
+import com.prey.net.PreyWebServices;
+import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyAccessibilityService;
 import com.prey.services.PreyOverlayService;
 
@@ -82,6 +91,22 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         }
     };
 
+    private final BroadcastReceiver restriction_receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey()) {
+                RestrictionsManager restrictionsManager = (RestrictionsManager) context.getSystemService(Context.RESTRICTIONS_SERVICE);
+                Bundle restrictions = restrictionsManager.getApplicationRestrictions();
+                if (restrictions != null && restrictions.containsKey("setup_key")) {
+                    String setupKey = restrictions.getString("setup_key");
+                    if (setupKey != null && !"".equals(setupKey)) {
+                        new AddDeviceWithRestriction().execute(setupKey);
+                    }
+                }
+            }
+        }
+    };
+
     private WebView myWebView = null;
 
     public static int OVERLAY_PERMISSION_REQ_CODE = 5469;
@@ -102,6 +127,11 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             registerReceiver(close_prey_receiver, new IntentFilter(CLOSE_PREY), RECEIVER_EXPORTED);
         } else {
             registerReceiver(close_prey_receiver, new IntentFilter(CLOSE_PREY));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(restriction_receiver, new IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED), RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(restriction_receiver, new IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED));
         }
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
@@ -133,7 +163,10 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(close_prey_receiver);
+        unregisterReceiver(restriction_receiver);
     }
+
+
 
     public void settings() {
         PreyLogger.d("CheckPasswordHtmlActivity: settings");
@@ -745,4 +778,56 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             showBiometricPrompt(signature,2);
         }
     }
+    String error = null;
+
+    private class AddDeviceWithRestriction extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... data) {
+            error = null;
+            try {
+                final Context ctx = getApplicationContext();
+                String apiKey = data[0];
+                String deviceType = PreyUtils.getDeviceType(ctx);
+                String nameDevice = PreyUtils.getNameDevice(ctx);
+                PreyLogger.d(String.format("apikey:%s mail:%s type:%s nameDevice:%s", apiKey, deviceType, nameDevice));
+                if (!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
+                    PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, apiKey, deviceType, nameDevice);
+                    if (accountData != null) {
+                        PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
+                        PreyConfig.getPreyConfig(ctx).registerC2dm();
+                        String email = PreyWebServices.getInstance().getEmail(ctx);
+                        PreyConfig.getPreyConfig(ctx).setEmail(email);
+                        PreyConfig.getPreyConfig(ctx).setRunBackground(true);
+                        RunBackgroundCheckBoxPreference.notifyReady(ctx);
+                        PreyConfig.getPreyConfig(ctx).setInstallationStatus("");
+                        new PreyApp().run(ctx);
+                        new Thread() {
+                            public void run() {
+                                try {
+                                    PreyStatus.getInstance().initConfig(getApplicationContext());
+                                    AwareController.getInstance().init(ctx);
+                                    new Location().get(ctx, null, null);
+                                } catch (Exception e) {
+                                    PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+                                }
+                            }
+                        }.start();
+                    }
+                }
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+                error = e.getMessage();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            if (error == null) {
+                reload();
+            }
+        }
+    }
+
 }
