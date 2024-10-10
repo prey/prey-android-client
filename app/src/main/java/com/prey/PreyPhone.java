@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -77,6 +78,8 @@ public class PreyPhone {
         }
         hardware.setCpuCores(String.valueOf(getCpuCores()));
         hardware.setRamSize(String.valueOf(getMemoryRamSize()));
+        hardware.setSerialNumber(getSerialNumber());
+        hardware.setUuid(getSerialNumber());
         initMemory();
     }
 
@@ -653,6 +656,35 @@ public class PreyPhone {
         }catch (Exception e){
             return null;
         }
+    }
+
+    public static String getSerialNumber() {
+        String serialNumber = null;
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method getMethod = c.getMethod("get", String.class);
+            serialNumber = getSerialNumberFromProperty(getMethod, "gsm.sn1");
+            if (serialNumber == null) {
+                serialNumber = getSerialNumberFromProperty(getMethod, "ril.serialnumber");
+            }
+            if (serialNumber == null) {
+                serialNumber = getSerialNumberFromProperty(getMethod, "ro.serialno");
+            }
+            if (serialNumber == null) {
+                serialNumber = getSerialNumberFromProperty(getMethod, "sys.serialnumber");
+            }
+            if (serialNumber == null) {
+                serialNumber = Build.SERIAL;
+            }
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error getSerialNumber:%s", e.getMessage()), e);
+            serialNumber = null;
+        }
+        return serialNumber;
+    }
+
+    private static String getSerialNumberFromProperty(Method getMethod, String propertyName) throws Exception {
+        return (String) getMethod.invoke(null, propertyName);
     }
 
 }
