@@ -458,6 +458,10 @@ public class UtilConnection {
                 // Handle the response code
                 switch (responseCode) {
                     case HttpURLConnection.HTTP_CREATED:
+                        // If the response was successful, convert it to a PreyHttpResponse object and exit the loop
+                        response = convertPreyHttpResponse(responseCode, connection);
+                        retryCount = RETRIES; // exit loop
+                        break;
                     case HttpURLConnection.HTTP_OK:
                         // If the response was successful, convert it to a PreyHttpResponse object and exit the loop
                         response = convertPreyHttpResponse(responseCode, connection);
