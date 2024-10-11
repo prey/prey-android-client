@@ -393,64 +393,91 @@ public class UtilConnection {
         return connectionJson(preyConfig,uri,method,jsonParam,"Basic " + getCredentials(preyConfig.getApiKey(), "X"));
     }
 
-    public static PreyHttpResponse connectionJson(PreyConfig preyConfig, String uri, String method, JSONObject jsonParam, String authorization) {
+    /**
+     * Sends a JSON request to the specified URI and returns the response.
+     *
+     * @param config The PreyConfig object containing configuration settings.
+     * @param uri The URI to send the request to.
+     * @param method The HTTP method to use (e.g. "POST", "GET", etc.).
+     * @param jsonParam The JSON data to send with the request.
+     * @param authorization The authorization token to include with the request.
+     * @return The PreyHttpResponse object containing the response from the server.
+     */
+    public static PreyHttpResponse connectionJson(PreyConfig config, String uri, String method, JSONObject jsonParam, String authorization) {
+        // Initialize variables to track the response and retry count
         PreyHttpResponse response = null;
-        HttpURLConnection connection = null;
-        try {
-            if (isInternetAvailable(preyConfig.getContext())) {
-                boolean delay = false;
-                int retry = 0;
-                do {
-                    if (delay) {
-                        Thread.sleep(ARRAY_RETRY_DELAY_MS[retry] * 1000);
-                    }
-                    URL url = new URL(uri);
-                    if (uri.indexOf("https:") >= 0) {
-                        connection = (HttpsURLConnection) url.openConnection();
-                    } else {
-                        connection = (HttpURLConnection) url.openConnection();
-                    }
-                    connection.setDoOutput(true);
-                    connection.setRequestMethod(method);
-                    connection.setUseCaches(USE_CACHES);
-                    connection.setConnectTimeout(CONNECT_TIMEOUT);
-                    connection.setReadTimeout(READ_TIMEOUT);
-                    connection.setRequestProperty("Content-Type", "application/json");
-                    if (authorization != null)
-                        connection.addRequestProperty("Authorization", authorization);
-                    connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
-                    connection.addRequestProperty("Origin", "android:com.prey");
-                    connection.connect();
-                    if (jsonParam != null) {
-                        PreyLogger.d(String.format("jsonParam.toString():%s", jsonParam.toString()));
-                        OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-                        out.write(jsonParam.toString());
-                        out.close();
-                    }
-                    int responseCode = connection.getResponseCode();
-                    switch (responseCode) {
-                        case HttpURLConnection.HTTP_CREATED:
-                            response = convertPreyHttpResponse(responseCode, connection);
-                            retry = RETRIES;
-                            break;
-                        case HttpURLConnection.HTTP_OK:
-                            response = convertPreyHttpResponse(responseCode, connection);
-                            retry = RETRIES;
-                            break;
-                        default:
-                            break;
-                    }
-                    connection.disconnect();
-                    retry++;
-                    if (retry <= RETRIES) {
-                        PreyLogger.d("AWARE WORK Failed retry " + retry + "/" + RETRIES);
-                    }
-                    delay = true;
-                } while (retry < RETRIES);
+        int retryCount = 0;
+        boolean shouldDelay = false;
+
+        // Loop until we've reached the maximum number of retries
+        while (retryCount < RETRIES) {
+            try {
+                // If we've previously failed, wait for a short period of time before retrying
+                if (shouldDelay) {
+                    Thread.sleep(ARRAY_RETRY_DELAY_MS[retryCount] * 1000);
+                }
+
+                // Create a URL object from the URI
+                URL url = new URL(uri);
+
+                // Open a connection to the URL, using HTTPS if the URI starts with "https"
+                HttpURLConnection connection = uri.startsWith("https") ? (HttpsURLConnection) url.openConnection() : (HttpURLConnection) url.openConnection();
+
+                // Set up the connection properties
+                connection.setDoOutput(true); // We're sending data with the request
+                connection.setRequestMethod(method); // Set the HTTP method
+                connection.setUseCaches(USE_CACHES); // Use caching if enabled
+                connection.setConnectTimeout(CONNECT_TIMEOUT); // Set the connection timeout
+                connection.setReadTimeout(READ_TIMEOUT); // Set the read timeout
+
+                // Set the Content-Type header to application/json
+                connection.setRequestProperty("Content-Type", "application/json");
+
+                // If an authorization token is provided, add it to the request headers
+                if (authorization != null) {
+                    connection.setRequestProperty("Authorization", authorization);
+                }
+
+                // Add the User-Agent and Origin headers
+                connection.setRequestProperty("User-Agent", getUserAgent(config));
+                connection.setRequestProperty("Origin", "android:com.prey");
+
+                // Connect to the server
+                connection.connect();
+
+                // If we have JSON data to send, write it to the output stream
+                if (jsonParam != null) {
+                    OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+                    writer.write(jsonParam.toString());
+                    writer.close();
+                }
+
+                // Get the response code from the server
+                int responseCode = connection.getResponseCode();
+
+                // Handle the response code
+                switch (responseCode) {
+                    case HttpURLConnection.HTTP_CREATED:
+                    case HttpURLConnection.HTTP_OK:
+                        // If the response was successful, convert it to a PreyHttpResponse object and exit the loop
+                        response = convertPreyHttpResponse(responseCode, connection);
+                        retryCount = RETRIES; // exit loop
+                        break;
+                    default:
+                        // If the response was not successful, increment the retry count and delay before retrying
+                        retryCount++;
+                        shouldDelay = true;
+                }
+
+                // Disconnect from the server
+                connection.disconnect();
+            } catch (Exception e) {
+                // Log any errors that occur during the request
+                PreyLogger.e(String.format("Error connecting to url:%s error:" , uri, e.getMessage()), e);
             }
-        } catch (Exception e) {
-            PreyLogger.e(String.format("postJson error:%s", e.getMessage()), e);
         }
+
+        // Return the response from the server
         return response;
     }
 

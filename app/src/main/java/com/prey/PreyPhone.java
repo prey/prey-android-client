@@ -658,32 +658,55 @@ public class PreyPhone {
         }
     }
 
+    /**
+     * Retrieves the device's serial number.
+     *
+     * This method attempts to retrieve the serial number from various system properties.
+     * If all attempts fail, it falls back to using the Build.SERIAL property.
+     *
+     * @return the device's serial number, or null if it could not be retrieved
+     */
     public static String getSerialNumber() {
+        // Initialize the serial number to null
         String serialNumber = null;
         try {
+            // Get the SystemProperties class
             Class<?> c = Class.forName("android.os.SystemProperties");
+            // Get the get() method of the SystemProperties class
             Method getMethod = c.getMethod("get", String.class);
-            serialNumber = getSerialNumberFromProperty(getMethod, "gsm.sn1");
+            // Attempt to retrieve the serial number from various system properties
+            serialNumber = getSerialNumberFromProperty(getMethod, "gsm.sn1"); // GSM serial number
             if (serialNumber == null) {
-                serialNumber = getSerialNumberFromProperty(getMethod, "ril.serialnumber");
+                serialNumber = getSerialNumberFromProperty(getMethod, "ril.serialnumber"); // RIL serial number
             }
             if (serialNumber == null) {
-                serialNumber = getSerialNumberFromProperty(getMethod, "ro.serialno");
+                serialNumber = getSerialNumberFromProperty(getMethod, "ro.serialno");// Serial number from ro.serialno property
             }
             if (serialNumber == null) {
-                serialNumber = getSerialNumberFromProperty(getMethod, "sys.serialnumber");
+                serialNumber = getSerialNumberFromProperty(getMethod, "sys.serialnumber");// Serial number from sys.serialnumber property
             }
             if (serialNumber == null) {
+                // If all else fails, use the Build.SERIAL property
                 serialNumber = Build.SERIAL;
             }
         } catch (Exception e) {
             PreyLogger.e(String.format("Error getSerialNumber:%s", e.getMessage()), e);
             serialNumber = null;
         }
+        // Return the retrieved serial number, or null if it could not be retrieved
         return serialNumber;
     }
 
+    /**
+     * Retrieves the value of the specified system property.
+     *
+     * @param getMethod    the method used to retrieve the system property value
+     * @param propertyName the name of the system property to retrieve
+     * @return the value of the system property, or null if it could not be retrieved
+     * @throws Exception if an error occurs while retrieving the system property value
+     */
     private static String getSerialNumberFromProperty(Method getMethod, String propertyName) throws Exception {
+        // Invoke the getMethod with the propertyName as an argument to retrieve the system property value
         return (String) getMethod.invoke(null, propertyName);
     }
 

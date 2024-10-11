@@ -1167,26 +1167,40 @@ public class PreyConfig {
         saveString(PreyConfig.AWARE_DATE, awareDate);
     }
 
-    public PreyLocation getLocationAware(){
-        try{
-            String lat="";
-            String lng="";
+    /**
+     * Retrieves the location aware settings.
+     *
+     * @return A PreyLocation object containing the location aware settings, or null if the settings are not available.
+     */
+    public PreyLocation getLocationAware() {
+        try {
+            // Initialize latitude and longitude variables
+            String lat = "";
+            String lng = "";
+            // Attempt to retrieve the latitude and longitude values from storage
+            //The data saving is changed to string because decimals are lost
             try {
                 lat = getString(PreyConfig.AWARE_LAT, "");
                 lng = getString(PreyConfig.AWARE_LNG, "");
-            }catch (Exception e){
-
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error getLocationAware:%s", e.getMessage()), e);
             }
-            float acc=getFloat(PreyConfig.AWARE_ACC,0f);
-            if(lat==null||"".equals(lat)||lng==null||"".equals(lng)){
+            // Retrieve the accuracy value from storage
+            float acc = getFloat(PreyConfig.AWARE_ACC, 0f);
+            // Check if the latitude or longitude values are empty or null
+            if (lat == null || "".equals(lat) || lng == null || "".equals(lng)) {
+                // If either value is empty or null, return null
                 return null;
             }
-            PreyLocation location= new PreyLocation();
+            // Create a new PreyLocation object
+            PreyLocation location = new PreyLocation();
             location.setLat(Double.parseDouble(lat));
             location.setLng(Double.parseDouble(lng));
             location.setAccuracy(acc);
+            // Return the PreyLocation object
             return location;
-        }catch(Exception e){
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error getLocationAware:%s", e.getMessage()), e);
             return null;
         }
     }
@@ -1659,8 +1673,16 @@ public class PreyConfig {
         saveInt(PreyConfig.MINUTES_TO_QUERY_SERVER, minutesToQueryServer);
     }
 
+    /**
+     * Key for storing the aware time in the configuration.
+     */
     public static final String AWARE_TIME = "AWARE_TIME";
 
+    /**
+     * Sets the aware time to 10 minutes in the future.
+     *
+     * This method updates the aware time stored in the configuration.
+     */
     public void setAwareTime() {
         //the date is saved 10 minutes in the future
         Calendar cal=Calendar.getInstance();
@@ -1671,6 +1693,14 @@ public class PreyConfig {
         saveLong(PreyConfig.AWARE_TIME, dateTimeLong);
     }
 
+    /**
+     * Checks if it's time for the next aware event.
+     *
+     * This method compares the current time with the saved aware time.
+     * It is used to not request the location for at least 10 minutes
+     *
+     * @return true if it's time for the next aware event, false otherwise
+     */
     public boolean isTimeNextAware() {
         //validates if the saved date is old
         long awareTime = getLong(AWARE_TIME, 0);
