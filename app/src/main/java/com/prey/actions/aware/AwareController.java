@@ -7,8 +7,6 @@
 package com.prey.actions.aware;
 
 import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -18,8 +16,6 @@ import android.os.StrictMode;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
@@ -30,7 +26,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.R;
 import com.prey.actions.location.LocationUpdatesService;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
@@ -185,7 +180,6 @@ public class AwareController {
         if (oldLocation == null) {
             if (newLocation != null) {
                 sendAware = true;
-                PreyConfig.getPreyConfig(ctx).setLocationAware(newLocation);
             }
         } else {
             if (newLocation != null) {
@@ -193,7 +187,6 @@ public class AwareController {
                 PreyLogger.d("AWARE distance:" + distance + " > " + distanceAware);
                 if (distance > distanceAware) {
                     sendAware = true;
-                    PreyConfig.getPreyConfig(ctx).setLocationAware(newLocation);
                 }
             }
         }
@@ -213,39 +206,63 @@ public class AwareController {
      * @return returns PreyHttpResponse
      */
     public static PreyHttpResponse sendNowAware(Context ctx, PreyLocation locationNow) throws Exception {
+        // Initialize response variable
         PreyHttpResponse preyResponse = null;
         if (locationNow == null || locationNow.getLat() == 0 || locationNow.getLng() == 0) {
+            // Log message if location is invalid
             PreyLogger.d("AWARE sendNowAware is zero");
             return preyResponse;
         }
+        // Get location aware status from config
         boolean isLocationAware = PreyConfig.getPreyConfig(ctx).getAware();
-        PreyLogger.d("AWARE sendNowAware isLocationAware:"+isLocationAware);
-        if (isLocationAware){
+        PreyLogger.d(String.format("AWARE sendNowAware isLocationAware:%s", isLocationAware));
+        // Check if location aware is enabled
+        if (isLocationAware) {
             String messageId = null;
             String reason = null;
             double accD = Math.round(locationNow.getAccuracy() * 100.0) / 100.0;
+            // Create JSON object for location data
             JSONObject json = new JSONObject();
-            String method=locationNow.getMethod();
-            if(method==null)
-                method="native";
+            String method = locationNow.getMethod();
+            // Get method from location object, default to "native" if null
+            if (method == null)
+                method = "native";
+            // Put location data into JSON object
             json.put("lat", locationNow.getLat());
             json.put("lng", locationNow.getLng());
             json.put("accuracy", accD);
             json.put("method", method);
+            // Create JSON object for location wrapper
             JSONObject location = new JSONObject();
+            // Put location data into location wrapper
             location.put("location", json);
+            // Set thread policy for Android versions > 9
             if (android.os.Build.VERSION.SDK_INT > 9) {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
             }
+            // Send location data using web services
             preyResponse = PreyWebServices.getInstance().sendLocation(ctx, location);
+            // Check if response is not null
             if (preyResponse != null) {
-                PreyLogger.d("AWARE getStatusCode :"+preyResponse.getStatusCode());
-                if (preyResponse.getStatusCode() == HttpURLConnection.HTTP_CREATED) {
-                    PreyConfig.getPreyConfig(ctx).setAware(false);
+                // Get status code and response from response object
+                int statusCode = preyResponse.getStatusCode();
+                String response = preyResponse.getResponseAsString();
+                // Log status code and response
+                PreyLogger.d(String.format("AWARE statusCode:%s response:%s", statusCode, response));
+                // Check if status code is HTTP_CREATED or HTTP_OK
+                if (statusCode == HttpURLConnection.HTTP_CREATED || statusCode == HttpURLConnection.HTTP_OK) {
+                    // Set location aware data in config
+                    PreyConfig.getPreyConfig(ctx).setLocationAware(locationNow);
+                    PreyConfig.getPreyConfig(ctx).setAwareTime();
+                    // Check if response is "OK"
+                    if ("OK".equals(response)) {
+                        // The date of the last location sent correctly is saved (yyyy-MM-dd )
+                        PreyConfig.getPreyConfig(ctx).setAwareDate(PreyConfig.FORMAT_SDF_AWARE.format(new Date()));
+                        // Log location aware data
+                        PreyLogger.d(String.format("AWARE sendNowAware:%s", locationNow.toString()));
+                    }
                 }
-                PreyConfig.getPreyConfig(ctx).setAwareDate(PreyConfig.FORMAT_SDF_AWARE.format(new Date()));
-                PreyLogger.d("AWARE sendNowAware:" + locationNow.toString());
             }
         }
         return preyResponse;

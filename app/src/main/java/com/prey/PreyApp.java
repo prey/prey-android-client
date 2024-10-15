@@ -33,6 +33,7 @@ import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.AwareJobService;
 import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyJobService;
+import com.prey.workers.PreyWorker;
 
 import java.util.Date;
 import java.util.Map;
@@ -117,6 +118,7 @@ public class PreyApp extends Application {
                             AwareController.getInstance().init(ctx);
                             AwareScheduled.getInstance(ctx).run();
                             LocationScheduled.getInstance().run(ctx);
+                            PreyWorker.getInstance().startPeriodicWork(ctx);
                         }
                         FileretrievalController.getInstance().run(ctx);
                         TriggerController.getInstance().run(ctx);

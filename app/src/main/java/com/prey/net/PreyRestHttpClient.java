@@ -130,17 +130,16 @@ public class PreyRestHttpClient {
     }
 
     public PreyHttpResponse jsonMethod(String url, String method, JSONObject jsonParam) {
-        PreyHttpResponse response=null;
-        HttpURLConnection connection=null;
+        PreyHttpResponse response = null;
+        HttpURLConnection connection = null;
         try {
-            PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + jsonParam.toString());
-            connection=UtilConnection.connectionJson(PreyConfig.getPreyConfig(ctx),url,method,jsonParam,null);
-            response = new PreyHttpResponse(connection);
-            if(response!=null) {
-                PreyLogger.d("Response from server: " + response.toString());
+            PreyLogger.d(String.format("Sending using 'POST' - URI:%s - parameters:%s", url, jsonParam.toString()));
+            response = UtilConnection.connectionJson(PreyConfig.getPreyConfig(ctx), url, method, jsonParam, null);
+            if (response != null) {
+                PreyLogger.d(String.format("Response from server:%s", response.toString()));
             }
         } catch (Exception e) {
-            PreyLogger.e("jsonMethod "+method+" error:" + e.getMessage(), e);
+            PreyLogger.e(String.format("jsonMethod:%s error:%s", method, e.getMessage()), e);
         } finally {
             if (connection != null)
                 connection.disconnect();
@@ -149,15 +148,16 @@ public class PreyRestHttpClient {
     }
 
     public PreyHttpResponse jsonMethodAutentication(String url,String method, JSONObject jsonParam) {
-        PreyHttpResponse response =null;
-        HttpURLConnection connection=null;
+        PreyHttpResponse response = null;
+        HttpURLConnection connection = null;
         try {
-            PreyLogger.d("Sending using '"+method+"' - URI: " + url + " - parameters: " + (jsonParam==null?"":jsonParam.toString()));
-            connection=UtilConnection.connectionJsonAuthorization(PreyConfig.getPreyConfig(ctx),url,method,jsonParam);
-            response = new PreyHttpResponse(connection);
-            PreyLogger.d("Response from server: " + response.toString());
+            PreyLogger.d(String.format("Sending using %s - URI:%s - parameters:%s", method, url, (jsonParam == null ? "" : jsonParam.toString())));
+            response = UtilConnection.connectionJsonAuthorization(PreyConfig.getPreyConfig(ctx), url, method, jsonParam);
+            if (response != null) {
+                PreyLogger.d(String.format("Response from server:%s", response.toString()));
+            }
         } catch (Exception e) {
-            PreyLogger.e("jsonMethodAutentication "+method+" error:" + e.getMessage(), e);
+            PreyLogger.e(String.format("jsonMethodAutentication:%s error:%s", method, e.getMessage()), e);
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -206,7 +206,6 @@ public class PreyRestHttpClient {
      * @throws Exception
      */
     public PreyHttpResponse validToken(Context ctx, String uri, JSONObject json) throws Exception {
-        HttpURLConnection connection = UtilConnection.connectionJson(PreyConfig.getPreyConfig(ctx), uri, UtilConnection.REQUEST_METHOD_POST, json);
-        return new PreyHttpResponse(connection);
+        return UtilConnection.connectionJson(PreyConfig.getPreyConfig(ctx), uri, UtilConnection.REQUEST_METHOD_POST, json);
     }
 }

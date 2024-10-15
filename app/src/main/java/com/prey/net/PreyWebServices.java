@@ -267,23 +267,27 @@ public class PreyWebServices {
 
     }
 
+    public PreyAccountData registerNewDeviceWithApiKeyEmail(Context ctx, String apiKey, String deviceType, String name) throws Exception {
+        return registerNewDeviceWithApiKeyEmail(ctx, apiKey, null, deviceType, name);
+    }
+
     public PreyAccountData registerNewDeviceWithApiKeyEmail(Context ctx, String apiKey, String email, String deviceType, String name) throws Exception {
         String deviceId = null;
-        PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType,name);
+        PreyHttpResponse responseDevice = registerNewDevice(ctx, apiKey, deviceType, name);
         String xmlDeviceId = null;
-        if(responseDevice!=null) {
+        if (responseDevice != null) {
             xmlDeviceId = responseDevice.getResponseAsString();
         }
         //if json
-        if (xmlDeviceId!=null&&xmlDeviceId.contains("{\"key\"")) {
+        if (xmlDeviceId != null && xmlDeviceId.contains("{\"key\"")) {
             try {
                 JSONObject jsnobject = new JSONObject(xmlDeviceId);
                 deviceId = jsnobject.getString("key");
             } catch (Exception e) {
             }
         }
-        PreyAccountData newAccount =null;
-        if (deviceId!=null&&!"".equals(deviceId)) {
+        PreyAccountData newAccount = null;
+        if (deviceId != null && !"".equals(deviceId)) {
             newAccount = new PreyAccountData();
             newAccount.setApiKey(apiKey);
             newAccount.setDeviceId(deviceId);
@@ -574,6 +578,7 @@ public class PreyWebServices {
         parameters.put(prefix + "[cpu_cores]", hardware.getCpuCores());
         parameters.put(prefix + "[ram_size]", "" + hardware.getTotalMemory());
         parameters.put(prefix + "[serial_number]", hardware.getSerialNumber());
+        parameters.put(prefix + "[uuid]", hardware.getUuid());
         parameters.put(prefix + "[google_services]", String.valueOf(PreyUtils.isGooglePlayServicesAvailable(ctx)));
         int nic = 0;
         Wifi wifi = phone.getWifi();
