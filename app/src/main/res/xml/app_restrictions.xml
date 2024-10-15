@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<restrictions xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <restriction
+        android:key="setup_key"
+        android:title="@string/restriction_title_setup_key"
+        android:restrictionType="string"
+        android:description="@string/restriction_description_setup_key"
+        android:defaultValue="" />
+
+</restrictions>

@@ -85,6 +85,7 @@ public class DailyLocation {
         json.put("lng", preyLocation.getLng());
         json.put("accuracy", accD);
         json.put("method", method);
+        json.put("force", true);
         JSONObject location = new JSONObject();
         location.put("location", json);
         if (android.os.Build.VERSION.SDK_INT > 9) {

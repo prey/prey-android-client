@@ -15,8 +15,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.RestrictionsManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -42,15 +44,22 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.prey.PreyAccountData;
+import com.prey.PreyApp;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
+import com.prey.PreyStatus;
 import com.prey.PreyUtils;
 import com.prey.R;
 
+import com.prey.actions.aware.AwareController;
 import com.prey.activities.js.CustomWebView;
 import com.prey.activities.js.WebAppInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.json.actions.Location;
+import com.prey.net.PreyWebServices;
+import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyAccessibilityService;
 import com.prey.services.PreyOverlayService;
 
@@ -82,6 +91,33 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * BroadcastReceiver to handle restriction events.
+     * Checks if the device is already registered with Prey and if not, retrieves the setup key from application restrictions.
+     */
+    private final BroadcastReceiver restriction_receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Check if the device is already registered with Prey
+            if (!PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey()) {
+                // Get the RestrictionsManager instance
+                RestrictionsManager restrictionsManager = (RestrictionsManager) context.getSystemService(Context.RESTRICTIONS_SERVICE);
+                // Retrieve the application restrictions
+                Bundle restrictions = restrictionsManager.getApplicationRestrictions();
+                // Check if the restrictions bundle is not null and contains the "setup_key"
+                if (restrictions != null && restrictions.containsKey("setup_key")) {
+                    // Get the setup key from the restrictions bundle
+                    String setupKey = restrictions.getString("setup_key");
+                    // Check if the setup key is not null and not empty
+                    if (setupKey != null && !"".equals(setupKey)) {
+                        // Execute the AddDeviceWithRestriction task with the setup key
+                        new AddDeviceWithRestriction().execute(setupKey);
+                    }
+                }
+            }
+        }
+    };
+
     private WebView myWebView = null;
 
     public static int OVERLAY_PERMISSION_REQ_CODE = 5469;
@@ -102,6 +138,11 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             registerReceiver(close_prey_receiver, new IntentFilter(CLOSE_PREY), RECEIVER_EXPORTED);
         } else {
             registerReceiver(close_prey_receiver, new IntentFilter(CLOSE_PREY));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(restriction_receiver, new IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED), RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(restriction_receiver, new IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED));
         }
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
@@ -133,7 +174,10 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(close_prey_receiver);
+        unregisterReceiver(restriction_receiver);
     }
+
+
 
     public void settings() {
         PreyLogger.d("CheckPasswordHtmlActivity: settings");
@@ -745,4 +789,84 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             showBiometricPrompt(signature,2);
         }
     }
+    String error = null;
+
+    /**
+     * AsyncTask to add a device with recovered the key from the restrictions.
+     * This task registers a new device with the provided API key, device type, and device name.
+     */
+    private class AddDeviceWithRestriction extends AsyncTask<String, Void, Void> {
+
+        /**
+         * Performs the device registration in the background.
+         *
+         * @param data API key, device type, and device name.
+         * @return null
+         */
+        @Override
+        protected Void doInBackground(String... data) {
+            // Reset error message
+            error = null;
+            try {
+                // Get application context
+                final Context ctx = getApplicationContext();
+                // Extract API key, device type, and device name from input data
+                String apiKey = data[0];
+                String deviceType = PreyUtils.getDeviceType(ctx);
+                String nameDevice = PreyUtils.getNameDevice(ctx);
+                PreyLogger.d(String.format("apikey:%s type:%s nameDevice:%s", apiKey, deviceType, nameDevice));
+                // Check if device is already registered
+                if (!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
+                    // Register new device with API key and email
+                    PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, apiKey, deviceType, nameDevice);
+                    if (accountData != null) {
+                        // Save account data
+                        PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
+                        // Register C2DM
+                        PreyConfig.getPreyConfig(ctx).registerC2dm();
+                        // Get email from web services
+                        String email = PreyWebServices.getInstance().getEmail(ctx);
+                        // Set email in config
+                        PreyConfig.getPreyConfig(ctx).setEmail(email);
+                        PreyConfig.getPreyConfig(ctx).setRunBackground(true);
+                        RunBackgroundCheckBoxPreference.notifyReady(ctx);
+                        PreyConfig.getPreyConfig(ctx).setInstallationStatus("");
+                        // Run PreyApp
+                        new PreyApp().run(ctx);
+                        new Thread() {
+                            public void run() {
+                                try {
+                                    PreyStatus.getInstance().initConfig(getApplicationContext());
+                                    AwareController.getInstance().init(ctx);
+                                    // Get location
+                                    new Location().get(ctx, null, null);
+                                } catch (Exception e) {
+                                    PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+                                }
+                            }
+                        }.start();
+                    }
+                }
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+                error = e.getMessage();
+            }
+            return null;
+        }
+
+        /**
+         * Called after device registration is complete.
+         * Reloads the activity if no error occurred.
+         *
+         * @param unused unused
+         */
+        @Override
+        protected void onPostExecute(Void unused) {
+            if (error == null) {
+                // Reload activity
+                reload();
+            }
+        }
+    }
+
 }

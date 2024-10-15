@@ -17,12 +17,17 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.prey.actions.location.PreyLocation;
 import com.prey.activities.FeedbackActivity;
 import com.prey.managers.PreyConnectivityManager;
@@ -616,7 +621,22 @@ public class PreyConfig {
                                 }
                             });
                         } catch (Exception ex) {
-                            PreyLogger.e("registerC2dm error2:" + ex.getMessage(), ex);
+                            try {
+                                FirebaseMessaging.getInstance().getToken()
+                                        .addOnCompleteListener(new OnCompleteListener<String>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<String> task) {
+                                                if (!task.isSuccessful()) {
+                                                    PreyLogger.e(String.format("registerC2dm error:%s", task.getException().getMessage()), task.getException());
+                                                }
+                                                String token = task.getResult();
+                                                PreyLogger.d(String.format("registerC2dm token:%s", token));
+                                                sendToken(ctx, token);
+                                            }
+                                        });
+                            } catch (Exception exception) {
+                                PreyLogger.e(String.format("registerC2dm error:%s", exception.getMessage()), exception);
+                            }
                         }
                     }
                  }
@@ -1125,15 +1145,15 @@ public class PreyConfig {
 
     public void setLocationAware(PreyLocation location){
         if(location!=null) {
-            saveFloat(PreyConfig.AWARE_LAT, location.getLat().floatValue());
-            saveFloat(PreyConfig.AWARE_LNG, location.getLng().floatValue());
+            saveString(PreyConfig.AWARE_LAT, location.getLat().toString());
+            saveString(PreyConfig.AWARE_LNG, location.getLng().toString());
             saveFloat(PreyConfig.AWARE_ACC, location.getAccuracy());
         }
     }
 
     public void removeLocationAware(){
-        saveFloat(PreyConfig.AWARE_LAT, 0);
-        saveFloat(PreyConfig.AWARE_LNG, 0);
+        saveString(PreyConfig.AWARE_LAT, "");
+        saveString(PreyConfig.AWARE_LNG, "");
         saveFloat(PreyConfig.AWARE_ACC, 0);
         saveString(PreyConfig.AWARE_DATE, "");
     }
@@ -1147,20 +1167,40 @@ public class PreyConfig {
         saveString(PreyConfig.AWARE_DATE, awareDate);
     }
 
-    public PreyLocation getLocationAware(){
-        try{
-            float lat=getFloat(PreyConfig.AWARE_LAT,0);
-            float lng=getFloat(PreyConfig.AWARE_LNG,0);
-            float acc=getFloat(PreyConfig.AWARE_ACC,0);
-            if(lat==0||lng==0){
+    /**
+     * Retrieves the location aware settings.
+     *
+     * @return A PreyLocation object containing the location aware settings, or null if the settings are not available.
+     */
+    public PreyLocation getLocationAware() {
+        try {
+            // Initialize latitude and longitude variables
+            String lat = "";
+            String lng = "";
+            // Attempt to retrieve the latitude and longitude values from storage
+            //The data saving is changed to string because decimals are lost
+            try {
+                lat = getString(PreyConfig.AWARE_LAT, "");
+                lng = getString(PreyConfig.AWARE_LNG, "");
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error getLocationAware:%s", e.getMessage()), e);
+            }
+            // Retrieve the accuracy value from storage
+            float acc = getFloat(PreyConfig.AWARE_ACC, 0f);
+            // Check if the latitude or longitude values are empty or null
+            if (lat == null || "".equals(lat) || lng == null || "".equals(lng)) {
+                // If either value is empty or null, return null
                 return null;
             }
-            PreyLocation location= new PreyLocation();
-            location.setLat(lat);
-            location.setLng(lng);
+            // Create a new PreyLocation object
+            PreyLocation location = new PreyLocation();
+            location.setLat(Double.parseDouble(lat));
+            location.setLng(Double.parseDouble(lng));
             location.setAccuracy(acc);
+            // Return the PreyLocation object
             return location;
-        }catch(Exception e){
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error getLocationAware:%s", e.getMessage()), e);
             return null;
         }
     }
@@ -1632,4 +1672,43 @@ public class PreyConfig {
         PreyLogger.d(String.format("setMinutesToQueryServer [%s]", minutesToQueryServer));
         saveInt(PreyConfig.MINUTES_TO_QUERY_SERVER, minutesToQueryServer);
     }
+
+    /**
+     * Key for storing the aware time in the configuration.
+     */
+    public static final String AWARE_TIME = "AWARE_TIME";
+
+    /**
+     * Sets the aware time to 10 minutes in the future.
+     *
+     * This method updates the aware time stored in the configuration.
+     */
+    public void setAwareTime() {
+        //the date is saved 10 minutes in the future
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MINUTE ,10);
+        long dateTimeLong=cal.getTimeInMillis();
+        PreyLogger.d(String.format("AWARE WORK AwareTime [%s]", dateTimeLong));
+        saveLong(PreyConfig.AWARE_TIME, dateTimeLong);
+    }
+
+    /**
+     * Checks if it's time for the next aware event.
+     *
+     * This method compares the current time with the saved aware time.
+     * It is used to not request the location for at least 10 minutes
+     *
+     * @return true if it's time for the next aware event, false otherwise
+     */
+    public boolean isTimeNextAware() {
+        //validates if the saved date is old
+        long awareTime = getLong(AWARE_TIME, 0);
+        if (awareTime == 0)
+            return true;
+        long timeNow = new Date().getTime();
+        PreyLogger.d(String.format("AWARE WORK AwareTime difference [%s] current[%s] > save[%s] ", (timeNow - awareTime), timeNow, awareTime));
+        return timeNow > awareTime;
+    }
+
 }

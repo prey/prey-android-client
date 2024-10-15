@@ -12,8 +12,8 @@ android {
 
         targetSdkVersion 34
 
-        versionCode 342
-        versionName '2.6.1'
+        versionCode 348
+        versionName '2.6.2'
 
         multiDexEnabled true
 
@@ -52,15 +52,16 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:19.0.0'
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.google.firebase:firebase-iid:21.1.0'
-    implementation 'com.google.firebase:firebase-messaging:24.0.0'
-    implementation 'com.google.firebase:firebase-analytics:22.0.2'
-    implementation 'com.google.firebase:firebase-crashlytics:19.0.3'
+    implementation 'com.google.firebase:firebase-messaging:24.0.2'
+    implementation 'com.google.firebase:firebase-analytics:22.1.2'
+    implementation 'com.google.firebase:firebase-crashlytics:19.2.0'
     implementation 'com.google.firebase:firebase-database:21.0.0'
 
     implementation 'com.android.installreferrer:installreferrer:2.2'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'androidx.biometric:biometric:1.2.0-alpha05'
+    implementation "androidx.work:work-runtime:2.9.1"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
