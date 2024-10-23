@@ -28,12 +28,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.prey.actions.aware.AwareController;
 import com.prey.actions.location.PreyLocation;
 import com.prey.activities.FeedbackActivity;
+import com.prey.json.actions.Location;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.net.UtilConnection;
+import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -1709,6 +1712,50 @@ public class PreyConfig {
         long timeNow = new Date().getTime();
         PreyLogger.d(String.format("AWARE WORK AwareTime difference [%s] current[%s] > save[%s] ", (timeNow - awareTime), timeNow, awareTime));
         return timeNow > awareTime;
+    }
+
+    /**
+     * Registers a new device with the given API key.
+     *
+     * @param apiKey The API key to register the device with.
+     * @throws Exception If there is an error during the registration process.
+     */
+    public void registerNewDeviceWithApiKey(String apiKey) throws Exception {
+        // Check if the device is already registered with Prey
+        if (!isThisDeviceAlreadyRegisteredWithPrey()) {
+            // Get the device type and name
+            String deviceType = PreyUtils.getDeviceType(ctx);
+            String nameDevice = PreyUtils.getNameDevice(ctx);
+            PreyLogger.d(String.format("apikey:%s type:%s nameDevice:%s", apiKey, deviceType, nameDevice));
+            // Register the device with the API key, device type, and name
+            PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, apiKey, deviceType, nameDevice);
+            if (accountData != null) {
+                PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
+                // Register C2DM
+                PreyConfig.getPreyConfig(ctx).registerC2dm();
+                // Get the email associated with the account
+                String email = PreyWebServices.getInstance().getEmail(ctx);
+                PreyConfig.getPreyConfig(ctx).setEmail(email);
+                PreyConfig.getPreyConfig(ctx).setRunBackground(true);
+                RunBackgroundCheckBoxPreference.notifyReady(ctx);
+                PreyConfig.getPreyConfig(ctx).setInstallationStatus("");
+                // Run the Prey app
+                new PreyApp().run(ctx);
+                // Start a new thread to initialize PreyStatus and Location
+                new Thread() {
+                    public void run() {
+                        try {
+                            PreyStatus.getInstance().initConfig(ctx);
+                            AwareController.getInstance().init(ctx);
+                            new Location().get(ctx, null, null);
+                        } catch (Exception e) {
+                            // Log any errors that occur during initialization
+                            PreyLogger.e("Error:" + e.getMessage(), e);
+                        }
+                    }
+                }.start();
+            }
+        }
     }
 
 }
