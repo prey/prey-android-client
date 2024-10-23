@@ -123,16 +123,11 @@ public class WelcomeBatchActivity extends FragmentActivity {
         protected Void doInBackground(String... data) {
             try {
                 error = null;
-                Context ctx=getApplicationContext();
-                if(!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
-                    PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, data[0], data[1], data[2],data[3]);
-                    PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
-                    PreyConfig.getPreyConfig(ctx).registerC2dm();
-                    PreyConfig.getPreyConfig(ctx).setRunBackground(true);
-                    RunBackgroundCheckBoxPreference.notifyReady(ctx);
-                    new PreyApp().run(ctx);
-                }
+                Context ctx = getApplicationContext();
+                String apiKey = data[0];
+                PreyConfig.getPreyConfig(ctx).registerNewDeviceWithApiKey(apiKey);
             } catch (Exception e) {
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
                 error = e.getMessage();
             }
             return null;

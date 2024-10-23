@@ -159,33 +159,10 @@ public class BarcodeActivity extends Activity   {
             error = null;
             try {
                 final Context ctx = getApplicationContext();
-                PreyLogger.d("apikey:" + data[0] + " mail:" + data[1] + " device:" + data[2]);
-                if(!PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
-                    PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, data[0], data[1], data[2], PreyUtils.getNameDevice(ctx));
-                    if (accountData != null) {
-                        PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
-                        PreyConfig.getPreyConfig(ctx).registerC2dm();
-                        String email=PreyWebServices.getInstance().getEmail(ctx);
-                        PreyConfig.getPreyConfig(ctx).setEmail(email);
-                        PreyConfig.getPreyConfig(ctx).setRunBackground(true);
-                        RunBackgroundCheckBoxPreference.notifyReady(ctx);
-                        PreyConfig.getPreyConfig(ctx).setInstallationStatus("");
-                        new PreyApp().run(ctx);
-                        new Thread() {
-                            public void run() {
-                                try {
-                                    PreyStatus.getInstance().initConfig(getApplicationContext());
-                                    AwareController.getInstance().init(ctx);
-                                    new Location().get(ctx, null, null);
-                                }catch (Exception e){
-                                    PreyLogger.e("Error:"+e.getMessage(),e);
-                                }
-                            }
-                        }.start();
-                    }
-                }
+                String apiKey = data[0];
+                PreyConfig.getPreyConfig(ctx).registerNewDeviceWithApiKey(apiKey);
             } catch (Exception e) {
-                PreyLogger.e("error:"+e.getMessage(),e);
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
                 error = e.getMessage();
             }
             return null;

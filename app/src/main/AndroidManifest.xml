@@ -424,6 +424,24 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+
+        <!--
+            BroadcastReceiver that listens for changes in application restrictions.
+        -->
+        <receiver
+            android:name="com.prey.receivers.RestrictionsReceiver"
+            android:enabled="true"
+            android:exported="true" >
+            <!--
+                Intent filter that specifies the action this receiver is interested in.
+                In this case, it's the APPLICATION_RESTRICTIONS_CHANGED action, which
+                is broadcast when the application restrictions have changed.
+            -->
+            <intent-filter>
+                <action android:name="android.content.action.APPLICATION_RESTRICTIONS_CHANGED"/>
+            </intent-filter>
+        </receiver>
+
         <service android:name="com.prey.services.PreyDisablePowerOptionsService" />
         <service android:name="com.prey.services.PreySecureService" />
 
