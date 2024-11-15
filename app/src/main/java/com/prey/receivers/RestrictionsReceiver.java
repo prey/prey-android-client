@@ -56,6 +56,15 @@ public class RestrictionsReceiver extends BroadcastReceiver {
     public static void handleApplicationRestrictions(Context context, Bundle restrictions) {
         // Check if the device is already registered with Prey
         if (!PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey()) {
+            if (restrictions != null && restrictions.containsKey("enterprise_name")) {
+                // Retrieve the enterprise name from the restrictions bundle
+                String enterpriseName = restrictions.getString("enterprise_name");
+                // Check if the enterprise name is not null and not empty
+                if (enterpriseName != null && !"".equals(enterpriseName)) {
+                    // Set the organization ID in the Prey configuration
+                    PreyConfig.getPreyConfig(context).setOrganizationId(enterpriseName);
+                }
+            }
             // Check if the restrictions bundle is not null and contains the "setup_key"
             if (restrictions != null && restrictions.containsKey("setup_key")) {
                 // Get the setup key from the restrictions bundle

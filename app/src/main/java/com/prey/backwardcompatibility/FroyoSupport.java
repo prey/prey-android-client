@@ -119,4 +119,36 @@ public class FroyoSupport {
         return isPhone;
     }
 
+    /**
+     * Retrieves the enrollment-specific ID for the device, if available.
+     *
+     * This method checks if the device is running Android S (API level 31) or later,
+     * and attempts to retrieve the enrollment-specific ID using the DevicePolicyManager.
+     *
+     * @return The enrollment-specific ID, or an empty string if not available.
+     */
+    public String getEnrollmentSpecificId() {
+        // Initialize the ID as an empty string
+        String id = "";
+        // Check if the device is running Android S (API level 31) or later
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            try {
+                // Retrieve the organization ID from the PreyConfig
+                String organizationId = PreyConfig.getPreyConfig(ctx).getOrganizationId();
+                // Check if the organization ID is not null and not empty
+                if (organizationId != null && !"".equals(organizationId)) {
+                    // Set the organization ID before attempting to retrieve the enrollment-specific ID
+                    policyManager.setOrganizationId(PreyConfig.getPreyConfig(ctx).getOrganizationId());
+                    // Attempt to retrieve the enrollment-specific ID using the DevicePolicyManager
+                    id = policyManager.getEnrollmentSpecificId();
+                }
+            } catch (Exception e) {
+                // Log any exceptions that occur during the retrieval process
+                PreyLogger.e("Failed to get enrollment specific ID", e);
+            }
+        }
+        // Return the retrieved ID, or an empty string if not available
+        return id;
+    }
+
 }
