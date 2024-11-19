@@ -1758,4 +1758,29 @@ public class PreyConfig {
         }
     }
 
+    /**
+     * Key for storing the organization ID in the configuration.
+     */
+    public static final String ORGANIZATION_ID = "ORGANIZATION_ID";
+
+    /**
+     * Retrieves the organization ID from the configuration.
+     *
+     * @return The organization ID, or an empty string if not set.
+     */
+    public String getOrganizationId() {
+        // Retrieve the organization ID from the configuration, defaulting to an empty string if not set
+        return getString(ORGANIZATION_ID, "");
+    }
+
+    /**
+     * Sets the organization ID in the configuration.
+     *
+     * @param organizationId The organization ID to set.
+     */
+    public void setOrganizationId(String organizationId) {
+        // Save the organization ID to the configuration
+        saveString(ORGANIZATION_ID, organizationId);
+    }
+
 }

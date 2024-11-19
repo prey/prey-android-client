@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
+import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.PreyWebServices;
 
@@ -79,7 +80,7 @@ public class PreyPhone {
         hardware.setCpuCores(String.valueOf(getCpuCores()));
         hardware.setRamSize(String.valueOf(getMemoryRamSize()));
         hardware.setSerialNumber(getSerialNumber());
-        hardware.setUuid(getSerialNumber());
+        hardware.setUuid(FroyoSupport.getInstance(ctx).getEnrollmentSpecificId());
         initMemory();
     }
 
