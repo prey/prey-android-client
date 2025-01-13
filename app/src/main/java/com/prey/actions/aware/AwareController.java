@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPhone;
 import com.prey.actions.location.LocationUpdatesService;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
@@ -53,34 +54,45 @@ public class AwareController {
         return INSTANCE;
     }
 
+    /**
+     * Initializes the AwareController.
+     *
+     * @param ctx The context of the application.
+     */
     public void init(Context ctx) {
-        try{
-            boolean isLocationAware=PreyConfig.getPreyConfig(ctx).getAware();
-            PreyLogger.d("AWARE AwareController init isLocationAware:"+isLocationAware);
-            if (isLocationAware) {
+        try {
+            // Check if location awareness is enabled in the Prey configuration
+            boolean isLocationAware = PreyConfig.getPreyConfig(ctx).getAware();
+            PreyLogger.d(String.format("AWARE AwareController init isLocationAware:%s", isLocationAware));
+            // Check if airplane mode is currently enabled on the device
+            boolean isAirplaneModeOn = PreyPhone.isAirplaneModeOn(ctx);
+            PreyLogger.d(String.format("AWARE AwareController init isAirplaneModeOn:%s", isAirplaneModeOn));
+            // Only proceed if location awareness is enabled and airplane mode is not on
+            if (isLocationAware && !isAirplaneModeOn) {
                 PreyLocationManager.getInstance(ctx).setLastLocation(null);
-                PreyLocation locationNow=LocationUtil.getLocation(ctx,null,false);
-                if (locationNow!=null&&locationNow.getLat()!=0&&locationNow.getLng()!=0){
+                PreyLocation locationNow = LocationUtil.getLocation(ctx, null, false);
+                if (locationNow != null && locationNow.getLat() != 0 && locationNow.getLng() != 0) {
                     PreyLocationManager.getInstance(ctx).setLastLocation(locationNow);
-                    PreyLogger.d("AWARE locationNow[i]:"+locationNow.toString());
+                    PreyLogger.d(String.format("AWARE locationNow:%s", locationNow.toString()));
                 }
                 new LocationUpdatesService().startForegroundService(ctx);
                 PreyLocation locationAware = null;
-                int i=0;
+                int i = 0;
                 while (i < LocationUtil.MAXIMUM_OF_ATTEMPTS) {
-                    PreyLogger.d("AWARE getPreyLocationApp[i]:"+i);
+                    PreyLogger.d(String.format("AWARE getPreyLocationApp[i]:%s", i));
                     try {
-                        Thread.sleep(LocationUtil.SLEEP_OF_ATTEMPTS[i]*1000);
+                        Thread.sleep(LocationUtil.SLEEP_OF_ATTEMPTS[i] * 1000);
                     } catch (InterruptedException e) {
+                        PreyLogger.e("AWARE error:" + e.getMessage(), e);
                     }
                     locationAware = PreyLocationManager.getInstance(ctx).getLastLocation();
-                    if (locationAware!=null) {
+                    if (locationAware != null) {
                         locationAware.setMethod("native");
-                        PreyLogger.d("AWARE init:" + locationAware.toString());
-                    }else{
-                        PreyLogger.d("AWARE init nulo" +i);
+                        PreyLogger.d(String.format("AWARE init[%s]:%s", i, locationAware.toString()));
+                    } else {
+                        PreyLogger.d(String.format("AWARE init[%s] null", i));
                     }
-                    if (locationAware!=null&&locationAware.getLat()!=0&&locationAware.getLng()!=0){
+                    if (locationAware != null && locationAware.getLat() != 0 && locationAware.getLng() != 0) {
                         break;
                     }
                     i++;
