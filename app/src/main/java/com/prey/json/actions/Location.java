@@ -16,6 +16,7 @@ import android.provider.Settings;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPhone;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.aware.AwareController;
 import com.prey.actions.location.LocationUtil;
@@ -69,7 +70,9 @@ public class Location extends JsonAction{
         float accuracy = -1;
         boolean send;
         boolean first = true;
-        while (i < maximum) {
+        boolean isAirplaneModeOn = PreyPhone.isAirplaneModeOn(ctx);
+        PreyLogger.d(String.format("Location get isAirplaneModeOn:%s", isAirplaneModeOn));
+        while (i < maximum && !isAirplaneModeOn) {
             send = false;
             try {
                 LocationUtil.dataLocation(ctx, messageId, true);
