@@ -11,6 +11,7 @@ import android.os.StrictMode;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.PreyPhone;
 import com.prey.actions.location.LocationUpdatesService;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
@@ -33,7 +34,9 @@ public class DailyLocation {
     public void run(Context context) {
         String dailyLocation = PreyConfig.getPreyConfig(context).getDailyLocation();
         String nowDailyLocation = PreyConfig.FORMAT_SDF_AWARE.format(new Date());
-        if (!nowDailyLocation.equals(dailyLocation)) {
+        boolean isAirplaneModeOn = PreyPhone.isAirplaneModeOn(context);
+        PreyLogger.d(String.format("DailyLocation run isAirplaneModeOn:%s", isAirplaneModeOn));
+        if (!nowDailyLocation.equals(dailyLocation) && !isAirplaneModeOn) {
             PreyLocationManager.getInstance(context).setLastLocation(null);
             try {
                 PreyLocationManager.getInstance(context).setLastLocation(null);
