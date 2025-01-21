@@ -35,6 +35,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 
 import androidx.core.app.ActivityCompat;
@@ -709,6 +710,21 @@ public class PreyPhone {
     private static String getSerialNumberFromProperty(Method getMethod, String propertyName) throws Exception {
         // Invoke the getMethod with the propertyName as an argument to retrieve the system property value
         return (String) getMethod.invoke(null, propertyName);
+    }
+
+    /**
+     * Checks if the airplane mode is currently enabled on the device.
+     *
+     * @param context the application context
+     * @return true if airplane mode is on, false otherwise
+     */
+    public static boolean isAirplaneModeOn(Context context) {
+        // Get the current airplane mode setting from the system settings
+        boolean isAirplaneModeOn = Settings.Global.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) == 1;
+        // Log the result for debugging purposes
+        PreyLogger.d(String.format("isAirplaneModeOn: %s", isAirplaneModeOn));
+        // Return the result
+        return isAirplaneModeOn;
     }
 
 }

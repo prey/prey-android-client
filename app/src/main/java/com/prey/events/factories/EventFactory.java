@@ -34,6 +34,7 @@ import androidx.core.content.ContextCompat;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
+import com.prey.PreyPhone;
 import com.prey.R;
 import com.prey.actions.aware.AwareController;
 import com.prey.actions.geofences.GeofenceController;
@@ -137,7 +138,7 @@ public class EventFactory {
             return new Event(Event.WIFI_CHANGED, info.toString());
         }
         if (AIRPLANE_MODE.equals(intent.getAction())) {
-            if (!isAirplaneModeOn(ctx)) {
+            if (!PreyPhone.isAirplaneModeOn(ctx)) {
                 boolean verifyNotification = verifyNotification(ctx);
                 if (!verifyNotification) {
                     notification(ctx);
@@ -186,11 +187,6 @@ public class EventFactory {
         } catch (Exception e) {
             PreyLogger.e("Error sendLocation:" + e.getMessage(), e);
         }
-    }
-
-    public static boolean isAirplaneModeOn(Context context) {
-        return Settings.System.getInt(context.getContentResolver
-                (), Settings.System.AIRPLANE_MODE_ON, 0) != 0;
     }
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy hh:mm:ss", Locale.getDefault());
