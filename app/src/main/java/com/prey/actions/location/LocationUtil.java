@@ -69,44 +69,73 @@ public class LocationUtil {
         return getLocation(ctx, messageId, asynchronous, MAXIMUM_OF_ATTEMPTS);
     }
 
-    public static PreyLocation getLocation(Context ctx, String messageId, boolean asynchronous, int maximum) throws Exception{
+    /**
+     * Retrieves the current location of the device.
+     *
+     * This method checks if airplane mode is enabled and if not, it proceeds to retrieve the location using various methods.
+     *
+     * @param ctx The context of the application.
+     * @param messageId The ID of the message.
+     * @param asynchronous Whether the location retrieval should be done asynchronously.
+     * @param maximum The maximum number of attempts to retrieve the location.
+     * @return The current location of the device, or null if it cannot be retrieved.
+     * @throws Exception If an error occurs during location retrieval.
+     */
+    public static PreyLocation getLocation(Context ctx, String messageId, boolean asynchronous, int maximum) throws Exception {
         PreyLocation preyLocation = null;
-        boolean isGpsEnabled = PreyLocationManager.getInstance(ctx).isGpsLocationServiceActive();
-        boolean isNetworkEnabled = PreyLocationManager.getInstance(ctx).isNetworkLocationServiceActive();
-        boolean isWifiEnabled = PreyWifiManager.getInstance(ctx).isWifiEnabled();
-        boolean isGooglePlayServicesAvailable = PreyUtils.isGooglePlayServicesAvailable(ctx);
-        JSONObject json = new JSONObject();
-        try {
-            json.put("gps", isGpsEnabled);
-            json.put("net", isNetworkEnabled);
-            json.put("wifi", isWifiEnabled);
-            json.put("play", isGooglePlayServicesAvailable);
-        } catch (JSONException e) {
-            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
-        }
-        String locationInfo = json.toString();
-        PreyConfig.getPreyConfig(ctx).setLocationInfo(locationInfo);
-        PreyLogger.d(locationInfo);
-        String method = getMethod(isGpsEnabled, isNetworkEnabled);
-        try {
-            preyLocation = getPreyLocationAppService(ctx, method, asynchronous, preyLocation, maximum);
-        } catch (Exception e) {
-            PreyLogger.e(String.format("Error PreyLocationApp:%s", e.getMessage()), e);
-        }
-        try {
-            if (preyLocation == null || preyLocation.getLocation() == null || (preyLocation.getLocation().getLatitude() == 0 && preyLocation.getLocation().getLongitude() == 0)) {
-                preyLocation = getPreyLocationAppServiceOreo(ctx, method, asynchronous, preyLocation);
+        boolean isAirplaneModeOn = PreyPhone.isAirplaneModeOn(ctx);
+        PreyLogger.d(String.format("PreyLocation getLocation isAirplaneModeOn:%s", isAirplaneModeOn));
+        /**
+         * Proceed with location retrieval only if airplane mode is not enabled.
+         * This is because location services are typically disabled in airplane mode.
+         */
+        if (!isAirplaneModeOn) {
+            // Get the status of GPS, network, and Wi-Fi location services
+            boolean isGpsEnabled = PreyLocationManager.getInstance(ctx).isGpsLocationServiceActive();
+            boolean isNetworkEnabled = PreyLocationManager.getInstance(ctx).isNetworkLocationServiceActive();
+            boolean isWifiEnabled = PreyWifiManager.getInstance(ctx).isWifiEnabled();
+            boolean isGooglePlayServicesAvailable = PreyUtils.isGooglePlayServicesAvailable(ctx);
+            // Create a JSON object to store the location service status
+            JSONObject json = new JSONObject();
+            try {
+                // Add the location service status to the JSON object
+                json.put("gps", isGpsEnabled);
+                json.put("net", isNetworkEnabled);
+                json.put("wifi", isWifiEnabled);
+                json.put("play", isGooglePlayServicesAvailable);
+            } catch (JSONException e) {
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
             }
-        } catch (Exception e) {
-            PreyLogger.e(String.format("Error AppServiceOreo:%s", e.getMessage()), e);
+            String locationInfo = json.toString();
+            PreyConfig.getPreyConfig(ctx).setLocationInfo(locationInfo);
+            PreyLogger.d(locationInfo);
+            // Determine the location method based on the GPS and network status
+            String method = getMethod(isGpsEnabled, isNetworkEnabled);
+            try {
+                // Attempt to retrieve the location using the App Service
+                preyLocation = getPreyLocationAppService(ctx, method, asynchronous, preyLocation, maximum);
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error PreyLocationApp:%s", e.getMessage()), e);
+            }
+            try {
+                // If the location is not retrieved using the App Service, attempt to retrieve it using the App Service Oreo
+                if (preyLocation == null || preyLocation.getLocation() == null || (preyLocation.getLocation().getLatitude() == 0 && preyLocation.getLocation().getLongitude() == 0)) {
+                    preyLocation = getPreyLocationAppServiceOreo(ctx, method, asynchronous, preyLocation);
+                }
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error AppServiceOreo:%s", e.getMessage()), e);
+            }
+            // If Google Play Services is not available and the location is not retrieved, attempt to retrieve it using Wi-Fi
+            if (!isGooglePlayServicesAvailable && (preyLocation == null || preyLocation.getLocation() == null || (preyLocation.getLocation().getLatitude() == 0 && preyLocation.getLocation().getLongitude() == 0))) {
+                List<PreyPhone.Wifi> listWifi = new PreyPhone(ctx).getListWifi();
+                preyLocation = PreyWebServices.getInstance().getLocationWithWifi(ctx, listWifi);
+            }
+            // Log the retrieved location
+            if (preyLocation != null) {
+                PreyLogger.d(String.format("preyLocation lat:%s lng:%s acc:%s", preyLocation.getLat(), preyLocation.getLng(), preyLocation.getAccuracy()));
+            }
         }
-        if (!isGooglePlayServicesAvailable && (preyLocation == null || preyLocation.getLocation() == null || (preyLocation.getLocation().getLatitude() == 0 && preyLocation.getLocation().getLongitude() == 0))) {
-            List<PreyPhone.Wifi> listWifi = new PreyPhone(ctx).getListWifi();
-            preyLocation = PreyWebServices.getInstance().getLocationWithWifi(ctx, listWifi);
-        }
-        if (preyLocation != null) {
-            PreyLogger.d(String.format("preyLocation lat:%s lng:%s acc:%s", preyLocation.getLat(), preyLocation.getLng(), preyLocation.getAccuracy()));
-        }
+        // Return the retrieved location
         return preyLocation;
     }
 
