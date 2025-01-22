@@ -14,8 +14,9 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.prey.PreyLogger;
-import com.prey.beta.actions.PreyBetaActionsRunnner;
 import com.prey.actions.observer.ActionsController;
+import com.prey.beta.actions.PreyBetaActionsRunnner;
+
 
 /**
  * This class wraps Prey execution as a services, allowing the OS to kill it and

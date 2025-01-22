@@ -16,22 +16,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.Settings;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyProperties;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.biometric.BiometricPrompt;
-import androidx.fragment.app.FragmentActivity;
+
 
 import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
@@ -65,23 +56,14 @@ import com.prey.services.PreyJobService;
 import com.prey.services.PreyLockHtmlService;
 import com.prey.services.PreySecureService;
 
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.net.HttpURLConnection;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.security.spec.ECGenParameterSpec;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
-import java.util.concurrent.Executor;
 
 public class WebAppInterface {
 
@@ -90,7 +72,7 @@ public class WebAppInterface {
     private String error = null;
     private boolean noMoreDeviceError = false;
     private String from = "setting";
-    private CheckPasswordHtmlActivity mActivity;
+    private com.prey.activities.CheckPasswordHtmlActivity mActivity;
     private PreySecureService preySecureService=null;
     private PreyLockHtmlService preyLockHtmlService=null;
 
@@ -101,7 +83,7 @@ public class WebAppInterface {
         mContext = ctx;
     }
 
-    public WebAppInterface(Context context, CheckPasswordHtmlActivity activity) {
+    public WebAppInterface(Context context, com.prey.activities.CheckPasswordHtmlActivity activity) {
         mContext = context;
         mActivity = activity;
     }
@@ -119,6 +101,8 @@ public class WebAppInterface {
         mContext = context;
         this.preySecureService=service;
     }
+
+
 
     @JavascriptInterface
     public String getData() {
