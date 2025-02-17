@@ -8,10 +8,17 @@ package com.prey.actions.location
 
 import android.content.Context
 import android.location.LocationManager
+
 import com.prey.PreyLogger
 
+/**
+ * Manager class for handling location-related operations.
+ */
 class PreyLocationManager {
 
+    /**
+     * The last known location.
+     */
     var location: PreyLocation? = null
 
     fun getLastLocation(): PreyLocation? {
@@ -22,44 +29,58 @@ class PreyLocationManager {
         location = preyLocation
     }
 
-    fun isGpsLocationServiceActive(ctx: Context): Boolean {
+    /**
+     * Check if the GPS location service is active.
+     *
+     * @param context The application context.
+     * @return True if the GPS location service is active, false otherwise.
+     */
+    fun isGpsLocationServiceActive(context: Context): Boolean {
         val androidLocationManager =
-            ctx.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         var gps_enabled = false
         try {
             gps_enabled =
                 androidLocationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         return gps_enabled
     }
 
-    fun isNetworkLocationServiceActive(ctx: Context): Boolean {
+    /**
+     * Check if the network location service is active.
+     *
+     * @param context The application context.
+     * @return True if the network location service is active, false otherwise.
+     */
+    fun isNetworkLocationServiceActive(context: Context): Boolean {
         val androidLocationManager =
-            ctx.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         var network_enabled = false
         try {
             network_enabled =
                 androidLocationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         return network_enabled
     }
 
-    fun locationServicesEnabled(ctx: Context): Boolean {
-        return (isGpsLocationServiceActive(ctx) || isNetworkLocationServiceActive(ctx))
+    /**
+     * Check if any location service is active.
+     *
+     * @param context The application context.
+     * @return True if any location service is active, false otherwise.
+     */
+    fun locationServicesEnabled(context: Context): Boolean {
+        return (isGpsLocationServiceActive(context) || isNetworkLocationServiceActive(context))
     }
 
-
     companion object {
-        private var INSTANCE: PreyLocationManager? = null
+        private var instance: PreyLocationManager? = null
         fun getInstance(): PreyLocationManager {
-            if (INSTANCE == null) {
-                INSTANCE = PreyLocationManager()
-            }
-            return INSTANCE!!
+            return instance ?: PreyLocationManager().also { instance = it }
         }
     }
 }

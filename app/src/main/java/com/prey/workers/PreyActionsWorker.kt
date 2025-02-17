@@ -12,11 +12,13 @@ import androidx.work.WorkerParameters
 import com.prey.actions.aware.AwareController
 import com.prey.PreyConfig
 import com.prey.PreyLogger
+import com.prey.beta.actions.PreyBetaActionsRunner
+import org.json.JSONObject
 
 /**
  * A Worker class responsible for incrementing a value and handling AwareController initialization.
  */
-class IncrementWorker
+class PreyActionsWorker
 /**
  * Constructor for IncrementWorker.
  *
@@ -34,27 +36,22 @@ class IncrementWorker
      */
     override fun doWork(): Result {
         // Log a debug message to indicate the start of the work
-        PreyLogger.d("AWARE WORK doWork")
+        PreyLogger.d("AWARE ACTIONS doWork")
         // Get the application context
         val context = applicationContext
         try {
-            // Check if it's time to run the AwareController
-            if (PreyConfig.getInstance(context).isTimeNextAware()) {
-                // Create a new thread to run the AwareController initialization
-                object : Thread() {
-                    override fun run() {
-                        // Initialize the AwareController
-                        AwareController().init(context)
-                    }
-                }.start() // Start the thread
+            var jsonObject: List<JSONObject>? = null
+            jsonObject=PreyBetaActionsRunner.getInstance(context).getInstructions(context, true)
+            PreyLogger.d("AWARE runInstructions")
+            if (jsonObject!=null){
+                PreyBetaActionsRunner.getInstance(context).runInstructions(jsonObject)
             }
             return Result.success()
         } catch (e: NumberFormatException) {
-            PreyLogger.e(String.format("----------Error IncrementWorker:%s", e.message), e)
+            PreyLogger.e("----------Error IncrementWorker:${ e.message}", e)
             return Result.failure()
         } catch (throwable: Throwable) {
-            PreyLogger.e(
-                String.format("----------Error IncrementWorker:%s", throwable.message),
+            PreyLogger.e("----------Error IncrementWorker:${throwable.message}",
                 throwable
             )
             return Result.failure()

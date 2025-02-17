@@ -6,9 +6,22 @@
  ******************************************************************************/
 package com.prey.actions.triggers
 
+/**
+ * Data transfer object for trigger events.
+ *
+ * This class represents a trigger event with its type and additional information.
+ */
 class TriggerEventDto {
+
+    /**
+     * The type of the trigger event.
+     */
     private var type: String? = null
+    /**
+     * Additional information about the trigger event.
+     */
     private var info: String? = null
+
     fun getType(): String {
         return type!!
     }

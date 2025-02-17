@@ -7,43 +7,44 @@
 package com.prey.json.actions
 
 import android.content.Context
+
 import com.prey.actions.alarm.AlarmThread
 import com.prey.actions.observer.ActionResult
-import com.prey.json.UtilJson
 import com.prey.PreyConfig
-import com.prey.PreyLogger
 import com.prey.PreyStatus
 import org.json.JSONObject
 
+/**
+ * Alarm class responsible for starting and stopping alarm functionality.
+ */
 class Alarm   {
 
-    fun start(ctx: Context, list: List<ActionResult?>?, parameters: JSONObject?) {
-        var sound: String? = null
-        try {
-            sound = UtilJson.getString(parameters, "sound")
-        } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
-        }
-        var messageId: String? = null
-        try {
-            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID)
-            PreyLogger.d("messageId:$messageId")
-        } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
-        }
-        var jobId: String? = null
-        try {
-            jobId = UtilJson.getString(parameters, PreyConfig.JOB_ID)
-            PreyLogger.d("jobId:$jobId")
-        } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
-        }
-        AlarmThread(ctx, sound!!, messageId, jobId).start()
+    /**
+     * Starts the alarm with the given parameters.
+     *
+     * @param context The application context.
+     * @param actionResults List of action results.
+     * @param parameters JSONObject containing alarm parameters (sound, message ID, job ID).
+     */
+    fun start(context: Context, actionResults: List<ActionResult?>?, parameters: JSONObject?) {
+        // Extract sound, message ID, and job ID from parameters
+        val sound = parameters?.getString("sound")
+        val messageId = parameters?.getString(PreyConfig.MESSAGE_ID)
+        val jobId = parameters?.getString(PreyConfig.JOB_ID)
+        // Start the alarm thread with the extracted parameters
+        AlarmThread(context, sound ?: "", messageId, jobId).start()
     }
 
-    fun stop(ctx: Context?, list: List<ActionResult?>?, options: JSONObject?) {
+    /**
+     * Stops the alarm.
+     *
+     * @param context The application context.
+     * @param actionResults List of action results.
+     * @param parameters JSONObject containing alarm parameters (not used in this implementation).
+     */
+    fun stop(context: Context?, actionResults: List<ActionResult?>?, parameters: JSONObject?) {
+        // Set alarm stop status using PreyStatus instance
         PreyStatus.getInstance().setAlarmStop()
     }
-
 
 }

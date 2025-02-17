@@ -6,6 +6,9 @@
  ******************************************************************************/
 package com.prey
 
+/**
+ * Represents a PreyWifi object, encapsulating properties of a Wi-Fi connection.
+ */
 class PreyWifi {
 
     private var name: String? = null
@@ -30,96 +33,96 @@ class PreyWifi {
         this.wifiEnabled = wifiEnabled
     }
 
-    fun getSsid(): String {
-        return ssid!!
+    fun getSsid(): String? {
+        return ssid
     }
 
     fun setSsid(ssid: String?) {
         this.ssid = ssid
     }
 
-    fun getSignalStrength(): String {
-        return signalStrength!!
+    fun getSignalStrength(): String? {
+        return signalStrength
     }
 
     fun setSignalStrength(signalStrength: String?) {
         this.signalStrength = signalStrength
     }
 
-    fun getChannel(): String {
-        return channel!!
+    fun getChannel(): String? {
+        return channel
     }
 
     fun setChannel(channel: String?) {
         this.channel = channel
     }
 
-    fun getSecurity(): String {
-        return security!!
+    fun getSecurity(): String? {
+        return security
     }
 
     fun setSecurity(security: String?) {
         this.security = security
     }
 
-    fun getName(): String {
-        return name!!
+    fun getName(): String? {
+        return name
     }
 
     fun setName(name: String?) {
         this.name = name
     }
 
-    fun getInterfaceType(): String {
-        return interfaceType!!
+    fun getInterfaceType(): String? {
+        return interfaceType
     }
 
     fun setInterfaceType(interfaceType: String?) {
         this.interfaceType = interfaceType
     }
 
-    fun getModel(): String {
-        return model!!
+    fun getModel(): String? {
+        return model
     }
 
     fun setModel(model: String?) {
         this.model = model
     }
 
-    fun getVendor(): String {
-        return vendor!!
+    fun getVendor(): String? {
+        return vendor
     }
 
     fun setVendor(vendor: String?) {
         this.vendor = vendor
     }
 
-    fun getIpAddress(): String {
-        return ipAddress!!
+    fun getIpAddress(): String? {
+        return ipAddress
     }
 
     fun setIpAddress(ipAddress: String?) {
         this.ipAddress = ipAddress
     }
 
-    fun getGatewayIp(): String {
-        return gatewayIp!!
+    fun getGatewayIp(): String? {
+        return gatewayIp
     }
 
     fun setGatewayIp(gatewayIp: String?) {
         this.gatewayIp = gatewayIp
     }
 
-    fun getNetmask(): String {
-        return netmask!!
+    fun getNetmask(): String? {
+        return netmask
     }
 
     fun setNetmask(netmask: String?) {
         this.netmask = netmask
     }
 
-    fun getMacAddress(): String {
-        return macAddress!!
+    fun getMacAddress(): String? {
+        return macAddress
     }
 
     fun setMacAddress(macAddress: String?) {

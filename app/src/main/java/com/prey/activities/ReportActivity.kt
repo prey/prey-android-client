@@ -7,7 +7,6 @@
 package com.prey.activities
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -24,29 +23,47 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.prey.R
 import com.prey.activities.js.WebAppInterface
 import com.prey.PreyLogger
-import java.util.Locale
+import com.prey.PreyUtils
 
+/**
+ * ReportActivity is a FragmentActivity that displays a map and a web view.
+ * It handles map initialization, web view configuration, and map marker placement.
+ */
 class ReportActivity : FragmentActivity(), OnMapReadyCallback, OnMapsSdkInitializedCallback {
-    private var myWebView: WebView? = null
+    private lateinit var webView: WebView
 
+    /**
+     * Called when the back button is pressed.
+     * Starts the CheckPasswordHtmlActivity and finishes this activity.
+     */
     override fun onBackPressed() {
-        var intent: Intent? = null
-        intent = Intent(application, CheckPasswordHtmlActivity::class.java)
-        startActivity(intent)
+        startActivity(Intent(application, CheckPasswordHtmlActivity::class.java))
         finish()
     }
 
+    /**
+     * Called when the activity is created.
+     * Initializes the map, sets the content view, and configures the web view.
+     *
+     * @param savedInstanceState Saved instance state, if any.
+     */
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MapsInitializer.initialize(applicationContext, MapsInitializer.Renderer.LATEST, this)
         setContentView(R.layout.report)
         PreyLogger.d("ReportActivity: onCreate")
-        loadUrl()
+        configureWebView()
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment!!.getMapAsync(this)
     }
 
+    /**
+     * Called when the map is ready.
+     * Places a marker on the map at the specified location and moves the camera to that location.
+     *
+     * @param googleMap The GoogleMap instance.
+     */
     override fun onMapReady(googleMap: GoogleMap) {
         val map = googleMap
         var lat = 0.0
@@ -64,6 +81,12 @@ class ReportActivity : FragmentActivity(), OnMapReadyCallback, OnMapsSdkInitiali
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(UPV, 17f))
     }
 
+    /**
+     * Called when the maps SDK is initialized.
+     * Logs a message indicating which renderer is being used.
+     *
+     * @param renderer The MapsInitializer.Renderer instance.
+     */
     override fun onMapsSdkInitialized(renderer: MapsInitializer.Renderer) {
         when (renderer) {
             MapsInitializer.Renderer.LATEST -> PreyLogger.d("Maps The latest version of the renderer is used.")
@@ -71,33 +94,32 @@ class ReportActivity : FragmentActivity(), OnMapReadyCallback, OnMapsSdkInitiali
         }
     }
 
-    fun loadUrl() {
-        settings()
-        myWebView!!.addJavascriptInterface(
+    /**
+     * Configures the web view.
+     * Sets up the web view's settings, adds a JavaScript interface, and loads a URL.
+     */
+    fun configureWebView() {
+        PreyLogger.d("ReportActivity: settings")
+        webView = findViewById<View>(R.id.install_browserReport) as WebView
+        webView.setBackgroundColor(0x00000000)
+        webView.addJavascriptInterface(
             WebAppInterface(applicationContext),
             CheckPasswordHtmlActivity.JS_ALIAS
         )
-        myWebView!!.loadUrl(getUrl(this))
+        val settings = webView.settings
+        settings.apply {
+            javaScriptEnabled = true
+            loadWithOverviewMode = true
+            loadsImagesAutomatically = true
+            useWideViewPort = true
+            setSupportZoom(false)
+            builtInZoomControls = false
+            allowFileAccess = true
+        }
+        val language: String = PreyUtils.getLanguage()
+        val url = "${CheckPasswordHtmlActivity.URL_ONB}#/$language/report"
+        PreyLogger.d("url:${url}")
+        webView.loadUrl(url)
     }
 
-    fun settings() {
-        PreyLogger.d("ReportActivity: settings")
-        myWebView = findViewById<View>(R.id.install_browserReport) as WebView
-        val settings = myWebView!!.settings
-        myWebView!!.setBackgroundColor(0x00000000)
-        settings.javaScriptEnabled = true
-        settings.loadWithOverviewMode = true
-        settings.loadsImagesAutomatically = true
-        settings.useWideViewPort = true
-        settings.setSupportZoom(false)
-        settings.builtInZoomControls = false
-        settings.allowFileAccess = true
-    }
-
-    fun getUrl(ctx: Context?): String {
-        val lng = if ("es" == Locale.getDefault().language) "es" else "en"
-        val url = CheckPasswordHtmlActivity.URL_ONB + "#/" + lng + "/report"
-        PreyLogger.d("ReportActivity url: $url")
-        return url
-    }
 }

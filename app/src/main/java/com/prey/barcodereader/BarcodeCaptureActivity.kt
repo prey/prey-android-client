@@ -1,15 +1,10 @@
-/*******************************************************************************
- * Created by Orlando Aliaga
- * Copyright 2025 Prey Inc. All rights reserved.
- * License: GPLv3
- * Full license at "/LICENSE"
- ******************************************************************************/
 package com.prey.barcodereader
+
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
@@ -23,24 +18,31 @@ import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ScaleGestureDetector.OnScaleGestureListener
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.Toast
+import androidx.annotation.NonNull
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.vision.MultiProcessor
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-import com.prey.R
+import com.google.android.material.snackbar.Snackbar
 import com.prey.PreyLogger
+import com.prey.R
 import com.prey.barcodereader.ui.camera.CameraSource
 import com.prey.barcodereader.ui.camera.CameraSourcePreview
+import com.prey.barcodereader.ui.camera.GraphicOverlay
 import java.io.IOException
+
 
 class BarcodeCaptureActivity : AppCompatActivity() {
     private var mCameraSource: CameraSource? = null
     private var mPreview: CameraSourcePreview? = null
-   // private var mGraphicOverlay: GraphicOverlay<BarcodeGraphic>? = null
+    private var mGraphicOverlay: GraphicOverlay<BarcodeGraphic>? = null
 
     private var scaleGestureDetector: ScaleGestureDetector? = null
     private var gestureDetector: GestureDetector? = null
@@ -51,7 +53,7 @@ class BarcodeCaptureActivity : AppCompatActivity() {
         setContentView(R.layout.barcode_capture)
 
         mPreview = findViewById<View>(R.id.preview) as CameraSourcePreview
-       // mGraphicOverlay = findViewById<View>(R.id.graphicOverlay) as GraphicOverlay<BarcodeGraphic>
+        mGraphicOverlay = findViewById<View>(R.id.graphicOverlay) as GraphicOverlay<BarcodeGraphic>
 
         val autoFocus = intent.getBooleanExtra(AutoFocus, false)
         val useFlash = intent.getBooleanExtra(UseFlash, false)
@@ -70,7 +72,7 @@ class BarcodeCaptureActivity : AppCompatActivity() {
     private fun requestCameraPermission() {
         PreyLogger.d("Camera permission is not granted. Requesting permission")
 
-        val permissions = arrayOf(Manifest.permission.CAMERA)
+        val permissions = arrayOf<String>(Manifest.permission.CAMERA)
 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
@@ -83,20 +85,21 @@ class BarcodeCaptureActivity : AppCompatActivity() {
 
         val thisActivity: Activity = this
 
-        val listener = View.OnClickListener {
-            ActivityCompat.requestPermissions(
-                thisActivity, permissions,
-                RC_HANDLE_CAMERA_PERM
-            )
+        val listener: View.OnClickListener = object : OnClickListener {
+            override fun onClick(view: View?) {
+                ActivityCompat.requestPermissions(
+                    thisActivity, permissions,
+                    RC_HANDLE_CAMERA_PERM
+                )
+            }
         }
-        //TODO:Cambiar
-/*
+
         Snackbar.make(
-            mGraphicOverlay, R.string.permission_camera_rationale,
+            mGraphicOverlay!!, R.string.permission_camera_rationale,
             Snackbar.LENGTH_INDEFINITE
         )
             .setAction(R.string.ok, listener)
-            .show()*/
+            .show()
     }
 
     override fun onTouchEvent(e: MotionEvent): Boolean {
@@ -109,17 +112,15 @@ class BarcodeCaptureActivity : AppCompatActivity() {
 
     @SuppressLint("InlinedApi")
     private fun createCameraSource(autoFocus: Boolean, useFlash: Boolean) {
-        val context = applicationContext
+        val context: Context = applicationContext
 
         val barcodeDetector = BarcodeDetector.Builder(context)
             .setBarcodeFormats(Barcode.DRIVER_LICENSE or Barcode.DATA_MATRIX or Barcode.QR_CODE or Barcode.PDF417)
             .build()
-        //TODO:cambiar
-        /*
-        val barcodeFactory = BarcodeTrackerFactory(mGraphicOverlay!!, this)
+        val barcodeFactory = BarcodeTrackerFactory(mGraphicOverlay, this)
         barcodeDetector.setProcessor(
             MultiProcessor.Builder(barcodeFactory).build()
-        )*/
+        )
 
         if (!barcodeDetector.isOperational) {
             PreyLogger.d("Detector dependencies are not yet available.")
@@ -133,9 +134,7 @@ class BarcodeCaptureActivity : AppCompatActivity() {
             }
         }
 
-        var builder = CameraSource.Builder(
-            applicationContext, barcodeDetector
-        )
+        var builder: CameraSource.Builder = CameraSource.Builder(applicationContext, barcodeDetector)
             .setFacing(CameraSource.CAMERA_FACING_BACK)
             .setRequestedPreviewSize(1600, 1024)
             .setRequestedFps(15.0f)
@@ -176,8 +175,8 @@ class BarcodeCaptureActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+        @NonNull permissions: Array<String>,
+        @NonNull grantResults: IntArray
     ) {
         if (requestCode != RC_HANDLE_CAMERA_PERM) {
             PreyLogger.d("Got unexpected permission result: $requestCode")
@@ -201,7 +200,7 @@ class BarcodeCaptureActivity : AppCompatActivity() {
         val listener =
             DialogInterface.OnClickListener { dialog, id -> finish() }
 
-        val builder = AlertDialog.Builder(this)
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle("Multitracker sample")
             .setMessage(R.string.no_camera_permission)
             .setPositiveButton(R.string.ok, listener)
@@ -221,8 +220,7 @@ class BarcodeCaptureActivity : AppCompatActivity() {
 
         if (mCameraSource != null) {
             try {
-                //TODO:cambiar
-              //  mPreview!!.start(mCameraSource, mGraphicOverlay)
+                mPreview!!.start(mCameraSource, mGraphicOverlay)
             } catch (e: IOException) {
                 PreyLogger.e("Unable to start camera source.", e)
                 mCameraSource!!.release()
@@ -232,8 +230,7 @@ class BarcodeCaptureActivity : AppCompatActivity() {
     }
 
     private fun onTap(rawX: Float, rawY: Float): Boolean {
-        //TODO:cambiar
-        /*val graphic = mGraphicOverlay!!.firstGraphic
+        val graphic = mGraphicOverlay!!.firstGraphic
         var barcode: Barcode? = null
         if (graphic != null) {
             barcode = graphic.barcode
@@ -251,8 +248,6 @@ class BarcodeCaptureActivity : AppCompatActivity() {
             PreyLogger.d("no barcode detected")
         }
         return barcode != null
-        */
-        return false
     }
 
     fun updateBarcode(barcode: Barcode?) {

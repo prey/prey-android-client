@@ -23,8 +23,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+
 import com.prey.R
 
+/**
+ * Onboarding activity that displays a series of introductory screens to the user.
+ */
 class OnboardingActivity : AppCompatActivity() {
     private var viewPager: ViewPager? = null
     private var myViewPagerAdapter: MyViewPagerAdapter? = null
@@ -34,6 +38,11 @@ class OnboardingActivity : AppCompatActivity() {
     private var btnSkip: Button? = null
     private var btnNext: Button? = null
 
+    /**
+     * Called when the activity is created.
+     *
+     * @param savedInstanceState Saved instance state, if any.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -84,6 +93,11 @@ class OnboardingActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Adds the bottom dots to the layout.
+     *
+     * @param currentPage The current page index.
+     */
     private fun addBottomDots(currentPage: Int) {
         dots = arrayOfNulls(layouts.size)
         val colorsActive = resources.getIntArray(R.array.array_dot_active)
@@ -99,15 +113,29 @@ class OnboardingActivity : AppCompatActivity() {
         if (dots.size > 0) dots[currentPage]!!.setTextColor(colorsActive[currentPage])
     }
 
+    /**
+     * Returns the next item index.
+     *
+     * @param i The offset from the current item.
+     * @return The next item index.
+     */
     private fun getItem(i: Int): Int {
         return viewPager!!.currentItem + i
     }
 
+    /**
+     * Launches the home screen of the application.
+     *
+     * This method starts the PermissionActivity and finishes the current OnboardingActivity.
+     */
     private fun launchHomeScreen() {
         startActivity(Intent(this@OnboardingActivity, PermissionActivity::class.java))
         finish()
     }
 
+    /**
+     * Listener for page changes in the ViewPager.
+     */
     var viewPagerPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             addBottomDots(position)
@@ -127,6 +155,9 @@ class OnboardingActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Changes the color of the status bar to transparent if the device is running Android 5.0 or higher.
+     */
     private fun changeStatusBarColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val window = window
@@ -135,6 +166,9 @@ class OnboardingActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Adapter for the ViewPager.
+     */
     inner class MyViewPagerAdapter : PagerAdapter() {
         private var layoutInflater: LayoutInflater? = null
         override fun instantiateItem(container: ViewGroup, position: Int): Any {

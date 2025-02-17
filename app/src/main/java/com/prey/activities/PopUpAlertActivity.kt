@@ -14,13 +14,21 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+
 import com.prey.R
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 
+/**
+ * Activity responsible for displaying a popup alert to the user.
+ */
 class PopUpAlertActivity : PreyActivity() {
     private var message: String? = null
     private var notificationId = 0
+
+    /**
+     * BroadcastReceiver to handle the close prey event.
+     */
     private val close_prey_receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             PreyLogger.d("PopUpAlertActivity close_prey_receiver finish")
@@ -28,6 +36,9 @@ class PopUpAlertActivity : PreyActivity() {
         }
     }
 
+    /**
+     * BroadcastReceiver to handle the popup prey event.
+     */
     private val popup_prey_receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             PreyLogger.d("PopUpAlertActivity popup_prey_receiver finish")
@@ -36,6 +47,11 @@ class PopUpAlertActivity : PreyActivity() {
         }
     }
 
+    /**
+     * Called when the activity is created.
+     *
+     * @param savedInstanceState The saved instance state, or null if not saved.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bundle = this.intent.extras
@@ -43,6 +59,7 @@ class PopUpAlertActivity : PreyActivity() {
             this.message = bundle.getString("alert_message")
             this.notificationId = bundle.getInt("notificationId")
         }
+        // Create the popup alert dialog
         val alertBuilder = AlertDialog.Builder(this@PopUpAlertActivity)
         alertBuilder.setTitle(R.string.popup_alert_title)
         alertBuilder.setMessage(this.message)
@@ -55,6 +72,7 @@ class PopUpAlertActivity : PreyActivity() {
             nMgr.cancel(notificationId)
             finish()
         }
+        // Create and show the popup dialog
         val popup: Dialog = alertBuilder.create()
         popup.setOnDismissListener { finish() }
         popup.show()
@@ -65,10 +83,13 @@ class PopUpAlertActivity : PreyActivity() {
             )
             registerReceiver(popup_prey_receiver, IntentFilter(POPUP_PREY + "_" + notificationId))
         } catch (e: Exception) {
-            PreyLogger.d(String.format("Error receiver:%s", e.message))
+            PreyLogger.d("Error receiver:${e.message}")
         }
     }
 
+    /**
+     * Called when the activity is resumed.
+     */
     override fun onResume() {
         super.onResume()
         val noficationPopupId: Int = PreyConfig.getInstance(this).getNoficationPopupId()

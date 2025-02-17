@@ -8,7 +8,6 @@ package com.prey.activities
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
@@ -20,21 +19,33 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+
 import com.prey.R
 import com.prey.PreyConfig
 import com.prey.PreyLogger
+
 import java.util.Calendar
 import java.util.Date
 
+/**
+ * PinNativeActivity is responsible for handling the PIN entry and validation.
+ * It sets up the UI, handles text changes, and validates the PIN against the stored PIN number.
+ */
 class PinNativeActivity : Activity() {
+    // UI components
     var button_Super_Lock_Unlock: Button? = null
     var button_close: Button? = null
     var textViewPin: TextView? = null
     var editTextPin: EditText? = null
 
+    /**
+     * Called when the activity is created.
+     * Sets up the UI, loads the fonts, and sets up the text watchers and click listeners.
+     *
+     * @param savedInstanceState Saved instance state, if any.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.super_lock)
         PreyLogger.d("PinNativeActivity: onCreate")
         editTextPin = findViewById<View>(R.id.editTextPin) as EditText
@@ -81,6 +92,10 @@ class PinNativeActivity : Activity() {
         }
     }
 
+    /**
+     * Called when the activity is resumed.
+     * Checks if the PIN is activated and if not, starts the CloseActivity.
+     */
     override fun onResume() {
         super.onResume()
         val pinActivated: String? = PreyConfig.getInstance(applicationContext).getPinActivated()
@@ -93,6 +108,12 @@ class PinNativeActivity : Activity() {
         }
     }
 
+    /**
+     * Called when the configuration changes.
+     * Checks if a hardware keyboard is available and shows a toast message accordingly.
+     *
+     * @param newConfig The new configuration.
+     */
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         // Checks whether a hardware keyboard is available

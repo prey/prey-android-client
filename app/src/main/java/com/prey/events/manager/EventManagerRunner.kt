@@ -7,23 +7,24 @@
 package com.prey.events.manager
 
 import android.content.Context
+
 import com.prey.events.Event
 import com.prey.PreyLogger
 
-class EventManagerRunner(ctx: Context, event: Event?) : Runnable {
-    private var ctx: Context? = null
-    private val event: Event?
+/**
+ * EventManagerRunner is a Runnable class responsible for executing events.
+ *
+ * @param context The application context.
+ * @param event The event to be executed.
+ */
+class EventManagerRunner(var context: Context, var event: Event) : Runnable {
 
-    init {
-        this.ctx = ctx
-        this.event = event
-    }
-
+    /**
+     * Runs the event execution process.
+     */
     override fun run() {
-        if (event != null) {
-            PreyLogger.d("EVENT CheckInReceiver IN:" + event.name)
-            EventManager(ctx!!).execute(event)
-            PreyLogger.d("EVENT CheckInReceiver OUT:" + event.name)
-        }
+        PreyLogger.d("EVENT CheckInReceiver IN:${event.name}")
+        EventManager(context).execute(event)
+        PreyLogger.d("EVENT CheckInReceiver OUT:${event.name}")
     }
 }

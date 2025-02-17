@@ -7,22 +7,42 @@
 package com.prey.actions.triggers
 
 import android.content.Context
+
 import com.prey.PreyLogger
 import com.prey.net.PreyWebServices
+
 import org.json.JSONObject
 
+/**
+ * TriggerParse is an object that provides methods for parsing trigger data from JSON.
+ */
 object TriggerParse {
-    fun getJSONFromUrl(ctx: Context): List<TriggerDto>? {
+
+    /**
+     * Retrieves trigger data from a URL and parses it into a list of TriggerDto objects.
+     *
+     * @param context The application context.
+     * @return A list of TriggerDto objects, or null if an error occurs.
+     */
+    fun getJSONFromUrl(context: Context): List<TriggerDto>? {
         var json: String? = null
         try {
-            json = PreyWebServices.getInstance().triggers(ctx)
-            return getJSONFromTxt(ctx, json!!)
+            json = PreyWebServices.getInstance().triggers(context)
+            return getJSONFromTxt(context, json!!)
         } catch (e: Exception) {
+            PreyLogger.e("Error:${e.message}", e)
             return null
         }
     }
 
-    fun getJSONFromTxt(ctx: Context, jsonValue: String): List<TriggerDto>? {
+    /**
+     * Parses a JSON string into a list of TriggerDto objects.
+     *
+     * @param context The application context.
+     * @param jsonValue The JSON string to parse.
+     * @return A list of TriggerDto objects, or null if an error occurs.
+     */
+    fun getJSONFromTxt(context: Context, jsonValue: String): List<TriggerDto>? {
         val listTrigger: MutableList<TriggerDto> = ArrayList()
         if (jsonValue != null && "" != jsonValue) {
             var json = ("{\"prey\":$jsonValue").toString() + "}"
@@ -49,13 +69,19 @@ object TriggerParse {
                     listTrigger.add(trigger)
                 }
             } catch (e: java.lang.Exception) {
-                PreyLogger.e("e:" + e.message, e)
+                PreyLogger.e("Error:${e.message}", e)
                 return null
             }
         }
         return listTrigger
     }
 
+    /**
+     * Parses a JSON string into a list of TriggerEventDto objects.
+     *
+     * @param events The JSON string to parse.
+     * @return A list of TriggerEventDto objects, or null if an error occurs.
+     */
     fun TriggerEvents(events: String): List<TriggerEventDto>? {
         var events = events
         events = "{\"prey\":$events}"
@@ -78,6 +104,12 @@ object TriggerParse {
         return listTrigger
     }
 
+    /**
+     * Parses a JSON string into a list of TriggerActionDto objects.
+     *
+     * @param actions The JSON string to parse.
+     * @return A list of TriggerActionDto objects, or null if an error occurs.
+     */
     fun TriggerActions(actions: String): List<TriggerActionDto>? {
         var actions = actions
         actions = "{\"prey\":$actions}"

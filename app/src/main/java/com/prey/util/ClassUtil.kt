@@ -7,15 +7,32 @@
 package com.prey.util
 
 import android.content.Context
+
 import com.prey.actions.HttpDataService
 import com.prey.actions.observer.ActionResult
 import com.prey.PreyLogger
+
 import org.json.JSONObject
 
+/**
+ * Utility class for executing actions based on the provided parameters.
+ */
 class ClassUtil {
+
+    /**
+     * Executes an action based on the provided parameters and returns the resulting HTTP data services.
+     *
+     * @param context The application context.
+     * @param listActions A list of action results.
+     * @param nameAction The name of the action to be executed.
+     * @param methodAction The method of the action to be executed.
+     * @param parametersAction A JSON object containing parameters for the action.
+     * @param listData A list of HTTP data services to be updated with the result.
+     * @return The updated list of HTTP data services.
+     */
     fun execute(
-        ctx: Context,
-        listActions: MutableList<ActionResult>,
+        context: Context,
+        listActions: MutableList<ActionResult>?,
         nameAction: String,
         methodAction: String,
         parametersAction: JSONObject?,
@@ -25,11 +42,8 @@ class ClassUtil {
         PreyLogger.d("name:$nameActionClass")
         PreyLogger.d("target:$methodAction")
         PreyLogger.d("options:$parametersAction")
-        nameActionClass = StringUtil.classFormat(nameActionClass)
-
-
+        nameActionClass = StringUtil().classFormat(nameActionClass)
         try {
-
             val actionClass = Class.forName("com.prey.json.actions.$nameActionClass")
             val actionObject = actionClass.newInstance()
             val method = actionClass.getMethod(
@@ -39,14 +53,12 @@ class ClassUtil {
                     JSONObject::class.java
                 )
             )
-            val params = arrayOf(ctx, listActions, parametersAction)
+            val params = arrayOf(context, listActions, parametersAction)
             var listDataTmp: MutableList<HttpDataService>? =null
             try{
                 listDataTmp = method.invoke(actionObject, *params) as ArrayList<HttpDataService>
             } catch (e: Exception) {
-
             }
-
             var i = 0
             while (listDataTmp != null && i < listDataTmp.size) {
                 val httpDataService = listDataTmp[i]
@@ -60,12 +72,9 @@ class ClassUtil {
     }
 
     companion object {
-        private var INSTANCE: ClassUtil? = null
+        private var instance: ClassUtil? = null
         fun getInstance(): ClassUtil {
-            if (INSTANCE == null) {
-                INSTANCE = ClassUtil()
-            }
-            return INSTANCE!!
+            return instance ?: ClassUtil().also { instance = it }
         }
     }
 }

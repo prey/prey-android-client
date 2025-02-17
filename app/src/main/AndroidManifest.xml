@@ -181,6 +181,19 @@
             android:configChanges="keyboardHidden|orientation"
             />
 
+        <activity
+            android:name="com.prey.barcodereader.BarcodeActivity"
+
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+
+        <activity android:name="com.prey.barcodereader.BarcodeCaptureActivity"
+
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+
         <!-- Exported added for android 12 -->
         <receiver
             android:name="com.prey.receivers.PreyBootController"
@@ -234,7 +247,8 @@
         <receiver android:name="com.prey.receivers.AlarmReportReceiver" />
         <receiver android:name="com.prey.actions.aware.AlarmAwareReceiver" />
         <receiver android:name="com.prey.receivers.AlarmScheduledReceiver" />
-        <receiver android:name="com.prey.actions.location.daily.AlarmLocationReceiver" />
+        <receiver android:name="com.prey.actions.location.daily.DailyLocationReceiver" />
+        <receiver android:name="com.prey.receivers.GeofenceBroadcastReceiver" />
 
         <receiver
             android:name="com.prey.receivers.GeofenceReceiver"
@@ -276,12 +290,13 @@
 
         <!-- Services -->
         <service android:name="com.prey.services.LocationService" />
-        <service android:name="com.prey.actions.location.LocationUpdatesService" />
+        <service android:name="com.prey.actions.location.LastLocationService" />
+        <service android:name="com.prey.actions.location.UpdateLocationService" />
+        <service android:name="com.prey.actions.location.daily.DailyLocationService" />
         <service android:name="com.prey.services.PreyBootService" />
 
-        <service android:name="com.prey.beta.services.PreyBetaRunnerService" />
+
         <service android:name="com.prey.actions.report.ReportService" />
-        <service android:name="com.prey.actions.geofences.GeofenceIntentService" />
         <service android:name="com.prey.actions.aware.AwareIntentService" />
         <service android:name="com.prey.actions.fileretrieval.FileretrievalService" />
         <service android:name="com.prey.services.PreyLockService" />
@@ -349,15 +364,9 @@
         </service>
         <!-- [END firebase_service] -->
 
-        <service android:name="com.prey.services.PreyJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
-
         <service android:name="com.prey.services.AwareJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>
-
-
 
         <service android:name="com.prey.services.ReportJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"

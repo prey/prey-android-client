@@ -22,12 +22,22 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+
 import com.prey.json.UtilJson
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.net.PreyWebServices
 
+/**
+ * Activity responsible for handling password entry and validation.
+ */
 class PasswordNativeActivity : Activity() {
+
+    /**
+     * Called when the activity is created.
+     *
+     * @param savedInstanceState Saved instance state, if any.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.prey.R.layout.lock_android7)
@@ -64,11 +74,9 @@ class PasswordNativeActivity : Activity() {
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
             }
-
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 text.setText(R.string.lock_access_denied)
             }
-
             override fun afterTextChanged(editable: Editable) {
             }
         })
@@ -110,6 +118,9 @@ class PasswordNativeActivity : Activity() {
         }
     }
 
+    /**
+     * Called when the activity is resumed.
+     */
     override fun onResume() {
         super.onResume()
         val unlock = PreyConfig.getInstance(applicationContext).getUnlockPass()
@@ -122,6 +133,11 @@ class PasswordNativeActivity : Activity() {
         }
     }
 
+    /**
+     * Called when the configuration changes.
+     *
+     * @param newConfig New configuration.
+     */
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         // Checks whether a hardware keyboard is available

@@ -31,7 +31,7 @@ class PreyStorageService : Service() {
      */
     override fun onStart(intent: Intent, startId: Int) {
         super.onStart(intent, startId)
-        val ctx: Context = this
+        val context: Context = this
         object : Thread() {
             override fun run() {
                 var i = 0
@@ -39,11 +39,11 @@ class PreyStorageService : Service() {
                 while (run) {
                     try {
                         sleep(1000)
-                        val isStorage = PreyPermission.isExternalStorageManager(ctx)
-                        PreyLogger.d(String.format("PreyStorageService: %b", isStorage))
+                        val isStorage = PreyPermission.isExternalStorageManager(context)
+                        PreyLogger.d("PreyStorageService: ${isStorage}")
                         if (isStorage) {
                             run = false
-                            val intentActivity = Intent(ctx, CheckPasswordHtmlActivity::class.java)
+                            val intentActivity = Intent(context, CheckPasswordHtmlActivity::class.java)
                             intentActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             startActivity(intentActivity)
                             stopSelf()
@@ -55,7 +55,7 @@ class PreyStorageService : Service() {
                         }
                         i++
                     } catch (e: Exception) {
-                        PreyLogger.e(String.format("Error: %s", e.message), e)
+                        PreyLogger.e("Error: ${e.message}", e)
                     }
                 }
             }

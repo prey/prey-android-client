@@ -11,11 +11,21 @@ import android.content.Intent
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 
+/**
+ * A service responsible for handling file retrieval operations.
+ */
 class FileretrievalService : IntentService {
     constructor() : super(PreyConfig.TAG)
 
     constructor(name: String?) : super(name)
 
+    /**
+     * Handles the intent sent to this service.
+     *
+     * This method is called on the worker thread.
+     *
+     * @param intent The intent to handle.
+     */
     override fun onHandleIntent(intent: Intent?) {
         PreyLogger.d("***************onHandleIntent")
         FileretrievalController.getInstance().run(applicationContext)

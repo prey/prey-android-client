@@ -13,26 +13,36 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.PowerManager
+
 import com.prey.events.Event
 import com.prey.events.manager.EventManagerRunner
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPermission
 import com.prey.services.PreySecureService
+
 import org.json.JSONObject
 import java.util.Date
 
+/**
+ * BroadcastReceiver that listens for the ACTION_CLOSE_SYSTEM_DIALOGS intent and disables power options on the device.
+ */
 class PreyDisablePowerOptionsReceiver : BroadcastReceiver() {
+
+    /**
+     * Called when the BroadcastReceiver receives an Intent.
+     *
+     * @param context The Context in which the receiver is running.
+     * @param intent The Intent being received.
+     */
     @TargetApi(Build.VERSION_CODES.ECLAIR_MR1)
     override fun onReceive(context: Context, intent: Intent) {
         val disablePowerOptions = PreyConfig.getInstance(context).isDisablePowerOptions()
         val canDrawOverlays = PreyPermission.canDrawOverlays(context)
         PreyLogger.d(
-            String.format(
-                "PreyDisablePowerOptionsReceiver disablePowerOptions:%s canDrawOverlays: %s",
-                disablePowerOptions,
-                canDrawOverlays
-            )
+            
+                "PreyDisablePowerOptionsReceiver disablePowerOptions:${disablePowerOptions} canDrawOverlays: ${canDrawOverlays}"
+
         )
         if (canDrawOverlays && disablePowerOptions) {
             if ("android.intent.action.CLOSE_SYSTEM_DIALOGS" == intent.action) {
@@ -41,11 +51,7 @@ class PreyDisablePowerOptionsReceiver : BroadcastReceiver() {
                     for (key in bundle.keySet()) {
                         val value = bundle[key]
                         PreyLogger.d(
-                            String.format(
-                                "PreyDisablePowerOptionsReceiver disablePowerOptions key:%s value:%s",
-                                key,
-                                value
-                            )
+                                "PreyDisablePowerOptionsReceiver disablePowerOptions key:${key} value:${value}"
                         )
                     }
                 }
@@ -58,22 +64,12 @@ class PreyDisablePowerOptionsReceiver : BroadcastReceiver() {
                     if (isScreenOn && reason != null) {
                         var extra = intent.getStringExtra(stringExtra)
                         PreyLogger.d(
-                            String.format(
-                                "PreyDisablePowerOptionsReceiver reason:%s flag:%s extra:%s",
-                                reason,
-                                flag,
-                                extra
-                            )
+                                "PreyDisablePowerOptionsReceiver reason:${reason} flag:${flag} extra:${extra}"
                         )
                         val time = PreyConfig.getInstance(context).getTimeSecureLock()
                         val now = Date().time
                         PreyLogger.d(
-                            String.format(
-                                "PreyDisablePowerOptionsReceiver time:%s now:%s <%s",
-                                time,
-                                now,
-                                (now < time)
-                            )
+                                "PreyDisablePowerOptionsReceiver time:${time} now:${now} <${ (now < time)}",
                         )
                         if (now < time) {
                             extra = ""
@@ -86,11 +82,7 @@ class PreyDisablePowerOptionsReceiver : BroadcastReceiver() {
                             val isOpenSecureService =
                                 PreyConfig.getInstance(context).isOpenSecureService()
                             PreyLogger.d(
-                                String.format(
-                                    "PreyDisablePowerOptionsReceiver pinNumber:%s isOpenSecureService:%s",
-                                    pinNumber,
-                                    isOpenSecureService
-                                )
+                                    "PreyDisablePowerOptionsReceiver pinNumber:${pinNumber} isOpenSecureService:${isOpenSecureService}"
                             )
                             if ("globalactions" == reason && pinNumber != null && "" != pinNumber && pinNumber.length == 4) {
                                 PreyLogger.d("pinNumber:$pinNumber")

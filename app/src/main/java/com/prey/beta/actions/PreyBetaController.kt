@@ -7,49 +7,43 @@
 package com.prey.beta.actions
 
 import android.content.Context
-import android.content.Intent
-import com.prey.beta.services.PreyBetaRunnerService
-import com.prey.PreyConfig
-import com.prey.PreyLogger
 
+import com.prey.PreyConfig
+
+/**
+ * Controller class for Prey beta actions.
+ */
 class PreyBetaController {
 
-    fun startPrey(ctx: Context) {
-        startPrey(ctx, null)
+    /**
+     * Starts the Prey beta actions with a null command.
+     *
+     * @param context The application context.
+     */
+    fun startPrey(context: Context) {
+        startPrey(context, null)
     }
 
-    fun startPrey(ctx: Context, cmd: String?) {
-        val config = PreyConfig.getInstance(ctx)
-        PreyLogger.d("startPrey:" + config.isThisDeviceAlreadyRegisteredWithPrey())
-        if (config.isThisDeviceAlreadyRegisteredWithPrey()) {
-            val context = ctx
+    /**
+     * Starts the Prey beta actions with a given command.
+     *
+     * @param context The application context.
+     * @param cmd The command to execute (optional).
+     */
+    fun startPrey(context: Context, cmd: String?) {
+        // Check if the device is already registered with Prey.
+        if (PreyConfig.getInstance(context).isThisDeviceAlreadyRegisteredWithPrey()) {
             Thread {
-                try {
-                    context.stopService(Intent(context, PreyBetaRunnerService::class.java))
-                    val intentStart = Intent(context, PreyBetaRunnerService::class.java)
-                    if (cmd != null) {
-                        intentStart.putExtra("cmd", cmd)
-                    }
-                    context.startService(intentStart)
-                } catch (e: Exception) {
-                    PreyLogger.e("error:" + e.message, e)
-                }
+                // Get the Prey beta actions runner instance and execute the actions.
+                PreyBetaActionsRunner.getInstance(context).execute()
             }.start()
         }
     }
 
-    fun stopPrey(ctx: Context) {
-        ctx.stopService(Intent(ctx, PreyBetaRunnerService::class.java))
-    }
-
     companion object {
-        private var INSTANCE: PreyBetaController? = null
-        fun getInstance(): PreyBetaController {
-            if (INSTANCE == null) {
-                INSTANCE = PreyBetaController()
-            }
-            return INSTANCE!!
-        }
+        private var instance: PreyBetaController? = null
+        fun getInstance(): PreyBetaController =
+            instance ?: PreyBetaController().also { instance = it }
     }
 
 }

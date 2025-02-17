@@ -9,23 +9,39 @@ package com.prey.actions.triggers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+
 import com.prey.actions.observer.ActionResult
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.util.ClassUtil
+
 import org.json.JSONException
 import org.json.JSONObject
 
+/**
+ * Abstract base class for trigger receivers.
+ * Provides a basic implementation for executing triggers and actions.
+ */
 abstract class TriggerReceiver : BroadcastReceiver() {
     abstract override fun onReceive(context: Context, intent: Intent)
 
+    /**
+     * Executes a trigger with the given name.
+     * Retrieves all triggers from the data source, checks if the trigger has a matching event,
+     * and executes the corresponding actions.
+     *
+     * @param context The Context in which the receiver is running.
+     * @param name The name of the trigger to execute.
+     */
     fun execute(context: Context, name: String) {
         val dataSource = TriggerDataSource(context)
         val listTrigger = dataSource.allTriggers
         PreyLogger.d("Trigger TriggerReceiver onReceive name:$name")
         PreyLogger.d(
-            "Trigger TriggerReceiver onReceive listTrigger.size():" + (listTrigger?.size
-                ?: -1)
+            "Trigger TriggerReceiver onReceive listTrigger.size():${
+                (listTrigger.size
+                    ?: -1)
+            }"
         )
         var i = 0
         while (listTrigger != null && i < listTrigger.size) {
@@ -34,7 +50,7 @@ abstract class TriggerReceiver : BroadcastReceiver() {
             var j = 0
             while (listEvents != null && j < listEvents.size) {
                 val event = listEvents[j]
-                PreyLogger.d("Trigger TriggerReceiver onReceive name:" + name + " event.type:" + event.getType())
+                PreyLogger.d("Trigger TriggerReceiver onReceive name:${name} event.type:${ event.getType()}")
                 if (name == event.getType()) {
                     var process = true
                     val haveRange = TriggerUtil.haveRange(listEvents)
@@ -46,11 +62,11 @@ abstract class TriggerReceiver : BroadcastReceiver() {
                     }
                     try {
                         if (process) {
-                            PreyLogger.d("Trigger TriggerReceiver triggerName trigger.getActions():" + trigger.getActions())
+                            PreyLogger.d("Trigger TriggerReceiver triggerName trigger.getActions():${trigger.getActions()}")
                             executeActions(context, trigger.getActions())
                         }
                     } catch (e: Exception) {
-                        PreyLogger.e("e:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                 }
                 j++
@@ -59,6 +75,15 @@ abstract class TriggerReceiver : BroadcastReceiver() {
         }
     }
 
+    /**
+     * Executes a list of actions.
+     * Parses the actions from the given string, executes each action with the given delay,
+     * and logs any errors that occur.
+     *
+     * @param context The Context in which the receiver is running.
+     * @param actions The string containing the actions to execute.
+     * @throws Exception If an error occurs while executing the actions.
+     */
     @Throws(Exception::class)
     fun executeActions(context: Context, actions: String) {
         val listActions = TriggerParse.TriggerActions(actions)
@@ -73,7 +98,7 @@ abstract class TriggerReceiver : BroadcastReceiver() {
             object : Thread() {
                 override fun run() {
                     try {
-                        PreyLogger.d("Trigger triggerName actionDto.action:" + actionDto.getAction())
+                        PreyLogger.d("Trigger triggerName actionDto.action:${actionDto.getAction()}")
                         val jsonObject = JSONObject(actionDto.getAction())
                         PreyLogger.d("Trigger triggerName action:$jsonObject")
                         PreyLogger.d("Trigger triggerName jsonObject:$jsonObject")
@@ -86,7 +111,7 @@ abstract class TriggerReceiver : BroadcastReceiver() {
                             parametersAction = jsonObject.getJSONObject("options")
                             PreyLogger.d("Trigger triggerName parametersAction:$parametersAction")
                         } catch (e: JSONException) {
-                            PreyLogger.e("Error:" + e.message, e)
+                            PreyLogger.e("Error:${e.message}", e)
                         }
                         if (parametersAction == null) {
                             parametersAction = JSONObject()
@@ -95,7 +120,7 @@ abstract class TriggerReceiver : BroadcastReceiver() {
                             val messageId = jsonObject.getString(PreyConfig.MESSAGE_ID)
                             parametersAction.put(PreyConfig.MESSAGE_ID, messageId)
                         } catch (e: Exception) {
-                            PreyLogger.e("Error:" + e.message, e)
+                            PreyLogger.e("Error:${e.message}", e)
                         }
                         PreyLogger.d("Trigger nameAction:$nameAction methodAction:$methodAction parametersAction:$parametersAction")
                         val listActions: MutableList<ActionResult> = ArrayList()
@@ -108,7 +133,7 @@ abstract class TriggerReceiver : BroadcastReceiver() {
                             null
                         )
                     } catch (e: Exception) {
-                        PreyLogger.e("Trigger error:" + e.message, e)
+                        PreyLogger.e("Trigger error:${e.message}", e)
                     }
                 }
             }.start()

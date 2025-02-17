@@ -9,13 +9,38 @@ package com.prey.actions.location
 import android.location.Location
 import android.location.LocationManager
 
+/**
+ * Represents a location with latitude, longitude, accuracy, altitude, timestamp, and method.
+ */
 class PreyLocation {
+
+    /**
+     * Latitude of the location in decimal degrees.
+     */
     private var lat: Double = 0.0
+    /**
+     * Longitude of the location in decimal degrees.
+     */
     private var lng: Double = 0.0
+    /**
+     * Accuracy of the location in meters.
+     */
     private var accuracy: Float = 0f
+    /**
+     * Altitude of the location in meters.
+     */
     private var altitude: Double = 0.0
+    /**
+     * Timestamp of the location in milliseconds since the Unix epoch.
+     */
     private var timestamp: Long = 0
+    /**
+     * Method used to obtain the location (e.g. "native", "gps", etc.).
+     */
     private var method: String = "native"
+    /**
+     * Android Location object associated with this PreyLocation.
+     */
     private var location: Location? = null
 
     constructor()
@@ -59,6 +84,7 @@ class PreyLocation {
         this.location = location
         this.method = method
     }
+
     constructor(
         latitude: Int,
         longitude: Int,
@@ -68,7 +94,7 @@ class PreyLocation {
         method: String
     ) {
         val location = Location(LocationManager.GPS_PROVIDER)
-        location.latitude =  latitude.toDouble()
+        location.latitude = latitude.toDouble()
         location.longitude = longitude.toDouble()
         location.accuracy = accuracy
         location.altitude = altitude.toDouble()
@@ -153,8 +179,7 @@ class PreyLocation {
     }
 
     override fun toString(): String {
-        return String.format("lat:%s - lng:%s - acc:%s - method:%s", lat, lng, accuracy, method)
+        return "lat:${lat} - lng:${lng} - acc:${accuracy} - method:${method}"
     }
-
 
 }

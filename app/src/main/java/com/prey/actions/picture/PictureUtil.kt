@@ -10,7 +10,6 @@ import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
-import com.prey.actions.camera.CameraAction
 import com.prey.actions.HttpDataService
 import com.prey.activities.CheckPasswordHtmlActivity
 import com.prey.activities.SimpleCameraActivity
@@ -23,21 +22,22 @@ import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 
-
-class PictureUtil private constructor(context: Context) {
+/**
+ * A utility class for handling picture-related operations.
+ */
+class PictureUtil private constructor(var context: Context) {
 
     var dataImagen: ByteArray? = null
-
     var activity: SimpleCameraActivity? = null
 
     /**
-     * Method obtains the images of the cameras with retry of 4 times per camera
+     * Obtains the images of the cameras with retry of 4 times per camera.
      *
-     * @return pictures
+     * @return an HttpDataService object containing the pictures.
      */
-    fun getPicture(ctx: Context): HttpDataService? {
-        var data: HttpDataService?  = null
-        data = HttpDataService(CameraAction.DATA_ID)
+    fun getPicture(): HttpDataService? {
+        var data: HttpDataService? = null
+        data = HttpDataService(DATA_ID)
         data.setList(true)
         var currentVolume = 0
         var mgr: AudioManager? = null
@@ -45,87 +45,87 @@ class PictureUtil private constructor(context: Context) {
             val sdf = SimpleDateFormat("yyyyMMddHHmmZ")
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
                 || ActivityCompat.checkSelfPermission(
-                    ctx,
+                    context,
                     Manifest.permission.CAMERA
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
                 var attempts = 0
                 val maximum = 4
-                mgr = ctx.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                mgr = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
                 //get current volume
                 currentVolume = mgr!!.getStreamVolume(AudioManager.STREAM_MUSIC)
-                PreyConfig.getInstance(ctx).setVolume (currentVolume)
+                PreyConfig.getInstance(context).setVolume(currentVolume)
 
 
                 do {
                     try {
-                        getInstance(ctx).dataImagen = null
+                        getInstance(context).dataImagen = null
                         PreyLogger.d("report front attempts FRONT:$attempts")
-                        val frontPicture = getPicture(ctx, BACK)
+                        val frontPicture = getPicture(context, BACK)
                         if (frontPicture != null) {
                             PreyLogger.d("report data length front=" + frontPicture.size)
                             val file: InputStream = ByteArrayInputStream(frontPicture)
                             val entityFile = EntityFile()
-                            entityFile.setFile(file)
-                            entityFile.setMimeType("image/png")
-                            entityFile.setFilename("picture.jpg")
+                            entityFile.setFileInputStream(file)
+                            entityFile.setFileMimeType("image/png")
+                            entityFile.setFileName("picture.jpg")
                             entityFile.setName("picture")
-                            entityFile.setType("image/png")
-                            entityFile.setIdFile(sdf.format(Date()) + "_" + entityFile.getType())
-                            entityFile.setLength(frontPicture.size)
+                            entityFile.setFileType("image/png")
+                            entityFile.setFileId(sdf.format(Date()) + "_" + entityFile.getFileType())
+                            entityFile.setFileSize(frontPicture.size)
                             data.addEntityFile(entityFile)
                             attempts = maximum
                         }
                     } catch (e: Exception) {
                         PreyLogger.e("report error:" + e.message, e)
-                        PreyFirebaseCrashlytics.getInstance(ctx).recordException(e)
+                        PreyFirebaseCrashlytics.getInstance(context).recordException(e)
                     }
                     attempts++
                 } while (attempts < maximum)
-                val numberOfCameras = getNumberOfCameras(ctx)
+                val numberOfCameras = getNumberOfCameras(context)
                 if (numberOfCameras != null && numberOfCameras > 1) {
                     attempts = 0
                     do {
                         try {
-                            getInstance(ctx).dataImagen = null
+                            getInstance(context).dataImagen = null
                             PreyLogger.d("report back attempts BACK:$attempts")
-                            val backPicture = getPicture(ctx, FRONT)
+                            val backPicture = getPicture(context, FRONT)
                             if (backPicture != null) {
                                 PreyLogger.d("report data length back=" + backPicture.size)
                                 val file: InputStream = ByteArrayInputStream(backPicture)
                                 val entityFile = EntityFile()
-                                entityFile.setFile(file)
-                                entityFile.setMimeType("image/png")
-                                entityFile.setFilename("screenshot.jpg")
+                                entityFile.setFileInputStream(file)
+                                entityFile.setFileMimeType("image/png")
+                                entityFile.setFileName("screenshot.jpg")
                                 entityFile.setName("screenshot")
-                                entityFile.setType("image/png")
-                                entityFile.setIdFile(sdf.format(Date()) + "_" + entityFile.getType())
-                                entityFile.setLength(backPicture.size)
+                                entityFile.setFileType("image/png")
+                                entityFile.setFileId(sdf.format(Date()) + "_" + entityFile.getFileType())
+                                entityFile.setFileSize(backPicture.size)
                                 data.addEntityFile(entityFile)
                                 attempts = maximum
                             }
                         } catch (e: Exception) {
                             PreyLogger.e("report error:$attempts", e)
-                            PreyFirebaseCrashlytics.getInstance(ctx).recordException(e)
+                            PreyFirebaseCrashlytics.getInstance(context).recordException(e)
                         }
                         attempts++
                     } while (attempts < maximum)
                 }
             }
             PreyLogger.d("report data files size:${data.getEntityFiles().size}")
-            val intentCamera = Intent(ctx, SimpleCameraActivity::class.java)
+            val intentCamera = Intent(context, SimpleCameraActivity::class.java)
             intentCamera.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             val myKillerBundle = Bundle()
             myKillerBundle.putInt("kill", 1)
             intentCamera.putExtras(myKillerBundle)
-            ctx.startActivity(intentCamera)
-            ctx.sendBroadcast(Intent(CheckPasswordHtmlActivity.CLOSE_PREY))
+            context.startActivity(intentCamera)
+            context.sendBroadcast(Intent(CheckPasswordHtmlActivity.CLOSE_PREY))
         } catch (e: Exception) {
             PreyLogger.e("report error:" + e.message, e)
-            PreyFirebaseCrashlytics.getInstance(ctx).recordException(e)
+            PreyFirebaseCrashlytics.getInstance(context).recordException(e)
         } finally {
             try {
-                currentVolume = PreyConfig.getInstance(ctx).getVolume()
+                currentVolume = PreyConfig.getInstance(context).getVolume()
                 if (currentVolume > 0) {
                     //set old volume
                     mgr!!.setStreamVolume(
@@ -136,7 +136,7 @@ class PictureUtil private constructor(context: Context) {
                 }
             } catch (e: Exception) {
                 PreyLogger.e("report error:" + e.message, e)
-                PreyFirebaseCrashlytics.getInstance(ctx).recordException(e)
+                PreyFirebaseCrashlytics.getInstance(context).recordException(e)
             }
         }
         return data
@@ -147,17 +147,17 @@ class PictureUtil private constructor(context: Context) {
      *
      * @return byte array
      */
-    private fun getPicture(ctx: Context, focus: String): ByteArray? {
+    private fun getPicture(context: Context, focus: String): ByteArray? {
         var mgr: AudioManager? = null
-        getInstance(ctx).dataImagen = null
+        getInstance(context).dataImagen = null
         val streamType = AudioManager.STREAM_SYSTEM
-        getInstance(ctx).activity = null
-        val intentCamera = Intent(ctx, SimpleCameraActivity::class.java)
+        getInstance(context).activity = null
+        val intentCamera = Intent(context, SimpleCameraActivity::class.java)
         intentCamera.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intentCamera.putExtra("focus", focus)
-        ctx.startActivity(intentCamera)
+        context.startActivity(intentCamera)
         var i = 0
-        mgr = ctx.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        mgr = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         //get current volume
         var currentVolume = mgr!!.getStreamVolume(AudioManager.STREAM_MUSIC)
         try {
@@ -173,7 +173,7 @@ class PictureUtil private constructor(context: Context) {
         } catch (e: Exception) {
             PreyLogger.e("report error:" + e.message, e)
         }
-        while ( getInstance(ctx).activity == null && i < 10) {
+        while (getInstance(context).activity == null && i < 10) {
             try {
                 Thread.sleep(500)
             } catch (e: InterruptedException) {
@@ -181,8 +181,8 @@ class PictureUtil private constructor(context: Context) {
             }
             i++
         }
-        if ( getInstance(ctx).activity != null) {
-            getInstance(ctx).activity!!.takePicture(ctx)
+        if (getInstance(context).activity != null) {
+            getInstance(context).activity!!.takePicture(context)
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             mgr!!.ringerMode = AudioManager.RINGER_MODE_NORMAL
@@ -190,7 +190,7 @@ class PictureUtil private constructor(context: Context) {
         }
         try {
             i = 0
-            while ( getInstance(ctx).activity != null &&  getInstance(ctx).dataImagen == null && i < 9) {
+            while (getInstance(context).activity != null && getInstance(context).dataImagen == null && i < 9) {
                 Thread.sleep(500)
                 i++
             }
@@ -203,14 +203,14 @@ class PictureUtil private constructor(context: Context) {
             PreyLogger.e("report error:" + e.message, e)
         }
         var out: ByteArray? = null
-        if ( getInstance(ctx).activity != null) {
-            out =  getInstance(ctx).dataImagen
-            getInstance(ctx).activity!!.finish()
-            getInstance(ctx).activity = null
-            getInstance(ctx).dataImagen = null
+        if (getInstance(context).activity != null) {
+            out = getInstance(context).dataImagen
+            getInstance(context).activity!!.finish()
+            getInstance(context).activity = null
+            getInstance(context).dataImagen = null
         }
         try {
-            currentVolume = PreyConfig.getInstance(ctx).getVolume()
+            currentVolume = PreyConfig.getInstance(context).getVolume()
             if (currentVolume > 0) {
                 //set old volume
                 mgr!!.setStreamVolume(
@@ -225,30 +225,25 @@ class PictureUtil private constructor(context: Context) {
         return out
     }
 
-    companion object {
-        var TAG: String = "memory"
-
-        private var instance: PictureUtil? = null
-
-        @Synchronized
-        fun getInstance(context: Context): PictureUtil {
-            if (instance == null) {
-                instance = PictureUtil(context)
-            }
-            return instance!!
-        }
-
-        var FRONT: String = "front"
-
-        var BACK: String = "back"
-    }
-
     /**
      * Method obtains camera numbers
      *
      * @return camera numbers
      */
-    fun getNumberOfCameras(ctx: Context): Int {
+    fun getNumberOfCameras(context: Context): Int {
         return Camera.getNumberOfCameras()
     }
+
+    companion object {
+        private var instance: PictureUtil? = null
+        fun getInstance(context: Context): PictureUtil {
+            return instance ?: PictureUtil(context).also { instance = it }
+        }
+
+        const val TAG: String = "memory"
+        const val FRONT: String = "front"
+        const val BACK: String = "back"
+        const val DATA_ID: String = "webcam"
+    }
+
 }

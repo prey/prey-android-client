@@ -7,105 +7,91 @@
 package com.prey.json.actions
 
 import android.content.Context
+
 import com.prey.actions.alert.AlertThread
-import com.prey.actions.HttpDataService
 import com.prey.actions.observer.ActionResult
 import com.prey.json.UtilJson
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPermission
 import com.prey.net.PreyWebServices
+
 import org.json.JSONObject
 
-class Alert   {
-    fun run(
-        ctx: Context,
-        list: List<ActionResult>,
-        parameters: JSONObject
-    ): HttpDataService? {
-        return null
-    }
-
+/**
+ * Class representing an Alert, which can be started, canceled, or run.
+ */
+class Alert {
 
     /**
-     * Method cancel
+     * Cancels the alert with the given parameters.
      *
-     * @param ctx
-     * @param list
-     * @param parameters
+     * @param context The application context.
+     * @param actionResults List of action results, or null if not available.
+     * @param parameters JSONObject containing alert parameters, or null if not available.
      */
-    fun cancel(ctx: Context, list: List<ActionResult?>?, parameters: JSONObject?) {
-        var messageId: String? = null
-        try {
-            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID)
-        } catch (e: Exception) {
-            PreyLogger.d(String.format("Error:%s", e.message))
-        }
+    fun cancel(context: Context, actionResults: List<ActionResult?>?, parameters: JSONObject?) {
+        // Extract the message ID from the parameters, if available.
+        val messageId = parameters?.getString(PreyConfig.MESSAGE_ID)
         try {
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                ctx,
+                context,
                 "processed",
                 messageId!!,
                 UtilJson.makeMapParam("cancel", "alert", "stopped", null)
             )
         } catch (e: Exception) {
-            PreyLogger.d(String.format("Error:%s", e.message))
+            PreyLogger.d("Error:${e.message}")
         }
     }
 
-    fun start(ctx: Context, list: List<ActionResult?>?, parameters: JSONObject?) {
-        var alert: String? = ""
-        try {
-            alert = UtilJson.getString(parameters, "alert_message")
-        } catch (e: Exception) {
-            try {
-                alert = UtilJson.getString(parameters, "message")
-            } catch (e2: Exception) {
-                PreyLogger.e(String.format("Error:%s", e2.message), e2)
-            }
+    /**
+     * Starts the alert with the given parameters.
+     *
+     * @param context The application context.
+     * @param actionResults List of action results, or null if not available.
+     * @param parameters JSONObject containing alert parameters, or null if not available.
+     */
+    fun start(context: Context, actionResults: List<ActionResult?>?, parameters: JSONObject?) {
+        // Extract the alert message, message ID, job ID, and full screen notification flag from the parameters.
+        val alertMessage =
+            parameters?.getString("alert_message") ?: parameters?.getString("message")
+        val messageId = parameters?.getString(PreyConfig.MESSAGE_ID)
+        val jobId = parameters?.getString(PreyConfig.JOB_ID)
+        var isFullscreenNotification = parameters?.getBoolean("fullscreen_notification") ?: false
+        if (!PreyPermission.areNotificationsEnabled(context)) {
+            isFullscreenNotification = true
         }
-        var messageId: String? = null
-        try {
-            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID)
-            PreyLogger.d(String.format("messageId:%s", messageId))
-        } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
-        }
-        var jobId: String? = null
-        try {
-            jobId = UtilJson.getString(parameters, PreyConfig.JOB_ID)
-            PreyLogger.d(String.format("jobId:%s", jobId))
-        } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
-        }
-        var fullscreen_notification = false
-        try {
-            fullscreen_notification = UtilJson.getBoolean(parameters, "fullscreen_notification")
-            PreyLogger.d(String.format("fullscreen_notification:%s", fullscreen_notification))
-        } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
-        }
-        if (!PreyPermission.areNotificationsEnabled(ctx)) {
-            fullscreen_notification = true
-        }
-        startAlert(ctx, alert!!, messageId, jobId, fullscreen_notification)
+        // Start the alert with the extracted parameters.
+        startAlert(context, alertMessage, messageId, jobId, isFullscreenNotification)
     }
 
+    /**
+     * Starts the alert with the given parameters.
+     *
+     * @param context The application context.
+     * @param alert The alert message, or null if not available.
+     * @param messageId The message ID, or null if not available.
+     * @param jobId The job ID, or null if not available.
+     * @param isFullscreenNotification Flag indicating whether the alert should be displayed in full screen mode.
+     */
     fun startAlert(
-        ctx: Context,
-        alert: String,
+        context: Context,
+        alert: String?,
         messageId: String?,
         jobId: String?,
-        fullscreen_notification: Boolean
+        isFullscreenNotification: Boolean
     ) {
         try {
-            if (alert != null && "" != alert) {
-                AlertThread.getInstance().run (ctx, alert, messageId, jobId, fullscreen_notification)
+            // If the alert message is not null and not blank, start the alert thread.
+            if (alert != null && alert.isNotBlank()) {
+                AlertThread.getInstance()
+                    .start(context, alert, messageId, jobId, isFullscreenNotification)
             }
         } catch (e: Exception) {
-            PreyLogger.e(String.format("Error, causa:%s", e.message), e)
+            PreyLogger.e("Error, causa:${e.message}", e)
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                ctx,
+                context,
                 UtilJson.makeMapParam("start", "alert", "failed", e.message)
             )
         }

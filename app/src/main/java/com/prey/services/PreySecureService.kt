@@ -45,9 +45,9 @@ class PreySecureService : Service() {
 
     override fun onStart(intent: Intent, startId: Int) {
         super.onStart(intent, startId)
-        val ctx: Context = this
+        val context: Context = this
         PreyLogger.d("PreySecureService onStart")
-        val canDrawOverlays = PreyPermission.canDrawOverlays(ctx)
+        val canDrawOverlays = PreyPermission.canDrawOverlays(context)
         if (!canDrawOverlays) {
             stopSelf()
             return
@@ -55,12 +55,8 @@ class PreySecureService : Service() {
         val time = PreyConfig.getInstance(this).getTimeSecureLock()
         val now = Date().time
         PreyLogger.d(
-            String.format(
-                "PreyDisablePowerOptionsReceiver time:%s now:%s <%s",
-                time,
-                now,
-                (now < time)
-            )
+            
+                "PreyDisablePowerOptionsReceiver time:${time} now:${now} < ${(now < time)}"
         )
         if (now < time) {
             PreyLogger.d("PreySecureService close")
@@ -91,14 +87,14 @@ class PreySecureService : Service() {
         settings.setSupportZoom(false)
         settings.builtInZoomControls = false
         val lng = PreyUtils.getLanguage()
-        val url = CheckPasswordHtmlActivity.URL_ONB + "#/" + lng + "/pin"
+        val url = "${CheckPasswordHtmlActivity.URL_ONB}#/${lng}/pin"
         myWebView!!.addJavascriptInterface(
             WebAppInterface(this, this),
             CheckPasswordHtmlActivity.JS_ALIAS
         )
         myWebView!!.loadUrl(url)
         myWebView!!.loadUrl("javascript:window.location.reload(true)")
-        val pinNumber = PreyConfig.getInstance(ctx).getPinNumber()
+        val pinNumber = PreyConfig.getInstance(context).getPinNumber()
         if (pinNumber != null && "" != pinNumber && pinNumber.length == 4) {
             try {
                 val intentClose = Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS")
@@ -108,7 +104,7 @@ class PreySecureService : Service() {
                 )
                 this.sendBroadcast(intentClose)
             } catch (e: Exception) {
-                PreyLogger.e(String.format("Error CLOSE_SYSTEM:%s", e.message), e)
+                PreyLogger.e("Error CLOSE_SYSTEM:${e.message}",  e)
             }
             val layoutParams = WindowManager.LayoutParams()
             layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
@@ -142,7 +138,7 @@ class PreySecureService : Service() {
                 )
                 this.sendBroadcast(intentClose)
             } catch (e: Exception) {
-                PreyLogger.e(String.format("Error intentClose:%s", e.message), e)
+                PreyLogger.e("Error intentClose:%${e.message}",  e)
             }
         } else {
             if (view != null) {
@@ -165,7 +161,7 @@ class PreySecureService : Service() {
                 try {
                     wm.removeView(view)
                 } catch (e: Exception) {
-                    PreyLogger.e(String.format("Error:%s", e.message), e)
+                    PreyLogger.e("Error:${e.message}",  e)
                 }
             }
             view = null

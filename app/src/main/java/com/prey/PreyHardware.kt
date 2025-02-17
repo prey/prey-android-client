@@ -6,6 +6,9 @@
  ******************************************************************************/
 package com.prey
 
+/**
+ * Represents the hardware information of a device.
+ */
 class PreyHardware {
     private var uuid: String? = null
     private var biosVendor: String? = null

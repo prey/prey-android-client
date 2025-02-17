@@ -12,9 +12,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
+
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GooglePlayServicesUtil
+
 import com.prey.actions.HttpDataService
 import com.prey.json.UtilJson
 import com.prey.PreyConfig
@@ -23,35 +25,26 @@ import com.prey.PreyUtils
 import com.prey.managers.PreyWifiManager
 import com.prey.net.PreyWebServices
 import com.prey.services.LocationService
+
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.DecimalFormat
 
 object LocationUtil {
-    const val LAT: String = "lat"
-    const val LNG: String = "lng"
-    const val ACC: String = "accuracy"
-    const val METHOD: String = "method"
 
     @JvmOverloads
     fun dataLocation(
-        ctx: Context,
+        context: Context,
         messageId: String?,
         asynchronous: Boolean,
         maximum: Int = MAXIMUM_OF_ATTEMPTS
     ): HttpDataService? {
         var data: HttpDataService? = null
         try {
-            val preyLocation = getLocation(ctx, messageId, asynchronous, maximum)
+            val preyLocation = getLocation(context, messageId, asynchronous, maximum)
             if (preyLocation != null && (preyLocation.getLat() != 0.0 && preyLocation.getLng() != 0.0)) {
-                PreyLogger.d(
-                    String.format(
-                        "locationData:%s %s %s",
-                        preyLocation.getLat(),
-                        preyLocation.getLng(),
-                        preyLocation.getAccuracy()
-                    )
-                )
-                PreyConfig.getInstance(ctx).setLocation(preyLocation)
+                PreyLogger.d("locationData:${preyLocation.getLat()} ${preyLocation.getLng()} ${preyLocation.getAccuracy()}")
+                PreyConfig.getInstance(context).setLocation(preyLocation)
                 PreyLocationManager.getInstance().setLastLocation(preyLocation)
                 data = convertData(preyLocation)
             } else {
@@ -59,28 +52,28 @@ object LocationUtil {
                 return null
             }
         } catch (e: Exception) {
-            sendNotify(ctx, "Error", messageId)
+            sendNotify(context, "Error", messageId)
         }
         return data
     }
 
     @Throws(Exception::class)
-    fun getLocation(ctx: Context, messageId: String?, asynchronous: Boolean): PreyLocation? {
-        return getLocation(ctx, messageId, asynchronous, MAXIMUM_OF_ATTEMPTS)
+    fun getLocation(context: Context, messageId: String?, asynchronous: Boolean): PreyLocation? {
+        return getLocation(context, messageId, asynchronous, MAXIMUM_OF_ATTEMPTS)
     }
 
     @Throws(Exception::class)
     fun getLocation(
-        ctx: Context,
+        context: Context,
         messageId: String?,
         asynchronous: Boolean,
         maximum: Int
     ): PreyLocation? {
         var preyLocation: PreyLocation? = null
-        val isGpsEnabled = PreyLocationManager.getInstance().isGpsLocationServiceActive(ctx)
-        val isNetworkEnabled = PreyLocationManager.getInstance().isNetworkLocationServiceActive(ctx)
-        val isWifiEnabled = PreyWifiManager.getInstance().isWifiEnabled(ctx)
-        val isGooglePlayServicesAvailable = PreyUtils.isGooglePlayServicesAvailable(ctx)
+        val isGpsEnabled = PreyLocationManager.getInstance().isGpsLocationServiceActive(context)
+        val isNetworkEnabled = PreyLocationManager.getInstance().isNetworkLocationServiceActive(context)
+        val isWifiEnabled = PreyWifiManager.getInstance().isWifiEnabled(context)
+        val isGooglePlayServicesAvailable = PreyUtils.isGooglePlayServicesAvailable(context)
         val json = JSONObject()
         try {
             json.put("gps", isGpsEnabled)
@@ -88,56 +81,44 @@ object LocationUtil {
             json.put("wifi", isWifiEnabled)
             json.put("play", isGooglePlayServicesAvailable)
         } catch (e: JSONException) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         val locationInfo = json.toString()
-        PreyConfig.getInstance(ctx).setLocationInfo(locationInfo)
+        PreyConfig.getInstance(context).setLocationInfo(locationInfo)
         PreyLogger.d(locationInfo)
         val method = getMethod(isGpsEnabled, isNetworkEnabled)
         try {
-           // preyLocation = getPreyLocationAppService(ctx, method, asynchronous, preyLocation, maximum)
+            // preyLocation = getPreyLocationAppService(context, method, asynchronous, preyLocation, maximum)
         } catch (e: Exception) {
-            PreyLogger.e(String.format("Error PreyLocationApp:%s", e.message), e)
+            PreyLogger.e("Error PreyLocationApp:${e.message}", e)
         }
         try {
-           if (preyLocation?.getLocation() == null || (preyLocation.getLat() == 0.0 && preyLocation.getLng() == 0.0)) {
+            if (preyLocation?.getLocation() == null || (preyLocation.getLat() == 0.0 && preyLocation.getLng() == 0.0)) {
                 preyLocation =
-                    getPreyLocationAppServiceOreo(ctx, method, asynchronous, preyLocation)
+                    getPreyLocationAppServiceOreo(context, method, asynchronous, preyLocation)
             }
         } catch (e: Exception) {
-            PreyLogger.e(String.format("Error AppServiceOreo:%s", e.message), e)
+            PreyLogger.e("Error AppServiceOreo:${e.message}", e)
         }
-        /*
-        if (!isGooglePlayServicesAvailable && (preyLocation == null || preyLocation.getLocation() == null || (preyLocation.getLat() == 0.0 && preyLocation.getLng() == 0.0))) {
-            val listWifi = PreyPhone(ctx).getListWifi()
-            preyLocation = PreyWebServices.getInstance().getLocationWithWifi(ctx, listWifi)
-        }*/
         if (preyLocation != null) {
-            PreyLogger.d(
-                String.format(
-                    "preyLocation lat:%s lng:%s acc:%s",
-                    preyLocation.getLat(),
-                    preyLocation.getLng(),
-                    preyLocation.getAccuracy()
-                )
-            )
+            PreyLogger.d("preyLocation lat:${preyLocation.getLat()} lng:${preyLocation.getLng()} acc:${preyLocation.getAccuracy()}")
         }
         return preyLocation
     }
 
-    private fun isGooglePlayServicesAvailable(ctx: Context): Boolean {
+    private fun isGooglePlayServicesAvailable(context: Context): Boolean {
         var isGooglePlayServicesAvailable = false
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
             || (ActivityCompat.checkSelfPermission(
-                ctx,
+                context,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
                     || ActivityCompat.checkSelfPermission(
-                ctx,
+                context,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED)
         ) {
-            val resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(ctx)
+            val resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context)
             if (ConnectionResult.SUCCESS == resultCode) {
                 isGooglePlayServicesAvailable = true
             }
@@ -158,23 +139,24 @@ object LocationUtil {
         return ""
     }
 
-    private fun sendNotify(ctx: Context, message: String) {
-        val parms = UtilJson.makeMapParam("get", "location", "failed", message)
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms)
+    private fun sendNotify(context: Context, message: String) {
+        val parameters = UtilJson.makeMapParam("get", "location", "failed", message)
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(context, parameters)
     }
 
-    private fun sendNotify(ctx: Context, message: String, status: String?) {
-        val parms = UtilJson.makeMapParam("get", "location", status, message)
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, parms)
+    private fun sendNotify(context: Context, message: String, status: String?) {
+        val parameters = UtilJson.makeMapParam("get", "location", status, message)
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(context, parameters)
     }
 
     const val MAXIMUM_OF_ATTEMPTS: Int = 5
     const val MAXIMUM_OF_ATTEMPTS2: Int = 2
-    val SLEEP_OF_ATTEMPTS: IntArray = intArrayOf(1, 1, 1, 1,1,1,1, 1, 1, 1,1,1,1, 1, 1, 1,1,1)
+    val SLEEP_OF_ATTEMPTS: IntArray =
+        intArrayOf(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
 
     @Throws(Exception::class)
     fun getPreyLocationPlayService(
-        ctx: Context,
+        context: Context,
         method: String,
         asynchronous: Boolean,
         preyLocationOld: PreyLocation?
@@ -183,16 +165,16 @@ object LocationUtil {
         PreyLogger.d("getPreyLocationPlayService")
         val play = PreyGooglePlayServiceLocation()
         try {
-            Thread { play.init(ctx) }.start()
+            Thread { play.init(context) }.start()
             var currentLocation: Location? = null
             val manager = PreyLocationManager.getInstance()
-            currentLocation = play.getLastLocation(ctx)
+            currentLocation = play.getLastLocation(context)
             if (currentLocation != null) {
-                PreyLogger.d(String.format("currentLocation:%s", currentLocation.toString()))
+                PreyLogger.d("currentLocation:${currentLocation.toString()}")
                 preyLocation = PreyLocation(currentLocation, method)
             }
         } catch (e: Exception) {
-            PreyLogger.d(String.format("Error getPreyLocationPlayService:%s", e.message))
+            PreyLogger.d("Error getPreyLocationPlayService:${e.message}")
             throw e
         } finally {
             if (play != null) play.stopLocationUpdates()
@@ -201,19 +183,18 @@ object LocationUtil {
     }
 
     fun getPreyLocationAppServiceOreo(
-        ctx: Context,
+        context: Context,
         method: String?,
         asynchronous: Boolean,
         preyLocationOld: PreyLocation?
     ): PreyLocation? {
-
         var preyLocation: PreyLocation? = null
-        val intentLocation = Intent(ctx, LocationUpdatesService::class.java)
+        val intentLocation = Intent(context, LastLocationService::class.java)
         try {
-            //ctx.startService(intentLocation)
+            //context.startService(intentLocation)
             var i = 0
-            while (i <1){// MAXIMUM_OF_ATTEMPTS2) {
-                PreyLogger.d(String.format("getPreyLocationAppServiceOreo[%d]:", i))
+            while (i < 1) {// MAXIMUM_OF_ATTEMPTS2) {
+                PreyLogger.d("getPreyLocationAppServiceOreo[${i}]")
                 try {
                     Thread.sleep((SLEEP_OF_ATTEMPTS[i] * 1000).toLong())
                 } catch (e: Exception) {
@@ -228,17 +209,17 @@ object LocationUtil {
                 i++
             }
         } catch (e: Exception) {
-            PreyLogger.e(String.format("Error getPreyLocationAppServiceOreo:%s", e.message), e)
+            PreyLogger.e("Error:${e.message}", e)
             throw e
         } finally {
-          //  ctx.stopService(intentLocation)
+            //  context.stopService(intentLocation)
         }
         return preyLocation
     }
 
     @Throws(Exception::class)
     private fun getPreyLocationAppService(
-        ctx: Context,
+        context: Context,
         method: String,
         asynchronous: Boolean,
         preyLocationOld: PreyLocation?,
@@ -247,35 +228,35 @@ object LocationUtil {
         var preyLocation: PreyLocation? = null
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M &&
             (ActivityCompat.checkSelfPermission(
-                ctx,
+                context,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(
-                ctx,
+                context,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED)
         ) {
-            val intentLocation = Intent(ctx, LocationService::class.java)
+            val intentLocation = Intent(context, LocationService::class.java)
             try {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    ctx.startService(intentLocation)
+                    context.startService(intentLocation)
                 } else {
-                    ctx.startService(intentLocation)
+                    context.startService(intentLocation)
                 }
-                preyLocation = waitLocation(ctx, method, asynchronous, maximum)
+                preyLocation = waitLocation(context, method, asynchronous, maximum)
             } catch (e: Exception) {
-                PreyLogger.e(String.format("getPreyLocationAppService e:%s", e.message), e)
+                PreyLogger.e("Error:${e.message}", e)
                 throw e
             } finally {
-                ctx.stopService(intentLocation)
+                context.stopService(intentLocation)
             }
         }
         return preyLocation
     }
 
     fun waitLocation(
-        ctx: Context?,
+        context: Context?,
         method: String?,
         asynchronous: Boolean,
         maximum: Int
@@ -285,26 +266,26 @@ object LocationUtil {
         if (location != null && location.isValid()) {
             preyLocation = location
             preyLocation.setMethod(method)
-            PreyLogger.d(String.format("getPreyLocationAppService:%s", preyLocation.toString()))
+            PreyLogger.d("getPreyLocationAppService:${preyLocation.toString()}")
         }
         return preyLocation
     }
 
     private fun sendLocation(
-        ctx: Context,
+        context: Context,
         asynchronous: Boolean,
         locationOld: PreyLocation?,
         locationNew: PreyLocation?
     ): PreyLocation? {
         val distance = distance(locationOld, locationNew)
-        val distanceLocation = PreyConfig.getInstance(ctx).getDistanceLocation().toDouble()
+        val distanceLocation = PreyConfig.getInstance(context).getDistanceLocation().toDouble()
         if (locationNew != null) {
             if (locationOld == null || distance > distanceLocation || locationOld.getAccuracy() > locationNew.getAccuracy()) {
                 if (asynchronous) {
                     val data = convertData(locationNew)
                     val dataToBeSent = ArrayList<HttpDataService>()
                     dataToBeSent.add(data!!)
-                    PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent)
+                    PreyWebServices.getInstance().sendPreyHttpData(context, dataToBeSent)
                 }
             }
             return locationNew
@@ -331,31 +312,48 @@ object LocationUtil {
         if (lastLocation == null) return null
         val data = HttpDataService("location")
         data.setList(true)
+        val latitude = lastLocation.getLat().toString()
+        val longitude = lastLocation.getLng().toString()
+        val accuracy = Math.round(lastLocation.getAccuracy()).toString()
+        val method = lastLocation.getMethod()
         val parametersMap = HashMap<String, String?>()
-        parametersMap[LAT] = lastLocation.getLat().toString()
-        parametersMap[LNG] = lastLocation.getLng().toString()
-        parametersMap[ACC] = Math.round(lastLocation.getAccuracy()).toString()
-        parametersMap[METHOD] = lastLocation.getMethod()
+        parametersMap[LAT] = latitude
+        parametersMap[LNG] = longitude
+        parametersMap[ACC] = accuracy
+        parametersMap[METHOD] = method
         data.addDataListAll(parametersMap)
-        PreyLogger.d(
-            String.format(
-                "lat:%.2f lng:%.2f acc:%.2f method:%s",
-                lastLocation.getLat(),
-                lastLocation.getLng(),
-                lastLocation.getAccuracy(),
-                lastLocation.getMethod()
-            )
-        )
+        PreyLogger.d("lat:${latitude} lng:${longitude} acc:${accuracy} method:${method}")
         return data
     }
 
-    fun dataPreyLocation(ctx: Context, messageId: String?): PreyLocation {
-        val data = dataLocation(ctx, messageId, false)
+    fun dataPreyLocation(context: Context, messageId: String?): PreyLocation {
+        val data = dataLocation(context, messageId, false)
         val location = PreyLocation()
-
         location.setLat(data!!.getDataList()!!.get(LAT)!!.toDouble())
         location.setLng(data.getDataList()!!.get(LNG)!!.toDouble())
         location.setAccuracy(data.getDataList()!!.get(ACC)!!.toFloat())
         return location
     }
+
+    fun round(value: Double): Double {
+        var finalValue = 0.0
+        val df = DecimalFormat("0.000000")
+        val format = df.format(value)
+        try {
+            finalValue = df.parse(format) as Double
+        } catch (e1: Exception) {
+            try {
+                val finalValue2 = df.parse(format) as Long
+                finalValue = finalValue2.toDouble()
+            } catch (e: Exception) {
+                PreyLogger.e("Error:${e.message}" , e)
+            }
+        }
+        return finalValue
+    }
+
+    const val LAT: String = "lat"
+    const val LNG: String = "lng"
+    const val ACC: String = "accuracy"
+    const val METHOD: String = "method"
 }

@@ -8,7 +8,7 @@ package com.prey.events.manager
 
 import android.content.Context
 import android.net.wifi.WifiManager
-import com.prey.events.factories.EventFactory
+
 import com.prey.events.Event
 import com.prey.events.retrieves.EventRetrieveDataBattery
 import com.prey.events.retrieves.EventRetrieveDataMinWifi
@@ -21,26 +21,34 @@ import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPhone
 import com.prey.managers.PreyConnectivityManager
+
 import org.json.JSONObject
 
-class EventManager(var ctx: Context) {
-    private var mapData: EventMap<String, JSONObject?>? = null
+/**
+ * EventManager is responsible for handling events and sending data to the server.
+ *
+ * @param context The application context.
+ */
+class EventManager(var context: Context) {
+    private var dataMap: EventMap<String, JSONObject?> = EventMap()
     var event: Event? = null
 
+    /**
+     * Execute an event and send data to the server.
+     *
+     * @param event The event to execute.
+     */
     fun execute(event: Event) {
-        val isDeviceRegistered = isThisDeviceAlreadyRegisteredWithPrey(ctx)
-        val previousSsid = PreyConfig.getInstance(ctx).getPreviousSsid()
+        val isDeviceRegistered = isThisDeviceAlreadyRegisteredWithPrey(context)
+        val previousSsid = PreyConfig.getInstance(context).getPreviousSsid()
         var ssid = ""
         var validation = true
         var type_connect = ""
         if (Event.WIFI_CHANGED == event.name) {
             if (event.info!!.indexOf("wifi") > 0) {
                 for (i in 0..29) {
-                    try {
-                        Thread.sleep(1000)
-                    } catch (e: Exception) {
-                    }
-                    val wifiManager = ctx.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                    Thread.sleep(1000)
+                    val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
                     val wifiInfo = wifiManager.connectionInfo
                     ssid = wifiInfo.ssid
                     PreyLogger.d("i[$i]ssid:$ssid")
@@ -50,34 +58,21 @@ class EventManager(var ctx: Context) {
                     }
                 }
             }
-            if (ssid != null && "" != ssid && ssid != previousSsid && "<unknown ssid>" != ssid && "0x" != ssid) {
-                validation = true
-                object : Thread() {
-                    override fun run() {
-                        try {
-                            EventFactory.sendLocationAware(ctx)
-                        } catch (e3: Exception) {
-                        }
-                    }
-                }.start()
-            } else {
-                validation = false
-            }
             if (event.info!!.indexOf(MOBILE) > 0) {
                 var isMobileConnected = false
                 for (i in 0..9) {
-                    try {
-                        Thread.sleep(1000)
-                    } catch (e: Exception) {
-                    }
-                    isMobileConnected = PreyConnectivityManager.getInstance().isMobileConnected(ctx)
+                    Thread.sleep(1000)
+                    isMobileConnected =
+                        PreyConnectivityManager.getInstance().isMobileConnected(context)
                     PreyLogger.d("i[$i]isMobileConnected:$isMobileConnected")
                     if (isMobileConnected) {
-                        val networkClass = PreyPhone.getInstance(ctx)!!.getNetworkClass(ctx)
-                        PreyConfig.getInstance(ctx).setPreviousSsid(networkClass)
-                        event.name = Event.MOBILE_CONNECTED
-                        event.info = networkClass
-                        type_connect = "mobile"
+                        val networkClass = PreyPhone.getInstance(context).getNetworkClass(context)
+                        if (networkClass != null) {
+                            PreyConfig.getInstance(context).setPreviousSsid(networkClass)
+                            event.name = Event.MOBILE_CONNECTED
+                            event.info = networkClass
+                            type_connect = "mobile"
+                        }
                         break
                     }
                 }
@@ -87,107 +82,131 @@ class EventManager(var ctx: Context) {
         if (event.isAlwaysSend) {
             validation = true
         }
-        val isMobileConnected = PreyConnectivityManager.getInstance().isMobileConnected(ctx)
+        val isMobileConnected = PreyConnectivityManager.getInstance().isMobileConnected(context)
 
         var i = 0
         while (isMobileConnected && i < 10) {
-            val networkClass = PreyPhone.getInstance(ctx)!!.getNetworkClass(ctx)
-            PreyConfig.getInstance(ctx).setPreviousSsid(networkClass)
+            val networkClass = PreyPhone.getInstance(context).getNetworkClass(context)
+            if (networkClass != null) {
+                PreyConfig.getInstance(context).setPreviousSsid(networkClass)
+            }
             type_connect = "mobile"
             break
             i++
         }
-
-        PreyLogger.d("EVENT name:" + event.name + " info:" + event.info + " ssid[" + ssid + "] previousSsid[" + previousSsid + "]")
+        PreyLogger.d("EVENT name:${event.name} info:${event.info} ssid[${ssid}] previousSsid[${previousSsid}]")
         PreyLogger.d("validation:$validation")
         if (validation) {
             PreyLogger.d("EVENT change PreviousSsid:$ssid")
-            PreyConfig.getInstance(ctx).setPreviousSsid(ssid)
+            PreyConfig.getInstance(context).setPreviousSsid(ssid)
             if (isDeviceRegistered) {
-                PreyLogger.d("EVENT isDeviceRegistered event: " + event.name + " type_connect:" + type_connect)
-                this.mapData = EventMap()
+                PreyLogger.d("EVENT isDeviceRegistered event: ${event.name} type_connect:${type_connect}")
+                this.dataMap = EventMap()
                 this.event = event
                 if (Event.DEVICE_STATUS == event.name) {
                     if (MOBILE == type_connect) {
-                        mapData!![MOBILE] = null
+                        dataMap[MOBILE] = null
                     } else {
-                        mapData!![WIFI] = null
+                        dataMap[WIFI] = null
                     }
                 } else {
-                    mapData!![MOBILE] = null
-                    mapData!![WIFI] = null
-                    mapData!![ONLINE] = null
-                    mapData!![UPTIME] = null
+                    dataMap[MOBILE] = null
+                    dataMap[WIFI] = null
+                    dataMap[ONLINE] = null
+                    dataMap[UPTIME] = null
                 }
-                mapData!![BATTERY] = null
+                dataMap[BATTERY] = null
                 if (Event.DEVICE_STATUS == event.name) {
                     if (MOBILE == type_connect) {
-                        EventRetrieveDataMobile().execute(ctx, this)
+                        EventRetrieveDataMobile().execute(context, this)
                     } else {
-                        EventRetrieveDataMinWifi().execute(ctx, this)
+                        EventRetrieveDataMinWifi().execute(context, this)
                     }
                 } else {
                     if (MOBILE == type_connect) EventRetrieveDataMobile().execute(
-                        ctx,
+                        context,
                         this
                     )
-                    else EventRetrieveDataNullMobile().execute(ctx, this)
-                    EventRetrieveDataWifi().execute(ctx, this)
-                    EventRetrieveDataOnline().execute(ctx, this)
-                    EventRetrieveDataUptime().execute(ctx, this)
+                    else EventRetrieveDataNullMobile().execute(context, this)
+                    EventRetrieveDataWifi().execute(context, this)
+                    EventRetrieveDataOnline().execute(context, this)
+                    EventRetrieveDataUptime().execute(context, this)
                 }
-                EventRetrieveDataBattery().execute(ctx, this)
+                EventRetrieveDataBattery().execute(context, this)
             }
         }
     }
 
+    /**
+     * This function is called when the EventManager receives data.
+     * It stores the data in the dataMap and checks if all the required data is available.
+     * If all the data is available, it calls the sendEvents function.
+     *
+     * @param key The key of the data.
+     * @param data The data to be stored.
+     */
     fun receivesData(key: String, data: JSONObject?) {
-        mapData!![key] = data
-        if (mapData!!.isCompleteData) {
+        dataMap[key] = data
+        if (dataMap.isCompleteData()) {
             sendEvents()
         }
     }
 
+    /**
+     * This function is called to send the events.
+     * It checks if the dataMap is not null and if the event is not null.
+     * It then converts the dataMap to a JSONObject.
+     * If the event name is BATTERY_LOW and the locationLowBattery is enabled,
+     * it checks if the LocationLowBatteryRunner is valid.
+     * If it is valid, it starts a new thread for the LocationLowBatteryRunner.
+     * It also adds the "locationLowBattery" field to the JSONObject.
+     * If the event name is DEVICE_STATUS, it sets the info of the event to the JSONObject.
+     * If the event name is not WIFI_CHANGED or the event name is not the same as the lastEvent,
+     * it sets the lastEvent to the event name and starts a new EventThread.
+     */
     private fun sendEvents() {
-        if (mapData != null) {
-            val jsonObjectStatus = mapData!!.toJSONObject()
-            PreyLogger.d("jsonObjectStatus: $jsonObjectStatus")
-            if (event != null) {
-                val lastEvent = PreyConfig.getInstance(ctx).getLastEvent()
-                PreyLogger.d("event name[" + event!!.name + "] lastEvent:" + lastEvent)
-                if (Event.BATTERY_LOW == event!!.name) {
-                    if (PreyConfig.getInstance(ctx).isLocationLowBattery()) {
-                        PreyLogger.d(
-                            "LocationLowBatteryRunner.isValid(ctx):" + LocationLowBatteryRunner.getInstance(
-                                ctx
-                            ).isValid(
-                                ctx
-                            )
-                        )
-                        if (LocationLowBatteryRunner.getInstance(ctx).isValid(ctx)) {
-                            Thread(LocationLowBatteryRunner(ctx)).start()
-                            try {
-                                jsonObjectStatus.put("locationLowBattery", true)
-                            } catch (e: Exception) {
-                                PreyLogger.e("Error put:" + e.message, e)
-                            }
+
+        val jsonObjectStatus = dataMap.toJSONObject()
+        PreyLogger.d("jsonObjectStatus: $jsonObjectStatus")
+        if (event != null) {
+            val lastEvent = PreyConfig.getInstance(context).getLastEvent()
+            PreyLogger.d("event name[${event!!.name}] lastEvent:${lastEvent}")
+            if (Event.BATTERY_LOW == event!!.name) {
+                if (PreyConfig.getInstance(context).isLocationLowBattery()) {
+                    PreyLogger.d(
+                        "LocationLowBatteryRunner.isValid(context):${
+                            LocationLowBatteryRunner.getInstance(context).isValid()
+                        }"
+                    )
+                    if (LocationLowBatteryRunner.getInstance(context).isValid()) {
+                        Thread(LocationLowBatteryRunner(context)).start()
+                        try {
+                            jsonObjectStatus.put("locationLowBattery", true)
+                        } catch (e: Exception) {
+                            PreyLogger.e("Error put:${e.message}", e)
                         }
                     }
                 }
-                if (Event.DEVICE_STATUS == event!!.name) {
-                    event!!.info = jsonObjectStatus.toString()
-                }
-                if (Event.WIFI_CHANGED != event!!.name || event!!.name != lastEvent) {
-                    PreyConfig.getInstance(ctx).setLastEvent(event!!.name)
-                    PreyLogger.d("event name[" + event!!.name + "], info[" + event!!.info + "]")
-                    EventThread(ctx, event!!, jsonObjectStatus).start()
-                }
+            }
+            if (Event.DEVICE_STATUS == event!!.name) {
+                event!!.info = jsonObjectStatus.toString()
+            }
+            if (Event.WIFI_CHANGED != event!!.name || event!!.name != lastEvent) {
+                PreyConfig.getInstance(context).setLastEvent(event!!.name!!)
+                PreyLogger.d("event name[${event!!.name}], info[${event!!.info}]")
+                EventThread(context, event!!, jsonObjectStatus).start()
             }
         }
     }
 
-    private fun isThisDeviceAlreadyRegisteredWithPrey(ctx: Context): Boolean {
-        return PreyConfig.getInstance(ctx).isThisDeviceAlreadyRegisteredWithPrey()
+    /**
+     * This function checks if the device is already registered with Prey.
+     *
+     * @param context The application context.
+     * @return True if the device is already registered, false otherwise.
+     */
+    private fun isThisDeviceAlreadyRegisteredWithPrey(context: Context): Boolean {
+        return PreyConfig.getInstance(context).isThisDeviceAlreadyRegisteredWithPrey()
     }
 
     companion object {

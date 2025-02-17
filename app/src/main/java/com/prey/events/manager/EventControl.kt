@@ -6,23 +6,35 @@
  ******************************************************************************/
 package com.prey.events.manager
 
+import android.content.Context
 import com.prey.PreyLogger
+
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+/**
+ * EventControl is a singleton class responsible for validating events based on battery status.
+ */
 class EventControl private constructor() {
-    private val sdf2 = SimpleDateFormat("dd/MM/yy hh:mm:ss", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("dd/MM/yy hh:mm:ss", Locale.getDefault())
 
     init {
+        // Initialize the map to store battery state timestamps
         map = HashMap()
     }
 
-    fun valida(json: JSONObject): Boolean {
+    /**
+     * Validates an event based on the provided JSON object containing battery status information.
+     *
+     * @param json JSONObject containing battery status information
+     * @return True if the event is valid, false otherwise
+     */
+    fun isValid(json: JSONObject): Boolean {
         var state = ""
-        var percentage = -1.0
+        var percentage: Double
         try {
             val jsonBattery = json.getJSONObject("battery_status")
             state = jsonBattery.getString("state")
@@ -34,6 +46,7 @@ class EventControl private constructor() {
         }
         val nowDate = Date()
         val now = nowDate.time
+        // Check if battery is discharging or stopped charging
         if ("discharging" == state || "stopped_charging" == state) {
             if (percentage > 0) {
                 if (map!!.containsKey(state)) {
@@ -46,8 +59,8 @@ class EventControl private constructor() {
                         cal.add(Calendar.MINUTE, 1)
                     }
                     val timeMore = cal.timeInMillis
-                    PreyLogger.d("EVENT now        :" + now + " " + sdf2.format(Date(now)))
-                    PreyLogger.d("EVENT timeMore:" + timeMore + " " + sdf2.format(Date(timeMore)))
+                    PreyLogger.d("EVENT now     :${now} ${dateFormat.format(Date(now))}")
+                    PreyLogger.d("EVENT timeMore:${timeMore} ${dateFormat.format(Date(timeMore))}"  )
                     if (timeMore > now) {
                         return false
                     } else {
@@ -67,17 +80,9 @@ class EventControl private constructor() {
     }
 
     companion object {
-
         private var map: MutableMap<String, Long>? = null
-
-
-        private var INSTANCE: EventControl? = null
-        fun getInstance(): EventControl {
-            if (INSTANCE == null) {
-                INSTANCE = EventControl()
-            }
-            return INSTANCE!!
-        }
-
+        private var instance: EventControl? = null
+        fun getInstance(): EventControl =
+            instance ?: EventControl().also { instance = it }
     }
 }

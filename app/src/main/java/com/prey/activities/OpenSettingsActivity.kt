@@ -9,14 +9,18 @@ package com.prey.activities
 import android.app.Activity
 import android.app.NotificationManager
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Window
+
 import com.prey.R
 import com.prey.events.factories.EventFactory
 
+/**
+ * Activity responsible for checking if a notification should be hidden or
+ * if the app settings should be opened to grant permissions.
+ */
 class OpenSettingsActivity : Activity() {
     /**
      * Activity that checks if it should hide the notification or
@@ -27,7 +31,6 @@ class OpenSettingsActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.splash_batch)
         val verifyNotification = EventFactory.verifyNotification(this)
         if (verifyNotification) {

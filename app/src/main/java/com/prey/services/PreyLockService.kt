@@ -45,9 +45,9 @@ class PreyLockService : Service() {
 
     override fun onStart(intent: Intent, startId: Int) {
         super.onStart(intent, startId)
-        val ctx: Context = this
+        val context: Context = this
         PreyLogger.d("PreyLockService onStart")
-        val unlock = PreyConfig.getInstance(ctx).getUnlockPass()
+        val unlock = PreyConfig.getInstance(context).getUnlockPass()
         if (unlock != null && "" != unlock) {
             val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
             view = inflater.inflate(R.layout.lock_android7, null)
@@ -71,10 +71,8 @@ class PreyLockService : Service() {
                 ) {
                     textViewWarning.text = ""
                 }
-
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 }
-
                 override fun afterTextChanged(s: Editable) {
                 }
             })
@@ -82,24 +80,24 @@ class PreyLockService : Service() {
             btn_unlock.setOnClickListener {
                 try {
                     val key = editText.text.toString().trim { it <= ' ' }
-                    val unlock = PreyConfig.getInstance(ctx).getUnlockPass()
-                    val canDrawOverlays = PreyPermission.canDrawOverlays(ctx)
+                    val unlock = PreyConfig.getInstance(context).getUnlockPass()
+                    val canDrawOverlays = PreyPermission.canDrawOverlays(context)
                     PreyLogger.d("unlock key:$key unlock:$unlock canDrawOverlays:$canDrawOverlays")
                     if (unlock == null || "" == unlock || unlock == key) {
-                        val jobIdLock = PreyConfig.getInstance(ctx).getJobIdLock()
+                        val jobIdLock = PreyConfig.getInstance(context).getJobIdLock()
                         var reason = "{\"origin\":\"user\"}"
                         if (jobIdLock != null && "" != jobIdLock) {
                             reason = "{\"device_job_id\":\"$jobIdLock\",\"origin\":\"user\"}"
-                            PreyConfig.getInstance(ctx).setJobIdLock("")
+                            PreyConfig.getInstance(context).setJobIdLock("")
                         }
                         val reasonFinal = reason
-                        PreyConfig.getInstance(ctx).setLock(false)
-                        PreyConfig.getInstance(ctx).deleteUnlockPass()
+                        PreyConfig.getInstance(context).setLock(false)
+                        PreyConfig.getInstance(context).deleteUnlockPass()
                         object : Thread() {
                             override fun run() {
                                 PreyWebServices.getInstance()
                                     .sendNotifyActionResultPreyHttp(
-                                        ctx,
+                                        context,
                                         UtilJson.makeMapParam(
                                             "start",
                                             "lock",
@@ -127,7 +125,7 @@ class PreyLockService : Service() {
                         }.start()
                     } else {
                         editText.setText("")
-                        textViewWarning.text = ctx.getString(R.string.password_wrong)
+                        textViewWarning.text = context.getString(R.string.password_wrong)
                     }
                 } catch (e: Exception) {
                 }

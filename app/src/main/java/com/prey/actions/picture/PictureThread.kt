@@ -1,17 +1,19 @@
 package com.prey.actions.picture
 
 import android.content.Context
+
 import com.prey.PreyEmail
 
-class PictureThread  {
-    private var ctx: Context? = null
+/**
+ * Represents a thread for taking and sending pictures.
+ */
+class PictureThread(var context: Context) {
 
-    constructor(ctx: Context) {
-        this.ctx = ctx
-    }
-
+    /**
+     * Runs the picture thread, taking a picture and sending it via email.
+     */
     fun run() {
-        val data = PictureUtil.getInstance(ctx!!).getPicture(ctx!!)
-        PreyEmail.sendDataMail(ctx!!, data)
+        val data = PictureUtil.getInstance(context).getPicture()
+        PreyEmail.sendDataMail(context, data)
     }
 }

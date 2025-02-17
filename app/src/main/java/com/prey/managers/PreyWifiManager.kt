@@ -10,52 +10,40 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
+
 import com.prey.PreyLogger
 
 class PreyWifiManager {
 
-    fun isWifiEnabled(ctx: Context): Boolean {
-        val wifiMgr = ctx.getSystemService(android.content.Context.WIFI_SERVICE) as WifiManager
+    fun isWifiEnabled(context: Context): Boolean {
+        val wifiMgr = context.getSystemService(android.content.Context.WIFI_SERVICE) as WifiManager
         return wifiMgr.isWifiEnabled ?: false
     }
 
-    fun isOnline(ctx: Context): Boolean {
-        val cm = ctx!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val netInfo = cm.activeNetworkInfo
-        if (netInfo != null && netInfo.isConnectedOrConnecting) {
-            return true
-        }
-        return false
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return connectivityManager.activeNetworkInfo?.isConnectedOrConnecting ?: false
     }
 
-    fun connectionInfo(ctx: Context): WifiInfo? {
+    private fun getConnectionInfo(context: Context): WifiInfo? {
         try {
-            val wifiMgr = ctx.getSystemService(Context.WIFI_SERVICE) as WifiManager
-            if (wifiMgr != null) return wifiMgr.connectionInfo
+            val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            return wifiManager.connectionInfo
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         return null
     }
 
-    fun sSID(ctx: Context): String? {
-        if (connectionInfo(ctx) != null) {
-            var ssid = connectionInfo(ctx)!!.ssid
-            if (ssid != null) {
-                ssid = ssid.replace("\"", "")
-            }
-            return ssid
-        }
-        return null
+    fun getSSID(context: Context): String? {
+        val connectionInfo = getConnectionInfo(context) ?: return null
+        return connectionInfo.ssid?.replace("\"", "")
     }
 
     companion object {
-        private var INSTANCE: PreyWifiManager? = null
+        private var instance: PreyWifiManager? = null
         fun getInstance(): PreyWifiManager {
-            if (INSTANCE == null) {
-                INSTANCE = PreyWifiManager()
-            }
-            return INSTANCE!!
+            return instance ?: PreyWifiManager().also { instance = it }
         }
     }
 }

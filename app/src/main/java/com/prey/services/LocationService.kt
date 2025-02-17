@@ -124,7 +124,7 @@ class LocationService : Service() {
                 PreyLogger.d("___________ask for permission LocationService ACCESS_FINE_LOCATION")
             }
         } catch (e: Exception) {
-            PreyLogger.e("Error LocationService.onCreate" + e.message, e)
+            PreyLogger.e("Error LocationService.onCreate:${e.message}", e)
         }
         PreyLogger.d("LocationService has been started...")
     }
@@ -154,7 +154,7 @@ class LocationService : Service() {
     }
 
     private fun setNewLocation(newLocation: Location) {
-        PreyLogger.d("[" + newLocation.provider + "] Fix found!. Accuracy: [" + newLocation.accuracy + "]")
+        PreyLogger.d("[${newLocation.provider}] Fix found!. Accuracy: [${newLocation.accuracy}]")
         if (lastRegisteredLocation == null) {
             //PreyLogger.d("-----> First fix. Set as last location!");
             lastRegisteredLocation = newLocation
@@ -169,7 +169,7 @@ class LocationService : Service() {
                 lastRegisteredLocation = newLocation
             }
         }
-        PreyLocationManager.getInstance().setLastLocation ( PreyLocation(lastRegisteredLocation))
+        PreyLocationManager.getInstance().setLastLocation(PreyLocation(lastRegisteredLocation))
     }
 
     private val gpsLocationListener: LocationListener = object : LocationListener {
@@ -225,28 +225,19 @@ class LocationService : Service() {
             else if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) statusAsString =
                 "Temporarily Unavailable"
             PreyLogger.d(
-                String.format(
-                    "[LocationService] Network Location provider status has changed: [%s].",
-                    statusAsString
-                )
+                "[LocationService] Network Location provider status has changed: [${statusAsString}]."
             )
         }
 
         override fun onProviderEnabled(provider: String) {
             PreyLogger.d(
-                String.format(
-                    "[LocationService] Passive Location Provider has been enabled: %s",
-                    provider
-                )
+                "[LocationService] Passive Location Provider has been enabled:${provider}"
             )
         }
 
         override fun onProviderDisabled(provider: String) {
             PreyLogger.d(
-                String.format(
-                    "[LocationService] Passive Location Provider has been disabled: %s",
-                    provider
-                )
+                "[LocationService] Passive Location Provider has been disabled:${provider}"
             )
         }
 
@@ -263,28 +254,19 @@ class LocationService : Service() {
             else if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) statusAsString =
                 "Temporarily Unavailable"
             PreyLogger.d(
-                String.format(
-                    "[LocationService] Network Location provider status has changed: [%s].",
-                    statusAsString
-                )
+                "[LocationService] Network Location provider status has changed:${statusAsString}."
             )
         }
 
         override fun onProviderEnabled(provider: String) {
             PreyLogger.d(
-                String.format(
-                    "[LocationService] Fused Location Provider has been enabled: %s",
-                    provider
-                )
+                "[LocationService] Fused Location Provider has been enabled:${provider}"
             )
         }
 
         override fun onProviderDisabled(provider: String) {
             PreyLogger.d(
-                String.format(
-                    "[LocationService] Fused Location Provider has been disabled: %s",
-                    provider
-                )
+                "[LocationService] Fused Location Provider has been disabled:${provider}"
             )
         }
 

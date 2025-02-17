@@ -11,18 +11,25 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+
 import com.prey.PreyLogger
 
-class LocationScheduled private constructor() {
+/**
+ * A utility class for scheduling daily location updates.
+ */
+class DailyLocationScheduled private constructor() {
+
     /**
-     * Method that prepares an alarm to send the daily location
+     * Prepares an alarm to send the daily location.
      *
-     * @param context
+     * This method initializes the alarm manager and sets a repeating alarm to trigger at a specified interval.
+     *
+     * @param context The application context.
      */
-    fun run(context: Context) {
+    fun start(context: Context) {
         try {
             val minute = 15
-            val intent = Intent(context, AlarmLocationReceiver::class.java)
+            val intent = Intent(context, DailyLocationReceiver::class.java)
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
                 0,
@@ -47,19 +54,16 @@ class LocationScheduled private constructor() {
                     pendingIntent
                 )
             }
-            PreyLogger.d(String.format("DAILY----------start [%s] LocationScheduled", minute))
+            PreyLogger.d( "DAILY----------start [${minute}] LocationScheduled")
         } catch (e: Exception) {
-            PreyLogger.e(String.format("DAILY----------Error LocationScheduled :%s", e.message), e)
+            PreyLogger.e( "DAILY----------Error LocationScheduled :${e.message}", e)
         }
     }
 
     companion object {
-        private var INSTANCE: LocationScheduled? = null
-        fun getInstance(): LocationScheduled {
-            if (INSTANCE == null) {
-                INSTANCE = LocationScheduled()
-            }
-            return INSTANCE!!
+        private var instance: DailyLocationScheduled? = null
+        fun getInstance(): DailyLocationScheduled {
+            return instance ?: DailyLocationScheduled().also { instance = it }
         }
     }
 }

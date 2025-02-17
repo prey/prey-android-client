@@ -6,7 +6,14 @@
  ******************************************************************************/
 package com.prey.actions.triggers
 
+/**
+ * Custom exception class for trigger-related errors.
+ *
+ * This class extends the built-in Exception class and provides additional constructors
+ * for creating TriggerException instances with custom error messages and/or underlying throwables.
+ */
 class TriggerException : Exception {
+
     var code: Int = -1
 
     constructor(detailMessage: String?, throwable: Throwable?) : super(detailMessage, throwable)

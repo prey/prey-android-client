@@ -15,33 +15,40 @@ import androidx.multidex.MultiDex
 import com.google.firebase.FirebaseApp
 import com.prey.actions.aware.AwareController
 import com.prey.actions.aware.AwareScheduled
-import com.prey.actions.fileretrieval.FileretrievalController
-import com.prey.actions.geofences.GeofenceController
-import com.prey.actions.location.daily.LocationScheduled
-import com.prey.actions.report.ReportScheduled
-import com.prey.actions.report.ReportService
+import com.prey.actions.location.daily.DailyLocationScheduled
 import com.prey.actions.triggers.TriggerController
 import com.prey.activities.LoginActivity
 import com.prey.beta.actions.PreyBetaController
 import com.prey.events.factories.EventFactory
 import com.prey.events.receivers.EventReceiver
 import com.prey.net.PreyWebServices
-import com.prey.preferences.RunBackgroundCheckBoxPreference
-import com.prey.services.AwareJobService
 import com.prey.services.PreyDisablePowerOptionsService
-import com.prey.services.PreyJobService
-import com.prey.workers.PreyWorker
+import com.prey.workers.PreyLocationWorkManager
+import com.prey.workers.PreyActionsWorkManager
 import java.util.Date
 
+/**
+ * The main application class for Prey.
+ */
 class PreyApp : Application() {
-    var mLastPause: Long = 0
+
+    /**
+     * The event receiver instance for handling various system events.
+     */
     private val eventReceiver = EventReceiver()
 
+    /**
+     * Called when the application is attached to the base context.
+     * @param base The base context.
+     */
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
         MultiDex.install(this)
     }
 
+    /**
+     * Called when the application is created.
+     */
     override fun onCreate() {
         super.onCreate()
         try {
@@ -52,120 +59,102 @@ class PreyApp : Application() {
                 applicationContext.startActivity(intent)
             }
         } catch (e: Exception) {
-            PreyLogger.e(String.format("Error call intent LoginActivity: %s", e.message), e)
+            PreyLogger.e("Error call intent LoginActivity: ${e.message}", e)
         }
         run(this)
         runReceiver(this)
         try {
             FirebaseApp.initializeApp(this)
         } catch (e: Exception) {
-            PreyLogger.e(String.format("Error FirebaseApp: %s", e.message), e)
+            PreyLogger.e("Error FirebaseApp: ${e.message}", e)
         }
         PreyBetaController.getInstance().startPrey(applicationContext)
     }
 
-    fun run(ctx: Context) {
+    /**
+     * Runs the main application logic.
+     * @param context The application context.
+     */
+    fun run(context: Context) {
         try {
-            mLastPause = 0
             PreyLogger.d("__________________")
             PreyLogger.i("Application launched!")
             PreyLogger.d("__________________")
-            PreyConfig.getInstance(ctx).setReportNumber(0);
-            val apiKey = PreyConfig.getInstance(ctx).getApiKey()
-            val deviceKey = PreyConfig.getInstance(ctx).getDeviceId()
-            PreyConfig.getInstance(ctx).setAwareDate("")
-            PreyConfig.getInstance(ctx).initTimeC2dm()
-            PreyLogger.d(String.format("apiKey: %s", apiKey))
-            PreyLogger.d(String.format("deviceKey: %s", deviceKey))
+            PreyConfig.getInstance(context).setReportNumber(0);
+            val apiKey = PreyConfig.getInstance(context).getApiKey()
+            val deviceKey = PreyConfig.getInstance(context).getDeviceId()
+            PreyConfig.getInstance(context).setAwareDate("")
+            PreyConfig.getInstance(context).initTimeC2dm()
+            PreyLogger.d("apiKey: ${apiKey}")
+            PreyLogger.d("deviceKey: ${deviceKey}")
             PreyLogger.d(
-                String.format(
-                    "InstallationDate: %s",
-                    PreyConfig.getInstance(ctx).getInstallationDate()
-                )
+                "InstallationDate: ${
+                    PreyConfig.getInstance(context).getInstallationDate()
+                }"
             )
-            if (PreyConfig.getInstance(ctx).getInstallationDate() == 0L) {
-                PreyConfig.getInstance(ctx).setInstallationDate(Date().time)
+            if (PreyConfig.getInstance(context).getInstallationDate() == 0L) {
+                PreyConfig.getInstance(context).setInstallationDate(Date().time)
             }
             val sessionId = PreyUtils.randomAlphaNumeric(16)
-            PreyLogger.d(String.format("#######sessionId: %s", sessionId))
-            PreyConfig.getInstance(ctx).setSessionId(sessionId)
-            val missing = PreyConfig.getInstance(ctx).isMissing()
-            PreyLogger.d(String.format("missing: %b", missing))
+            PreyLogger.d("#######sessionId: ${sessionId}")
+            PreyConfig.getInstance(context).setSessionId(sessionId)
+            val missing = PreyConfig.getInstance(context).isMissing()
+            PreyLogger.d("missing: ${missing}")
             if (deviceKey != null && "" != deviceKey) {
                 object : Thread() {
                     override fun run() {
-                        PreyConfig.getInstance(ctx).registerC2dm()
-                        PreyWebServices.getInstance().getProfile(ctx)
-                        val initName = PreyWebServices.getInstance().getNameDevice(ctx)
+                        PreyConfig.getInstance(context).registerC2dm()
+                        PreyWebServices.getInstance().getProfile(context)
+                        val initName = PreyWebServices.getInstance().getNameDevice(context)
                         if (initName != null && "" != initName) {
-                            PreyLogger.d(String.format("initName: %s", initName))
-                            PreyConfig.getInstance(ctx).setDeviceName(initName)
+                            PreyLogger.d("initName: ${initName}")
+                            PreyConfig.getInstance(context).setDeviceName(initName)
                         }
-                        PreyStatus.getInstance().initConfig(ctx)
-                        val accessCoarseLocation = PreyPermission.canAccessCoarseLocation(ctx)
-                        val accessFineLocation = PreyPermission.canAccessFineLocation(ctx)
+                        PreyStatus.getInstance().initConfig(context)
+                        val accessCoarseLocation = PreyPermission.canAccessCoarseLocation(context)
+                        val accessFineLocation = PreyPermission.canAccessFineLocation(context)
                         val canAccessBackgroundLocation =
-                            PreyPermission.canAccessBackgroundLocation(ctx)
-                        val verifyNotification = EventFactory.verifyNotification(ctx)
-                        if (!verifyNotification) {
-                            EventFactory.notification(ctx)
-                        }
+                            PreyPermission.canAccessBackgroundLocation(context)
                         val isGooglePlayServicesAvailable =
-                            PreyUtils.isGooglePlayServicesAvailable(ctx)
+                            PreyUtils.isGooglePlayServicesAvailable(context)
                         if (isGooglePlayServicesAvailable && (accessCoarseLocation || accessFineLocation) && canAccessBackgroundLocation) {
-                            GeofenceController.getInstance().run(ctx)
-                            AwareController.getInstance().init(ctx)
-                            AwareScheduled.getInstance(ctx)!!.run()
-                            LocationScheduled.getInstance().run(ctx)
-                            PreyWorker.getInstance().startPeriodicWork(ctx)
+                            Thread(Runnable {
+                                PreyConfig.getInstance(context).setLocation(null);
+                                AwareController.getInstance().initUpdateLocation(context)
+                                AwareController.getInstance().registerGeofence(context)
+                            }).start()
+                            PreyLocationWorkManager.getInstance().locationWork(context)
+                            AwareScheduled.getInstance().start(context)
+                            DailyLocationScheduled.getInstance().start(context)
                         }
-                        FileretrievalController.getInstance().run(ctx)
-                        TriggerController.getInstance().run(ctx)
+                        PreyActionsWorkManager.getInstance().actionsWork(context)
+                        PreyScheduled.getInstance().start(context)
+                        TriggerController.getInstance().run(context)
                         if (missing) {
-                            if (PreyConfig.getInstance(ctx)
+                            if (PreyConfig.getInstance(context)
                                     .getIntervalReport() != null && "" != PreyConfig.getInstance(
-                                    ctx
+                                    context
                                 ).getIntervalReport()
                             ) {
-                                ReportScheduled.getInstance(ctx)!!.run()
-                                ReportService().run(ctx)
+                                // ReportScheduled.getInstance(context)!!.run()
+                                // ReportService().run(context)
                             }
                         }
-                        if (!PreyConfig.getInstance(ctx).isChromebook()) {
-                            try {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    PreyJobService.schedule(ctx)
-                                    if (isGooglePlayServicesAvailable) {
-                                        AwareJobService.schedule(ctx)
-                                    }
-                                }
-                            } catch (e: Exception) {
-                                PreyLogger.e(
-                                    String.format(
-                                        "error jobService.schedule : %s",
-                                        e.message
-                                    ), e
-                                )
-                            }
-                            if (PreyConfig.getInstance(ctx).isRunBackground()) {
-                                RunBackgroundCheckBoxPreference.notifyReady(ctx)
-                            }
-                            if (PreyConfig.getInstance(ctx).isDisablePowerOptions()) {
+                        if (!PreyConfig.getInstance(context).isChromebook()) {
+                            if (PreyConfig.getInstance(context).isDisablePowerOptions()) {
                                 try {
                                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                                        ctx.startService(
+                                        context.startService(
                                             Intent(
-                                                ctx,
+                                                context,
                                                 PreyDisablePowerOptionsService::class.java
                                             )
                                         )
                                     }
                                 } catch (e: Exception) {
                                     PreyLogger.e(
-                                        String.format(
-                                            "error startService PreyDisablePowerOptionsService : %s",
-                                            e.message
-                                        ), e
+                                        "error startService PreyDisablePowerOptionsService : ${e.message}",
+                                        e
                                     )
                                 }
                             }
@@ -174,11 +163,16 @@ class PreyApp : Application() {
                 }.start()
             }
         } catch (e: Exception) {
-            PreyLogger.e(String.format("Error PreyApp: %s", e.message), e)
+            PreyLogger.e("Error PreyApp:${e.message}", e)
         }
     }
 
-    fun runReceiver(ctx: Context?) {
+    /**
+     * Registers the event receiver for various system intents.
+     *
+     * @param context The application context.
+     */
+    private fun runReceiver(context: Context?) {
         val ACTION_POWER_CONNECTED = IntentFilter(Intent.ACTION_POWER_CONNECTED)
         registerReceiver(eventReceiver, ACTION_POWER_CONNECTED)
         val ACTION_POWER_DISCONNECTED = IntentFilter(Intent.ACTION_POWER_DISCONNECTED)
@@ -195,20 +189,26 @@ class PreyApp : Application() {
         registerReceiver(eventReceiver, USER_PRESENT)
     }
 
+    /**
+     * Sets the installation data for the application.
+     *
+     * @param conversionData A map of conversion data.
+     */
+    fun setInstallData(conversionData: Map<String?, String>) {
+        if (sessionCount == 0) {
+            val install_type = "Install Type: ${conversionData["af_status"]}\n"
+            val media_source = "Media Source: ${conversionData["media_source"]}\n"
+            val install_time = "Install Time(GMT): ${conversionData["install_time"]}\n"
+            val click_time = "Click Time(GMT): ${conversionData["click_time"]}\n"
+            val is_first_launch = "Is First Launch: ${conversionData["is_first_launch"]}\n"
+            InstallConversionData += install_type.plus(media_source).plus(install_time)
+                .plus(click_time).plus(is_first_launch)
+            sessionCount++
+        }
+    }
+
     companion object {
         var InstallConversionData: String = ""
         var sessionCount: Int = 0
-
-        fun setInstallData(conversionData: Map<String?, String>) {
-            if (sessionCount == 0) {
-                val install_type = "Install Type: " + conversionData["af_status"] + "\n"
-                val media_source = "Media Source: " + conversionData["media_source"] + "\n"
-                val install_time = "Install Time(GMT): " + conversionData["install_time"] + "\n"
-                val click_time = "Click Time(GMT): " + conversionData["click_time"] + "\n"
-                val is_first_launch = "Is First Launch: " + conversionData["is_first_launch"] + "\n"
-                InstallConversionData += install_type + media_source + install_time + click_time + is_first_launch
-                sessionCount++
-            }
-        }
     }
 }

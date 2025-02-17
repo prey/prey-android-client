@@ -8,92 +8,83 @@ package com.prey.managers
 
 import android.content.Context
 import android.net.ConnectivityManager
-import com.prey.PreyLogger
+import android.net.NetworkInfo
 
+/**
+ * This class provides methods to manage and retrieve information about the device's connectivity.
+ */
 class PreyConnectivityManager {
 
-    fun isConnected(ctx: Context): Boolean {
-        val connectivity = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivity!!.activeNetworkInfo != null) return connectivity.activeNetworkInfo!!
-            .isConnected
-        return false
+    /**
+     * Returns the ConnectivityManager instance for the given context.
+     *
+     * @param context The application context.
+     * @return The ConnectivityManager instance.
+     */
+    private fun getConnectivityManager(context: Context): ConnectivityManager {
+        return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
-    fun isAvailable(ctx: Context): Boolean {
-        val connectivity = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivity!!.activeNetworkInfo != null) return connectivity.activeNetworkInfo!!
-            .isAvailable
-        return false
+    /**
+     * Returns the active network information for the given ConnectivityManager instance.
+     *
+     * @param connectivityManager The ConnectivityManager instance.
+     * @return The active network information, or null if not available.
+     */
+    private fun getActiveNetworkInfo(connectivityManager: ConnectivityManager): NetworkInfo? {
+        return connectivityManager.activeNetworkInfo
     }
 
-    fun isConnectedOrConnecting(ctx: Context): Boolean {
-        val connectivity = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivity!!.activeNetworkInfo != null) return connectivity.activeNetworkInfo!!
-            .isConnectedOrConnecting
-        return false
+    /**
+     * Returns the network information for the given network type and ConnectivityManager instance.
+     *
+     * @param connectivityManager The ConnectivityManager instance.
+     * @param networkType The network type (e.g. TYPE_MOBILE, TYPE_WIFI).
+     * @return The network information, or null if not available.
+     */
+    private fun getNetworkInfo(connectivityManager: ConnectivityManager, networkType: Int): NetworkInfo? {
+        return connectivityManager.getNetworkInfo(networkType)
     }
 
-    fun isFailover(ctx: Context): Boolean {
-        val connectivity = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivity!!.activeNetworkInfo != null) return connectivity.activeNetworkInfo!!
-            .isFailover
-        return false
+    /**
+     * Checks if the device is connected to a network.
+     *
+     * @param context The application context.
+     * @return True if the device is connected, false otherwise.
+     */
+    fun isConnected(context: Context): Boolean {
+        val activeNetworkInfo = getActiveNetworkInfo(getConnectivityManager(context))
+        return activeNetworkInfo?.isConnected ?: false
     }
 
-    fun isRoaming(ctx: Context): Boolean {
-        val connectivity = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivity!!.activeNetworkInfo != null) return connectivity.activeNetworkInfo!!
-            .isRoaming
-        return false
+    /**
+     * Checks if the device is connected to a mobile network.
+     *
+     * @param context The application context.
+     * @return True if the device is connected to a mobile network, false otherwise.
+     */
+    fun isMobileConnected(context: Context): Boolean {
+        val mobileNetworkInfo = getNetworkInfo(getConnectivityManager(context), ConnectivityManager.TYPE_MOBILE)
+        return mobileNetworkInfo?.isConnected ?: false
     }
 
-    fun isMobileAvailable(ctx: Context): Boolean {
-        try {
-            val connectivity =
-                ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val mobile = connectivity!!.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
-            return mobile!!.isAvailable
-        } catch (e: Exception) {
-            return false
-        }
-    }
-
-    fun isMobileConnected(ctx: Context): Boolean {
-        try {
-            val connectivity =
-                ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val mobile = connectivity!!.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
-            return mobile!!.isConnected
-        } catch (e: Exception) {
-            return false
-        }
-    }
-
-    fun isWifiAvailable(ctx: Context): Boolean {
-        val connectivity = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val wifi = connectivity!!.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-        return wifi!!.isAvailable
-    }
-
-    fun isWifiConnected(ctx: Context): Boolean {
-        try {
-            val connectivity =
-                ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val wifi = connectivity!!.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-            return wifi!!.isConnected
-        } catch (e: Exception) {
-            PreyLogger.d("Error isWifiConnected:" + e.message)
-            return false
-        }
+    /**
+     * Checks if the device is connected to a Wi-Fi network.
+     *
+     * @param context The application context.
+     * @return True if the device is connected to a Wi-Fi network, false otherwise.
+     */
+    fun isWifiConnected(context: Context): Boolean {
+        val wifiNetworkInfo = getNetworkInfo(getConnectivityManager(context), ConnectivityManager.TYPE_WIFI)
+        return wifiNetworkInfo?.isAvailable ?: false
     }
 
     companion object {
-        private var INSTANCE: PreyConnectivityManager? = null
+        private var instance: PreyConnectivityManager? = null
         fun getInstance(): PreyConnectivityManager {
-            if (INSTANCE == null) {
-                INSTANCE = PreyConnectivityManager()
+            return instance ?: synchronized(this) {
+                instance ?: PreyConnectivityManager().also { instance = it }
             }
-            return INSTANCE!!
         }
     }
 }

@@ -6,19 +6,36 @@
  ******************************************************************************/
 package com.prey.events
 
+/**
+ * Represents an event with a name, additional information, and a flag indicating whether it should always be sent.
+ */
 class Event {
     var name: String? = null
     var info: String? = null
     var isAlwaysSend: Boolean = false
 
+    /**
+     * Default constructor. Initializes all fields to null or default values.
+     */
     constructor()
 
+    /**
+     * Constructor that initializes the event with a name.
+     *
+     * @param name The name of the event.
+     */
     constructor(name: String?) {
         this.name = name
         this.info = ""
         this.isAlwaysSend = false
     }
 
+    /**
+     * Constructor that initializes the event with a name and info.
+     *
+     * @param name The name of the event.
+     * @param info Additional information about the event.
+     */
     constructor(name: String?, info: String?) {
         this.name = name
         this.info = info

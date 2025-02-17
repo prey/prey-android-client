@@ -7,28 +7,37 @@
 package com.prey.net
 
 import android.content.Context
+
 import com.prey.PreyLogger
 import com.prey.net.http.EntityFile
+
 import org.json.JSONObject
 import java.io.File
 import java.net.HttpURLConnection
 
-class PreyRestHttpClient {
+/**
+ * A REST HTTP client for making requests to a server.
+ *
+ * This class provides methods for sending POST and GET requests to a server.
+ * It uses the UtilConnection class to establish the connection and send the requests.
+ *
+ * @param context The application context.
+ */
+class PreyRestHttpClient(private val context: Context) {
 
-    var mContext: Context
-
-    constructor(context: Context) {
-        mContext = context
-    }
-
-    val CONTENT_TYPE_URL_ENCODED: String = "application/x-www-form-urlencoded"
-
-
+    /**
+     * Sends a POST request to the server.
+     *
+     * @param url The URL of the server.
+     * @param params The parameters to be sent with the request.
+     * @return The response from the server.
+     * @throws Exception If an error occurs while sending the request.
+     */
     @Throws(java.lang.Exception::class)
     fun post(url: String, params: MutableMap<String, String?>): PreyHttpResponse? {
         PreyLogger.d("Sending using 'POST' - URI: $url - parameters: $params")
         val response: PreyHttpResponse? = UtilConnection.getInstance().connectionPost(
-            mContext,
+            context,
             url,
             params,
             CONTENT_TYPE_URL_ENCODED
@@ -36,11 +45,20 @@ class PreyRestHttpClient {
         PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
         return response
     }
+
+    /**
+     * Sends a POST request to the server with authentication.
+     *
+     * @param url The URL of the server.
+     * @param params The parameters to be sent with the request.
+     * @return The response from the server.
+     * @throws Exception If an error occurs while sending the request.
+     */
     @Throws(Exception::class)
     fun postAutentication(url: String, params: MutableMap<String, String?>): PreyHttpResponse? {
         PreyLogger.d("Sending using 'POST' - URI: $url - parameters: $params")
         val response: PreyHttpResponse? = UtilConnection.getInstance().connectionPostAuthorization(
-            mContext,
+            context,
             url,
             params,
             CONTENT_TYPE_URL_ENCODED
@@ -49,6 +67,15 @@ class PreyRestHttpClient {
         return response
     }
 
+    /**
+     * Sends a POST request to the server with authentication and status.
+     *
+     * @param url The URL of the server.
+     * @param status The status to be sent with the request.
+     * @param params The parameters to be sent with the request.
+     * @return The response from the server.
+     * @throws Exception If an error occurs while sending the request.
+     */
     @Throws(java.lang.Exception::class)
     fun postStatusAutentication(
         url: String,
@@ -56,26 +83,40 @@ class PreyRestHttpClient {
         params: MutableMap<String, String?>
     ): PreyHttpResponse? {
         PreyLogger.d("Sending using 'POST' - URI: $url - parameters: $params")
-        val response: PreyHttpResponse? = UtilConnection.getInstance().connectionPostAuthorizationStatus(
-            mContext,
-            url,
-            params,
-            CONTENT_TYPE_URL_ENCODED,
-            status
-        )
+        val response: PreyHttpResponse? =
+            UtilConnection.getInstance().connectionPostAuthorizationStatus(
+                context,
+                url,
+                params,
+                CONTENT_TYPE_URL_ENCODED,
+                status
+            )
         PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
         return response
     }
 
+    /**
+     * Sends a POST request to the server with authentication and entity files.
+     *
+     * @param url The URL of the server.
+     * @param params The parameters to be sent with the request.
+     * @param entityFiles The entity files to be sent with the request.
+     * @return The response from the server.
+     * @throws Exception If an error occurs while sending the request.
+     */
     @Throws(java.lang.Exception::class)
-    fun postAutentication( url: String, params: MutableMap<String, String?>, entityFiles: List<EntityFile>?): PreyHttpResponse? {
+    fun postAutentication(
+        url: String,
+        params: MutableMap<String, String?>,
+        entityFiles: List<EntityFile>?
+    ): PreyHttpResponse? {
         PreyLogger.d("Sending using 'POST' - URI: $url - parameters: $params")
         var contentType = CONTENT_TYPE_URL_ENCODED
         if (entityFiles != null && entityFiles.size > 0) {
             contentType = ""
         }
         val response: PreyHttpResponse? = UtilConnection.getInstance().connectionPostAuthorization(
-            mContext,
+            context,
             url,
             params,
             contentType,
@@ -85,10 +126,18 @@ class PreyRestHttpClient {
         return response
     }
 
+    /**
+     * Sends a GET request to the server.
+     *
+     * @param url The URL of the server.
+     * @param params The parameters to be sent with the request.
+     * @return The response from the server.
+     * @throws Exception If an error occurs while sending the request.
+     */
     @Throws(java.lang.Exception::class)
     fun get(url: String, params: MutableMap<String, String?>?): PreyHttpResponse? {
         val response: PreyHttpResponse? = UtilConnection.getInstance().connectionGet(
-            mContext,
+            context,
             url,
             params,
             CONTENT_TYPE_URL_ENCODED
@@ -97,6 +146,16 @@ class PreyRestHttpClient {
         return response
     }
 
+    /**
+     * Sends a GET request to the server with authentication.
+     *
+     * @param url The URL of the server.
+     * @param params The parameters to be sent with the request.
+     * @param user The username for authentication.
+     * @param pass The password for authentication.
+     * @return The response from the server.
+     * @throws Exception If an error occurs while sending the request.
+     */
     @Throws(java.lang.Exception::class)
     fun get(
         url: String,
@@ -105,7 +164,7 @@ class PreyRestHttpClient {
         pass: String
     ): PreyHttpResponse? {
         val response: PreyHttpResponse? = UtilConnection.getInstance().connectionGetAuthorization(
-            mContext,
+            context,
             url,
             params,
             CONTENT_TYPE_URL_ENCODED,
@@ -116,6 +175,17 @@ class PreyRestHttpClient {
         return response
     }
 
+    /**
+     * Sends a GET request to the server with authentication and custom content type.
+     *
+     * @param url The URL of the server.
+     * @param params The parameters to be sent with the request.
+     * @param user The username for authentication.
+     * @param pass The password for authentication.
+     * @param content The custom content type.
+     * @return The response from the server.
+     * @throws Exception If an error occurs while sending the request.
+     */
     @Throws(java.lang.Exception::class)
     fun get(
         url: String,
@@ -125,7 +195,7 @@ class PreyRestHttpClient {
         content: String
     ): PreyHttpResponse? {
         val response: PreyHttpResponse? = UtilConnection.getInstance().connectionGetAuthorization(
-            mContext,
+            context,
             url,
             params,
             content,
@@ -136,10 +206,18 @@ class PreyRestHttpClient {
         return response
     }
 
+    /**
+     * Sends a GET request to the server with authentication.
+     *
+     * @param url The URL of the server.
+     * @param params The parameters to be sent with the request.
+     * @return The response from the server.
+     * @throws Exception If an error occurs while sending the request.
+     */
     @Throws(java.lang.Exception::class)
     fun getAutentication(url: String, params: MutableMap<String, String?>?): PreyHttpResponse? {
         val response: PreyHttpResponse? = UtilConnection.getInstance().connectionGetAuthorization(
-            mContext,
+            context,
             url,
             params,
             CONTENT_TYPE_URL_ENCODED
@@ -149,29 +227,29 @@ class PreyRestHttpClient {
     }
 
     /**
-     * Method to send the help
+     * Sends a POST request to the server with authentication and entity files.
      *
-     * @param ctx
-     * @param uri
-     * @param params
-     * @param entityFiles
-     * @return  help result
-     * @throws Exception
+     * @param context The application context.
+     * @param uri The URL of the server.
+     * @param params The parameters to be sent with the request.
+     * @param entityFiles The entity files to be sent with the request.
+     * @return The response from the server.
+     * @throws Exception If an error occurs while sending the request.
      */
     @Throws(java.lang.Exception::class)
     fun sendHelp(
-        ctx: Context,
+        context: Context,
         uri: String,
         params: MutableMap<String, String?>,
         entityFiles: List<EntityFile>
     ): PreyHttpResponse? {
         val correlationId: String? = null
         val status: String? = null
-        val authorization: String = UtilConnection.getInstance().getAuthorization(ctx)
+        val authorization: String = UtilConnection.getInstance().getAuthorization(context)
         val requestMethod: String = UtilConnection.REQUEST_METHOD_POST
         val contentType = CONTENT_TYPE_URL_ENCODED
         return UtilConnection.getInstance().connection(
-            ctx,
+            context,
             uri,
             params,
             requestMethod,
@@ -183,29 +261,50 @@ class PreyRestHttpClient {
         )
     }
 
+    /**
+     * Sends a POST request to the server with authentication and correlation ID.
+     *
+     * @param context The application context.
+     * @param url The URL of the server.
+     * @param status The status to be sent with the request.
+     * @param correlation The correlation ID to be sent with the request.
+     * @param params The parameters to be sent with the request.
+     * @return The response from the server.
+     * @throws Exception If an error occurs while sending the request.
+     */
     @Throws(java.lang.Exception::class)
     fun postAutenticationCorrelationId(
-        ctx: Context,
+        context: Context,
         url: String,
         status: String?,
         correlation: String?,
         params: MutableMap<String, String?>
     ): PreyHttpResponse? {
-        PreyLogger.d("Sending using 'POST' - URI: $url - parameters: $params")
-        var response: PreyHttpResponse? = UtilConnection.getInstance().connectionPostAuthorizationCorrelationId(
-            ctx,
-            url,
-            params,
-            CONTENT_TYPE_URL_ENCODED,
-            status,
-            correlation
-        )
+        PreyLogger.d("AWARE Sending using 'POST' - URI: $url - parameters: $params")
+        val response: PreyHttpResponse? =
+            UtilConnection.getInstance().connectionPostAuthorizationCorrelationId(
+                context,
+                url,
+                params,
+                CONTENT_TYPE_URL_ENCODED,
+                status,
+                correlation
+            )
         PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
         return response
     }
 
+    /**
+     * Sends a JSON request to the server with authentication.
+     *
+     * @param context The application context.
+     * @param url The URL of the server.
+     * @param method The HTTP method to use (e.g. "POST", "GET", etc.).
+     * @param jsonParam The JSON data to send with the request.
+     * @return The response from the server.
+     */
     fun jsonMethodAutentication(
-        ctx: Context,
+        context: Context,
         url: String,
         method: String,
         jsonParam: JSONObject?
@@ -213,50 +312,82 @@ class PreyRestHttpClient {
         var response: PreyHttpResponse? = null
         val connection: HttpURLConnection? = null
         try {
-            PreyLogger.d(
-                String.format(
-                    "Sending using %s - URI:%s - parameters:%s", method, url, (jsonParam?.toString()
-                        ?: "")
-                )
-            )
+            PreyLogger.d("AWARE Sending using ${method} - URI:${url} - parameters:${jsonParam?.toString()}")
+
             response = UtilConnection.getInstance().connectionJsonAuthorization(
-                 ctx,
+                context,
                 url,
                 method,
                 jsonParam
             )
             if (response != null) {
-                PreyLogger.d(String.format("Response from server:%s", response.toString()))
+                PreyLogger.d("AWARE Response from server:${response.toString()}")
             }
         } catch (e: java.lang.Exception) {
-            PreyLogger.e(String.format("jsonMethodAutentication:%s error:%s", method, e.message), e)
+            PreyLogger.e("AWARE jsonMethodAutentication:${method} error:${e.message}", e)
         } finally {
             connection?.disconnect()
         }
         return response
     }
 
-    fun uploadFile(ctx: Context, url: String, file: File, total: Long): Int {
-        return UtilConnection.getInstance().uploadFile(ctx, url, file, total)
+    /**
+     * Uploads a file to the server.
+     *
+     * @param context The application context.
+     * @param url The URL of the server.
+     * @param file The file to upload.
+     * @param total The total size of the file.
+     * @return The result of the upload operation.
+     */
+    fun uploadFile(context: Context, url: String, file: File, total: Long): Int {
+        return UtilConnection.getInstance().uploadFile(context, url, file, total)
     }
 
+    /**
+     * Sends a DELETE request to the server with authentication.
+     *
+     * @param context The application context.
+     * @param url The URL of the server.
+     * @param params The parameters to send with the request.
+     * @return The response from the server.
+     * @throws Exception If an error occurs while sending the request.
+     */
     @Throws(java.lang.Exception::class)
-    fun delete(ctx: Context,url: String, params: MutableMap<String, String?>?): PreyHttpResponse? {
-        val response: PreyHttpResponse? = UtilConnection.getInstance().connectionDeleteAuthorization(
-            ctx,
-            url,
-            params,
-            CONTENT_TYPE_URL_ENCODED
-        )
+    fun delete(
+        context: Context,
+        url: String,
+        params: MutableMap<String, String?>?
+    ): PreyHttpResponse? {
+        val response: PreyHttpResponse? =
+            UtilConnection.getInstance().connectionDeleteAuthorization(
+                context,
+                url,
+                params,
+                CONTENT_TYPE_URL_ENCODED
+            )
         PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
         return response
     }
 
+    /**
+     * Sends a POST request to the server with authentication and a timeout.
+     *
+     * @param context The application context.
+     * @param url The URL of the server.
+     * @param params The parameters to send with the request.
+     * @return The response from the server.
+     * @throws Exception If an error occurs while sending the request.
+     */
     @Throws(java.lang.Exception::class)
-    fun postAutenticationTimeout(ctx: Context,url: String, params: MutableMap<String, String?>): PreyHttpResponse? {
+    fun postAutenticationTimeout(
+        context: Context,
+        url: String,
+        params: MutableMap<String, String?>
+    ): PreyHttpResponse? {
         PreyLogger.d("Sending using 'POST' - URI: $url - parameters: $params")
         val response: PreyHttpResponse? = UtilConnection.getInstance().connectionPostAuthorization(
-            ctx,
+            context,
             url,
             params,
             CONTENT_TYPE_URL_ENCODED
@@ -264,13 +395,31 @@ class PreyRestHttpClient {
         PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
         return response
     }
+
+    /**
+     * Gets a valid token from the server.
+     *
+     * @param context The application context.
+     * @param uri The URL of the server.
+     * @param json The JSON data to send with the request.
+     * @return The response from the server.
+     * @throws Exception If an error occurs while sending the request.
+     */
+    @Throws(java.lang.Exception::class)
+    fun getValidToken(context: Context, uri: String, json: JSONObject): PreyHttpResponse? {
+        return UtilConnection.getInstance().connectionJson(
+            context,
+            uri,
+            UtilConnection.REQUEST_METHOD_POST,
+            json
+        )
+    }
+
     companion object {
-        private var INSTANCE: PreyRestHttpClient? = null
+        const val CONTENT_TYPE_URL_ENCODED: String = "application/x-www-form-urlencoded"
+        private var instance: PreyRestHttpClient? = null
         fun getInstance(context: Context): PreyRestHttpClient {
-            if (INSTANCE == null) {
-                INSTANCE = PreyRestHttpClient(context)
-            }
-            return INSTANCE!!
+            return instance ?: PreyRestHttpClient(context).also { instance = it }
         }
     }
 }

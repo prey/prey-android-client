@@ -11,65 +11,73 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+
 import com.prey.PreyLogger
 
+/**
+ * A utility class for scheduling and canceling alarms.
+ */
+class AwareScheduled {
 
-class AwareScheduled (private val context: Context) {
-    private var alarmMgr: AlarmManager? = null
-    private var pendingIntent: PendingIntent? = null
-    fun run() {
+    private lateinit var alarmManager: AlarmManager
+    private lateinit var pendingIntent: PendingIntent
+
+    /**
+     * Starts the alarm scheduling process.
+     *
+     * @param context The application context
+     */
+    fun start(context: Context) {
         try {
-            val minute = 15
             val intent = Intent(context, AlarmAwareReceiver::class.java)
-            pendingIntent = PendingIntent.getBroadcast(
-                context,
-                0,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-            )
-            alarmMgr = context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                PreyLogger.d("----------setRepeating")
-                alarmMgr!!.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    System.currentTimeMillis(),
-                    (1000 * 60 * minute).toLong(),
-                    pendingIntent!!
-                )
-            } else {
-                PreyLogger.d("----------setInexactRepeating")
-                alarmMgr!!.setInexactRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    System.currentTimeMillis(),
-                    (1000 * 60 * minute).toLong(),
-                    pendingIntent!!
-                )
-            }
-            PreyLogger.d(String.format("----------start aware [%s] AwareScheduled", minute))
+            pendingIntent =
+                PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_MUTABLE)
+            alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            scheduleAlarm()
         } catch (e: Exception) {
-            PreyLogger.e(String.format("----------Error AwareScheduled :%s", e.message), e)
+            PreyLogger.e("----------Error AwareScheduled :${e.message}", e)
         }
     }
 
-    fun reset() {
-        if (alarmMgr != null) {
-            try {
-                alarmMgr!!.cancel(pendingIntent!!)
-            } catch (e: Exception) {
-                PreyLogger.d(String.format("----------Error AwareScheduled :%s", e.message))
-            }
+    /**
+     * Schedules an alarm to trigger at a specified interval.
+     */
+    private fun scheduleAlarm() {
+        val intervalMinutes = 15
+        val triggerTime = System.currentTimeMillis()
+        val alarmInterval = (1000 * 60 * intervalMinutes).toLong()
+        scheduleAlarm(triggerTime, alarmInterval)
+    }
+
+    /**
+     * Schedules an alarm to trigger at a specified time with a specified interval.
+     *
+     * @param triggerTime The time at which the alarm should first trigger
+     * @param interval The interval in milliseconds between alarm triggers
+     */
+    private fun scheduleAlarm(triggerTime: Long, interval: Long) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, interval, pendingIntent)
+        } else {
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, triggerTime, interval, pendingIntent)
+        }
+    }
+
+    /**
+     * Cancels any currently scheduled alarms.
+     */
+    fun cancel() {
+        try {
+            alarmManager.cancel(pendingIntent)
+        } catch (e: Exception) {
+            PreyLogger.d("----------Error AwareScheduled :${e.message}")
         }
     }
 
     companion object {
         private var instance: AwareScheduled? = null
-
-        @Synchronized
-        fun getInstance(context: Context): AwareScheduled? {
-            if (instance == null) {
-                instance = AwareScheduled(context)
-            }
-            return instance
+        fun getInstance(): AwareScheduled {
+            return instance ?: AwareScheduled().also { instance = it }
         }
     }
 }

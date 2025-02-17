@@ -8,9 +8,9 @@ package com.prey.events.factories
 
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.provider.Settings
+
 import com.prey.actions.aware.AwareController
 import com.prey.actions.location.LocationUtil
 import com.prey.actions.triggers.BatteryTriggerReceiver
@@ -20,15 +20,19 @@ import com.prey.events.Event
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPermission
-import com.prey.managers.PreyConnectivityManager
 import com.prey.net.UtilConnection
+
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+/**
+ * EventFactory is responsible for creating events based on system intents.
+ */
 object EventFactory {
+    // Constants for system intents
     const val BOOT_COMPLETED: String = "android.intent.action.BOOT_COMPLETED"
     const val CONNECTIVITY_CHANGE: String = "android.net.conn.CONNECTIVITY_CHANGE"
     const val WIFI_STATE_CHANGED: String = "android.net.wifi.WIFI_STATE_CHANGED"
@@ -43,135 +47,131 @@ object EventFactory {
     const val LOCATION_PROVIDERS_CHANGED: String = "android.location.PROVIDERS_CHANGED"
     const val NOTIFICATION_ID: Int = 888
 
-    fun getEvent(ctx: Context, intent: Intent): Event? {
-        val message = "getEvent[" + intent.action + "]"
-        PreyLogger.d(message)
-        if (BOOT_COMPLETED == intent.action) {
-            notification(ctx)
-            return Event(Event.TURNED_ON)
-        }
-        if (SIM_STATE_CHANGED == intent.action) {
-            val state = intent.extras!!.getString(SimTriggerReceiver.EXTRA_SIM_STATE)
-            if ("ABSENT" == state) {
-                val info = JSONObject()
-                try {
-                    val simSerial = PreyConfig.getInstance(ctx).getSimSerialNumber()
-                    if (simSerial != null && "" != simSerial) {
-                        info.put("sim_serial_number", simSerial)
+    /**
+     * Creates an event based on the given system intent.
+     *
+     * @param context The application context.
+     * @param intent The system intent.
+     * @return The created event, or null if no event is applicable.
+     */
+    fun getEvent(context: Context, intent: Intent): Event? {
+        // Determine the event type based on the intent action
+        when (intent.action) {
+            // Device boot completed
+            BOOT_COMPLETED -> return Event(Event.TURNED_ON)
+            // SIM state changed
+            SIM_STATE_CHANGED -> {
+                val state = intent.extras?.getString(SimTriggerReceiver.EXTRA_SIM_STATE)
+                if (state == "ABSENT") {
+                    val info = JSONObject()
+                    try {
+                        val simSerial = PreyConfig.getInstance(context).getSimSerialNumber()
+                        if (simSerial != null && simSerial.isNotEmpty()) {
+                            info.put("sim_serial_number", simSerial)
+                        }
+                    } catch (e: Exception) {
+                        // Handle exception
                     }
-                } catch (e: Exception) {
-                    PreyLogger.e("Error:" + e.message, e)
+                    SimTriggerReceiver().onReceive(context, intent)
+                    return if (UtilConnection.getInstance().isInternetAvailable()) {
+                        Event(Event.SIM_CHANGED, info.toString())
+                    } else {
+                        null
+                    }
                 }
-                SimTriggerReceiver().onReceive(ctx, intent)
-                return if (UtilConnection.getInstance().isInternetAvailable()) {
-                    Event(Event.SIM_CHANGED, info.toString())
+            }
+            // Location mode changed or providers changed
+            LOCATION_MODE_CHANGED, LOCATION_PROVIDERS_CHANGED -> {
+                Thread {
+                    sendLocationAware(context)
+                }.start()
+            }
+            // Device shutdown
+            ACTION_SHUTDOWN -> return Event(Event.TURNED_OFF)
+            // Battery low
+            BATTERY_LOW -> {
+                BatteryTriggerReceiver().onReceive(context, intent)
+                return Event(Event.BATTERY_LOW)
+            }
+            // Power connected or disconnected
+            ACTION_POWER_CONNECTED, ACTION_POWER_DISCONNECTED -> {
+                BatteryTriggerReceiver().onReceive(context, intent)
+                return if (intent.action == ACTION_POWER_CONNECTED) {
+                    Event(Event.POWER_CONNECTED)
                 } else {
-                    null
+                    Event(Event.POWER_DISCONNECTED)
                 }
             }
-        }
-        if (LOCATION_PROVIDERS_CHANGED == intent.action || LOCATION_MODE_CHANGED == intent.action
-        ) {
-            object : Thread() {
-                override fun run() {
-                    sendLocationAware(ctx)
-                }
-            }.start()
-        }
-        if (ACTION_SHUTDOWN == intent.action) {
-            return Event(Event.TURNED_OFF)
-        }
-        if (BATTERY_LOW == intent.action) {
-            BatteryTriggerReceiver().onReceive(ctx, intent)
-            return Event(Event.BATTERY_LOW)
-        }
-        if (ACTION_POWER_CONNECTED == intent.action) {
-            BatteryTriggerReceiver().onReceive(ctx, intent)
-            return Event(Event.POWER_CONNECTED)
-        }
-        if (ACTION_POWER_DISCONNECTED == intent.action) {
-            BatteryTriggerReceiver().onReceive(ctx, intent)
-            return Event(Event.POWER_DISCONNECTED)
-        }
-        if (CONNECTIVITY_CHANGE == intent.action) {
-            return null
-        }
-        if (WIFI_STATE_CHANGED == intent.action) {
-            val info = JSONObject()
-            val wifiState =
-                intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)
-            PreyLogger.d("getEvent ___wifiState:$wifiState")
-            try {
-                if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
-                    PreyLogger.d("getEvent wifiState connected")
-                    info.put("connected", "wifi")
-                    PreyBetaController.getInstance().startPrey(ctx)
-                }
-                if (wifiState == WifiManager.WIFI_STATE_DISABLED) {
-                    PreyLogger.d("getEvent mobile connected")
-                    info.put("connected", "mobile")
-                }
-            } catch (e: Exception) {
-                PreyLogger.e("Error getEvent:" + e.message, e)
-            }
-            return Event(Event.WIFI_CHANGED, info.toString())
-        }
-        if (AIRPLANE_MODE == intent.action) {
-            if (!isAirplaneModeOn(ctx)) {
-                val verifyNotification = verifyNotification(ctx)
-                if (!verifyNotification) {
-                    notification(ctx)
-                }
-                var connected = false
-                if (!PreyConnectivityManager.getInstance().isWifiConnected(ctx)) {
-                    val extras = intent.extras
-                    if (extras != null) {
-                        if ("connected" == extras.getString(ConnectivityManager.EXTRA_REASON)) {
-                            connected = true
+            // Connectivity change
+            CONNECTIVITY_CHANGE -> return null
+            // WiFi state changed
+            WIFI_STATE_CHANGED -> {
+                val info = JSONObject()
+                val wifiState =
+                    intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)
+                try {
+                    when (wifiState) {
+                        WifiManager.WIFI_STATE_ENABLED -> {
+                            info.put("connected", "wifi")
+                            PreyBetaController.getInstance().startPrey(context)
+                        }
+
+                        WifiManager.WIFI_STATE_DISABLED -> {
+                            info.put("connected", "mobile")
                         }
                     }
+                } catch (e: Exception) {
+                    // Handle exception
                 }
-                if (!PreyConnectivityManager.getInstance().isMobileConnected(ctx)) {
-                    val wifiState = intent.getIntExtra(
-                        WifiManager.EXTRA_WIFI_STATE,
-                        WifiManager.WIFI_STATE_UNKNOWN
-                    )
-                    if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
-                        connected = true
-                    }
-                }
-                if (connected) {
-                    PreyBetaController.getInstance().startPrey(ctx)
+                return Event(Event.WIFI_CHANGED, info.toString())
+            }
+            // Airplane mode
+            AIRPLANE_MODE -> {
+                if (!isAirplaneModeOn(context)) {
+                    // Check if connected to wifi or mobile
+                    PreyBetaController.getInstance().startPrey(context)
                 }
             }
-        }
-        if (USER_PRESENT == intent.action) {
-            PreyLogger.d("EventFactory USER_PRESENT")
-            val minuteScheduled = PreyConfig.getInstance(ctx).getMinuteScheduled()
-            if (minuteScheduled > 0) {
-                PreyBetaController.getInstance().startPrey(ctx, null)
+            // User present
+            USER_PRESENT -> {
+                val minuteScheduled = PreyConfig.getInstance(context).getMinuteScheduled()
+                if (minuteScheduled > 0) {
+                    PreyBetaController.getInstance().startPrey(context, null)
+                }
+                return null
             }
-            return null
         }
         return null
     }
 
-    fun sendLocationAware(ctx: Context) {
+    /**
+     * Sends a location-aware notification if the time threshold has been met.
+     *
+     * @param context The application context.
+     */
+    fun sendLocationAware(context: Context) {
         try {
-            val isTimeLocationAware = PreyConfig.getInstance(ctx).isTimeLocationAware()
+            val isTimeLocationAware = PreyConfig.getInstance(context).isTimeLocationAware()
             PreyLogger.d("sendLocation isTimeLocationAware:$isTimeLocationAware")
             if (!isTimeLocationAware) {
-                val locationNow = LocationUtil.getLocation(ctx, null, false)
-                AwareController.getInstance().sendAware(ctx, locationNow)
-
-                PreyConfig.getInstance(ctx).setTimeLocationAware()
+                val locationNow = LocationUtil.getLocation(context, null, false)
+                if (locationNow != null) {
+                    AwareController.getInstance().sendAware(context, locationNow)
+                }
+                PreyConfig.getInstance(context).setTimeLocationAware()
             }
         } catch (e: Exception) {
-            PreyLogger.e("Error sendLocation:" + e.message, e)
+            PreyLogger.e("Error sendLocation:${e.message}", e)
         }
     }
 
-    fun isAirplaneModeOn(context: Context): Boolean {
+    /**
+     * Checks if airplane mode is currently enabled on the device.
+     *
+     * @param context The application context.
+     * @return True if airplane mode is enabled, false otherwise.
+     */
+    private fun isAirplaneModeOn(context: Context): Boolean {
         return Settings.System.getInt(
             context.contentResolver,
             Settings.System.AIRPLANE_MODE_ON,
@@ -181,24 +181,23 @@ object EventFactory {
 
     private val sdf = SimpleDateFormat("dd/MM/yy hh:mm:ss", Locale.getDefault())
 
-    fun isValidLowBattery(ctx: Context): Boolean {
+    /**
+     * Checks if the device's battery level is low and if a notification should be sent.
+     *
+     * @param context The application context.
+     * @return True if the battery level is low and a notification should be sent, false otherwise.
+     */
+    fun isValidLowBattery(context: Context): Boolean {
         try {
             val cal = Calendar.getInstance()
             cal.time = Date()
             cal.add(Calendar.MINUTE, -1)
             val leastThreeHours = cal.timeInMillis
-            val lowBatteryDate = PreyConfig.getInstance(ctx).getLowBatteryDate()
-            PreyLogger.d("lowBatteryDate :" + lowBatteryDate + " " + sdf.format(Date(lowBatteryDate)))
-            PreyLogger.d(
-                "leastMinutes   :" + leastThreeHours + " " + sdf.format(
-                    Date(
-                        leastThreeHours
-                    )
-                )
-            )
+            val lowBatteryDate = PreyConfig.getInstance(context).getLowBatteryDate()
+            PreyLogger.d("lowBatteryDate :${lowBatteryDate} ${sdf.format(Date(lowBatteryDate))}")
+            PreyLogger.d("leastMinutes   :${leastThreeHours} ${sdf.format(Date(leastThreeHours))}")
             if (lowBatteryDate == 0L || leastThreeHours > lowBatteryDate) {
-                val now = Date().time
-                PreyConfig.getInstance(ctx).setLowBatteryDate (now)
+                PreyConfig.getInstance(context).setLowBatteryDate(Date().time)
                 return true
             }
             return false
@@ -210,21 +209,14 @@ object EventFactory {
     /**
      * Method that returns if it has all the permissions
      *
-     * @param ctx context
+     * @param context context
      * @return if you have all permissions
      */
-    fun verifyNotification(ctx: Context?): Boolean {
-        val canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(ctx)
-        val canAccessFineLocation = PreyPermission.canAccessFineLocation(ctx)
-        val canAccessStorage = PreyPermission.canAccessStorage(ctx)
+    fun verifyNotification(context: Context): Boolean {
+        val canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(context)
+        val canAccessFineLocation = PreyPermission.canAccessFineLocation(context)
+        val canAccessStorage = PreyPermission.canAccessStorage(context)
         return (canAccessCoarseLocation || canAccessFineLocation) && canAccessStorage
     }
 
-    /**
-     * Method that opens the notification missing permissions
-     *
-     * @param ctx context
-     */
-    fun notification(ctx: Context?) {
-    }
 }

@@ -7,9 +7,10 @@
 package com.prey
 
 import android.content.Context
+
 import com.prey.net.PreyWebServices
 
-class PreyStatus private constructor() {
+class PreyStatus {
 
     @JvmName("functionOfKotlin")
     fun isPreyConfigurationActivityResume(): Boolean {
@@ -67,8 +68,8 @@ class PreyStatus private constructor() {
                 }
                 PreyConfig.getInstance(context!!).setAware(aware)
                 PreyConfig.getInstance(context).setAutoConnect(autoconnect)
-                PreyLogger.d(String.format("STATUS aware :%b", aware))
-                PreyLogger.d(String.format("STATUS autoconnect :%b", autoconnect))
+                PreyLogger.d("STATUS aware :${aware}")
+                PreyLogger.d("STATUS autoconnect :${autoconnect}")
                 minutesToQueryServer = try {
                     jsnobject.getInt("minutes_to_query_server")
                 } catch (e: Exception) {
@@ -76,31 +77,19 @@ class PreyStatus private constructor() {
                 }
                 PreyConfig.getInstance(context).setMinutesToQueryServer(minutesToQueryServer)
                 PreyLogger.d(
-                    String.format(
-                        "STATUS minutesToQueryServer :%s",
-                        minutesToQueryServer
-                    )
+
+                    "STATUS minutesToQueryServer :${minutesToQueryServer}"
                 )
             }
         } catch (e: Exception) {
-            PreyLogger.e(String.format("STATUS Error:%s", e.message), e)
+            PreyLogger.e("STATUS Error:${e.message}", e)
         }
     }
 
     companion object {
-        @Volatile
         private var instance: PreyStatus? = null
-
         fun getInstance(): PreyStatus {
-            if (instance == null) {
-                synchronized(this) {
-                    if (instance == null) {
-                        instance = PreyStatus()
-                    }
-                }
-            }
-            return instance!!
+            return instance ?: PreyStatus().also { instance = it }
         }
-
     }
 }

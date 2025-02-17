@@ -10,6 +10,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
+
 import com.prey.R
 import com.prey.activities.js.CustomWebView
 import com.prey.activities.js.WebAppInterface
@@ -17,9 +18,17 @@ import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyUtils
 
+/**
+ * Activity responsible for displaying the password HTML page.
+ */
 class PasswordHtmlActivity : Activity() {
     private var myWebView: WebView? = null
 
+    /**
+     * Called when the activity is created.
+     *
+     * @param savedInstanceState Saved instance state, if any.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.webview)
@@ -51,10 +60,12 @@ class PasswordHtmlActivity : Activity() {
         )
         myWebView!!.loadUrl(url)
         myWebView!!.loadUrl("javascript:window.location.reload(true)")
-        //TODO:cambiar
-       // PreyConfig.getInstance(this).viewLock = myWebView
+        PreyConfig.getInstance(this).viewLock = myWebView
     }
 
+    /**
+     * Called when the activity is resumed.
+     */
     override fun onResume() {
         super.onResume()
         val unlockPass: String? = PreyConfig.getInstance(applicationContext).getUnlockPass()

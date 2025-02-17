@@ -7,6 +7,7 @@
 package com.prey.net.http
 
 import com.prey.PreyLogger
+
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -17,12 +18,18 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.Random
 
+/**
+ * A simple multipart entity class for handling HTTP multipart requests.
+ */
 class SimpleMultipartEntity {
     private var boundary: String? = null
     var out: ByteArrayOutputStream = ByteArrayOutputStream()
     var isSetLast: Boolean = false
     var isSetFirst: Boolean = false
 
+    /**
+     * Initializes the multipart entity with a random boundary string.
+     */
     init {
         val buf = StringBuffer()
         val rand = Random()
@@ -32,6 +39,9 @@ class SimpleMultipartEntity {
         this.boundary = buf.toString()
     }
 
+    /**
+     * Writes the first boundary to the output stream if it hasn't been written yet.
+     */
     fun writeFirstBoundaryIfNeeds() {
         if (!isSetFirst) {
             try {
@@ -43,6 +53,9 @@ class SimpleMultipartEntity {
         isSetFirst = true
     }
 
+    /**
+     * Writes the last boundary to the output stream if it hasn't been written yet.
+     */
     fun writeLastBoundaryIfNeeds() {
         if (isSetLast) {
             return
@@ -55,6 +68,12 @@ class SimpleMultipartEntity {
         isSetLast = true
     }
 
+    /**
+     * Adds a part to the multipart request with the given key and value.
+     *
+     * @param key The key for the part
+     * @param value The value for the part
+     */
     fun addPart(key: String?, value: String?) {
         writeFirstBoundaryIfNeeds()
         try {
@@ -68,10 +87,29 @@ class SimpleMultipartEntity {
         }
     }
 
+    /**
+     * Adds a part to the multipart request with the given key, file name, and input stream.
+     *
+     * @param key The key for the part
+     * @param fileName The file name for the part
+     * @param fin The input stream for the part
+     * @param isLast Whether this is the last part
+     * @return The output stream for the part
+     */
     fun addPart(key: String, fileName: String, fin: InputStream?, isLast: Boolean) {
         addPart(key, fileName, fin, "application/octet-stream", isLast)
     }
 
+    /**
+     * Adds a part to the multipart request with the given key, file name, input stream, and content type.
+     *
+     * @param key The key for the part
+     * @param fileName The file name for the part
+     * @param fin The input stream for the part
+     * @param type The content type for the part
+     * @param isLast Whether this is the last part
+     * @return The output stream for the part
+     */
     fun addPart(
         key: String,
         fileName: String,
@@ -118,6 +156,13 @@ class SimpleMultipartEntity {
         return outputStream
     }
 
+    /**
+     * Adds a part to the multipart request with the given key and file.
+     *
+     * @param key The key for the part
+     * @param value The file for the part
+     * @param isLast Whether this is the last part
+     */
     fun addPart(key: String, value: File, isLast: Boolean) {
         try {
             addPart(key, value.name, FileInputStream(value), isLast)
@@ -126,41 +171,64 @@ class SimpleMultipartEntity {
         }
     }
 
-    val contentLength: Long
-        get() {
-            writeLastBoundaryIfNeeds()
-            return out.toByteArray().size.toLong()
-        }
+    /**
+     * Returns the length of the content in bytes.
+     *
+     * @return The length of the content
+     */
+    fun contentLength(): Long {
+        writeLastBoundaryIfNeeds()
+        return out.toByteArray().size.toLong()
+    }
 
-    val contentType: String
-        get() = "multipart/form-data; boundary=$boundary"
+    /**
+     * Returns the content type of the multipart request.
+     *
+     * @return The content type
+     */
+    fun contentType(): String = "multipart/form-data; boundary=$boundary"
 
-    val isChunked: Boolean
-        get() = false
+    fun isChunked(): Boolean = false
 
-    val isRepeatable: Boolean
-        get() = false
+    fun isRepeatable(): Boolean = false
 
-    val isStreaming: Boolean
-        get() = false
+    fun isStreaming(): Boolean = false
 
+    /**
+     * Writes the content to the given output stream.
+     *
+     * @param outstream The output stream to write to
+     * @throws IOException If an I/O error occurs
+     */
     @Throws(IOException::class)
     fun writeTo(outstream: OutputStream) {
         outstream.write(out.toByteArray())
     }
 
+    /**
+     * Consumes the content of the entity.
+     *
+     * @throws IOException If an I/O error occurs
+     * @throws UnsupportedOperationException If the entity is streaming
+     */
     @Throws(IOException::class, UnsupportedOperationException::class)
     fun consumeContent() {
-        if (isStreaming) {
+        if (isStreaming()) {
             throw UnsupportedOperationException(
                 "Streaming entity does not implement #consumeContent()"
             )
         }
     }
 
-    @get:Throws(IOException::class, UnsupportedOperationException::class)
-    val content: InputStream
-        get() = ByteArrayInputStream(out.toByteArray())
+    /**
+     * Returns the content of the entity as an input stream.
+     *
+     * @return The content of the entity as an input stream
+     * @throws IOException If an I/O error occurs
+     * @throws UnsupportedOperationException If the entity is streaming
+     */
+    @Throws(IOException::class, UnsupportedOperationException::class)
+    fun getContent(): InputStream = ByteArrayInputStream(out.toByteArray())
 
     companion object {
         private val MULTIPART_CHARS =

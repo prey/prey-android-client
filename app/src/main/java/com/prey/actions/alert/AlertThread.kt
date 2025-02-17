@@ -18,8 +18,8 @@ import android.text.Spanned
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.prey.R
 
+import com.prey.R
 import com.prey.activities.PopUpAlertActivity
 import com.prey.json.UtilJson
 import com.prey.PreyConfig
@@ -27,6 +27,9 @@ import com.prey.PreyLogger
 import com.prey.PreyUtils
 import com.prey.net.PreyWebServices
 
+/**
+ * Class responsible for managing alert threads.
+ */
 class AlertThread {
     private var notificationId: Int = 0
     private var context: Context? = null
@@ -35,94 +38,90 @@ class AlertThread {
     private var jobId: String? = null
     private var fullscreenNotification: Boolean = false
 
-    fun run(
+    /**
+     * Starts the alert thread.
+     *
+     * @param context Context in which the alert is being displayed
+     * @param alertDescription Description of the alert
+     * @param alertMessageId Message ID associated with the alert (optional)
+     * @param alertJobId Job ID associated with the alert (optional)
+     * @param isFullscreenNotification Flag indicating whether the alert should be displayed in full screen mode
+     */
+    fun start(
         context: Context,
-        description: String,
-        messageId: String?,
-        jobId: String?,
-        fullscreenNotification: Boolean
+        alertDescription: String,
+        alertMessageId: String? = null,
+        alertJobId: String? = null,
+        isFullscreenNotification: Boolean
     ) {
         this.context = context
-        this.description = description
-        this.messageId = messageId
-        this.jobId = jobId
-        this.fullscreenNotification = fullscreenNotification
-        notificationId = AlertConfig.getInstance(context)?.getNextNotificationId() ?: 0
-        if (PreyUtils.isChromebook(context) || Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            runFullscreenAlert()
-        } else if (fullscreenNotification) {
-            runFullscreenAlert()
-            runNotificationAlert()
-        } else {
-            runNotificationAlert()
+        this.description = alertDescription
+        this.messageId = alertMessageId
+        this.jobId = alertJobId
+        this.fullscreenNotification = isFullscreenNotification
+        // Get the next available notification ID
+        notificationId = PreyConfig.getInstance(context).getNextNotificationId() ?: 0
+        // Determine which type of alert to display based on the device and full screen flag
+        when {
+            // If the device is a Chromebook or the Android version is less than N, display a full screen alert
+            PreyUtils.isChromebook(context) || Build.VERSION.SDK_INT < Build.VERSION_CODES.N -> runFullscreenAlert()
+            // If the full screen flag is set, display both a full screen alert and a notification alert
+            isFullscreenNotification -> {
+                runFullscreenAlert()
+                runNotificationAlert()
+            }
+            // Otherwise, display only a notification alert
+            else -> runNotificationAlert()
         }
     }
 
-    fun runNotificationAlert() {
+    /**
+     * Runs a notification alert.
+     *
+     * This function is responsible for creating and displaying a notification alert to the user.
+     * It handles the creation of the notification intent, pending intent, and notification manager,
+     * and also sends a notification result to the server.
+     */
+    private fun runNotificationAlert() {
         try {
-            val channelId = "CHANNEL_ALERT_ID"
-            val notificationId = notificationId
-            val jobId = jobId
-            val description = description
-            val messageId = messageId
-            val context = context
-
+            // Get the notification ID, job ID, description, message ID, and context
+            val notificationId = this.notificationId
+            val jobId = this.jobId
+            val description = this.description
+            val messageId = this.messageId
+            val context = this.context!!
+            // Create a notification channel if the Android version is O or higher
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                createNotificationChannel(channelId, context!!)
+                createNotificationChannel(context)
             }
-
-            val reason =
-                if (jobId != null && jobId.isNotEmpty()) "{\"device_job_id\":\"$jobId\"}" else null
-
-            val buttonIntent = Intent(context, AlertReceiver::class.java).apply {
-                setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            // Create a reason string from the job ID, if available
+            val reason = jobId?.let { "{\"device_job_id\":\"$it\"}" }
+            // Create an intent for the AlertReceiver
+            val intent = Intent(context, AlertReceiver::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 action = notificationId.toString()
                 putExtra("notificationId", notificationId)
                 putExtra("messageId", messageId)
                 putExtra("reason", reason)
             }
-
             val pendingIntent =
-                PendingIntent.getBroadcast(context, 0, buttonIntent, PendingIntent.FLAG_MUTABLE)
-
+                PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_MUTABLE)
             val notificationManager =
-                context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                createNotificationCompatBuilder(
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            // Create the notification based on the Android version
+            val notification: Notification = when {
+                Build.VERSION.SDK_INT < Build.VERSION_CODES.M -> createNotificationCompatBuilder(
                     notificationId,
-                    channelId,
                     pendingIntent,
                     description!!,
                     context
-                )
-                    .also { notificationManager.notify(notificationId, it.build()) }
-            } else {
-                val contentViewSmall =
-                    RemoteViews(context.packageName, R.layout.custom_notification_small)
-                val contentViewBig = createBigContentView(description!!, context)
-
-                contentViewBig.setOnClickPendingIntent(R.id.noti_button, pendingIntent)
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val notification = Notification.Builder(context, channelId)
-                        .setSmallIcon(R.drawable.icon2)
-                        .setCustomContentView(contentViewSmall)
-                        .setCustomBigContentView(contentViewBig)
-                        .setDeleteIntent(pendingIntent)
-                        .setAutoCancel(true);
-                    notificationManager.notify(notificationId, notification.build())
-                } else {
-                    val notification = NotificationCompat.Builder(context!!)
-                        .setSmallIcon(R.drawable.icon2)
-                        .setCustomContentView(contentViewSmall)
-                        .setCustomBigContentView(contentViewBig)
-                        .setDeleteIntent(pendingIntent)
-                        .setAutoCancel(true);
-                    notificationManager.notify(notificationId, notification.build())
-                }
+                ).build()
+                // Otherwise, use the standard builder
+                else -> buildNotification(pendingIntent, description!!, context)
             }
-
+            // Notify the notification manager with the notification
+            notificationManager.notify(notificationId, notification)
+            // Send a notification result to the server
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
                 context,
                 "processed",
@@ -130,7 +129,6 @@ class AlertThread {
                 UtilJson.makeMapParam("start", "alert", "started", reason)
             )
         } catch (e: Exception) {
-            PreyLogger.e("failed alert: " + e.message, e)
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
                 context!!,
                 messageId,
@@ -139,9 +137,54 @@ class AlertThread {
         }
     }
 
+    /**
+     * Builds a notification with a custom small and big content view.
+     *
+     * @param pendingIntent The pending intent to be triggered when the notification is clicked.
+     * @param description The description of the notification.
+     * @param context The context in which the notification is being built.
+     * @return The built notification.
+     */
+    private fun buildNotification(
+        pendingIntent: PendingIntent,
+        description: String,
+        context: Context
+    ): Notification {
+        val smallContentView = RemoteViews(context.packageName, R.layout.custom_notification_small)
+        val bigContentView = createBigContentView(description, context)
+        bigContentView.setOnClickPendingIntent(R.id.noti_button, pendingIntent)
+        // Build the notification based on the Android version
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Notification.Builder(context, ALERT_CHANNEL_ID)
+                .setSmallIcon(R.drawable.icon2)
+                .setCustomContentView(smallContentView)
+                .setCustomBigContentView(bigContentView)
+                .setDeleteIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build()
+        } else {
+            // For Android versions below O, use the NotificationCompat.Builder
+            NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.icon2)
+                .setCustomContentView(smallContentView)
+                .setCustomBigContentView(bigContentView)
+                .setDeleteIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build()
+        }
+    }
+
+    /**
+     * Creates a notification builder with a custom style and actions.
+     *
+     * @param notificationId The ID of the notification.
+     * @param pendingIntent The pending intent to be triggered when the notification is clicked.
+     * @param description The description of the notification.
+     * @param context The context in which the notification is being built.
+     * @return A NotificationCompat.Builder object.
+     */
     private fun createNotificationCompatBuilder(
         notificationId: Int,
-        channelId: String,
         pendingIntent: PendingIntent,
         description: String,
         context: Context
@@ -156,95 +199,108 @@ class AlertThread {
             .setAutoCancel(true)
     }
 
+    /**
+     * Creates a notification channel with high importance.
+     *
+     * @param context The context in which the notification channel is being created.
+     */
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationChannel(channelId: String, context: Context) {
-        val channel =
-            NotificationChannel(channelId, "prey_alert", NotificationManager.IMPORTANCE_HIGH)
-        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-        (context.getSystemService(NotificationManager::class.java) as NotificationManager).createNotificationChannel(
-            channel
-        )
+    private fun createNotificationChannel(context: Context) {
+        val notificationManager =
+            context.getSystemService(NotificationManager::class.java) as NotificationManager
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val notificationChannel = NotificationChannel(ALERT_CHANNEL_ID, "prey_alert", importance)
+        notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        notificationManager.createNotificationChannel(notificationChannel)
     }
 
+    /**
+     * Creates a notification channel with high importance.
+     *
+     * @param context The context in which the notification channel is being created.
+     */
     private fun createBigContentView(description: String, context: Context): RemoteViews {
-        var contentViewBig: RemoteViews? = null
-        if (description.length <= 70) {
-            contentViewBig = RemoteViews(context.packageName, R.layout.custom_notification1)
+        val contentViewBig: RemoteViews = when {
+            description.length <= 70 -> RemoteViews(
+                context.packageName,
+                R.layout.custom_notification1
+            )
+
+            description.length <= 170 -> RemoteViews(
+                context.packageName,
+                R.layout.custom_notification2
+            )
+
+            else -> RemoteViews(context.packageName, R.layout.custom_notification3)
+        }
+        val notificationBody = SpannableStringBuilder(description)
+        notificationBody.setSpan(
+            CustomTypefaceSpan(context, "fonts/Regular/regular-book.otf"),
+            0,
+            notificationBody.length,
+            Spanned.SPAN_EXCLUSIVE_INCLUSIVE
+        )
+        contentViewBig.setTextViewText(R.id.noti_body, notificationBody)
+        val truncatedDescription = if (description.length > 45) {
+            description.substring(0, 45) + ".."
         } else {
-            if (description.length <= 170) {
-                contentViewBig = RemoteViews(context.packageName, R.layout.custom_notification2)
-            } else {
-                contentViewBig = RemoteViews(context.packageName, R.layout.custom_notification3)
-            }
+            description
         }
-
-        val notiBody = SpannableStringBuilder(description)
-        notiBody.setSpan(
+        val truncatedNotificationBody = SpannableStringBuilder(truncatedDescription)
+        truncatedNotificationBody.setSpan(
             CustomTypefaceSpan(context, "fonts/Regular/regular-book.otf"),
             0,
-            notiBody.length,
+            truncatedNotificationBody.length,
             Spanned.SPAN_EXCLUSIVE_INCLUSIVE
         )
-        contentViewBig!!.setTextViewText(R.id.noti_body, notiBody)
-
-        val maxlength = 45
-        var descriptionSmall: String = description
-        if (description.length > maxlength) {
-            descriptionSmall = description.substring(0, maxlength) + ".."
-        }
-        val notiBodySmall = SpannableStringBuilder(descriptionSmall)
-        notiBodySmall.setSpan(
-            CustomTypefaceSpan(context, "fonts/Regular/regular-book.otf"),
-            0,
-            notiBodySmall.length,
-            Spanned.SPAN_EXCLUSIVE_INCLUSIVE
-        )
-
-        val closeAlert: String = context.getString(R.string.close_alert)
-        val notiButton = SpannableStringBuilder(closeAlert)
-        notiButton.setSpan(
+        val closeButtonLabel = context.getString(R.string.close_alert)
+        val closeButton = SpannableStringBuilder(closeButtonLabel)
+        closeButton.setSpan(
             CustomTypefaceSpan(context, "fonts/Regular/regular-bold.otf"),
             0,
-            notiButton.length,
+            closeButton.length,
             Spanned.SPAN_EXCLUSIVE_INCLUSIVE
         )
-        contentViewBig!!.setTextViewText(R.id.noti_button, notiButton)
+        contentViewBig.setTextViewText(R.id.noti_button, closeButton)
         return contentViewBig
     }
 
-    fun runFullscreenAlert() {
+    /**
+     * Runs a full-screen alert.
+     *
+     * This function is responsible for creating and displaying a full-screen alert to the user.
+     * It handles the creation of the alert intent, sets the notification ID, and starts the alert activity.
+     * Additionally, it sends a notification result to the server if the device is a Chromebook or the Android version is less than N.
+     */
+    private fun runFullscreenAlert() {
         try {
-            val notificationPopupId = notificationId
-            val alertTitle = "title"
-            val alertDescription = description
-
-            val intent = Intent(context, PopUpAlertActivity::class.java).apply {
+            val notificationIdValue = notificationId
+            val alertTitleValue = "title"
+            val alertDescriptionValue = description
+            val popupIntent = Intent(context, PopUpAlertActivity::class.java).apply {
                 flags =
                     Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                putExtra("title_message", alertTitle)
-                putExtra("alert_message", alertDescription)
-                putExtra("description_message", alertDescription)
-                putExtra("notificationId", notificationPopupId)
+                putExtra("title_message", alertTitleValue)
+                putExtra("alert_message", alertDescriptionValue)
+                putExtra("description_message", alertDescriptionValue)
+                putExtra("notificationId", notificationIdValue)
             }
-
-            PreyConfig.getInstance(context!!).setNoficationPopupId(notificationPopupId)
-            context!!.startActivity(intent)
-
+            PreyConfig.getInstance(context!!).setNoficationPopupId(notificationIdValue)
+            context!!.startActivity(popupIntent)
             if (PreyUtils.isChromebook(context!!) || Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 Thread {
-                    val reason = null
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
                         context!!,
                         "processed",
                         messageId,
-                        UtilJson.makeMapParam("start", "alert", "started", reason)
+                        UtilJson.makeMapParam("start", "alert", "started", null)
                     )
                     Thread.sleep(2000)
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
                         context!!,
                         "processed",
                         messageId,
-                        UtilJson.makeMapParam("start", "alert", "stopped", reason)
+                        UtilJson.makeMapParam("start", "alert", "stopped", null)
                     )
                 }.start()
             }
@@ -254,12 +310,13 @@ class AlertThread {
     }
 
     companion object {
-        private var INSTANCE: AlertThread? = null
+        const val ALERT_CHANNEL_ID = "CHANNEL_ALERT_ID"
+
+        private var instance: AlertThread? = null
         fun getInstance(): AlertThread {
-            if (INSTANCE == null) {
-                INSTANCE = AlertThread()
-            }
-            return INSTANCE!!
+            instance = instance ?: AlertThread()
+            return instance!!
         }
     }
+
 }

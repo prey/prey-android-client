@@ -1,46 +1,72 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2025 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.json.actions
 
 import android.content.Context
+
 import com.prey.actions.HttpDataService
 import com.prey.actions.observer.ActionResult
 import com.prey.json.JsonAction
 import com.prey.PreyPhone
-import com.prey.PreyWifi
+
 import org.json.JSONObject
 
-
+/**
+ * ActiveAccessPoint class is responsible for retrieving and reporting the active access point.
+ */
 class ActiveAccessPoint : JsonAction() {
 
+    /**
+     * Reports the active access point.
+     *
+     * @param context        The application context.
+     * @param actionResults  The list of action results.
+     * @param parameters     The JSON parameters.
+     * @return The list of HTTP data services.
+     */
     override fun report(
-        ctx: Context,
-        list: MutableList<ActionResult>?,
+        context: Context,
+        actionResults: MutableList<ActionResult>?,
         parameters: JSONObject?
     ): MutableList<HttpDataService>? {
-        val listResult: MutableList<HttpDataService>? = super.report(ctx, list, parameters)
-        return listResult
+        return super.report(context, actionResults, parameters)
     }
 
-    override fun run(ctx: Context, list: MutableList<ActionResult>?, parameters: JSONObject?): HttpDataService {
-        var data: HttpDataService = HttpDataService("active_access_point")
-        data.setList(true)
-        val phone: PreyPhone = PreyPhone.getInstance(ctx)
-        val wifiPhone: PreyWifi? = phone.getWifi()!!
-        if (wifiPhone!=null && wifiPhone.isWifiEnabled()) {
-            val ssid: String = wifiPhone.getSsid()
-            if ("" != ssid && "<unknown ssid>" != ssid) {
-                val parametersMap = HashMap<String, String?>()
-                parametersMap["ssid"] = wifiPhone.getSsid()
-                parametersMap["security"] = wifiPhone.getSecurity()
-                try {
-                    parametersMap["mac_address"] = wifiPhone.getMacAddress()
-                } catch (e: Exception) {
-                    parametersMap["mac_address"] = null
-                }
-                parametersMap["signal_strength"] = wifiPhone.getSignalStrength()
-                parametersMap["channel"] = wifiPhone.getChannel()
-                data.addDataListAll(parametersMap)
+    /**
+     * Runs the active access point action.
+     *
+     * @param context        The application context.
+     * @param actionResults  The list of action results.
+     * @param parameters     The JSON parameters.
+     * @return The HTTP data service containing the active access point data.
+     */
+    override fun run(context: Context, actionResults: MutableList<ActionResult>?, parameters: JSONObject?): HttpDataService {
+        // Create a new HTTP data service for the active access point
+        val activeAccessPointData= HttpDataService("active_access_point")
+        activeAccessPointData.setList(true)
+        val phone= PreyPhone.getInstance(context)
+        val wifi= phone.getWifi()
+        // Check if WiFi is enabled and available
+        if (wifi!=null && wifi.isWifiEnabled()) {
+            val ssid = wifi.getSsid()
+            // Check if the SSID is valid
+            if (ssid != null && ssid.isNotEmpty() && ssid != "<unknown ssid>") {
+                val wifiInfo = HashMap<String, String?>()
+                // Add the WiFi information to the hash map
+                wifiInfo["ssid"] = ssid
+                wifiInfo["security"] = wifi.getSecurity()
+                wifiInfo["mac_address"] = wifi.getMacAddress()
+                wifiInfo["signal_strength"] = wifi.getSignalStrength()
+                wifiInfo["channel"] = wifi.getChannel()
+                // Add the WiFi information to the HTTP data service
+                activeAccessPointData.addDataListAll(wifiInfo)
             }
         }
-        return data
+        // Return the HTTP data service containing the active access point data
+        return activeAccessPointData
     }
 }

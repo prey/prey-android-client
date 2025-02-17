@@ -16,6 +16,9 @@ import com.prey.activities.PermissionInformationActivity
 import com.prey.PreyLogger
 import com.prey.PreyPermission
 
+/**
+ * Service responsible for handling accessibility events.
+ */
 class PreyAccessibilityService : Service() {
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -25,9 +28,15 @@ class PreyAccessibilityService : Service() {
         super.onCreate()
     }
 
+    /**
+     * Called when the service is started. This method is called every time the service is started.
+     *
+     * @param intent The Intent that was used to start this service.
+     * @param startId A unique integer representing this specific start request.
+     */
     override fun onStart(intent: Intent, startId: Int) {
         super.onStart(intent, startId)
-        val ctx: Context = this
+        val context: Context = this
         object : Thread() {
             override fun run() {
                 var i = 0
@@ -35,15 +44,15 @@ class PreyAccessibilityService : Service() {
                 while (run) {
                     try {
                         sleep(1000)
-                        val isAccessibility = PreyPermission.isAccessibilityServiceEnabled(ctx)
+                        val isAccessibility = PreyPermission.isAccessibilityServiceEnabled(context)
                         PreyLogger.d("PreyAccessibilityService [$i]$isAccessibility")
                         if (isAccessibility) {
                             run = false
                             var intentActivity: Intent? = null
                             intentActivity = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                                Intent(ctx, CheckPasswordHtmlActivity::class.java)
+                                Intent(context, CheckPasswordHtmlActivity::class.java)
                             } else {
-                                Intent(ctx, PermissionInformationActivity::class.java)
+                                Intent(context, PermissionInformationActivity::class.java)
                             }
                             intentActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             startActivity(intentActivity)
@@ -58,7 +67,7 @@ class PreyAccessibilityService : Service() {
                         }
                         i++
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error: ${e.message}", e)
                     }
                 }
             }

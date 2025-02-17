@@ -6,94 +6,134 @@
  ******************************************************************************/
 package com.prey.activities
 
+import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
-import com.prey.R
+import com.prey.PreyBatch
 import com.prey.PreyLogger
+import com.prey.R
+import com.prey.net.PreyWebServices
 
-/****
- * This activity verify that the installer has a valid token
+/**
+ * This activity verifies that the installer has a valid token.
  */
 class SplashBatchActivity : FragmentActivity() {
+
+    // Error message to be displayed if token validation fails
     private var error: String? = null
+
+    // TextView to display error messages or loading text
     private var textSplash: TextView? = null
 
+    /**
+     * Called when the activity is resumed.
+     */
     public override fun onResume() {
+        // Log debug message to indicate onResume was called
         PreyLogger.d("onResume of SplashBatchActivity")
         super.onResume()
-        //TODO:cambiar
-        //TokenBatchTask().execute()
+        // Call tokenBatch function to validate token
+        tokenBatch()
     }
 
+    /**
+     * Called when the activity is paused.
+     */
     public override fun onPause() {
+        // Log debug message to indicate onPause was called
         PreyLogger.d("onPause of SplashBatchActivity")
         super.onPause()
     }
 
+    /**
+     * Called when the activity is first created.
+     *
+     * @param savedInstanceState The saved instance state.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Log debug message to indicate onCreate was called
         PreyLogger.d("onCreate of SplashBatchActivity")
         super.onCreate(savedInstanceState)
+        // Request no title for the window
         requestWindowFeature(Window.FEATURE_NO_TITLE)
+        // Set the content view to splash_batch layout
         setContentView(R.layout.splash_batch)
+        // Find the text_splash TextView and assign it to textSplash
         textSplash = findViewById<View>(R.id.text_splash) as TextView
     }
 
-    /****
-     * This asyncTask verify that the installer has a valid token
+    /**
+     * Validates the token and displays a progress dialog while doing so.
      */
-    //TODO:cambiar
-    /*
-    private inner class TokenBatchTask : AsyncTask<String?, Void?, Void?>() {
+    fun tokenBatch() {
+        // Progress dialog to display while validating token
         var progressDialog: ProgressDialog? = null
+        // Get the application context
+        val context = applicationContext
 
-        override fun onPreExecute() {
-            try {
-                textSplash!!.text = ""
-                progressDialog = ProgressDialog(this@SplashBatchActivity)
-                progressDialog!!.setMessage(getText(R.string.loading).toString())
-                progressDialog!!.isIndeterminate = true
-                progressDialog!!.setCancelable(false)
-                progressDialog!!.show()
-            } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
-            }
+        try {
+            // Clear any previous error messages from textSplash
+            textSplash!!.text = ""
+            // Create a new progress dialog
+            progressDialog = ProgressDialog(this@SplashBatchActivity)
+            // Set the progress dialog message to "Loading..."
+            progressDialog!!.setMessage(getText(R.string.loading).toString())
+            // Set the progress dialog to indeterminate
+            progressDialog!!.isIndeterminate = true
+            // Make the progress dialog non-cancelable
+            progressDialog!!.setCancelable(false)
+            // Show the progress dialog
+            progressDialog!!.show()
+        } catch (e: Exception) {
+            // Log any exceptions that occur while creating the progress dialog
+            PreyLogger.e("Error:" + e.message, e)
         }
 
-        protected override fun doInBackground(vararg data: String): Void? {
-            val ctx = applicationContext
-            try {
-                error = null
-                val token: String = PreyBatch.getInstance(ctx)!!.token
-                if (token == null || "" == token) {
-                    error = ctx.getString(R.string.error_token)
-                } else {
-                    val validToken = PreyWebServices.getInstance()
-                        .validToken(ctx, PreyBatch.getInstance(ctx)!!.token)
-                    if (!validToken) {
-                        error = ctx.getString(R.string.error_token)
-                    }
-                }
-            } catch (e: Exception) {
-                error = e.message
-            }
-            return null
-        }
-
-        override fun onPostExecute(unused: Void?) {
-            if (progressDialog != null) progressDialog!!.dismiss()
-            if (error == null) {
-                val intentPermission = Intent(
-                    this@SplashBatchActivity,
-                    WelcomeBatchActivity::class.java
-                )
-                startActivity(intentPermission)
-                finish()
+        try {
+            // Reset the error message
+            error = null
+            // Get the token from PreyBatch
+            val token: String = PreyBatch.getInstance(context).getToken()
+            // Check if the token is null or empty
+            if (token == null || "" == token) {
+                // Set the error message to "Error: Invalid token"
+                error = context.getString(R.string.error_token)
             } else {
-                textSplash!!.text = error
+                // Validate the token using PreyWebServices
+                val validToken = PreyWebServices.getInstance()
+                    .validToken(context, PreyBatch.getInstance(context).getToken())
+                // Check if the token is invalid
+                if (!validToken) {
+                    // Set the error message to "Error: Invalid token"
+                    error = context.getString(R.string.error_token)
+                }
             }
+        } catch (e: Exception) {
+            // Set the error message to the exception message
+            error = e.message
         }
-    }*/
+
+        // Dismiss the progress dialog if it was created
+        if (progressDialog != null) progressDialog!!.dismiss()
+
+        // Check if an error occurred during token validation
+        if (error == null) {
+            // Create an intent to start WelcomeBatchActivity
+            val intentPermission = Intent(
+                this@SplashBatchActivity,
+                WelcomeBatchActivity::class.java
+            )
+            // Start the WelcomeBatchActivity
+            startActivity(intentPermission)
+            // Finish the current activity
+            finish()
+        } else {
+            // Display the error message in textSplash
+            textSplash!!.text = error
+        }
+    }
 }

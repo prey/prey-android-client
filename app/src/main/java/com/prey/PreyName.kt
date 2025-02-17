@@ -6,6 +6,9 @@
  ******************************************************************************/
 package com.prey
 
+/**
+ * Represents a PreyName entity, encapsulating code, name, and error information.
+ */
 class PreyName {
     private var code: Int = 0
     private var name: String? = null

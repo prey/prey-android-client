@@ -6,7 +6,8 @@
  ******************************************************************************/
 package com.prey.activities
 
-import android.content.pm.ActivityInfo
+import android.app.ProgressDialog
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
@@ -15,32 +16,51 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+
 import com.prey.R
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyUtils
 
+/**
+ * Activity for displaying a welcome screen and handling the batch installation process.
+ */
 class WelcomeBatchActivity : FragmentActivity() {
     private var error: String? = null
 
+    /**
+     * Called when the activity is resumed.
+     */
     public override fun onResume() {
         PreyLogger.d("onResume of WelcomeBatchActivity")
         super.onResume()
     }
 
+    /**
+     * Called when the activity is paused.
+     */
     public override fun onPause() {
         PreyLogger.d("onPause of WelcomeBatchActivity")
         super.onPause()
     }
 
+    /**
+     * Called when the configuration of the activity changes.
+     *
+     * @param newConfig The new device configuration.
+     */
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
     }
 
+    /**
+     * Called when the activity is first created.
+     *
+     * @param savedInstanceState The saved instance state.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         menu()
         if (PreyConfig.getInstance(this).isAskForNameBatch()) {
             setContentView(R.layout.welcomebatch2)
@@ -48,7 +68,7 @@ class WelcomeBatchActivity : FragmentActivity() {
                 val editTextBatch2 = findViewById<EditText>(R.id.editTextBatch2)
                 editTextBatch2.setText(PreyUtils.getNameDevice(this))
             } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
+                PreyLogger.e("Error:${e.message}", e)
             }
             menu()
             val buttonBatch2 = findViewById<View>(R.id.buttonBatch2) as Button
@@ -70,8 +90,11 @@ class WelcomeBatchActivity : FragmentActivity() {
         }
     }
 
+    /**
+     * Updates the menu based on the protect ready status.
+     */
     fun menu() {
-        PreyLogger.d("menu ready:" + PreyConfig.getInstance(this).getProtectReady())
+        PreyLogger.d("menu ready:${PreyConfig.getInstance(this).getProtectReady()}" )
         val email: String? = PreyConfig.getInstance(this).getEmail()
         if (email == null || "" == email) {
             PreyConfig.getInstance(this).setProtectReady(false)
@@ -80,61 +103,46 @@ class WelcomeBatchActivity : FragmentActivity() {
         }
     }
 
+    /**
+     * Installs the batch with the given name.
+     *
+     * @param name The name of the batch.
+     */
     private fun installBatch(name: String) {
         error = null
         val config: PreyConfig = PreyConfig.getInstance(this)
-        //TODO:cambiar
-        /*
-        AddDeviceToApiKeyBatch().execute(
-            config.getApiKeyBatch(), config.getEmailBatch(), PreyUtils.getDeviceType(
-                this
-            ), name
-        )*/
+        addDeviceToApiKeyBatch()
     }
 
-    //TODO:cambiar
-    /*
-    private inner class AddDeviceToApiKeyBatch : AsyncTask<String?, Void?, Void?>() {
-        var progressDialog: ProgressDialog? = null
-
-        override fun onPreExecute() {
-            try {
-                progressDialog = ProgressDialog(this@WelcomeBatchActivity)
-                progressDialog!!.setMessage(getText(R.string.set_old_user_loading).toString())
-                progressDialog!!.isIndeterminate = true
-                progressDialog!!.setCancelable(false)
-                progressDialog!!.show()
-            } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
-            }
+    /**
+     * Adds the device to the API key batch.
+     */
+    fun addDeviceToApiKeyBatch() {
+        val progressDialog = ProgressDialog(this).apply {
+            setMessage(getText(R.string.set_old_user_loading).toString())
+            setIndeterminate(true)
+            setCancelable(false)
+            show()
         }
-
-        protected override fun doInBackground(vararg data: String): Void? {
-            try {
-                error = null
-                val ctx = applicationContext
-                val apiKey = data[0]
-                PreyConfig.getInstance(ctx).registerNewDeviceWithApiKey(apiKey)
-            } catch (e: Exception) {
-                PreyLogger.e(String.format("Error:%s", e.message), e)
-                error = e.message
-            }
-            return null
+        try {
+            error = null
+            val apiKey = PreyConfig.getInstance(this).getApiKeyBatch()
+            PreyConfig.getInstance(applicationContext).registerNewDeviceWithApiKey(apiKey)
+        } catch (e: Exception) {
+            PreyLogger.e("Error:${e.message}", e)
+            error = e.message
         }
-
-        override fun onPostExecute(unused: Void?) {
-            if (progressDialog != null) progressDialog!!.dismiss()
-            if (error == null) {
-                val message = getString(R.string.device_added_congratulations_text)
-                val bundle = Bundle()
-                bundle.putString("message", message)
-                PreyConfig.getInstance(this@WelcomeBatchActivity).setCamouflageSet(true)
-                val intentPermission =
-                    Intent(this@WelcomeBatchActivity, PermissionInformationActivity::class.java)
-                intentPermission.putExtras(bundle)
-                startActivity(intentPermission)
-                finish()
-            }
+        if (progressDialog != null) progressDialog.dismiss()
+        if (error == null) {
+            val message = getString(R.string.device_added_congratulations_text)
+            val bundle = Bundle()
+            bundle.putString("message", message)
+            PreyConfig.getInstance(this@WelcomeBatchActivity).setCamouflageSet(true)
+            val intentPermission =
+                Intent(this@WelcomeBatchActivity, PermissionInformationActivity::class.java)
+            intentPermission.putExtras(bundle)
+            startActivity(intentPermission)
+            finish()
         }
-    }*/
+    }
 }

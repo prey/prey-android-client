@@ -21,18 +21,22 @@ import java.io.OutputStream
 import java.util.Locale
 import java.util.StringTokenizer
 
+/**
+ * Utility class for Prey-related functionality.
+ */
 object PreyUtils {
+
     fun getDeviceType(act: Activity): String {
         return getDeviceType(act.applicationContext)
     }
 
     const val LAPTOP: String = "Laptop"
 
-    fun getDeviceType(ctx: Context): String {
-        return if (isChromebook(ctx)) {
+    fun getDeviceType(context: Context): String {
+        return if (isChromebook(context)) {
             LAPTOP
         } else {
-            if (isTablet(ctx)) {
+            if (isTablet(context)) {
                 "Tablet"
             } else {
                 "Phone"
@@ -41,7 +45,7 @@ object PreyUtils {
     }
 
     @Throws(Exception::class)
-    fun getNameDevice(ctx: Context): String {
+    fun getNameDevice(context: Context): String {
         var newName = ""
         var name: String? = null
         val model = Build.MODEL
@@ -52,7 +56,7 @@ object PreyUtils {
             PreyLogger.e("Error:" + e.message, e)
         }
         try {
-            name = Settings.Secure.getString(ctx.contentResolver, "bluetooth_name")
+            name = Settings.Secure.getString(context.contentResolver, "bluetooth_name")
         } catch (e: Exception) {
             PreyLogger.e("Error:" + e.message, e)
         }
@@ -64,13 +68,13 @@ object PreyUtils {
         return newName
     }
 
-    fun isChromebook(ctx: Context): Boolean {
-        return PreyConfig.getInstance(ctx).isChromebook()
+    fun isChromebook(context: Context): Boolean {
+        return PreyConfig.getInstance(context).isChromebook()
     }
 
-    fun isTablet(ctx: Context): Boolean {
+    fun isTablet(context: Context): Boolean {
         try {
-            val dm = ctx.resources.displayMetrics
+            val dm = context.resources.displayMetrics
             val screenWidth = dm.widthPixels / dm.xdpi
             val screenHeight = dm.heightPixels / dm.ydpi
             //TODO: OSO cambiar
@@ -114,11 +118,11 @@ object PreyUtils {
         return if ("es" == Locale.getDefault().language) "es" else "en"
     }
 
-    fun toast(ctx: Context?, out: String?) {
+    fun toast(context: Context?, out: String?) {
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             if (out != null && "" != out) {
-                Toast.makeText(ctx, out, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, out, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -155,13 +159,10 @@ object PreyUtils {
             isGooglePlayServicesAvailable = false
         }
         PreyLogger.d(
-            String.format(
-                "isGooglePlayServicesAvailable:%s",
-                isGooglePlayServicesAvailable
-            )
+
+            "isGooglePlayServicesAvailable:${isGooglePlayServicesAvailable}"
         )
         return isGooglePlayServicesAvailable
     }
-
 
 }

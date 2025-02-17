@@ -11,31 +11,38 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.receivers.AlarmReportReceiver
 
-class ReportScheduled private constructor(context: Context) {
-    private var context: Context? = null
+/**
+ * A utility class for scheduling and canceling report alarms.
+ */
+class ReportScheduled private constructor(var context: Context) {
+
+    // The AlarmManager instance used for scheduling alarms.
     private var alarmMgr: AlarmManager? = null
 
-
-    init {
-        this.context = context
-    }
-
+    /**
+     * Starts the report scheduling process.
+     *
+     * This method retrieves the report interval from the PreyConfig instance,
+     * creates a PendingIntent for the AlarmReportReceiver, and schedules
+     * an alarm using the AlarmManager.
+     */
     fun run() {
         try {
-            val minute = PreyConfig.getInstance(context!!).getIntervalReport()!!.toInt()
+            val minute = PreyConfig.getInstance(context).getIntervalReport()!!.toInt()
             PreyLogger.d("----------ReportScheduled start minute:$minute")
             val intent = Intent(context, AlarmReportReceiver::class.java)
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
                 0,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_IMMUTABLE
             )
-            alarmMgr = context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                 PreyLogger.d("----------setRepeating")
                 alarmMgr!!.setRepeating(
@@ -55,32 +62,32 @@ class ReportScheduled private constructor(context: Context) {
             }
             PreyLogger.d("----------start report [$minute] ReportScheduled")
         } catch (e: Exception) {
-            PreyLogger.d("----------Error ReportScheduled :" + e.message)
+            PreyLogger.e("----------Error ReportScheduled :${e.message}",e)
         }
     }
 
+    /**
+     * Resets the report scheduling process.
+     *
+     * This method cancels any currently scheduled alarms and logs a message
+     * indicating that the report has been shut down.
+     */
     fun reset() {
         if (alarmMgr != null) {
             try {
-                var minute = PreyConfig.getInstance(context!!).getIntervalReport()!!.toInt()
+                var minute = PreyConfig.getInstance(context).getIntervalReport()!!.toInt()
                 PreyLogger.d("_________________shutdown report [$minute] alarmIntent")
-
                 minute = 0
             } catch (e: Exception) {
-                PreyLogger.d("----------Error ReportScheduled :" + e.message)
+                PreyLogger.e("----------Error ReportScheduled ::${e.message}",e)
             }
         }
     }
 
     companion object {
         private var instance: ReportScheduled? = null
-
-        @Synchronized
-        fun getInstance(context: Context): ReportScheduled? {
-            if (instance == null) {
-                instance = ReportScheduled(context)
-            }
-            return instance
+        fun getInstance(context: Context): ReportScheduled {
+            return instance ?: ReportScheduled(context).also { instance = it }
         }
     }
 }

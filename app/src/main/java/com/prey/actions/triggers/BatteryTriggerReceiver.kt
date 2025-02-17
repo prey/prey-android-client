@@ -10,8 +10,17 @@ import android.content.Context
 import android.content.Intent
 import com.prey.events.factories.EventFactory
 
+/**
+ * A BroadcastReceiver that listens for battery-related events and triggers corresponding actions.
+ */
 class BatteryTriggerReceiver : TriggerReceiver() {
 
+    /**
+     * Called when the BroadcastReceiver receives an Intent.
+     *
+     * @param context The Context in which the receiver is running.
+     * @param intent The Intent being received.
+     */
     override fun onReceive(context: Context, intent: Intent) {
         val action = intent.action
         val eventName = when (action) {

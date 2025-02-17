@@ -10,6 +10,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+
 import com.prey.json.UtilJson
 import com.prey.PreyLogger
 import com.prey.net.PreyWebServices
@@ -17,31 +18,47 @@ import com.prey.net.UtilConnection
 
 import org.json.JSONObject
 
+/**
+ * TriggerController is responsible for managing triggers and updating them based on data from the web.
+ */
 class TriggerController {
     private var listBD: List<TriggerDto>? = null
     private var listWeb: List<TriggerDto>? = null
 
-    fun run(ctx: Context) {
+    /**
+     * Runs the trigger controller, updating triggers based on internet availability.
+     *
+     * @param context The application context.
+     */
+    fun run(context: Context) {
         try {
             if (UtilConnection.getInstance().isInternetAvailable()) {
                 Thread.sleep(1000)
-                val dataSource = TriggerDataSource(ctx)
+                val dataSource = TriggerDataSource(context)
                 listBD = dataSource.allTriggers
                 listWeb = null
                 try {
-                    listWeb = TriggerParse.getJSONFromUrl(ctx)
+                    listWeb = TriggerParse.getJSONFromUrl(context)
                 } catch (e: Exception) {
-                    PreyLogger.e("error TriggerController get json:" + e.message, e)
+                    PreyLogger.e("error TriggerController get json:${e.message}", e)
                 }
-                updateTriggers(ctx, listWeb, listBD, dataSource)
+                updateTriggers(context, listWeb, listBD, dataSource)
             }
         } catch (e: Exception) {
-            PreyLogger.e("error TriggerController run:" + e.message, e)
+            PreyLogger.e("error TriggerController run:${e.message}", e)
         }
     }
 
+    /**
+     * Updates triggers based on data from the web and database.
+     *
+     * @param context The application context.
+     * @param listWeb Triggers from the web.
+     * @param listBD Triggers from the database.
+     * @param dataSource Data source for triggers.
+     */
     private fun updateTriggers(
-        ctx: Context,
+        context: Context,
         listWeb: List<TriggerDto>?,
         listBD: List<TriggerDto>?,
         dataSource: TriggerDataSource
@@ -71,7 +88,7 @@ class TriggerController {
                 }
             }
             if (listDel.size > 0) {
-                cancelAlarm(ctx, listDel)
+                cancelAlarm(context, listDel)
             }
             if (removeList != null && removeList.size > 0) {
                 var infoDelete = "["
@@ -85,7 +102,10 @@ class TriggerController {
                 }
                 infoDelete += "]"
                 PreyLogger.d("Trigger infoDelete:$infoDelete")
-                sendNotify(ctx, UtilJson.makeMapParam("start", "triggers", "stopped", infoDelete))
+                sendNotify(
+                    context,
+                    UtilJson.makeMapParam("start", "triggers", "stopped", infoDelete)
+                )
             }
             run {
                 var i = 0
@@ -104,10 +124,10 @@ class TriggerController {
                 while (listRun != null && i < listRun.size) {
                     val trigger = listRun[i]
                     try {
-                        TimeTrigger.updateTrigger(ctx, trigger)
+                        TimeTrigger.updateTrigger(context, trigger)
                     } catch (te: TriggerException) {
                         listStop.add(trigger)
-                        PreyLogger.d("TimeTrigger listRun exception id:" + trigger.getId() + " ,state:" + te.code)
+                        PreyLogger.d("TimeTrigger listRun exception id:${trigger.getId()} ,state:${te.code}")
                     }
                     i++
                 }
@@ -117,28 +137,28 @@ class TriggerController {
                 var i = 0
                 while (listStop != null && i < listStop.size) {
                     val trigger = listStop[i]
-                    infoStop += "{\"id\":" + trigger.getId() + ",\"state\":3}"
+                    infoStop += "{\"id\":${trigger.getId()},\"state\":3}"
                     if (i + 1 < listStop.size) {
                         infoStop += ","
                     }
-                    dataSource.deleteTrigger("" + trigger.getId())
+                    dataSource.deleteTrigger("${trigger.getId()}" )
                     i++
                 }
             }
             infoStop += "]"
             if (listStop != null && listStop.size > 0) {
-                sendNotify(ctx, UtilJson.makeMapParam("start", "triggers", "started", infoStop))
+                sendNotify(context, UtilJson.makeMapParam("start", "triggers", "started", infoStop))
             }
             var infoAdd = "["
             var i = 0
             while (listAdd != null && i < listAdd.size) {
                 val trigger = listAdd[i]
                 try {
-                    TimeTrigger.updateTrigger(ctx, trigger)
-                    infoAdd += "{\"id\":" + trigger.getId() + ",\"state\":1}"
+                    TimeTrigger.updateTrigger(context, trigger)
+                    infoAdd += "{\"id\":${trigger.getId()},\"state\":1}"
                     dataSource.createTrigger(trigger)
                 } catch (te: TriggerException) {
-                    infoAdd += "{\"id\":" + trigger.getId() + ",\"state\":" + te.code + "}"
+                    infoAdd += "{\"id\":${trigger.getId()},\"state\":${te.code}}"
                 }
                 if (i + 1 < listAdd.size) {
                     infoAdd += ","
@@ -147,13 +167,19 @@ class TriggerController {
             }
             infoAdd += "]"
             if (listAdd != null && listAdd.size > 0) {
-                sendNotify(ctx, UtilJson.makeMapParam("start", "triggers", "started", infoAdd))
+                sendNotify(context, UtilJson.makeMapParam("start", "triggers", "started", infoAdd))
             }
         } catch (e: Exception) {
-            PreyLogger.e("error run" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
     }
 
+    /**
+     * Converts a list of TriggerDto objects to a map where the key is the trigger ID and the value is the TriggerDto object.
+     *
+     * @param list The list of TriggerDto objects to convert.
+     * @return A map of trigger IDs to TriggerDto objects, or null if the input list is null.
+     */
     private fun convertMap(list: List<TriggerDto>?): Map<Int, TriggerDto>? {
         if (list == null) {
             return null
@@ -166,17 +192,23 @@ class TriggerController {
         return map
     }
 
-    fun cancelAlarm(ctx: Context, list: List<TriggerDto>?) {
-        val alarmManager = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    /**
+     * Cancels any alarms associated with the given list of TriggerDto objects.
+     *
+     * @param context The application context.
+     * @param list The list of TriggerDto objects for which to cancel alarms.
+     */
+    fun cancelAlarm(context: Context, list: List<TriggerDto>?) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         var i = 0
         while (list != null && i < list.size) {
             val trigger = list[i]
             val events = trigger.getEvents()
             if (events.indexOf(TimeTrigger.EXACT_TIME) > 0) {
-                val intent = Intent(ctx, TimeTriggerReceiver::class.java)
-                intent.putExtra("trigger_id", "" + trigger.getId())
+                val intent = Intent(context, TimeTriggerReceiver::class.java)
+                intent.putExtra("trigger_id", "${trigger.getId()}")
                 val pendingIntent = PendingIntent.getBroadcast(
-                    ctx,
+                    context,
                     (trigger.getId() * TimeTrigger.ADD_TRIGGER_ID),
                     intent,
                     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -195,10 +227,10 @@ class TriggerController {
                             var x = 0
                             while (array != null && x < array.length()) {
                                 val day = array.getInt(x)
-                                val intent = Intent(ctx, TimeTriggerReceiver::class.java)
-                                intent.putExtra("trigger_id", "" + trigger.getId())
+                                val intent = Intent(context, TimeTriggerReceiver::class.java)
+                                intent.putExtra("trigger_id", "${trigger.getId()}")
                                 val pendingIntent = PendingIntent.getBroadcast(
-                                    ctx,
+                                    context,
                                     (trigger.getId() * TimeTrigger.ADD_TRIGGER_ID + day),
                                     intent,
                                     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -207,7 +239,7 @@ class TriggerController {
                                 x++
                             }
                         } catch (e: Exception) {
-                            PreyLogger.e("Error cancelAlarm:" + e.message, e)
+                            PreyLogger.e("Error cancelAlarm:${e.message}", e)
                         }
                     }
                     j++
@@ -217,12 +249,19 @@ class TriggerController {
         }
     }
 
-    fun sendNotify(ctx: Context, params: MutableMap<String, String?>) {
+    /**
+     * Sends a notification to the server with the given parameters.
+     *
+     * @param context The application context.
+     * @param params The parameters to include in the notification.
+     */
+    fun sendNotify(context: Context, params: MutableMap<String, String?>) {
         object : Thread() {
             override fun run() {
                 try {
-                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, params)
+                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(context, params)
                 } catch (e: Exception) {
+                    PreyLogger.e("Error:${e.message}", e)
                 }
             }
         }.start()
@@ -231,10 +270,7 @@ class TriggerController {
     companion object {
         private var instance: TriggerController? = null
         fun getInstance(): TriggerController {
-            if (instance == null) {
-                instance = TriggerController()
-            }
-            return instance!!
+            return instance ?: TriggerController().also { instance = it }
         }
     }
 }

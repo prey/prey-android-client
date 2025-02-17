@@ -6,12 +6,37 @@
  ******************************************************************************/
 package com.prey.actions.fileretrieval
 
+/**
+ * Data Transfer Object (DTO) for file retrieval.
+ * This class represents a file being retrieved and its associated metadata.
+ */
 class FileretrievalDto {
+    /**
+     * Unique identifier for the file.
+     */
     private var fileId: String? = null
+    /**
+     * Path to the file on the device.
+     */
     private var path: String? = null
+    /**
+     * Size of the file in bytes.
+     */
     private var size: Long = 0
+    /**
+     * Status of the file retrieval process.
+     * 0 - Not started
+     * 1 - In progress
+     * 2 - Completed
+     */
     private var status: Int = 0
+    /**
+     * Total size of the file to be retrieved.
+     */
     private var total: Long = 0
+    /**
+     * Name of the file.
+     */
     private var name: String? = null
 
     fun getFileId(): String {

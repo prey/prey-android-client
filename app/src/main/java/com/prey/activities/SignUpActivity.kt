@@ -8,10 +8,9 @@ package com.prey.activities
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -23,36 +22,37 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+
 import com.prey.R
 import com.prey.FileConfigReader
+import com.prey.PreyAccountData
+import com.prey.PreyApp
+import com.prey.PreyConfig
 import com.prey.PreyLogger
+import com.prey.PreyUtils
+import com.prey.net.PreyWebServices
+import com.prey.preferences.RunBackgroundCheckBoxPreference
 import com.prey.util.HttpUtil
 import com.prey.util.KeyboardStatusDetector
+
 import java.util.Locale
 
+/**
+ * SignUpActivity is the activity responsible for handling the sign-up process.
+ */
 class SignUpActivity : Activity() {
     private var error: String? = null
     private var email: String? = null
     private var htmTerms = ""
 
-    public override fun onResume() {
-        PreyLogger.d("onResume of SignUpActivity")
-        super.onResume()
-    }
-
-    public override fun onPause() {
-        PreyLogger.d("onPause of SignUpActivity")
-        super.onPause()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-    }
-
+    /**
+     * Called when the activity is created.
+     *
+     * @param savedInstanceState The saved instance state, or null if not saved
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         this.setContentView(R.layout.signup)
         PreyLogger.d("onCreate of SignUpActivity")
         val nameText = (findViewById<View>(R.id.editTextName) as EditText)
@@ -78,18 +78,18 @@ class SignUpActivity : Activity() {
         textViewInit2.setTypeface(titilliumWebBold)
         text_linear_agree_terms_condition.setTypeface(titilliumWebBold)
         text_linear_confirm_over.setTypeface(titilliumWebBold)
-        val ctx: Context = this
+        val context: Context = this
         var urlTerms = ""
         urlTerms = if ("es" == Locale.getDefault().language) {
-            FileConfigReader.getInstance(applicationContext)!!.preyTermsEs
+            FileConfigReader.getInstance(applicationContext)!!.getPreyTermsEs()
         } else {
-            FileConfigReader.getInstance(applicationContext)!!.preyTerms
+            FileConfigReader.getInstance(applicationContext)!!.getPreyTerms()
         }
         PreyLogger.d("urlTerms:$urlTerms")
-        htmTerms = HttpUtil.getContents(urlTerms)
+        htmTerms = HttpUtil().getContents(urlTerms)
         val regex = "<a href.*?>"
         htmTerms = htmTerms.replace(regex.toRegex(), "<a>")
-        val builder = AlertDialog.Builder(ctx)
+        val builder = AlertDialog.Builder(context)
         val alert = builder.create()
         val wv = WebView(applicationContext)
         wv.webChromeClient = WebChromeClient()
@@ -129,34 +129,23 @@ class SignUpActivity : Activity() {
             val name = nameText.text.toString()
             email = emailText.text.toString()
             val password = passwordText.text.toString()
-            val confirm_over = "" + checkBox_linear_confirm_over.isChecked
-            val agree_terms_condition = "" + checkBox_linear_agree_terms_condition.isChecked
+            val confirmOver = "" + checkBox_linear_confirm_over.isChecked
+            val agreeTermsCondition = "" + checkBox_linear_agree_terms_condition.isChecked
             val offer = "" + checkBox_linear_offer.isChecked
             PreyLogger.d("email:$email")
             PreyLogger.d("password:$password")
-            PreyLogger.d("confirm_over:$confirm_over")
-            PreyLogger.d("agree_terms_condition:$agree_terms_condition")
+            PreyLogger.d("confirm_over:$confirmOver")
+            PreyLogger.d("agree_terms_condition:$agreeTermsCondition")
             PreyLogger.d("offer:$offer")
-            val ctx = applicationContext
-            //TODO:cambiar
-            /*
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) CreateAccount(ctx).executeOnExecutor(
-                AsyncTask.THREAD_POOL_EXECUTOR,
+            createAccount(
+                applicationContext,
                 name,
                 email,
                 password,
-                confirm_over,
-                agree_terms_condition,
+                confirmOver,
+                agreeTermsCondition,
                 offer
             )
-            else CreateAccount(ctx).execute(
-                name,
-                email,
-                password,
-                confirm_over,
-                agree_terms_condition,
-                offer
-            )*/
         }
         linkSignup.setOnClickListener {
             val intent = Intent(applicationContext, SignInActivity::class.java)
@@ -165,84 +154,93 @@ class SignUpActivity : Activity() {
         }
     }
 
-    //TODO:cambiar
-    /*
-    private inner class CreateAccount(var context: Context) :
-        AsyncTask<String?, Void?, Void?>() {
+    /**
+     * Creates a new account on the server.
+     *
+     * @param context The application context.
+     * @param name The user's name.
+     * @param email The user's email address.
+     * @param password The user's password.
+     * @param confirmOver The confirmation of the user's age.
+     * @param agreeTermsCondition Whether the user agrees to the terms and conditions.
+     * @param offer The offer code (if any).
+     */
+    fun createAccount(
+        context: Context,
+        name: String?,
+        email: String?,
+        password: String?,
+        confirmOver: String?,
+        agreeTermsCondition: String?,
+        offer: String?
+    ) {
         var progressDialog: ProgressDialog? = null
-
-        override fun onPreExecute() {
-            try {
-                progressDialog = ProgressDialog(this@SignUpActivity)
-                progressDialog!!.setMessage(getText(R.string.creating_account_please_wait).toString())
-                progressDialog!!.isIndeterminate = true
-                progressDialog!!.setCancelable(false)
-                progressDialog!!.show()
-            } catch (e: Exception) {
-                PreyLogger.e("e.getMessage():" + e.message, e)
-            }
+        try {
+            progressDialog = ProgressDialog(this@SignUpActivity)
+            progressDialog.setMessage(getText(R.string.creating_account_please_wait).toString())
+            progressDialog.isIndeterminate = true
+            progressDialog.setCancelable(false)
+            progressDialog.show()
+        } catch (e: Exception) {
+            PreyLogger.e("e.getMessage():" + e.message, e)
+        }
+        try {
             error = null
-        }
-
-        protected override fun doInBackground(vararg data: String): Void? {
-            try {
-                error = null
-                val ctx = applicationContext
-                val accountData: PreyAccountData = PreyWebServices.getInstance().registerNewAccount(
-                    ctx,
-                    data[0], data[1], data[2], data[3], data[4], data[5], PreyUtils.getDeviceType(
-                        application
-                    )
+            val context = applicationContext
+            val accountData: PreyAccountData = PreyWebServices.getInstance().registerNewAccount(
+                context,
+                name,
+                email,
+                password,
+                confirmOver,
+                agreeTermsCondition,
+                offer, PreyUtils.getDeviceType(
+                    application
                 )
-                PreyLogger.d("Response creating account: " + accountData.toString())
-                PreyConfig.getInstance(ctx).saveAccount(accountData)
-                PreyConfig.getInstance(ctx).registerC2dm()
-                PreyConfig.getInstance(ctx).setEmail(email)
-                PreyConfig.getInstance(ctx).setRunBackground(true)
-                RunBackgroundCheckBoxPreference.notifyReady(ctx)
-                PreyApp().run(ctx)
-            } catch (e: Exception) {
-                error = e.message
-                PreyLogger.e("e.getMessage():" + e.message, e)
-            }
-            return null
+            )
+            PreyLogger.d("Response creating account: " + accountData.toString())
+            PreyConfig.getInstance(context).saveAccount(accountData)
+            PreyConfig.getInstance(context).registerC2dm()
+            PreyConfig.getInstance(context).setEmail(email!!)
+            PreyConfig.getInstance(context).setRunBackground(true)
+            PreyApp().run(context)
+        } catch (e: Exception) {
+            error = e.message
+            PreyLogger.e("e.getMessage():" + e.message, e)
         }
-
-        override fun onPostExecute(unused: Void?) {
-            try {
-                if (progressDialog != null) progressDialog!!.dismiss()
-                if (error == null) {
-                    val message = getString(R.string.new_account_congratulations_text, email)
-                    val bundle = Bundle()
-                    bundle.putString("message", message)
-                    var intent: Intent? = null
-                    if (PreyConfig.getInstance(this@SignUpActivity).isChromebook()) {
-                        intent = Intent(this@SignUpActivity, WelcomeActivity::class.java)
-                        PreyConfig.getInstance(this@SignUpActivity).setProtectReady(true)
-                    } else {
-                        intent = Intent(
-                            this@SignUpActivity,
-                            PermissionInformationActivity::class.java
-                        )
-                    }
-                    intent.putExtras(bundle)
-                    startActivity(intent)
-                    finish()
+        try {
+            if (progressDialog != null) progressDialog!!.dismiss()
+            if (error == null) {
+                val message = getString(R.string.new_account_congratulations_text, email)
+                val bundle = Bundle()
+                bundle.putString("message", message)
+                var intent: Intent? = null
+                if (PreyConfig.getInstance(this@SignUpActivity).isChromebook()) {
+                    intent = Intent(this@SignUpActivity, WelcomeActivity::class.java)
+                    PreyConfig.getInstance(this@SignUpActivity).setProtectReady(true)
                 } else {
-                    val alertDialog = AlertDialog.Builder(this@SignUpActivity)
-                    alertDialog.setIcon(R.drawable.error).setTitle(R.string.error_title)
-                        .setMessage(error)
-                        .setPositiveButton(
-                            R.string.ok
-                        ) { dialog, which -> }.setCancelable(false)
-                    alertDialog.show()
+                    intent = Intent(
+                        this@SignUpActivity,
+                        PermissionInformationActivity::class.java
+                    )
                 }
-            } catch (e: Exception) {
-                PreyLogger.e("e.getMessage():" + e.message, e)
+                intent.putExtras(bundle)
+                startActivity(intent)
+                finish()
+            } else {
+                val alertDialog = AlertDialog.Builder(this@SignUpActivity)
+                alertDialog.setIcon(R.drawable.error).setTitle(R.string.error_title)
+                    .setMessage(error)
+                    .setPositiveButton(
+                        R.string.ok
+                    ) { dialog, which -> }.setCancelable(false)
+                alertDialog.show()
             }
+        } catch (e: Exception) {
+            PreyLogger.e("e.getMessage():" + e.message, e)
         }
     }
-*/
+
     companion object {
         private const val ERROR = 1
     }

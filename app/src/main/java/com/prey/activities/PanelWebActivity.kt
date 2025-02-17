@@ -14,22 +14,35 @@ import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
+
 import com.prey.R
 import com.prey.activities.js.CustomWebView
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 
+/**
+ * Activity responsible for displaying the Panel Web view.
+ */
 class PanelWebActivity : Activity() {
     private val activity: Activity = this
     private var myWebView: WebView? = null
 
+    /**
+     * Handles the back button press event.
+     * Redirects to the CheckPasswordHtmlActivity.
+     */
     override fun onBackPressed() {
-        var intent: Intent? = null
-        intent = Intent(application, CheckPasswordHtmlActivity::class.java)
+        var intent = Intent(application, CheckPasswordHtmlActivity::class.java)
         startActivity(intent)
         finish()
     }
 
+    /**
+     * Called when the activity is created.
+     * Initializes the WebView component and sets its layout.
+     *
+     * @param savedInstanceState Saved instance state, if any.
+     */
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.panelweb)
@@ -41,6 +54,10 @@ class PanelWebActivity : Activity() {
         }
     }
 
+    /**
+     * Called when the activity is resumed.
+     * Configures the WebView component and loads the panel URL.
+     */
     public override fun onResume() {
         super.onResume()
         val settings = myWebView!!.settings

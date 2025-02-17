@@ -35,6 +35,7 @@ import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
 import android.view.View
 import androidx.core.app.ActivityCompat
+
 import com.prey.R
 import com.prey.actions.picture.PictureUtil
 import com.prey.PreyLogger
@@ -164,7 +165,7 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
     /**
      * Method take picture
      */
-    fun takePicture(ctx: Context) {
+    fun takePicture(context: Context) {
         if (null == cameraDevice) {
             openCamera()
         }
@@ -222,7 +223,7 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
 
                 @Throws(IOException::class)
                 fun save(bytes: ByteArray) {
-                    PictureUtil.getInstance(ctx).dataImagen = getCompressedBitmap(bytes)
+                    PictureUtil.getInstance(context).dataImagen = getCompressedBitmap(bytes)
                 }
             }
             reader.setOnImageAvailableListener(readerListener, mBackgroundHandler)

@@ -16,6 +16,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.Window
 import androidx.core.app.ActivityCompat
+
 import com.prey.actions.aware.AwareController
 import com.prey.backwardcompatibility.FroyoSupport
 import com.prey.PreyConfig
@@ -23,28 +24,42 @@ import com.prey.PreyLogger
 import com.prey.PreyPermission
 import com.prey.services.PreyOverlayService
 
+/**
+ * Activity that displays information about the required permissions.
+ *
+ * This activity is responsible for explaining the necessary permissions to the user
+ * and providing a way to grant them.
+ */
 class PermissionInformationActivity : PreyActivity() {
     private val congratsMessage: String? = null
 
+    /**
+     * Called when the activity is created.
+     * Initializes the activity and sets up the window feature.
+     *
+     * @param savedInstanceState The saved instance state, or null if not saved
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
-    override fun onBackPressed() {
-    }
-
-    override fun onResume() {
-        super.onResume()
-        showScreen()
-    }
-
+    /**
+     * Called when an activity you launched exits, giving you the requestCode you started it with,
+     * the resultCode it returned, and any additional data from it.
+     *
+     * @param requestCode The request code of the activity that was launched
+     * @param resultCode The result code of the activity that was launched
+     * @param data The data returned by the activity that was launched
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         PreyLogger.d("requestCode:$requestCode resultCode:$resultCode")
         if (requestCode == SECURITY_PRIVILEGES) showScreen()
     }
 
+    /**
+     * Shows the screen and performs necessary actions based on the device's configuration.
+     */
     private fun showScreen() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PreyLogger.d("PermissionInformationActivity: Build.VERSION_CODES >=M")
@@ -60,7 +75,7 @@ class PermissionInformationActivity : PreyActivity() {
                 askForPermission()
             }
         }
-        if (FroyoSupport.getInstance(this)!!.isAdminActive) {
+        if (FroyoSupport.getInstance(this).isAdminActive()) {
             var intentPermission: Intent? = null
             val canDrawOverlays: Boolean = PreyPermission.canDrawOverlays(this)
             if (!canDrawOverlays) {
@@ -80,7 +95,7 @@ class PermissionInformationActivity : PreyActivity() {
             object : Thread() {
                 override fun run() {
                     try {
-                        AwareController.getInstance().init(applicationContext)
+                        AwareController.getInstance().initLastLocation(applicationContext)
                     } catch (e: Exception) {
                         PreyLogger.e("Error:" + e.message, e)
                     }
@@ -96,11 +111,14 @@ class PermissionInformationActivity : PreyActivity() {
             finish()
         } else {
             val intentPrivileges =
-                FroyoSupport.getInstance(applicationContext)!!.askForAdminPrivilegesIntent
+                FroyoSupport.getInstance(applicationContext).getAskForAdminPrivilegesIntent()
             startActivityForResult(intentPrivileges, SECURITY_PRIVILEGES)
         }
     }
 
+    /**
+     * Asks for the necessary permissions.
+     */
     @TargetApi(Build.VERSION_CODES.M)
     fun askForPermission() {
         ActivityCompat.requestPermissions(
@@ -110,6 +128,10 @@ class PermissionInformationActivity : PreyActivity() {
         )
     }
 
+    /**
+     * Asks for the Android 7 overlay permission.
+     * This permission is required for the app to draw over other apps.
+     */
     @TargetApi(Build.VERSION_CODES.M)
     fun askForPermissionAndroid7() {
         PreyLogger.d("PermissionInformationActivity: askForPermissionAndroid7")
@@ -122,6 +144,14 @@ class PermissionInformationActivity : PreyActivity() {
         startOverlayService()
     }
 
+    /**
+     * Handles the result of the permission request.
+     * This method is called after the user has granted or denied the requested permissions.
+     *
+     * @param requestCode The request code of the permission request
+     * @param permissions The array of requested permissions
+     * @param grantResults The array of grant results for the requested permissions
+     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -156,15 +186,23 @@ class PermissionInformationActivity : PreyActivity() {
         }
     }
 
+    /**
+     * Starts the overlay service.
+     * This service is responsible for drawing over other apps.
+     */
     private fun startOverlayService() {
         PreyLogger.d("PermissionInformationActivity: startOverlayService")
         val intentOverlay = Intent(applicationContext, PreyOverlayService::class.java)
         startService(intentOverlay)
     }
 
+    /**
+     * Asks for admin privileges.
+     * This method is called when the app needs to perform administrative tasks.
+     */
     fun askForAdminActive() {
         val intentPrivileges =
-            FroyoSupport.getInstance(applicationContext)!!.askForAdminPrivilegesIntent
+            FroyoSupport.getInstance(applicationContext).getAskForAdminPrivilegesIntent()
         startActivityForResult(intentPrivileges, SECURITY_PRIVILEGES)
     }
 

@@ -11,12 +11,17 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+
 import com.prey.PreyLogger
+
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
+/**
+ * TimeTrigger is a utility object that provides functionality for working with time-based triggers.
+ */
 object TimeTrigger {
     var EXACT_TIME_FORMAT_SDF: SimpleDateFormat = SimpleDateFormat("yyyyMMddHHmmss")
     var REPEAT_TIME_FORMAT_SDF: SimpleDateFormat = SimpleDateFormat("yyyyMMdd")
@@ -29,17 +34,24 @@ object TimeTrigger {
 
     const val ADD_TRIGGER_ID: Int = 1000
 
+    /**
+     * Updates a trigger with the given context and trigger data.
+     *
+     * @param context The application context.
+     * @param trigger The trigger data to update.
+     * @throws TriggerException If an error occurs during trigger update.
+     */
     @Throws(TriggerException::class)
-    fun updateTrigger(ctx: Context, trigger: TriggerDto) {
+    fun updateTrigger(context: Context, trigger: TriggerDto) {
         val triggerName = trigger.getName()
-        PreyLogger.d("TimeTrigger triggerName:" + triggerName + " id:" + trigger.getId())
-        val listEvents = TriggerParse.TriggerEvents(trigger.getEvents()!!)
+        PreyLogger.d("TimeTrigger triggerName:${triggerName} id:${trigger.getId()}")
+        val listEvents = TriggerParse.TriggerEvents(trigger.getEvents())
         val now = Date()
-        PreyLogger.d("TimeTrigger now:" + EXACT_TIME_FORMAT_SDF.format(now))
+        PreyLogger.d("TimeTrigger now:${EXACT_TIME_FORMAT_SDF.format(now)}")
         var j = 0
         while (listEvents != null && j < listEvents.size) {
             val event = listEvents[j]
-            PreyLogger.d("TimeTrigger event.type:" + event.getType() + " ")
+            PreyLogger.d("TimeTrigger event.type:${event.getType()}")
             if (REPEAT_RANGE_TIME == event.getType()) {
                 try {
                     val json = JSONObject(event.getInfo())
@@ -47,13 +59,13 @@ object TimeTrigger {
                     try {
                         hour_from = json.getString("hour_from")
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                     var hour_until = ""
                     try {
                         hour_until = json.getString("hour_until")
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                     var hourFrom: Date? = null
                     var hourUntil: Date? = null
@@ -83,7 +95,7 @@ object TimeTrigger {
                     try {
                         until = json.getString("until")
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                     if ("" != until) {
                         try {
@@ -103,8 +115,8 @@ object TimeTrigger {
                 } catch (te: TriggerException) {
                     throw te
                 } catch (e: Exception) {
-                    PreyLogger.e("error:" + e.message, e)
-                    throw TriggerException(0, "Unknown error:" + e.message)
+                    PreyLogger.e("error:${e.message}", e)
+                    throw TriggerException(0, "Unknown error:${e.message}")
                 }
             }
             if (RANGE_TIME == event.getType()) {
@@ -114,13 +126,13 @@ object TimeTrigger {
                     try {
                         from = json.getString("from")
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                     var until = ""
                     try {
                         until = json.getString("until")
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                     var dateFrom: Date? = null
                     var dateUntil: Date? = null
@@ -169,8 +181,8 @@ object TimeTrigger {
                 } catch (te: TriggerException) {
                     throw te
                 } catch (e: Exception) {
-                    PreyLogger.e("error:" + e.message, e)
-                    throw TriggerException(0, "Unknown error:" + e.message)
+                    PreyLogger.e("error:${e.message}", e)
+                    throw TriggerException(0, "Unknown error:${e.message}")
                 }
             }
             if (EXACT_TIME == event.getType()) {
@@ -181,20 +193,20 @@ object TimeTrigger {
                     PreyLogger.d("TimeTrigger dateTime:$dateTime")
                     val date = EXACT_TIME_FORMAT_SDF.parse(dateTime)
                     if (now.time <= date.time) {
-                        PreyLogger.d("TimeTrigger format:" + EXACT_TIME_FORMAT_SDF.format(date))
+                        PreyLogger.d("TimeTrigger format:${EXACT_TIME_FORMAT_SDF.format(date)}")
                         val calendar = Calendar.getInstance()
                         calendar.timeInMillis = date.time
-                        PreyLogger.d("TimeTrigger format:" + EXACT_TIME_FORMAT_SDF.format(calendar.time))
-                        val intent = Intent(ctx, TimeTriggerReceiver::class.java)
-                        intent.putExtra("trigger_id", "" + trigger.getId())
+                        PreyLogger.d("TimeTrigger format:${EXACT_TIME_FORMAT_SDF.format(calendar.time)}")
+                        val intent = Intent(context, TimeTriggerReceiver::class.java)
+                        intent.putExtra("trigger_id", "${trigger.getId()}")
                         val pendingIntent = PendingIntent.getBroadcast(
-                            ctx,
+                            context,
                             (trigger.getId() + ADD_TRIGGER_ID),
                             intent,
                             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                         )
                         val alarmManager =
-                            ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                            context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                             PreyLogger.d("TimeTrigger----------set")
                             alarmManager[AlarmManager.RTC_WAKEUP, calendar.timeInMillis] =
@@ -223,8 +235,8 @@ object TimeTrigger {
                 } catch (te: TriggerException) {
                     throw te
                 } catch (e: Exception) {
-                    PreyLogger.e("error:" + e.message, e)
-                    throw TriggerException(0, "Unknown error:" + e.message)
+                    PreyLogger.e("error:${e.message}", e)
+                    throw TriggerException(0, "Unknown error:${e.message}")
                 }
             }
             if (REPEAT_TIME == event.getType()) {
@@ -234,7 +246,7 @@ object TimeTrigger {
                     try {
                         until = json.getString("until")
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                     if ("" != until) {
                         var dateUntil: Date? = null
@@ -265,21 +277,21 @@ object TimeTrigger {
                     try {
                         hour = hourSt.toInt()
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                     var minute = 0
                     try {
                         minute = minuteSt.toInt()
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                     var second = 0
                     try {
                         second = secondSt.toInt()
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
-                    val myIntent = Intent(ctx, TimeTriggerReceiver::class.java)
+                    val myIntent = Intent(context, TimeTriggerReceiver::class.java)
                     myIntent.putExtra("trigger_id", "" + trigger.getId())
                     var daysOfWeek = json.getString("days_of_week")
                     daysOfWeek = daysOfWeek.replace("[", "")
@@ -297,16 +309,16 @@ object TimeTrigger {
                         calender[Calendar.MILLISECOND] = 0
                         PreyLogger.d("Trigger TimeTrigger array DAY_OF_WEEK:$day")
                         calender[Calendar.DAY_OF_WEEK] = day
-                        val intent = Intent(ctx, TimeTriggerReceiver::class.java)
-                        intent.putExtra("trigger_id", "" + trigger.getId())
+                        val intent = Intent(context, TimeTriggerReceiver::class.java)
+                        intent.putExtra("trigger_id", "${trigger.getId()}")
                         val pendingIntent = PendingIntent.getBroadcast(
-                            ctx,
+                            context,
                             (trigger.getId() * ADD_TRIGGER_ID + day),
                             intent,
                             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                         )
                         val alarmManager =
-                            ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                            context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                         alarmManager.setRepeating(
                             AlarmManager.RTC_WAKEUP,
                             calender.timeInMillis,
@@ -318,8 +330,8 @@ object TimeTrigger {
                 } catch (te: TriggerException) {
                     throw te
                 } catch (e: Exception) {
-                    PreyLogger.e("error:" + e.message, e)
-                    TriggerException(0, "Unknown error:" + e.message)
+                    PreyLogger.e("error:${e.message}", e)
+                    TriggerException(0, "Unknown error:${e.message}")
                 }
             }
             j++

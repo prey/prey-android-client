@@ -23,16 +23,11 @@ class AlarmAwareReceiver : BroadcastReceiver() {
      */
     override fun onReceive(context: Context, intent: Intent) {
         try {
-            // Log debug messages to indicate the start of the onReceive method
-            PreyLogger.d("______________________________")
-            PreyLogger.d("______________________________")
-            PreyLogger.d("----------AlarmAwareReceiver onReceive")
             // Start a new thread to initialize the AwareController
             Thread {
-                // Get the application context to pass to the AwareController
-                val applicationContext = context.applicationContext
                 // Initialize the AwareController with the application context
-                AwareController().init(applicationContext)
+                AwareController().initLastLocation(context.applicationContext)
+                AwareController.getInstance().registerGeofence(context)
             }.start()
         } catch (e: Exception) {
             // Log any exceptions that occur during the onReceive method

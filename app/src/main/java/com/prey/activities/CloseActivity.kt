@@ -9,7 +9,22 @@ package com.prey.activities
 import android.app.Activity
 import android.os.Bundle
 
+/**
+ * Activity that immediately closes itself when created.
+ *
+ * This activity is used to handle cases where the app needs to close itself
+ * immediately, without performing any additional actions.
+ */
 class CloseActivity : Activity() {
+
+    /**
+     * Called when the activity is created.
+     *
+     * This method is responsible for initializing the activity's state and
+     * finishing the activity immediately.
+     *
+     * @param savedInstanceState Saved instance state, if any.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         finish()

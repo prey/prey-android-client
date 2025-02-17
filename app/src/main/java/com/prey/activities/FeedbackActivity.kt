@@ -11,28 +11,45 @@ import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+
 import com.prey.R
 import com.prey.PreyConfig
+
 import java.util.Calendar
 import java.util.Date
 
+/**
+ * Activity responsible for displaying a feedback dialog to the user.
+ */
 class FeedbackActivity : PreyActivity() {
+
+    /**
+     * Called when the activity is created.
+     *
+     * @param savedInstanceState The saved instance state, or null if not saved.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showDialog(SHOW_POPUP)
     }
 
+    /**
+     * Creates a dialog for the given ID.
+     *
+     * @param id The ID of the dialog to create.
+     * @return The created dialog.
+     */
     override fun onCreateDialog(id: Int): Dialog {
-        var popup: Dialog? = null
+        var dialog: Dialog? = null
         when (id) {
             SHOW_POPUP -> {
-                val alert = AlertDialog.Builder(this)
-                alert.setIcon(R.drawable.info)
-                alert.setTitle(R.string.feedback_principal_title)
-                alert.setMessage(R.string.feedback_principal_message)
-                alert.setPositiveButton(
+                val builder = AlertDialog.Builder(this)
+                builder.setIcon(R.drawable.info)
+                builder.setTitle(R.string.feedback_principal_title)
+                builder.setMessage(R.string.feedback_principal_message)
+                builder.setPositiveButton(
                     R.string.feedback_principal_button1
-                ) { dialog, id ->
+                ) { _, _ ->
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.setData(Uri.parse("market://details?id=com.prey"))
                     startActivity(intent)
@@ -40,9 +57,9 @@ class FeedbackActivity : PreyActivity() {
                         .setFlagFeedback(FLAG_FEEDBACK_SEND)
                     finish()
                 }
-                alert.setNeutralButton(
+                builder.setNeutralButton(
                     R.string.feedback_principal_button2
-                ) { dialog, id ->
+                ) { _, _ ->
                     val popup = Intent(applicationContext, FormFeedbackActivity::class.java)
                     popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(popup)
@@ -50,41 +67,45 @@ class FeedbackActivity : PreyActivity() {
                         .setFlagFeedback(FLAG_FEEDBACK_SEND)
                     finish()
                 }
-                alert.setNegativeButton(
+                builder.setNegativeButton(
                     R.string.feedback_principal_button3
-                ) { dialog, id ->
+                ) { _, _ ->
                     PreyConfig.getInstance(applicationContext)
                         .setFlagFeedback(FLAG_FEEDBACK_SEND)
                     finish()
                 }
-                popup = alert.create()
+                dialog = builder.create()
             }
         }
-        return popup!!
+        return dialog!!
+    }
+
+    /**
+     * Checks if the feedback should be shown based on the installation date and feedback flag.
+     *
+     * @param installationDate The date the app was installed.
+     * @param feedbackFlag The feedback flag.
+     * @return True if the feedback should be shown, false otherwise.
+     */
+    fun showFeedback(installationDate: Long, feedbackFlag: Int): Boolean {
+        return when (feedbackFlag) {
+            FLAG_FEEDBACK_C2DM -> true
+            FLAG_FEEDBACK_INIT -> {
+                val calendar = Calendar.getInstance()
+                calendar.timeInMillis = installationDate
+                calendar.add(Calendar.WEEK_OF_YEAR, 2)
+                val twoWeeksLater = calendar.timeInMillis
+                val now = Date().time
+                now > twoWeeksLater
+            }
+            else -> false
+        }
     }
 
     companion object {
         private const val SHOW_POPUP = 0
-        var FLAG_FEEDBACK_INIT: Int = 0
-        var FLAG_FEEDBACK_C2DM: Int = 1
-        var FLAG_FEEDBACK_SEND: Int = 2
-
-        fun showFeedback(installationDate: Long, flagFeedback: Int): Boolean {
-            if (flagFeedback == FLAG_FEEDBACK_C2DM) {
-                return true
-            } else {
-                if (flagFeedback == FLAG_FEEDBACK_INIT) {
-                    val cal = Calendar.getInstance()
-                    cal.timeInMillis = installationDate
-                    cal.add(Calendar.WEEK_OF_YEAR, 2)
-                    val twoWeekOfYear = cal.timeInMillis
-                    val now = Date().time
-                    if (now > twoWeekOfYear) {
-                        return true
-                    }
-                }
-            }
-            return false
-        }
+        private const val FLAG_FEEDBACK_INIT = 0
+        private const val FLAG_FEEDBACK_C2DM = 1
+        private const val FLAG_FEEDBACK_SEND = 2
     }
 }

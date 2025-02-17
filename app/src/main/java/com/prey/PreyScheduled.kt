@@ -10,65 +10,64 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+
 import com.prey.receivers.AlarmScheduledReceiver
-import java.util.Calendar
 
-class PreyScheduled private constructor(context: Context) {
-    private var context: Context? = null
-    private var alarmMgr: AlarmManager? = null
-    private var alarmIntent: PendingIntent? = null
+/**
+ * A utility class for scheduling and canceling alarms.
+ */
+class PreyScheduled {
 
-    init {
-        this.context = context
+    private lateinit var alarmManager: AlarmManager
+    private lateinit var pendingIntent: PendingIntent
+
+    /**
+     * Starts the alarm scheduling process.
+     *
+     * @param context The application context
+     */
+    fun start(context: Context) {
+        val intent = Intent(context, AlarmScheduledReceiver::class.java)
+        pendingIntent =
+            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_MUTABLE)
+        alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        scheduleAlarm()
     }
 
-    fun run(minute: Int) {
-        val ctx = context
-        if (minute > 0) {
-            reset()
-            val intent = Intent(context, AlarmScheduledReceiver::class.java)
-            alarmIntent =
-                PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-            alarmMgr = context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = System.currentTimeMillis()
-            calendar.add(Calendar.MINUTE, minute)
-
-            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
-                alarmMgr!!.setRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    (1000 * 60 * minute).toLong(),
-                    alarmIntent!!
-                )
-            } else {
-                alarmMgr!!.setInexactRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    (1000 * 60 * minute).toLong(),
-                    alarmIntent!!
-                )
-            }
-            PreyLogger.d("SCHEDULE_____________start scheduled [$minute] alarmIntent")
+    /**
+     * Schedules an alarm to trigger at a specified interval.
+     */
+    private fun scheduleAlarm() {
+        val intervalMinutes = 15
+        val triggerTime = System.currentTimeMillis()
+        val interval = (1000 * 60 * intervalMinutes).toLong()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, interval, pendingIntent)
+        } else {
+            alarmManager.setInexactRepeating(
+                AlarmManager.RTC_WAKEUP,
+                triggerTime,
+                interval,
+                pendingIntent
+            )
         }
     }
 
-    fun reset() {
-        if (alarmMgr != null) {
-            PreyLogger.d("_________________shutdown scheduled alarmIntent")
-            alarmMgr!!.cancel(alarmIntent!!)
+    /**
+     * Cancels any currently scheduled alarms.
+     */
+    fun cancel() {
+        try {
+            alarmManager.cancel(pendingIntent)
+        } catch (e: Exception) {
+            PreyLogger.d("----------Error PreyScheduled :${e.message}")
         }
     }
 
     companion object {
         private var instance: PreyScheduled? = null
-
-        @Synchronized
-        fun getInstance(context: Context): PreyScheduled? {
-            if (instance == null) {
-                instance = PreyScheduled(context)
-            }
-            return instance
-        }
+        fun getInstance(): PreyScheduled =
+            instance ?: PreyScheduled().also { instance = it }
     }
 }

@@ -11,85 +11,85 @@ import android.content.Context
 import android.content.Intent
 import android.content.RestrictionsManager
 import android.os.Build
+
 import com.prey.beta.actions.PreyBetaController
 import com.prey.json.actions.Report
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPermission
-import com.prey.preferences.RunBackgroundCheckBoxPreference
 import com.prey.services.PreyDisablePowerOptionsService
 import com.prey.services.PreyLockHtmlService
 import com.prey.services.PreyLockService
 
+/**
+ * This class is a BroadcastReceiver that listens for the android.intent.action.BOOT_COMPLETED intent,
+ * which is broadcast after the system finishes booting.
+ */
 class PreyBootController : BroadcastReceiver() {
+
+    /**
+     * Called when the BroadcastReceiver receives an Intent broadcast.
+     *
+     * @param context The Context in which the receiver is running.
+     * @param intent The Intent being received.
+     */
     override fun onReceive(context: Context, intent: Intent) {
         PreyLogger.d("Boot finished. Starting Prey Boot Service")
         if ("android.intent.action.BOOT_COMPLETED" == intent.action) {
             val interval = PreyConfig.getInstance(context).getIntervalReport()
             if (interval != null && "" != interval) {
-                Report.run(context, interval.toInt())
+                Report().run(context, interval.toInt())
             }
-            val ctx = context
             object : Thread() {
                 override fun run() {
                     try {
                         val disablePowerOptions =
-                            PreyConfig.getInstance(ctx).isDisablePowerOptions()
+                            PreyConfig.getInstance(context).isDisablePowerOptions()
                         if (disablePowerOptions) {
                             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                                ctx.startService(
+                                context.startService(
                                     Intent(
-                                        ctx,
+                                        context,
                                         PreyDisablePowerOptionsService::class.java
                                     )
                                 )
                             }
                         } else {
-                            ctx.stopService(Intent(ctx, PreyDisablePowerOptionsService::class.java))
+                            context.stopService(Intent(context, PreyDisablePowerOptionsService::class.java))
                         }
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
-                    }
-                    try {
-                        val runBackground = PreyConfig.getInstance(ctx).isRunBackground()
-                        if (runBackground) {
-                            RunBackgroundCheckBoxPreference.notifyReady(ctx)
-                        } else {
-                            RunBackgroundCheckBoxPreference.notifyCancel(ctx)
-                        }
-                    } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}" , e)
                     }
                 }
             }.start()
             object : Thread() {
                 override fun run() {
                     try {
-                        val unlockPass = PreyConfig.getInstance(ctx).getUnlockPass()
+                        val unlockPass = PreyConfig.getInstance(context).getUnlockPass()
                         PreyLogger.d("unlockPass:$unlockPass")
                         if (unlockPass != null && "" != unlockPass) {
-                            if (PreyConfig.getInstance(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(
-                                    ctx
+                            if (PreyConfig.getInstance(context).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(
+                                    context
                                 )
                             ) {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                    ctx.startService(Intent(ctx, PreyLockHtmlService::class.java))
+                                    context.startService(Intent(context, PreyLockHtmlService::class.java))
                                 } else {
-                                    ctx.startService(Intent(ctx, PreyLockService::class.java))
+                                    context.startService(Intent(context, PreyLockService::class.java))
                                 }
                             }
                         }
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}" , e)
                     }
                 }
             }.start()
             object : Thread() {
                 override fun run() {
                     try {
-                        PreyBetaController.getInstance().startPrey(ctx)
+                        PreyBetaController.getInstance().startPrey(context)
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}" , e)
                     }
                 }
             }.start()
@@ -104,13 +104,13 @@ class PreyBootController : BroadcastReceiver() {
                     if (applicationRestrictions != null) {
                         // Log the application restrictions
                         PreyLogger.d(
-                            String.format(
-                                "RestrictionsReceiver restrictions applied: %s",
-                                applicationRestrictions.toString()
-                            )
+
+                                "RestrictionsReceiver restrictions applied: ${ applicationRestrictions.toString()}"
+
+
                         )
                         // Handle the application restrictions
-                        RestrictionsReceiver.handleApplicationRestrictions(
+                        RestrictionsReceiver().handleApplicationRestrictions(
                             context,
                             applicationRestrictions
                         )

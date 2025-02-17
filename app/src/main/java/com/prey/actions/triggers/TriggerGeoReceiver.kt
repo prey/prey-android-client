@@ -11,16 +11,26 @@ import android.content.Intent
 import com.prey.PreyLogger
 import org.json.JSONObject
 
+/**
+ * A BroadcastReceiver that handles geofence triggers.
+ */
 class TriggerGeoReceiver : TriggerReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
     }
 
+    /**
+     * Handles geofence trigger events.
+     *
+     * @param context The Context in which the receiver is running.
+     * @param geoId The ID of the geofence that triggered the event.
+     * @param transition The type of geofence transition (e.g., enter, exit).
+     */
     fun onReceive(context: Context, geoId: Int, transition: String) {
         val dataSource = TriggerDataSource(context)
         val listTrigger = dataSource.allTriggers
-        PreyLogger.d("Trigger  onReceive geoId:$geoId transition:$transition")
-        PreyLogger.d("Trigger  onReceive listTrigger.size():" + (listTrigger?.size ?: -1))
+        PreyLogger.d("Trigger onReceive geoId:$geoId transition:$transition")
+        PreyLogger.d("Trigger onReceive listTrigger.size():${(listTrigger?.size ?: -1)}")
         var i = 0
         while (listTrigger != null && i < listTrigger.size) {
             val trigger = listTrigger[i]
@@ -45,12 +55,12 @@ class TriggerGeoReceiver : TriggerReceiver() {
                                 process = validRange
                             }
                             if (process) {
-                                PreyLogger.d("Trigger triggerName trigger.getActions():" + trigger.getActions())
+                                PreyLogger.d("Trigger triggerName trigger.getActions():${trigger.getActions()}" )
                                 executeActions(context, trigger.getActions())
                             }
                         }
                     } catch (e: Exception) {
-                        PreyLogger.e("e:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}" , e)
                     }
                 }
                 j++

@@ -6,43 +6,55 @@
  ******************************************************************************/
 package com.prey.activities
 
+import android.app.ProgressDialog
+import android.content.Intent
 import android.graphics.Typeface
 import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.prey.R
 
+import com.prey.PreyConfig
+import com.prey.PreyLogger
+import com.prey.PreyStatus
+import com.prey.R
+import com.prey.events.Event
+import com.prey.events.manager.EventManagerRunner
+import com.prey.net.PreyWebServices
+
+/**
+ * Activity responsible for handling password entry and validation.
+ */
 class PasswordActivity : PreyActivity() {
+    /**
+     * Counter for the number of wrong password intents.
+     */
     var wrongPasswordIntents: Int = 0
 
+    /**
+     * Binds the password controls to their respective listeners.
+     */
     protected fun bindPasswordControls() {
         val checkPasswordOkButton = findViewById<View>(R.id.password_btn_login) as Button
         val pass1 = (findViewById<View>(R.id.password_pass_txt) as EditText)
         checkPasswordOkButton.setOnClickListener {
             val passwordtyped = pass1.text.toString()
-            val ctx = applicationContext
+            val context = applicationContext
             if (passwordtyped == "") Toast.makeText(
-                ctx,
+                context,
                 R.string.preferences_password_length_error,
                 Toast.LENGTH_LONG
             ).show()
             else {
                 if (passwordtyped.length < 6 || passwordtyped.length > 32) {
                     Toast.makeText(
-                        ctx,
-                        ctx.getString(R.string.error_password_out_of_range, "6", "32"),
+                        context,
+                        context.getString(R.string.error_password_out_of_range, "6", "32"),
                         Toast.LENGTH_LONG
                     ).show()
                 } else {
-                    //TODO:cambiar
-                    /*
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) CheckPassword()
-                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, passwordtyped)
-                    else CheckPassword().execute(passwordtyped)
-
-                     */
+                    checkPassword(passwordtyped)
                 }
             }
         }
@@ -50,80 +62,75 @@ class PasswordActivity : PreyActivity() {
         password.setTypeface(Typeface.DEFAULT)
         password.transformationMethod = PasswordTransformationMethod()
     }
-//TODO:cambiar
-/*
-protected inner class CheckPassword : AsyncTask<String?, Void?, Void?>() {
-var progressDialog: ProgressDialog? = null
-var isPasswordOk: Boolean = false
-var keepAsking: Boolean = true
-var error: String? = null
-override fun onPreExecute() {
-    try {
-        progressDialog = ProgressDialog(this@PasswordActivity)
-        progressDialog!!.setMessage(getText(R.string.password_checking_dialog).toString())
-        progressDialog!!.isIndeterminate = true
-        progressDialog!!.setCancelable(false)
-        progressDialog!!.show()
-    } catch (e: Exception) {
-    }
-}
-//TODO:cambiar
-/*
-protected override fun doInBackground(vararg password: String): Void? {
-    try {
-        val apikey: String = preyConfig.getApiKey()
-        PreyLogger.d(String.format("apikey:%s password:%s", apikey, password[0]))
-        isPasswordOk = PreyWebServices.getInstance().checkPassword(
-            this@PasswordActivity, apikey,
-            password[0]
-        )
-    } catch (e: Exception) {
-        error = e.message
-    }
-    return null
-}*/
 
-override fun onPostExecute(unused: Void?) {
-    try {
-        if (progressDialog!!.isShowing) {
-            progressDialog!!.dismiss()
+    /**
+     * Checks the password against the server.
+     *
+     * @param password The password to check.
+     */
+    fun checkPassword(password: String) {
+        var progressDialog: ProgressDialog? = null
+        var isPasswordOk: Boolean = false
+        var keepAsking: Boolean = true
+        var error: String? = null
+        val context = applicationContext
+        try {
+            progressDialog = ProgressDialog(this@PasswordActivity)
+            progressDialog!!.setMessage(getText(R.string.password_checking_dialog).toString())
+            progressDialog!!.isIndeterminate = true
+            progressDialog!!.setCancelable(false)
+            progressDialog!!.show()
+        } catch (e: Exception) {
         }
-    } catch (e: Exception) {
-        PreyLogger.e("Error:" + e.message, e)
-    }
-    if (error != null) Toast.makeText(this@PasswordActivity, error, Toast.LENGTH_LONG)
-        .show()
-    else if (!isPasswordOk) {
-        wrongPasswordIntents++
-        if (wrongPasswordIntents == 3) {
-            Toast.makeText(
-                this@PasswordActivity,
-                R.string.password_intents_exceed,
-                Toast.LENGTH_LONG
-            ).show()
-            setResult(RESULT_CANCELED)
-            finish()
-        } else {
-            Toast.makeText(
-                this@PasswordActivity,
-                R.string.password_wrong,
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    } else {
-        val intentConfiguration = Intent(
-            this@PasswordActivity,
-            PreyConfigurationActivity::class.java
-        )
-        PreyStatus.getInstance().setPreyConfigurationActivityResume(true)
-        startActivity(intentConfiguration)
-        Thread(
-            EventManagerRunner(
-                this@PasswordActivity,
-                Event(Event.APPLICATION_OPENED)
+        try {
+            val apikey: String = PreyConfig.getInstance(context).getApiKey()!!
+            PreyLogger.d("apikey:${apikey} password:${password}")
+            isPasswordOk = PreyWebServices.getInstance().checkPassword(
+                this@PasswordActivity, apikey,
+                password
             )
-        ).start()
+        } catch (e: Exception) {
+            error = e.message
+        }
+        try {
+            if (progressDialog!!.isShowing) {
+                progressDialog!!.dismiss()
+            }
+        } catch (e: Exception) {
+            PreyLogger.e("Error:${e.message}", e)
+        }
+        if (error != null) Toast.makeText(this@PasswordActivity, error, Toast.LENGTH_LONG)
+            .show()
+        else if (!isPasswordOk) {
+            wrongPasswordIntents++
+            if (wrongPasswordIntents == 3) {
+                Toast.makeText(
+                    this@PasswordActivity,
+                    R.string.password_intents_exceed,
+                    Toast.LENGTH_LONG
+                ).show()
+                setResult(RESULT_CANCELED)
+                finish()
+            } else {
+                Toast.makeText(
+                    this@PasswordActivity,
+                    R.string.password_wrong,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } else {
+            val intentConfiguration = Intent(
+                this@PasswordActivity,
+                PreyConfigurationActivity::class.java
+            )
+            PreyStatus.getInstance().setPreyConfigurationActivityResume(true)
+            startActivity(intentConfiguration)
+            Thread(
+                EventManagerRunner(
+                    this@PasswordActivity,
+                    Event(Event.APPLICATION_OPENED)
+                )
+            ).start()
+        }
     }
-}
-}*/
 }

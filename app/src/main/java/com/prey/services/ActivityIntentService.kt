@@ -8,15 +8,18 @@ package com.prey.services
 
 import android.app.IntentService
 import android.content.Intent
+
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 
 class ActivityIntentService : IntentService(PreyConfig.TAG) {
+
     override fun onCreate() {
         super.onCreate()
         PreyLogger.d("ActivityIntentService onCreate")
     }
 
     override fun onHandleIntent(intent: Intent?) {
+        PreyLogger.d("ActivityIntentService onHandleIntent")
     }
 }

@@ -36,10 +36,9 @@ class RestrictionsReceiver : BroadcastReceiver() {
             if (applicationRestrictions != null) {
                 // Log the application restrictions
                 PreyLogger.d(
-                    String.format(
-                        "RestrictionsReceiver restrictions applied: %s",
-                        applicationRestrictions.toString()
-                    )
+
+                    "RestrictionsReceiver restrictions applied: ${applicationRestrictions.toString()}"
+
                 )
                 // Handle the application restrictions
                 handleApplicationRestrictions(context, applicationRestrictions)
@@ -50,41 +49,41 @@ class RestrictionsReceiver : BroadcastReceiver() {
         }
     }
 
-    companion object {
-        /**
-         * Handles the application restrictions.
-         *
-         * @param context      The Context in which the restrictions are being handled.
-         * @param restrictions The Bundle containing the application restrictions.
-         */
-        fun handleApplicationRestrictions(context: Context, restrictions: Bundle?) {
-            // Check if the device is already registered with Prey
-            if (!PreyConfig.getInstance(context).isThisDeviceAlreadyRegisteredWithPrey()) {
-                if (restrictions != null && restrictions.containsKey("enterprise_name")) {
-                    // Retrieve the enterprise name from the restrictions bundle
-                    val enterpriseName = restrictions.getString("enterprise_name")
-                    // Check if the enterprise name is not null and not empty
-                    if (enterpriseName != null && "" != enterpriseName) {
-                        // Set the organization ID in the Prey configuration
-                        PreyConfig.getInstance(context).setOrganizationId (enterpriseName)
-                    }
+
+    /**
+     * Handles the application restrictions.
+     *
+     * @param context      The Context in which the restrictions are being handled.
+     * @param restrictions The Bundle containing the application restrictions.
+     */
+    fun handleApplicationRestrictions(context: Context, restrictions: Bundle?) {
+        // Check if the device is already registered with Prey
+        if (!PreyConfig.getInstance(context).isThisDeviceAlreadyRegisteredWithPrey()) {
+            if (restrictions != null && restrictions.containsKey("enterprise_name")) {
+                // Retrieve the enterprise name from the restrictions bundle
+                val enterpriseName = restrictions.getString("enterprise_name")
+                // Check if the enterprise name is not null and not empty
+                if (enterpriseName != null && "" != enterpriseName) {
+                    // Set the organization ID in the Prey configuration
+                    PreyConfig.getInstance(context).setOrganizationId(enterpriseName)
                 }
-                // Check if the restrictions bundle is not null and contains the "setup_key"
-                if (restrictions != null && restrictions.containsKey("setup_key")) {
-                    // Get the setup key from the restrictions bundle
-                    val setupKey = restrictions.getString("setup_key")
-                    // Check if the setup key is not null and not empty
-                    if (setupKey != null && "" != setupKey) {
-                        try {
-                            // Attempt to register a new device with the setup key
-                            PreyConfig.getInstance(context).registerNewDeviceWithApiKey(setupKey)
-                        } catch (e: Exception) {
-                            // Log any errors that occur during registration
-                            PreyLogger.e(String.format("Error:%s", e.message), e)
-                        }
+            }
+            // Check if the restrictions bundle is not null and contains the "setup_key"
+            if (restrictions != null && restrictions.containsKey("setup_key")) {
+                // Get the setup key from the restrictions bundle
+                val setupKey = restrictions.getString("setup_key")
+                // Check if the setup key is not null and not empty
+                if (setupKey != null && "" != setupKey) {
+                    try {
+                        // Attempt to register a new device with the setup key
+                        PreyConfig.getInstance(context).registerNewDeviceWithApiKey(setupKey)
+                    } catch (e: Exception) {
+                        // Log any errors that occur during registration
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                 }
             }
         }
     }
+
 }

@@ -9,7 +9,12 @@ package com.prey.actions
 import com.prey.PreyLogger
 import com.prey.net.http.EntityFile
 
-
+/**
+ * A service class for handling HTTP data.
+ *
+ * This class provides methods for setting and getting key-value pairs, data lists, and single data.
+ * It also provides methods for converting data to parameters and string formats.
+ */
 class HttpDataService(private var keyValue: String) {
     private var dataList: MutableMap<String, String?> = HashMap()
     private var singleData: String? = null
@@ -17,7 +22,6 @@ class HttpDataService(private var keyValue: String) {
     private var httpMethod: String? = null
     private var url: String? = null
     private var entityFiles: MutableList<EntityFile> = ArrayList()
-
 
     fun getKeyValue(): String {
         return keyValue
@@ -60,60 +64,71 @@ class HttpDataService(private var keyValue: String) {
         entityFiles = ArrayList()
     }
 
+    /**
+     * Returns the data as parameters.
+     *
+     * If the data is a list, each key-value pair is added to the parameters map.
+     * If the data is not a list, the single data is added to the parameters map.
+     *
+     * @return the data as parameters
+     */
     fun getReportAsParameters(): MutableMap<String, String?> {
         val parameters = HashMap<String, String?>()
         if (isList) {
-            var key: StringBuffer? = StringBuffer()
             for (valueKey in dataList.keys) {
                 val valueData = dataList[valueKey]
-                key!!.append("")
-                key.append(this.getKeyValue())
-                key.append("[")
-                key.append(valueKey)
-                key.append("]")
-                parameters[key.toString()] = valueData
-                key.delete(0, key.length)
+                parameters["${getKeyValue()}[${valueKey}]"] = valueData
             }
-            key = null
         } else parameters[" $keyValue "] = singleData
         return parameters
     }
 
+    /**
+     * Returns the data as parameters.
+     *
+     * If the data is a list, each key-value pair is added to the parameters map.
+     * If the data is not a list, the single data is added to the parameters map.
+     *
+     * @return the data as parameters
+     */
     fun getDataAsParameters(): MutableMap<String, String?> {
-
         val parameters = HashMap<String, String?>()
         if (isList) {
-            var key: StringBuffer? = StringBuffer()
             for (valueKey in dataList.keys) {
                 val valueData = dataList[valueKey]
-                key!!.append(this.keyValue)
-                key.append("[")
-                key.append(valueKey)
-                key.append("]")
-                parameters[key.toString()] = valueData
-                key.delete(0, key.length)
+                parameters["${keyValue}[${valueKey}]"] = valueData
             }
-            key = null
         } else parameters[keyValue] = singleData
         return parameters
     }
 
+    /**
+     * Returns the data as a string.
+     *
+     * If the data is a list, each key-value pair is appended to the string.
+     * If the data is not a list, the single data is appended to the string.
+     *
+     * @return the data as a string
+     */
     fun getDataAsString(): String {
-        val sb = StringBuffer()
+        val buffer = StringBuffer()
         if (isList) {
             for (valueKey in dataList.keys) {
                 val valueData = dataList[keyValue]
-                sb.append(keyValue)
-                sb.append("[")
-                sb.append(valueKey)
-                sb.append("]=")
-                sb.append(valueData)
-                sb.append("&")
+                buffer.append("$keyValue[$valueKey]=$valueData&")
             }
-        } else sb.append(keyValue).append("=").append(singleData).append("&")
-        return sb.toString()
+        } else {
+            buffer.append("$keyValue=$singleData&")
+        }
+        return buffer.toString()
     }
 
+    /**
+     * Retrieves the value associated with the specified key from the data list.
+     *
+     * @param key the key to look up in the data list
+     * @return the value associated with the key, or null if the key is not present
+     */
     fun getDataListKey(key: String): String? {
         var value: String? = ""
         if (dataList != null && dataList.containsKey(key)) {

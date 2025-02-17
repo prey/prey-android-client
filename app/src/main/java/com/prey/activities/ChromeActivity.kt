@@ -22,6 +22,12 @@ import com.prey.PreyUtils
  * This activity shows the html view for Chromebook
  */
 class ChromeActivity : AppCompatActivity() {
+
+    /**
+     * Called when the activity is created.
+     *
+     * @param savedInstanceState The saved instance state, or null if not saved
+     */
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +40,9 @@ class ChromeActivity : AppCompatActivity() {
         setContentView(R.layout.webview)
     }
 
+    /**
+     * Called when the activity is resumed.
+     */
     override fun onResume() {
         super.onResume()
         PreyLogger.d("ChromeActivity: onResume")
@@ -41,23 +50,21 @@ class ChromeActivity : AppCompatActivity() {
             val builder = VmPolicy.Builder()
             StrictMode.setVmPolicy(builder.build())
         }
-        val lng: String = PreyUtils.getLanguage()
-        val url = CheckPasswordHtmlActivity.URL_ONB + "#/" + lng + "/chrome"
-        val myWebView = findViewById<View>(R.id.install_browser) as WebView
-        val settings = myWebView.settings
-        myWebView.setBackgroundColor(0x00000000)
-        settings.javaScriptEnabled = true
-        settings.loadWithOverviewMode = true
-        settings.loadsImagesAutomatically = true
-        settings.useWideViewPort = true
-        settings.setSupportZoom(false)
-        settings.builtInZoomControls = false
-        myWebView.loadUrl(url)
-        myWebView.loadUrl("javascript:window.location.reload(true)")
+        val webView = findViewById<View>(R.id.install_browser) as WebView
+        webView.apply {
+            setBackgroundColor(0x00000000)
+            settings.apply {
+                javaScriptEnabled = true
+                loadWithOverviewMode = true
+                loadsImagesAutomatically = true
+                useWideViewPort = true
+                setSupportZoom(false)
+                builtInZoomControls = false
+            }
+        }
+        val language: String = PreyUtils.getLanguage()
+        webView.loadUrl("${CheckPasswordHtmlActivity.URL_ONB}#/$language/chrome")
+        webView.loadUrl("javascript:window.location.reload(true)")
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        PreyLogger.d("ChromeActivity: onDestroy")
-    }
 }

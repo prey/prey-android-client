@@ -11,6 +11,7 @@ import android.content.Intent
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.view.KeyEvent
+
 import com.prey.activities.CloseActivity
 import com.prey.activities.PanelWebActivity
 import com.prey.activities.SecurityActivity
@@ -20,25 +21,36 @@ import com.prey.PreyLogger
 import com.prey.net.PreyWebServices
 import com.prey.services.PreyLockHtmlService
 
+/**
+ * CustomWebView object that handles dispatching key events.
+ */
 object CustomWebView {
-    fun callDispatchKeyEvent(ctx: Context, event: KeyEvent) {
-        PreyLogger.d("callDispatchKeyEvent:" + event.keyCode)
-        if (event.keyCode == KeyEvent.KEYCODE_ENTER) {
-            val page: String? = PreyConfig.getInstance(ctx).getPage()
-            val apikey: String? = PreyConfig.getInstance(ctx).getApiKey()
-            val inputWebview: String? = PreyConfig.getInstance(ctx).getInputWebview()
+
+    /**
+     * Dispatches a key event to the CustomWebView.
+     *
+     * @param context The application context.
+     * @param keyEvent The key event to dispatch.
+     */
+    fun callDispatchKeyEvent(context: Context, keyEvent: KeyEvent) {
+        PreyLogger.d("callDispatchKeyEvent:" + keyEvent.keyCode)
+        // Check if the key event is the Enter key.
+        if (keyEvent.keyCode == KeyEvent.KEYCODE_ENTER) {
+            val page: String? = PreyConfig.getInstance(context).getPage()
+            val apikey: String? = PreyConfig.getInstance(context).getApiKey()
+            val inputWebview: String? = PreyConfig.getInstance(context).getInputWebview()
             val policy = ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
             PreyLogger.d("CustomWebView dispatchKeyEvent Enter page:$page inputWebview:$inputWebview")
             if ("setting" == page) {
                 try {
                     val isPasswordOk =
-                        PreyWebServices.getInstance().checkPassword(ctx, apikey!!, inputWebview!!)
+                        PreyWebServices.getInstance().checkPassword(context, apikey!!, inputWebview!!)
                     if (isPasswordOk) {
-                        PreyConfig.getInstance(ctx).setUnlockPass("")
-                        val intentSecurity = Intent(ctx, SecurityActivity::class.java)
+                        PreyConfig.getInstance(context).setUnlockPass("")
+                        val intentSecurity = Intent(context, SecurityActivity::class.java)
                         intentSecurity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        ctx.startActivity(intentSecurity)
+                        context.startActivity(intentSecurity)
                     }
                 } catch (e: Exception) {
                     PreyLogger.e("Error:" + e.message, e)
@@ -47,55 +59,42 @@ object CustomWebView {
             if ("login" == page) {
                 try {
                     val isPasswordOk =
-                        PreyWebServices.getInstance().checkPassword(ctx, apikey!!, inputWebview!!)
+                        PreyWebServices.getInstance().checkPassword(context, apikey!!, inputWebview!!)
                     if (isPasswordOk) {
-                        PreyConfig.getInstance(ctx).setUnlockPass("")
-                        val intentPanelWeb = Intent(ctx, PanelWebActivity::class.java)
+                        PreyConfig.getInstance(context).setUnlockPass("")
+                        val intentPanelWeb = Intent(context, PanelWebActivity::class.java)
                         intentPanelWeb.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        ctx.startActivity(intentPanelWeb)
+                        context.startActivity(intentPanelWeb)
                     }
                 } catch (e: Exception) {
                     PreyLogger.e("Error:" + e.message, e)
                 }
             }
             if ("lock" == page) {
-                val unlock: String = PreyConfig.getInstance(ctx).getUnlockPass().toString()
+                val unlock: String = PreyConfig.getInstance(context).getUnlockPass().toString()
                 PreyLogger.d("dispatchKeyEvent inputWebview:$inputWebview unlock:$unlock")
-                PreyConfig.getInstance(ctx).setInputWebview("")
+                PreyConfig.getInstance(context).setInputWebview("")
                 if (unlock != null && "" != unlock && unlock == inputWebview) {
-                    PreyConfig.getInstance(ctx).setUnlockPass("")
-                    val intent = Intent(ctx, PreyLockHtmlService::class.java)
-                    ctx.stopService(intent)
+                    PreyConfig.getInstance(context).setUnlockPass("")
+                    val intent = Intent(context, PreyLockHtmlService::class.java)
+                    context.stopService(intent)
                     object : Thread() {
                         override fun run() {
-                            val jobIdLock: String? = PreyConfig.getInstance(ctx).getJobIdLock()
+                            val jobIdLock: String? = PreyConfig.getInstance(context).getJobIdLock()
                             var reason = "{\"origin\":\"user\"}"
                             if (jobIdLock != null && "" != jobIdLock) {
                                 reason = "{\"origin\":\"user\",\"device_job_id\":\"$jobIdLock\"}"
-                                PreyConfig.getInstance(ctx).setJobIdLock("")
+                                PreyConfig.getInstance(context).setJobIdLock("")
                             }
                             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                                ctx,
+                                context,
                                 UtilJson.makeMapParam("start", "lock", "stopped", reason)
                             )
                         }
                     }.start()
-                    val intentClose = Intent(ctx, CloseActivity::class.java)
+                    val intentClose = Intent(context, CloseActivity::class.java)
                     intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    ctx.startActivity(intentClose)
-                    //TODO: falta implemnetar
-                    /*
-                    try {
-                        val viewLock: View = PreyConfig.getInstance(ctx).viewLock
-                        if (viewLock != null) {
-                            val wm = ctx.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-                            wm.removeView(viewLock)
-                        } else {
-                            Process.killProcess(Process.myPid())
-                        }
-                    } catch (e: Exception) {
-                        Process.killProcess(Process.myPid())
-                    }*/
+                    context.startActivity(intentClose)
                 }
             }
         }

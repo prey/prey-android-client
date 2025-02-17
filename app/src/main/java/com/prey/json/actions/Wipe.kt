@@ -7,74 +7,64 @@
 package com.prey.json.actions
 
 import android.content.Context
+
 import com.prey.actions.observer.ActionResult
 import com.prey.actions.wipe.WipeThread
 import com.prey.PreyConfig
-import com.prey.PreyLogger
-import com.prey.json.UtilJson
+
 import org.json.JSONObject
 
+/**
+ * Class responsible for handling wipe actions.
+ */
 class Wipe {
 
-    fun start(context: Context, list: MutableList<ActionResult>?, parameters: JSONObject?) {
-        execute(context, list, parameters)
+    /**
+     * Starts the wipe action.
+     *
+     * @param context The application context.
+     * @param actionResults A list of action results.
+     * @param parameters A JSON object containing wipe parameters.
+     */
+    fun start(context: Context, actionResults: MutableList<ActionResult>?, parameters: JSONObject?) {
+        execute(context, actionResults, parameters)
     }
 
-    fun execute(context: Context, list: MutableList<ActionResult>?, parameters: JSONObject?) {
-        var wipe = false
-        var deleteSD = false
-        try {
-            var sd: String? = null
-            if (parameters != null && parameters.has("parameter")) {
-                sd = parameters.getString("parameter")
-                PreyLogger.d(String.format("sd:%s", sd))
+    /**
+     * Executes the wipe action based on the provided parameters.
+     *
+     * @param context The application context.
+     * @param actionResults A list of action results.
+     * @param parameters A JSON object containing wipe parameters.
+     */
+    fun execute(context: Context, actionResults: MutableList<ActionResult>?, parameters: JSONObject?) {
+        // Initialize wipe flags
+        var shouldWipe = false
+        var shouldDeleteSd = false
+        // Check if the "parameter" key exists in the parameters JSON object
+        if (parameters?.has("parameter") == true) {
+            val parameter = parameters.getString("parameter")
+            if (parameter == "sd") {
+                shouldWipe = false
+                shouldDeleteSd = true
             }
-            if (sd != null && "sd" == sd) {
-                wipe = false
-                deleteSD = true
-            }
-        } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
         }
-        var messageId: String? = null
-        try {
-            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID)
-            PreyLogger.d(String.format("messageId:%s", messageId))
-        } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
+        // Get the message ID and job ID from the parameters JSON object
+        val messageId = parameters?.getString(PreyConfig.MESSAGE_ID)
+        val jobId = parameters?.getString(PreyConfig.JOB_ID)
+        val factoryReset = parameters?.getString("factory_reset")
+        if (factoryReset == "on" || factoryReset == "y" || factoryReset == "true") {
+            shouldWipe = true
+        } else if (factoryReset == "off" || factoryReset == "n" || factoryReset == "false") {
+            shouldWipe = false
         }
-        var jobId: String? = null
-        try {
-            jobId = UtilJson.getString(parameters, PreyConfig.JOB_ID)
-            PreyLogger.d(String.format("jobId:%s", jobId))
-        } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
+        val wipeSim = parameters?.getString("wipe_sim")
+        if (wipeSim == "on" || wipeSim == "y" || wipeSim == "true") {
+            shouldDeleteSd = true
+        } else if (wipeSim == "off" || wipeSim == "n" || wipeSim == "false") {
+            shouldDeleteSd = false
         }
-        try {
-            val factoryReset = UtilJson.getString(parameters, "factory_reset")
-            PreyLogger.i(String.format("factoryReset:%s", factoryReset))
-            if ("on" == factoryReset || "y" == factoryReset || "true" == factoryReset) {
-                wipe = true
-            }
-            if ("off" == factoryReset || "n" == factoryReset || "false" == factoryReset) {
-                wipe = false
-            }
-        } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
-        }
-        try {
-            val wipeSim = UtilJson.getString(parameters, "wipe_sim")
-            PreyLogger.i(String.format("wipeSim:%s", wipeSim))
-            if ("on" == wipeSim || "y" == wipeSim || "true" == wipeSim) {
-                deleteSD = true
-            }
-            if ("off" == wipeSim || "n" == wipeSim || "false" == wipeSim) {
-                deleteSD = false
-            }
-        } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:", e.message), e)
-        }
-        PreyLogger.i(String.format("wipe:%b deleteSD%b:", wipe, deleteSD))
-        WipeThread(context, wipe, deleteSD, messageId!!, jobId).start()
+        // Start the wipe thread with the determined flags
+        WipeThread(context, shouldWipe, shouldDeleteSd, messageId!!, jobId).start()
     }
 }

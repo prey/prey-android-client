@@ -9,128 +9,112 @@ package com.prey.json.actions
 import android.content.Context
 import android.os.Environment
 import android.webkit.MimeTypeMap
+
 import com.prey.actions.observer.ActionResult
 import com.prey.json.UtilJson
 import com.prey.PreyConfig
-import com.prey.PreyLogger
 import com.prey.net.PreyWebServices
 import org.json.JSONArray
 import org.json.JSONObject
+
 import java.io.File
 
+/**
+ * Tree class responsible for handling file system operations.
+ */
 class Tree {
-    fun get(ctx: Context, list: List<ActionResult?>?, parameters: JSONObject) {
-        var messageId: String? = null
-        try {
-            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID)
-        } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
-        }
+
+    /**
+     * Retrieves a list of files and directories based on the provided parameters.
+     *
+     * @param context Context of the application.
+     * @param actionResults List of ActionResult objects.
+     * @param parameters JSONObject containing the parameters for the operation.
+     */
+    fun get(context: Context, actionResults: List<ActionResult?>?, parameters: JSONObject) {
+        // Initialize variables to store message ID and reason.
         var reason: String? = null
-        try {
-            val jobId = UtilJson.getString(parameters, PreyConfig.JOB_ID)
-            PreyLogger.d(String.format("jobId:%s", jobId))
-            if (jobId != null && "" != jobId) {
-                reason = "{\"device_job_id\":\"$jobId\"}"
-            }
+        val messageId = parameters?.getString(PreyConfig.MESSAGE_ID)
+        reason = try {
+            val jobId = UtilJson.getStringValue(parameters, PreyConfig.JOB_ID)
+            if (!jobId.isNullOrEmpty()) "{\"device_job_id\":\"$jobId\"}" else null
         } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
+            null
         }
         try {
-            PreyLogger.d("Tree started")
+            // Send notification to indicate the start of the operation.
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                ctx,
+                context,
                 messageId,
                 UtilJson.makeMapParam("get", "tree", "started", reason)
             )
-            var depth = 1
-            try {
-                depth = parameters.getString("depth").toInt()
-            } catch (e: Exception) {
-            }
-            var path = parameters.getString("path")
-            if ("sdcard" == path) {
-                path = "/"
-            }
-            val pathBase = Environment.getExternalStorageDirectory().toString()
-            val dir = File(pathBase + path)
-            val array = getFilesRecursiveJSON(pathBase, dir, depth - 1)
-            val jsonTree = JSONObject()
-            jsonTree.put("tree", array.toString())
-            val response = PreyWebServices.getInstance().sendTree(ctx, jsonTree)
-            PreyLogger.d(String.format("Tree stopped response:%d", response!!.getStatusCode()))
+            val depth = parameters.optString("depth", "1").toInt()
+            val path =
+                if (parameters.optString("path") == "sdcard") "/" else parameters.optString("path")
+            // Create a File object representing the directory.
+            val directory = File("${Environment.getExternalStorageDirectory().toString()}$path")
+            // Recursively retrieve a list of files and directories.
+            val fileArray = getFilesRecursiveJson(directory.parent, directory, depth - 1)
+            // Create a JSONObject to store the result.
+            val treeJson = JSONObject()
+            treeJson.put("tree", fileArray.toString())
+            // Send the result to the server.
+            val response = PreyWebServices.getInstance().sendTree(context, treeJson)
+            // Send notification to indicate the end of the operation.
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                ctx,
+                context,
                 UtilJson.makeMapParam("get", "tree", "stopped", reason)
             )
-            PreyLogger.d("Tree stopped")
         } catch (e: Exception) {
+            // If an exception occurs, send a notification with the error message.
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                ctx,
+                context,
                 messageId,
                 UtilJson.makeMapParam("get", "tree", "failed", e.message)
             )
-            PreyLogger.d("Tree failed:" + e.message)
         }
     }
 
     /**
-     * Method to get a list of files
+     * Recursively retrieves a list of files and directories.
      *
-     * @param pathBase
-     * @param folder
-     * @param depth
-     * @return jsonArray
+     * @param pathBase Base path of the directory.
+     * @param folder File object representing the directory.
+     * @param depth Maximum depth to recurse.
+     * @return JSONArray containing the list of files and directories.
      */
-    private fun getFilesRecursiveJSON(pathBase: String, folder: File?, depth: Int): JSONArray {
-        var depth = depth
-        depth = 0
-        var length = 0
-        var arrayFile: Array<File>? = null
-        try {
-            arrayFile = folder!!.listFiles()
-            length = arrayFile.size
-        } catch (e: Exception) {
-        }
-        val array = JSONArray()
-        try {
-            var i = 0
-            while (folder != null && arrayFile != null && i < length) {
-                val child = arrayFile[i]
-                val parent = child.parent.replace(pathBase, "")
-                val json = JSONObject()
-                var size = 0
-                try {
-                    size = child.listFiles().size
-                } catch (e: Exception) {
+    private fun getFilesRecursiveJson(pathBase: String, folder: File?, depth: Int): JSONArray {
+        // Initialize an array to store the files.
+        val files = folder?.listFiles() ?: emptyArray()
+        // Initialize a JSONArray to store the result.
+        val jsonArray = JSONArray()
+        // Iterate over the files.
+        files.forEach { file ->
+            val parentPath = file.parent.replace(pathBase, "")
+            val fileInfo = JSONObject()
+            if (file.isDirectory && file.listFiles().isNotEmpty()) {
+                // Add the directory information to the JSONObject.
+                fileInfo.put("name", file.name)
+                fileInfo.put("path", "$parentPath/${file.name}")
+                // Recursively retrieve the contents of the directory.
+                if (depth > 0) {
+                    fileInfo.put("children", getFilesRecursiveJson(pathBase, file, depth - 1))
                 }
-                if (child.isDirectory && size > 0) {
-                    json.put("name", child.name)
-                    json.put("path", parent + "/" + child.name)
-                    var listChildren = JSONArray()
-                    if (depth > 0) {
-                        listChildren = getFilesRecursiveJSON(pathBase, child, depth - 1)
-                        json.put("children", listChildren)
-                    }
-                    json.put("isFile", false)
-                    array.put(json)
-                }
-                if (child.isFile) {
-                    val extension = MimeTypeMap.getFileExtensionFromUrl(child.name)
-                    val mime = MimeTypeMap.getSingleton()
-                    json.put("name", child.name)
-                    json.put("path", parent + "/" + child.name)
-                    json.put("mimetype", mime.getMimeTypeFromExtension(extension))
-                    json.put("size", child.length())
-                    json.put("isFile", true)
-                    json.put("hidden", false)
-                    array.put(json)
-                }
-                i++
+                fileInfo.put("isFile", false)
+            } else if (file.isFile) {
+                // Get the file extension and MIME type.
+                val extension = MimeTypeMap.getFileExtensionFromUrl(file.name)
+                val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+                // Add the file information to the JSONObject.
+                fileInfo.put("name", file.name)
+                fileInfo.put("path", "$parentPath/${file.name}")
+                fileInfo.put("mimetype", mimeType)
+                fileInfo.put("size", file.length())
+                fileInfo.put("isFile", true)
+                fileInfo.put("hidden", false)
             }
-        } catch (e: Exception) {
-            PreyLogger.e("Error getFilesRecursiveJSON:" + e.message, e)
+            jsonArray.put(fileInfo)
         }
-        return array
+        return jsonArray
     }
 }

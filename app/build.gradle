@@ -14,7 +14,7 @@ android {
         targetSdkVersion 35
 
         versionCode 351
-        versionName '2.6.5'
+        versionName '2.6.6'
 
         multiDexEnabled true
 
@@ -37,9 +37,18 @@ android {
         checkReleaseBuilds false
     }
     namespace 'com.prey'
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14"
+    }
     kotlinOptions {
         jvmTarget = '17'
     }
+
+
 }
 
 
@@ -67,6 +76,11 @@ dependencies {
     implementation 'androidx.biometric:biometric:1.2.0-alpha05'
     implementation "androidx.work:work-runtime:2.9.1"
     implementation 'androidx.core:core-ktx:1.15.0'
+
+
+    implementation("androidx.compose.runtime:runtime:1.7.7")
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.7")
+    implementation("androidx.compose.runtime:runtime-rxjava2:1.7.7")
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'

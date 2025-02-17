@@ -38,10 +38,10 @@ class ReportJobService : JobService() {
     companion object {
         private const val JOB_ID = 124
 
-        fun schedule(ctx: Context) {
+        fun schedule(context: Context) {
             var jobScheduler: JobScheduler? = null
-            jobScheduler = ctx.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-            val builder = JobInfo.Builder(1, ComponentName(ctx, ReportJobService::class.java.name))
+            jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+            val builder = JobInfo.Builder(1, ComponentName(context, ReportJobService::class.java.name))
             builder.setPeriodic(30 * DateUtils.MINUTE_IN_MILLIS)
             builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_NONE)
             builder.setRequiresDeviceIdle(false)
@@ -53,9 +53,9 @@ class ReportJobService : JobService() {
             }
         }
 
-        fun cancel(ctx: Context) {
+        fun cancel(context: Context) {
             var jobScheduler: JobScheduler? = null
-            jobScheduler = ctx.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+            jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
             jobScheduler.cancel(JOB_ID)
         }
     }

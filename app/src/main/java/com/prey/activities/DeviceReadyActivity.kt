@@ -9,64 +9,70 @@ package com.prey.activities
 import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.graphics.Typeface
 import android.os.Bundle
-import android.view.View
 import android.view.Window
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
+
 import com.prey.R
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 
+/**
+ * DeviceReadyActivity is the main activity of the application.
+ * It handles the device ready state and provides options to navigate to PanelWebActivity or PreyConfigurationActivity.
+ */
 class DeviceReadyActivity : AppCompatActivity(), OnRequestPermissionsResultCallback {
+
+    /**
+     * Called when the user presses the back button.
+     * Starts CheckPasswordHtmlActivity and finishes the current activity.
+     */
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-        var intent: Intent? = null
-        intent = Intent(application, CheckPasswordHtmlActivity::class.java)
-        startActivity(intent)
+        startActivity(Intent(application, CheckPasswordHtmlActivity::class.java))
         finish()
     }
 
+    /**
+     * Called when the activity is resumed.
+     * Cancels the notification with tag PreyConfig.TAG and id PreyConfig.NOTIFY_ANDROID_6.
+     */
     override fun onResume() {
         super.onResume()
-        val nManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        nManager.cancel(PreyConfig.TAG, PreyConfig.NOTIFY_ANDROID_6)
+        (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).cancel(
+            PreyConfig.TAG,
+            PreyConfig.NOTIFY_ANDROID_6
+        )
     }
 
+    /**
+     * Called when the activity is created.
+     * Sets up the activity layout, fonts, and click listeners.
+     *
+     * @param savedInstanceState The saved instance state, or null if not saved
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.device_ready)
         PreyLogger.d("onCreate of DeviceReadyActivity")
-        val titilliumWebBold =
-            Typeface.createFromAsset(assets, "fonts/Titillium_Web/TitilliumWeb-Bold.ttf")
-        val magdacleanmonoRegular =
+        val boldFont = Typeface.createFromAsset(assets, "fonts/Titillium_Web/TitilliumWeb-Bold.ttf")
+        val regularFont =
             Typeface.createFromAsset(assets, "fonts/MagdaClean/magdacleanmono-regular.ttf")
-        val textView3_1 = findViewById<View>(R.id.textView3_1) as TextView
-        val textView3_2 = findViewById<View>(R.id.textView3_2) as TextView
-        val textView4_1 = findViewById<View>(R.id.textView4_1) as TextView
-        val textView4_2 = findViewById<View>(R.id.textView4_2) as TextView
-        textView3_1.setTypeface(magdacleanmonoRegular)
-        textView3_2.setTypeface(titilliumWebBold)
-        textView4_1.setTypeface(magdacleanmonoRegular)
-        textView4_2.setTypeface(titilliumWebBold)
-        val linearLayout1 = findViewById<View>(R.id.linearLayout1) as LinearLayout
-        linearLayout1.setOnClickListener {
-            var intent: Intent? = null
-            intent = Intent(application, PanelWebActivity::class.java)
-            startActivity(intent)
+        findViewById<TextView>(R.id.textView3_1).typeface = regularFont
+        findViewById<TextView>(R.id.textView3_2).typeface = boldFont
+        findViewById<TextView>(R.id.textView4_1).typeface = regularFont
+        findViewById<TextView>(R.id.textView4_2).typeface = boldFont
+        findViewById<LinearLayout>(R.id.linearLayout1).setOnClickListener {
+            startActivity(Intent(application, PanelWebActivity::class.java))
             finish()
         }
-        val linearLayout2 = findViewById<View>(R.id.linearLayout2) as LinearLayout
-        linearLayout2.setOnClickListener {
-            var intent: Intent? = null
-            intent = Intent(application, PreyConfigurationActivity::class.java)
-            startActivity(intent)
+        findViewById<LinearLayout>(R.id.linearLayout2).setOnClickListener {
+            startActivity(Intent(application, PreyConfigurationActivity::class.java))
             finish()
         }
     }

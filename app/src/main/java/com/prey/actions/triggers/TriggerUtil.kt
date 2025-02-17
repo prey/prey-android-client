@@ -7,16 +7,26 @@
 package com.prey.actions.triggers
 
 import com.prey.PreyLogger
+
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
+/**
+ * Utility object for working with triggers.
+ */
 object TriggerUtil {
     var sdf_dh: SimpleDateFormat = SimpleDateFormat("yyyyMMddHHmmss")
     var sdf_h: SimpleDateFormat = SimpleDateFormat("HHmmss")
     var sdf_d: SimpleDateFormat = SimpleDateFormat("yyyyMMdd")
 
+    /**
+     * Checks if a list of events contains a range time trigger.
+     *
+     * @param listEvents List of trigger events
+     * @return True if a range time trigger is found, false otherwise
+     */
     fun haveRange(listEvents: List<TriggerEventDto>?): Boolean {
         var j = 0
         while (listEvents != null && j < listEvents.size) {
@@ -32,6 +42,12 @@ object TriggerUtil {
         return false
     }
 
+    /**
+     * Validates a list of events against a range trigger.
+     *
+     * @param listEvents List of trigger events
+     * @return True if the events are valid, false otherwise
+     */
     fun validRange(listEvents: List<TriggerEventDto>?): Boolean {
         var j = 0
         while (listEvents != null && j < listEvents.size) {
@@ -47,6 +63,12 @@ object TriggerUtil {
         return false
     }
 
+    /**
+     * Validates a range time trigger event.
+     *
+     * @param event Trigger event
+     * @return True if the event is valid, false otherwise
+     */
     fun validRangeTime(event: TriggerEventDto): Boolean {
         val now = Date()
         val cal = Calendar.getInstance()
@@ -107,11 +129,17 @@ object TriggerUtil {
                 }
             }
         } catch (e: Exception) {
-            PreyLogger.e("error validRangeTime:" + e.message, e)
+            PreyLogger.e("error validRangeTime:${e.message}", e)
         }
         return false
     }
 
+    /**
+     * Validates a range trigger event.
+     *
+     * @param event Trigger event
+     * @return True if the event is valid, false otherwise
+     */
     fun validRange(event: TriggerEventDto): Boolean {
         try {
             val nowDate = Date()
@@ -132,11 +160,17 @@ object TriggerUtil {
                 return true
             }
         } catch (e: Exception) {
-            PreyLogger.e("error validRange:" + e.message, e)
+            PreyLogger.e("error validRange:${e.message}", e)
         }
         return false
     }
 
+    /**
+     * Validates a trigger against a list of events.
+     *
+     * @param trigger Trigger to validate
+     * @return True if the trigger is valid, false otherwise
+     */
     fun validateTrigger(trigger: TriggerDto): Boolean {
         val now = Date()
         val listEvents = TriggerParse.TriggerEvents(trigger.getEvents()!!)
@@ -149,12 +183,12 @@ object TriggerUtil {
                     val json = JSONObject(event.getInfo())
                     var dateTime: String? = null
                     dateTime = json.getString("date")
-                    PreyLogger.d(String.format("TimeTrigger dateTime:%s", dateTime))
+                    PreyLogger.d("TimeTrigger dateTime:${dateTime}")
                     val date = TimeTrigger.EXACT_TIME_FORMAT_SDF.parse(dateTime)
                     //increased to 15
                     valid = validDateAroundMinutes(date, 15)
                 } catch (e: Exception) {
-                    PreyLogger.e(String.format("Error :%s", e.message), e)
+                    PreyLogger.e("Error :${e.message}", e)
                 }
                 return valid
             }
@@ -176,19 +210,19 @@ object TriggerUtil {
                     try {
                         hour = hourSt.toInt()
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                     var minute = 0
                     try {
                         minute = minuteSt.toInt()
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                     var second = 0
                     try {
                         second = secondSt.toInt()
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                     val calender = Calendar.getInstance()
                     calender[Calendar.HOUR_OF_DAY] = hour
@@ -215,7 +249,7 @@ object TriggerUtil {
                     }
                     return valid
                 } catch (e: Exception) {
-                    PreyLogger.e("Error:" + e.message, e)
+                    PreyLogger.e("Error:${e.message}", e)
                 }
             }
             j++
@@ -223,6 +257,12 @@ object TriggerUtil {
         return true
     }
 
+    /**
+     * Converts a day of the week string to a Calendar day constant.
+     *
+     * @param daySt String representation of the day (e.g. "0" for Sunday)
+     * @return The corresponding Calendar day constant
+     */
     fun dayTrigger(daySt: String?): Int {
         var day = -1
         day = when (daySt) {
@@ -237,7 +277,13 @@ object TriggerUtil {
         return day
     }
 
-
+    /**
+     * Checks if a given date is within a certain time range from the current time.
+     *
+     * @param date The date to check
+     * @param minutes The time range in minutes
+     * @return True if the date is within the time range, false otherwise
+     */
     fun validDateAroundMinutes(date: Date, minutes: Int): Boolean {
         val now = Date()
         var valid = true

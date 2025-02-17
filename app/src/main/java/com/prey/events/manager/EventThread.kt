@@ -7,48 +7,72 @@
 package com.prey.events.manager
 
 import android.content.Context
+
 import com.prey.events.Event
 import com.prey.PreyLogger
 import com.prey.net.PreyWebServices
+
 import org.json.JSONObject
 import java.net.HttpURLConnection
 
+/**
+ * EventThread is a Thread class responsible for handling events and sending data to the server.
+ */
 class EventThread : Thread {
-    private var jsonObjectStatus: JSONObject
+    // Properties to store the context, event, status JSON, and geo event
+    private lateinit var statusJson: JSONObject
+    private lateinit var event: Event
+    private lateinit var context: Context
+    private var geoEvent: String? = null
 
-    private var event: Event
-    private var ctx: Context
-    private var eventGeo: String?
+    /**
+     * Primary constructor for EventThread.
+     *
+     * @param context The application context.
+     * @param event The event to be handled.
+     * @param statusJson The JSON object containing the event status.
+     */
+    constructor(context: Context, event: Event, statusJson: JSONObject) : this(
+        context,
+        event,
+        statusJson,
+        null
+    )
 
-    constructor(ctx: Context, event: Event, jsonObjectStatus: JSONObject) {
-        this.ctx = ctx
+    /**
+     * Secondary constructor for EventThread with an optional geo event.
+     *
+     * @param context The application context.
+     * @param event The event to be handled.
+     * @param statusJson The JSON object containing the event status.
+     * @param geoEvent The geo event associated with the event (optional).
+     */
+    constructor(context: Context, event: Event, statusJson: JSONObject, geoEvent: String?) {
+        this.context = context
         this.event = event
-        this.jsonObjectStatus = jsonObjectStatus
-        this.eventGeo = null
+        this.statusJson = statusJson
+        this.geoEvent = geoEvent
     }
 
-    constructor(ctx: Context, event: Event, jsonObjectStatus: JSONObject, eventGeo: String?) {
-        this.ctx = ctx
-        this.event = event
-        this.jsonObjectStatus = jsonObjectStatus
-        this.eventGeo = eventGeo
-    }
-
+    /**
+     * Runs the event thread, validating the event and sending the event data to the server if valid.
+     */
     override fun run() {
         try {
-            val valida = EventControl.getInstance().valida(jsonObjectStatus)
-            PreyLogger.d("EVENT valida:" + valida + " eventName:" + event.name)
-            if (valida) {
+            // Validate the event using the EventControl instance
+            val isValid = EventControl.getInstance().isValid(statusJson)
+            PreyLogger.d("EVENT isValid:${isValid} eventName:${event.name}")
+            if (isValid) {
                 val preyHttpResponse =
-                    PreyWebServices.getInstance().sendPreyHttpEvent(ctx, event, jsonObjectStatus)
+                    PreyWebServices.getInstance().sendPreyHttpEvent(context, event, statusJson)
                 if (preyHttpResponse != null) {
-                    if (preyHttpResponse.getStatusCode() == HttpURLConnection.HTTP_OK && eventGeo != null) {
-                        PreyLogger.d("EVENT sendPreyHttpEvent eventName:$eventGeo")
+                    if (preyHttpResponse.getStatusCode() == HttpURLConnection.HTTP_OK && geoEvent != null) {
+                        PreyLogger.d("EVENT sendPreyHttpEvent eventName:$geoEvent")
                     }
                 }
             }
         } catch (e: Exception) {
-            PreyLogger.e("EVENT Error EventThread:" + e.message, e)
+            PreyLogger.e("EVENT Error EventThread:${e.message}", e)
         }
     }
 }

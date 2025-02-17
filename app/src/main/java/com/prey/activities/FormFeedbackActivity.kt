@@ -11,22 +11,35 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
+
 import com.prey.R
 import com.prey.FileConfigReader
 import com.prey.PreyUtils
 
+/**
+ * An activity that displays a feedback form to the user.
+ */
 class FormFeedbackActivity : PreyActivity() {
+    /**
+     * Called when the activity is created.
+     *
+     * @param savedInstanceState The saved instance state, or null if not saved.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         showDialog(SHOW_POPUP)
     }
 
+    /**
+     * Creates a dialog for the given ID.
+     *
+     * @param id The ID of the dialog to create.
+     * @return The created dialog.
+     */
     override fun onCreateDialog(id: Int): Dialog {
         var popup: Dialog? = null
         when (id) {
@@ -44,23 +57,26 @@ class FormFeedbackActivity : PreyActivity() {
                 alert.setNegativeButton(R.string.feedback_form_button1,
                     DialogInterface.OnClickListener { dialog, id ->
                         if (input != null) {
-                            val ctx: Context = applicationContext
+                            val context: Context = applicationContext
                             val emailFeedback: String = FileConfigReader.getInstance(
                                 applicationContext
-                            )!!.emailFeedback
+                            ).getEmailFeedback()
                             val subject = StringBuffer()
-                            subject.append(FileConfigReader.getInstance(ctx)!!.subjectFeedback)
+                            subject.append(FileConfigReader.getInstance(context).getSubjectFeedback())
                                 .append(" ")
                             subject.append(PreyUtils.randomAlphaNumeric(7).toUpperCase())
+                            // Create an intent to send the email
                             val intent = Intent(Intent.ACTION_SEND)
                             intent.setType("text/plain")
                             intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(emailFeedback))
                             intent.putExtra(Intent.EXTRA_SUBJECT, subject.toString())
                             intent.putExtra(Intent.EXTRA_TEXT, input.text.toString())
+                            // Create a chooser for the email intent
                             val chooser = Intent.createChooser(
                                 intent,
-                                ctx.getText(R.string.feedback_form_send_email)
+                                context.getText(R.string.feedback_form_send_email)
                             )
+                            // Start the email chooser activit
                             startActivity(chooser)
                         }
                         finish()

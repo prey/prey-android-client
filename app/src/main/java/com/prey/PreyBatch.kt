@@ -11,13 +11,24 @@ import android.content.res.Resources
 import java.io.IOException
 import java.util.Properties
 
-class PreyBatch private constructor(ctx: Context) {
+/**
+ * A class representing a Prey batch configuration.
+ *
+ * This class loads configuration properties from a file named "batch" in the raw resources.
+ * It provides methods to retrieve the API key, email, and token from the configuration.
+ */
+class PreyBatch private constructor(context: Context) {
     private val properties = Properties()
 
+    /**
+     * Initializes the PreyBatch instance by loading the configuration from the file.
+     *
+     * @param context The application context.
+     */
     init {
         try {
             PreyLogger.d("Loading config batch properties from file...")
-            val file = ctx.resources.openRawResource(R.raw.batch)
+            val file = context.resources.openRawResource(R.raw.batch)
             properties.load(file)
             file.close()
             PreyLogger.d("Batch Config: $properties")
@@ -28,49 +39,52 @@ class PreyBatch private constructor(ctx: Context) {
         }
     }
 
-    val apiKeyBatch: String
-        /**
-         * Method get api key
-         * @return
-         */
-        get() = properties!!.getProperty("api-key-batch")
+    /**
+     * Method get api key
+     * @return
+     */
+    fun getApiKeyBatch(): String {
+        return properties.getProperty("api-key-batch")
+    }
 
-    val emailBatch: String
-        /**
-         * Method get email
-         * @return
-         */
-        get() = properties!!.getProperty("email-batch")
+    /**
+     * Method get email
+     * @return
+     */
+    fun getEmailBatch(): String {
+        return properties.getProperty("email-batch")
+    }
 
-    val isAskForNameBatch: Boolean
-        /**
-         * Method if it asks for the name
-         * @return
-         */
-        get() = properties!!.getProperty("ask-for-name-batch").toBoolean()
+    /**
+     * Method if it asks for the name
+     * @return
+     */
+    fun isAskForNameBatch(): Boolean {
+        return properties.getProperty("ask-for-name-batch").toBoolean()
+    }
 
-    val token: String
-        /**
-         * Method get token
-         * @return
-         */
-        get() = properties!!.getProperty("token")
+    /**
+     * Method get token
+     * @return
+     */
+    fun getToken(): String {
+        return properties.getProperty("token")
+    }
 
-    val isThereBatchInstallationKey: Boolean
-        /**
-         * Method returns if it has apikey batch
-         * @return
-         */
-        get() {
-            val apiKeyBatch = _instance!!.apiKeyBatch
-            return (apiKeyBatch != null && "" != apiKeyBatch)
-        }
+    /**
+     * Method returns if it has apikey batch
+     * @return
+     */
+    fun isThereBatchInstallationKey(): Boolean {
+        val apiKeyBatch = getApiKeyBatch()
+        return (apiKeyBatch != null && "" != apiKeyBatch)
+    }
 
     companion object {
-        private var _instance: PreyBatch? = null
-        fun getInstance(ctx: Context): PreyBatch? {
-            if (_instance == null) _instance = PreyBatch(ctx)
-            return _instance
+        private var instance: PreyBatch? = null
+        fun getInstance(context: Context): PreyBatch {
+            if (instance == null) instance = PreyBatch(context)
+            return instance!!
         }
     }
 }

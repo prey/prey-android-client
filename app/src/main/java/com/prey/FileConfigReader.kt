@@ -11,13 +11,22 @@ import android.content.res.Resources
 import java.io.IOException
 import java.util.Properties
 
-class FileConfigReader private constructor(ctx: Context) {
+/**
+ * A class representing a file-based configuration reader.
+ *
+ * This class loads configuration properties from a file named "config" in the raw resources.
+ * It provides methods to retrieve specific configuration properties.
+ */
+class FileConfigReader private constructor(context: Context) {
     private val properties = Properties()
 
+    /**
+     * Initializes the FileConfigReader instance by loading the configuration properties from the file.
+     */
     init {
         try {
             PreyLogger.d("Loading config properties from file...")
-            val file = ctx.resources.openRawResource(R.raw.config)
+            val file = context.resources.openRawResource(R.raw.config)
             properties.load(file)
             file.close()
             PreyLogger.d("Config: $properties")
@@ -28,20 +37,25 @@ class FileConfigReader private constructor(ctx: Context) {
         }
     }
 
-    val preyCampaign: String
-        get() = properties.getProperty("prey-campaign")
+    fun getPreyCampaign(): String {
+        return properties.getProperty("prey-campaign")
+    }
 
-    val preyPanel: String
-        get() = properties.getProperty("prey-panel")
+    fun getPreyPanel(): String {
+        return properties.getProperty("prey-panel")
+    }
 
-    val agreementId: String
-        get() = properties.getProperty("agreement-id")
+    fun getAgreementId(): String {
+        return properties.getProperty("agreement-id")
+    }
 
-    val gcmId: String
-        get() = properties.getProperty("gcm-id")
+    fun getGcmId(): String {
+        return properties.getProperty("gcm-id")
+    }
 
-    val gcmIdPrefix: String
-        get() = properties.getProperty("gcm-id-prefix")
+    fun getGcmIdPrefix(): String {
+        return properties.getProperty("gcm-id-prefix")
+    }
 
     fun getc2dmAction(): String {
         return properties.getProperty("c2dm-action")
@@ -51,99 +65,126 @@ class FileConfigReader private constructor(ctx: Context) {
         return properties.getProperty("c2dm-message-sync")
     }
 
-    val preyDomain: String
-        get() = properties.getProperty("prey-domain")
+    fun getPreyDomain(): String {
+        return properties.getProperty("prey-domain")
+    }
 
-    val preySubdomain: String
-        get() = properties.getProperty("prey-subdomain")
+    fun getPreySubdomain(): String {
+        return properties.getProperty("prey-subdomain")
+    }
 
-    val preyUninstall: String
-        get() = properties.getProperty("prey-uninstall")
+    fun getPreyUninstall(): String {
+        return properties.getProperty("prey-uninstall")
+    }
 
-    val preyUninstallEs: String
-        get() = properties.getProperty("prey-uninstall-es")
+    fun getPreyUninstallEs(): String {
+        return properties.getProperty("prey-uninstall-es")
+    }
 
-    val preyMinorVersion: String
-        get() = properties.getProperty("prey-minor-version")
+    fun getPreyMinorVersion(): String {
+        return properties.getProperty("prey-minor-version")
+    }
 
-    val isAskForPassword: Boolean
-        get() = properties.getProperty("ask-for-password").toBoolean()
+    fun isAskForPassword(): Boolean {
+        return properties.getProperty("ask-for-password").toBoolean()
+    }
 
-    val isLogEnabled: Boolean
-        get() = properties.getProperty("log-enabled").toBoolean()
+    fun isLogEnabled(): Boolean {
+        return properties.getProperty("log-enabled").toBoolean()
+    }
 
-    val emailFeedback: String
-        get() = properties.getProperty("email-feedback")
+    fun getEmailFeedback(): String {
+        return properties.getProperty("email-feedback")
+    }
 
-    val subjectFeedback: String
-        get() = properties.getProperty("subject-feedback")
+    fun getSubjectFeedback(): String {
+        return properties.getProperty("subject-feedback")
+    }
 
-    val apiV2: String
-        get() = properties.getProperty("api-v2")
+    fun getApiV2(): String {
+        return properties.getProperty("api-v2")
+    }
 
-    val isScheduled: Boolean
-        get() = properties.getProperty("scheduled").toBoolean()
+    fun isScheduled(): Boolean {
+        return properties.getProperty("scheduled").toBoolean()
+    }
 
-    val isOverOtherApps: Boolean
-        get() = properties.getProperty("over-other-apps").toBoolean()
+    fun isOverOtherApps(): Boolean {
+        return properties.getProperty("over-other-apps").toBoolean()
+    }
 
-    val minuteScheduled: Int
-        get() = properties.getProperty("minute-scheduled").toInt()
+    fun getMinuteScheduled(): Int {
+        return properties.getProperty("minute-scheduled").toInt()
+    }
 
-    val timeoutReport: Int
-        get() = properties.getProperty("timeout-report").toInt()
+    fun getTimeoutReport(): Int {
+        return properties.getProperty("timeout-report").toInt()
+    }
 
-    val geofenceMaximumAccuracy: Int
-        get() = properties.getProperty("geofence-maximum-accuracy").toInt()
+    fun getGeofenceMaximumAccuracy(): Int {
+        return properties.getProperty("geofence-maximum-accuracy").toInt()
+    }
 
-    val preyJwt: String
-        get() = properties.getProperty("prey-jwt")
+    fun getPreyJwt(): String {
+        return properties.getProperty("prey-jwt")
+    }
 
-    val preyGooglePlay: String
-        get() = properties.getProperty("prey-google-play")
+    fun getPreyGooglePlay(): String {
+        return properties.getProperty("prey-google-play")
+    }
 
-    val geofenceLoiteringDelay: Int
-        get() = properties.getProperty("geofence-loitering-delay").toInt()
+    fun getGeofenceLoiteringDelay(): Int {
+        return properties.getProperty("geofence-loitering-delay").toInt()
+    }
 
-    val preyEventsLogs: String
-        get() = properties.getProperty("prey-events-logs")
+    fun getPreyEventsLogs(): String {
+        return properties.getProperty("prey-events-logs")
+    }
 
-    val distanceLocation: Int
-        get() = properties.getProperty("distance-location").toInt()
+    fun getDistanceLocation(): Int {
+        return properties.getProperty("distance-location").toInt()
+    }
 
-    val geofenceNotificationResponsiveness: Int
-        get() = properties.getProperty("geofence-notification-responsiveness").toInt()
+    fun getGeofenceNotificationResponsiveness(): Int {
+        return properties.getProperty("geofence-notification-responsiveness").toInt()
+    }
 
-    val flyerKey: String
-        get() = properties.getProperty("flyer-key")
+    fun getFlyerKey(): String {
+        return properties.getProperty("flyer-key")
+    }
 
-    val distanceAware: Int
-        get() = properties.getProperty("distance-aware").toInt()
+    fun getDistanceAware(): Int {
+        return properties.getProperty("distance-aware").toInt()
+    }
 
-    val radiusAware: Int
-        get() = properties.getProperty("radius-aware").toInt()
+    fun getRadiusAware(): Int {
+        return properties.getProperty("radius-aware").toInt()
+    }
 
-    val preyTerms: String
-        get() = properties.getProperty("prey-terms")
+    fun getPreyTerms(): String {
+        return properties.getProperty("prey-terms")
+    }
 
-    val preyTermsEs: String
-        get() = properties.getProperty("prey-terms-es")
+    fun getPreyTermsEs(): String {
+        return properties.getProperty("prey-terms-es")
+    }
 
-    val preyForgot: String
-        get() = properties.getProperty("prey-forgot")
+    fun getPreyForgot(): String {
+        return properties.getProperty("prey-forgot")
+    }
 
-    val openPin: Boolean
-        /**
-         * Method if it should show pin
-         * @return true o false
-         */
-        get() = properties.getProperty("open-pin").toBoolean()
+    /**
+     * Method if it should show pin
+     * @return true o false
+     */
+    fun getOpenPin(): Boolean {
+        return properties.getProperty("open-pin").toBoolean()
+    }
 
     companion object {
-        private var _instance: FileConfigReader? = null
-        fun getInstance(ctx: Context): FileConfigReader? {
-            if (_instance == null) _instance = FileConfigReader(ctx)
-            return _instance
+        private var instance: FileConfigReader? = null
+        fun getInstance(context: Context): FileConfigReader {
+            return instance ?: FileConfigReader(context).also { instance = it }
         }
     }
 }

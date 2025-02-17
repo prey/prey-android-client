@@ -1,29 +1,32 @@
-/*******************************************************************************
- * Created by Orlando Aliaga
- * Copyright 2025 Prey Inc. All rights reserved.
- * License: GPLv3
- * Full license at "/LICENSE"
- ******************************************************************************/
 package com.prey.barcodereader
+
 
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.app.ProgressDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.Window
 import android.widget.Button
 import android.widget.CompoundButton
 import android.widget.TextView
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
+import com.prey.PreyConfig
+import com.prey.PreyLogger
+import com.prey.PreyUtils.getDeviceType
 import com.prey.R
 import com.prey.activities.CheckPasswordHtmlActivity
 import com.prey.activities.LoginActivity
-import com.prey.PreyLogger
+import com.prey.activities.PermissionInformationActivity
+
 
 class BarcodeActivity : Activity() {
     private var autoFocus: CompoundButton? = null
@@ -48,12 +51,14 @@ class BarcodeActivity : Activity() {
     override fun onResume() {
         super.onResume()
         val readBarcodeButton = findViewById<View>(R.id.read_barcode) as Button
-        readBarcodeButton.setOnClickListener {
-            val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
-            intent.putExtra(BarcodeCaptureActivity.AutoFocus, autoFocus!!.isChecked)
-            intent.putExtra(BarcodeCaptureActivity.UseFlash, useFlash!!.isChecked)
-            startActivityForResult(intent, RC_BARCODE_CAPTURE)
-        }
+        readBarcodeButton.setOnClickListener(object : OnClickListener  {
+            override fun onClick(v: View?) {
+                val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
+                intent.putExtra(BarcodeCaptureActivity.AutoFocus, autoFocus!!.isChecked)
+                intent.putExtra(BarcodeCaptureActivity.UseFlash, useFlash!!.isChecked)
+                startActivityForResult(intent, RC_BARCODE_CAPTURE)
+            }
+        })
     }
 
     override fun onBackPressed() {
@@ -102,8 +107,11 @@ class BarcodeActivity : Activity() {
                             }
                         }
                         if ("" != apikey) {
-                            //TODO:cambiar
-                           // AddDeviceToApiKeyBatch().execute(   apikey, mail, PreyUtils.getDeviceType(   this     ) )
+                           addDeviceToApiKeyBatch(
+                                apikey, mail, getDeviceType(
+                                    this
+                                )
+                            )
                         }
                     }
                 } else {
@@ -123,35 +131,31 @@ class BarcodeActivity : Activity() {
 
     var error: String? = null
     private val noMoreDeviceError = false
-    //TODO:cambiar
-    /*
-    private inner class AddDeviceToApiKeyBatch : AsyncTask<String?, Void?, Void?>() {
+
+    fun addDeviceToApiKeyBatch (apikey: String, mail: String, deviceType: String) {
         var progressDialog: ProgressDialog? = null
 
-        override fun onPreExecute() {
+
             progressDialog = ProgressDialog(this@BarcodeActivity)
             progressDialog!!.setMessage(getText(R.string.set_old_user_loading).toString())
             progressDialog!!.isIndeterminate = true
             progressDialog!!.setCancelable(false)
             progressDialog!!.show()
-        }
 
-         fun doInBackground(vararg data: String): Void? {
+
+
             error = null
             try {
-                val ctx = applicationContext
-                val apiKey = data[0]
-                PreyConfig.getInstance(ctx).registerNewDeviceWithApiKey(apiKey)
+                PreyConfig.getInstance(applicationContext).registerNewDeviceWithApiKey(apikey)
             } catch (e: Exception) {
-                PreyLogger.e(String.format("Error:%s", e.message), e)
+                PreyLogger.e("Error:${e.message}", e)
                 error = e.message
             }
-            return null
-        }
 
-        override fun onPostExecute(unused: Void?) {
+
+
             try {
-                progressDialog!!.dismiss()
+                progressDialog.dismiss()
             } catch (e: Exception) {
                 PreyLogger.e("Error:" + e.message, e)
             }
@@ -174,8 +178,8 @@ class BarcodeActivity : Activity() {
             } else {
                 showDialog(ERROR)
             }
-        }
-    }*/
+
+    }
 
     override fun onCreateDialog(id: Int): Dialog {
         val pass: Dialog? = null
@@ -186,10 +190,8 @@ class BarcodeActivity : Activity() {
                     DialogInterface.OnClickListener { dialog, which -> }).setCancelable(false)
                 .create()
 
-            NO_MORE_DEVICES_WARNING -> return AlertDialog.Builder(
-                this@BarcodeActivity
-            ).setIcon(R.drawable.info).setTitle(R.string.set_old_user_no_more_devices_title)
-                .setMessage(error)
+            NO_MORE_DEVICES_WARNING -> return AlertDialog.Builder(this@BarcodeActivity).setIcon(R.drawable.info)
+                .setTitle(R.string.set_old_user_no_more_devices_title).setMessage(error)
                 .setPositiveButton(R.string.ok,
                     DialogInterface.OnClickListener { dialog, which -> }).setCancelable(false)
                 .create()
@@ -205,9 +207,8 @@ class BarcodeActivity : Activity() {
                 ad.setIcon(R.drawable.error)
                 ad.setTitle(R.string.error_title)
                 ad.setMessage(error)
-                ad.setButton(
-                    DialogInterface.BUTTON_POSITIVE, this.getString(R.string.ok)
-                ) { dialog, id -> }
+                ad.setButton(DialogInterface.BUTTON_POSITIVE, this.getString(R.string.ok),
+                    DialogInterface.OnClickListener { dialog, id -> })
                 ad.setCancelable(false)
             }
 
@@ -216,9 +217,8 @@ class BarcodeActivity : Activity() {
                 ad.setIcon(R.drawable.info)
                 ad.setTitle(R.string.set_old_user_no_more_devices_title)
                 ad.setMessage(error)
-                ad.setButton(
-                    DialogInterface.BUTTON_POSITIVE, this.getString(R.string.ok)
-                ) { dialog, id -> }
+                ad.setButton(DialogInterface.BUTTON_POSITIVE, this.getString(R.string.ok),
+                    DialogInterface.OnClickListener { dialog, id -> })
                 ad.setCancelable(false)
             }
 

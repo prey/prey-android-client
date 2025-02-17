@@ -15,6 +15,7 @@ import android.os.PowerManager
 import android.os.Process
 import android.provider.Settings
 import android.view.WindowManager
+
 import com.prey.actions.observer.ActionResult
 import com.prey.activities.CloseActivity
 import com.prey.activities.PasswordHtmlActivity
@@ -32,223 +33,285 @@ import com.prey.services.AppAccessibilityService
 import com.prey.services.CheckLockActivated
 import com.prey.services.PreyLockHtmlService
 import com.prey.services.PreyLockService
+
 import org.json.JSONObject
 
-class Lock  {
+/**
+ * Lock class responsible for handling device lock functionality.
+ */
+class Lock {
 
-    fun start(ctx: Context, list: List<ActionResult?>?, parameters: JSONObject?) {
+    /**
+     * Starts the lock process.
+     *
+     * @param context        The application context.
+     * @param actionResults  The list of action results.
+     * @param parameters     The JSON object containing lock parameters.
+     */
+    fun start(context: Context, actionResults: List<ActionResult?>?, parameters: JSONObject?) {
         try {
-            var messageId: String? = null
-            if (parameters != null && parameters.has(PreyConfig.MESSAGE_ID)) {
-                messageId = parameters.getString(PreyConfig.MESSAGE_ID)
-                PreyLogger.d("messageId:$messageId")
+            // Extract lock parameters from the JSON object
+            val messageId = parameters?.getString(PreyConfig.MESSAGE_ID)
+            val jobId = parameters?.getString(PreyConfig.JOB_ID)
+            val unlockPass = parameters?.getString(PreyConfig.UNLOCK_PASS)!!
+            val lockMessage = parameters?.getString(PreyConfig.LOCK_MESSAGE) ?: ""
+            val reason: String? = null
+            // Set lock settings
+            if (jobId != null) {
+                PreyConfig.getInstance(context).setJobIdLock(jobId)
             }
-            var reason: String? = null
-            var jobId: String? = null
-            if (parameters != null && parameters.has(PreyConfig.JOB_ID)) {
-                jobId = parameters.getString(PreyConfig.JOB_ID)
-                PreyLogger.d("jobId:$jobId")
-                reason = "{\"device_job_id\":\"$jobId\"}"
-                PreyConfig.getInstance(ctx).setJobIdLock (jobId)
-            }
-            var unlock: String? = null
-            if (parameters != null && parameters.has(PreyConfig.UNLOCK_PASS)) {
-                unlock = parameters.getString(PreyConfig.UNLOCK_PASS)
-                PreyConfig.getInstance(ctx).setUnlockPass  (unlock)
-            }
-            if (parameters != null && parameters.has(PreyConfig.LOCK_MESSAGE)) {
-                val lockMessage = parameters.getString(PreyConfig.LOCK_MESSAGE)
-                PreyConfig.getInstance(ctx).setLockMessage  (lockMessage)
-            } else {
-                PreyConfig.getInstance(ctx).setLockMessage ("")
-            }
-            lock(ctx, unlock!!, messageId, reason, jobId)
+            PreyConfig.getInstance(context).setUnlockPass(unlockPass)
+            PreyConfig.getInstance(context).setLockMessage(lockMessage)
+            // Initiate the lock process
+            lock(context, unlockPass, messageId, reason, jobId)
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                ctx,
+                context,
                 UtilJson.makeMapParam("start", "lock", "failed", e.message)
             )
         }
     }
 
-    fun stop(ctx: Context, list: List<ActionResult?>?, parameters: JSONObject?) {
+    /**
+     * Stops the lock process.
+     *
+     * @param context        The application context.
+     * @param actionResults  The list of action results.
+     * @param parameters     The JSON object containing lock parameters.
+     */
+    fun stop(context: Context, actionResults: List<ActionResult?>?, parameters: JSONObject?) {
         try {
-            var messageId: String? = null
-            if (parameters != null && parameters.has(PreyConfig.MESSAGE_ID)) {
-                messageId = parameters.getString(PreyConfig.MESSAGE_ID)
-                PreyLogger.d("messageId:$messageId")
-            }
+            // Extract lock parameters from the JSON object
+            val messageId = parameters?.getString(PreyConfig.MESSAGE_ID)
+            val jobId = parameters?.getString(PreyConfig.JOB_ID)
             var reason = "{\"origin\":\"panel\"}"
-
-            if (parameters != null && parameters.has(PreyConfig.JOB_ID)) {
-                val jobId = parameters.getString(PreyConfig.JOB_ID)
-                PreyLogger.d("jobId:$jobId")
+            if (jobId != null) {
                 reason = "{\"device_job_id\":\"$jobId\",\"origin\":\"panel\"}"
             }
-            val jobIdLock = PreyConfig.getInstance(ctx).getJobIdLock()
-            if (jobIdLock != null && "" != jobIdLock) {
-                reason = "{\"device_job_id\":\"$jobIdLock\",\"origin\":\"panel\"}"
-                PreyConfig.getInstance(ctx).setJobIdLock ("")
-            }
-            PreyConfig.getInstance(ctx).setLockMessage ("")
-            PreyConfig.getInstance(ctx).setLock(false)
-            PreyConfig.getInstance(ctx).deleteUnlockPass()
-            if (PreyConfig.getInstance(ctx).isMarshmallowOrAbove()) {
-                Thread.sleep(1000)
-                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                    ctx,
-                    "processed",
-                    messageId,
-                    UtilJson.makeMapParam("start", "lock", "stopped", reason)
-                )
-                Thread.sleep(2000)
-                val canAccessibility = PreyPermission.isAccessibilityServiceEnabled(ctx)
-                val canDrawOverlays = PreyPermission.canDrawOverlays(ctx)
-                if (canDrawOverlays || canAccessibility) {
-                    if (canDrawOverlays) {
-                        try {
-                            val view = PreyConfig.getInstance(ctx).viewLock
-                            val wm = ctx.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-                            if (wm != null && view != null) {
-                                wm.removeView(view)
-                                PreyConfig.getInstance(ctx).viewLock = null
-                            } else {
-                                Process.killProcess(Process.myPid())
-                            }
-                        } catch (e: Exception) {
-                            Process.killProcess(Process.myPid())
-                        }
-                    }
-                    val intentClose = Intent(ctx, CloseActivity::class.java)
-                    intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    ctx.startActivity(intentClose)
-                } else {
-                    try {
-                        FroyoSupport.getInstance(ctx)!!.changePasswordAndLock("", true)
-                        val screenLock =
-                            (ctx.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(
-                                PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
-                                PreyConfig.TAG
-                            )
-                        screenLock.acquire()
-                        screenLock.release()
-                        Thread.sleep(2000)
-                        reason = "{\"origin\":\"panel\"}"
-                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                            ctx,
-                            UtilJson.makeMapParam("start", "lock", "stopped", reason)
-                        )
-                    } catch (e: Exception) {
-                        throw PreyException(e)
-                    }
-                }
+            // Reset lock settings
+            PreyConfig.getInstance(context).setLockMessage("")
+            PreyConfig.getInstance(context).setLock(false)
+            PreyConfig.getInstance(context).deleteUnlockPass()
+            // Handle lock stop process based on device version
+            if (PreyConfig.getInstance(context).isMarshmallowOrAbove()) {
+                // Handle Marshmallow and above devices
+                sendStopNotification(context, messageId, reason)
+                handleAccessibilityAndOverlay(context)
             } else {
-                try {
-                    if (!PreyConfig.getInstance(ctx).isMarshmallowOrAbove()) {
-                        FroyoSupport.getInstance(ctx)!!.changePasswordAndLock("", true)
-                        val screenLock =
-                            (ctx.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(
-                                PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
-                                PreyConfig.TAG
-                            )
-                        screenLock.acquire()
-                        screenLock.release()
-                    }
-                    Thread.sleep(2000)
-                    reason = "{\"origin\":\"panel\"}"
-                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                        ctx,
-                        UtilJson.makeMapParam("start", "lock", "stopped", reason)
-                    )
-                } catch (e: Exception) {
-                    throw PreyException(e)
-                }
+                // Handle pre-Marshmallow devices
+                handlePreMarshmallow(context)
             }
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message + e.message, e)
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                ctx,
-                UtilJson.makeMapParam("start", "lock", "failed", e.message)
-            )
+            // Handle any exceptions that occur during the lock stop process
+            handleException(context, e)
         }
     }
 
-    fun sms(ctx: Context, list: List<ActionResult?>?, parameters: JSONObject) {
+    /**
+     * Handles an exception that occurred during the lock process.
+     *
+     * @param context The application context.
+     * @param e The exception that occurred.
+     */
+    private fun handleException(context: Context, e: Exception) {
+        PreyLogger.e("Error:${e.message}", e)
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
+            context,
+            UtilJson.makeMapParam("start", "lock", "failed", e.message)
+        )
+    }
+
+    /**
+     * Handles the lock process for pre-Marshmallow devices.
+     *
+     * This function changes the password and locks the device, then sends a notification
+     * to the server indicating that the lock process has stopped.
+     *
+     * @param context The application context.
+     */
+    private fun handlePreMarshmallow(context: Context) {
         try {
-            val unlock = parameters.getString("parameter")
-            lock(ctx, unlock, null, null, null)
-        } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            FroyoSupport.getInstance(context).changePasswordAndLock("", true)
+            val screenLock =
+                (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(
+                    PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                    PreyConfig.TAG
+                )
+            screenLock.acquire()
+            screenLock.release()
+            Thread.sleep(2000)
+            val reason = "{\"origin\":\"panel\"}"
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                ctx,
-                UtilJson.makeMapParam("start", "lock", "failed", e.message)
+                context,
+                UtilJson.makeMapParam("start", "lock", "stopped", reason)
             )
+        } catch (e: Exception) {
+            throw PreyException(e)
         }
     }
 
+    /**
+     * Handles the accessibility and overlay settings for the lock process.
+     *
+     * This function checks if the accessibility service is enabled and if the app can draw overlays.
+     * If either condition is true, it removes the lock view and starts the CloseActivity.
+     * Otherwise, it calls the handleNoAccessibilityAndOverlay function.
+     *
+     * @param context The application context.
+     */
+    private fun handleAccessibilityAndOverlay(context: Context) {
+        Thread.sleep(2000)
+        val canAccessibility = PreyPermission.isAccessibilityServiceEnabled(context)
+        val canDrawOverlays = PreyPermission.canDrawOverlays(context)
+        if (canDrawOverlays || canAccessibility) {
+            if (canDrawOverlays) {
+                removeLockView(context)
+            }
+            val intentClose = Intent(context, CloseActivity::class.java)
+            intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intentClose)
+        } else {
+            handleNoAccessibilityAndOverlay(context)
+        }
+    }
+
+    /**
+     * Removes the lock view from the window manager.
+     *
+     * @param context The application context.
+     */
+    private fun removeLockView(context: Context) {
+        try {
+            val view = PreyConfig.getInstance(context).viewLock
+            val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            if (wm != null && view != null) {
+                wm.removeView(view)
+                PreyConfig.getInstance(context).viewLock = null
+            } else {
+                Process.killProcess(Process.myPid())
+            }
+        } catch (e: Exception) {
+            Process.killProcess(Process.myPid())
+        }
+    }
+
+    /**
+     * Handles the case where accessibility and overlay are not available.
+     *
+     * This function changes the password and locks the device, then sends a notification
+     * to the server indicating that the lock process has stopped.
+     *
+     * @param context The application context.
+     */
+    private fun handleNoAccessibilityAndOverlay(context: Context) {
+        try {
+            FroyoSupport.getInstance(context).changePasswordAndLock("", true)
+            val screenLock =
+                (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(
+                    PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                    PreyConfig.TAG
+                )
+            screenLock.acquire()
+            screenLock.release()
+            Thread.sleep(2000)
+            val reason = "{\"origin\":\"panel\"}"
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
+                context,
+                UtilJson.makeMapParam("start", "lock", "stopped", reason)
+            )
+        } catch (e: Exception) {
+            throw PreyException(e)
+        }
+    }
+
+    /**
+     * Sends a stop notification to the server.
+     *
+     * @param context The application context.
+     * @param messageId The message ID.
+     * @param reason The reason for the stop notification.
+     */
+    private fun sendStopNotification(context: Context, messageId: String?, reason: String) {
+        Thread.sleep(1000)
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
+            context,
+            "processed",
+            messageId,
+            UtilJson.makeMapParam("start", "lock", "stopped", reason)
+        )
+    }
+
+    /**
+     * Locks the device with the given unlock password, message ID, reason, and device job ID.
+     *
+     * This function sets the unlock password, enables the lock, and starts the necessary services
+     * to lock the device. It also sends a notification to the server with the result of the lock action.
+     *
+     * @param context The application context.
+     * @param unlock The unlock password.
+     * @param messageId The message ID.
+     * @param reason The reason for locking the device.
+     * @param deviceJobId The device job ID.
+     */
     fun lock(
-        ctx: Context,
+        context: Context,
         unlock: String,
         messageId: String?,
         reason: String?,
-        device_job_id: String?
+        deviceJobId: String?
     ) {
         PreyLogger.d(
-            String.format(
-                "lock unlock:%s messageId:%s reason:%s",
-                unlock,
-                messageId,
-                reason
-            )
+
+            "lock unlock:${unlock} messageId:${messageId} reason:${reason}"
         )
-        PreyConfig.getInstance(ctx).setUnlockPass (unlock )
-        PreyConfig.getInstance(ctx).setLock(true)
+        PreyConfig.getInstance(context).setUnlockPass(unlock)
+        PreyConfig.getInstance(context).setLock(true)
         PreyLogger.d("lock 1")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val accessibility = PreyPermission.isAccessibilityServiceEnabled(ctx)
-            val canDrawOverlays = PreyPermission.canDrawOverlays(ctx)
+            val accessibility = PreyPermission.isAccessibilityServiceEnabled(context)
+            val canDrawOverlays = PreyPermission.canDrawOverlays(context)
             if (canDrawOverlays || accessibility) {
                 if (canDrawOverlays) {
                     var intentPreyLock: Intent? = null
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         PreyLogger.d("lock 2")
-                        intentPreyLock = Intent(ctx, PreyLockHtmlService::class.java)
+                        intentPreyLock = Intent(context, PreyLockHtmlService::class.java)
                     } else {
                         PreyLogger.d("lock 3")
-                        intentPreyLock = Intent(ctx, PreyLockService::class.java)
+                        intentPreyLock = Intent(context, PreyLockService::class.java)
                     }
-                    ctx.startService(intentPreyLock)
-                    val intentCheckLock = Intent(ctx, CheckLockActivated::class.java)
-                    ctx.startService(intentCheckLock)
+                    context.startService(intentPreyLock)
+                    val intentCheckLock = Intent(context, CheckLockActivated::class.java)
+                    context.startService(intentCheckLock)
                 }
                 if (accessibility) {
                     PreyLogger.d("lock 4")
-                    PreyConfig.getInstance(ctx).setOverLock( false)
-                    val intentAccessibility = Intent(ctx, AppAccessibilityService::class.java)
-                    ctx.startService(intentAccessibility)
+                    PreyConfig.getInstance(context).setOverLock(false)
+                    val intentAccessibility = Intent(context, AppAccessibilityService::class.java)
+                    context.startService(intentAccessibility)
                     var intentPasswordActivity: Intent? = null
                     intentPasswordActivity = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        Intent(ctx, PasswordHtmlActivity::class.java)
+                        Intent(context, PasswordHtmlActivity::class.java)
                     } else {
-                        Intent(ctx, PasswordNativeActivity::class.java)
+                        Intent(context, PasswordNativeActivity::class.java)
                     }
                     intentPasswordActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    ctx.startActivity(intentPasswordActivity)
+                    context.startActivity(intentPasswordActivity)
                 }
             } else {
                 PreyLogger.d("lock 5")
-                lockWhenYouNocantDrawOverlays(ctx)
+                lockWhenYouNocantDrawOverlays(context)
             }
         } else {
             PreyLogger.d("lock 6")
-            lockOld(ctx)
+            lockOld(context)
         }
         Thread {
             try {
                 Thread.sleep(2000)
                 PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                    ctx,
+                    context,
                     "processed",
                     messageId,
                     UtilJson.makeMapParam("start", "lock", "started", reason)
@@ -263,144 +326,177 @@ class Lock  {
      * @return true if pass or pin or pattern locks screen
      */
     @TargetApi(23)
-    private fun isDeviceLocked(ctx: Context): Boolean {
+    private fun isDeviceLocked(context: Context): Boolean {
         val keyguardManager =
-            ctx.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager //api 23+
+            context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager //api 23+
         return keyguardManager.isDeviceSecure
     }
 
-    companion object {
-        fun sendUnLock(context: Context) {
-            Thread {
-                val unlockPass = PreyConfig.getInstance(context).getUnlockPass()
-                PreyLogger.d("sendUnLock unlockPass:$unlockPass")
-                if (unlockPass != null && "" != unlockPass) {
-                    if (PreyConfig.getInstance(context).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(
-                            context
-                        )
-                    ) {
-                        PreyLogger.d("sendUnLock nothing")
-                    } else {
-                        PreyLogger.d("sendUnLock deleteUnlockPass")
-                        PreyConfig.getInstance(context).setUnlockPass("")
-                        val intentClose =
-                            Intent(context, CloseActivity::class.java)
-                        intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        context.startActivity(intentClose)
-                        val intentAccessibility = Intent(
-                            context,
-                            AppAccessibilityService::class.java
-                        )
-                        context.stopService(intentAccessibility)
-                        val ctx = context
-                        object : Thread() {
-                            override fun run() {
-                                val jobIdLock = PreyConfig.getInstance(ctx).getJobIdLock()
-                                var reason = "{\"origin\":\"user\"}"
-                                if (jobIdLock != null && "" != jobIdLock) {
-                                    reason =
-                                        "{\"origin\":\"user\",\"device_job_id\":\"$jobIdLock\"}"
-                                    PreyConfig.getInstance(ctx).setJobIdLock ("")
-                                }
-                                PreyWebServices.getInstance()
-                                    .sendNotifyActionResultPreyHttp(
-                                        ctx,
-                                        UtilJson.makeMapParam(
-                                            "start",
-                                            "lock",
-                                            "stopped",
-                                            reason
-                                        )
-                                    )
-                            }
-                        }.start()
-                    }
-                }
-            }.start()
-        }
-
-        fun lockWhenYouNocantDrawOverlays(ctx: Context) {
-            val accessibility = PreyPermission.isAccessibilityServiceEnabled(ctx)
-            val canDrawOverlays = PreyPermission.canDrawOverlays(ctx)
-            val unlockPass = PreyConfig.getInstance(ctx).getUnlockPass()
-            PreyLogger.d(
-                String.format(
-                    "DeviceAdmin lockWhenYouNocantDrawOverlays unlockPass: %s accessibility: %s canDrawOverlays: %s",
-                    unlockPass,
-                    accessibility,
-                    canDrawOverlays
-                )
-            )
-            val isAccessibilityServiceEnabled = PreyPermission.isAccessibilityServiceEnabled(ctx)
+    /**
+     * Sends an unlock request to the device.
+     *
+     * This function checks if the device has a valid unlock pass and if it's running on a Marshmallow or above device.
+     * If the conditions are met, it clears the unlock pass, closes the current activity, stops the accessibility service,
+     * and sends a notification to the server with the result of the unlock action.
+     *
+     * @param context The application context.
+     */
+    fun sendUnLock(context: Context) {
+        Thread {
+            val unlockPass = PreyConfig.getInstance(context).getUnlockPass()
+            PreyLogger.d("sendUnLock unlockPass:$unlockPass")
             if (unlockPass != null && "" != unlockPass) {
-                if (!canDrawOverlays(ctx) && !isAccessibilityServiceEnabled) {
-                    val isPatternSet = isPatternSet(ctx)
-                    val isPassOrPinSet = isPassOrPinSet(ctx)
-                    PreyLogger.d("CheckLockActivated isPatternSet:$isPatternSet")
-                    PreyLogger.d("CheckLockActivated  isPassOrPinSet:$isPassOrPinSet")
-                    if (isPatternSet || isPassOrPinSet) {
-                        FroyoSupport.getInstance(ctx)!!.lockNow()
-                        Thread(EventManagerRunner(ctx, Event(Event.NATIVE_LOCK))).start()
-                    } else {
-                        try {
-                            FroyoSupport.getInstance(ctx)!!.changePasswordAndLock(
-                                PreyConfig.getInstance(ctx).getUnlockPass(),
-                                true
-                            )
-                            Thread(EventManagerRunner(ctx, Event(Event.NATIVE_LOCK))).start()
-                        } catch (e: Exception) {
-                            PreyLogger.e("Error FroyoSupport changePasswordAndLock:" + e.message, e)
+                if (PreyConfig.getInstance(context)
+                        .isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(
+                        context
+                    )
+                ) {
+                    PreyLogger.d("sendUnLock nothing")
+                } else {
+                    PreyLogger.d("sendUnLock deleteUnlockPass")
+                    PreyConfig.getInstance(context).setUnlockPass("")
+                    val intentClose =
+                        Intent(context, CloseActivity::class.java)
+                    intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intentClose)
+                    val intentAccessibility = Intent(
+                        context,
+                        AppAccessibilityService::class.java
+                    )
+                    context.stopService(intentAccessibility)
+
+                    object : Thread() {
+                        override fun run() {
+                            val jobIdLock = PreyConfig.getInstance(context).getJobIdLock()
+                            var reason = "{\"origin\":\"user\"}"
+                            if (jobIdLock != null && "" != jobIdLock) {
+                                reason =
+                                    "{\"origin\":\"user\",\"device_job_id\":\"$jobIdLock\"}"
+                                PreyConfig.getInstance(context).setJobIdLock("")
+                            }
+                            PreyWebServices.getInstance()
+                                .sendNotifyActionResultPreyHttp(
+                                    context,
+                                    UtilJson.makeMapParam(
+                                        "start",
+                                        "lock",
+                                        "stopped",
+                                        reason
+                                    )
+                                )
                         }
-                    }
+                    }.start()
                 }
             }
-        }
+        }.start()
+    }
 
-        fun lockOld(ctx: Context) {
-            val accessibility = PreyPermission.isAccessibilityServiceEnabled(ctx)
-            val canDrawOverlays = PreyPermission.canDrawOverlays(ctx)
-            val unlockPass = PreyConfig.getInstance(ctx).getUnlockPass()
-            PreyLogger.d("DeviceAdmin lockWhenYouNocantDrawOverlays unlockPass1:$unlockPass accessibility:$accessibility canDrawOverlays:$canDrawOverlays")
-            if (unlockPass != null && "" != unlockPass) {
-                val isPatternSet = isPatternSet(ctx)
-                val isPassOrPinSet = isPassOrPinSet(ctx)
+    /**
+     * Locks the device when accessibility service is not enabled and the app cannot draw overlays.
+     *
+     * @param context The application context.
+     */
+    fun lockWhenYouNocantDrawOverlays(context: Context) {
+        val isAccessibilityServiceEnabled = PreyPermission.isAccessibilityServiceEnabled(context)
+        val canDrawOverlays = PreyPermission.canDrawOverlays(context)
+        val unlockPass = PreyConfig.getInstance(context).getUnlockPass()
+        PreyLogger.d(
+            "DeviceAdmin lockWhenYouNocantDrawOverlays unlockPass: ${unlockPass} accessibility: ${isAccessibilityServiceEnabled} canDrawOverlays: ${canDrawOverlays}"
+        )
+        if (unlockPass != null && unlockPass.isNotEmpty()) {
+            if (!canDrawOverlays(context) && !isAccessibilityServiceEnabled) {
+                val isPatternSet = isPatternSet(context)
+                val isPassOrPinSet = isPassOrPinSet(context)
                 PreyLogger.d("CheckLockActivated isPatternSet:$isPatternSet")
                 PreyLogger.d("CheckLockActivated  isPassOrPinSet:$isPassOrPinSet")
                 if (isPatternSet || isPassOrPinSet) {
-                    FroyoSupport.getInstance(ctx)!!.lockNow()
+                    FroyoSupport.getInstance(context).lockNow()
+                    Thread(EventManagerRunner(context, Event(Event.NATIVE_LOCK))).start()
                 } else {
                     try {
-                        FroyoSupport.getInstance(ctx)!!
-                            .changePasswordAndLock(PreyConfig.getInstance(ctx).getUnlockPass(), true)
+                        FroyoSupport.getInstance(context).changePasswordAndLock(
+                            PreyConfig.getInstance(context).getUnlockPass(),
+                            true
+                        )
+                        Thread(EventManagerRunner(context, Event(Event.NATIVE_LOCK))).start()
                     } catch (e: Exception) {
-                        PreyLogger.e("error lockold:" + e.message, e)
+                        PreyLogger.e("Error FroyoSupport changePasswordAndLock:${e.message}", e)
                     }
                 }
             }
         }
+    }
 
-        fun canDrawOverlays(ctx: Context?): Boolean {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                return true
+    /**
+     * Locks the device using the old locking mechanism.
+     *
+     * This function checks if the accessibility service is enabled and if the app can draw overlays.
+     * It then checks if a unlock password is set and if a pattern or PIN is set on the device.
+     * If a pattern or PIN is set, it locks the device immediately. Otherwise, it changes the password and locks the device.
+     *
+     * @param context The application context.
+     */
+    fun lockOld(context: Context) {
+        val accessibility = PreyPermission.isAccessibilityServiceEnabled(context)
+        val canDrawOverlays = PreyPermission.canDrawOverlays(context)
+        val unlockPassword = PreyConfig.getInstance(context).getUnlockPass()
+        PreyLogger.d("DeviceAdmin lockWhenYouNocantDrawOverlays unlockPass1:$unlockPassword accessibility:$accessibility canDrawOverlays:$canDrawOverlays")
+        if (unlockPassword != null && unlockPassword.isNotEmpty()) {
+            val isPatternSet = isPatternSet(context)
+            val isPassOrPinSet = isPassOrPinSet(context)
+            PreyLogger.d("CheckLockActivated isPatternSet:$isPatternSet")
+            PreyLogger.d("CheckLockActivated  isPassOrPinSet:$isPassOrPinSet")
+            if (isPatternSet || isPassOrPinSet) {
+                FroyoSupport.getInstance(context)?.lockNow()
+            } else {
+                try {
+                    FroyoSupport.getInstance(context)!!
+                        .changePasswordAndLock(unlockPassword, true)
+                } catch (e: Exception) {
+                    PreyLogger.e("error locking device:${e.message}", e)
+                }
             }
-            return Settings.canDrawOverlays(ctx)
-        }
-
-        /**
-         * @return true if pattern set, false if not (or if an issue when checking)
-         */
-        fun isPatternSet(ctx: Context?): Boolean {
-            return false
-        }
-
-        /**
-         * @return true if pass or pin set
-         */
-        @TargetApi(16)
-        fun isPassOrPinSet(ctx: Context): Boolean {
-            val keyguardManager =
-                ctx.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager //api 16+
-            return keyguardManager.isKeyguardSecure
         }
     }
+
+    /**
+     * Checks if the app can draw overlays on the device.
+     *
+     * @param context The application context.
+     * @return True if the app can draw overlays, false otherwise.
+     */
+    fun canDrawOverlays(context: Context?): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true
+        }
+        return Settings.canDrawOverlays(context)
+    }
+
+    /**
+     * Checks if a pattern is set on the device.
+     *
+     * This function is currently not implemented.
+     *
+     * @param context The application context.
+     * @return Always returns false.
+     */
+    fun isPatternSet(context: Context?): Boolean {
+        return false
+    }
+
+    /**
+     * Checks if a pass or pin is set on the device.
+     *
+     * This function uses the KeyguardManager to check if the device is secure.
+     *
+     * @param context The application context.
+     * @return True if a pass or pin is set, false otherwise.
+     */
+    @TargetApi(16)
+    fun isPassOrPinSet(context: Context): Boolean {
+        val keyguardManager =
+            context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager //api 16+
+        return keyguardManager.isKeyguardSecure
+    }
+
 }

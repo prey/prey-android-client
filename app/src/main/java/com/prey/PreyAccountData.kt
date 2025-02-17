@@ -6,6 +6,11 @@
  ******************************************************************************/
 package com.prey
 
+/**
+ * Represents a Prey account data.
+ *
+ * This class holds the necessary information for a Prey account, including API key, device ID, name, password, email, referer ID, Prey version, and missing status.
+ */
 class PreyAccountData {
     private var apiKey: String? = null
     private var deviceId: String? = null

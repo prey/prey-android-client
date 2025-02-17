@@ -13,13 +13,22 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build
+
 import com.prey.actions.HttpDataService
 import com.prey.PreyLogger
 
-
+/**
+ * Class responsible for handling battery information.
+ */
 class BatteryInformation {
+    /**
+     * The battery object that stores the current battery state.
+     */
     var battery: Battery? = null
 
+    /**
+     * BroadcastReceiver that listens for battery information updates.
+     */
     private val mBatInfoReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         @TargetApi(Build.VERSION_CODES.ECLAIR)
         override fun onReceive(arg0: Context, intent: Intent) {
@@ -52,6 +61,12 @@ class BatteryInformation {
         }
     }
 
+    /**
+     * Retrieves battery information and returns it as an HttpDataService object.
+     *
+     * @param context The application context.
+     * @return An HttpDataService object containing the battery information, or null if the information could not be retrieved.
+     */
     fun getInformation(context: Context): HttpDataService? {
         battery = null
         context.applicationContext.registerReceiver(
@@ -79,41 +94,53 @@ class BatteryInformation {
         return data
     }
 
+    /**
+     * A BroadcastReceiver that listens for battery information updates and stores the received information in the battery object.
+     */
     private val batteryInfoReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         @TargetApi(Build.VERSION_CODES.ECLAIR)
         override fun onReceive(context: Context, intent: Intent) {
-
             battery = Battery()
-            battery!!.setHealth (intent.getIntExtra(BatteryManager.EXTRA_HEALTH, 0))
-            battery!!.setIconSmall ( intent.getIntExtra(BatteryManager.EXTRA_ICON_SMALL, 0))
-            battery!!.setLevel (intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0))
-            battery!!.setPlugged (intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0))
-            battery!!.setPresent (intent.extras!!.getBoolean(BatteryManager.EXTRA_PRESENT))
+            battery!!.setHealth(intent.getIntExtra(BatteryManager.EXTRA_HEALTH, 0))
+            battery!!.setIconSmall(intent.getIntExtra(BatteryManager.EXTRA_ICON_SMALL, 0))
+            battery!!.setLevel(intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0))
+            battery!!.setPlugged(intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0))
+            battery!!.setPresent(intent.extras!!.getBoolean(BatteryManager.EXTRA_PRESENT))
             battery!!.setScale(intent.getIntExtra(BatteryManager.EXTRA_SCALE, 0))
-            battery!!.setStatus ( intent.getIntExtra(BatteryManager.EXTRA_STATUS, 0))
-            battery!!.setTechnology ( intent.extras!!.getString(BatteryManager.EXTRA_TECHNOLOGY))
-            battery!!.setTemperature( intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0))
-            battery!!.setVoltage ( intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0))
-            battery!!.setCharging ( battery!!.getStatus() == BatteryManager.BATTERY_STATUS_CHARGING ||
-                    battery!!.getStatus() == BatteryManager.BATTERY_STATUS_FULL)
+            battery!!.setStatus(intent.getIntExtra(BatteryManager.EXTRA_STATUS, 0))
+            battery!!.setTechnology(intent.extras!!.getString(BatteryManager.EXTRA_TECHNOLOGY))
+            battery!!.setTemperature(intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0))
+            battery!!.setVoltage(intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0))
+            battery!!.setCharging(
+                battery!!.getStatus() == BatteryManager.BATTERY_STATUS_CHARGING ||
+                        battery!!.getStatus() == BatteryManager.BATTERY_STATUS_FULL
+            )
         }
     }
 
+    /**
+     * Creates a new Battery object based on the provided Intent.
+     *
+     * @param intent The Intent containing battery information.
+     * @return A new Battery object with the extracted information.
+     */
     @TargetApi(Build.VERSION_CODES.ECLAIR)
     fun makeBattery(intent: Intent): Battery {
         val battery = Battery()
-        battery.setHealth (intent.getIntExtra(BatteryManager.EXTRA_HEALTH, 0))
-        battery.setIconSmall ( intent.getIntExtra(BatteryManager.EXTRA_ICON_SMALL, 0))
-        battery.setLevel (intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0))
-        battery.setPlugged (intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0))
-        battery.setPresent (intent.extras!!.getBoolean(BatteryManager.EXTRA_PRESENT))
+        battery.setHealth(intent.getIntExtra(BatteryManager.EXTRA_HEALTH, 0))
+        battery.setIconSmall(intent.getIntExtra(BatteryManager.EXTRA_ICON_SMALL, 0))
+        battery.setLevel(intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0))
+        battery.setPlugged(intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0))
+        battery.setPresent(intent.extras!!.getBoolean(BatteryManager.EXTRA_PRESENT))
         battery.setScale(intent.getIntExtra(BatteryManager.EXTRA_SCALE, 0))
-        battery.setStatus ( intent.getIntExtra(BatteryManager.EXTRA_STATUS, 0))
-        battery.setTechnology ( intent.extras!!.getString(BatteryManager.EXTRA_TECHNOLOGY))
-        battery.setTemperature( intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0))
-        battery.setVoltage ( intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0))
-        battery.setCharging ( battery.getStatus() == BatteryManager.BATTERY_STATUS_CHARGING ||
-                battery.getStatus() == BatteryManager.BATTERY_STATUS_FULL)
+        battery.setStatus(intent.getIntExtra(BatteryManager.EXTRA_STATUS, 0))
+        battery.setTechnology(intent.extras!!.getString(BatteryManager.EXTRA_TECHNOLOGY))
+        battery.setTemperature(intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0))
+        battery.setVoltage(intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0))
+        battery.setCharging(
+            battery.getStatus() == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    battery.getStatus() == BatteryManager.BATTERY_STATUS_FULL
+        )
         return battery
     }
 }

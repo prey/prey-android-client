@@ -11,25 +11,29 @@ import android.content.Context
 import android.content.Intent
 import com.prey.PreyLogger
 
-class AlarmLocationReceiver : BroadcastReceiver() {
+/**
+ * A BroadcastReceiver that receives daily location updates.
+ */
+class DailyLocationReceiver : BroadcastReceiver() {
+
     /**
-     * Receiving method to send daily location
+     * Called when the BroadcastReceiver receives an Intent.
+     * This method is responsible for handling the daily location update.
      *
-     * @param context
-     * @param intent
+     * @param context The Context in which the receiver is running.
+     * @param intent The Intent being received.
      */
     override fun onReceive(context: Context, intent: Intent) {
         try {
             PreyLogger.d("DAILY______________________________")
             PreyLogger.d("DAILY----------AlarmLocationReceiver onReceive")
-            val ctx = context
             object : Thread() {
                 override fun run() {
-                    DailyLocation().run(ctx)
+                    DailyLocation().run(context)
                 }
             }.start()
         } catch (e: Exception) {
-            PreyLogger.e(String.format("DAILY AlarmLocationReceiver error:%s", e.message), e)
+            PreyLogger.e("DAILY AlarmLocationReceiver error:${e.message}", e)
         }
     }
 }

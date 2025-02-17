@@ -16,9 +16,11 @@ import android.os.Build
 import android.provider.Settings
 import android.telephony.TelephonyManager
 import androidx.core.app.ActivityCompat
+
 import com.prey.backwardcompatibility.FroyoSupport
 import com.prey.managers.PreyConnectivityManager
 import com.prey.net.PreyWebServices
+
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
@@ -26,16 +28,22 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.lang.reflect.Method
 
-class PreyPhone private constructor(context: Context) {
-
-    var ctx: Context = context
+/**
+ * Represents a Prey phone device.
+ *
+ * This class encapsulates the device's hardware and Wi-Fi information.
+ */
+class PreyPhone internal constructor(var context: Context) {
 
     var hardware: PreyHardware? = null
-        private set
     private var listWifi: MutableList<PreyWifi>? = ArrayList<PreyWifi>()
     private var wifi: PreyWifi? = PreyWifi()
 
-
+    /**
+     * Initializes the Prey phone device.
+     *
+     * This method updates the device's hardware information, available Wi-Fi networks, and current Wi-Fi connection.
+     */
     private fun init() {
         updateHardware()
         updateListWifi()
@@ -62,13 +70,13 @@ class PreyPhone private constructor(context: Context) {
         try {
             hardware!!.setCpuSpeed(maxCPUFreqMHz().toString())
         } catch (e: java.lang.Exception) {
-            PreyLogger.d(String.format("Error setCpuSpeed:%s", e.message))
+            PreyLogger.d("Error setCpuSpeed:${e.message}")
         }
         hardware!!.setCpuCores(java.lang.String.valueOf(getCpuCores()))
         hardware!!.setRamSize(java.lang.String.valueOf(getMemoryRamSize()))
         hardware!!.setSerialNumber(getSerialNumber())
-        hardware!!.setUuid(FroyoSupport.getInstance(ctx)!!.enrollmentSpecificId)
-        val activityManager = ctx.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        hardware!!.setUuid(FroyoSupport.getInstance(context).getEnrollmentSpecificId())
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val memoryInfo = ActivityManager.MemoryInfo()
         activityManager.getMemoryInfo(memoryInfo)
         val totalMemory = totalMemory()
@@ -85,12 +93,11 @@ class PreyPhone private constructor(context: Context) {
     }
 
     fun getMemoryRamSize(): Long {
-        val activityManager = ctx.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val mInfo = ActivityManager.MemoryInfo()
         activityManager.getMemoryInfo(mInfo)
         return (mInfo.threshold shr 20)
     }
-
 
     fun totalMemory(): Long {
         var line = ""
@@ -176,13 +183,12 @@ class PreyPhone private constructor(context: Context) {
     }
 
     fun getAndroidDeviceId(): String {
-        return Settings.Secure.getString(ctx.contentResolver, Settings.Secure.ANDROID_ID)
+        return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
     }
 
     private fun updateWifi() {
-
         try {
-            val wifiMgr = ctx.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val wifiMgr = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val wifiInfo = wifiMgr.connectionInfo
             wifi!!.setWifiEnabled(wifiMgr.isWifiEnabled)
             val ipAddress = wifiInfo.ipAddress
@@ -190,10 +196,11 @@ class PreyPhone private constructor(context: Context) {
             val dhcpInfo = wifiMgr.dhcpInfo
             wifi!!.setNetmask(formatterIp(dhcpInfo.netmask))
             wifi!!.setGatewayIp(formatterIp(dhcpInfo.serverAddress))
+            wifi!!.setMacAddress(wifiInfo.bssid)
             if (ipAddress != 0) {
                 wifi!!.setInterfaceType("Wireless")
             } else {
-                if (PreyConnectivityManager.getInstance().isMobileConnected(ctx)) {
+                if (PreyConnectivityManager.getInstance().isMobileConnected(context)) {
                     wifi!!.setInterfaceType("Mobile")
                 } else {
                     wifi!!.setInterfaceType("")
@@ -230,27 +237,21 @@ class PreyPhone private constructor(context: Context) {
     }
 
     private fun formatterIp(ipAddress: Int): String {
-        return String.format(
-            "%d.%d.%d.%d",
-            (ipAddress and 0xff),
-            (ipAddress shr 8 and 0xff),
-            (ipAddress shr 16 and 0xff),
-            (ipAddress shr 24 and 0xff)
-        )
+        return "${(ipAddress and 0xff)}.${(ipAddress shr 8 and 0xff)}.${(ipAddress shr 16 and 0xff)}.${(ipAddress shr 24 and 0xff)}"
     }
 
     private fun updateListWifi() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
             || (ActivityCompat.checkSelfPermission(
-                ctx,
+                context,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
                     || ActivityCompat.checkSelfPermission(
-                ctx,
+                context,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED)
         ) {
-            val wifiMgr = ctx.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val wifiMgr = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val listScanResults = wifiMgr.scanResults
             var i = 0
             while (listScanResults != null && i < listScanResults.size) {
@@ -277,8 +278,7 @@ class PreyPhone private constructor(context: Context) {
 
 
     fun processorData(): MutableMap<String, String?> {
-
-        val activityManager = ctx.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val mInfo = ActivityManager.MemoryInfo()
         activityManager.getMemoryInfo(mInfo)
         val args = arrayOf("/system/bin/cat", "/proc/cpuinfo")
@@ -296,7 +296,7 @@ class PreyPhone private constructor(context: Context) {
                         val data: List<String> = aLine.split(":")
                         mapData[data[0].trim()] = data[1].trim()
                     } catch (e: Exception) {
-                        PreyLogger.e(String.format("Error:%s", e.message), e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                 } else {
                     break
@@ -304,23 +304,20 @@ class PreyPhone private constructor(context: Context) {
             }
 
         } catch (e: IOException) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         return mapData
     }
 
-
-    val iPAddress: String
-        get() {
-            var ip = ""
-            try {
-                ip = PreyWebServices.getInstance().getIPAddress(ctx)!!
-            } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
-            }
-            return ip
+    fun getIpAddress(): String {
+        var ip = ""
+        try {
+            ip = PreyWebServices.getInstance().getIPAddress(context)!!
+        } catch (e: Exception) {
+            PreyLogger.e("Error:${e.message}", e)
         }
-
+        return ip
+    }
 
     /**
      * Checks if the airplane mode is currently enabled on the device.
@@ -336,7 +333,7 @@ class PreyPhone private constructor(context: Context) {
             0
         ) == 1
         // Log the result for debugging purposes
-        PreyLogger.d(String.format("isAirplaneModeOn: %s", isAirplaneModeOn))
+        PreyLogger.d("isAirplaneModeOn: ${isAirplaneModeOn}")
         // Return the result
         return isAirplaneModeOn
     }
@@ -345,31 +342,29 @@ class PreyPhone private constructor(context: Context) {
         init()
     }
 
-
-    val dataState: Int
-        get() {
-            val tManager = ctx.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            var dataState = -1
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ctx.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                        dataState = tManager.dataState
-                    }
-                } else {
+    fun getDataState(): Int {
+        val tManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        var dataState = -1
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                     dataState = tManager.dataState
                 }
-            } catch (e: Exception) {
-                PreyLogger.e("Error getDataState:" + e.message, e)
+            } else {
+                dataState = tManager.dataState
             }
-            return dataState
+        } catch (e: Exception) {
+            PreyLogger.e("Error getDataState:${e.message}", e)
         }
+        return dataState
+    }
 
 
     @SuppressLint("MissingPermission")
-    fun getNetworkClass(ctx: Context): String? {
+    fun getNetworkClass(context: Context): String? {
         try {
             val mTelephonyManager =
-                ctx.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             val networkType = mTelephonyManager.networkType
             return when (networkType) {
                 TelephonyManager.NETWORK_TYPE_GPRS, TelephonyManager.NETWORK_TYPE_EDGE, TelephonyManager.NETWORK_TYPE_CDMA, TelephonyManager.NETWORK_TYPE_1xRTT, TelephonyManager.NETWORK_TYPE_IDEN -> "2G"
@@ -391,8 +386,6 @@ class PreyPhone private constructor(context: Context) {
      * @return the device's serial number, or null if it could not be retrieved
      */
     fun getSerialNumber(): String? {
-
-
         // Initialize the serial number to null
         var serialNumber: String? = null
         try {
@@ -426,7 +419,7 @@ class PreyPhone private constructor(context: Context) {
                 serialNumber = Build.SERIAL
             }
         } catch (e: Exception) {
-            PreyLogger.e(String.format("Error getSerialNumber:%s", e.message), e)
+            PreyLogger.e("Error getSerialNumber:${e.message}", e)
             serialNumber = null
         }
         // Return the retrieved serial number, or null if it could not be retrieved
@@ -447,7 +440,6 @@ class PreyPhone private constructor(context: Context) {
         return getMethod.invoke(null, propertyName) as String
     }
 
-
     companion object {
         var TAG: String = "memory"
 
@@ -460,7 +452,6 @@ class PreyPhone private constructor(context: Context) {
             }
             return instance!!
         }
-
 
         private val channelsFrequency: List<Int> = ArrayList(
             mutableListOf(
@@ -483,9 +474,5 @@ class PreyPhone private constructor(context: Context) {
         )
 
         private const val REQUEST_READ_PHONE_STATE_PERMISSION = 225
-
-
     }
-
-
 }

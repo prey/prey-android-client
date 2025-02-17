@@ -7,91 +7,82 @@
 package com.prey.actions.observer
 
 import android.content.Context
+
 import com.prey.actions.HttpDataService
-import com.prey.json.UtilJson
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.actions.location.PreyLocationManager
 import com.prey.util.ClassUtil
-import org.json.JSONException
+
 import org.json.JSONObject
 
+/**
+ * Controller class responsible for executing actions based on JSON objects.
+ */
 class ActionsController {
 
-    fun runActionJson(ctx: Context, jsonObjectList: List<JSONObject>): List<HttpDataService>? {
-        var listData: MutableList<HttpDataService>? = ArrayList()
-        val size = jsonObjectList?.size ?: -1
-        PreyLogger.d(String.format("runActionJson size:%s", size))
+    /**
+     * Executes a list of JSON actions and returns the resulting HTTP data services.
+     *
+     * @param context     The application context.
+     * @param jsonObjects The list of JSON objects containing action commands.
+     * @return The list of HTTP data services resulting from the action execution.
+     */
+    fun runActionJson(context: Context, jsonObjects: List<JSONObject>): List<HttpDataService>? {
+        // Initialize an empty list to store the resulting HTTP data services.
+        var data = mutableListOf<HttpDataService>()
+        // Get the size of the JSON object list.
+        val size = jsonObjects.size ?: -1
+        PreyLogger.d("AWARE runActionJson size:${size}")
         try {
+            // Reset the last location and location info.
             PreyLocationManager.getInstance().setLastLocation(null);
-            PreyConfig.getInstance(ctx).setLocation(null);
-            PreyConfig.getInstance(ctx).setLocationInfo("");
-
-            var i = 0
-            while (jsonObjectList != null && i < jsonObjectList.size) {
-                var jsonObject = jsonObjectList[i]
-                try {
-                    val jsonCmd = UtilJson.getJSONObject(jsonObject, "cmd")
-                    if (jsonCmd != null) {
-                        jsonObject = jsonCmd
-                    }
-                } catch (e: Exception) {
-                    PreyLogger.e(String.format("Error:%s", e.message), e)
-                }
-                PreyLogger.d(String.format("jsonObject:%s", jsonObject))
-                val nameAction = UtilJson.getString(jsonObject, "target")
-                val methodAction = UtilJson.getString(jsonObject, "command")
-                var parametersAction: JSONObject? = null
-                try {
-                    parametersAction = UtilJson.getJSONObject(jsonObject, "options")
-                } catch (e: JSONException) {
-                    PreyLogger.e(String.format("Error:%s", e.message), e)
-                }
-                if (parametersAction == null) {
-                    parametersAction = JSONObject()
-                }
-                try {
-                    val messageId = UtilJson.getString(jsonObject, PreyConfig.MESSAGE_ID)
-                    if (messageId != null) {
-                        parametersAction.put(PreyConfig.MESSAGE_ID, messageId)
-                    }
-                } catch (e: Exception) {
-                    PreyLogger.e(String.format("Error:%s", e.message), e)
-                }
-                PreyLogger.d(
-                    String.format(
-                        "nameAction:%s methodAction:%s parametersAction:%s",
-                        nameAction,
-                        methodAction,
-                        parametersAction
-                    )
+            PreyConfig.getInstance(context).setLocation(null);
+            PreyConfig.getInstance(context).setLocationInfo("");
+            // Iterate through each JSON object in the list.
+            jsonObjects.forEach { jsonObject ->
+                PreyLogger.d("jsonObject:${jsonObject}")
+                // Get the command object from the JSON object, defaulting to the JSON object itself if not found.
+                val command = jsonObject.optJSONObject("cmd") ?: jsonObject
+                // Extract the action name, method, and parameters from the command object.
+                val actionName = command.getString("target")
+                val actionMethod = command.getString("command")
+                val actionParameters = command.optJSONObject("options") ?: JSONObject()
+                // Add the message ID to the action parameters if present.
+                actionParameters.put(
+                    PreyConfig.MESSAGE_ID,
+                    command.optString(PreyConfig.MESSAGE_ID)
                 )
-                val listAction: MutableList<ActionResult> = ArrayList()
-                listData = ClassUtil.getInstance().execute(
-                    ctx,
-                    listAction,
-                    nameAction!!,
-                    methodAction!!,
-                    parametersAction,
-                    listData
-                )
-
-                i++
+                // Log the action details for debugging purposes.
+                PreyLogger.d("actionName:${actionName} actionMethod:${actionMethod} actionParameters:${actionParameters}")
+                // Initialize an empty list to store the action results.
+                val actionResults = mutableListOf<ActionResult>()
+                // Execute the action using the ClassUtil class and update the data list with the result.
+                data = ClassUtil.getInstance().execute(
+                    context,
+                    actionResults,
+                    actionName,
+                    actionMethod,
+                    actionParameters,
+                    data
+                )!!
             }
-            return listData
+            return data
         } catch (e: Exception) {
-            PreyLogger.e("Error, causa:" + e.message, e)
+            PreyLogger.e("Error, cause:${e.message}", e)
         }
         return null
     }
 
     companion object {
         private var instance: ActionsController? = null
+        /**
+         * Returns the singleton instance of the ActionsController class.
+         *
+         * @return The singleton instance of the ActionsController class.
+         */
         fun getInstance(): ActionsController {
-            if (instance == null) {
-                instance = ActionsController()
-            }
-            return instance!!
+            return instance ?: ActionsController().also { instance = it }
         }
     }
 }

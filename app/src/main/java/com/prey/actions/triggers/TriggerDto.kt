@@ -6,12 +6,35 @@
  ******************************************************************************/
 package com.prey.actions.triggers
 
+/**
+ * Data Transfer Object (DTO) for Triggers.
+ * This class represents a trigger with an ID, name, events, actions, and lists of events and actions.
+ */
 class TriggerDto {
+
+    /**
+     * Unique identifier for the trigger.
+     */
     private var id: Int = 0
+    /**
+     * Name of the trigger.
+     */
     private var name: String? = null
+    /**
+     * String representation of the trigger events.
+     */
     private var events: String? = null
+    /**
+     * String representation of the trigger actions.
+     */
     private var actions: String? = null
+    /**
+     * List of TriggerEventDto objects representing the trigger events.
+     */
     private var listEvents: List<TriggerEventDto>? = null
+    /**
+     * List of TriggerActionDto objects representing the trigger actions.
+     */
     private var listActions: List<TriggerActionDto>? = null
 
     fun getId(): Int {

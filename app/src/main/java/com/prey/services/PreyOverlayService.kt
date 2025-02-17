@@ -29,7 +29,7 @@ class PreyOverlayService : Service() {
 
     override fun onStart(intent: Intent, startId: Int) {
         super.onStart(intent, startId)
-        val ctx: Context = this
+        val context: Context = this
 
         object : Thread() {
             override fun run() {
@@ -42,13 +42,13 @@ class PreyOverlayService : Service() {
                         if (canDrawOverlays()) {
                             run = false
                             val nManager =
-                                (ctx.getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
+                                (context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
                             nManager.cancelAll()
                             val message = getString(R.string.device_added_congratulations_text)
                             val bundle = Bundle()
                             bundle.putString("message", message)
                             val intentWelcome =
-                                Intent(ctx, PermissionInformationActivity::class.java)
+                                Intent(context, PermissionInformationActivity::class.java)
                             intentWelcome.putExtras(bundle)
                             intentWelcome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             startActivity(intentWelcome)
@@ -62,7 +62,7 @@ class PreyOverlayService : Service() {
                         }
                         i++
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error: ${e.message}", e)
                     }
                 }
             }

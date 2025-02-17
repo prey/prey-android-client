@@ -18,6 +18,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.webkit.WebView
+
 import com.prey.R
 import com.prey.activities.js.CustomWebView
 import com.prey.activities.js.WebAppInterface
@@ -26,6 +27,10 @@ import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyUtils
 
+/**
+ * PreyLockHtmlService is a service that handles the lock screen functionality.
+ * It inflates a web view and loads a URL based on the device's language and lock message.
+ */
 class PreyLockHtmlService : Service() {
     private var view: View? = null
 
@@ -44,20 +49,26 @@ class PreyLockHtmlService : Service() {
         return mBinder
     }
 
+    /**
+     * Called when the service is created.
+     */
     override fun onCreate() {
         super.onCreate()
         PreyLogger.d("PreyLockHtmlService onCreate")
     }
 
+    /**
+     * Called when the service is started.
+     */
     override fun onStart(intent: Intent, startId: Int) {
         super.onStart(intent, startId)
-        val ctx: Context = this
+        val context: Context = this
         PreyLogger.d("PreyLockHtmlService onStart")
-        val unlock = PreyConfig.getInstance(ctx).getUnlockPass()
+        val unlock = PreyConfig.getInstance(context).getUnlockPass()
         if (unlock != null && "" != unlock) {
             val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
             view = inflater.inflate(R.layout.webview, null)
-            PreyConfig.getInstance(ctx).viewLock = view!!
+            PreyConfig.getInstance(context).viewLock = view!!
             val myWebView = view!!.findViewById<View>(R.id.install_browser) as WebView
             myWebView.setOnKeyListener { view, i, keyEvent ->
                 CustomWebView.callDispatchKeyEvent(
@@ -116,7 +127,6 @@ class PreyLockHtmlService : Service() {
             stopSelf()
         }
     }
-
 
 
     override fun onDestroy() {

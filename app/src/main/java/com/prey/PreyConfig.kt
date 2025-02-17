@@ -16,20 +16,20 @@ import android.view.View
 import com.google.android.gms.location.LocationRequest
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
+import com.prey.actions.aware.AwareController
 import com.prey.actions.location.PreyLocation
+import com.prey.json.actions.Location
 import com.prey.managers.PreyConnectivityManager
 import com.prey.net.PreyWebServices
 import com.prey.net.UtilConnection
+import com.prey.preferences.RunBackgroundCheckBoxPreference
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
-class PreyConfig {
+class PreyConfig private constructor(var context: Context) {
 
-    var mContext: Context
-
-    private constructor(context: Context) {
-        mContext = context
+    init {
         saveString(PREY_VERSION, getInfoPreyVersion(context));
     }
 
@@ -61,31 +61,31 @@ class PreyConfig {
     }
 
     fun getPreyDomain(): String {
-        return FileConfigReader.getInstance(mContext)!!.preyDomain
+        return FileConfigReader.getInstance(context).getPreyDomain()
     }
 
     fun getPreyCampaign(): String {
-        return FileConfigReader.getInstance(mContext)!!.preyCampaign
+        return FileConfigReader.getInstance(context).getPreyCampaign()
     }
 
     fun getPreyPanelUrl(): String {
-        val panel: String = FileConfigReader.getInstance(mContext)!!.preyPanel
+        val panel: String = FileConfigReader.getInstance(context).getPreyPanel()
         val url = HTTP + panel + "." + getPreyDomain() + "/" + getPreyCampaign()
         return url
     }
 
     private fun getPreyJwt(): String {
-        return FileConfigReader.getInstance(mContext)!!.preyJwt
+        return FileConfigReader.getInstance(context).getPreyJwt()
     }
 
     fun getPreyPanelJwt(): String {
-        val panel: String = FileConfigReader.getInstance(mContext)!!.preyPanel
+        val panel: String = FileConfigReader.getInstance(context).getPreyPanel()
         val url = HTTP + panel + "." + getPreyDomain() + "/" + getPreyJwt()
         return url
     }
 
     fun getPreyUrl(): String {
-        val subdomain: String = FileConfigReader.getInstance(mContext)!!.preySubdomain
+        val subdomain: String = FileConfigReader.getInstance(context).getPreySubdomain()
         return HTTP + subdomain + "." + getPreyDomain() + "/"
     }
 
@@ -94,7 +94,7 @@ class PreyConfig {
     }
 
     fun setMinutesToQueryServer(minutesToQueryServer: Int) {
-        PreyLogger.d(String.format("setMinutesToQueryServer [%s]", minutesToQueryServer))
+        PreyLogger.d("setMinutesToQueryServer [${minutesToQueryServer}]")
         saveInt(MINUTES_TO_QUERY_SERVER, minutesToQueryServer)
     }
 
@@ -112,6 +112,10 @@ class PreyConfig {
     }
 
     fun getAware(): Boolean {
+        return getBoolean(AWARE, false)
+    }
+
+    fun isLocatigetAwareonAwareEnabled(): Boolean {
         return getBoolean(AWARE, false)
     }
 
@@ -145,7 +149,7 @@ class PreyConfig {
     }
 
     fun isChromebook(): Boolean {
-        return mContext.getPackageManager().hasSystemFeature("org.chromium.arc.device_management")
+        return context.getPackageManager().hasSystemFeature("org.chromium.arc.device_management")
     }
 
     fun isFroyoOrAbove(): Boolean {
@@ -219,43 +223,43 @@ class PreyConfig {
     }
 
     fun getApiKeyBatch(): String {
-        return PreyBatch.getInstance(mContext)!!.apiKeyBatch
+        return PreyBatch.getInstance(context).getApiKeyBatch()
     }
 
     fun getEmailBatch(): String? {
-        return PreyBatch.getInstance(mContext)!!.emailBatch
+        return PreyBatch.getInstance(context).getEmailBatch()
     }
 
     fun getJobIdLock(): String? {
         return getString(JOB_ID_LOCK, "")
     }
 
-    fun setJobIdLock(jobIdLock: String?) {
-        saveString(JOB_ID_LOCK, jobIdLock!!)
+    fun setJobIdLock(jobIdLock: String) {
+        saveString(JOB_ID_LOCK, jobIdLock)
     }
 
     fun getSsid(): String? {
         return getString(SSID, "")
     }
 
-    fun setSsid(ssid: String?) {
-        saveString(SSID, ssid!!)
+    fun setSsid(ssid: String) {
+        saveString(SSID, ssid)
     }
 
     fun getImei(): String? {
         return getString(IMEI, "")
     }
 
-    fun setImei(imei: String?) {
-        saveString(IMEI, imei!!)
+    fun setImei(imei: String) {
+        saveString(IMEI, imei)
     }
 
     fun getModel(): String? {
         return getString(MODEL, "")
     }
 
-    fun setModel(model: String?) {
-        saveString(MODEL, model!!)
+    fun setModel(model: String) {
+        saveString(MODEL, model)
     }
 
     fun setLocation(location: PreyLocation?) {
@@ -290,27 +294,30 @@ class PreyConfig {
     }
 
     private fun getLong(key: String, defaultValue: Long): Long {
-        val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+        val settings = PreferenceManager.getDefaultSharedPreferences(context)
         return settings.getLong(key, defaultValue)
     }
 
     private fun getFloat(key: String, defaultValue: Float): Float {
-        val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+        val settings = PreferenceManager.getDefaultSharedPreferences(context)
         return settings.getFloat(key, defaultValue)
     }
 
     private fun containsKey(key: String): Boolean {
-        val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+        val settings = PreferenceManager.getDefaultSharedPreferences(context)
         return settings.contains(key)
     }
 
-    fun setPinNumber(pin: String?) {
-        saveString(PIN_NUMBER2, pin!!)
+    fun setPinNumber(pin: String) {
+        saveString(PIN_NUMBER2, pin)
     }
 
     fun getPinNumber(): String? {
         var pin = getString(PIN_NUMBER2, "")
-        if (pin!!.length > 4) {
+        if (pin == null) {
+            pin = ""
+        }
+        if (pin.length > 4) {
             pin = pin.substring(0, 4)
         }
         return pin
@@ -320,8 +327,8 @@ class PreyConfig {
         return getString(PUBLIC_IP, "")
     }
 
-    fun setPublicIp(publicIp: String?) {
-        saveString(PUBLIC_IP, publicIp!!)
+    fun setPublicIp(publicIp: String) {
+        saveString(PUBLIC_IP, publicIp)
     }
 
     fun isRunBackground(): Boolean {
@@ -393,8 +400,8 @@ class PreyConfig {
         return getString(TYPE_BIOMETRIC, "")
     }
 
-    fun setTypeBiometric(typeBiometric: String?) {
-        saveString(TYPE_BIOMETRIC, typeBiometric!!)
+    fun setTypeBiometric(typeBiometric: String) {
+        saveString(TYPE_BIOMETRIC, typeBiometric)
     }
 
     fun getVerificateBiometric(): Boolean {
@@ -443,8 +450,8 @@ class PreyConfig {
         return getString(HELP_FILE, "")
     }
 
-    fun setFileHelp(fileHelp: String?) {
-        saveString(HELP_FILE, fileHelp!!)
+    fun setFileHelp(fileHelp: String) {
+        saveString(HELP_FILE, fileHelp)
     }
 
     fun getMspAccount(): Boolean {
@@ -571,8 +578,8 @@ class PreyConfig {
         return getString(EMAIL, "")
     }
 
-    fun setEmail(email: String?) {
-        saveString(EMAIL, email!!)
+    fun setEmail(email: String) {
+        saveString(EMAIL, email)
     }
 
     fun setRunBackground(disablePowerOptions: Boolean) {
@@ -584,8 +591,8 @@ class PreyConfig {
         return getString(INSTALLATION_STATUS, "")
     }
 
-    fun setInstallationStatus(installationStatus: String?) {
-        saveString(INSTALLATION_STATUS, installationStatus!!)
+    fun setInstallationStatus(installationStatus: String) {
+        saveString(INSTALLATION_STATUS, installationStatus)
     }
 
     fun getPreyVersion(): String? {
@@ -724,15 +731,15 @@ class PreyConfig {
         }
     }
 
-    fun setNotificationId(notificationId: String?) {
-        saveString(NOTIFICATION_ID, notificationId!!)
+    fun setNotificationId(notificationId: String) {
+        saveString(NOTIFICATION_ID, notificationId)
     }
 
     fun getNotificationId(): String? {
         return getString(NOTIFICATION_ID, "")
     }
 
-    fun sendToken(ctx: Context, token: String) {
+    fun sendToken(context: Context, token: String) {
         PreyLogger.d("registerC2dm send token:$token")
         if (token != null && "null" != token && "" != token && UtilConnection.getInstance()
                 .isInternetAvailable()
@@ -741,16 +748,16 @@ class PreyConfig {
                 val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
                 StrictMode.setThreadPolicy(policy)
                 val registration: String =
-                    FileConfigReader.getInstance(ctx)!!.gcmIdPrefix + token
+                    FileConfigReader.getInstance(context).getGcmIdPrefix() + token
                 PreyLogger.d("registerC2dm registration:$registration")
                 val response =
-                    PreyWebServices.getInstance().setPushRegistrationId(ctx, registration)
-                getInstance(ctx).setNotificationId(registration)
+                    PreyWebServices.getInstance().setPushRegistrationId(context, registration)
+                getInstance(context).setNotificationId(registration)
                 if (response != null) {
                     PreyLogger.d("registerC2dm response:$response")
                 }
-                getInstance(ctx).setRegisterC2dm(true)
-                getInstance(ctx).setTimeC2dm()
+                getInstance(context).setRegisterC2dm(true)
+                getInstance(context).setTimeC2dm()
             } catch (e: java.lang.Exception) {
                 PreyLogger.e("registerC2dm error:" + e.message, e)
             }
@@ -759,22 +766,24 @@ class PreyConfig {
 
     fun registerC2dm() {
         // synchronized(PreyConfig.class) {
-        val deviceId: String? = getInstance(mContext).getDeviceId()
-        val isTimeC2dm: Boolean = getInstance(mContext).isTimeC2dm()
+        val deviceId: String? = getInstance(context).getDeviceId()
+        val isTimeC2dm: Boolean = getInstance(context).isTimeC2dm()
         PreyLogger.d("registerC2dm deviceId:$deviceId isTimeC2dm:$isTimeC2dm")
         if (deviceId != null && "" != deviceId) {
             if (!isTimeC2dm) {
                 var token: String? = null
                 try {
                     token = FirebaseInstanceId.getInstance().token
-                    PreyLogger.d("registerC2dm token2:$token")
-                    sendToken(mContext, token!!)
+                    if (token != null) {
+                        PreyLogger.d("registerC2dm token2:$token")
+                        sendToken(context, token)
+                    }
                 } catch (e: java.lang.Exception) {
                     PreyLogger.e("registerC2dm error:" + e.message, e)
                     try {
                         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener { instanceIdResult ->
                             val token = instanceIdResult.token
-                            sendToken(mContext, token)
+                            sendToken(context, token)
                         }
                     } catch (ex: java.lang.Exception) {
                         try {
@@ -782,19 +791,19 @@ class PreyConfig {
                                 .addOnCompleteListener { task ->
                                     if (!task.isSuccessful) {
                                         PreyLogger.e(
-                                            String.format(
-                                                "registerC2dm error:%s",
-                                                task.exception!!.message
-                                            ), task.exception
+
+                                            "registerC2dm error:${task.exception!!.message}",
+
+                                            task.exception
                                         )
                                     }
                                     val token = task.result
-                                    PreyLogger.d(String.format("registerC2dm token:%s", token))
-                                    sendToken(mContext, token)
+                                    PreyLogger.d("registerC2dm token:${token}")
+                                    sendToken(context, token)
                                 }
                         } catch (exception: java.lang.Exception) {
                             PreyLogger.e(
-                                String.format("registerC2dm error:%s", exception.message),
+                                "registerC2dm error:${exception.message}",
                                 exception
                             )
                         }
@@ -821,9 +830,9 @@ class PreyConfig {
      *
      * @param organizationId The organization ID to set.
      */
-    fun setOrganizationId(organizationId: String?) {
+    fun setOrganizationId(organizationId: String) {
         // Save the organization ID to the configuration
-        saveString(ORGANIZATION_ID, organizationId!!)
+        saveString(ORGANIZATION_ID, organizationId)
     }
 
     /**
@@ -833,51 +842,50 @@ class PreyConfig {
      * @throws Exception If there is an error during the registration process.
      */
     @Throws(java.lang.Exception::class)
-    fun registerNewDeviceWithApiKey(apiKey: String?) {
+    fun registerNewDeviceWithApiKey(apiKey: String) {
         // Check if the device is already registered with Prey
         if (!isThisDeviceAlreadyRegisteredWithPrey()) {
             // Get the device type and name
-            val deviceType = PreyUtils.getDeviceType(mContext)
-            val nameDevice = PreyUtils.getNameDevice(mContext)
+            val deviceType = PreyUtils.getDeviceType(context)
+            val nameDevice = PreyUtils.getNameDevice(context)
             PreyLogger.d(
-                String.format(
-                    "apikey:%s type:%s nameDevice:%s",
-                    apiKey,
-                    deviceType,
-                    nameDevice
-                )
+
+                "apikey:${apiKey} type:${deviceType} nameDevice:${nameDevice}"
+
             )
-            //TODO:cambiar
-            /*
+
+
             // Register the device with the API key, device type, and name
             val accountData: PreyAccountData? = PreyWebServices.getInstance()
-                .registerNewDeviceWithApiKeyEmail(ctx, apiKey, deviceType, nameDevice)
+                .registerNewDeviceWithApiKeyEmail(context, apiKey, deviceType, nameDevice)
             if (accountData != null) {
-                PreyConfig.getPreyConfig(ctx).saveAccount(accountData)
+                PreyConfig.getInstance(context).saveAccount(accountData)
                 // Register C2DM
-                PreyConfig.getPreyConfig(ctx).registerC2dm()
+                PreyConfig.getInstance(context).registerC2dm()
                 // Get the email associated with the account
-                val email = PreyWebServices.getInstance().getEmail(ctx)
-                PreyConfig.getPreyConfig(ctx).setEmail(email)
-                PreyConfig.getPreyConfig(ctx).setRunBackground(true)
-                RunBackgroundCheckBoxPreference.notifyReady(ctx)
-                PreyConfig.getPreyConfig(ctx).setInstallationStatus("")
+                val email = PreyWebServices.getInstance().getEmail(context)
+                if (email != null) {
+                    PreyLogger.d("email:$email")
+                    PreyConfig.getInstance(context).setEmail(email)
+                }
+                PreyConfig.getInstance(context).setRunBackground(true)
+                PreyConfig.getInstance(context).setInstallationStatus("")
                 // Run the Prey app
-                PreyApp().run(ctx)
+                PreyApp().run(context)
                 // Start a new thread to initialize PreyStatus and Location
                 object : Thread() {
                     override fun run() {
                         try {
-                            PreyStatus.getInstance().initConfig(ctx)
-                            AwareController.getInstance().init(ctx)
-                            Location()[ctx, null, null]
+                            PreyStatus.getInstance().initConfig(context)
+
+
                         } catch (e: java.lang.Exception) {
                             // Log any errors that occur during initialization
                             PreyLogger.e("Error:" + e.message, e)
                         }
                     }
                 }.start()
-            }*/
+            }
         }
     }
 
@@ -901,8 +909,8 @@ class PreyConfig {
         return getString(TOKEN_JWT, "")
     }
 
-    fun setTokenJwt(tokenJwt: String?) {
-        saveString(TOKEN_JWT, tokenJwt!!)
+    fun setTokenJwt(tokenJwt: String) {
+        saveString(TOKEN_JWT, tokenJwt)
     }
 
     fun setAccountVerified(accountVerified: Boolean) {
@@ -987,15 +995,15 @@ class PreyConfig {
     }
 
     fun isAskForNameBatch(): Boolean {
-        return PreyBatch.getInstance(mContext)!!.isAskForNameBatch
+        return PreyBatch.getInstance(context).isAskForNameBatch()
     }
 
     fun getSessionId(): String? {
         return getString(SESSION_ID, "")
     }
 
-    fun setSessionId(sessionId: String?) {
-        saveString(SESSION_ID, sessionId!!)
+    fun setSessionId(sessionId: String) {
+        saveString(SESSION_ID, sessionId)
     }
 
     fun setCamouflageSet(camouflageSet: Boolean) {
@@ -1023,13 +1031,13 @@ class PreyConfig {
     }
 
     fun getBoolean(key: String, defaultValue: Boolean): Boolean {
-        val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+        val settings = PreferenceManager.getDefaultSharedPreferences(context)
         return settings.getBoolean(key, defaultValue)
     }
 
     private fun saveBoolean(key: String, value: Boolean) {
         try {
-            val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+            val settings = PreferenceManager.getDefaultSharedPreferences(context)
             val editor = settings.edit()
             editor.putBoolean(key, value)
             editor.commit()
@@ -1040,7 +1048,7 @@ class PreyConfig {
 
     private fun saveInt(key: String, value: Int) {
         try {
-            val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+            val settings = PreferenceManager.getDefaultSharedPreferences(context)
             val editor = settings.edit()
             editor.putInt(key, value)
             editor.commit()
@@ -1050,13 +1058,13 @@ class PreyConfig {
     }
 
     private fun getInt(key: String, defaultValue: Int): Int {
-        val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+        val settings = PreferenceManager.getDefaultSharedPreferences(context)
         return settings.getInt(key, defaultValue)
     }
 
     private fun saveString(key: String, value: String) {
         try {
-            val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+            val settings = PreferenceManager.getDefaultSharedPreferences(context)
             val editor = settings.edit()
             editor.putString(key, value)
             editor.commit()
@@ -1066,13 +1074,13 @@ class PreyConfig {
     }
 
     private fun getString(key: String, defaultValue: String?): String? {
-        val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+        val settings = PreferenceManager.getDefaultSharedPreferences(context)
         return settings.getString(key, defaultValue)
     }
 
     private fun saveLong(key: String, value: Long) {
         try {
-            val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+            val settings = PreferenceManager.getDefaultSharedPreferences(context)
             val editor = settings.edit()
             editor.putLong(key, value)
             editor.commit()
@@ -1083,7 +1091,7 @@ class PreyConfig {
 
     private fun saveFloat(key: String, value: Float) {
         try {
-            val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+            val settings = PreferenceManager.getDefaultSharedPreferences(context)
             val editor = settings.edit()
             editor.putFloat(key, value)
             editor.commit()
@@ -1094,7 +1102,7 @@ class PreyConfig {
 
     private fun removeKey(key: String) {
         try {
-            val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+            val settings = PreferenceManager.getDefaultSharedPreferences(context)
             val editor = settings.edit()
             editor.remove(key)
             editor.commit()
@@ -1140,10 +1148,10 @@ class PreyConfig {
         return getBoolean(CAN_ACCESS_EXTERNAL_STORAGE, false)
     }
 
-    fun getInfoPreyVersion(ctx: Context): String {
+    fun getInfoPreyVersion(context: Context): String {
         var versionName: String = VERSION_PREY_DEFAULT
         try {
-            val pinfo = ctx.packageManager.getPackageInfo(ctx.packageName, 0)
+            val pinfo = context.packageManager.getPackageInfo(context.packageName, 0)
             versionName = pinfo.versionName!!
         } catch (e: Exception) {
             PreyLogger.e("Error:" + e.message, e)
@@ -1155,23 +1163,23 @@ class PreyConfig {
         return getString(LOCATION_INFO, "")
     }
 
-    fun setLocationInfo(locationInfo: String?) {
-        saveString(LOCATION_INFO, locationInfo!!)
+    fun setLocationInfo(locationInfo: String) {
+        saveString(LOCATION_INFO, locationInfo)
     }
 
     fun getDistanceLocation(): Int {
-        return FileConfigReader.getInstance(mContext)!!.distanceLocation
+        return FileConfigReader.getInstance(context).getDistanceLocation()
     }
 
     fun unregisterC2dm(updatePrey: Boolean) {
         try {
-            if (updatePrey) PreyWebServices.getInstance().setPushRegistrationId(mContext, "")
+            if (updatePrey) PreyWebServices.getInstance().setPushRegistrationId(context, "")
             val unregIntent = Intent("com.google.android.c2dm.intent.UNREGISTER")
             unregIntent.putExtra(
                 "app",
-                PendingIntent.getBroadcast(mContext, 0, Intent(), PendingIntent.FLAG_IMMUTABLE)
+                PendingIntent.getBroadcast(context, 0, Intent(), PendingIntent.FLAG_IMMUTABLE)
             )
-            mContext.startService(unregIntent)
+            context.startService(unregIntent)
         } catch (e: java.lang.Exception) {
             PreyLogger.e("Error:" + e.message, e)
         }
@@ -1180,7 +1188,7 @@ class PreyConfig {
     fun setSecurityPrivilegesAlreadyPrompted(securityPrivilegesAlreadyPrompted: Boolean) {
         //TODO:cambiar
         //this.securityPrivilegesAlreadyPrompted = securityPrivilegesAlreadyPrompted
-        val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+        val settings = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = settings.edit()
         editor.putBoolean(PREFS_SECURITY_PROMPT_SHOWN, securityPrivilegesAlreadyPrompted)
         editor.commit()
@@ -1188,7 +1196,7 @@ class PreyConfig {
 
     fun wipeData() {
         val installationDate = getLong(INSTALLATION_DATE, 0)
-        val settings = PreferenceManager.getDefaultSharedPreferences(mContext)
+        val settings = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = settings.edit()
         editor.clear()
         editor.commit()
@@ -1210,10 +1218,9 @@ class PreyConfig {
     }
 
 
-    fun deleteCacheInstance(ctx: Context) {
-        INSTANCE = PreyConfig(ctx)
+    fun deleteCacheInstance(context: Context) {
+        instance = PreyConfig(context)
     }
-
 
     fun setLocationAware(location: PreyLocation?) {
         if (location != null) {
@@ -1242,8 +1249,8 @@ class PreyConfig {
         return getString(PREVIOUS_SSID, null)
     }
 
-    fun setPreviousSsid(previousSsid: String?) {
-        this.saveString(PREVIOUS_SSID, previousSsid!!)
+    fun setPreviousSsid(previousSsid: String) {
+        this.saveString(PREVIOUS_SSID, previousSsid)
     }
 
     fun setTimeLocationAware() {
@@ -1275,8 +1282,8 @@ class PreyConfig {
         return getString(com.prey.PreyConfig.SIM_SERIAL_NUMBER, null)
     }
 
-    fun setSimSerialNumber(simSerialNumber: String?) {
-        saveString(com.prey.PreyConfig.SIM_SERIAL_NUMBER, simSerialNumber!!)
+    fun setSimSerialNumber(simSerialNumber: String) {
+        saveString(com.prey.PreyConfig.SIM_SERIAL_NUMBER, simSerialNumber)
     }
 
     /**
@@ -1295,7 +1302,7 @@ class PreyConfig {
                 lat = getString(AWARE_LAT, "")
                 lng = getString(AWARE_LNG, "")
             } catch (e: java.lang.Exception) {
-                PreyLogger.e(String.format("Error getLocationAware:%s", e.message), e)
+                PreyLogger.e("Error getLocationAware:${e.message}", e)
             }
             // Retrieve the accuracy value from storage
             val acc = getFloat(AWARE_ACC, 0f)
@@ -1312,14 +1319,14 @@ class PreyConfig {
             // Return the PreyLocation object
             return location
         } catch (e: java.lang.Exception) {
-            PreyLogger.e(String.format("Error getLocationAware:%s", e.message), e)
+            PreyLogger.e("Error getLocationAware:${e.message}", e)
             return null
         }
     }
 
 
     fun getDistanceAware(): Int {
-        return FileConfigReader.getInstance(mContext)!!.distanceAware
+        return FileConfigReader.getInstance(context).getDistanceAware()
     }
 
     /**
@@ -1339,7 +1346,7 @@ class PreyConfig {
         cal.time = Date()
         cal.add(Calendar.MINUTE, 10)
         val dateTimeLong = cal.timeInMillis
-        PreyLogger.d(String.format("AWARE WORK AwareTime [%s]", dateTimeLong))
+        PreyLogger.d("AWARE WORK AwareTime [${dateTimeLong}]")
         saveLong(Companion.AWARE_TIME, dateTimeLong)
     }
 
@@ -1357,12 +1364,8 @@ class PreyConfig {
         if (awareTime == 0L) return true
         val timeNow = Date().time
         PreyLogger.d(
-            String.format(
-                "AWARE WORK AwareTime difference [%s] current[%s] > save[%s] ",
-                (timeNow - awareTime),
-                timeNow,
-                awareTime
-            )
+
+            "AWARE WORK AwareTime difference [${(timeNow - awareTime)}] current[${timeNow}] > save[${awareTime}] "
         )
         return timeNow > awareTime
     }
@@ -1371,8 +1374,8 @@ class PreyConfig {
         return getString(LAST_EVENT, null)
     }
 
-    fun setLastEvent(lastEvent: String?) {
-        saveString(LAST_EVENT, lastEvent!!)
+    fun setLastEvent(lastEvent: String) {
+        saveString(LAST_EVENT, lastEvent)
     }
 
     fun setLocationLowBattery(locationLowBattery: Boolean) {
@@ -1397,9 +1400,9 @@ class PreyConfig {
         return getString(Companion.DAILY_LOCATION, "")
     }
 
-    fun setDailyLocation(dailyLocation: String?) {
-        PreyLogger.d(String.format("DAILY setDailyLocation [%s]", dailyLocation))
-        saveString(Companion.DAILY_LOCATION, dailyLocation!!)
+    fun setDailyLocation(dailyLocation: String) {
+        PreyLogger.d("DAILY setDailyLocation [${dailyLocation}]")
+        saveString(Companion.DAILY_LOCATION, dailyLocation)
     }
 
     fun setLastReportStartDate(lastReportStartDate: Long) {
@@ -1413,12 +1416,12 @@ class PreyConfig {
     fun isConnectionExists(): Boolean {
         var isConnectionExists = false
         // There is wifi connexion?
-        if (PreyConnectivityManager.getInstance().isWifiConnected(mContext)) {
+        if (PreyConnectivityManager.getInstance().isWifiConnected(context)) {
             isConnectionExists = true
         }
         // if there is no connexion wifi, verify mobile connection?
         if (!isConnectionExists && PreyConnectivityManager.getInstance()
-                .isMobileConnected(mContext)
+                .isMobileConnected(context)
         ) {
             isConnectionExists = true
         }
@@ -1462,22 +1465,17 @@ class PreyConfig {
         saveBoolean(SEND_DATA, sendData)
     }
 
+    private var nextNotificationId = 100
+
+    fun getNextNotificationId(): Int {
+        return nextNotificationId++
+    }
 
     companion object {
-
-
-        private var INSTANCE: PreyConfig? = null
-
-
+        private var instance: PreyConfig? = null
         fun getInstance(context: Context): PreyConfig {
-
-            if (INSTANCE == null) {
-
-                INSTANCE = PreyConfig(context)
-            }
-            return INSTANCE!!
+            return instance ?: PreyConfig(context).also { instance = it }
         }
-
 
         //Set false in production
         const val LOG_DEBUG_ENABLED: Boolean = false
@@ -1549,20 +1547,8 @@ class PreyConfig {
         const val LOCATION_LOW_BATTERY_DATE: String = "LOCATION_LOW_BATTERY_DATE"
         const val SESSION_ID: String = "SESSION_ID"
         const val PIN_NUMBER2: String = "PIN_NUMBER2"
-        const val SMS_COMMAND: String = "SMS_COMMAND"
         const val PREFERENCE_LOCATION_LOW_BATTERY: String = "PREFERENCE_LOCATION_LOW_BATTERY"
         const val TOKEN_JWT: String = "TOKEN_JWT"
-        const val ANDROID_INIT: Int = 2000
-        const val ANDROID_SIGN_UP: Int = 2001
-        const val ANDROID_TOUR_SCREEN: Int = 2002
-        const val ANDROID_TOUR_COMPLETED: Int = 2003
-        const val ANDROID_PRIVILEGES_GIVEN: Int = 2004
-        const val ANDROID_SIGN_IN: Int = 2005
-        const val ANDROID_LOGIN_SETTINGS: Int = 2007
-        const val ANDROID_FAILED_LOGIN_SETTINGS: Int = 2008
-        const val ANDROID_VERSION_UPDATED: Int = 2009
-        const val ANDROID_ONBOARDING_INIT: Int = 2010
-        const val ANDROID_ONBOARDING_COMPLETED: Int = 2011
         const val PREY_VERSION: String = "PREY_VERSION"
         const val API_KEY: String = "API_KEY"
         const val DEVICE_ID: String = "DEVICE_ID"
@@ -1613,10 +1599,8 @@ class PreyConfig {
         const val VERIFICATE_BIOMETRIC: String = "VERIFICATE_BIOMETRIC"
         const val TYPE_BIOMETRIC: String = "TYPE_BIOMETRIC"
         const val OVER_LOCK: String = "OVER_LOCK"
-        const val FIRST: String = "FIRST"
         const val PIN_NUMBER_ACTIVATE: String = "PIN_NUMBER_ACTIVATE"
         const val INPUT_WEBVIEW: String = "INPUT_WEBVIEW"
-        const val PAGE: String = "PAGE"
         const val PERMISSION_LOCATION: String = "PERMISSION_LOCATION"
         const val HELP_FILE: String = "HELP_FILE"
         const val CONTACT_FORM_FOR_FREE: String = "CONTACT_FORM_FOR_FREE"
@@ -1630,16 +1614,11 @@ class PreyConfig {
         const val LOCATIONBG_DENIED: String = "LOCATIONBG_DENIED"
         const val MSP_ACCOUNT: String = "MSP_ACCOUNT"
         const val START: String = "START"
-
         const val VOLUME: String = "VOLUME"
         const val DENY_NOTIFICATION: String = "DENY_NOTIFICATION"
-        const val TIME_NEXT_PING: String = "TIME_NEXT_PING"
         const val OPEN_SECURE_SERVICE: String = "OPEN_SECURE_SERVICE"
 
         var postUrl: String? = null
-
-
-        private const val PLAY_SERVICES_RESOLUTION_REQUEST = 9000
 
         var FORMAT_SDF_AWARE: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
 

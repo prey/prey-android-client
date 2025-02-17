@@ -13,6 +13,7 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.Window
+
 import com.prey.backwardcompatibility.FroyoSupport
 import com.prey.json.actions.Lock
 import com.prey.PreyConfig
@@ -22,32 +23,68 @@ import com.prey.services.CheckLockActivated
 import com.prey.services.PreyLockHtmlService
 import com.prey.services.PreyLockService
 
+/**
+ * LoginActivity is the main activity of the application.
+ * It handles the login process and redirects the user to the
+ * appropriate activity based on the device's registration status.
+ */
 class LoginActivity : Activity() {
+
+    /**
+     * Called when the configuration of the activity changes.
+     *
+     * @param newConfig The new configuration.
+     */
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
     }
 
+    /**
+     * Called when the activity is first created.
+     *
+     * @param savedInstanceState The saved instance state, if any.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         startup()
     }
 
+    /**
+     * Called when the activity is started.
+     */
     override fun onStart() {
         super.onStart()
         startup()
     }
 
+    /**
+     * Called when the activity is resumed.
+     */
     override fun onResume() {
         super.onResume()
         startup()
     }
 
+    /**
+     * Called when the activity is restarted.
+     */
     override fun onRestart() {
         super.onRestart()
         startup()
     }
 
+    /**
+     * Starts the login process.
+     *
+     * This method checks if the device is registered, and if so,
+     * starts the PreyLockService.
+     *
+     * If the device is not registered, it shows the login activity.
+     *
+     * If the device is registered, but the user has not unlocked
+     * the device, it shows the lock activity.
+     */
     private fun startup() {
         var intentLock: Intent? = null
         val unlockPass = PreyConfig.getInstance(applicationContext).getUnlockPass()
@@ -75,17 +112,20 @@ class LoginActivity : Activity() {
                     )
                 )
             } else {
-                Lock.lockWhenYouNocantDrawOverlays(applicationContext)
+                Lock().lockWhenYouNocantDrawOverlays(applicationContext)
             }
         }
         val ready: Boolean = PreyConfig.getInstance(this).getProtectReady()
-        if (isThereBatchInstallationKey && !ready) {
+        if (isThereBatchInstallationKey() && !ready) {
             showLoginBatch()
         } else {
             showLogin()
         }
     }
 
+    /**
+     * Shows the login activity.
+     */
     private fun showLogin() {
         var intent: Intent? = null
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -96,9 +136,9 @@ class LoginActivity : Activity() {
                 intent = Intent(this@LoginActivity, CheckPasswordActivity::class.java)
             } else {
                 val canDrawOverlays = PreyPermission.canDrawOverlays(this)
-                PreyLogger.d(String.format("LoginActivity: canDrawOverlays:%b", canDrawOverlays))
-                val isAdminActive = FroyoSupport.getInstance(this)!!.isAdminActive
-                PreyLogger.d(String.format("LoginActivity: isAdminActive:%b", isAdminActive))
+                PreyLogger.d("LoginActivity: canDrawOverlays:${canDrawOverlays}")
+                val isAdminActive = FroyoSupport.getInstance(this).isAdminActive()
+                PreyLogger.d("LoginActivity: isAdminActive:${isAdminActive}")
                 val configurated = canDrawOverlays && isAdminActive
                 intent = if (configurated) {
                     Intent(this@LoginActivity, SignInActivity::class.java)
@@ -115,6 +155,9 @@ class LoginActivity : Activity() {
         finish()
     }
 
+    /**
+     * Shows the login batch activity.
+     */
     private fun showLoginBatch() {
         var intent: Intent? = null
         intent = Intent(this@LoginActivity, SplashBatchActivity::class.java)
@@ -122,18 +165,16 @@ class LoginActivity : Activity() {
         finish()
     }
 
-    private val isThisDeviceAlreadyRegisteredWithPrey: Boolean
-        get() = PreyConfig.getInstance(this@LoginActivity)
+    private fun isThisDeviceAlreadyRegisteredWithPrey(): Boolean = PreyConfig.getInstance(this@LoginActivity)
             .isThisDeviceAlreadyRegisteredWithPrey(false)
 
-    private fun showFeedback(ctx: Context) {
-        val popup = Intent(ctx, FeedbackActivity::class.java)
+    private fun showFeedback(context: Context) {
+        val popup = Intent(context, FeedbackActivity::class.java)
         popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        ctx.startActivity(popup)
+        context.startActivity(popup)
     }
 
-    private val isThereBatchInstallationKey: Boolean
-        get() {
+    private fun isThereBatchInstallationKey(): Boolean{
             val apiKeyBatch = PreyConfig.getInstance(this@LoginActivity).getApiKeyBatch()
             return (apiKeyBatch != null && "" != apiKeyBatch)
         }

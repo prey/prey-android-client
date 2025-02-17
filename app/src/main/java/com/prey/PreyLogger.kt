@@ -6,6 +6,7 @@
  ******************************************************************************/
 package com.prey
 
+import android.content.Context
 import android.util.Log
 
 class PreyLogger {
@@ -23,6 +24,15 @@ class PreyLogger {
         else Log.e(PreyConfig.TAG, message!!)
     }
     companion object {
+
+        private var instance: PreyLogger? = null
+        fun getInstance(): PreyLogger {
+            if (instance == null) {
+                instance = PreyLogger()
+            }
+            return instance!!
+        }
+
         fun i(message: String?) {
             Log.i(PreyConfig.TAG, "OSO_:$message")
         }

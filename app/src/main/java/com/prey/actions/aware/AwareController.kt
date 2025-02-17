@@ -6,162 +6,165 @@
  ******************************************************************************/
 package com.prey.actions.aware
 
-import android.Manifest
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
-import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 
-import com.prey.actions.location.LocationUpdatesService
+import com.prey.actions.location.LastLocationService
 import com.prey.actions.location.LocationUtil
 import com.prey.actions.location.PreyLocation
-import com.prey.actions.location.PreyLocationManager
 import com.prey.FileConfigReader
 import com.prey.PreyConfig
 import com.prey.PreyLogger
+import com.prey.actions.location.UpdateLocationService
+import com.prey.actions.location.daily.DailyLocationService
 import com.prey.net.PreyHttpResponse
 import com.prey.net.PreyWebServices
 import com.prey.receivers.AwareGeofenceReceiver
-
+import com.prey.workers.PreyGetLocationWorkManager
 
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.util.Date
 
-
+/**
+ * Controller class for handling location awareness.
+ */
 class AwareController {
-    fun init(context: Context) {
+
+    /**
+     * Starts a location service.
+     *
+     * @param context Context
+     * @param serviceClass Class of the service to start
+     */
+    private fun startLocationService(context: Context, serviceClass: Class<*>) {
         try {
-            val isLocationAwareEnabled = PreyConfig.getInstance(context).getAware()
-            PreyLogger.d("AWARE AwareController init isLocationAwareEnabled:$isLocationAwareEnabled")
-            if (isLocationAwareEnabled) {
-                PreyLocationManager.getInstance().setLastLocation(null)
-                val locationNow = LocationUtil.getLocation(context, null, false)
-                if (locationNow != null && locationNow.isValid()) {
-                    PreyLocationManager.getInstance().setLastLocation(locationNow)
-                    PreyLogger.d("AWARE locationNow[i]:$locationNow")
-                }
-                LocationUpdatesService().startForegroundService(context)
-                var locationAware: PreyLocation? = null
-                var i = 0
-                while (i < LocationUtil.MAXIMUM_OF_ATTEMPTS) {
-                    PreyLogger.d("AWARE getPreyLocationApp[i]:$i")
-                    try {
-                        Thread.sleep((LocationUtil.SLEEP_OF_ATTEMPTS[i] * 1000).toLong())
-                    } catch (e: InterruptedException) {
-                    }
-                    locationAware = PreyLocationManager.getInstance().getLastLocation()
-                    if (locationAware != null) {
-                        locationAware.setMethod("native");
-                        PreyLogger.d("AWARE init:$locationAware")
-                    }
-                    if (locationAware != null && locationAware.isValid()) {
-                        break
-                    }
-                    i++
-                }
-                val locationNow2 = sendAware(context, locationAware)
-                if (locationNow2 != null) {
-                    run(context)
-                }
-            }
+            val serviceIntent = Intent(context, serviceClass)
+            context.startService(serviceIntent)
+            Thread.sleep(3000)
+            context.stopService(serviceIntent)
         } catch (e: Exception) {
-            PreyLogger.e("AWARE error:" + e.message, e)
+            PreyLogger.d("Error:${e.message}")
         }
     }
 
-    fun run(context: Context) {
-        PreyLogger.d("AWARE AwareController run")
-        try {
-            val geofenceConfig = FileConfigReader.getInstance(context)!!
-            val loiteringDelay = geofenceConfig.geofenceLoiteringDelay
-            val notificationResponsiveness = geofenceConfig.geofenceNotificationResponsiveness
-            val radius = geofenceConfig.radiusAware
-
-            //remove
-            val listRemove: MutableList<String> = ArrayList()
-            listRemove.add(GEO_AWARE_NAME)
-            LocationServices.getGeofencingClient(context!!).removeGeofences(listRemove)
-            //new
-            val locationOld = PreyConfig.getInstance(context).getLocationAware()
-            if (locationOld != null) {
-                val lat = locationOld.getLat()
-                val lng = locationOld.getLng()
-                PreyLogger.d(
-                    "AWARE lat:" + LocationUpdatesService.round(lat) + " lng:" + LocationUpdatesService.round(
-                        lng
-                    )
-                )
-                if (lat == 0.0 || lng == 0.0) {
-                    PreyLogger.d("AWARE is zero")
-                    return
-                }
-                val mGeofenceList: MutableList<Geofence> = ArrayList()
-                mGeofenceList.add(
-                    Geofence.Builder()
-                        .setRequestId(GEO_AWARE_NAME)
-                        .setCircularRegion(lat, lng, radius.toFloat())
-                        .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
-                        .setLoiteringDelay(loiteringDelay)
-                        .setNotificationResponsiveness(notificationResponsiveness)
-                        .build()
-                )
-                val builder = GeofencingRequest.Builder()
-                builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_EXIT or GeofencingRequest.INITIAL_TRIGGER_ENTER)
-                builder.addGeofences(mGeofenceList)
-                val geofencingRequest = builder.build()
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ActivityCompat.checkSelfPermission(
-                        context, Manifest.permission.ACCESS_FINE_LOCATION
-                    ) == PackageManager.PERMISSION_GRANTED
-                ) {
-                    //Added for android 12
-                    val pendingIntent = PendingIntent.getBroadcast(
-                        context, 0, Intent(
-                            context,
-                            AwareGeofenceReceiver::class.java
-                        ), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-                    )
-                    LocationServices.getGeofencingClient(context)
-                        .addGeofences(geofencingRequest, pendingIntent)
-                        .addOnSuccessListener {
-                            PreyLogger.d(
-                                "AWARE saveGeofence lat:" + LocationUpdatesService.round(
-                                    lat
-                                ) + " lng:" + LocationUpdatesService.round(lng)
-                            )
-                        }
-                        .addOnFailureListener { e ->
-                            PreyLogger.e(
-                                "AWARE saveGeofence error: " + e.message,
-                                e
-                            )
-                        }
-                }
-            } else {
-                PreyLogger.d("AWARE locationOld is null")
-            }
-        } catch (e: Exception) {
-            PreyLogger.e("AWARE error:" + e.message, e)
-        }
+    /**
+     * Initializes the last location.
+     *
+     * @param context Context
+     */
+    fun initLastLocation(context: Context) {
+        startLocationService(context, LastLocationService::class.java)
     }
 
+    /**
+     * Initializes the update location.
+     *
+     * @param context Context
+     */
+    @SuppressLint("SuspiciousIndentation")
+    fun initUpdateLocation(context: Context) {
+        startLocationService(context, UpdateLocationService::class.java)
+    }
+
+    /**
+     * Initializes the daily location.
+     *
+     * @param context Context
+     */
+    @SuppressLint("SuspiciousIndentation")
+    fun initDailyLocation(context: Context) {
+        startLocationService(context, DailyLocationService::class.java)
+    }
+
+    /**
+     * Creates a pending intent for geofencing.
+     *
+     * @param context Context
+     * @return PendingIntent
+     */
+    private fun createGeofencingPendingIntent(context: Context): PendingIntent {
+        return PendingIntent.getBroadcast(
+            context,
+            CUSTOM_REQUEST_CODE_GEOFENCE,
+            Intent(context, AwareGeofenceReceiver::class.java),
+            PendingIntent.FLAG_MUTABLE
+        )
+    }
+
+    /**
+     * Creates a geofencing request.
+     *
+     * @param context Context
+     * @return GeofencingRequest?
+     */
+    private fun createGeofencingRequest(context: Context): GeofencingRequest? {
+        val geofenceConfig = FileConfigReader.getInstance(context) ?: return null
+
+        val awareRadius = geofenceConfig.getRadiusAware()
+        val lastLocation = PreyConfig.getInstance(context).getLocationAware() ?: return null
+
+        val geofence = Geofence.Builder()
+            .setRequestId(GEO_AWARE_NAME)
+            .setCircularRegion(lastLocation.getLat(), lastLocation.getLng(), awareRadius.toFloat())
+            .setExpirationDuration(Geofence.NEVER_EXPIRE)
+            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
+            .build()
+
+        return GeofencingRequest.Builder()
+            .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_EXIT or GeofencingRequest.INITIAL_TRIGGER_ENTER)
+            .addGeofence(geofence)
+            .build()
+    }
+
+    /**
+     * Registers a geofence.
+     *
+     * @param context Context
+     */
+    @SuppressLint("MissingPermission")
+    fun registerGeofence(context: Context) {
+        val geofencingClient = LocationServices.getGeofencingClient(context)
+        geofencingClient.addGeofences(
+            createGeofencingRequest(context)!!,
+            createGeofencingPendingIntent(context)
+        )
+            .run {
+                addOnSuccessListener {
+                    PreyLogger.d("AWARE registerGeofence: SUCCESS")
+                }
+                addOnFailureListener { exception ->
+                    PreyLogger.d("AWARE registerGeofence: Failure\n$exception")
+                }
+            }
+    }
+
+    /**
+     * Sends an aware notification.
+     *
+     * @param context Context
+     * @param currentLocation Current location
+     * @return PreyLocation?
+     * @throws Exception
+     */
     @Throws(Exception::class)
-    fun sendAware(context: Context, currentLocation: PreyLocation?): PreyLocation? {
+    fun sendAware(context: Context, currentLocation: PreyLocation): PreyLocation? {
         //get location
         val previousLocation = PreyConfig.getInstance(context).getLocationAware()
-        val distanceAware = PreyConfig.getInstance(context).getDistanceAware()
+        val distanceThreshold = PreyConfig.getInstance(context).getDistanceAware()
         //TODO:SACAR DISTANCIA
-        val mustSendAware = true//mustSendAware(context, previousLocation, currentLocation, distanceAware)
+        val shouldSendNotification =
+            true//mustSendAware(context, previousLocation, currentLocation, distanceAware)
         //send aware
-        return if (mustSendAware) {
+        return if (shouldSendNotification) {
             sendNowAware(context, currentLocation)
             currentLocation
         } else {
@@ -170,8 +173,46 @@ class AwareController {
     }
 
     /**
+     * Sends a daily location update.
+     *
+     * @param context Context
+     * @param location PreyLocation
+     * @throws Exception
+     */
+    @Throws(Exception::class)
+    fun sendDaily(context: Context, location: PreyLocation) {
+        val formattedAccuracy = Math.round(location.getAccuracy() * 100.0) / 100.0
+        val json = JSONObject().apply {
+            put("lat", location.getLat())
+            put("lng", location.getLng())
+            put("accuracy", formattedAccuracy)
+            put("method", location.getMethod() ?: "native")
+            put("force", true)
+        }
+        val locationJson = JSONObject()
+        locationJson.put("location", json)
+        if (Build.VERSION.SDK_INT > 9) {
+            val policy = ThreadPolicy.Builder().permitAll().build()
+            StrictMode.setThreadPolicy(policy)
+        }
+        val response = PreyWebServices.getInstance().sendLocation(context, locationJson)
+        if (response != null) {
+            val statusCode = response.getStatusCode()
+            PreyLogger.d("DAILY getStatusCode :${statusCode}")
+            if (statusCode == HttpURLConnection.HTTP_OK || statusCode == HttpURLConnection.HTTP_CREATED) {
+                PreyConfig.getInstance(context).setDailyLocation(
+                    PreyConfig.FORMAT_SDF_AWARE.format(
+                        Date()
+                    )
+                )
+            }
+            PreyLogger.d("DAILY sendNowAware:${location.toString()}")
+        }
+    }
+
+    /**
      * Method to if location must send
-     * @param ctx Context
+     * @param context Context
      * @param oldLocation Old location
      * @param newLocation New location
      * @param distanceAware Minimum difference between locations
@@ -183,124 +224,96 @@ class AwareController {
         currentLocation: PreyLocation?,
         distanceAware: Int
     ): Boolean {
-        var sendAware = false
-        if (previousLocation == null) {
-            if (currentLocation != null) {
-                sendAware = true
-            }
-        } else {
-            if (currentLocation != null) {
-                val distance = LocationUtil.distance(previousLocation, currentLocation)
-                PreyLogger.d("AWARE distance:$distance > $distanceAware")
-                if (distance > distanceAware) {
-                    sendAware = true
-                }
-            }
+        if (previousLocation == null && currentLocation != null) {
+            return true
         }
-        return sendAware
-    }
-
-    @Throws(Exception::class)
-    fun getSendNowAware(ctx: Context) {
-        val currentLocation = LocationUtil.getLocation(ctx, null, false)
-        PreyLogger.d("AWARE currentLocation:$currentLocation")
-        sendNowAware(ctx, currentLocation)
+        if (previousLocation != null && currentLocation != null) {
+            val distanceBetweenLocations = LocationUtil.distance(previousLocation, currentLocation)
+            return distanceBetweenLocations > distanceAware
+        }
+        return false
     }
 
     /**
      * Method that sends the location
-     * @param ctx Context
+     * @param context Context
      * @param currentLocation  location
      * @return returns PreyHttpResponse
      */
     @Throws(Exception::class)
-    fun sendNowAware(ctx: Context, currentLocation: PreyLocation?): PreyHttpResponse? {
-        // Initialize response variable
-        var preyResponse: PreyHttpResponse? = null
+    fun sendNowAware(context: Context, currentLocation: PreyLocation?): PreyHttpResponse? {
         if (currentLocation == null || currentLocation.getLat() == 0.0 || currentLocation.getLng() == 0.0) {
-            // Log message if location is invalid
-            PreyLogger.d("AWARE sendNowAware is zero")
-            return preyResponse
+            return null
         }
-        // Get location aware status from config
-        val isLocationAware = PreyConfig.getInstance(ctx).getAware()
-        PreyLogger.d(String.format("AWARE sendNowAware isLocationAware:%s", isLocationAware))
-        // Check if location aware is enabled
-        if (isLocationAware) {
-            val messageId: String? = null
-            val reason: String? = null
-            // Create JSON object for location wrapper
-            val location = JSONObject()
-            // Put location data into location wrapper
-            location.put("location", createLocationData(currentLocation))
-            // Set thread policy for Android versions > 9
-            if (Build.VERSION.SDK_INT > 9) {
-                val policy = ThreadPolicy.Builder().permitAll().build()
-                StrictMode.setThreadPolicy(policy)
-            }
-            // Send location data using web services
-            preyResponse = PreyWebServices.getInstance().sendLocation(ctx, location)
-            // Check if response is not null
-            if (preyResponse != null) {
-                // Get status code and response from response object
-                val statusCode = preyResponse.getStatusCode()
-                val response = preyResponse.getResponseAsString()
-                // Log status code and response
-                PreyLogger.d(
-                    String.format(
-                        "AWARE statusCode:%s response:%s",
-                        statusCode,
-                        response
-                    )
+        val isLocationAwareEnabled =
+            PreyConfig.getInstance(context).isLocatigetAwareonAwareEnabled()
+        if (!isLocationAwareEnabled) {
+            return null
+        }
+
+        val locationData = createLocationData(currentLocation)
+        val locationWrapper = JSONObject().apply { put("location", locationData) }
+
+        if (Build.VERSION.SDK_INT > 9) {
+            val threadPolicy = ThreadPolicy.Builder().permitAll().build()
+            StrictMode.setThreadPolicy(threadPolicy)
+        }
+
+        val response = PreyWebServices.getInstance().sendLocation(context, locationWrapper)
+        return if (response != null && (response.getStatusCode() == HttpURLConnection.HTTP_CREATED || response.getStatusCode() == HttpURLConnection.HTTP_OK)) {
+            // Set location aware data in config
+            PreyConfig.getInstance(context).setLocationAware(currentLocation)
+            PreyConfig.getInstance(context).setAwareTime()
+            val responseAsString = response.getResponseAsString()
+            // Check if response is "OK"
+            if ("OK" == responseAsString) {
+                // The date of the last location sent correctly is saved (yyyy-MM-dd )
+                PreyConfig.getInstance(context).setAwareDate(
+                    PreyConfig.FORMAT_SDF_AWARE.format(Date())
                 )
-                // Check if status code is HTTP_CREATED or HTTP_OK
-                if (statusCode == HttpURLConnection.HTTP_CREATED || statusCode == HttpURLConnection.HTTP_OK) {
-                    // Set location aware data in config
-                    PreyConfig.getInstance(ctx).setLocationAware(currentLocation)
-                    PreyConfig.getInstance(ctx).setAwareTime()
-                    // Check if response is "OK"
-                    if ("OK" == response) {
-                        // The date of the last location sent correctly is saved (yyyy-MM-dd )
-                        PreyConfig.getInstance(ctx).setAwareDate(
-                            PreyConfig.FORMAT_SDF_AWARE.format(Date())
-                        )
-                        // Log location aware data
-                        PreyLogger.d(
-                            String.format(
-                                "AWARE sendNowAware:%s",
-                                currentLocation.toString()
-                            )
-                        )
-                    }
-                }
+                // Log location aware data
+                PreyLogger.d("AWARE sendNowAware:${currentLocation.toString()}")
             }
+            response
+        } else {
+            null
         }
-        return preyResponse
     }
 
+    /**
+     * Creates a JSONObject containing location data from a PreyLocation object.
+     *
+     * @param location The PreyLocation object to extract data from.
+     * @return A JSONObject containing the location data.
+     */
     private fun createLocationData(location: PreyLocation): JSONObject {
-        val json = JSONObject()
-        json.put("lat", location.getLat())
-        json.put("lng", location.getLng())
-        json.put("accuracy", roundAccuracy(location.getAccuracy().toDouble()))
-        json.put("method", location.getMethod() ?: "native")
-        return json
+        val locationData = JSONObject()
+        locationData.apply {
+            put("lat", location.getLat())
+            put("lng", location.getLng())
+            put("accuracy", roundAccuracy(location.getAccuracy().toDouble()))
+            put("method", location.getMethod() ?: "native")
+        }
+        return locationData
     }
 
+    /**
+     * Rounds a given accuracy value to two decimal places.
+     *
+     * @param accuracy The accuracy value to round.
+     * @return The rounded accuracy value.
+     */
     private fun roundAccuracy(accuracy: Double): Double {
         return Math.round(accuracy * 100.0) / 100.0
     }
 
-
     companion object {
-        var GEO_AWARE_NAME: String = "AWARE"
+        const val GEO_AWARE_NAME = "AWARE"
+        const val CUSTOM_REQUEST_CODE_GEOFENCE = 1001
 
         private var instance: AwareController? = null
         fun getInstance(): AwareController {
-            if (instance == null) {
-                instance = AwareController()
-            }
-            return instance!!
+            return instance ?: AwareController().also { instance = it }
         }
     }
 }

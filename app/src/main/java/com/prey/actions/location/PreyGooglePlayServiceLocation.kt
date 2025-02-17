@@ -19,12 +19,17 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationListener
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+
 import com.prey.PreyConfig
 import com.prey.PreyLogger
+
 import java.text.DateFormat
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
+/**
+ * A class that handles location updates using the Google Play Services API.
+ */
 class PreyGooglePlayServiceLocation : GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener,
     LocationListener {
@@ -33,23 +38,37 @@ class PreyGooglePlayServiceLocation : GoogleApiClient.ConnectionCallbacks,
     protected var mCurrentLocation: Location? = null
     protected var mLastUpdateTime: String? = null
     protected var mRequestingLocationUpdates: Boolean? = null
-    private var ctx: Context? = null
+    private var context: Context? = null
 
-    fun init(ctx: Context?) {
-        this.ctx = ctx
+    /**
+     * Initializes the location service with the given context.
+     *
+     * @param context The application context.
+     */
+    fun init(context: Context?) {
+        this.context = context
         mCurrentLocation = null
         mLastUpdateTime = null
         mRequestingLocationUpdates = false
         buildGoogleApiClient()
     }
 
-    fun getLastLocation(ctx: Context?): Location? {
+    /**
+     * Returns the last known location.
+     *
+     * @param context The application context.
+     * @return The last known location, or null if not available.
+     */
+    fun getLastLocation(context: Context?): Location? {
         return mCurrentLocation
     }
 
+    /**
+     * Builds the Google API client instance.
+     */
     @Synchronized
     protected fun buildGoogleApiClient() {
-        mGoogleApiClient = GoogleApiClient.Builder(ctx!!)
+        mGoogleApiClient = GoogleApiClient.Builder(context!!)
             .addConnectionCallbacks(this)
             .addOnConnectionFailedListener(this)
             .addApi(LocationServices.API)
@@ -70,6 +89,9 @@ class PreyGooglePlayServiceLocation : GoogleApiClient.ConnectionCallbacks,
         }
     }
 
+    /**
+     * Creates a location request instance.
+     */
     protected fun createLocationRequest() {
         mLocationRequest = LocationRequest()
         mLocationRequest!!.setInterval(PreyConfig.UPDATE_INTERVAL_IN_MILLISECONDS)
@@ -80,6 +102,11 @@ class PreyGooglePlayServiceLocation : GoogleApiClient.ConnectionCallbacks,
     override fun onConnected(connectionHint: Bundle?) {
     }
 
+    /**
+     * Called when the location changes.
+     *
+     * @param location The new location.
+     */
     override fun onLocationChanged(location: Location) {
         mCurrentLocation = location
         if (location != null) {
@@ -88,27 +115,43 @@ class PreyGooglePlayServiceLocation : GoogleApiClient.ConnectionCallbacks,
         }
     }
 
+    /**
+     * Stops location updates.
+     */
     fun stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient!!, this)
     }
 
+    /**
+     * Called when the Google API client connection is suspended.
+     *
+     * @param cause The reason for the suspension.
+     */
     override fun onConnectionSuspended(cause: Int) {
         PreyLogger.d("Connection suspended")
         mGoogleApiClient!!.connect()
     }
 
+    /**
+     * Called when the Google API client connection fails.
+     *
+     * @param result The connection result.
+     */
     override fun onConnectionFailed(result: ConnectionResult) {
-        PreyLogger.d("Connection failed: ConnectionResult.getErrorCode() = " + result.errorCode)
+        PreyLogger.d("Connection failed: ConnectionResult.getErrorCode() = ${result.errorCode}" )
     }
 
+    /**
+     * Starts location updates.
+     */
     protected fun startLocationUpdates() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
             || (ActivityCompat.checkSelfPermission(
-                ctx!!,
+                context!!,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(
-                ctx!!,
+                context!!,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED)
         ) {
@@ -119,7 +162,7 @@ class PreyGooglePlayServiceLocation : GoogleApiClient.ConnectionCallbacks,
                 )
                 Looper.loop()
             } catch (e: Exception) {
-                PreyLogger.d("Error startLocationUpdates: " + e.message)
+                PreyLogger.d("Error startLocationUpdates: ${e.message}")
             }
         }
     }

@@ -10,10 +10,14 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+
 import com.prey.json.actions.Lock
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 
+/**
+ * Service responsible for checking if the device is locked and taking necessary actions.
+ */
 class CheckLockActivated : Service() {
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -23,9 +27,15 @@ class CheckLockActivated : Service() {
         super.onCreate()
     }
 
+    /**
+     * Called when the service is started.
+     *
+     * @param intent The Intent that was used to start the service.
+     * @param startId A unique integer representing the start request.
+     */
     override fun onStart(intent: Intent, startId: Int) {
         super.onStart(intent, startId)
-        val ctx: Context = this
+        val context: Context = this
         object : Thread() {
             override fun run() {
                 var run = true
@@ -40,13 +50,13 @@ class CheckLockActivated : Service() {
                     }
                     try {
                         sleep(1000)
-                        if (!Lock.canDrawOverlays(ctx)) {
-                            Lock.lockWhenYouNocantDrawOverlays(ctx)
+                        if (!Lock().canDrawOverlays(context)) {
+                            Lock().lockWhenYouNocantDrawOverlays(context)
                             stopSelf()
                             break
                         }
                     } catch (e: Exception) {
-                        PreyLogger.e("CheckLockActivated Error:" + e.message, e)
+                        PreyLogger.e("CheckLockActivated Error: ${e.message}", e)
                     }
                 }
             }

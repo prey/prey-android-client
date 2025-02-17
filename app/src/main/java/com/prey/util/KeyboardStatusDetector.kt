@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.util
 
-import android.R
 import android.app.Activity
 import android.graphics.Rect
 import android.view.View
@@ -20,7 +19,7 @@ class KeyboardStatusDetector {
     var keyboardVisible: Boolean = false
 
     fun registerActivity(a: Activity) {
-        registerView(a.window.decorView.findViewById(R.id.content))
+        registerView(a.window.decorView.findViewById(android.R.id.content))
     }
 
     fun registerView(v: View): KeyboardStatusDetector {
@@ -29,10 +28,6 @@ class KeyboardStatusDetector {
             v.getWindowVisibleDisplayFrame(r)
             val heightDiff: Int = v.getRootView().getHeight() - (r.bottom - r.top)
             if (heightDiff > 100) { // if more than 100 pixels, its probably a keyboard...
-                /** Check this variable to debounce layout events  */
-                /** Check this variable to debounce layout events  */
-                /** Check this variable to debounce layout events  */
-                /** Check this variable to debounce layout events  */
                 if (!keyboardVisible) {
                     keyboardVisible = true
                     if (visibilityListener != null) visibilityListener!!.onVisibilityChanged(true)

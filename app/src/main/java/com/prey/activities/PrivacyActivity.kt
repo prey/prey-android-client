@@ -14,9 +14,19 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+
 import com.prey.R
 
+/**
+ * Activity responsible for displaying the privacy policy.
+ */
 class PrivacyActivity : AppCompatActivity() {
+
+    /**
+     * Called when the activity is created.
+     *
+     * @param savedInstanceState Saved instance state, if any.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)

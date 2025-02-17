@@ -8,9 +8,10 @@ package com.prey.json.actions
 
 import android.content.Context
 import android.content.Intent
+
 import com.prey.actions.aware.AwareController
 import com.prey.actions.HttpDataService
-import com.prey.actions.location.LocationUpdatesService
+import com.prey.actions.location.LastLocationService
 import com.prey.actions.location.LocationUtil
 import com.prey.actions.location.PreyLocation
 import com.prey.actions.location.PreyLocationManager
@@ -20,54 +21,56 @@ import com.prey.json.UtilJson
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.net.PreyWebServices
+import com.prey.workers.PreyGetLocationWorkManager
+
 import org.json.JSONObject
 
 
 class Location : JsonAction() {
     override fun report(
-        ctx: Context,
-        list: MutableList<ActionResult>?,
+        context: Context,
+        actionResults: MutableList<ActionResult>?,
         parameters: JSONObject?
     ): MutableList<HttpDataService>? {
         PreyLogger.d("REPORT Ejecuting Location Report.")
 
-        val dataToBeSent = super.report(ctx, list, parameters)
+        val dataToBeSent = super.report(context, actionResults, parameters)
         return dataToBeSent
     }
 
 
     override fun get(
-        ctx: Context,
-        list: MutableList<ActionResult>?,
+        context: Context,
+        actionResults: MutableList<ActionResult>?,
         parameters: JSONObject?
     ): MutableList<HttpDataService>? {
         val dataToBeSent = null
 
-        PreyLogger.d("Ejecuting Location Get.")
+        PreyLogger.d("AWARE Ejecuting Location Get.")
         var messageId: String? = null
         try {
-            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID)
-            PreyLogger.d(String.format("messageId:%s", messageId))
+            messageId = UtilJson.getStringValue(parameters, PreyConfig.MESSAGE_ID)
+            PreyLogger.d("messageId:${messageId}")
         } catch (e: java.lang.Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         var jobId: String? = null
         try {
-            jobId = UtilJson.getString(parameters, PreyConfig.JOB_ID)
-            PreyLogger.d(String.format("jobId:%s", jobId))
+            jobId = UtilJson.getStringValue(parameters, PreyConfig.JOB_ID)
+            PreyLogger.d("jobId:${jobId}")
         } catch (e: java.lang.Exception) {
-            PreyLogger.e(String.format("Error:%s" + e.message), e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         var reason: String? = null
         if (jobId != null && "" != jobId) {
             reason = "{\"device_job_id\":\"$jobId\"}"
         }
         PreyLocationManager.getInstance().setLastLocation(null)
-        PreyConfig.getInstance(ctx).setLocation(null)
-        PreyConfig.getInstance(ctx).setLocationInfo("")
+        PreyConfig.getInstance(context).setLocation(null)
+        PreyConfig.getInstance(context).setLocationInfo("")
 
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-            ctx,
+            context,
             "processed",
             messageId,
             UtilJson.makeMapParam("get", "location", "started", reason)
@@ -75,9 +78,12 @@ class Location : JsonAction() {
         PreyLogger.d(javaClass.name)
 
         Thread(Runnable {
-        val intentLocation = Intent(ctx, LocationUpdatesService::class.java)
-        ctx.startService(intentLocation)
-            ctx.stopService(intentLocation)
+            //AwareController.getInstance().initLastLocation(context)
+            //PreyGetLocationWorkManager.getInstance().getLocationWork(context)
+
+            val intentLocation = Intent(context, LastLocationService::class.java)
+            context.startService(intentLocation)
+            context.stopService(intentLocation)
         }).start()
         Thread(Runnable {
             var data: HttpDataService? = null
@@ -90,10 +96,13 @@ class Location : JsonAction() {
             var first = true
 
             while (i < maximum&&!send) {
-                PreyLogger.i("Runnable[$i] send[$send]")
+                PreyLogger.i("AWARE Runnable[$i] send[$send]")
+                if(i==10){
+                    PreyGetLocationWorkManager.getInstance().getLocationWork(context)
+                }
                 try {
 
-                    val location: PreyLocation? = PreyConfig.getInstance(ctx).getLocation()
+                    val location: PreyLocation? = PreyConfig.getInstance(context).getLocation()
                     if (location != null) {
                         data = LocationUtil.convertData(location)
                         val acc = data!!.getDataListKey(LocationUtil.ACC)
@@ -101,15 +110,9 @@ class Location : JsonAction() {
                             var newAccuracy = 0f
                             try {
                                 newAccuracy = acc.toFloat()
-                                PreyLogger.d(
-                                    String.format(
-                                        "accuracy_:%s newAccuracy:%s",
-                                        accuracy,
-                                        newAccuracy
-                                    )
-                                )
+                                PreyLogger.d( "accuracy_:${accuracy} newAccuracy:${newAccuracy}"   )
                             } catch (e: java.lang.Exception) {
-                                PreyLogger.e(String.format("Error:%s", e.message), e)
+                                PreyLogger.e("Error:${ e.message}", e)
                             }
                             if (newAccuracy > 0) {
                                 if (accuracy == -1f || accuracy > newAccuracy) {
@@ -127,8 +130,8 @@ class Location : JsonAction() {
                             dataToBeSent = ArrayList()
                             dataToBeSent.add(data)
                             dataToBeSent.add(dataToast)
-                            PreyLogger.d(String.format("send [%s]:%s", i, accuracy))
-                            PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent)
+                            PreyLogger.d("send [${i}]:${accuracy}")
+                            PreyWebServices.getInstance().sendPreyHttpData(context, dataToBeSent)
                             first = false
                             i = LocationUtil.MAXIMUM_OF_ATTEMPTS
                         }
@@ -146,19 +149,19 @@ class Location : JsonAction() {
             }
             if (data == null) {
                 PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                    ctx,
+                    context,
                     "failed",
                     messageId,
                     UtilJson.makeMapParam(
                         "get",
                         "location",
                         "failed",
-                        PreyConfig.getInstance(ctx).getLocationInfo()
+                        PreyConfig.getInstance(context).getLocationInfo()
                     )
                 )
             } else {
                 PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                    ctx,
+                    context,
                     "processed",
                     messageId,
                     UtilJson.makeMapParam("get", "location", "stopped", reason)
@@ -171,17 +174,17 @@ class Location : JsonAction() {
 
 
     fun start(
-        ctx: Context,
+        context: Context,
         list: MutableList<ActionResult>?,
         parameters: JSONObject?
     ): List<HttpDataService>? {
         PreyLogger.d("Ejecuting Location Start.")
-        val listResult = super.get(ctx!!, list, parameters)
+        val listResult = super.get(context, list, parameters)
         return listResult
     }
 
     override fun run(
-        ctx: Context,
+        context: Context,
         list: MutableList<ActionResult>?,
         parameters: JSONObject?
     ): HttpDataService? {
@@ -189,41 +192,25 @@ class Location : JsonAction() {
         var data: HttpDataService? = null
         var messageId: String? = null
         try {
-            messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID)
-            PreyLogger.d(String.format("messageId:%s", messageId))
+            messageId = UtilJson.getStringValue(parameters, PreyConfig.MESSAGE_ID)
+            PreyLogger.d("messageId:${messageId}")
         } catch (e: Exception) {
-            PreyLogger.e(String.format("Error:%s", e.message), e)
+            PreyLogger.e("Error:${e.message}",  e)
         }
-         data = LocationUtil.dataLocation(ctx, messageId, false)
+         data = LocationUtil.dataLocation(context, messageId, false)
 
-/*
-        val location: PreyLocation? = PreyConfig.getInstance(ctx).getLocation()
-        if(location!=null) {
-            PreyLogger.d("REPORT run location______________" + location.toString())
-            if (location != null && (location.getLat() != 0.0 && location.getLng() != 0.0)) {
-                PreyLogger.d(
-                    String.format(
-                        "locationData:%s %s %s",
-                        location.getLat(),
-                        location.getLng(),
-                        location.getAccuracy()
-                    )
-                )
 
-                data = convertData(location)
-            }
-        }*/
         return data
     }
 
 
     fun start_location_aware(
-        ctx: Context,
+        context: Context,
         list: MutableList<ActionResult?>?,
         parameters: JSONObject?
     ): List<HttpDataService>? {
         PreyLogger.d("AWARE start_location_aware:")
-        AwareController.getInstance().init(ctx)
+        AwareController.getInstance().initLastLocation(context)
         return null
     }
 

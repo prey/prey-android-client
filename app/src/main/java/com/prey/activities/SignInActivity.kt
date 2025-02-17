@@ -7,10 +7,10 @@
 package com.prey.activities
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -19,41 +19,40 @@ import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
+
+import com.prey.PreyAccountData
+import com.prey.PreyApp
+import com.prey.PreyConfig
 import com.prey.R
 import com.prey.barcodereader.BarcodeActivity
 import com.prey.PreyLogger
+import com.prey.PreyUtils
+import com.prey.net.PreyWebServices
+import com.prey.preferences.RunBackgroundCheckBoxPreference
 import com.prey.util.KeyboardStatusDetector
 
+/**
+ * Activity for signing in to the app.
+ */
 class SignInActivity : Activity() {
     private var error: String? = null
     private var noMoreDeviceError = false
 
-    public override fun onResume() {
-        PreyLogger.d("onResume of SignInActivity")
-        super.onResume()
-    }
-
-    public override fun onPause() {
-        PreyLogger.d("onPause of SignInActivity")
-        super.onPause()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-    }
-
+    /**
+     * Called when the activity is created.
+     *
+     * @param savedInstanceState Saved instance state, if any.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         this.setContentView(R.layout.signin)
         PreyLogger.d("onCreate of SignInActivity")
         val buttonSignin = findViewById<View>(R.id.buttonSignin) as Button
         val emailText = (findViewById<View>(R.id.editTextEmailAddress) as EditText)
         val passwordText = (findViewById<View>(R.id.editTextPassword) as EditText)
-        val ctx: Context = this
+        val context: Context = this
         val metrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(metrics)
         val halfHeight = metrics.heightPixels / 3
@@ -74,92 +73,66 @@ class SignInActivity : Activity() {
         editTextPassword.setTypeface(magdacleanmonoRegular)
         val keyboard = KeyboardStatusDetector()
         keyboard.registerActivity(this)
-        //TODO:cambiar
-        /*
-        keyboard.setVisibilityListener { keyboardVisible ->
-            try {
-                val params = linkSignin.layoutParams as RelativeLayout.LayoutParams
-                if (keyboardVisible) {
-                    PreyLogger.d("key on")
-                    params.setMargins(20, 0, 20, halfHeight)
-                } else {
-                    PreyLogger.d("key off")
-                    params.setMargins(20, 0, 20, 20)
-                }
-                linkSignin.layoutParams = params
-            } catch (e: Exception) {
-                PreyLogger.e("error:" + e.message, e)
-            }
-        }*/
+        // Set click listener for sign in button
         buttonSignin.setOnClickListener {
             val email = emailText.text.toString()
             val password = passwordText.text.toString()
-//TODO:cambiar
-/*
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) AddDeviceToAccount().executeOnExecutor(
-            AsyncTask.THREAD_POOL_EXECUTOR,
-            email,
-            password,
-            PreyUtils.getDeviceType(ctx)
-        )
-        else AddDeviceToAccount().execute(email, password, PreyUtils.getDeviceType(ctx))
-        */
-    }
-    linkSignin.setOnClickListener {
-        val intent = Intent(applicationContext, SignUpActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-    val imageViewQr = findViewById<View>(R.id.imageViewQR) as ImageView
-    imageViewQr.setOnClickListener {
-        val intent = Intent(applicationContext, BarcodeActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-}
-
-//TODO:cambiar
-/*
-private inner class AddDeviceToAccount : AsyncTask<String?, Void?, Void?>() {
-    var progressDialog: ProgressDialog? = null
-    override fun onPreExecute() {
-        try {
-            progressDialog = ProgressDialog(this@SignInActivity)
-            progressDialog!!.setMessage(getText(R.string.set_old_user_loading).toString())
-            progressDialog!!.isIndeterminate = true
-            progressDialog!!.setCancelable(false)
-            progressDialog!!.show()
-        } catch (e: Exception) {
-            PreyLogger.e("error:" + e.message, e)
+            addDeviceToAccount(email, password)
+        }
+        // Set click listener for sign up link
+        linkSignin.setOnClickListener {
+            val intent = Intent(applicationContext, SignUpActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        // Set click listener for QR code image
+        val imageViewQr = findViewById<View>(R.id.imageViewQR) as ImageView
+        imageViewQr.setOnClickListener {
+            val intent = Intent(applicationContext, BarcodeActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
-    protected override fun doInBackground(vararg data: String): Void? {
+    /**
+     * Adds a device to an account.
+     *
+     * @param mail The email address of the account.
+     * @param password The password for the account.
+     */
+    fun addDeviceToAccount(
+        mail: String,
+        password: String
+    ) {
+        var progressDialog: ProgressDialog? = null
+        val context = applicationContext
+        try {
+            progressDialog = ProgressDialog(this@SignInActivity)
+            progressDialog.setMessage(getText(R.string.set_old_user_loading).toString())
+            progressDialog.isIndeterminate = true
+            progressDialog.setCancelable(false)
+            progressDialog.show()
+        } catch (e: Exception) {
+            PreyLogger.e("error:" + e.message, e)
+        }
         try {
             noMoreDeviceError = false
             error = null
-            val accountData: PreyAccountData =
+            val accountData: PreyAccountData? =
                 PreyWebServices.getInstance().registerNewDeviceToAccount(
-                    this@SignInActivity,
-                    data[0], data[1], data[2]
+                    context,
+                    mail, password, PreyUtils.getDeviceType(context)
                 )
-            val ctx = applicationContext
-            PreyConfig.getInstance(ctx).saveAccount(accountData)
-            PreyConfig.getInstance(ctx).registerC2dm()
-            val email = PreyWebServices.getInstance().getEmail(ctx)
-            PreyConfig.getInstance(ctx).setEmail(email)
-            PreyConfig.getInstance(ctx).setRunBackground(true)
-            RunBackgroundCheckBoxPreference.notifyReady(ctx)
-            PreyApp().run(ctx)
-            Location()[ctx, null, null]
+            PreyConfig.getInstance(context).saveAccount(accountData!!)
+            PreyConfig.getInstance(context).registerC2dm()
+            val email = PreyWebServices.getInstance().getEmail(context)
+            PreyConfig.getInstance(context).setEmail(email!!)
+            PreyConfig.getInstance(context).setRunBackground(true)
+            PreyApp().run(context)
         } catch (e: Exception) {
             PreyLogger.e("error:" + e.message, e)
             error = e.message
         }
-        return null
-    }
-
-    override fun onPostExecute(unused: Void?) {
         try {
             if (progressDialog != null) progressDialog!!.dismiss()
             if (error == null) {
@@ -167,9 +140,9 @@ private inner class AddDeviceToAccount : AsyncTask<String?, Void?, Void?>() {
                 val bundle = Bundle()
                 bundle.putString("message", message)
                 var intent: Intent? = null
-                if (PreyConfig.getInstance(this@SignInActivity).isChromebook()) {
-                    intent = Intent(this@SignInActivity, WelcomeActivity::class.java)
-                    PreyConfig.getInstance(this@SignInActivity).setProtectReady(true)
+                if (PreyConfig.getInstance(context).isChromebook()) {
+                    intent = Intent(context, WelcomeActivity::class.java)
+                    PreyConfig.getInstance(context).setProtectReady(true)
                 } else {
                     intent = Intent(
                         this@SignInActivity,
@@ -193,10 +166,9 @@ private inner class AddDeviceToAccount : AsyncTask<String?, Void?, Void?>() {
             PreyLogger.e("error:" + e.message, e)
         }
     }
-}*/
 
-companion object {
-    private const val NO_MORE_DEVICES_WARNING = 0
-    private const val ERROR = 3
-}
+    companion object {
+        private const val NO_MORE_DEVICES_WARNING = 0
+        private const val ERROR = 3
+    }
 }

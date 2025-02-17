@@ -12,46 +12,59 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.Preference.OnPreferenceClickListener
 import android.preference.PreferenceActivity
+
 import com.prey.R
 import com.prey.PreyConfig
 import com.prey.PreyStatus
 import com.prey.PreyLogger
 import com.prey.backwardcompatibility.FroyoSupport
 
+/**
+ * This activity is responsible for displaying the configuration preferences for the Prey app.
+ */
 class PreyConfigurationActivity : PreferenceActivity() {
+
+    /**
+     * Called when the user presses the back button.
+     * Redirects the user to the CheckPasswordActivity.
+     */
     override fun onBackPressed() {
-        var intent: Intent? = null
-        intent = Intent(application, CheckPasswordActivity::class.java)
+        val intent = Intent(application, CheckPasswordActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
         finish()
     }
 
+    /**
+     * Called when the activity is created.
+     * Initializes the preferences from the resources.
+     *
+     * @param savedInstanceState Saved instance state
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         addPreferencesFromResource(R.xml.preferences_5)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
+    /**
+     * Called when the activity is resumed.
+     * Checks if the user is allowed to access the configuration activity.
+     * If not, redirects the user to the LoginActivity.
+     */
     override fun onResume() {
         super.onResume()
         if (!PreyStatus.getInstance().isPreyConfigurationActivityResume()) {
             val intent = Intent(applicationContext, LoginActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.putExtra("EXIT", true)
-            try {
-                startActivity(intent)
-            } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
-            }
+            startActivity(intent)
             finish()
         }
         val preyConfig: PreyConfig = PreyConfig.getInstance(applicationContext)
         var p = findPreference("PREFS_ADMIN_DEVICE")
         try {
             if (preyConfig.isFroyoOrAbove()) {
-                if (FroyoSupport.getInstance(applicationContext)!!.isAdminActive) {
+                if (FroyoSupport.getInstance(applicationContext).isAdminActive()) {
                     p.setTitle(R.string.preferences_admin_enabled_title)
                     p.setSummary(R.string.preferences_admin_enabled_summary)
                 } else {
@@ -81,7 +94,4 @@ class PreyConfigurationActivity : PreferenceActivity() {
         PreyStatus.getInstance().setPreyConfigurationActivityResume(false)
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
 }

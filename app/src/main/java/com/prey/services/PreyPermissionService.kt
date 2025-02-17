@@ -29,8 +29,7 @@ class PreyPermissionService : Service() {
      */
     override fun onStart(intent: Intent, startId: Int) {
         super.onStart(intent, startId)
-        val ctx: Context = this
-        val intentConfiguration = Intent(ctx, OpenSettingsActivity::class.java)
+        val intentConfiguration = Intent(applicationContext, OpenSettingsActivity::class.java)
         intentConfiguration.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intentConfiguration)
     }

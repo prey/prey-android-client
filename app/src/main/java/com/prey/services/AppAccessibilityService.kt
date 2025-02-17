@@ -10,17 +10,31 @@ import android.accessibilityservice.AccessibilityService
 import android.content.Intent
 import android.os.Build
 import android.view.accessibility.AccessibilityEvent
+
 import com.prey.activities.PasswordHtmlActivity
 import com.prey.activities.PasswordNativeActivity
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 
+/**
+ * AppAccessibilityService is an AccessibilityService that handles accessibility events.
+ * It checks if the device is locked and if so, it starts the password activity.
+ */
 class AppAccessibilityService : AccessibilityService() {
+
+    /**
+     * Called when the service is created.
+     */
     override fun onCreate() {
         super.onCreate()
         PreyLogger.d("AppAccessibilityService onCreate")
     }
 
+    /**
+     * Called when an accessibility event occurs.
+     *
+     * @param accessibilityEvent The accessibility event that occurred.
+     */
     override fun onAccessibilityEvent(accessibilityEvent: AccessibilityEvent) {
         try {
             val unlockPass = PreyConfig.getInstance(applicationContext).getUnlockPass()
@@ -51,10 +65,13 @@ class AppAccessibilityService : AccessibilityService() {
                 }
             }
         } catch (e: Exception) {
-            PreyLogger.e("Error onAccessibilityEvent:" + e.message, e)
+            PreyLogger.e("Error onAccessibilityEvent:${e.message}" , e)
         }
     }
 
+    /**
+     * Called when the service is interrupted.
+     */
     override fun onInterrupt() {
     }
 }
