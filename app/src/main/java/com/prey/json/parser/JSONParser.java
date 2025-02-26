@@ -92,24 +92,43 @@ public class JSONParser {
         return getJSONFromTxt(ctx, json);
     }
 
-    public List<JSONObject> getJSONFromTxt(Context ctx, String json) {
-        if("Invalid data received".equals(json)) return null;
-        List<JSONObject> listaJson = new ArrayList<JSONObject>();
-        json="{\"prey\":"+json+"}";
-        PreyLogger.d(json);
-        try{
-            JSONObject jsnobject = new JSONObject(json);
-            JSONArray jsonArray = jsnobject.getJSONArray("prey");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                String jsonCommand= jsonArray.get(i).toString();
-                JSONObject explrObject =new JSONObject(jsonCommand);
-                PreyLogger.d(explrObject.toString());
-                listaJson.add(explrObject);
-            }
-        }catch(Exception e){
-            PreyLogger.e("error in parser:"+e.getMessage(), e);
+    /**
+     * Parse a JSON string into a list of JSONObject instances.
+     *
+     * @param context The application context.
+     * @param jsonString The JSON string to parse.
+     * @return A list of JSONObject instances, or null if the input string is invalid.
+     */
+    public List<JSONObject> getJSONFromTxt(Context context, String jsonString) {
+        // Check if the input string is null or empty
+        if (jsonString == null || jsonString.isEmpty() || jsonString.equals("Invalid data received") || jsonString.equals("[null]")) {
+            // If so, return null immediately
+            return null;
         }
-        return listaJson;
+        // Create an empty list to store the parsed JSONObject instances
+        List<JSONObject> jsonObjectList = new ArrayList<>();
+        // Wrap the input string in a JSON object with a "prey" key
+        String wrappedJsonString = "{\"prey\":" + jsonString + "}";
+        try {
+            // Create a JSONObject instance from the wrapped string
+            JSONObject jsonObject = new JSONObject(wrappedJsonString);
+            // Get the JSONArray instance associated with the "prey" key
+            JSONArray jsonArray = jsonObject.getJSONArray("prey");
+            // Iterate over the JSONArray and create a JSONObject instance for each element
+            for (int i = 0; i < jsonArray.length(); i++) {
+                // Get the current element as a string
+                String jsonElement = jsonArray.get(i).toString();
+                // Create a JSONObject instance from the string
+                JSONObject commandObject = new JSONObject(jsonElement);
+                // Add the JSONObject instance to the list
+                jsonObjectList.add(commandObject);
+            }
+        } catch (Exception e) {
+            // Log any errors that occur during parsing
+            PreyLogger.e(String.format("Error parsing JSON:%s", e.getMessage()), e);
+        }
+        // Return the list of parsed JSONObject instances
+        return jsonObjectList;
     }
 
     public List<JSONObject> getJSONFromTxt2(Context ctx, String json) {
