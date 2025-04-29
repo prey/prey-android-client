@@ -58,9 +58,23 @@ public class FroyoSupport {
                         if ("".equals(newPass))
                             android.provider.Settings.System.putInt(ctx.getContentResolver(), android.provider.Settings.System.LOCK_PATTERN_ENABLED, 0);
                         if(length>=4){
-                            policyManager.setPasswordMinimumLength(deviceAdmin, 0);
-                            policyManager.setPasswordQuality(deviceAdmin, DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED);
-                            policyManager.resetPassword(newPass, DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
+                            //This method was deprecated in API level 31.
+                            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                                try {
+                                    policyManager.setPasswordMinimumLength(deviceAdmin, 0);
+                                    policyManager.setPasswordQuality(deviceAdmin, DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED);
+                                }catch (SecurityException se){
+                                    PreyLogger.e(String.format("SecurityException:%s", se.getMessage()), se);
+                                }
+                            }
+                            //This method was deprecated in API level 30.
+                            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                                try {
+                                    policyManager.resetPassword(newPass, DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
+                                }catch (SecurityException se){
+                                    PreyLogger.e(String.format("SecurityException:%s", se.getMessage()), se);
+                                }
+                            }
                         }else {
                             if (lock) {
                                 lockNow();
