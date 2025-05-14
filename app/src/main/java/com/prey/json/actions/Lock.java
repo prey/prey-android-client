@@ -208,6 +208,8 @@ public class Lock extends JsonAction {
                         intentPasswordActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         ctx.startActivity(intentPasswordActivity);
                 }
+                //Lock immediately, as if the lock screen timeout has expired
+                FroyoSupport.getInstance(ctx).lockNow();
             } else {
                 PreyLogger.d("lock 5");
                 Lock.lockWhenYouNocantDrawOverlays(ctx);
