@@ -17,6 +17,7 @@ import android.telephony.TelephonyManager;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
+import com.prey.R;
 import com.prey.exceptions.PreyException;
 import com.prey.json.actions.Lock;
 import com.prey.receivers.PreyDeviceAdmin;
@@ -122,9 +123,11 @@ public class FroyoSupport {
         return intent;
     }
 
-    public void wipe() {
+    public void wipe() throws Exception {
         if (isAdminActive())
             policyManager.wipeData(0);
+        else
+            throw new Exception(ctx.getString(R.string.administrator_disabled));
     }
 
     public static boolean supportSMS(Context ctx) {
