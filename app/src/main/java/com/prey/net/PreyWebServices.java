@@ -1136,11 +1136,13 @@ public class PreyWebServices {
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
             PreyConfig config = PreyConfig.getPreyConfig(ctx);
             String deviceKey = config.getDeviceId();
-            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey).concat(".json");
+            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey).concat("/events.json");
+            JSONObject jsonInfo = new JSONObject();
+            jsonInfo.put("new_name", name);
             JSONObject jsonParam = new JSONObject();
-            jsonParam.put("name", name);
-            jsonParam.put("lang", Locale.getDefault().getLanguage());
-            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url, UtilConnection.REQUEST_METHOD_PUT, jsonParam);
+            jsonParam.put("name", "device_renamed");
+            jsonParam.put("info", jsonInfo);
+            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url, UtilConnection.REQUEST_METHOD_POST, jsonParam);
             PreyLogger.d(String.format("renameName:%s", response.getStatusCode()));
             preyName.setCode(response.getStatusCode());
             if (response.getStatusCode() == HttpURLConnection.HTTP_OK) {
