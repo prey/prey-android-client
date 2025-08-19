@@ -153,4 +153,5 @@ class HttpDataService(private var keyValue: String) {
     fun setEntityFiles(entityFiles: MutableList<EntityFile>) {
         this.entityFiles = entityFiles
     }
+
 }

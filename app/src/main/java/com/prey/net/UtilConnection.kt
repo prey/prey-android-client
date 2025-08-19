@@ -7,6 +7,8 @@
 package com.prey.net
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
@@ -441,6 +443,25 @@ class UtilConnection {
         )
     }
 
+    fun isNetworkAvailable(context: Context): Boolean {
+        try {
+            val connectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val networkCapabilities = connectivityManager.activeNetwork?.let {
+                    connectivityManager.getNetworkCapabilities(it)
+                }
+                return networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+            } else {
+                val activeNetworkInfo = connectivityManager.activeNetworkInfo
+                return activeNetworkInfo != null && activeNetworkInfo.isConnected
+            }
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
+
     /**
      * Establishes a connection and sends a request with the given parameters.
      *
@@ -472,7 +493,9 @@ class UtilConnection {
             val policy = ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
         }
-        var response: PreyHttpResponse? = null
+        if (!isNetworkAvailable(context))
+            return null
+        var httpResponse: PreyHttpResponse? = null
         val url = URL(uri)
         var connection: HttpURLConnection? = null
         var retry = 0
@@ -527,10 +550,6 @@ class UtilConnection {
                 connection.addRequestProperty("User-Agent", userAgent)
                 PreyLogger.d("User-Agent:${userAgent}")
                 connection.addRequestProperty("Origin", "android:com.prey")
-                if (params != null) {
-                    PreyLogger.d("REPORT params__________:${params.size}")
-                }
-                PreyLogger.d("REPORT entityFiles is null:${(entityFiles == null)}")
                 if (entityFiles == null && (params != null && params.size > 0)) {
                     val os: OutputStream = connection.outputStream
                     val dos = DataOutputStream(os)
@@ -580,55 +599,55 @@ class UtilConnection {
                 when (responseCode) {
                     HttpURLConnection.HTTP_CREATED -> {
                         PreyLogger.d("$uri **CREATED**")
-                        response = convertPreyHttpResponse(responseCode, connection)
+                        httpResponse = convertPreyHttpResponse(responseCode, connection)
                         retry = RETRIES
                     }
 
                     HttpURLConnection.HTTP_OK -> {
                         PreyLogger.d("$uri **OK**")
-                        response = convertPreyHttpResponse(responseCode, connection)
+                        httpResponse = convertPreyHttpResponse(responseCode, connection)
                         retry = RETRIES
                     }
 
                     HttpURLConnection.HTTP_CONFLICT -> {
                         PreyLogger.d("$uri **CONFLICT**")
-                        response = convertPreyHttpResponse(responseCode, connection)
+                        httpResponse = convertPreyHttpResponse(responseCode, connection)
                         retry = RETRIES
                     }
 
                     HttpURLConnection.HTTP_FORBIDDEN -> {
                         PreyLogger.d("$uri **FORBIDDEN**")
-                        response = convertPreyHttpResponse(responseCode, connection)
+                        httpResponse = convertPreyHttpResponse(responseCode, connection)
                         retry = RETRIES
                     }
 
                     HttpURLConnection.HTTP_MOVED_TEMP -> {
                         PreyLogger.d("$uri **MOVED_TEMP**")
-                        response = convertPreyHttpResponse(responseCode, connection)
+                        httpResponse = convertPreyHttpResponse(responseCode, connection)
                         retry = RETRIES
                     }
 
                     422 -> {
                         PreyLogger.d("$uri **422**")
-                        response = convertPreyHttpResponse(responseCode, connection)
+                        httpResponse = convertPreyHttpResponse(responseCode, connection)
                         retry = RETRIES
                     }
 
                     HttpURLConnection.HTTP_BAD_GATEWAY -> {
                         PreyLogger.d("$uri **BAD_GATEWAY**")
-                        response = convertPreyHttpResponse(responseCode, connection)
+                        httpResponse = convertPreyHttpResponse(responseCode, connection)
                         retry = RETRIES
                     }
 
                     HttpURLConnection.HTTP_INTERNAL_ERROR -> {
                         PreyLogger.d("$uri **INTERNAL_ERROR**")
-                        response = convertPreyHttpResponse(responseCode, connection)
+                        httpResponse = convertPreyHttpResponse(responseCode, connection)
                         retry = RETRIES
                     }
 
                     HttpURLConnection.HTTP_NOT_FOUND -> {
                         PreyLogger.d("$uri **NOT_FOUND**")
-                        response = convertPreyHttpResponse(responseCode, connection)
+                        httpResponse = convertPreyHttpResponse(responseCode, connection)
                         retry = RETRIES
                     }
 
@@ -636,13 +655,13 @@ class UtilConnection {
                     HttpURLConnection.HTTP_UNAVAILABLE -> PreyLogger.d("$uri**unavailable**")
                     HttpURLConnection.HTTP_NOT_ACCEPTABLE -> {
                         PreyLogger.d("$uri **NOT_ACCEPTABLE**")
-                        response = convertPreyHttpResponse(responseCode, connection)
+                        httpResponse = convertPreyHttpResponse(responseCode, connection)
                         retry = RETRIES
                     }
 
                     HttpURLConnection.HTTP_UNAUTHORIZED -> {
                         PreyLogger.d("$uri **HTTP_UNAUTHORIZED**")
-                        response = convertPreyHttpResponse(responseCode, connection)
+                        httpResponse = convertPreyHttpResponse(responseCode, connection)
                         retry = RETRIES
                     }
 
@@ -660,7 +679,7 @@ class UtilConnection {
             PreyLogger.e("error util:${e.message}", e)
             throw e
         }
-        return response
+        return httpResponse
     }
 
     /**
@@ -693,7 +712,7 @@ class UtilConnection {
                 result.append(URLEncoder.encode("", "UTF-8"))
             }
         }
-        PreyLogger.d("REPORT getPostDataString:${result.toString()}")
+        PreyLogger.d("getPostDataString:${result.toString()}")
         return result.toString()
     }
 
@@ -920,6 +939,7 @@ class UtilConnection {
             } catch (e: java.lang.Exception) {
                 // Log any errors that occur during the request
                 PreyLogger.e("Error connecting to url:${uri} error:${e.message}", e)
+                retryCount++
             }
         }
         // Return the response from the server
@@ -947,7 +967,7 @@ class UtilConnection {
             val url = URL(page)
             connection = url.openConnection() as HttpURLConnection
             connection.doOutput = true
-            connection!!.requestMethod = "POST"
+            connection.requestMethod = "POST"
             connection.addRequestProperty("Origin", "android:com.prey")
             connection.addRequestProperty("Content-Type", "application/octet-stream")
             connection.addRequestProperty("User-Agent", getUserAgent(context))
@@ -1018,12 +1038,7 @@ class UtilConnection {
     fun isInternetAvailable(): Boolean = true
 
     companion object {
-        private var instance: UtilConnection? = null
-        fun getInstance(): UtilConnection {
-            return instance ?: UtilConnection().also { instance = it }
-        }
-
-        var RETRIES: Int = 4
+        var RETRIES: Int = 3
         var ARRAY_RETRY_DELAY_MS: IntArray = intArrayOf(1, 2, 3, 4)
         val REQUEST_METHOD_PUT: String = "PUT"
         val REQUEST_METHOD_POST: String = "POST"
@@ -1032,5 +1047,10 @@ class UtilConnection {
         val USE_CACHES: Boolean = false
         val CONNECT_TIMEOUT: Int = 30000
         val READ_TIMEOUT: Int = 30000
+        private var instance: UtilConnection? = null
+        fun getInstance(): UtilConnection {
+            return instance ?: UtilConnection().also { instance = it }
+        }
     }
+
 }

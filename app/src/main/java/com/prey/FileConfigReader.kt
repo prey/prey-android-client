@@ -7,8 +7,7 @@
 package com.prey
 
 import android.content.Context
-import android.content.res.Resources
-import java.io.IOException
+import java.io.InputStream
 import java.util.Properties
 
 /**
@@ -30,10 +29,13 @@ class FileConfigReader private constructor(context: Context) {
             properties.load(file)
             file.close()
             PreyLogger.d("Config: $properties")
-        } catch (e: Resources.NotFoundException) {
-            PreyLogger.e("Config file wasn't found", e)
-        } catch (e: IOException) {
-            PreyLogger.e("Couldn't read config file", e)
+        } catch (e: Exception) {
+            try {
+                val input: InputStream = ClassLoader.getSystemResourceAsStream("config")
+                properties.load(input)
+            } catch (e: Exception) {
+                PreyLogger.e("Config file wasn't found", e)
+            }
         }
     }
 

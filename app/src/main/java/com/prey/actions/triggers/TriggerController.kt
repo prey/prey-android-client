@@ -10,11 +10,14 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import com.prey.PreyConfig
 
 import com.prey.json.UtilJson
 import com.prey.PreyLogger
-import com.prey.net.PreyWebServices
 import com.prey.net.UtilConnection
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 import org.json.JSONObject
 
@@ -82,7 +85,7 @@ class TriggerController {
                         removeList.add(dto.getId())
                         listRemove.add(dto.getId())
                         listDel.add(dto)
-                        dataSource.deleteTrigger("" + dto.getId())
+                        dataSource.deleteTrigger("${dto.getId()}")
                     }
                     i++
                 }
@@ -141,7 +144,7 @@ class TriggerController {
                     if (i + 1 < listStop.size) {
                         infoStop += ","
                     }
-                    dataSource.deleteTrigger("${trigger.getId()}" )
+                    dataSource.deleteTrigger("${trigger.getId()}")
                     i++
                 }
             }
@@ -256,15 +259,14 @@ class TriggerController {
      * @param params The parameters to include in the notification.
      */
     fun sendNotify(context: Context, params: MutableMap<String, String?>) {
-        object : Thread() {
-            override fun run() {
-                try {
-                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(context, params)
-                } catch (e: Exception) {
-                    PreyLogger.e("Error:${e.message}", e)
-                }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                PreyConfig.getInstance(context).getWebServices()
+                    .sendNotifyActionResultPreyHttp(context, params)
+            } catch (e: Exception) {
+                PreyLogger.e("Error:${e.message}", e)
             }
-        }.start()
+        }
     }
 
     companion object {
@@ -273,4 +275,5 @@ class TriggerController {
             return instance ?: TriggerController().also { instance = it }
         }
     }
+
 }

@@ -27,4 +27,5 @@ class EventManagerRunner(var context: Context, var event: Event) : Runnable {
         EventManager(context).execute(event)
         PreyLogger.d("EVENT CheckInReceiver OUT:${event.name}")
     }
+
 }

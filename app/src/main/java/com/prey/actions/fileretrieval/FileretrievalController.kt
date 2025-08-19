@@ -12,7 +12,6 @@ import android.os.Environment
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.managers.PreyWifiManager
-import com.prey.net.PreyWebServices
 import java.io.File
 import java.net.HttpURLConnection
 
@@ -53,7 +52,7 @@ class FileretrievalController private constructor() {
                 val fileId = dto.getFileId()
                 PreyLogger.d("id:${dto.getFileId()} ${dto.getPath()}")
                 try {
-                    val dtoStatus = PreyWebServices.getInstance().uploadStatus(
+                    val dtoStatus = PreyConfig.getInstance(context).getWebServices().uploadStatus(
                         context, fileId
                     )
                     PreyLogger.d("dtoStatus:${dtoStatus!!.getStatus()}")
@@ -62,10 +61,12 @@ class FileretrievalController private constructor() {
                     }
                     if (dtoStatus.getStatus() == 2 || dtoStatus.getStatus() == 0) {
                         val total = dtoStatus.getTotal()
-                        val file = File("${Environment.getExternalStorageDirectory()}/${dto.getPath()}")
+                        val file =
+                            File("${Environment.getExternalStorageDirectory()}/${dto.getPath()}")
                         PreyLogger.d("total:${total} size:${dtoStatus.getSize()} length:${file.length()}")
                         val responseCode =
-                            PreyWebServices.getInstance().uploadFile(context, file, fileId, total)
+                            PreyConfig.getInstance(context).getWebServices()
+                                .uploadFile(context, file, fileId, total)
                         PreyLogger.d("responseCode:$responseCode")
                         if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
                             datasource.deleteFileretrieval(fileId)
@@ -97,4 +98,5 @@ class FileretrievalController private constructor() {
             return instance ?: FileretrievalController().also { instance = it }
         }
     }
+
 }

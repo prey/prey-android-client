@@ -32,7 +32,8 @@ class PreyHttpResponse {
         try {
             this.response = connection
             this.statusCode = connection.responseCode
-            val inputStream = if (statusCode == HttpURLConnection.HTTP_OK || statusCode == HttpURLConnection.HTTP_CREATED) {
+            val inputStream =
+                if (statusCode == HttpURLConnection.HTTP_OK || statusCode == HttpURLConnection.HTTP_CREATED) {
                     connection.inputStream
                 } else {
                     connection.errorStream
@@ -106,7 +107,7 @@ class PreyHttpResponse {
             reader.close()
             return response.toString()
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
             null
         }
     }

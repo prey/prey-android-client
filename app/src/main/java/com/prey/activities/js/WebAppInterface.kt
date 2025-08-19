@@ -31,7 +31,8 @@ import com.prey.PreyName
 import com.prey.PreyPermission
 import com.prey.PreyUtils
 import com.prey.R
-import com.prey.actions.location.LastLocationService
+import com.prey.actions.location.LocationUtil
+import com.prey.activities.BarcodeActivity
 import com.prey.activities.CheckPasswordHtmlActivity
 import com.prey.activities.CloseActivity
 import com.prey.activities.LoginActivity
@@ -40,15 +41,15 @@ import com.prey.activities.PasswordHtmlActivity
 import com.prey.activities.PreReportActivity
 import com.prey.activities.SecurityActivity
 import com.prey.backwardcompatibility.FroyoSupport
-import com.prey.barcodereader.BarcodeActivity
 import com.prey.json.UtilJson
 import com.prey.json.actions.Detach
 import com.prey.json.actions.Location
-import com.prey.net.PreyWebServices
-import com.prey.preferences.RunBackgroundCheckBoxPreference
 import com.prey.services.PreyDisablePowerOptionsService
 import com.prey.services.PreyLockHtmlService
 import com.prey.services.PreySecureService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 import org.json.JSONArray
 import org.json.JSONObject
@@ -62,8 +63,8 @@ import java.util.Locale
  * WebAppInterface is a class that provides a JavaScript interface for the web app.
  * It allows the web app to access and manipulate the device's data and settings.
  */
-class WebAppInterface {
-    private lateinit var context: Context
+open class WebAppInterface {
+    private var context: Context
     private lateinit var activity: CheckPasswordHtmlActivity
     private var wrongPasswordIntents = 0
     private var error: String? = null
@@ -124,6 +125,10 @@ class WebAppInterface {
         this.preySecureService = service
     }
 
+    fun setContext(context: Context) {
+        this.context = context
+    }
+
     /**
      * Gets the device's data as a JSON string.
      *
@@ -136,8 +141,8 @@ class WebAppInterface {
         val model = config.getModel()
         val imei = config.getImei()
         val location = config.getLocation()
-        val lat = location?.let { LastLocationService.round(it.getLat()).toString() } ?: ""
-        val lng = location?.let { LastLocationService.round(it.getLng()).toString() } ?: ""
+        val lat = location?.let { LocationUtil.round(it.getLat()).toString() } ?: ""
+        val lng = location?.let { LocationUtil.round(it.getLng()).toString() } ?: ""
         val publicIp = config.getPublicIp()?.trim() ?: ""
         val json =
             "{\"lat\":\"$lat\",\"lng\":\"$lng\",\"ssid\":\"$ssid\",\"public_ip\":\"$publicIp\",\"imei\":\"$imei\",\"model\": \"$model\"}"
@@ -419,32 +424,25 @@ class WebAppInterface {
             error = null
             PreyConfig.getInstance(context).setError("")
             var errorConfig: String? = null
-            object : Thread() {
-                override fun run() {
-                    try {
-                        val accountData = PreyWebServices.getInstance()
-                            .registerNewDeviceToAccount(
-                                context,
-                                email,
-                                password,
-                                PreyUtils.getDeviceType(context)
-                            )
-                        PreyConfig.getInstance(context).saveAccount(accountData!!)
-                    } catch (e: Exception) {
-                        PreyLogger.d("mylogin error2:${e.message}")
-                        PreyConfig.getInstance(context).setError(e.message!!)
-                    }
-                }
-            }.start()
-            var isAccount = false
-            var i = 0
-            do {
-                Thread.sleep(1000)
-                errorConfig = PreyConfig.getInstance(context).getError()
-                isAccount = PreyConfig.getInstance(context).isAccount()
-                PreyLogger.d("mylogin [${i}] isAccount:${isAccount}")
-                i++
-            } while (i < 30 && !isAccount && errorConfig == null)
+
+            try {
+                val accountData = PreyConfig.getInstance(context).getWebServices()
+                    .registerNewDeviceToAccount(
+                        context,
+                        email,
+                        password,
+                        PreyUtils.getDeviceType(context)
+                    )
+                PreyConfig.getInstance(context).saveAccount(accountData!!)
+            } catch (e: Exception) {
+                PreyLogger.d("mylogin error2:${e.message}")
+                PreyConfig.getInstance(context).setError(e.message!!)
+            }
+
+            errorConfig = PreyConfig.getInstance(context).getError()
+            var isAccount = PreyConfig.getInstance(context).isAccount()
+            PreyLogger.d("mylogin  isAccount:${isAccount}")
+
             isAccount = PreyConfig.getInstance(context).isAccount()
             if (!isAccount) {
                 if (errorConfig != null && "" != errorConfig) {
@@ -462,7 +460,7 @@ class WebAppInterface {
                 PreyConfig.getInstance(context).setEmail(email)
                 PreyConfig.getInstance(context).setRunBackground(true)
                 PreyConfig.getInstance(context).setInstallationStatus("")
-                PreyApp().run(context)
+                PreyApp().initialize(context)
                 Location().get(context, null, null)
             }
         } catch (e: Exception) {
@@ -497,7 +495,7 @@ class WebAppInterface {
     @JavascriptInterface
     fun newName(name: String): String {
         PreyLogger.d("newName:$name")
-        PreyWebServices.getInstance().validateName(context, name)
+        PreyConfig.getInstance(context).getWebServices().validateName(context, name)
         return ""
     }
 
@@ -521,12 +519,13 @@ class WebAppInterface {
             PreyLogger.d("login_tipo isTwoStepEnabled:${isTwoStepEnabled}")
             if (isTwoStepEnabled) {
                 PreyLogger.d("login_tipo apikey:${apikey} password:${password} password2:${password2}")
-                isPasswordValid = PreyWebServices.getInstance()
+                isPasswordValid = PreyConfig.getInstance(context).getWebServices()
                     .checkPassword2(context, apikey!!, password, password2)
             } else {
                 PreyLogger.d("login_tipo apikey:${apikey} password:${password}")
                 isPasswordValid =
-                    PreyWebServices.getInstance().checkPassword(context, apikey!!, password)
+                    PreyConfig.getInstance(context).getWebServices()
+                        .checkPassword(context, apikey!!, password)
             }
             if (isPasswordValid) {
                 PreyConfig.getInstance(context).setTimePasswordOk()
@@ -558,14 +557,17 @@ class WebAppInterface {
             } else {
                 PreyLogger.d("login_tipo from:${from}")
                 if ("setting" == from || "rename" == from) {
-                    return JSONObject().apply {
+                    /*return JSONObject().apply {
                         put("result", true)
-                    }.toString()
+                    }.toString()*/
+                    var nextUrl = ""
+                    if (from == "setting")
+                        nextUrl = "/security"
+                    else
+                        nextUrl = "/rename"
+                    activity.jump(nextUrl)
                 } else {
-                    val intent = Intent(context, PanelWebActivity::class.java)
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    context.startActivity(intent)
-                    if (activity != null) activity.finish()
+                    activity.openPanel()
                 }
             }
         } catch (e: Exception) {
@@ -579,10 +581,8 @@ class WebAppInterface {
      */
     @JavascriptInterface
     fun openPanelWeb() {
-        val apikey = PreyConfig.getInstance(context).getApiKey()
-        PreyWebServices.getInstance().getToken(context, apikey!!, "X")
         val intent = Intent(context, PanelWebActivity::class.java)
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         context.startActivity(intent)
         if (activity != null) activity.finish()
     }
@@ -619,7 +619,7 @@ class WebAppInterface {
     @JavascriptInterface
     fun initXiaomi(): Boolean {
         val initXiaomi = "Xiaomi".equals(Build.MANUFACTURER, ignoreCase = true)
-        PreyLogger.d("Manufacter:" + Build.MANUFACTURER + " initXiaomi:" + initXiaomi)
+        PreyLogger.d("Manufacter: ${Build.MANUFACTURER} initXiaomi:${initXiaomi}")
         return initXiaomi
     }
 
@@ -631,7 +631,7 @@ class WebAppInterface {
     @JavascriptInterface
     fun initHuawei(): Boolean {
         val initHuawei = "huawei".equals(Build.MANUFACTURER, ignoreCase = true)
-        PreyLogger.d("Manufacter:${Build.MANUFACTURER} initHuawei:${initHuawei}")
+        PreyLogger.d("Manufacter: ${Build.MANUFACTURER} initHuawei:${initHuawei}")
         return initHuawei
     }
 
@@ -712,7 +712,8 @@ class WebAppInterface {
     @JavascriptInterface
     fun getTwoStepEnabled(): Boolean {
         if (!PreyConfig.getInstance(context).isTimeTwoStep()) {
-            val twoStepEnabled = PreyWebServices.getInstance().getTwoStepEnabled(context)
+            val twoStepEnabled =
+                PreyConfig.getInstance(context).getWebServices().getTwoStepEnabled(context)
             PreyConfig.getInstance(context).setTwoStep(twoStepEnabled)
             PreyConfig.getInstance(context).setTimeTwoStep()
         }
@@ -839,23 +840,20 @@ class WebAppInterface {
             val overLock = config.getOverLock()
             val canDrawOverlays = PreyPermission.canDrawOverlays(context)
             PreyLogger.d("lock key:$key  unlock:$unlock overLock:$overLock canDrawOverlays:$canDrawOverlays")
-            object : Thread() {
-                override fun run() {
-                    val reason = "{\"origin\":\"user\"}"
-                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                        context,
-                        UtilJson.makeMapParam("start", "lock", "stopped", reason)
-                    )
-                }
-            }.start()
+            CoroutineScope(Dispatchers.IO).launch {
+                val reason = "{\"origin\":\"user\"}"
+                PreyConfig.getInstance(context).getWebServices().sendNotifyActionResultPreyHttp(
+                    context,
+                    UtilJson.makeMapParam("start", "lock", "stopped", reason)
+                )
+            }
             try {
                 Thread.sleep(2000)
             } catch (e: Exception) {
-                PreyLogger.e("Error sleep:" + e.message, e)
+                PreyLogger.e("Error: ${e.message}", e)
             }
             if (overLock) {
                 if (unlock.isEmpty()) {
-                    PreyLogger.d("lock accc ")
                     config.setOverLock(false)
                     if (preyLockHtmlService != null) {
                         preyLockHtmlService!!.stop()
@@ -864,39 +862,38 @@ class WebAppInterface {
                     }
                 }
             }
-            object : Thread() {
-                override fun run() {
-                    if (canDrawOverlays) {
-                        try {
-                            if (preyLockHtmlService != null) {
-                                preyLockHtmlService!!.stop()
-                                val viewLock: View? = config.viewLock
-                                if (viewLock != null) {
-                                    val wm =
-                                        context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-                                    wm.removeView(viewLock)
-                                } else {
-                                    Process.killProcess(Process.myPid())
-                                }
-                            }
-                        } catch (e: Exception) {
-                            Process.killProcess(Process.myPid())
-                        }
-                    }
-                    val intentClose = Intent(context, CloseActivity::class.java)
-                    intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    context.startActivity(intentClose)
+            CoroutineScope(Dispatchers.IO).launch {
+                if (canDrawOverlays) {
                     try {
-                        sleep(2000)
+                        if (preyLockHtmlService != null) {
+                            preyLockHtmlService!!.stop()
+                            val viewLock: View? = config.viewLock
+                            if (viewLock != null) {
+                                val wm =
+                                    context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+                                wm.removeView(viewLock)
+                            } else {
+                                Process.killProcess(Process.myPid())
+                            }
+                        }
                     } catch (e: Exception) {
-                        PreyLogger.e("Error sleep:" + e.message, e)
+                        Process.killProcess(Process.myPid())
                     }
-                    context.sendBroadcast(Intent(CheckPasswordHtmlActivity.CLOSE_PREY))
                 }
-            }.start()
+                val intentClose = Intent(context, CloseActivity::class.java)
+                intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intentClose)
+                try {
+                    Thread.sleep(2000)
+                } catch (e: Exception) {
+                    PreyLogger.e("Error: ${e.message}", e)
+                }
+                context.sendBroadcast(Intent(CheckPasswordHtmlActivity.CLOSE_PREY))
+
+            }
             error2 = "{\"ok\":\"ok\"}"
         } else {
-            error2 = "{\"error\":[\"" + context.getString(R.string.password_wrong) + "\"]}"
+            error2 = "{\"error\":[\"${context.getString(R.string.password_wrong)}\"]}"
         }
         PreyLogger.d("error2:$error2")
         return error2
@@ -912,10 +909,10 @@ class WebAppInterface {
     fun changemail(email: String): String? {
         var result: String? = null
         try {
-            val verificationResult = PreyWebServices.getInstance().verifyEmail(context, email)
+            val verificationResult =
+                PreyConfig.getInstance(context).getWebServices().verifyEmail(context, email)
             PreyLogger.d(
-                "verify:" + (if (verificationResult == null) "" else (verificationResult.getStatusCode()
-                    .toString() + " " + verificationResult.getStatusDescription()))
+                "verify:${(if (verificationResult == null) "" else ("${verificationResult.getStatusCode()} ${verificationResult.getStatusDescription()}"))}"
             )
             if (verificationResult != null) {
                 val statusCode: Int = verificationResult.getStatusCode()
@@ -966,7 +963,7 @@ class WebAppInterface {
      * @return An error message if there was an issue signing up the user, or null if the user was successfully signed up.
      */
     @JavascriptInterface
-    fun signup(
+    public fun signup(
         name: String,
         email: String,
         password1: String,
@@ -986,35 +983,36 @@ class WebAppInterface {
             PreyLogger.d("rule_age:$policy_rule_age")
             PreyLogger.d("privacy_terms:$policy_rule_privacy_terms")
             PreyLogger.d("offers:$offers")
-            val accountData: PreyAccountData = PreyWebServices.getInstance().registerNewAccount(
-                context,
-                name,
-                email,
-                password1,
-                password2,
-                policy_rule_age,
-                policy_rule_privacy_terms,
-                offers,
-                PreyUtils.getDeviceType(context)
-            )
+            val accountData: PreyAccountData =
+                PreyConfig.getInstance(context).getWebServices().registerNewAccount(
+                    context,
+                    name,
+                    email,
+                    password1,
+                    password2,
+                    policy_rule_age,
+                    policy_rule_privacy_terms,
+                    offers,
+                    PreyUtils.getDeviceType(context)
+                )
             PreyLogger.d("Response creating account:${accountData.toString()}")
             PreyConfig.getInstance(context).saveAccount(accountData)
             PreyConfig.getInstance(context).registerC2dm()
             PreyConfig.getInstance(context).setEmail(email)
             PreyConfig.getInstance(context).setRunBackground(true)
             PreyConfig.getInstance(context).setInstallationStatus("Pending")
-            PreyApp().run(context)
+            PreyApp().initialize(context)
             Location().get(context, null, null)
         } catch (e: Exception) {
             error = e.message
-            PreyLogger.e("error:$error", e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         try {
             if (error == null) {
                 error = ""
             }
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         PreyLogger.d("signup out:$error")
         return error
@@ -1056,10 +1054,10 @@ class WebAppInterface {
         if (!canAccessStorage) {
             if (!showStorage) showDeniedPermission = true
         }
-        if (!canAccessFineLocation) {
+        if (!canAccessBackgroundLocation && !canAccessFineLocation) {
             if (!showFineLocation) showDeniedPermission = true
         }
-        if (!canAccessCoarseLocation) {
+        if (!canAccessBackgroundLocation && !canAccessCoarseLocation) {
             if (!showCoarseLocation) showDeniedPermission = true
         }
         if (!canAccessCamera) {
@@ -1153,7 +1151,7 @@ class WebAppInterface {
         try {
             initName = PreyConfig.getInstance(context).getDeviceName()!!
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         PreyLogger.d("initName:$initName")
         return initName
@@ -1170,7 +1168,7 @@ class WebAppInterface {
         try {
             initUserFree = !PreyConfig.getInstance(context).getProAccount()
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         PreyLogger.d("initUserFree:$initUserFree")
         return initUserFree
@@ -1187,7 +1185,8 @@ class WebAppInterface {
         PreyLogger.d("rename:${newName}")
         var result: String? = null
         try {
-            val renamedDevice: PreyName = PreyWebServices.getInstance().renameName(context, newName)
+            val renamedDevice: PreyName =
+                PreyConfig.getInstance(context).getWebServices().renameName(context, newName)
             val responseJson = JSONObject()
             responseJson.put("code", renamedDevice.getCode())
             responseJson.put("error", renamedDevice.getError())
@@ -1297,7 +1296,12 @@ class WebAppInterface {
      */
     @JavascriptInterface
     fun verificateAlert(): String {
-        return PreyConfig.getInstance(context).getLockMessage()!!
+        val lockMessage = PreyConfig.getInstance(context).getLockMessage()
+        if (lockMessage != null) {
+            return lockMessage
+        } else {
+            return ""
+        }
     }
 
     /**
@@ -1479,7 +1483,8 @@ class WebAppInterface {
             if (error) {
                 out = errorJson.toString()
             } else {
-                val response = PreyWebServices.getInstance().sendHelp(context, subject, message)
+                val response = PreyConfig.getInstance(context).getWebServices()
+                    .sendHelp(context, subject, message)
                 PreyLogger.d(
                     "response sendHelp:${(response?.toString() ?: "")}"
                 )
@@ -1657,7 +1662,7 @@ class WebAppInterface {
         try {
             initMspAccount = PreyConfig.getInstance(context).getMspAccount()
         } catch (e: Exception) {
-            PreyLogger.e("Error initMspAccount:" + e.message, e)
+            PreyLogger.e("Error initMspAccount: ${e.message}", e)
         }
         return initMspAccount
     }
@@ -1690,17 +1695,21 @@ class WebAppInterface {
     fun detachDevice() {
         var error: String? = null
         var progressDialog: ProgressDialog? = null
-        progressDialog = ProgressDialog(context)
-        progressDialog.setMessage(
-            context.getText(R.string.preferences_detach_dettaching_message).toString()
-        )
-        progressDialog.isIndeterminate = true
-        progressDialog.setCancelable(false)
-        progressDialog.show()
+        try {
+            progressDialog = ProgressDialog(context)
+            progressDialog.setMessage(
+                context.getText(R.string.preferences_detach_dettaching_message).toString()
+            )
+            progressDialog.isIndeterminate = true
+            progressDialog.setCancelable(false)
+            progressDialog.show()
+        } catch (e: java.lang.Exception) {
+        }
         error = Detach().detachDevice(context)
         PreyLogger.d("error:$error")
         try {
-            progressDialog.dismiss()
+            if (progressDialog != null)
+                progressDialog.dismiss()
         } catch (e: java.lang.Exception) {
         }
         try {
@@ -1713,7 +1722,7 @@ class WebAppInterface {
                 if (activity != null) activity.finish()
             }
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
@@ -1732,7 +1741,7 @@ class WebAppInterface {
                 !PreyPermission.areNotificationsEnabled(context)
             }
         } catch (e: Exception) {
-            PreyLogger.e("Error showNotification:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         return showNotification
     }
@@ -1756,9 +1765,10 @@ class WebAppInterface {
      */
     @JavascriptInterface
     fun openBiometric(typeBiometric: String?) {
+        PreyLogger.d("openBiometric")
         if (typeBiometric != null) {
             PreyConfig.getInstance(context).setTypeBiometric(typeBiometric)
-            activity!!.openBiometric()
+            activity.openBiometric()
         }
     }
 

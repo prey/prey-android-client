@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.services
 
-import android.annotation.TargetApi
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.Service
@@ -56,7 +55,6 @@ class PreyDisablePowerOptionsService : Service() {
     /**
      * Called when the service is destroyed.
      */
-    @TargetApi(Build.VERSION_CODES.ECLAIR)
     override fun onDestroy() {
         PreyLogger.d("PreyDisablePowerOptionsService  onDestroy__________")
         try {

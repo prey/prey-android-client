@@ -7,11 +7,11 @@
 package com.prey.json
 
 import android.content.Context
+import com.prey.PreyConfig
 
 import com.prey.actions.HttpDataService
 import com.prey.actions.observer.ActionResult
 import com.prey.PreyLogger
-import com.prey.net.PreyWebServices
 
 import org.json.JSONObject
 
@@ -64,7 +64,7 @@ abstract class JsonAction {
         return if (data != null) {
             val dataToSend = ArrayList<HttpDataService>()
             dataToSend.add(data)
-            PreyWebServices.getInstance().sendPreyHttpData(context, dataToSend)
+            PreyConfig.getInstance(context).getWebServices().sendPreyHttpData(context, dataToSend)
             dataToSend
         } else {
             null

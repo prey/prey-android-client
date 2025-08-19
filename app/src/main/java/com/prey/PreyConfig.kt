@@ -14,23 +14,34 @@ import android.os.StrictMode
 import android.preference.PreferenceManager
 import android.view.View
 import com.google.android.gms.location.LocationRequest
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
-import com.prey.actions.aware.AwareController
+
 import com.prey.actions.location.PreyLocation
-import com.prey.json.actions.Location
+import com.prey.actions.wipe.PreyWipe
+import com.prey.actions.wipe.WipeInterface
 import com.prey.managers.PreyConnectivityManager
 import com.prey.net.PreyWebServices
+import com.prey.net.WebServicesInterface
 import com.prey.net.UtilConnection
-import com.prey.preferences.RunBackgroundCheckBoxPreference
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
+/**
+ * The PreyConfig class is a Kotlin singleton that manages the
+ * configuration and state of the Prey Android client.
+ */
 class PreyConfig private constructor(var context: Context) {
 
     init {
-        saveString(PREY_VERSION, getInfoPreyVersion(context));
+        saveString(PREY_VERSION, getInfoPreyVersion(context))
+        saveBoolean(ASK_FOR_NAME_BATCH, PreyBatch.getInstance(context).isAskForNameBatch())
+        saveString(TOKEN_BATCH, PreyBatch.getInstance(context).getToken())
+        saveString(API_KEY_BATCH, PreyBatch.getInstance(context).getApiKeyBatch())
     }
 
     var viewLock: View? = null
@@ -70,7 +81,7 @@ class PreyConfig private constructor(var context: Context) {
 
     fun getPreyPanelUrl(): String {
         val panel: String = FileConfigReader.getInstance(context).getPreyPanel()
-        val url = HTTP + panel + "." + getPreyDomain() + "/" + getPreyCampaign()
+        val url = "${HTTP}${panel}.${getPreyDomain()}/${getPreyCampaign()}"
         return url
     }
 
@@ -80,13 +91,13 @@ class PreyConfig private constructor(var context: Context) {
 
     fun getPreyPanelJwt(): String {
         val panel: String = FileConfigReader.getInstance(context).getPreyPanel()
-        val url = HTTP + panel + "." + getPreyDomain() + "/" + getPreyJwt()
+        val url = "${HTTP}${panel}.${getPreyDomain()}/${getPreyJwt()}"
         return url
     }
 
     fun getPreyUrl(): String {
         val subdomain: String = FileConfigReader.getInstance(context).getPreySubdomain()
-        return HTTP + subdomain + "." + getPreyDomain() + "/"
+        return "${HTTP}${subdomain}.${getPreyDomain()}/"
     }
 
     fun getMinutesToQueryServer(): Int {
@@ -222,8 +233,12 @@ class PreyConfig private constructor(var context: Context) {
         saveString(DEVICE_NAME, deviceName)
     }
 
-    fun getApiKeyBatch(): String {
-        return PreyBatch.getInstance(context).getApiKeyBatch()
+    fun getApiKeyBatch(): String? {
+        return getString(API_KEY_BATCH, "")
+    }
+
+    fun setApiKeyBatch(apiKeyBatch: String) {
+        saveString(API_KEY_BATCH, apiKeyBatch)
     }
 
     fun getEmailBatch(): String? {
@@ -690,7 +705,7 @@ class PreyConfig private constructor(var context: Context) {
         return getString(LOCK_MESSAGE, null)
     }
 
-    fun setLockMessage(unlockPass: String) {
+    fun setLockMessage(unlockPass: String?) {
         saveString(LOCK_MESSAGE, unlockPass)
     }
 
@@ -739,81 +754,64 @@ class PreyConfig private constructor(var context: Context) {
         return getString(NOTIFICATION_ID, "")
     }
 
-    fun sendToken(context: Context, token: String) {
+    fun sendToken(token: String) {
         PreyLogger.d("registerC2dm send token:$token")
-        if (token != null && "null" != token && "" != token && UtilConnection.getInstance()
+        val deviceId: String? = getDeviceId()
+        if (deviceId != null && "" != deviceId && token != null && "null" != token && "" != token && UtilConnection.getInstance()
                 .isInternetAvailable()
         ) {
             try {
                 val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
                 StrictMode.setThreadPolicy(policy)
-                val registration: String =
-                    FileConfigReader.getInstance(context).getGcmIdPrefix() + token
+                val registration =
+                    "${FileConfigReader.getInstance(context).getGcmIdPrefix()}${token}"
                 PreyLogger.d("registerC2dm registration:$registration")
                 val response =
-                    PreyWebServices.getInstance().setPushRegistrationId(context, registration)
-                getInstance(context).setNotificationId(registration)
+                    getWebServices().setPushRegistrationId(context, registration)
+                setNotificationId(registration)
                 if (response != null) {
                     PreyLogger.d("registerC2dm response:$response")
                 }
-                getInstance(context).setRegisterC2dm(true)
-                getInstance(context).setTimeC2dm()
+                setRegisterC2dm(true)
+                setTimeC2dm()
             } catch (e: java.lang.Exception) {
-                PreyLogger.e("registerC2dm error:" + e.message, e)
+                PreyLogger.e("Error: ${e.message}", e)
             }
         }
     }
 
     fun registerC2dm() {
         // synchronized(PreyConfig.class) {
-        val deviceId: String? = getInstance(context).getDeviceId()
-        val isTimeC2dm: Boolean = getInstance(context).isTimeC2dm()
+        val deviceId: String? = getDeviceId()
+        val isTimeC2dm: Boolean = isTimeC2dm()
         PreyLogger.d("registerC2dm deviceId:$deviceId isTimeC2dm:$isTimeC2dm")
         if (deviceId != null && "" != deviceId) {
             if (!isTimeC2dm) {
-                var token: String? = null
                 try {
-                    token = FirebaseInstanceId.getInstance().token
-                    if (token != null) {
-                        PreyLogger.d("registerC2dm token2:$token")
-                        sendToken(context, token)
-                    }
-                } catch (e: java.lang.Exception) {
-                    PreyLogger.e("registerC2dm error:" + e.message, e)
-                    try {
-                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener { instanceIdResult ->
-                            val token = instanceIdResult.token
-                            sendToken(context, token)
-                        }
-                    } catch (ex: java.lang.Exception) {
-                        try {
-                            FirebaseMessaging.getInstance().token
-                                .addOnCompleteListener { task ->
-                                    if (!task.isSuccessful) {
-                                        PreyLogger.e(
+                    FirebaseMessaging.getInstance().token
+                        .addOnCompleteListener { task ->
+                            if (!task.isSuccessful) {
+                                PreyLogger.e(
 
-                                            "registerC2dm error:${task.exception!!.message}",
+                                    "Firebase error:${task.exception!!.message}",
 
-                                            task.exception
-                                        )
-                                    }
-                                    val token = task.result
-                                    PreyLogger.d("registerC2dm token:${token}")
-                                    sendToken(context, token)
-                                }
-                        } catch (exception: java.lang.Exception) {
-                            PreyLogger.e(
-                                "registerC2dm error:${exception.message}",
-                                exception
-                            )
+                                    task.exception
+                                )
+                            }
+                            val token = task.result
+                            PreyLogger.d("Firebase token:${token}")
+                            sendToken(token)
                         }
-                    }
+                } catch (exception: java.lang.Exception) {
+                    PreyLogger.e(
+                        "Firebase error:${exception.message}",
+                        exception
+                    )
                 }
             }
         }
         //   }
     }
-
 
     /**
      * Retrieves the organization ID from the configuration.
@@ -849,42 +847,34 @@ class PreyConfig private constructor(var context: Context) {
             val deviceType = PreyUtils.getDeviceType(context)
             val nameDevice = PreyUtils.getNameDevice(context)
             PreyLogger.d(
-
                 "apikey:${apiKey} type:${deviceType} nameDevice:${nameDevice}"
-
             )
-
-
             // Register the device with the API key, device type, and name
-            val accountData: PreyAccountData? = PreyWebServices.getInstance()
+            val accountData: PreyAccountData? = getWebServices()
                 .registerNewDeviceWithApiKeyEmail(context, apiKey, deviceType, nameDevice)
             if (accountData != null) {
-                PreyConfig.getInstance(context).saveAccount(accountData)
+                saveAccount(accountData)
                 // Register C2DM
-                PreyConfig.getInstance(context).registerC2dm()
+                registerC2dm()
                 // Get the email associated with the account
-                val email = PreyWebServices.getInstance().getEmail(context)
+                val email = getWebServices().getEmail(context)
                 if (email != null) {
                     PreyLogger.d("email:$email")
-                    PreyConfig.getInstance(context).setEmail(email)
+                    setEmail(email)
                 }
-                PreyConfig.getInstance(context).setRunBackground(true)
-                PreyConfig.getInstance(context).setInstallationStatus("")
+                setRunBackground(true)
+                setInstallationStatus("")
                 // Run the Prey app
-                PreyApp().run(context)
+                PreyApp().initialize(context)
                 // Start a new thread to initialize PreyStatus and Location
-                object : Thread() {
-                    override fun run() {
-                        try {
-                            PreyStatus.getInstance().initConfig(context)
-
-
-                        } catch (e: java.lang.Exception) {
-                            // Log any errors that occur during initialization
-                            PreyLogger.e("Error:" + e.message, e)
-                        }
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        PreyStatus.getInstance().initConfig(context)
+                    } catch (e: java.lang.Exception) {
+                        // Log any errors that occur during initialization
+                        PreyLogger.e("Error: ${e.message}", e)
                     }
-                }.start()
+                }
             }
         }
     }
@@ -994,8 +984,20 @@ class PreyConfig private constructor(var context: Context) {
         return getBoolean(permission, defaultValue)
     }
 
+    fun setAskForNameBatch(askForNameBatch: Boolean) {
+        saveBoolean(ASK_FOR_NAME_BATCH, askForNameBatch)
+    }
+
     fun isAskForNameBatch(): Boolean {
-        return PreyBatch.getInstance(context).isAskForNameBatch()
+        return getBoolean(ASK_FOR_NAME_BATCH, false)
+    }
+
+    fun setTokenBatch(tokenBatch: String) {
+        saveString(TOKEN_BATCH, tokenBatch)
+    }
+
+    fun getTokenBatch(): String? {
+        return getString(TOKEN_BATCH, "")
     }
 
     fun getSessionId(): String? {
@@ -1042,7 +1044,7 @@ class PreyConfig private constructor(var context: Context) {
             editor.putBoolean(key, value)
             editor.commit()
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
@@ -1053,7 +1055,7 @@ class PreyConfig private constructor(var context: Context) {
             editor.putInt(key, value)
             editor.commit()
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
@@ -1062,14 +1064,14 @@ class PreyConfig private constructor(var context: Context) {
         return settings.getInt(key, defaultValue)
     }
 
-    private fun saveString(key: String, value: String) {
+    private fun saveString(key: String, value: String?) {
         try {
             val settings = PreferenceManager.getDefaultSharedPreferences(context)
             val editor = settings.edit()
             editor.putString(key, value)
             editor.commit()
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
@@ -1085,7 +1087,7 @@ class PreyConfig private constructor(var context: Context) {
             editor.putLong(key, value)
             editor.commit()
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
@@ -1096,7 +1098,7 @@ class PreyConfig private constructor(var context: Context) {
             editor.putFloat(key, value)
             editor.commit()
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
@@ -1107,7 +1109,7 @@ class PreyConfig private constructor(var context: Context) {
             editor.remove(key)
             editor.commit()
         } catch (e: Exception) {
-            PreyLogger.e("removeKey:" + e.message, e)
+            PreyLogger.e("removeKey: ${e.message}", e)
         }
     }
 
@@ -1154,7 +1156,7 @@ class PreyConfig private constructor(var context: Context) {
             val pinfo = context.packageManager.getPackageInfo(context.packageName, 0)
             versionName = pinfo.versionName!!
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         return versionName
     }
@@ -1173,7 +1175,7 @@ class PreyConfig private constructor(var context: Context) {
 
     fun unregisterC2dm(updatePrey: Boolean) {
         try {
-            if (updatePrey) PreyWebServices.getInstance().setPushRegistrationId(context, "")
+            if (updatePrey) getWebServices().setPushRegistrationId(context, "")
             val unregIntent = Intent("com.google.android.c2dm.intent.UNREGISTER")
             unregIntent.putExtra(
                 "app",
@@ -1181,13 +1183,11 @@ class PreyConfig private constructor(var context: Context) {
             )
             context.startService(unregIntent)
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
     fun setSecurityPrivilegesAlreadyPrompted(securityPrivilegesAlreadyPrompted: Boolean) {
-        //TODO:cambiar
-        //this.securityPrivilegesAlreadyPrompted = securityPrivilegesAlreadyPrompted
         val settings = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = settings.edit()
         editor.putBoolean(PREFS_SECURITY_PROMPT_SHOWN, securityPrivilegesAlreadyPrompted)
@@ -1467,21 +1467,68 @@ class PreyConfig private constructor(var context: Context) {
 
     private var nextNotificationId = 100
 
+    fun setNextNotificationId(nextNotificationId: Int) {
+        this.nextNotificationId = nextNotificationId
+    }
+
     fun getNextNotificationId(): Int {
         return nextNotificationId++
     }
 
+    private var webService: WebServicesInterface = PreyWebServices.getInstance()
+
+    fun setWebServices(webService: WebServicesInterface) {
+        this.webService = webService
+    }
+
+    fun getWebServices(): WebServicesInterface {
+        return webService
+    }
+
+    private var wipe: WipeInterface = PreyWipe.getInstance()
+
+    fun setWipe(wipe: WipeInterface) {
+        this.wipe = wipe
+    }
+
+    fun getWipe(): WipeInterface {
+        return wipe
+    }
+
+    fun isTest(): Boolean {
+        return getBoolean(TEST, false)
+    }
+
+    fun setTest(test: Boolean) {
+        saveBoolean(TEST, test)
+    }
+
+    fun getLoadUrl(): String? {
+        return getString(Companion.LOAD_URL, "")
+    }
+
+    fun setLoadUrl(loadUrl: String) {
+        saveString(Companion.LOAD_URL, loadUrl)
+    }
+
+    fun getActivityView(): String? {
+        return getString(Companion.ACTIVITY_VIEW, "")
+    }
+
+    fun setActivityView(loadUrl: String) {
+        saveString(Companion.ACTIVITY_VIEW, loadUrl)
+    }
+
     companion object {
+
         private var instance: PreyConfig? = null
         fun getInstance(context: Context): PreyConfig {
             return instance ?: PreyConfig(context).also { instance = it }
         }
 
-        //Set false in production
-        const val LOG_DEBUG_ENABLED: Boolean = false
         const val TAG: String = "PREY"
-        private const val HTTP = "https://"
-        const val VERSION_PREY_DEFAULT: String = "2.4.9"
+        const val HTTP = "https://"
+        const val VERSION_PREY_DEFAULT: String = "2.7.1"
 
         // Milliseconds per second
         private const val MILLISECONDS_PER_SECOND = 1000
@@ -1509,7 +1556,6 @@ class PreyConfig private constructor(var context: Context) {
         const val PROTECT_PRIVILEGES: String = "PROTECT_PRIVILEGES"
         const val PROTECT_TOUR: String = "PROTECT_TOUR"
         const val PROTECT_READY: String = "PROTECT_READY"
-        const val PREFS_SIM_SERIAL_NUMBER: String = "PREFS_SIM_SERIAL_NUMBER"
         const val PREFS_SECURITY_PROMPT_SHOWN: String = "PREFS_SECURITY_PROMPT_SHOWN"
         const val PREFS_IS_MISSING: String = "PREFS_IS_MISSING"
         const val PREFS_DISABLE_POWER_OPTIONS: String = "PREFS_DISABLE_POWER_OPTIONS"
@@ -1518,9 +1564,7 @@ class PreyConfig private constructor(var context: Context) {
         const val PREFS_USE_BIOMETRIC: String = "PREFS_USE_BIOMETRIC"
         const val PREFS_BACKGROUND: String = "PREFS_BACKGROUND"
         const val IS_LOCK_SET: String = "IS_LOCK_SET"
-        const val NEXT_ALERT: String = "NEXT_ALERT"
         const val IS_CAMOUFLAGE_SET: String = "IS_CAMOUFLAGE_SET"
-        const val PREFS_RINGTONE: String = "PREFS_RINGTONE"
         const val LAST_EVENT: String = "LAST_EVENT"
         const val LOW_BATTERY_DATE: String = "LOW_BATTERY_DATE"
         const val PREVIOUS_SSID: String = "PREVIOUS_SSID"
@@ -1532,18 +1576,12 @@ class PreyConfig private constructor(var context: Context) {
         const val TWO_STEP: String = "TWO_STEP"
         const val PRO_ACCOUNT: String = "PRO_ACCOUNT"
         const val SEND_DATA: String = "SEND_DATA"
-        const val SCHEDULED: String = "SCHEDULED"
         const val MINUTE_SCHEDULED: String = "MINUTE_SCHEDULED2"
-        const val IS_REVOKED_PASSWORD: String = "IS_REVOKED_PASSWORD"
-        const val REVOKED_PASSWORD: String = "REVOKED_PASSWORD"
         const val NOTIFICATION_ID: String = "NOTIFICATION_ID"
         const val INTERVAL_REPORT: String = "INTERVAL_REPORT"
         const val EXCLUDE_REPORT: String = "EXCLUDE_REPORT"
         const val LAST_REPORT_START_DATE: String = "LAST_REPORT_START_DATE"
-        const val TIMEOUT_REPORT: String = "TIMEOUT_REPORT"
-        const val INTERVAL_AWARE: String = "INTERVAL_AWARE"
         const val TIME_SECURE_LOCK: String = "TIME_SECURE_LOCK"
-        const val LAST_TIME_SECURE_LOCK: String = "LAST_TIME_SECURE_LOCK"
         const val LOCATION_LOW_BATTERY_DATE: String = "LOCATION_LOW_BATTERY_DATE"
         const val SESSION_ID: String = "SESSION_ID"
         const val PIN_NUMBER2: String = "PIN_NUMBER2"
@@ -1569,12 +1607,10 @@ class PreyConfig private constructor(var context: Context) {
         const val NOTIFY_ANDROID_6: Int = 6
         const val NOTIFICATION_POPUP_ID: String = "NOTIFICATION_POPUP_ID"
         const val SENT_UUID_SERIAL_NUMBER: String = "SENT_UUID_SERIAL_NUMBER"
-        const val LAST_EVENT_GEO: String = "LAST_EVENT_GEO"
         const val MESSAGE_ID: String = "messageID"
         const val JOB_ID: String = "device_job_id"
         const val UNLOCK_PASS: String = "unlock_pass"
         const val LOCK_MESSAGE: String = "lock_message"
-        const val NOTIFICATION_ANDROID_7: String = "notify_android_7"
         const val JOB_ID_LOCK: String = "job_id_lock"
         const val COUNTER_OFF: String = "counter_off"
         const val SSID: String = "SSID"
@@ -1590,7 +1626,6 @@ class PreyConfig private constructor(var context: Context) {
         const val AWARE_DATE: String = "AWARE_DATE"
         const val AUTO_CONNECT: String = "auto_connect"
         const val AWARE: String = "aware"
-        const val TIME_BLOCK_APP_UNINSTALL: String = "TIME_BLOCK_APP_UNINSTALL"
         const val REPORT_NUMBER: String = "REPORT_NUMBER"
         const val PREFS_BIOMETRIC: String = "PREFS_BIOMETRIC"
         const val INSTALLATION_STATUS: String = "INSTALLATION_STATUS"
@@ -1617,23 +1652,17 @@ class PreyConfig private constructor(var context: Context) {
         const val VOLUME: String = "VOLUME"
         const val DENY_NOTIFICATION: String = "DENY_NOTIFICATION"
         const val OPEN_SECURE_SERVICE: String = "OPEN_SECURE_SERVICE"
-
-        var postUrl: String? = null
-
-        var FORMAT_SDF_AWARE: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
-
+        const val TEST: String = "TEST"
+        const val LOAD_URL: String = "LOAD_URL"
+        const val ASK_FOR_NAME_BATCH: String = "ASK_FOR_NAME_BATCH"
+        const val TOKEN_BATCH: String = "TOKEN_BATCH"
+        const val API_KEY_BATCH: String = "API_KEY_BATCH"
+        const val ACTIVITY_VIEW: String = "ACTIVITY_VIEW"
         const val DAILY_LOCATION: String = "DAILY_LOCATION"
-
         const val MINUTES_TO_QUERY_SERVER: String = "MINUTES_TO_QUERY_SERVER"
-
-        /**
-         * Key for storing the aware time in the configuration.
-         */
         const val AWARE_TIME: String = "AWARE_TIME"
-
-        /**
-         * Key for storing the organization ID in the configuration.
-         */
         const val ORGANIZATION_ID: String = "ORGANIZATION_ID"
+        var postUrl: String? = null
+        var FORMAT_SDF_AWARE: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
     }
 }

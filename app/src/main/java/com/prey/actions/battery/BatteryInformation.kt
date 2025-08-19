@@ -80,7 +80,7 @@ class BatteryInformation {
                 i++
             }
         } catch (e: InterruptedException) {
-            PreyLogger.d("Error, causa:" + e.message)
+            PreyLogger.d("Error:${e.message}")
         }
         var data: HttpDataService? = null
         if (battery != null) {
@@ -143,4 +143,5 @@ class BatteryInformation {
         )
         return battery
     }
+
 }

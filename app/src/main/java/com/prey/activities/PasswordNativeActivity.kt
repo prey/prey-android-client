@@ -26,7 +26,10 @@ import android.widget.Toast
 import com.prey.json.UtilJson
 import com.prey.PreyConfig
 import com.prey.PreyLogger
-import com.prey.net.PreyWebServices
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Activity responsible for handling password entry and validation.
@@ -74,9 +77,11 @@ class PasswordNativeActivity : Activity() {
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
             }
+
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 text.setText(R.string.lock_access_denied)
             }
+
             override fun afterTextChanged(editable: Editable) {
             }
         })
@@ -88,22 +93,20 @@ class PasswordNativeActivity : Activity() {
                 val key = editText.text.toString().trim { it <= ' ' }
                 PreyLogger.d("PasswordActivity2 unlock key:$key unlock:$unlock")
                 if (unlock != null && unlock == key) {
-                    PreyConfig.getInstance(applicationContext).setUnlockPass ("")
-                    object : Thread() {
-                        override fun run() {
-                            val reason = "{\"origin\":\"user\"}"
-                            PreyWebServices.getInstance()
-                                .sendNotifyActionResultPreyHttp(
-                                    applicationContext,
-                                    UtilJson.makeMapParam(
-                                        "start",
-                                        "lock",
-                                        "stopped",
-                                        reason
-                                    )
+                    PreyConfig.getInstance(applicationContext).setUnlockPass("")
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val reason = "{\"origin\":\"user\"}"
+                        PreyConfig.getInstance(applicationContext).getWebServices()
+                            .sendNotifyActionResultPreyHttp(
+                                applicationContext,
+                                UtilJson.makeMapParam(
+                                    "start",
+                                    "lock",
+                                    "stopped",
+                                    reason
                                 )
-                        }
-                    }.start()
+                            )
+                    }
                     onResume()
                 } else {
                     if (unlock == null) {
@@ -113,7 +116,7 @@ class PasswordNativeActivity : Activity() {
                     }
                 }
             } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
+                PreyLogger.e("Error: ${e.message}", e)
             }
         }
     }
@@ -127,9 +130,12 @@ class PasswordNativeActivity : Activity() {
         PreyLogger.d("PasswordActivity2 unlock:$unlock")
         if (unlock == null || "" == unlock) {
             val intent = Intent(applicationContext, CloseActivity::class.java)
+            PreyConfig.getInstance(applicationContext).setActivityView(PASSWORD_EMPTY)
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
             finish()
+        } else {
+            PreyConfig.getInstance(applicationContext).setActivityView(PASSWORD_OK)
         }
     }
 
@@ -147,4 +153,10 @@ class PasswordNativeActivity : Activity() {
             Toast.makeText(this, "keyboard hidden", Toast.LENGTH_SHORT).show()
         }
     }
+
+    companion object {
+        const val PASSWORD_OK: String = "PASSWORD_OK"
+        const val PASSWORD_EMPTY: String = "PASSWORD_EMPTY"
+    }
+
 }

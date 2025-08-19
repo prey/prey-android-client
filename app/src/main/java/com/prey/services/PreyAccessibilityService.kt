@@ -6,71 +6,78 @@
  ******************************************************************************/
 package com.prey.services
 
-import android.app.Service
+import android.accessibilityservice.AccessibilityService
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.IBinder
-import com.prey.activities.CheckPasswordHtmlActivity
-import com.prey.activities.PermissionInformationActivity
+import android.view.accessibility.AccessibilityEvent
+
+import com.prey.activities.PasswordHtmlActivity
+import com.prey.activities.PasswordNativeActivity
+import com.prey.PreyConfig
 import com.prey.PreyLogger
-import com.prey.PreyPermission
 
 /**
- * Service responsible for handling accessibility events.
+ * AppAccessibilityService is an AccessibilityService that handles accessibility events.
+ * It checks if the device is locked and if so, it starts the password activity.
  */
-class PreyAccessibilityService : Service() {
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
+class PreyAccessibilityService : AccessibilityService() {
 
+    /**
+     * Called when the service is created.
+     */
     override fun onCreate() {
         super.onCreate()
+        PreyLogger.d("AppAccessibilityService onCreate")
     }
 
     /**
-     * Called when the service is started. This method is called every time the service is started.
+     * Called when an accessibility event occurs.
      *
-     * @param intent The Intent that was used to start this service.
-     * @param startId A unique integer representing this specific start request.
+     * @param accessibilityEvent The accessibility event that occurred.
      */
-    override fun onStart(intent: Intent, startId: Int) {
-        super.onStart(intent, startId)
-        val context: Context = this
-        object : Thread() {
-            override fun run() {
-                var i = 0
-                var run = true
-                while (run) {
-                    try {
-                        sleep(1000)
-                        val isAccessibility = PreyPermission.isAccessibilityServiceEnabled(context)
-                        PreyLogger.d("PreyAccessibilityService [$i]$isAccessibility")
-                        if (isAccessibility) {
-                            run = false
-                            var intentActivity: Intent? = null
-                            intentActivity = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                                Intent(context, CheckPasswordHtmlActivity::class.java)
-                            } else {
-                                Intent(context, PermissionInformationActivity::class.java)
-                            }
-                            intentActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                            startActivity(intentActivity)
-                            stopSelf()
-                            break
+    override fun onAccessibilityEvent(accessibilityEvent: AccessibilityEvent) {
+        chekLock(applicationContext, accessibilityEvent)
+    }
+
+    fun chekLock(context: Context, accessibilityEvent: AccessibilityEvent): Boolean {
+        var lock = false
+        try {
+            val unlockPass = PreyConfig.getInstance(context).getUnlockPass()
+            val isLock = unlockPass != null && "" != unlockPass
+            if (isLock) {
+                PreyLogger.d("acc 1")
+                if (accessibilityEvent?.packageName != null) {
+                    val charSequence =
+                        if (accessibilityEvent.packageName != null) accessibilityEvent.packageName.toString() else null
+                    if ("com.prey" == charSequence || "android" == charSequence) {
+                    } else {
+                        if (isLock) {
+                            PreyLogger.d("acc 2")
+                            var intentPasswordActivity: Intent? = null
+                            intentPasswordActivity =
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Intent(context, PasswordHtmlActivity::class.java)
+                                } else {
+                                    Intent(context, PasswordNativeActivity::class.java)
+                                }
+                            intentPasswordActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            context.startActivity(intentPasswordActivity)
+                            lock = true
                         }
-                        //TODO:Waiting time for accessibility to be active
-                        if (i > 40) {
-                            run = false
-                            stopSelf()
-                            break
-                        }
-                        i++
-                    } catch (e: Exception) {
-                        PreyLogger.e("Error: ${e.message}", e)
                     }
                 }
             }
-        }.start()
+        } catch (e: Exception) {
+            PreyLogger.e("Error onAccessibilityEvent:${e.message}", e)
+        }
+        return lock
     }
+
+    /**
+     * Called when the service is interrupted.
+     */
+    override fun onInterrupt() {
+    }
+
 }

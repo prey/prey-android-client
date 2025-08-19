@@ -289,10 +289,10 @@ object TimeTrigger {
                     try {
                         second = secondSt.toInt()
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:${e.message}", e)
+                        PreyLogger.e("Error: ${e.message}", e)
                     }
                     val myIntent = Intent(context, TimeTriggerReceiver::class.java)
-                    myIntent.putExtra("trigger_id", "" + trigger.getId())
+                    myIntent.putExtra("trigger_id", "${trigger.getId()}")
                     var daysOfWeek = json.getString("days_of_week")
                     daysOfWeek = daysOfWeek.replace("[", "")
                     daysOfWeek = daysOfWeek.replace("]", "")
@@ -337,4 +337,5 @@ object TimeTrigger {
             j++
         }
     }
+
 }

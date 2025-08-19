@@ -32,21 +32,21 @@ class DeviceReadyActivity : AppCompatActivity(), OnRequestPermissionsResultCallb
      * Starts CheckPasswordHtmlActivity and finishes the current activity.
      */
     @SuppressLint("MissingSuperCall")
-    override fun onBackPressed() {
-        startActivity(Intent(application, CheckPasswordHtmlActivity::class.java))
-        finish()
+    public override fun onBackPressed() {
+        startNewActivity(CheckPasswordHtmlActivity::class.java)
     }
 
     /**
      * Called when the activity is resumed.
      * Cancels the notification with tag PreyConfig.TAG and id PreyConfig.NOTIFY_ANDROID_6.
      */
-    override fun onResume() {
+    public override fun onResume() {
         super.onResume()
         (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).cancel(
             PreyConfig.TAG,
             PreyConfig.NOTIFY_ANDROID_6
         )
+        PreyConfig.getInstance(applicationContext).setActivityView(DEVICE_READY_FORM)
     }
 
     /**
@@ -55,11 +55,16 @@ class DeviceReadyActivity : AppCompatActivity(), OnRequestPermissionsResultCallb
      *
      * @param savedInstanceState The saved instance state, or null if not saved
      */
-    override fun onCreate(savedInstanceState: Bundle?) {
+    public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.device_ready)
         PreyLogger.d("onCreate of DeviceReadyActivity")
+        setupFonts()
+        setupClickListeners()
+    }
+
+    private fun setupFonts() {
         val boldFont = Typeface.createFromAsset(assets, "fonts/Titillium_Web/TitilliumWeb-Bold.ttf")
         val regularFont =
             Typeface.createFromAsset(assets, "fonts/MagdaClean/magdacleanmono-regular.ttf")
@@ -67,13 +72,24 @@ class DeviceReadyActivity : AppCompatActivity(), OnRequestPermissionsResultCallb
         findViewById<TextView>(R.id.textView3_2).typeface = boldFont
         findViewById<TextView>(R.id.textView4_1).typeface = regularFont
         findViewById<TextView>(R.id.textView4_2).typeface = boldFont
+    }
+
+    private fun setupClickListeners() {
         findViewById<LinearLayout>(R.id.linearLayout1).setOnClickListener {
-            startActivity(Intent(application, PanelWebActivity::class.java))
-            finish()
+            startNewActivity(PanelWebActivity::class.java)
         }
         findViewById<LinearLayout>(R.id.linearLayout2).setOnClickListener {
-            startActivity(Intent(application, PreyConfigurationActivity::class.java))
-            finish()
+            startNewActivity(PreyConfigurationActivity::class.java)
         }
     }
+
+    private fun startNewActivity(activityClass: Class<*>) {
+        startActivity(Intent(application, activityClass))
+        finish()
+    }
+
+    companion object {
+        const val DEVICE_READY_FORM: String = "DEVICE_READY_FORM"
+    }
+
 }

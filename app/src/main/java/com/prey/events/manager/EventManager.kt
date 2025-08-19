@@ -21,6 +21,9 @@ import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPhone
 import com.prey.managers.PreyConnectivityManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 import org.json.JSONObject
 
@@ -162,7 +165,7 @@ class EventManager(var context: Context) {
      * It also adds the "locationLowBattery" field to the JSONObject.
      * If the event name is DEVICE_STATUS, it sets the info of the event to the JSONObject.
      * If the event name is not WIFI_CHANGED or the event name is not the same as the lastEvent,
-     * it sets the lastEvent to the event name and starts a new EventThread.
+     * it sets the lastEvent to the event name and starts a new EventSend.
      */
     private fun sendEvents() {
 
@@ -179,7 +182,7 @@ class EventManager(var context: Context) {
                         }"
                     )
                     if (LocationLowBatteryRunner.getInstance(context).isValid()) {
-                        Thread(LocationLowBatteryRunner(context)).start()
+                        CoroutineScope(Dispatchers.IO).launch { LocationLowBatteryRunner(context) }
                         try {
                             jsonObjectStatus.put("locationLowBattery", true)
                         } catch (e: Exception) {
@@ -194,7 +197,7 @@ class EventManager(var context: Context) {
             if (Event.WIFI_CHANGED != event!!.name || event!!.name != lastEvent) {
                 PreyConfig.getInstance(context).setLastEvent(event!!.name!!)
                 PreyLogger.d("event name[${event!!.name}], info[${event!!.info}]")
-                EventThread(context, event!!, jsonObjectStatus).start()
+                EventSend(context, event!!, jsonObjectStatus).start()
             }
         }
     }
@@ -217,4 +220,5 @@ class EventManager(var context: Context) {
         const val BATTERY: String = "battery"
         const val MOBILE: String = "mobile"
     }
+
 }

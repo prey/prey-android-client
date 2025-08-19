@@ -7,10 +7,10 @@
 package com.prey
 
 import android.content.Context
+
 import com.prey.actions.HttpDataService
 import com.prey.net.PreyHttpResponse
 import com.prey.net.PreyRestHttpClient
-import com.prey.net.PreyWebServices
 
 /**
  * Object responsible for sending email data.
@@ -28,18 +28,19 @@ object PreyEmail {
             if (data != null) {
                 val entityFiles = data.getEntityFiles()
                 if (entityFiles != null && entityFiles.size >= 0) {
-                    val url = PreyWebServices.getInstance().getFileUrlJson(context)
+                    val preyConfig = PreyConfig.getInstance(context)
+                    val url =
+                        preyConfig.getWebServices().getFileUrlJson(context)
                     PreyLogger.d("URL:$url")
                     val parameters: MutableMap<String, String?> = HashMap()
-                    val preyConfig = PreyConfig.getInstance(context)
                     var preyHttpResponse: PreyHttpResponse? = null
                     preyHttpResponse = PreyRestHttpClient.getInstance(context)
                         .postAutentication(url, parameters, entityFiles)
-                    PreyLogger.d("status line:" + preyHttpResponse!!.getStatusCode())
+                    PreyLogger.d("status line:${preyHttpResponse!!.getStatusCode()}")
                 }
             }
         } catch (e: Exception) {
-            PreyLogger.e("Error causa:${e.message}", e)
+            PreyLogger.e("Error:${e.message}", e)
         }
     }
 

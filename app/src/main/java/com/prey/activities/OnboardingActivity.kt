@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import com.prey.PreyConfig
 
 import com.prey.R
 
@@ -90,7 +91,9 @@ class OnboardingActivity : AppCompatActivity() {
             } else {
                 launchHomeScreen()
             }
+            PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_ONBOARDING_NEXT)
         }
+        PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_ONBOARDING)
     }
 
     /**
@@ -191,4 +194,10 @@ class OnboardingActivity : AppCompatActivity() {
             container.removeView(view)
         }
     }
+
+    companion object {
+        const val ACTIVITY_ONBOARDING: String = "ACTIVITY_ONBOARDING"
+        const val ACTIVITY_ONBOARDING_NEXT: String = "ACTIVITY_ONBOARDING_NEXT"
+    }
+
 }

@@ -30,8 +30,6 @@ import com.prey.PreyApp
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyUtils
-import com.prey.net.PreyWebServices
-import com.prey.preferences.RunBackgroundCheckBoxPreference
 import com.prey.util.HttpUtil
 import com.prey.util.KeyboardStatusDetector
 
@@ -105,14 +103,14 @@ class SignUpActivity : Activity() {
             try {
                 dialog.dismiss()
             } catch (e: Exception) {
-                PreyLogger.e("e.getMessage():" + e.message, e)
+                PreyLogger.e("Error:${e.message}", e)
             }
         }
         text_linear_agree_terms_condition.setOnClickListener {
             try {
                 alert.show()
             } catch (e: Exception) {
-                PreyLogger.e("e.getMessage():" + e.message, e)
+                PreyLogger.e("Error:${e.message}", e)
             }
         }
         linkSignup.setTypeface(titilliumWebBold)
@@ -125,13 +123,14 @@ class SignUpActivity : Activity() {
         val halfHeight = metrics.heightPixels / 3
         val keyboard = KeyboardStatusDetector()
         keyboard.registerActivity(this)
+        PreyConfig.getInstance(applicationContext).setActivityView(SIGN_UP_ACTIVITY_FORM)
         buttonSignup.setOnClickListener {
             val name = nameText.text.toString()
             email = emailText.text.toString()
             val password = passwordText.text.toString()
-            val confirmOver = "" + checkBox_linear_confirm_over.isChecked
-            val agreeTermsCondition = "" + checkBox_linear_agree_terms_condition.isChecked
-            val offer = "" + checkBox_linear_offer.isChecked
+            val confirmOver = "${checkBox_linear_confirm_over.isChecked}"
+            val agreeTermsCondition = "${checkBox_linear_agree_terms_condition.isChecked}"
+            val offer = "${checkBox_linear_offer.isChecked}"
             PreyLogger.d("email:$email")
             PreyLogger.d("password:$password")
             PreyLogger.d("confirm_over:$confirmOver")
@@ -182,31 +181,32 @@ class SignUpActivity : Activity() {
             progressDialog.setCancelable(false)
             progressDialog.show()
         } catch (e: Exception) {
-            PreyLogger.e("e.getMessage():" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         try {
             error = null
             val context = applicationContext
-            val accountData: PreyAccountData = PreyWebServices.getInstance().registerNewAccount(
-                context,
-                name,
-                email,
-                password,
-                confirmOver,
-                agreeTermsCondition,
-                offer, PreyUtils.getDeviceType(
-                    application
+            val accountData: PreyAccountData =
+                PreyConfig.getInstance(context).getWebServices().registerNewAccount(
+                    context,
+                    name,
+                    email,
+                    password,
+                    confirmOver,
+                    agreeTermsCondition,
+                    offer, PreyUtils.getDeviceType(
+                        application
+                    )
                 )
-            )
-            PreyLogger.d("Response creating account: " + accountData.toString())
+            PreyLogger.d("Response creating account: ${accountData.toString()}")
             PreyConfig.getInstance(context).saveAccount(accountData)
             PreyConfig.getInstance(context).registerC2dm()
             PreyConfig.getInstance(context).setEmail(email!!)
             PreyConfig.getInstance(context).setRunBackground(true)
-            PreyApp().run(context)
+            PreyApp().initialize(context)
         } catch (e: Exception) {
             error = e.message
-            PreyLogger.e("e.getMessage():" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         try {
             if (progressDialog != null) progressDialog!!.dismiss()
@@ -224,6 +224,7 @@ class SignUpActivity : Activity() {
                         PermissionInformationActivity::class.java
                     )
                 }
+                PreyConfig.getInstance(applicationContext).setActivityView(SIGN_UP_ACTIVITY_WELCOME)
                 intent.putExtras(bundle)
                 startActivity(intent)
                 finish()
@@ -235,13 +236,18 @@ class SignUpActivity : Activity() {
                         R.string.ok
                     ) { dialog, which -> }.setCancelable(false)
                 alertDialog.show()
+                PreyConfig.getInstance(applicationContext).setActivityView(SIGN_UP_ACTIVITY_ERROR)
             }
         } catch (e: Exception) {
-            PreyLogger.e("e.getMessage():" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
     companion object {
         private const val ERROR = 1
+        const val SIGN_UP_ACTIVITY_FORM: String = "SIGN_UP_ACTIVITY_FORM"
+        const val SIGN_UP_ACTIVITY_ERROR: String = "SIGN_UP_ACTIVITY_ERROR"
+        const val SIGN_UP_ACTIVITY_WELCOME: String = "SIGN_UP_ACTIVITY_WELCOME"
     }
+
 }

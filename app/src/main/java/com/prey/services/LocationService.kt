@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.os.IBinder
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+
 import com.prey.actions.location.PreyLocation
 import com.prey.actions.location.PreyLocationManager
 import com.prey.PreyConfig
@@ -31,7 +32,7 @@ import com.prey.PreyLogger
  * persitent storage
  */
 class LocationService : Service() {
-    var lastRegisteredLocation: Location? = null
+    private var lastRegisteredLocation: Location? = null
         private set
 
     //private LocationManager networkLocationManager;
@@ -274,5 +275,5 @@ class LocationService : Service() {
             setNewLocation(location)
         }
     }
-}
 
+}

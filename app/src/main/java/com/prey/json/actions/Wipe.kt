@@ -9,7 +9,7 @@ package com.prey.json.actions
 import android.content.Context
 
 import com.prey.actions.observer.ActionResult
-import com.prey.actions.wipe.WipeThread
+import com.prey.actions.wipe.Wipe
 import com.prey.PreyConfig
 
 import org.json.JSONObject
@@ -26,7 +26,11 @@ class Wipe {
      * @param actionResults A list of action results.
      * @param parameters A JSON object containing wipe parameters.
      */
-    fun start(context: Context, actionResults: MutableList<ActionResult>?, parameters: JSONObject?) {
+    fun start(
+        context: Context,
+        actionResults: MutableList<ActionResult>?,
+        parameters: JSONObject?
+    ) {
         execute(context, actionResults, parameters)
     }
 
@@ -37,7 +41,11 @@ class Wipe {
      * @param actionResults A list of action results.
      * @param parameters A JSON object containing wipe parameters.
      */
-    fun execute(context: Context, actionResults: MutableList<ActionResult>?, parameters: JSONObject?) {
+    fun execute(
+        context: Context,
+        actionResults: MutableList<ActionResult>?,
+        parameters: JSONObject?
+    ) {
         // Initialize wipe flags
         var shouldWipe = false
         var shouldDeleteSd = false
@@ -65,6 +73,7 @@ class Wipe {
             shouldDeleteSd = false
         }
         // Start the wipe thread with the determined flags
-        WipeThread(context, shouldWipe, shouldDeleteSd, messageId!!, jobId).start()
+        Wipe(context, shouldWipe, shouldDeleteSd, messageId!!, jobId).start()
     }
+
 }

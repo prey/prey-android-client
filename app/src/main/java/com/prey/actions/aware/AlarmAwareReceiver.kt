@@ -10,6 +10,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.prey.PreyLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * AlarmAwareReceiver is a BroadcastReceiver that listens for alarm events and initializes the AwareController.
@@ -24,14 +27,15 @@ class AlarmAwareReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         try {
             // Start a new thread to initialize the AwareController
-            Thread {
+            CoroutineScope(Dispatchers.IO).launch {
                 // Initialize the AwareController with the application context
                 AwareController().initLastLocation(context.applicationContext)
                 AwareController.getInstance().registerGeofence(context)
-            }.start()
+            }
         } catch (e: Exception) {
             // Log any exceptions that occur during the onReceive method
             PreyLogger.e("AlarmAwareReceiver error: ${e.message}", e)
         }
     }
+
 }

@@ -58,14 +58,17 @@ class ActionsController {
                 // Initialize an empty list to store the action results.
                 val actionResults = mutableListOf<ActionResult>()
                 // Execute the action using the ClassUtil class and update the data list with the result.
-                data = ClassUtil.getInstance().execute(
+                val resultData = ClassUtil.getInstance().execute(
                     context,
                     actionResults,
                     actionName,
                     actionMethod,
                     actionParameters,
                     data
-                )!!
+                )
+                if (resultData != null) {
+                    data = resultData
+                }
             }
             return data
         } catch (e: Exception) {
@@ -76,6 +79,7 @@ class ActionsController {
 
     companion object {
         private var instance: ActionsController? = null
+
         /**
          * Returns the singleton instance of the ActionsController class.
          *
@@ -85,4 +89,5 @@ class ActionsController {
             return instance ?: ActionsController().also { instance = it }
         }
     }
+
 }

@@ -46,4 +46,5 @@ class PreyWifiManager {
             return instance ?: PreyWifiManager().also { instance = it }
         }
     }
+
 }

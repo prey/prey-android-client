@@ -63,6 +63,7 @@ object PreyPermission {
     }
 
     fun canAccessFineLocation(context: Context?): Boolean {
+        if (canAccessBackgroundLocation(context)) return true
         return canPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION)
     }
 
@@ -71,6 +72,7 @@ object PreyPermission {
     }
 
     fun canAccessCoarseLocation(context: Context?): Boolean {
+        if (canAccessBackgroundLocation(context)) return true
         return canPermissionGranted(context, Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
@@ -158,15 +160,16 @@ object PreyPermission {
      * @return true if accessibility method should request it, false otherwise
      */
     fun isAccessibilityServiceView(context: Context): Boolean {
-        val isThereBatchInstallationKey = PreyBatch.getInstance(context).isThereBatchInstallationKey()
+        val isThereBatchInstallationKey =
+            PreyBatch.getInstance(context).isThereBatchInstallationKey()
         //If it is batch, do not request accessibility
         if (isThereBatchInstallationKey) {
             return isThereBatchInstallationKey
         }
         val isAccessibilityServiceEnabled = isAccessibilityServiceEnabled(context)
         PreyLogger.d(
-            
-                "isAccessibilityServiceEnabled:${isAccessibilityServiceEnabled}"
+
+            "isAccessibilityServiceEnabled:${isAccessibilityServiceEnabled}"
         )
         if (isAccessibilityServiceEnabled) {
             return isAccessibilityServiceEnabled
@@ -176,7 +179,8 @@ object PreyPermission {
             if (accessibilityDenied) {
                 return accessibilityDenied
             } else {
-                val isTimeNextAccessibility = PreyConfig.getInstance(context).isTimeNextAccessibility()
+                val isTimeNextAccessibility =
+                    PreyConfig.getInstance(context).isTimeNextAccessibility()
                 PreyLogger.d("isTimeNextAccessibility:${isTimeNextAccessibility}")
                 return isTimeNextAccessibility
             }
@@ -244,4 +248,5 @@ object PreyPermission {
             return true
         }
     }
+
 }

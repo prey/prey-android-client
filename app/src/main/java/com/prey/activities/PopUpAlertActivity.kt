@@ -81,7 +81,7 @@ class PopUpAlertActivity : PreyActivity() {
                 close_prey_receiver,
                 IntentFilter(CheckPasswordHtmlActivity.CLOSE_PREY)
             )
-            registerReceiver(popup_prey_receiver, IntentFilter(POPUP_PREY + "_" + notificationId))
+            registerReceiver(popup_prey_receiver, IntentFilter("${POPUP_PREY}_${notificationId}"))
         } catch (e: Exception) {
             PreyLogger.d("Error receiver:${e.message}")
         }
@@ -99,10 +99,12 @@ class PopUpAlertActivity : PreyActivity() {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NO_HISTORY)
             startActivity(intent)
         }
+        PreyConfig.getInstance(this).setActivityView(POPUP_FORM)
     }
 
     companion object {
         private const val SHOW_POPUP = 0
         const val POPUP_PREY: String = "popup_prey"
+        const val POPUP_FORM: String = "POPUP_FORM"
     }
 }

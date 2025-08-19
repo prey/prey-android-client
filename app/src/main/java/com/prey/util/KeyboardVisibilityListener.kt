@@ -8,4 +8,5 @@ package com.prey.util
 
 interface KeyboardVisibilityListener {
     fun onVisibilityChanged(keyboardVisible: Boolean)
+
 }

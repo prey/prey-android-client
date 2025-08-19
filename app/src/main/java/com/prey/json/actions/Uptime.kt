@@ -56,4 +56,5 @@ class Uptime : JsonAction() {
         // Return the HTTP data service
         return data
     }
+
 }

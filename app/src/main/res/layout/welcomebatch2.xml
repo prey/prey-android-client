@@ -1,9 +1,11 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:background="#1e2938"
+    tools:context=".activities.WelcomeBatchActivity"
     >
     <ImageView
         android:layout_width="fill_parent"
@@ -43,6 +45,7 @@
         android:background="#fff"
         android:paddingLeft="10dp"
         android:hint="@string/placehoder_batch"
+        android:text=""
         android:textColorHint="#9D9C96"
         android:textColor="#000"
         />

@@ -38,11 +38,10 @@ class ClassUtil {
         parametersAction: JSONObject?,
         listData: MutableList<HttpDataService>?
     ): MutableList<HttpDataService>? {
-        var nameActionClass = nameAction
+        val nameActionClass = StringUtil().classFormat(nameAction)
         PreyLogger.d("name:$nameActionClass")
         PreyLogger.d("target:$methodAction")
         PreyLogger.d("options:$parametersAction")
-        nameActionClass = StringUtil().classFormat(nameActionClass)
         try {
             val actionClass = Class.forName("com.prey.json.actions.$nameActionClass")
             val actionObject = actionClass.newInstance()
@@ -54,10 +53,11 @@ class ClassUtil {
                 )
             )
             val params = arrayOf(context, listActions, parametersAction)
-            var listDataTmp: MutableList<HttpDataService>? =null
-            try{
+            var listDataTmp: MutableList<HttpDataService>? = null
+            try {
                 listDataTmp = method.invoke(actionObject, *params) as ArrayList<HttpDataService>
             } catch (e: Exception) {
+                PreyLogger.e("Error:${e.message}", e)
             }
             var i = 0
             while (listDataTmp != null && i < listDataTmp.size) {
@@ -66,7 +66,7 @@ class ClassUtil {
                 i++
             }
         } catch (e: Exception) {
-            PreyLogger.e("Error, causa:" + e.message, e);
+            PreyLogger.e("Error:${e.message}", e)
         }
         return listData
     }
@@ -77,4 +77,5 @@ class ClassUtil {
             return instance ?: ClassUtil().also { instance = it }
         }
     }
+
 }

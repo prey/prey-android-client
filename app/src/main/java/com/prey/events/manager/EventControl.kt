@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.events.manager
 
-import android.content.Context
 import com.prey.PreyLogger
 
 import org.json.JSONObject
@@ -85,4 +84,5 @@ class EventControl private constructor() {
         fun getInstance(): EventControl =
             instance ?: EventControl().also { instance = it }
     }
+
 }

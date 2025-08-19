@@ -9,16 +9,11 @@ package com.prey.workers
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.prey.actions.aware.AwareController
-import com.prey.PreyConfig
+
 import com.prey.PreyLogger
 import com.prey.actions.report.ReportService
-import com.prey.beta.actions.PreyBetaActionsRunner
-import org.json.JSONObject
-
 
 class PreyReportWorker
-
     (
     context: Context,
     params: WorkerParameters
@@ -33,11 +28,12 @@ class PreyReportWorker
             ReportService().run(applicationContext)
             return Result.success()
         } catch (e: NumberFormatException) {
-            PreyLogger.e( "----------Error PreyReportWorker:${e.message}", e)
+            PreyLogger.e("----------Error PreyReportWorker:${e.message}", e)
             return Result.failure()
         } catch (throwable: Throwable) {
-            PreyLogger.e( "----------Error PreyReportWorker:${throwable.message}",   throwable )
+            PreyLogger.e("----------Error PreyReportWorker:${throwable.message}", throwable)
             return Result.failure()
         }
     }
+
 }

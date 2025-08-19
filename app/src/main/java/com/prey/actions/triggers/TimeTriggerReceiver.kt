@@ -25,13 +25,17 @@ class TimeTriggerReceiver : TriggerReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         try {
             val triggerId = intent.extras?.getString("trigger_id")
+            PreyLogger.d("triggerId:${triggerId}")
             val dataSource = TriggerDataSource(context)
-            val trigger = dataSource.getTrigger(triggerId ?: return)
-            if (TriggerUtil.validateTrigger(trigger!!)) {
-                executeActions(context, trigger.getActions())
+            if (triggerId != null) {
+                val trigger = dataSource.getTrigger(triggerId)
+                if (trigger != null && TriggerUtil.validateTrigger(trigger)) {
+                    executeActions(context, trigger.getActions())
+                }
             }
         } catch (e: Exception) {
             PreyLogger.e("Error processing trigger:${e.message}", e)
         }
     }
+
 }

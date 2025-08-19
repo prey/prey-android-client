@@ -22,9 +22,13 @@ import com.prey.json.UtilJson
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyUtils
+import com.prey.actions.aware.AwareController
 import com.prey.managers.PreyWifiManager
 import com.prey.net.PreyWebServices
 import com.prey.services.LocationService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 import org.json.JSONException
 import org.json.JSONObject
@@ -57,6 +61,28 @@ object LocationUtil {
         return data
     }
 
+    fun dataLocationReport(
+        context: Context,
+        messageId: String?,
+        asynchronous: Boolean,
+        maximum: Int = MAXIMUM_OF_ATTEMPTS
+    ): HttpDataService? {
+        var data: HttpDataService? = null
+        try {
+            val preyLocation = PreyConfig.getInstance(context).getLocation()
+            if (preyLocation != null && (preyLocation.getLat() != 0.0 && preyLocation.getLng() != 0.0)) {
+                PreyLogger.d("locationData:${preyLocation.getLat()} ${preyLocation.getLng()} ${preyLocation.getAccuracy()}")
+                data = convertData(preyLocation)
+            } else {
+                PreyLogger.d("locationData else:")
+                return null
+            }
+        } catch (e: Exception) {
+            sendNotify(context, "Error", messageId)
+        }
+        return data
+    }
+
     @Throws(Exception::class)
     fun getLocation(context: Context, messageId: String?, asynchronous: Boolean): PreyLocation? {
         return getLocation(context, messageId, asynchronous, MAXIMUM_OF_ATTEMPTS)
@@ -71,7 +97,8 @@ object LocationUtil {
     ): PreyLocation? {
         var preyLocation: PreyLocation? = null
         val isGpsEnabled = PreyLocationManager.getInstance().isGpsLocationServiceActive(context)
-        val isNetworkEnabled = PreyLocationManager.getInstance().isNetworkLocationServiceActive(context)
+        val isNetworkEnabled =
+            PreyLocationManager.getInstance().isNetworkLocationServiceActive(context)
         val isWifiEnabled = PreyWifiManager.getInstance().isWifiEnabled(context)
         val isGooglePlayServicesAvailable = PreyUtils.isGooglePlayServicesAvailable(context)
         val json = JSONObject()
@@ -88,15 +115,8 @@ object LocationUtil {
         PreyLogger.d(locationInfo)
         val method = getMethod(isGpsEnabled, isNetworkEnabled)
         try {
-            // preyLocation = getPreyLocationAppService(context, method, asynchronous, preyLocation, maximum)
-        } catch (e: Exception) {
-            PreyLogger.e("Error PreyLocationApp:${e.message}", e)
-        }
-        try {
-            if (preyLocation?.getLocation() == null || (preyLocation.getLat() == 0.0 && preyLocation.getLng() == 0.0)) {
-                preyLocation =
-                    getPreyLocationAppServiceOreo(context, method, asynchronous, preyLocation)
-            }
+            preyLocation =
+                getPreyLocationAppServiceOreo(context, method, asynchronous, preyLocation)
         } catch (e: Exception) {
             PreyLogger.e("Error AppServiceOreo:${e.message}", e)
         }
@@ -141,12 +161,14 @@ object LocationUtil {
 
     private fun sendNotify(context: Context, message: String) {
         val parameters = UtilJson.makeMapParam("get", "location", "failed", message)
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(context, parameters)
+        PreyConfig.getInstance(context).getWebServices()
+            .sendNotifyActionResultPreyHttp(context, parameters)
     }
 
     private fun sendNotify(context: Context, message: String, status: String?) {
         val parameters = UtilJson.makeMapParam("get", "location", status, message)
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(context, parameters)
+        PreyConfig.getInstance(context).getWebServices()
+            .sendNotifyActionResultPreyHttp(context, parameters)
     }
 
     const val MAXIMUM_OF_ATTEMPTS: Int = 5
@@ -165,7 +187,7 @@ object LocationUtil {
         PreyLogger.d("getPreyLocationPlayService")
         val play = PreyGooglePlayServiceLocation()
         try {
-            Thread { play.init(context) }.start()
+            CoroutineScope(Dispatchers.IO).launch { play.init(context) }
             var currentLocation: Location? = null
             val manager = PreyLocationManager.getInstance()
             currentLocation = play.getLastLocation(context)
@@ -189,9 +211,8 @@ object LocationUtil {
         preyLocationOld: PreyLocation?
     ): PreyLocation? {
         var preyLocation: PreyLocation? = null
-        val intentLocation = Intent(context, LastLocationService::class.java)
+        AwareController.getInstance().initLastLocation(context)
         try {
-            //context.startService(intentLocation)
             var i = 0
             while (i < 1) {// MAXIMUM_OF_ATTEMPTS2) {
                 PreyLogger.d("getPreyLocationAppServiceOreo[${i}]")
@@ -211,8 +232,6 @@ object LocationUtil {
         } catch (e: Exception) {
             PreyLogger.e("Error:${e.message}", e)
             throw e
-        } finally {
-            //  context.stopService(intentLocation)
         }
         return preyLocation
     }
@@ -285,7 +304,8 @@ object LocationUtil {
                     val data = convertData(locationNew)
                     val dataToBeSent = ArrayList<HttpDataService>()
                     dataToBeSent.add(data!!)
-                    PreyWebServices.getInstance().sendPreyHttpData(context, dataToBeSent)
+                    PreyConfig.getInstance(context).getWebServices()
+                        .sendPreyHttpData(context, dataToBeSent)
                 }
             }
             return locationNew
@@ -346,10 +366,26 @@ object LocationUtil {
                 val finalValue2 = df.parse(format) as Long
                 finalValue = finalValue2.toDouble()
             } catch (e: Exception) {
-                PreyLogger.e("Error:${e.message}" , e)
+                PreyLogger.e("Error:${e.message}", e)
             }
         }
         return finalValue
+    }
+
+    /**
+     * Check if the location permission is granted.
+     *
+     * @return Boolean True if permission is granted, false otherwise.
+     */
+    fun hasLocationPermission(context: Context): Boolean {
+        // Check the permission status using the ActivityCompat.checkSelfPermission function.
+        return ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     const val LAT: String = "lat"

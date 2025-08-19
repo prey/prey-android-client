@@ -17,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.webkit.WebView
+
 import com.prey.R
 import com.prey.activities.js.CustomWebView
 import com.prey.activities.js.WebAppInterface
@@ -26,6 +27,7 @@ import com.prey.PreyLogger
 import com.prey.PreyPermission
 import com.prey.PreyUtils
 import com.prey.receivers.PreyDisablePowerOptionsReceiver
+
 import java.util.Date
 
 class PreySecureService : Service() {
@@ -46,6 +48,10 @@ class PreySecureService : Service() {
     override fun onStart(intent: Intent, startId: Int) {
         super.onStart(intent, startId)
         val context: Context = this
+        onStart(context)
+    }
+
+    fun onStart(context: Context) {
         PreyLogger.d("PreySecureService onStart")
         val canDrawOverlays = PreyPermission.canDrawOverlays(context)
         if (!canDrawOverlays) {
@@ -55,8 +61,8 @@ class PreySecureService : Service() {
         val time = PreyConfig.getInstance(this).getTimeSecureLock()
         val now = Date().time
         PreyLogger.d(
-            
-                "PreyDisablePowerOptionsReceiver time:${time} now:${now} < ${(now < time)}"
+
+            "PreyDisablePowerOptionsReceiver time:${time} now:${now} < ${(now < time)}"
         )
         if (now < time) {
             PreyLogger.d("PreySecureService close")
@@ -104,7 +110,7 @@ class PreySecureService : Service() {
                 )
                 this.sendBroadcast(intentClose)
             } catch (e: Exception) {
-                PreyLogger.e("Error CLOSE_SYSTEM:${e.message}",  e)
+                PreyLogger.e("Error CLOSE_SYSTEM:${e.message}", e)
             }
             val layoutParams = WindowManager.LayoutParams()
             layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
@@ -138,7 +144,7 @@ class PreySecureService : Service() {
                 )
                 this.sendBroadcast(intentClose)
             } catch (e: Exception) {
-                PreyLogger.e("Error intentClose:%${e.message}",  e)
+                PreyLogger.e("Error intentClose:%${e.message}", e)
             }
         } else {
             if (view != null) {
@@ -149,6 +155,7 @@ class PreySecureService : Service() {
             PreyConfig.getInstance(this).setOpenSecureService(false)
             stopSelf()
         }
+        PreyConfig.getInstance(context).setLastEvent("on_start_secure")
     }
 
     override fun onDestroy() {
@@ -161,7 +168,7 @@ class PreySecureService : Service() {
                 try {
                     wm.removeView(view)
                 } catch (e: Exception) {
-                    PreyLogger.e("Error:${e.message}",  e)
+                    PreyLogger.e("Error:${e.message}", e)
                 }
             }
             view = null
@@ -176,4 +183,5 @@ class PreySecureService : Service() {
         PreyLogger.d("PreySecureService close")
         stopSelf()
     }
+
 }

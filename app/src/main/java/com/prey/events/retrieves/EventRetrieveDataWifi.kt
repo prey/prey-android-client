@@ -43,11 +43,11 @@ class EventRetrieveDataWifi {
                 manager.event!!.info = ssid
             }
             wifiJSon.put("active_access_point", accessElementJSon)
-            if(ssid!=null) {
+            if (ssid != null) {
                 PreyConfig.getInstance(context).setPreviousSsid(ssid)
             }
         } catch (e: Exception) {
-            PreyLogger.e("Error:${e.message}" , e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         PreyLogger.d("wifi:$ssid")
         // Send the WiFi data to the EventManager

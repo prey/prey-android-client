@@ -31,4 +31,5 @@ class SimTriggerReceiver : TriggerReceiver() {
     companion object {
         const val EXTRA_SIM_STATE = "ss"
     }
+
 }

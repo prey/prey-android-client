@@ -67,7 +67,7 @@ class CheckPasswordActivity : Activity() {
                 finish()
             }
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         textLink_uninstall_prey.setOnClickListener {
             val i = Intent(Intent.ACTION_VIEW)
@@ -75,6 +75,7 @@ class CheckPasswordActivity : Activity() {
             i.setData(Uri.parse(url))
             startActivity(i)
         }
+        PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_CHECK_PASSWORD)
     }
 
     /**
@@ -85,4 +86,9 @@ class CheckPasswordActivity : Activity() {
         startActivity(intent)
         finish()
     }
+
+    companion object {
+        const val ACTIVITY_CHECK_PASSWORD: String = "ACTIVITY_CHECK_PASSWORD"
+    }
+
 }

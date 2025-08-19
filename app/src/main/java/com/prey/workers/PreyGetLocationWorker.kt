@@ -14,16 +14,12 @@ import androidx.core.app.ActivityCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationTokenSource
-import com.prey.PreyConfig
 
+import com.prey.PreyConfig
 import com.prey.actions.location.PreyLocation
-import com.prey.actions.location.PreyLocationManager
 import com.prey.PreyLogger
 import com.prey.actions.aware.AwareController
-import com.prey.actions.location.LastLocationService.Companion.round
-import com.prey.json.actions.Location
+import com.prey.actions.location.LocationUtil
 
 /**
  * A CoroutineWorker subclass responsible for retrieving the device's location.
@@ -38,6 +34,7 @@ class PreyGetLocationWorker
 ) : CoroutineWorker(context, params) {
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+
     /**
      * Override the doWork function to perform the location retrieval task.
      *
@@ -56,22 +53,25 @@ class PreyGetLocationWorker
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location ->
                 location?.let {
-
                     PreyLogger.d(
-                        "AWARE PreyGetLocationWorker last lat_ :" + round(
-                            location.latitude
-                        ) + " lng:" + round(
-                            location.longitude
-                        ) + " acc:" + round(
-                            location.accuracy.toDouble()
-                        )
+                        "AWARE PreyGetLocationWorker last lat_ :${
+                            LocationUtil.round(
+                                location.latitude
+                            )
+                        } lng:${
+                            LocationUtil.round(
+                                location.longitude
+                            )
+                        } acc:${
+                            LocationUtil.round(
+                                location.accuracy.toDouble()
+                            )
+                        }"
                     )
                     val preyLocation = PreyLocation(location)
-
                     PreyConfig.getInstance(context).setLocation(preyLocation)
                     PreyConfig.getInstance(context).setLocationAware(preyLocation)
                     AwareController.getInstance().sendAware(context, preyLocation)
-
                 }
             }
 

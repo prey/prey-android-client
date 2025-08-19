@@ -117,7 +117,22 @@
             android:configChanges="keyboardHidden|orientation"
             />
         <activity
+            android:name="com.prey.activities.PasswordHtmlActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+        <activity
             android:name="com.prey.activities.CheckPasswordHtmlActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+        <activity
+            android:name="com.prey.activities.JumpActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+        <activity
+            android:name="com.prey.activities.PanelWebActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
             />
@@ -147,6 +162,64 @@
             android:configChanges="keyboardHidden|orientation"
             />
         <activity
+            android:name="com.prey.activities.PreReportActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+        <activity
+            android:name="com.prey.activities.PinNativeActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+        <activity
+            android:name="com.prey.activities.PermissionInformationActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+        <activity
+            android:name="com.prey.activities.PermissionActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+
+        <activity
+            android:name="com.prey.activities.PasswordNativeActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+
+        <activity
+            android:name="com.prey.activities.OpenSettingsActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+
+
+
+        <activity
+            android:name="com.prey.activities.WelcomeBatchActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+
+        <activity
+            android:name="com.prey.activities.WelcomeActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+
+
+        <activity android:name="com.prey.activities.CloseActivity"
+            android:configChanges="keyboardHidden|orientation"
+            />
+
+
+
+        <activity android:name=".activities.ReportActivity"
+            android:configChanges="keyboardHidden|orientation"
+            />
+
+        <activity
             android:name="com.prey.activities.PrivacyActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
@@ -161,6 +234,19 @@
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
             />
+
+        <activity
+            android:name="com.prey.activities.SecurityActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+
+        <activity
+            android:name="com.prey.activities.FormFeedbackActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+            />
+
         <activity
             android:name="com.prey.activities.SplashBatchActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"
@@ -182,21 +268,27 @@
             />
 
         <activity
-            android:name="com.prey.barcodereader.BarcodeActivity"
+            android:name="com.prey.activities.BarcodeActivity"
 
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
             />
 
-        <activity android:name="com.prey.barcodereader.BarcodeCaptureActivity"
+
+
+
+
+        <activity
+            android:name="com.prey.activities.DeviceReadyActivity"
 
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
             />
+
 
         <!-- Exported added for android 12 -->
         <receiver
-            android:name="com.prey.receivers.PreyBootController"
+            android:name="com.prey.receivers.PreyBootReceiver"
             android:enabled="true"
             android:exported="true"
             android:label="PreyBootController" >
@@ -248,17 +340,7 @@
         <receiver android:name="com.prey.actions.aware.AlarmAwareReceiver" />
         <receiver android:name="com.prey.receivers.AlarmScheduledReceiver" />
         <receiver android:name="com.prey.actions.location.daily.DailyLocationReceiver" />
-        <receiver android:name="com.prey.receivers.GeofenceBroadcastReceiver" />
 
-        <receiver
-            android:name="com.prey.receivers.GeofenceReceiver"
-            android:exported="true"
-            >
-            <intent-filter>
-                <action android:name="android.location.MODE_CHANGED" />
-                <action android:name="android.location.PROVIDERS_CHANGED" />
-            </intent-filter>
-        </receiver>
         <receiver
             android:name="com.prey.receivers.AwareGeofenceReceiver"
             android:exported="true"
@@ -269,9 +351,19 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name="com.prey.actions.geofencing.GeofenceBroadcastReceiver"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.location.MODE_CHANGED" />
+                <action android:name="android.location.PROVIDERS_CHANGED" />
+            </intent-filter>
+        </receiver>
+
         <!-- Exported added for android 12 -->
         <receiver
-            android:name="com.prey.receivers.PreyDeviceAdmin"
+            android:name="com.prey.receivers.PreyDeviceAdminReceiver"
             android:label="@string/device_admin_label"
             android:exported="true"
             android:permission="android.permission.BIND_DEVICE_ADMIN" >
@@ -301,7 +393,7 @@
         <service android:name="com.prey.actions.fileretrieval.FileretrievalService" />
         <service android:name="com.prey.services.PreyLockService" />
         <service android:name="com.prey.services.PreyLockHtmlService" />
-        <service android:name="com.prey.services.CheckLockActivated" />
+        <service android:name="com.prey.services.CheckLockService" />
         <service android:name="com.prey.services.PreyOverlayService" />
 
 
@@ -309,7 +401,6 @@
 
 
 
-        <service android:name="com.prey.services.ActivityIntentService" />
 
         <receiver android:name="com.prey.receivers.AlarmDisablePowerReceiver" />
 
@@ -372,14 +463,14 @@
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"/>
 
-        <service android:name="com.prey.services.PreyAccessibilityService" />
-        <service android:name="com.prey.services.PreyStorageService" />
+
+
         <service android:name="com.prey.services.PreyPermissionService" />
         <service android:name="com.prey.services.PreyCloseNotificationService" />
 
         <!-- Exported added for android 12 -->
         <service
-            android:name="com.prey.services.AppAccessibilityService"
+            android:name="com.prey.services.PreyAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:enabled="true"
             android:exported="true"

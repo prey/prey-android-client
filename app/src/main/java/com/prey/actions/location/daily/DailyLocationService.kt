@@ -128,4 +128,5 @@ class DailyLocationService : Service() {
         private const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2
     }
+
 }

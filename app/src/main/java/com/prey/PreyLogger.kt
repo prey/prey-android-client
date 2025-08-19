@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey
 
-import android.content.Context
 import android.util.Log
 
 class PreyLogger {
@@ -43,6 +42,5 @@ class PreyLogger {
             Log.e(PreyConfig.TAG, "OSO_:$message", e)
         }
     }
-
 
 }

@@ -8,34 +8,23 @@ package com.prey.activities
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
 
 import com.prey.R
-import com.prey.activities.js.CustomWebView
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 
 /**
  * Activity responsible for displaying the Panel Web view.
  */
-class PanelWebActivity : Activity() {
+class PanelWebActivity : AppCompatActivity() {
     private val activity: Activity = this
-    private var myWebView: WebView? = null
-
-    /**
-     * Handles the back button press event.
-     * Redirects to the CheckPasswordHtmlActivity.
-     */
-    override fun onBackPressed() {
-        var intent = Intent(application, CheckPasswordHtmlActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
+    private lateinit var myWebView: WebView
 
     /**
      * Called when the activity is created.
@@ -45,13 +34,7 @@ class PanelWebActivity : Activity() {
      */
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.panelweb)
-        this.setContentView(R.layout.activity_webview)
-        myWebView = findViewById<View>(R.id.install_browser) as WebView
-        myWebView!!.setOnKeyListener { view, i, keyEvent ->
-            CustomWebView.callDispatchKeyEvent(applicationContext, keyEvent)
-            false
-        }
+        setContentView(R.layout.activity_webview)
     }
 
     /**
@@ -60,40 +43,50 @@ class PanelWebActivity : Activity() {
      */
     public override fun onResume() {
         super.onResume()
-        val settings = myWebView!!.settings
-        settings.useWideViewPort = true
-        settings.loadWithOverviewMode = true
-        settings.domStorageEnabled = true
-        settings.javaScriptEnabled = true
-        myWebView!!.isVerticalScrollBarEnabled = false
-        myWebView!!.isHorizontalScrollBarEnabled = false
-        myWebView!!.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView, progress: Int) {
-                activity.title = getText(R.string.loading).toString()
-                activity.setProgress(progress * 100)
-                if (progress == 100) activity.setTitle(R.string.app_name)
+        myWebView = findViewById<View>(R.id.install_browser) as WebView
+        myWebView.settings.useWideViewPort = true
+        myWebView.settings.loadWithOverviewMode = true
+        myWebView.settings.domStorageEnabled = true
+        myWebView.settings.javaScriptEnabled = true
+        myWebView.settings.javaScriptCanOpenWindowsAutomatically = true
+        myWebView.isVerticalScrollBarEnabled = false
+        myWebView.isHorizontalScrollBarEnabled = false
+        myWebView.webChromeClient = object : WebChromeClient() {
+            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                super.onProgressChanged(view, newProgress);
+                activity.setTitle(getText(R.string.loading).toString());
+                activity.setProgress(newProgress * 100);
+                if (newProgress == 100)
+                    activity.setTitle(R.string.app_name);
             }
         }
-        myWebView!!.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView, url: String) {
-                PreyLogger.d("Finished:$url")
-                super.onPageFinished(view, url)
-            }
-
-            override fun onPageStarted(view: WebView, url: String, favicon: Bitmap) {
-                PreyLogger.d("Started:$url")
-                super.onPageStarted(view, url, favicon)
-            }
-
-            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                PreyLogger.d("OverrideUrl:$url")
-                return super.shouldOverrideUrlLoading(view, url)
-            }
+        myWebView.webViewClient = object : WebViewClient() {
         }
+        val apikey = PreyConfig.getInstance(this).getApiKey()
+        val tokenJwt = PreyConfig.getInstance(this).getWebServices().getToken(this, apikey!!, "X")
+        PreyLogger.d("token jwt:$tokenJwt")
+        PreyConfig.getInstance(this).setTokenJwt(tokenJwt)
         val url: String = PreyConfig.getInstance(applicationContext).getPreyPanelJwt()
-        val tokenJwt: String? = PreyConfig.getInstance(applicationContext).getTokenJwt()
-        PreyLogger.d("tokenJwt:$tokenJwt")
+        PreyLogger.d("token url:$url")
+        PreyLogger.d("token jwt:$tokenJwt")
         val postData = "token=$tokenJwt"
-        myWebView!!.postUrl(url, postData.toByteArray())
+        myWebView.postUrl(url, postData.toByteArray())
+        PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_PANEL_FORM)
     }
+
+    /**
+     * Handles the back button press event.
+     * Redirects to the CheckPasswordHtmlActivity.
+     */
+    override fun onBackPressed() {
+        PreyLogger.i("onBackPressed")
+        val intent = Intent(application, CheckPasswordHtmlActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    companion object {
+        const val ACTIVITY_PANEL_FORM: String = "ACTIVITY_PANEL_FORM"
+    }
+
 }

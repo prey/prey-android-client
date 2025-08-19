@@ -46,4 +46,5 @@ class KeyboardStatusDetector {
         visibilityListener = listener
         return this
     }
+
 }

@@ -11,7 +11,9 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
+
 import com.prey.PreyLogger
+
 /**
  * A manager class responsible for handling location-related work requests.
  */
@@ -41,6 +43,7 @@ class PreyGetLocationWorkManager private constructor() {
      */
     companion object {
         const val WORK_NAME: String = "prey_get_location_work_manager"
+
         // The singleton instance of the PreyLocationWorkManager class.
         private var instance: PreyGetLocationWorkManager? = null
 
@@ -54,4 +57,5 @@ class PreyGetLocationWorkManager private constructor() {
         fun getInstance(): PreyGetLocationWorkManager =
             instance ?: PreyGetLocationWorkManager().also { instance = it }
     }
+
 }

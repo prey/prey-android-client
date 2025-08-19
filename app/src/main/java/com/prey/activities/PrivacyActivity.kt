@@ -14,6 +14,7 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.prey.PreyConfig
 
 import com.prey.R
 
@@ -76,5 +77,11 @@ class PrivacyActivity : AppCompatActivity() {
                 arrow3.setImageResource(R.drawable.down)
             }
         }
+        PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_PRIVACY)
     }
+
+    companion object {
+        const val ACTIVITY_PRIVACY: String = "ACTIVITY_PRIVACY"
+    }
+
 }

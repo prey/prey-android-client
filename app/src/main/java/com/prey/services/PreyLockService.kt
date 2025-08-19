@@ -23,12 +23,16 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+
 import com.prey.R
 import com.prey.json.UtilJson
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPermission
-import com.prey.net.PreyWebServices
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class PreyLockService : Service() {
     private val windowManager: WindowManager? = null
@@ -71,8 +75,10 @@ class PreyLockService : Service() {
                 ) {
                     textViewWarning.text = ""
                 }
+
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 }
+
                 override fun afterTextChanged(s: Editable) {
                 }
             })
@@ -93,36 +99,34 @@ class PreyLockService : Service() {
                         val reasonFinal = reason
                         PreyConfig.getInstance(context).setLock(false)
                         PreyConfig.getInstance(context).deleteUnlockPass()
-                        object : Thread() {
-                            override fun run() {
-                                PreyWebServices.getInstance()
-                                    .sendNotifyActionResultPreyHttp(
-                                        context,
-                                        UtilJson.makeMapParam(
-                                            "start",
-                                            "lock",
-                                            "stopped",
-                                            reasonFinal
-                                        )
+                        CoroutineScope(Dispatchers.IO).launch {
+                            PreyConfig.getInstance(context).getWebServices()
+                                .sendNotifyActionResultPreyHttp(
+                                    context,
+                                    UtilJson.makeMapParam(
+                                        "start",
+                                        "lock",
+                                        "stopped",
+                                        reasonFinal
                                     )
-                                if (canDrawOverlays) {
-                                    try {
-                                        val wm =
-                                            getSystemService(WINDOW_SERVICE) as WindowManager
-                                        if (wm != null && view != null) {
-                                            wm.removeView(view)
-                                            view = null
-                                        } else {
-                                            view = null
-                                            Process.killProcess(Process.myPid())
-                                        }
-                                    } catch (e: Exception) {
+                                )
+                            if (canDrawOverlays) {
+                                try {
+                                    val wm =
+                                        getSystemService(WINDOW_SERVICE) as WindowManager
+                                    if (wm != null && view != null) {
+                                        wm.removeView(view)
+                                        view = null
+                                    } else {
                                         view = null
                                         Process.killProcess(Process.myPid())
                                     }
+                                } catch (e: Exception) {
+                                    view = null
+                                    Process.killProcess(Process.myPid())
                                 }
                             }
-                        }.start()
+                        }
                     } else {
                         editText.setText("")
                         textViewWarning.text = context.getString(R.string.password_wrong)
@@ -149,7 +153,7 @@ class PreyLockService : Service() {
                             wm.addView(view, layoutParams)
                             PreyConfig.getInstance(this).viewLock = view
                         } catch (e: Exception) {
-                            PreyLogger.e(e.message, e)
+                            PreyLogger.e("Error: ${e.message}", e)
                         }
                     }
                 }
@@ -173,4 +177,5 @@ class PreyLockService : Service() {
             view = null
         }
     }
+
 }

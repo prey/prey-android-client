@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.services
 
-import android.annotation.TargetApi
 import android.app.job.JobInfo
 import android.app.job.JobParameters
 import android.app.job.JobScheduler
@@ -14,14 +13,17 @@ import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
 import android.text.format.DateUtils
+import com.prey.PreyConfig
 
 import com.prey.actions.aware.AwareController
 import com.prey.PreyLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * A JobService that handles location awareness.
  */
-@TargetApi(21)
 class AwareJobService : JobService() {
 
     /**
@@ -32,11 +34,11 @@ class AwareJobService : JobService() {
      */
     override fun onStartJob(jobParameters: JobParameters): Boolean {
         PreyLogger.d("AWARE onStartJob")
-        Thread {
+        CoroutineScope(Dispatchers.IO).launch {
             AwareController.getInstance().initLastLocation(applicationContext)
             val needsReschedule = false
             jobFinished(jobParameters, false)
-        }.start()
+        }
         return true
     }
 
@@ -52,43 +54,46 @@ class AwareJobService : JobService() {
         return false
     }
 
-    /**
-     * Schedules the AwareJobService to run periodically.
-     *
-     * @param context the context.
-     */
-    fun schedule(context: Context) {
-        var jobScheduler: JobScheduler? = null
-        jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-        val builder = JobInfo.Builder(
-            JOB_ID, ComponentName(
-                context,
-                AwareJobService::class.java.name
+    companion object {
+        private const val JOB_ID = 123
+
+        /**
+         * Schedules the AwareJobService to run periodically.
+         *
+         * @param context the context.
+         */
+        fun scheduleJob(context: Context) {
+            var jobScheduler: JobScheduler? = null
+            jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+            val builder = JobInfo.Builder(
+                JOB_ID, ComponentName(
+                    context,
+                    AwareJobService::class.java.name
+                )
             )
-        )
-        builder.setPeriodic(20 * DateUtils.MINUTE_IN_MILLIS)
-        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_NONE)
-        builder.setRequiresDeviceIdle(false)
-        val resulCode = jobScheduler.schedule(builder.build())
-        if (resulCode == JobScheduler.RESULT_SUCCESS) {
-            PreyLogger.d("AWARE resulCode success")
-        } else {
-            PreyLogger.d("AWARE resulCode failed")
+            builder.setPeriodic(20 * DateUtils.MINUTE_IN_MILLIS)
+            builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_NONE)
+            builder.setRequiresDeviceIdle(false)
+            val resulCode = jobScheduler.schedule(builder.build())
+            if (resulCode == JobScheduler.RESULT_SUCCESS) {
+                PreyLogger.d("AWARE resulCode success")
+                PreyConfig.getInstance(context).setLastEvent("awareJobService_success")
+            } else {
+                PreyLogger.d("AWARE resulCode failed")
+                PreyConfig.getInstance(context).setLastEvent("awareJobService_success")
+            }
+        }
+
+        /**
+         * Cancels the scheduled AwareJobService.
+         *
+         * @param context the context.
+         */
+        fun cancelJob(context: Context) {
+            var jobScheduler: JobScheduler? = null
+            jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+            jobScheduler.cancel(JOB_ID)
         }
     }
 
-    /**
-     * Cancels the scheduled AwareJobService.
-     *
-     * @param context the context.
-     */
-    fun cancel(context: Context) {
-        var jobScheduler: JobScheduler? = null
-        jobScheduler = context.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-        jobScheduler.cancel(JOB_ID)
-    }
-
-    companion object {
-        private const val JOB_ID = 123
-    }
 }

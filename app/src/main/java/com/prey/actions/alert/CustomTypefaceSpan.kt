@@ -77,4 +77,5 @@ class CustomTypefaceSpan(private val context: Context, private val fontName: Str
     companion object {
         private val FontCache = LruCache<String, Typeface>(12)
     }
+
 }

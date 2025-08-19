@@ -9,7 +9,12 @@ package com.prey.actions.location.daily
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+
 import com.prey.PreyLogger
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * A BroadcastReceiver that receives daily location updates.
@@ -27,11 +32,9 @@ class DailyLocationReceiver : BroadcastReceiver() {
         try {
             PreyLogger.d("DAILY______________________________")
             PreyLogger.d("DAILY----------AlarmLocationReceiver onReceive")
-            object : Thread() {
-                override fun run() {
-                    DailyLocation().run(context)
-                }
-            }.start()
+            CoroutineScope(Dispatchers.IO).launch {
+                DailyLocation().run(context)
+            }
         } catch (e: Exception) {
             PreyLogger.e("DAILY AlarmLocationReceiver error:${e.message}", e)
         }

@@ -20,6 +20,7 @@ import com.google.android.gms.maps.OnMapsSdkInitializedCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.prey.PreyConfig
 import com.prey.R
 import com.prey.activities.js.WebAppInterface
 import com.prey.PreyLogger
@@ -56,6 +57,7 @@ class ReportActivity : FragmentActivity(), OnMapReadyCallback, OnMapsSdkInitiali
         configureWebView()
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment!!.getMapAsync(this)
+        PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_REPORT)
     }
 
     /**
@@ -73,7 +75,7 @@ class ReportActivity : FragmentActivity(), OnMapReadyCallback, OnMapsSdkInitiali
             lat = extras!!.getDouble("lat")
             lng = extras.getDouble("lng")
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         val UPV = LatLng(lat, lng)
         map.addMarker(MarkerOptions().position(UPV))
@@ -120,6 +122,10 @@ class ReportActivity : FragmentActivity(), OnMapReadyCallback, OnMapsSdkInitiali
         val url = "${CheckPasswordHtmlActivity.URL_ONB}#/$language/report"
         PreyLogger.d("url:${url}")
         webView.loadUrl(url)
+    }
+
+    companion object {
+        const val ACTIVITY_REPORT: String = "ACTIVITY_REPORT"
     }
 
 }

@@ -19,13 +19,12 @@ import android.view.View
 import android.view.WindowManager
 import android.webkit.WebView
 
-import com.prey.R
-import com.prey.activities.js.CustomWebView
-import com.prey.activities.js.WebAppInterface
-import com.prey.activities.CheckPasswordHtmlActivity
 import com.prey.PreyConfig
 import com.prey.PreyLogger
-import com.prey.PreyUtils
+import com.prey.PreyUtils.getLanguage
+import com.prey.activities.CheckPasswordHtmlActivity
+import com.prey.activities.js.CustomWebView.callDispatchKeyEvent
+import com.prey.activities.js.WebAppInterface
 
 /**
  * PreyLockHtmlService is a service that handles the lock screen functionality.
@@ -63,18 +62,29 @@ class PreyLockHtmlService : Service() {
     override fun onStart(intent: Intent, startId: Int) {
         super.onStart(intent, startId)
         val context: Context = this
-        PreyLogger.d("PreyLockHtmlService onStart")
+        onStart(context)
+    }
+
+    fun onStart(context: Context) {
         val unlock = PreyConfig.getInstance(context).getUnlockPass()
+        val lockMessage: String? = PreyConfig.getInstance(context).getLockMessage()
+        PreyLogger.d("PreyLockHtmlService onStart unlock:${unlock} lockMessage:${lockMessage}")
         if (unlock != null && "" != unlock) {
-            val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            view = inflater.inflate(R.layout.webview, null)
-            PreyConfig.getInstance(context).viewLock = view!!
-            val myWebView = view!!.findViewById<View>(R.id.install_browser) as WebView
+            val lng = getLanguage()
+            var url = "${CheckPasswordHtmlActivity.URL_ONB}#/${lng}/"
+            if (lockMessage != null && "" != lockMessage) {
+                url += "lockmessage"
+            } else {
+                url += "lock"
+            }
+            PreyLogger.d("_url:${url}")
+            val inflater =
+                applicationContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            view = inflater.inflate(com.prey.R.layout.webview, null)
+            PreyConfig.getInstance(context).viewLock = view
+            val myWebView = view!!.findViewById<View>(com.prey.R.id.install_browser) as WebView
             myWebView.setOnKeyListener { view, i, keyEvent ->
-                CustomWebView.callDispatchKeyEvent(
-                    applicationContext,
-                    keyEvent
-                )
+                callDispatchKeyEvent(applicationContext, keyEvent)
                 false
             }
             val settings = myWebView.settings
@@ -85,16 +95,8 @@ class PreyLockHtmlService : Service() {
             settings.useWideViewPort = true
             settings.setSupportZoom(false)
             settings.builtInZoomControls = false
-            val lng = PreyUtils.getLanguage()
-            var url = "%s#/%s/%s"
-            val lockMessage = PreyConfig.getInstance(this).getLockMessage()
-            url = if (lockMessage != null && "" != lockMessage) {
-                String.format(url, CheckPasswordHtmlActivity.URL_ONB, lng, "lockmessage")
-            } else {
-                String.format(url, CheckPasswordHtmlActivity.URL_ONB, lng, "lock")
-            }
             myWebView.addJavascriptInterface(
-                WebAppInterface(applicationContext.applicationContext, this),
+                WebAppInterface(this, this),
                 CheckPasswordHtmlActivity.JS_ALIAS
             )
             myWebView.loadUrl(url)
@@ -128,9 +130,9 @@ class PreyLockHtmlService : Service() {
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         PreyLogger.d("PreyLockHtmlService onDestroy")
     }
+
 }

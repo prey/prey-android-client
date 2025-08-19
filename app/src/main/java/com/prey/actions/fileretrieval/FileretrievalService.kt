@@ -31,4 +31,5 @@ class FileretrievalService : IntentService {
         FileretrievalController.getInstance().run(applicationContext)
         stopSelf()
     }
+
 }

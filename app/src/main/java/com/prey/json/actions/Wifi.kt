@@ -64,4 +64,5 @@ class Wifi {
     companion object {
         var SSID: String = "ssid"
     }
+
 }

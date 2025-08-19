@@ -16,7 +16,6 @@ import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPhone
 import com.prey.managers.PreyConnectivityManager
-import com.prey.net.PreyWebServices
 
 import org.json.JSONObject
 
@@ -77,7 +76,7 @@ class AccessPointsList : JsonAction() {
         try {
             messageId = UtilJson.getStringValue(parameters, PreyConfig.MESSAGE_ID)
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         // Try to retrieve the access points list
         try {
@@ -106,12 +105,13 @@ class AccessPointsList : JsonAction() {
             }
         } catch (e: Exception) {
             // Send a notification to the server if an error occurs
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
+            PreyConfig.getInstance(context).getWebServices().sendNotifyActionResultPreyHttp(
                 context,
                 UtilJson.makeMapParam("get", "access_points_list", "failed", e.message)
             )
-            PreyLogger.e("Error causa:" + e.message + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         return wifiData
     }
+
 }

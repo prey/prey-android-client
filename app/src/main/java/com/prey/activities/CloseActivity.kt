@@ -8,6 +8,7 @@ package com.prey.activities
 
 import android.app.Activity
 import android.os.Bundle
+import com.prey.PreyConfig
 
 /**
  * Activity that immediately closes itself when created.
@@ -27,6 +28,12 @@ class CloseActivity : Activity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_CLOSE)
         finish()
     }
+
+    companion object {
+        const val ACTIVITY_CLOSE: String = "ACTIVITY_CLOSE"
+    }
+
 }

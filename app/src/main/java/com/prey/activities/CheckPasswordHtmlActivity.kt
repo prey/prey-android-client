@@ -40,15 +40,15 @@ import androidx.biometric.BiometricPrompt.PromptInfo
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import com.prey.R
-import com.prey.activities.js.WebAppInterface
-import com.prey.activities.js.CustomWebView
-import com.prey.backwardcompatibility.FroyoSupport
 
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPermission
 import com.prey.PreyUtils
+import com.prey.R
+import com.prey.activities.js.CustomWebView
+import com.prey.activities.js.WebAppInterface
+import com.prey.backwardcompatibility.FroyoSupport
 import com.prey.services.PreyAccessibilityService
 import com.prey.services.PreyOverlayService
 
@@ -99,7 +99,7 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
      *
      * @param context The Context in which the restrictions are being resolved.
      */
-    private fun resolveRestrictions(context: Context) {
+    public fun resolveRestrictions(context: Context) {
         // Check if the device is already registered with Prey
         if (!PreyConfig.getInstance(context).isThisDeviceAlreadyRegisteredWithPrey()) {
             // Get the RestrictionsManager instance
@@ -112,7 +112,7 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
                 // Retrieve the enterprise name from the restrictions bundle
                 val enterpriseName: String? = restrictions.getString("enterprise_name")
                 // Check if the enterprise name is not null and not empty
-                if (enterpriseName != null && !("" == enterpriseName)) {
+                if (!enterpriseName.isNullOrEmpty()) {
                     // Set the organization ID in the Prey configuration
                     PreyConfig.getInstance(context).setOrganizationId(enterpriseName)
                 }
@@ -122,7 +122,7 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
                 // Get the setup key from the restrictions bundle
                 val setupKey: String? = restrictions.getString("setup_key")
                 // Check if the setup key is not null and not empty
-                if (setupKey != null && !("" == setupKey)) {
+                if (!setupKey.isNullOrEmpty()) {
                     // Execute the AddDeviceWithRestriction task with the setup key
                     addDeviceWithRestriction(setupKey)
                 }
@@ -171,22 +171,6 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
             val builder: VmPolicy.Builder = VmPolicy.Builder()
             StrictMode.setVmPolicy(builder.build())
         }
-        val extras: Bundle? = intent.extras
-        var nexturl: String? = ""
-        try {
-            nexturl = extras!!.getString("nexturl")
-        } catch (e: Exception) {
-            PreyLogger.d("not extra nexturl")
-        }
-        PreyLogger.d("CheckPasswordHtmlActivity nexturl: ${nexturl}")
-        // Determine which action to take based on the next URL
-        if (("tryReport" == nexturl)) {
-            // Try to report if the next URL is "tryReport"
-            tryReport()
-        } else {
-            // Load the URL otherwise
-            loadUrl()
-        }
     }
 
     /**
@@ -194,13 +178,47 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
      *
      * This method is responsible for updating the activity's state and resolving any restrictions.
      */
-    override fun onResume() {
+    public override fun onResume() {
         super.onResume()
+        PreyLogger.d("CheckPasswordHtmlActivity: onResume")
         PreyConfig.getInstance(applicationContext).setCapsLockOn(false)
         PreyConfig.getInstance(applicationContext).setVerificateBiometric(false)
-        PreyLogger.d("CheckPasswordHtmlActivity: onResume")
         resolveRestrictions(this)
+        val extras: Bundle? = intent.extras
+        var nextUrl: String? = null
+        try {
+            nextUrl = extras!!.getString(NEXT_URL)
+            PreyLogger.d("CheckPasswordHtmlActivity nextUrl: $nextUrl")
+        } catch (e: Exception) {
+            PreyLogger.d("not extra nextUrl")
+        }
+        // Determine which action to take based on the next URL
+        //if (("tryReport" == nextUrl)) {
+        if ((nextUrl != null && nextUrl!!.isNotEmpty())) {
+            // Try to report if the next URL is "tryReport"
+            nextUrl(nextUrl)
+        } else {
+            // Load the URL otherwise
+            loadUrl()
+        }
     }
+
+    private fun nextUrl(nextUrl: String) {
+        PreyLogger.d("CheckPasswordHtmlActivity: nextUrl")
+        val lng: String = PreyUtils.getLanguage()
+        val url: StringBuffer = StringBuffer("")
+        url.append(URL_ONB).append("#/").append(lng).append(nextUrl)
+        settings()
+        PreyLogger.d("_nextUrl:${url}")
+        myWebView.addJavascriptInterface(
+            WebAppInterface(applicationContext, this),
+            JS_ALIAS
+        )
+        myWebView.loadUrl(url.toString())
+        myWebView.loadUrl("javascript:window.location.reload(true)")
+        PreyConfig.getInstance(applicationContext).setActivityView(nextUrl)
+    }
+
 
     /**
      * Called when the activity is destroyed.
@@ -345,7 +363,7 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
                         && canScheduleExactAlarms
                         && canAccessStorage && isAdminActive && canDrawOverlays && canAccessibility && isStorage)
             val installationStatus: String? = PreyConfig.getInstance(this).getInstallationStatus()
-            PreyLogger.d("CheckPasswordHtmlActivity: configurated:${configurated} installationStatus:${installationStatus}")
+            PreyLogger.d("CheckPasswordHtmlActivity: configurated:${configurated}")
             if (configurated) {
                 if (registered) {
                     if (("" == installationStatus)) {
@@ -393,7 +411,12 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
                         if (!canAccessibility) {
                             url.append(URL_ONB).append("#/").append(lng).append("/accessibility")
                         } else {
-                            url.append(URL_ONB).append("#/").append(lng).append("/permissions")
+                            if (!canAccessBackgroundLocation) {
+                                PreyLogger.d("CheckPasswordHtmlActivity !canAccessBackgroundLocation")
+                                url.append(URL_ONB).append("#/").append(lng).append("/bgloc")
+                            } else {
+                                url.append(URL_ONB).append("#/").append(lng).append("/permissions")
+                            }
                         }
                     }
                 }
@@ -414,7 +437,7 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
     fun askForPermissionAndroid7() {
         PreyLogger.d("CheckPasswordHtmlActivity: askForPermissionAndroid7")
         val intent: Intent =
-            Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + packageName))
+            Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${packageName}"))
         startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE)
         startOverlayService()
     }
@@ -458,6 +481,21 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
         finish()
     }
 
+    fun openPanel() {
+        val intent = Intent(this, PanelWebActivity::class.java)
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
+        finish()
+    }
+
+    fun jump(nextUrl: String) {
+        val intent = Intent(this, JumpActivity::class.java)
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.putExtra(NEXT_URL, nextUrl)
+        startActivity(intent)
+        finish()
+    }
+
     /**
      * Displays an alert dialog when a permission is denied.
      * The dialog informs the user about the denied permission and provides an option to manually grant the permission.
@@ -494,7 +532,7 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
             message =
                 String.format(resources.getString(R.string.permission_message_popup), permission)
         } catch (e: Exception) {
-            PreyLogger.e("Error format:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         builder.setMessage(message)
         builder.setCancelable(false)
@@ -520,7 +558,7 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        PreyLogger.d("CheckPasswordHtmlActivity onRequestPermissionsResult:${requestCode}")
+        PreyLogger.d("CheckPasswordHtmlActivity onRequestPermissionsResult requestCode:${requestCode}")
         if (requestCode == REQUEST_PERMISSIONS) {
             var i: Int = 0
             while (permissions != null && i < permissions.size) {
@@ -546,6 +584,20 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
                 i++
             }
         }
+        if (requestCode == SECURITY_PRIVILEGES) {
+            val intentLogin: Intent = Intent(this, LoginActivity::class.java)
+            intentLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intentLogin)
+            finish()
+        }
+        if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
+            val intentLogin: Intent = Intent(this, LoginActivity::class.java)
+            intentLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intentLogin)
+            finish()
+        }
+
+
         if (requestCode == REQUEST_PERMISSIONS_LOCATION) {
             var i: Int = 0
             while (permissions != null && i < permissions.size) {
@@ -605,6 +657,7 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
                 }
             }
         }
+
         /*
         Set notification permission response
         */
@@ -654,7 +707,7 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
         startActivity(
             Intent(
                 Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
-                Uri.parse("package:" + packageName)
+                Uri.parse("package:${packageName}")
             )
         )
     }
@@ -830,7 +883,7 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
                         Thread.sleep(200)
                         showBiometricPrompt(signature, attempts - 1)
                     } catch (e1: Exception) {
-                        PreyLogger.e("error Show biometric prompt:" + e1.message, e1)
+                        PreyLogger.e("Error: ${e1.message}", e1)
                     }
                 }
             }
@@ -860,8 +913,21 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
                             signature.sign(), Base64.URL_SAFE
                         )
                         PreyLogger.d(signatureString)
-                        PreyConfig.getInstance(applicationContext).setVerificateBiometric(true)
+                        val typeBiometric =
+                            PreyConfig.getInstance(applicationContext).getTypeBiometric()
+                        PreyLogger.d("______typeBiometric:$typeBiometric")
+                        //PreyConfig.getInstance(applicationContext).setVerificateBiometric(true)
 
+                        if (typeBiometric == "login") {
+                            openPanel()
+                        } else {
+                            val intentLogin: Intent =
+                                Intent(applicationContext, JumpActivity::class.java)
+                            intentLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            intentLogin.putExtra(NEXT_URL, "/security")
+                            startActivity(intentLogin)
+                            finish()
+                        }
                     } catch (e: SignatureException) {
                         throw RuntimeException()
                     }
@@ -961,10 +1027,8 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
             try {
                 val keyPair: KeyPair = generateKeyPair(KEY_NAME, true)
                 mToBeSignedMessage =
-                    (Base64.encodeToString(keyPair.public.encoded, Base64.URL_SAFE) +
-                            ":" +
-                            KEY_NAME)
-                // ":" +
+                    "${Base64.encodeToString(keyPair.public.encoded, Base64.URL_SAFE)}:${KEY_NAME}"
+                // ":"
                 // Generated by the server to protect against replay attack
                 // "";
                 signature = initSignature(KEY_NAME)
@@ -988,7 +1052,6 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
          * @param data API key, device type, and device name.
          * @return null
          */
-
         // Reset error message
         error = null
         try {
@@ -1001,33 +1064,31 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
             PreyLogger.e("Error:${e.message}", e)
             error = e.message
         }
-
         /**
          * Called after device registration is complete.
          * Reloads the activity if no error occurred.
          *
          * @param unused unused
          */
-
         if (error == null) {
             // Reload activity
             reload()
         }
-
     }
 
     companion object {
         var JS_ALIAS: String = "Android"
         var URL_ONB: String = "file:///android_asset/html/index.html"
-
         val CLOSE_PREY: String = "close_prey"
         var OVERLAY_PERMISSION_REQ_CODE: Int = 5469
         var FILE_CHOOSER_RESULT_CODE: Int = 6969
-
-        private val REQUEST_PERMISSIONS: Int = 5
-        private val REQUEST_PERMISSIONS_LOCATION: Int = 6
-        private val REQUEST_PERMISSIONS_POST_NOTIFICATIONS: Int = 12
-        private val INITIAL_PERMS: Array<String> = arrayOf(
+        val NEXT_URL = "nextUrl"
+        val REQUEST_PERMISSIONS: Int = 5
+        val REQUEST_PERMISSIONS_LOCATION: Int = 6
+        val REQUEST_PERMISSIONS_POST_NOTIFICATIONS: Int = 12
+        val SECURITY_PRIVILEGES: Int = 10
+        val KEY_NAME: String = UUID.randomUUID().toString()
+        val INITIAL_PERMS: Array<String> = arrayOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.CAMERA,
@@ -1043,8 +1104,6 @@ class CheckPasswordHtmlActivity() : AppCompatActivity() {
             Manifest.permission.READ_MEDIA_AUDIO,
             Manifest.permission.READ_MEDIA_VIDEO
         )
-
-        private val SECURITY_PRIVILEGES: Int = 10
-        val KEY_NAME: String = UUID.randomUUID().toString()
     }
+
 }

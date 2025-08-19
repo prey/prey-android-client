@@ -37,4 +37,5 @@ class TriggerEventDto {
     fun setInfo(info: String?) {
         this.info = info
     }
+
 }

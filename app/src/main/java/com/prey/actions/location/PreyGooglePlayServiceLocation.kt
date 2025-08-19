@@ -138,7 +138,7 @@ class PreyGooglePlayServiceLocation : GoogleApiClient.ConnectionCallbacks,
      * @param result The connection result.
      */
     override fun onConnectionFailed(result: ConnectionResult) {
-        PreyLogger.d("Connection failed: ConnectionResult.getErrorCode() = ${result.errorCode}" )
+        PreyLogger.d("Connection failed: ConnectionResult.getErrorCode() = ${result.errorCode}")
     }
 
     /**
@@ -162,7 +162,7 @@ class PreyGooglePlayServiceLocation : GoogleApiClient.ConnectionCallbacks,
                 )
                 Looper.loop()
             } catch (e: Exception) {
-                PreyLogger.d("Error startLocationUpdates: ${e.message}")
+                PreyLogger.d("Error startLocationUpdates:${e.message}")
             }
         }
     }
@@ -172,4 +172,5 @@ class PreyGooglePlayServiceLocation : GoogleApiClient.ConnectionCallbacks,
         const val GOOGLE_API_CLIENT_ERROR_MSG: String =
             "Failed to connect to GoogleApiClient (error code = %d)"
     }
+
 }

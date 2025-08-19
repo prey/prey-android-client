@@ -9,7 +9,6 @@ package com.prey.activities
 import android.Manifest
 import android.annotation.TargetApi
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -23,6 +22,9 @@ import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPermission
 import com.prey.services.PreyOverlayService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Activity that displays information about the required permissions.
@@ -42,6 +44,11 @@ class PermissionInformationActivity : PreyActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        showScreen()
     }
 
     /**
@@ -92,21 +99,19 @@ class PermissionInformationActivity : PreyActivity() {
                 }
             }
             PreyConfig.getInstance(this@PermissionInformationActivity).setProtectReady(true)
-            object : Thread() {
-                override fun run() {
-                    try {
-                        AwareController.getInstance().initLastLocation(applicationContext)
-                    } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
-                    }
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    AwareController.getInstance().initLastLocation(applicationContext)
+                } catch (e: Exception) {
+                    PreyLogger.e("Error: ${e.message}", e)
                 }
-            }.start()
+            }
             try {
                 if (intentPermission != null) {
                     startActivity(intentPermission)
                 }
             } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
+                PreyLogger.e("Error: ${e.message}", e)
             }
             finish()
         } else {
@@ -121,6 +126,7 @@ class PermissionInformationActivity : PreyActivity() {
      */
     @TargetApi(Build.VERSION_CODES.M)
     fun askForPermission() {
+        PreyConfig.getInstance(applicationContext).setActivityView(PERMISSIONS_ASK)
         ActivityCompat.requestPermissions(
             this@PermissionInformationActivity,
             INITIAL_PERMS,
@@ -207,9 +213,10 @@ class PermissionInformationActivity : PreyActivity() {
     }
 
     companion object {
-        private const val SECURITY_PRIVILEGES = 10
-        private const val REQUEST_PERMISSIONS = 5
-
+        const val SECURITY_PRIVILEGES = 10
+        const val REQUEST_PERMISSIONS = 5
+        const val OVERLAY_PERMISSION_REQ_CODE: Int = 5473
+        const val PERMISSIONS_ASK: String = "PERMISSIONS_ASK"
         private val INITIAL_PERMS = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -217,7 +224,6 @@ class PermissionInformationActivity : PreyActivity() {
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
         )
-
-        var OVERLAY_PERMISSION_REQ_CODE: Int = 5473
     }
+
 }

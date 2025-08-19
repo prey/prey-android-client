@@ -54,9 +54,9 @@ class DailyLocationScheduled private constructor() {
                     pendingIntent
                 )
             }
-            PreyLogger.d( "DAILY----------start [${minute}] LocationScheduled")
+            PreyLogger.d("DAILY----------start [${minute}] LocationScheduled")
         } catch (e: Exception) {
-            PreyLogger.e( "DAILY----------Error LocationScheduled :${e.message}", e)
+            PreyLogger.e("DAILY----------Error LocationScheduled :${e.message}", e)
         }
     }
 

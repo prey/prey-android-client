@@ -80,4 +80,5 @@ class TriggerDataSource(context: Context) {
     fun updateTrigger(trigger: TriggerDto) {
         dbHelper.updateTrigger(trigger)
     }
+
 }

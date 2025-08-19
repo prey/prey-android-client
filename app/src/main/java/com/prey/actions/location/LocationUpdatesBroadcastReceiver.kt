@@ -53,4 +53,5 @@ class LocationUpdatesBroadcastReceiver : BroadcastReceiver() {
         const val ACTION_PROCESS_UPDATES =
             "com.prey.actions.location.LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES"
     }
+
 }

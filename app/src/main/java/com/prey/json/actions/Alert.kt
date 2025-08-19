@@ -7,21 +7,20 @@
 package com.prey.json.actions
 
 import android.content.Context
-
-import com.prey.actions.alert.AlertThread
-import com.prey.actions.observer.ActionResult
-import com.prey.json.UtilJson
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPermission
-import com.prey.net.PreyWebServices
-
+import com.prey.actions.alert.AlertAction
+import com.prey.actions.observer.ActionResult
+import com.prey.json.UtilJson
 import org.json.JSONObject
+
 
 /**
  * Class representing an Alert, which can be started, canceled, or run.
  */
-class Alert {
+class Alert() {
+
 
     /**
      * Cancels the alert with the given parameters.
@@ -34,7 +33,7 @@ class Alert {
         // Extract the message ID from the parameters, if available.
         val messageId = parameters?.getString(PreyConfig.MESSAGE_ID)
         try {
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
+            PreyConfig.getInstance(context).getWebServices().sendNotifyActionResultPreyHttp(
                 context,
                 "processed",
                 messageId!!,
@@ -53,12 +52,39 @@ class Alert {
      * @param parameters JSONObject containing alert parameters, or null if not available.
      */
     fun start(context: Context, actionResults: List<ActionResult?>?, parameters: JSONObject?) {
-        // Extract the alert message, message ID, job ID, and full screen notification flag from the parameters.
-        val alertMessage =
-            parameters?.getString("alert_message") ?: parameters?.getString("message")
-        val messageId = parameters?.getString(PreyConfig.MESSAGE_ID)
-        val jobId = parameters?.getString(PreyConfig.JOB_ID)
-        var isFullscreenNotification = parameters?.getBoolean("fullscreen_notification") ?: false
+        PreyLogger.d("Alert start")
+        var alertMessage: String? = ""
+        try {
+            alertMessage = UtilJson.getStringValue(parameters, "alert_message")
+        } catch (e: java.lang.Exception) {
+            try {
+                alertMessage = UtilJson.getStringValue(parameters, "message")
+            } catch (e2: java.lang.Exception) {
+                PreyLogger.e("Error:${e2.message}", e2)
+            }
+        }
+        var messageId: String? = null
+        try {
+            messageId = UtilJson.getStringValue(parameters, PreyConfig.MESSAGE_ID)
+            PreyLogger.d("messageId:${messageId}")
+        } catch (e: java.lang.Exception) {
+            PreyLogger.e("Error:${e.message}", e)
+        }
+        var jobId: String? = null
+        try {
+            jobId = UtilJson.getStringValue(parameters, PreyConfig.JOB_ID)
+            PreyLogger.d("jobId:${jobId}")
+        } catch (e: java.lang.Exception) {
+            PreyLogger.e("Error:${e.message}", e)
+        }
+        var isFullscreenNotification = false
+        try {
+            isFullscreenNotification =
+                UtilJson.getBooleanValue(parameters, "fullscreen_notification")
+            PreyLogger.d("fullscreen_notification:${isFullscreenNotification}")
+        } catch (e: java.lang.Exception) {
+            PreyLogger.e("Error:${e.message}", e)
+        }
         if (!PreyPermission.areNotificationsEnabled(context)) {
             isFullscreenNotification = true
         }
@@ -83,17 +109,19 @@ class Alert {
         isFullscreenNotification: Boolean
     ) {
         try {
+            PreyLogger.d("startAlert:${alert}")
             // If the alert message is not null and not blank, start the alert thread.
             if (alert != null && alert.isNotBlank()) {
-                AlertThread.getInstance()
-                    .start(context, alert, messageId, jobId, isFullscreenNotification)
+                AlertAction.getInstance()
+                    .start(context, messageId, jobId, alert, isFullscreenNotification)
             }
         } catch (e: Exception) {
             PreyLogger.e("Error, causa:${e.message}", e)
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
+            PreyConfig.getInstance(context).getWebServices().sendNotifyActionResultPreyHttp(
                 context,
                 UtilJson.makeMapParam("start", "alert", "failed", e.message)
             )
         }
     }
+
 }

@@ -81,4 +81,5 @@ class TriggerDto {
     fun setId(id: String) {
         this.id = id.toInt()
     }
+
 }

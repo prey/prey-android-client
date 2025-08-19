@@ -1,20 +1,17 @@
 <resources>
     <string name="app_name">Prey</string>
-
     <string name="menu_title_1">current device status</string>
     <string name="menu_title_2">NOT PROTECTED YET.</string>
     <string name="menu_title_3">WE ARE ALMOST THERE</string>
     <string name="menu_title_4">Administration privileges needed</string>
     <string name="menu_title_5">They’ll allow Prey to protect your phone and help you control it if it ever gets lost or stolen. Your information and privacy are safe with us.</string>
     <string name="menu_button_1">ACTIVATE PROTECTION</string>
-
     <string name="signin_subtitle">prey account</string>
     <string name="signin_title">SIGN IN</string>
     <string name="field_email_signin">email</string>
     <string name="field_password_signin">password</string>
     <string name="button_signin">ACCESS TO MY ACCOUNT</string>
     <string name="link_signin">don\’t have an account?</string>
-
     <string name="signup_subtitle">prey account</string>
     <string name="signup_title">SIGN UP</string>
     <string name="field_name_signup">your name</string>
@@ -22,12 +19,10 @@
     <string name="field_password_signup">password</string>
     <string name="button_signup">CREATE MY NEW ACCOUNT</string>
     <string name="link_signup">already have an account?</string>
-
     <string name="permission_error_title_1">current device status</string>
     <string name="permission_error_title_2">NOT PROTECTED.</string>
     <string name="permission_error_title_3">Prey utilizes the Device Administrator permission for its Remote Wipe and Lock features.\nGranting permission allows you to activate our data protection tools remotely to counter data theft.\nThe Remote Wipe lets you execute a data wipe on a lost device, while our Lock feature blocks access to it with a lock screen and a custom password.</string>
     <string name="permission_error_button_1">ACTIVATE PROTECTION</string>
-
     <string name="protect_title_1">current device status</string>
     <string name="protect_title_2">PROTECTED</string>
     <string name="protect_button_title_1">REMOTE CONTROL FROM YOUR</string>
@@ -37,70 +32,59 @@
     <string name="protect_title_3">Take the tour</string>
     <string name="protect_title_4">What can Prey do for you...</string>
     <string name="protect_title_5">How to uninstall Prey</string>
-
     <string name="password_subtitle">For your safety, enter your password, to manage device settings.</string>
     <string name="password_button">SIGN IN</string>
     <string name="password_forgot">FORGOT PASSWORD?</string>
     <string name="password_hint">Type in your password</string>
-
     <string name="tour_01_title">DOWNLOAD PREY ON THE DEVICES YOU WANT TO PROTECT.</string>
     <string name="tour_01_subtitle">It works on all major operating systems, so it lets you keep track and trigger actions on all your devices from your Prey account.</string>
     <string name="tour_01_button">NEXT</string>
-
     <string name="tour_02_title">GEOLOCATION AND SO MUCH MORE</string>
     <string name="tour_02_subtitle">Once remotely triggered from your Prey account, your device will gather and deliver detailed evidence back to you, including a picture of who\'s using it — often the crucial piece of data that police officers need to take action.</string>
     <string name="tour_02_button">NEXT</string>
-
     <string name="tour_03_title">PREVENT UNAUTHORIZED ACCESS</string>
     <string name="tour_03_subtitle">Use Prey to fully lock down your devices and delete your stored passwords, to ensure that no one will have access to your private stuff. All this while consuming minimal battery life.</string>
     <string name="tour_03_button">NEXT</string>
-
     <string name="tour_04_title">PRIVACY COMES FIRST</string>
     <string name="tour_04_subtitle">Sensitive data is gathered only when you request it, and is for your eyes only ‐ nothing is sent without your permission. You can always check our source code if you want to make sure.</string>
     <string name="tour_04_button">NEXT</string>
-
     <string name="tour_05_title">DON\’T TAKE OUR WORD FOR IT</string>
     <string name="tour_05_subtitle">I\’m euphoric and laughing with excitement that this actually worked.</string>
     <string name="tour_05_button">NEXT</string>
-
     <string name="tour_06_title">FREE WITH NO GIMMICKS, PLANS FOR EXTENDED PROTECTION</string>
     <string name="tour_06_subtitle">Prey is completely free of charge for as long as you want to. We also have some great plans with extra features!</string>
     <string name="tour_06_button">NOW YOU\'RE IN CONTROL</string>
-
     <string name="yes">Yes</string>
-     <string name="no">No</string> 
-    <string name="ok">OK</string> 
+    <string name="no">No</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-
     <string name="feedback_principal_title">Is everything alright, dear?</string>
     <string name="feedback_principal_message">It seems you\'ve been using Prey for a while now. Would you tell us what you think about it?</string>
-     <string name="feedback_principal_button1">I Love It</string> 
-    <string name="feedback_principal_button2">It Needs Improvements</string> 
-    <string name="feedback_principal_button3">No, thanks</string> 
+    <string name="feedback_principal_button1">I Love It</string>
+    <string name="feedback_principal_button2">It Needs Improvements</string>
+    <string name="feedback_principal_button3">No, thanks</string>
     <string name="feedback_form_title">Drop us a line</string>
-     <string name="feedback_form_message">What would you change about Prey if you could?</string>
-     <string name="feedback_form_field_hint_comment"></string> 
+    <string name="feedback_form_message">What would you change about Prey if you could?</string>
+    <string name="feedback_form_field_hint_comment"></string>
     <string name="feedback_form_button1">OK, send</string>
-     <string name="feedback_form_button2">NO, thanks</string>
-     <string name="feedback_form_send_email">Send Email</string>
-
-    <string name="preferences_password_old">Current password</string> 
+    <string name="feedback_form_button2">NO, thanks</string>
+    <string name="feedback_form_send_email">Send Email</string>
+    <string name="preferences_password_old">Current password</string>
     <string name="preferences_password_new">New password</string>
-     <string name="preferences_password_confirm">Confirm password</string> 
+    <string name="preferences_password_confirm">Confirm password</string>
     <string name="preferences_config_title">Manage Your Devices</string>
     <string name="preferences_config_pin_title">Pin Settings</string>
     <string name="preferences_go_to_control_panel_title">Manage Your Devices</string>
-     <string name="preferences_go_to_control_panel_summary">Go to your Prey account</string>
-    <string name="preferences_admin_enabled_title">Revoke extra permissions</string> 
+    <string name="preferences_go_to_control_panel_summary">Go to your Prey account</string>
+    <string name="preferences_admin_enabled_title">Revoke extra permissions</string>
     <string name="preferences_admin_enabled_summary">Allows you to uninstall Prey</string>
     <string name="preferences_detach_title">Detach device</string>
-     <string name="preferences_detach_summary">Deletes this device from your Prey account</string>
-     <string name="preferences_detach_dialog_title">Detaching device</string>
-     <string name="preferences_detach_dialog_message">Your device will be detached from the Control Panel. This will also delete all its stored reports.\n\nAre you sure?</string>
+    <string name="preferences_detach_summary">Deletes this device from your Prey account</string>
+    <string name="preferences_detach_dialog_title">Detaching device</string>
+    <string name="preferences_detach_dialog_message">Your device will be detached from the Control Panel. This will also delete all its stored reports.\n\nAre you sure?</string>
     <string name="preferences_disable_power_options_title">Shield OFF Button</string>
     <string name="preferences_disable_power_options_summary">Prevents your device from being turned off manually. Upon using the OFF button it will request your Prey PIN. A notification is shown due to Android policies</string>
     <string name="preferences_disable_power_options_summary_old">Your device can\'t be turned off if its screen is locked</string>
-
     <string name="preferences_scheduled_title">Set interval frequency</string>
     <string name="preferences_scheduled_summary">How often Prey will run if no Google Services are available</string>
     <string name="preferences_about_category_name">About</string>
@@ -109,71 +93,52 @@
     <string name="preferences_about_message">Prey for Android™</string>
     <string name="preferences_password_length_error">Passwords must be at least 6 characters</string>
     <string name="preferences_admin_disabled_title">Grant extra permissions</string>
-     <string name="preferences_admin_disabled_summary">Allows lock and uninstall protection</string>
+    <string name="preferences_admin_disabled_summary">Allows lock and uninstall protection</string>
     <string name="preferences_admin_enabled_dialog_title">Please note</string>
-     <string name="preferences_admin_enabled_dialog_message">By clicking \'Yes\' you will revoke Prey administration privileges on this device. Without these privileges, Prey won\'t be able to erase remotely.\nAre you sure?</string>
+    <string name="preferences_admin_enabled_dialog_message">By clicking \'Yes\' you will revoke Prey administration privileges on this device. Without these privileges, Prey won\'t be able to erase remotely.\nAre you sure?</string>
     <string name="preferences_passwords_do_not_match">Passwords do not match</string>
-     <string name="preferences_passwords_updating_dialog">Updating your Prey password.\nPlease wait…</string>
-     <string name="preferences_passwords_successfully_changed">Your Prey password was successfully changed</string>
+    <string name="preferences_passwords_updating_dialog">Updating your Prey password.\nPlease wait…</string>
+    <string name="preferences_passwords_successfully_changed">Your Prey password was successfully changed</string>
     <string name="preferences_detach_dettaching_message">Detaching device, please wait…</string>
     <string name="preferences_admin_disabled_dialog_title">Extra permissions</string>
-     <string name="preferences_admin_disabled_dialog_message">You\'re about to grant Prey special security privileges, that will allow you to remotely lock your device.\nClick Yes to continue.</string>
+    <string name="preferences_admin_disabled_dialog_message">You\'re about to grant Prey special security privileges, that will allow you to remotely lock your device.\nClick Yes to continue.</string>
     <string name="preferences_admin_device_setting_uninstallation_password">Setting uninstaller password</string>
-
     <string name="device_admin_label">Prey extra security</string>
-     <string name="device_admin_description">These privileges are needed to remotely lockdown your device, and will prevent Prey from being uninstalled. You need to revoke these rights later if you wish to uninstall Prey.</string>
+    <string name="device_admin_description">These privileges are needed to remotely lockdown your device, and will prevent Prey from being uninstalled. You need to revoke these rights later if you wish to uninstall Prey.</string>
     <string name="device_added_congratulations_text">You have successfully associated this device with your Prey account. Now take a minute to set it up.</string>
-
     <string name="location_notification_prefix">Geofix sent: </string>
-
     <string name="popup_alert_title">Important message</string>
-
-    <string name="error_title">We have a situation!</string> 
-    <string name="error_communication_exception">Check your settings and try again.</string> 
+    <string name="error_title">We have a situation!</string>
+    <string name="error_communication_exception">Check your settings and try again.</string>
     <string name="error_communication_500">We couldn\'t reach our servers due to a connection error. please ensure you have a stable connection.</string>
     <string name="error_cant_add_this_device">Can\'t add this device to your prey account. Please check again the email and password provided. %s</string>
-     <string name="error_registered_password_has_changed">Can\'t change password. The current password entered is invalid.</string>
-     <string name="error_cant_report_forgotten_password">Can\'t report forgotten password. Please try again later.</string>
-    <string name="error_all_fields_are_required">All fields are required</string> 
+    <string name="error_registered_password_has_changed">Can\'t change password. The current password entered is invalid.</string>
+    <string name="error_cant_report_forgotten_password">Can\'t report forgotten password. Please try again later.</string>
+    <string name="error_all_fields_are_required">All fields are required</string>
     <string name="error_mail_out_of_range">Email length must be between %1$s and %2$s characters.</string>
-     <string name="error_password_out_of_range">Password length must be between %1$s and %2$s characters.</string> 
-    <string name="error_already_register">Did you already register?</string> 
-
-    <string name="password_wrong">Wrong password. Try again.</string> 
-    <string name="password_intents_exceed">You have failed 3 times. Sorry!</string> 
+    <string name="error_password_out_of_range">Password length must be between %1$s and %2$s characters.</string>
+    <string name="error_already_register">Did you already register?</string>
+    <string name="password_wrong">Wrong password. Try again.</string>
+    <string name="password_intents_exceed">You have failed 3 times. Sorry!</string>
     <string name="password_checking_dialog">Checking your password…\nJust a sec!</string>
-
     <string name="loading">Loading, please wait..</string>
-
-    <string name="set_old_user_loading">Attaching device to account…\nJust a sec!</string> 
-    <string name="set_old_user_no_more_devices_title">Hold your horses!</string> 
+    <string name="set_old_user_loading">Attaching device to account…\nJust a sec!</string>
+    <string name="set_old_user_no_more_devices_title">Hold your horses!</string>
     <string name="set_old_user_no_more_devices_text">You\'ve reached your free account\'s device limit. Delete one to make room or consider one of our paid plans for more device slots and extra features: https://www.preyproject.com/pricing</string> 
-     <string name="set_new_user_dialog_creating_popup">Creating account. Please wait…</string>
-
+    <string name="set_new_user_dialog_creating_popup">Creating account. Please wait…</string>
     <string name="create_my_account">CREATE MY ACCOUNT!</string>
-     <string name="creating_account_please_wait">Creating account. Please wait…</string>
-
+    <string name="creating_account_please_wait">Creating account. Please wait…</string>
     <string name="new_account_congratulations_text">You\'ve successfully installed Prey on your device. To finish the setup process you need to verify your email address by following the link we just sent to %s.</string>
-
     <string name="updating_info_message">Updating information, please wait…</string>
-
-
-
     <string name="geofence_not_available">Geofence service is not available now</string>
     <string name="geofence_too_many_geofences">Your app has registered too many geofences</string>
     <string name="geofence_too_many_pending_intents">You have provided too many PendingIntents to the addGeofences() call</string>
     <string name="unknown_geofence_error">Unknown error: the Geofence service is not available now</string>
-
     <string name="geofence_transition_entered">Entered</string>
     <string name="geofence_transition_exited">Exited</string>
     <string name="unknown_geofence_transition">Unknown Transition</string>
-
-
     <string name="home_button">SIGN UP</string>
     <string name="home_subtitle">Do you already have an account? <u>Log in</u></string>
-
-
-
     <string name="home_text_0">Ashley uses Prey on all her devices: her Macbook, her Android phone and tablet. But one day, she was at the wrong place at the wrong time and someone stole her tablet.</string>
     <string name="home_text_1">Meet Steve, he steals objects left unattended.</string>
     <string name="home_text_2">Losing a device means losing precious data, memories, information and some really expensive equipment.</string>
@@ -181,34 +146,17 @@
     <string name="home_text_4">Good thing Ashley has PREY activated! She just got the reports from her stolen device, so now the police has accurate evidence to work with.</string>
     <string name="home_text_5">With the detailed reports on the missing device, Ashley had more worries, she got her device back.</string>
     <string name="home_text_6">Don\'t wait for the worst to happen to take action. <b>Sign up, enter your registration details and set up Prey on your phone.</b></string>
-
-
-    <!-- preferece -->
     <string name="preference_pin">Prey security PIN</string>
     <string name="preference_pin_summary">Create your 4 digit PIN code to activate the use the OFF Button Lock feature</string>
-    <!--<string name="preference_pin_summary">Create your 4 digit PIN code to activate the use of remote actions via SMS commands and the OFF Button Lock feature</string>-->
-    <!--<string name="preference_pin_summary_subtitle">This PIN number will be requested when using SMS commands or the OFF button <lock></lock></string>-->
     <string name="preference_pin_summary_subtitle">This PIN number will be requested when using the OFF button</string>
     <string name="preference_pin_dialog_title">Set you Prey security PIN</string>
-
-
-
-
     <string name="preference_pin_updating_dialog">Updating Prey PIN</string>
     <string name="preference_pin_successfully_changed">Prey PIN set successfully</string>
     <string name="preference_pin_removed">Prey PIN removed successfully</string>
     <string name="preference_pin_save">Save PIN</string>
     <string name="preference_pin_remove">Remove PIN</string>
-
     <string name="preference_sms">SMS commands</string>
     <string name="preference_sms_summary">It allows execute actions on your device remotely by sending instructions via a text message</string>
-
-
-
-
-
-    <!-- preferece sms-->
-
     <string name="preference_sms_category_title">SMS</string>
     <string name="preference_sms_checkbox_title">Enable SMS commands</string>
     <string name="preference_sms_checkbox_summary">Send a text message to your phone with the command you need and action is activated on your device</string>
@@ -225,37 +173,22 @@
     <string name="preference_sms_command_alert_summary">Will show some_text as a system notification</string>
     <string name="preference_sms_command_wipe">prey PIN wipe</string>
     <string name="preference_sms_command_wipe_summary">Will erase all your data from your phone, performing a “factory reset”. This is specially useful to protect your private information, but could render Prey useless. Use with caution!</string>
-
-
-    <!-- Location Low Battery  -->
     <string name="preferences_location_low_battery_options_title">Activate Location Low Battery</string>
     <string name="preferences_location_low_battery_options_summary">Gets the location of your device when the battery low</string>
-
-
-    <!-- Warning Alert  -->
     <string name="warning_notification_title">Warning! Prey needs permissions</string>
     <string name="warning_notification_body">Tap to provide permissions.</string>
-
     <string name="warning_title">Prey requires multiple privileges from Android to work at maximum capacity, these are:</string>
     <string name="warning_body"><b>Device Administrator</b>\nIt allows the use of two tools. The Remote Wipe, to delete data and protect your privacy, and the Remote Lock that blocks access to the device.\n\n<b>Access to camera, location, and state</b>\nUtilized in Prey’s tracking and in the generation of Evidence Reports, which include location, pictures, and local device information.\n\n<b>Permission to draw over other apps</b>\nEnables Prey’s screen lock to overlay above the phone’s interface and other apps, making the lock more robust by avoiding user navigation.\n\n<b>Access to contacts and calls</b>\nPrey uses this permission because it also provides access to the device’s IMEI, which we deliver to our users as info, it doesn’t utilize contacts or calls in any way.\n\n<b>Access to media and local files</b>\nPermits the use of our remote File Retrieval and Wipe features, utilized to save documents on lost devices and to wipe their data clean.</string>
-
-
     <string name="warning_re_approve">Approve</string>
     <string name="warning_close">Close</string>
-
-
     <string name="location_settings">You need to activate all location sources \"Settings Location\" to get your location</string>
     <string name="go_to_settings">Go to Settings</string>
-
     <string name="error">Error</string>
     <string name="new_version_available">There is a new version available. Do you want to update?</string>
     <string name="accept">Accept</string>
     <string name="download">Download</string>
     <string name="ccontinue">Continue</string>
     <string name="information">Information</string>
-
-
-    <!-- barcode -->
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
@@ -268,41 +201,26 @@
     <string name="barcode_failure">No barcode captured</string>
     <string name="barcode_error">"Error reading barcode: %1$s"</string>
     <string name="barcode_find_your_QR">Visit panel.preyproject.com/qr\n on your computer an scan the QR code</string>
-
-
-
-
-    <!-- Warning Android 7 Alert  -->
     <string name="warning_android7_notification_title">Prey needs new permissions to guard this device</string>
     <string name="warning_android7_notification_body">Take advantage of Prey’s new remote lock for Android 7.</string>
     <string name="warning_android7_title">New permissions for a fortified lock!</string>
     <string name="warning_android7_body">Prey’s improved lock for Android 7 now protects your device from being turned off and blocks access to the status bar. You’ll be asked to enable Prey to “draw over other apps” on the following menu to activate this feature.</string>
     <string name="warning_android7_re_approve">Approve</string>
     <string name="warning_android7_close">Close</string>
-
     <string name="lock_access_denied">The device has been blocked by its owner to protect both privacy and property.\n\nEnter the password to unlock.</string>
-
     <string name="lock_unlock">ENTER</string>
     <string name="lock_close">CLOSE</string>
-
     <string name="disable_power_ready">Device actively protected by Prey</string>
-
     <string name="i_agree_terms_conditions">I have read and agree to the <u>Terms and Conditions and Privacy Policy</u></string>
     <string name="i_confirm_i_am_over_16">I confirm that I am over 16 years old</string>
     <string name="i_offer">I want to receive emails regarding offers and promotions from Prey</string>
-
     <string name="super_lock">To turn off the device enter your PIN and try again.</string>
-
     <string name="preferences_block_app_uninstall_summary">Prevents uninstall attempts by locking the phone with your Prey PIN. If a native lock pattern or code is active, it will be used instead.</string>
     <string name="preferences_block_app_uninstall_title">Block App Uninstall</string>
-
     <string name="preference_background_summary">As of Android 8.0, Prey needs to display a notification to run as a background app and actively track the device and its control zone triggers.</string>
     <string name="preference_background_title">Run in Background</string>
-
-
     <string name="preferences_disable_power_alert_android9_title">Not Available in Android 9 and up</string>
     <string name="preferences_disable_power_alert_android9_message">This feature is not availabe due to Google\'s policy restrictions in this Android version</string>
-
     <string name="preference_biometric_summary">Use your fingerprint instead of your password to view the app’s Settings.</string>
     <string name="preference_biometric_title">Login With Fingerprint</string>
     <string name="biometric_prompt_title">Activate Fingerprint Login</string>
@@ -310,40 +228,31 @@
     <string name="biometric_prompt_cancelled">Authentication cancelled</string>
     <string name="biometric_prompt_error">Enter thes app’s Settings menu with your password and activate the feature.</string>
     <string name="biometric_touch">Touch the fingerprint sensor</string>
-
     <string name="password">Password</string>
     <string name="password2">Six digits</string>
     <string name="password_description">Enter your Prey password</string>
     <string name="password_description2">Six digit security code</string>
     <string name="use_password">Use password</string>
     <string name="use_fingerprint">Use fingerprint</string>
-
     <string name="picture">Picture</string>
     <string name="description_info">Info</string>
     <string name="request_permission">This sample needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
-
-
-
     <string name="pre_report_title">This a test report, no alerts or messages will be shown when gathering a real one.</string>
     <string name="pre_report_camera1">Taking frontal picture...</string>
     <string name="pre_report_camera2">Taking rear picture...</string>
     <string name="pre_report_location">Gathering location..</string>
     <string name="pre_report_public_ip">Gathering local IP...</string>
-
     <string name="close_alert">Close</string>
     <string name="title_alert">Important Alert</string>
-
     <string name="permission_camera">Camera</string>
     <string name="permission_phone">Phone</string>
     <string name="permission_storage">Storage</string>
     <string name="permission_location">Location</string>
     <string name="permission_message_popup">The %1$s permission was denied, which affects Prey\'s features. Please give permission manually in the settings menu.\n\nSelect Permissions -> Enable permission</string>
     <string name="permission_manually">Permit Manually</string>
-
     <string name="email_resend">If the email entered is valid, we will send the activation link shortly.</string>
     <string name="permission_summary">Enabling the accessibility service for Prey allows it to block all applications before they ́re opened when the device is marked as missing.</string>
-
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
     <string name="start">GOT IT</string>
@@ -366,7 +275,6 @@
     <string name="onboarding03_body">Protect your device and its data with remote security actions like Lock, Wipe, and Alarm.</string>
     <string name="onboarding04_tit">RECOVER WITH EVIDENCE</string>
     <string name="onboarding04_body">Get evidence reports with pictures, screenshots, nearby WiFis, user data, and locations.</string>
-
     <string name="text_batch">Give this device a name to identify it in Prey.</string>
     <string name="placehoder_batch">Type here</string>
     <string name="button_batch">Next</string>
@@ -380,7 +288,7 @@
     <string name="preferences_uninstall_summary">Do you want to continue with the process of removing Prey permissions on this device? Remember to reboot and then uninstall.</string>
     <string name="finger_title">Login with fingerprint</string>
     <string name="finger_description">Allows Prey to enter the app configuration using only your fingerprint.</string>
-
     <string name="restriction_title_setup_key">Setup key</string>
     <string name="restriction_description_setup_key">Account key</string>
+    <string name="permissions_not_granted_by_user">Permissions not granted by the user</string>
 </resources>

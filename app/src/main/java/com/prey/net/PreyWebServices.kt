@@ -9,6 +9,7 @@ package com.prey.net
 import android.content.Context
 import android.os.Build
 import android.os.Environment
+
 import com.prey.FileConfigReader
 import com.prey.PreyAccountData
 import com.prey.PreyConfig
@@ -30,6 +31,10 @@ import com.prey.events.Event
 import com.prey.exceptions.PreyException
 import com.prey.json.parser.JSONParser
 import com.prey.net.http.EntityFile
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.DataInputStream
@@ -41,9 +46,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-
-class PreyWebServices {
-
+class PreyWebServices : WebServicesInterface {
 
     /**
      * Register a new device for a given API_KEY, needed just after obtain the
@@ -52,7 +55,7 @@ class PreyWebServices {
      * @throws PreyException
      */
     @Throws(java.lang.Exception::class)
-    private fun registerNewDevice(
+    override fun registerNewDevice(
         context: Context,
         apiKey: String,
         deviceType: String,
@@ -62,7 +65,6 @@ class PreyWebServices {
         if (name == null || "" == name) {
             name = PreyUtils.getNameDevice(context)
         }
-
         val model = Build.MODEL
         var vendor: String = "Google"
         try {
@@ -79,10 +81,7 @@ class PreyWebServices {
         parameters["plan"] = "free"
         parameters["model_name"] = model
         parameters["vendor_name"] = vendor
-
-
         //  parameters = increaseData(context, parameters)
-
         val imei: String = PreyPhone.getInstance(context).getAndroidDeviceId()
         parameters["physical_address"] = imei
         val lang = Locale.getDefault().language
@@ -102,7 +101,7 @@ class PreyWebServices {
                 )
             )
         } else {
-            PreyLogger.d("response:" + response.getStatusCode() + " " + response.getResponseAsString())
+            PreyLogger.d("response: ${response.getStatusCode()} ${response.getResponseAsString()}")
             val json = response.getResponseAsString()
             PreyLogger.d("json:$json")
             if (response.getStatusCode() > 299) {
@@ -113,7 +112,7 @@ class PreyWebServices {
         return response
     }
 
-    fun increaseData(
+    override fun increaseData(
         context: Context,
         parameters: HashMap<String, String?>
     ): HashMap<String, String?> {
@@ -129,7 +128,7 @@ class PreyWebServices {
         parameters["$prefix[cpu_model]"] = hardware.getCpuModel()
         parameters["$prefix[cpu_speed]"] = hardware.getCpuSpeed()
         parameters["$prefix[cpu_cores]"] = hardware.getCpuCores()
-        parameters["$prefix[ram_size]"] = "" + hardware.getTotalMemory()
+        parameters["$prefix[ram_size]"] = "${hardware.getTotalMemory()}"
         parameters["$prefix[serial_number]"] = hardware.getSerialNumber()
         parameters["$prefix[uuid]"] = hardware.getUuid()
         parameters["$prefix[google_services]"] = isGooglePlayServicesAvailable(context).toString()
@@ -148,22 +147,22 @@ class PreyWebServices {
     }
 
     @Throws(java.lang.Exception::class)
-    fun registerNewDeviceToAccount(
+    override fun registerNewDeviceToAccount(
         context: Context,
         email: String,
         password: String,
         deviceType: String
     ): PreyAccountData? {
         PreyLogger.d("registerNewDeviceToAccount email:$email password:$password")
-
         val parameters = HashMap<String, String?>()
         var response: PreyHttpResponse? = null
         var json: String? = null
         try {
-            val apiv2: String = FileConfigReader.getInstance(context)!!.getApiV2()
+            //  val apiv2: String = FileConfigReader.getInstance(context)!!.getApiV2()
             val lang = Locale.getDefault().language
-            val url: String = PreyConfig.getInstance(context).getPreyUrl().plus(apiv2)
-                .plus("profile.json?lang=").plus(lang)
+            // val url: String = PreyConfig.getInstance(context).getPreyUrl().plus(apiv2)
+            //    .plus("profile.json?lang=").plus(lang)
+            val url: String = getProfileUrl(context).plus("?lang=").plus(lang)
             PreyLogger.d("_____url:$url")
             response = PreyRestHttpClient.getInstance(context).get(url, parameters, email, password)
             PreyLogger.d("response:$response")
@@ -172,21 +171,22 @@ class PreyWebServices {
                 PreyLogger.d("json:$json")
             }
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error!" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
             throw PreyException(
-                "{\"error\":[\"" + context.getText(R.string.error_communication_exception)
-                    .toString() + "\"]}"
+                "{\"error\":[\"${
+                    context.getText(R.string.error_communication_exception)
+                        .toString()
+                }\"]}"
             )
         }
         var status = ""
         if (response != null) {
-            status = "[" + response.getStatusCode() + "]"
+            status = "[${response.getStatusCode()}]"
         }
         if (json == null || !json.contains("key")) {
             PreyLogger.d("no key")
             throw PreyException(json)
         }
-
         var from: Int
         var to: Int
         var apiKey: String? = null
@@ -221,13 +221,13 @@ class PreyWebServices {
         return newAccount
     }
 
-    fun getEmail(context: Context): String? {
+    override fun getEmail(context: Context): String? {
         var email: String? = null
         try {
             val parameters = HashMap<String, String?>()
-            val apiv2: String = FileConfigReader.getInstance(context)!!.getApiV2()
-            val url: String =
-                PreyConfig.getInstance(context).getPreyUrl().plus(apiv2).plus("profile.json")
+            //val apiv2: String = FileConfigReader.getInstance(context)!!.getApiV2()
+            val url: String = getProfileUrl(context)
+            //    PreyConfig.getInstance(context).getPreyUrl().plus(apiv2).plus("profile.json")
             PreyLogger.d("url:$url")
             val response = PreyRestHttpClient.getInstance(context).getAutentication(url, parameters)
             if (response != null) {
@@ -238,25 +238,29 @@ class PreyWebServices {
                 PreyLogger.d("email:$email")
             }
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("error get email", e)
+            PreyLogger.e("error get email:${e.message}", e)
         }
         return email
     }
 
     @Throws(PreyException::class)
-    private fun checkPassword(apikey: String, password: String, context: Context): PreyHttpResponse {
-
+    override fun checkPassword(
+        apikey: String,
+        password: String,
+        context: Context
+    ): PreyHttpResponse {
         val parameters = HashMap<String, String?>()
         var response: PreyHttpResponse? = null
         var json: String? = ""
         try {
-            val uri: String = PreyConfig.getInstance(context).getPreyUrl()
-                .plus("api/v2/profile.json?lang=" + Locale.getDefault().language)
-            response = PreyRestHttpClient.getInstance(context).get(uri, parameters, apikey, password)
+            val lang = Locale.getDefault().language
+            val uri: String = getProfileUrl(context).plus("?lang=").plus(lang)
+            response =
+                PreyRestHttpClient.getInstance(context).get(uri, parameters, apikey, password)
             json = response!!.getResponseAsString()
         } catch (e: java.lang.Exception) {
             response = null
-            val err = "" + context.getText(com.prey.R.string.error_communication_exception)
+            val err = "${context.getText(com.prey.R.string.error_communication_exception)}"
             json = "{\"error\":[\"$err\"]}"
         }
         if (response == null) {
@@ -273,40 +277,36 @@ class PreyWebServices {
             json = StringBuffer("{\"error\":[\"").append(err).append("\"]}").toString()
             throw PreyException(json)
         }
-
         PreyLogger.d("____[token]_________________apikey:$apikey password:$password")
         getToken(context, apikey, password)
-
         return response
     }
 
-    fun getToken(context: Context, apikey: String, password: String): String {
+    override fun getToken(context: Context, apikey: String, password: String): String {
         var tokenJwt = ""
         try {
             val parameters = HashMap<String, String?>()
-            val apiv2: String = FileConfigReader.getInstance(context)!!.getApiV2()
+            val apiV2 = FileConfigReader.getInstance(context).getApiV2()
             val uri2: String =
-                PreyConfig.getInstance(context).getPreyUrl().plus(apiv2).plus("get_token.json")
+                PreyConfig.getInstance(context).getPreyUrl().plus(apiV2).plus("get_token.json")
             val response2 = PreyRestHttpClient.getInstance(
                 context
             ).get(uri2, parameters, apikey, password, "application/json")
             if (response2 != null) {
-                PreyLogger.d("get_token:" + response2.getResponseAsString())
+                PreyLogger.d("token get response:${response2.getResponseAsString()}")
                 val jsnobject = JSONObject(response2.getResponseAsString())
                 tokenJwt = jsnobject.getString("token")
-                PreyLogger.d("tokenJwt:$tokenJwt")
-                PreyConfig.getInstance(context).setTokenJwt(tokenJwt)
             } else {
-                PreyLogger.d("token: nulo")
+                PreyLogger.d("token null")
             }
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("error:" + e.message, e)
+            PreyLogger.e("error:${e.message}", e)
         }
         return tokenJwt
     }
 
     @Throws(java.lang.Exception::class)
-    fun checkPassword(context: Context, apikey: String, password: String): Boolean {
+    override fun checkPassword(context: Context, apikey: String, password: String): Boolean {
         val response: PreyHttpResponse? = checkPassword(apikey, password, context)
         if (response != null) {
             val xml = response.getResponseAsString()
@@ -318,16 +318,16 @@ class PreyWebServices {
     }
 
     @Throws(Exception::class)
-    fun checkPassword2(
+    override fun checkPassword2(
         context: Context,
         apikey: String,
         password: String,
         password2: String
     ): Boolean {
-        PreyLogger.d("checkPassword2 password:${password} password2:${password2}:%s")
-        val apiv2: String = FileConfigReader.getInstance(context)!!.getApiV2()
+        PreyLogger.d("checkPassword2 password:${password} password2:${password2}")
+        val apiV2: String = FileConfigReader.getInstance(context).getApiV2()
         val url: String =
-            PreyConfig.getInstance(context).getPreyUrl().plus(apiv2).plus("authenticate")
+            PreyConfig.getInstance(context).getPreyUrl().plus(apiV2).plus("authenticate")
         val parameters = HashMap<String, String?>()
         parameters["email"] = PreyConfig.getInstance(context).getEmail()!!
         parameters["password"] = password
@@ -348,7 +348,7 @@ class PreyWebServices {
                     tokenJwt = jsnobject.getString("token")
                     PreyConfig.getInstance(context).setTokenJwt(tokenJwt)
                 } catch (e: Exception) {
-                    PreyLogger.e("error:" + e.message, e)
+                    PreyLogger.e("error:${e.message}", e)
                 }
                 return true
             } else {
@@ -357,7 +357,7 @@ class PreyWebServices {
                     val jsnobject = JSONObject(response.getResponseAsString())
                     json = response.getResponseAsString()
                 } catch (e: Exception) {
-                    PreyLogger.e("error:" + e.message, e)
+                    PreyLogger.e("error:${e.message}", e)
                 }
                 try {
                     val jsnobject = JSONObject(response.getResponseAsString())
@@ -382,15 +382,12 @@ class PreyWebServices {
         }
     }
 
-
-    fun getTwoStepEnabled(context: Context): Boolean {
+    override fun getTwoStepEnabled(context: Context): Boolean {
         var TwoStepEnabled = false
         try {
             val parameters = HashMap<String, String?>()
-
-            val apiv2: String = FileConfigReader.getInstance(context)!!.getApiV2()
-            val url: String = PreyConfig.getInstance(context).getPreyUrl().plus(apiv2)
-                .plus("profile?api_key=" + PreyConfig.getInstance(context).getApiKey())
+            val apikey = PreyConfig.getInstance(context).getApiKey()
+            val url: String = getProfileUrl(context).plus("?api_key=").plus(apikey)
             PreyLogger.d("url:$url")
             val response: PreyHttpResponse? = PreyRestHttpClient.getInstance(
                 context
@@ -410,7 +407,6 @@ class PreyWebServices {
 
     @Throws(PreyException::class)
     private fun getDeviceUrlApiv2(context: Context): String {
-
         val deviceKey = PreyConfig.getInstance(context).getDeviceId()
         if (deviceKey == null || deviceKey === "") throw PreyException("Device key not found on the configuration")
         val apiv2: String = FileConfigReader.getInstance(context)!!.getApiV2()
@@ -425,10 +421,12 @@ class PreyWebServices {
         return getDeviceUrlApiv2(context).plus("/response")
     }
 
-    fun sendNotifyActionResultPreyHttp(context: Context, params: MutableMap<String, String?>): String? {
+    override fun sendNotifyActionResultPreyHttp(
+        context: Context,
+        params: MutableMap<String, String?>
+    ): String? {
         var response: String? = null
         try {
-
             val url: String = getResponseUrlJson(context)
             PreyConfig.postUrl = null
             val httpResponse = PreyRestHttpClient.getInstance(
@@ -436,12 +434,12 @@ class PreyWebServices {
             ).postAutentication(url, params)
             response = httpResponse.toString()
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Notify Action Result wasn't send:" + e.message, e)
+            PreyLogger.e("Notify Action Result wasn't send:${e.message}", e)
         }
         return response
     }
 
-    fun sendNotifyActionResultPreyHttp(
+    override fun sendNotifyActionResultPreyHttp(
         context: Context,
         correlationId: String?,
         params: MutableMap<String, String?>
@@ -449,29 +447,26 @@ class PreyWebServices {
         sendNotifyActionResultPreyHttp(context, null, correlationId, params)
     }
 
-    fun sendNotifyActionResultPreyHttp(
+    override fun sendNotifyActionResultPreyHttp(
         context: Context,
         status: String?,
         correlationId: String?,
         params: MutableMap<String, String?>
     ) {
-        object : Thread() {
-            override fun run() {
-                val preyConfig: PreyConfig = PreyConfig.getInstance(context)
-                var response: String? = null
-                try {
-                    val url = getResponseUrlJson(context!!)
-                    PreyConfig.postUrl = null
-                    val httpResponse: PreyHttpResponse? = PreyRestHttpClient.getInstance(context)
-                        .postAutenticationCorrelationId(context, url, status, correlationId, params)
-                    response = httpResponse.toString()
-                } catch (e: java.lang.Exception) {
-                    PreyLogger.e("error:" + e.message, e)
-                }
+        CoroutineScope(Dispatchers.IO).launch {
+            val preyConfig: PreyConfig = PreyConfig.getInstance(context)
+            var response: String? = null
+            try {
+                val url = getResponseUrlJson(context!!)
+                PreyConfig.postUrl = null
+                val httpResponse: PreyHttpResponse? = PreyRestHttpClient.getInstance(context)
+                    .postAutenticationCorrelationId(context, url, status, correlationId, params)
+                response = httpResponse.toString()
+            } catch (e: java.lang.Exception) {
+                PreyLogger.e("error:${e.message}", e)
             }
-        }.start()
+        }
     }
-
 
     /**
      * Method to send the help
@@ -483,7 +478,7 @@ class PreyWebServices {
      * @throws Exception
      */
     @Throws(java.lang.Exception::class)
-    fun sendHelp(context: Context, subject: String, message: String): PreyHttpResponse? {
+    override fun sendHelp(context: Context, subject: String, message: String): PreyHttpResponse? {
         val params: MutableMap<String, String?> = HashMap()
         params["support_category"] = "support"
         params["message"] = message
@@ -509,7 +504,7 @@ class PreyWebServices {
                 entityFile.setName("file")
                 entityFile.setFileName(displayName)
                 entityFile.setFileType("image/jpeg")
-                entityFile.setFileId(sdf.format(Date()) + "_" + entityFile.getFileType())
+                entityFile.setFileId("${sdf.format(Date())}_${entityFile.getFileType()}")
                 entityFiles.add(entityFile)
             }
         } catch (e: java.lang.Exception) {
@@ -535,46 +530,51 @@ class PreyWebServices {
     }
 
     @Throws(PreyException::class)
-    private fun getDeviceUrlJson(context: Context): String {
-        return getDeviceUrlApiv2(context) + ".json"
+    fun getDeviceUrlJson(context: Context): String {
+        return "${getDeviceUrlApiv2(context)}.json"
     }
 
     @Throws(PreyException::class)
-    fun getActionsJsonToPerform(context: Context): List<JSONObject>? {
+    fun getProfileUrl(context: Context): String {
+        val apiv2: String = FileConfigReader.getInstance(context)!!.getApiV2()
+        return PreyConfig.getInstance(context).getPreyUrl().plus(apiv2).plus("profile.json")
+    }
+
+    @Throws(PreyException::class)
+    override fun getActionsJsonToPerform(context: Context): List<JSONObject>? {
         val url: String = getDeviceUrlJson(context)
-        return JSONParser().getJSONFromUrl(context, url)
+        PreyLogger.d("getActionsJsonToPerform url:$url")
+        PreyRestHttpClient.getInstance(context)
+        val preyRestHttpClient = PreyRestHttpClient.getInstance(context)
+        return JSONParser().getJSONFromUrl(preyRestHttpClient, url)
     }
 
     @Throws(com.prey.exceptions.PreyException::class)
     fun getDataUrlJson(context: Context?): String {
-        return getDeviceUrlApiv2(context!!) + "/data.json"
+        return "${getDeviceUrlApiv2(context!!)}/data.json"
     }
 
-    fun sendPreyHttpData(
+    override fun sendPreyHttpData(
         context: Context,
         dataToSend: ArrayList<HttpDataService>?
     ): PreyHttpResponse? {
-
         var parameters: MutableMap<String, String?> = java.util.HashMap()
         var entityFiles: MutableList<EntityFile> = java.util.ArrayList()
-
         for (httpDataService in dataToSend!!) {
             if (httpDataService != null) {
-
                 parameters.putAll(httpDataService.getDataAsParameters())
                 if (httpDataService.getEntityFiles() != null && httpDataService.getEntityFiles()!!.size > 0) {
                     entityFiles.plus(httpDataService.getEntityFiles())
                 }
             }
         }
-
         var preyHttpResponse: PreyHttpResponse? = null
         if (parameters.size > 0 || entityFiles.size > 0) {
             val hardware = PreyPhone.getInstance(context).hardware
             if (!PreyConfig.getInstance(context).isSendData() && hardware!!.getTotalMemory() > 0) {
                 PreyConfig.getInstance(context).setSendData(true);
 
-                parameters["hardware_attributes[ram_size]"] = "" + hardware!!.getTotalMemory()
+                parameters["hardware_attributes[ram_size]"] = "${hardware!!.getTotalMemory()}"
             }
             if ("" != hardware!!.getUuid() && !com.prey.PreyConfig.getInstance(context)
                     .isSentUuidSerialNumber()
@@ -590,15 +590,16 @@ class PreyWebServices {
                 if (UtilConnection.getInstance().isInternetAvailable()) {
                     if (entityFiles.size == 0) {
                         preyHttpResponse =
-                            PreyRestHttpClient.getInstance(context).postAutentication(url, parameters);
+                            PreyRestHttpClient.getInstance(context)
+                                .postAutentication(url, parameters);
                     } else {
                         preyHttpResponse = PreyRestHttpClient.getInstance(context)
                             .postAutentication(url, parameters, entityFiles);
                     }
-                    PreyLogger.d("Data sent_: " + (if (preyHttpResponse == null) "" else preyHttpResponse.getResponseAsString()))
+                    PreyLogger.d("Data sent_: ${(if (preyHttpResponse == null) "" else preyHttpResponse.getResponseAsString())}")
                 }
             } catch (e: java.lang.Exception) {
-                PreyLogger.e("Data wasn't send", e)
+                PreyLogger.e("Data wasn't send: ${e.message}", e)
             }
         }
         return preyHttpResponse
@@ -611,7 +612,7 @@ class PreyWebServices {
      * @param listWifi
      * @return PreyLocation
      */
-    fun getLocationWithWifi(context: Context, listWifi: List<PreyWifi>?): PreyLocation? {
+    override fun getLocationWithWifi(context: Context, listWifi: List<PreyWifi>?): PreyLocation? {
         var location: PreyLocation? = null
         try {
             val jsonParam = JSONObject()
@@ -629,11 +630,16 @@ class PreyWebServices {
             }
             jsonParam.put("wifiAccessPoints", array)
             if (array != null && array.length() > 0) {
-                val url: String = PreyConfig.getInstance(context).getPreyUrl() + "geo"
+                val url: String = "${PreyConfig.getInstance(context).getPreyUrl()}geo"
                 PreyLogger.d("url:${url}")
                 val response: PreyHttpResponse? = PreyRestHttpClient.getInstance(
                     context
-                ).jsonMethodAutentication(context, url, UtilConnection.REQUEST_METHOD_POST, jsonParam)
+                ).jsonMethodAutentication(
+                    context,
+                    url,
+                    UtilConnection.REQUEST_METHOD_POST,
+                    jsonParam
+                )
                 if (response != null) {
                     if (response.getStatusCode() == HttpURLConnection.HTTP_OK) {
                         val out = response.getResponseAsString()
@@ -675,7 +681,7 @@ class PreyWebServices {
                 }
             }
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error:${e.message}",  e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         if (location != null) {
             PreyLocationManager.getInstance().setLastLocation(location)
@@ -684,7 +690,7 @@ class PreyWebServices {
         return location
     }
 
-    fun setPushRegistrationId(context: Context, regId: String): PreyHttpResponse? {
+    override fun setPushRegistrationId(context: Context, regId: String): PreyHttpResponse? {
         //this.updateDeviceAttribute(context, "notification_id", regId);
         val data = HttpDataService("notification_id")
         data.setList(false)
@@ -705,7 +711,7 @@ class PreyWebServices {
         return response
     }
 
-    fun sendPreyHttpDataName(context: Context, nameDevice: String): PreyHttpResponse? {
+    override fun sendPreyHttpDataName(context: Context, nameDevice: String): PreyHttpResponse? {
         val parameters: MutableMap<String, String?> = HashMap()
         var preyHttpResponse: PreyHttpResponse? = null
         parameters["name"] = nameDevice
@@ -715,7 +721,7 @@ class PreyWebServices {
                 preyHttpResponse =
                     PreyRestHttpClient.getInstance(context).postAutentication(url, parameters)
                 PreyLogger.d(
-                        "Data sent_: ${  (if (preyHttpResponse == null) "" else preyHttpResponse.getResponseAsString())}"
+                    "Data sent_: ${(if (preyHttpResponse == null) "" else preyHttpResponse.getResponseAsString())}"
                 )
             }
         } catch (e: java.lang.Exception) {
@@ -726,10 +732,10 @@ class PreyWebServices {
 
     @Throws(PreyException::class)
     fun getInfoUrlJson(context: Context): String {
-        return getDeviceUrlApiv2(context) + "/info.json"
+        return "${getDeviceUrlApiv2(context)}/info.json"
     }
 
-    fun getNameDevice(context: Context): String? {
+    override fun getNameDevice(context: Context): String? {
         var name: String? = null
         try {
             val uri: String = getInfoUrlJson(context)
@@ -743,27 +749,27 @@ class PreyWebServices {
                 }
             }
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("error getNameDevice:" + e.message, e)
+            PreyLogger.e("error getNameDevice:${e.message}", e)
         }
         return name
     }
 
     @Throws(PreyException::class)
-    fun uploadFile(context: Context, file: File, uploadID: String, total: Long): Int {
-        val uri: String =
-            PreyConfig.getInstance(context).getPreyUrl() + "upload/upload?uploadID=" + uploadID
+    override fun uploadFile(context: Context, file: File, uploadID: String, total: Long): Int {
+        val uri =
+            "${PreyConfig.getInstance(context).getPreyUrl()}upload/upload?uploadID=${uploadID}"
         return PreyRestHttpClient.getInstance(context).uploadFile(context, uri, file, total)
     }
 
     @Throws(PreyException::class)
-    fun sendTree(context: Context, json: JSONObject?): PreyHttpResponse? {
-        val uri = getDeviceUrlApiv2(context) + "/data.json"
+    override fun sendTree(context: Context, json: JSONObject?): PreyHttpResponse? {
+        val uri = "${getDeviceUrlApiv2(context)}/data.json"
         return PreyRestHttpClient.getInstance(context)
             .jsonMethodAutentication(context, uri, UtilConnection.REQUEST_METHOD_POST, json)
     }
 
     @Throws(PreyException::class)
-    fun getDeviceWebControlPanelUiUrl(context: Context): String {
+    override fun getDeviceWebControlPanelUiUrl(context: Context): String {
         val preyConfig: PreyConfig = PreyConfig.getInstance(context)
         val deviceKey = preyConfig.getDeviceId()
         if (deviceKey == null || deviceKey === "") throw PreyException("Device key not found on the configuration")
@@ -773,7 +779,7 @@ class PreyWebServices {
     }
 
     @Throws(PreyException::class)
-    fun deleteDevice(context: Context): String? {
+    override fun deleteDevice(context: Context): String? {
         val preyConfig: PreyConfig = PreyConfig.getInstance(context)
         val parameters: MutableMap<String, String?> = HashMap()
         var xml: String? = null
@@ -795,10 +801,10 @@ class PreyWebServices {
 
     @Throws(PreyException::class)
     fun getLocationUrlJson(context: Context?): String {
-        return getDeviceUrlApiv2(context!!) + "/location.json"
+        return "${getDeviceUrlApiv2(context!!)}/location.json"
     }
 
-    fun sendLocation(context: Context, jsonParam: JSONObject?): PreyHttpResponse? {
+    override fun sendLocation(context: Context, jsonParam: JSONObject?): PreyHttpResponse? {
         PreyLogger.i("AWARE sendLocation.. ${jsonParam.toString()}")
         var preyHttpResponse: PreyHttpResponse? = null
         try {
@@ -820,10 +826,14 @@ class PreyWebServices {
 
     @Throws(PreyException::class)
     private fun getEventsUrlJson(context: Context): String {
-        return getDeviceUrlApiv2(context) + "/events"
+        return "${getDeviceUrlApiv2(context)}/events"
     }
 
-    fun sendPreyHttpEvent(context: Context, event: Event, jsonObject: JSONObject): PreyHttpResponse? {
+    override fun sendPreyHttpEvent(
+        context: Context,
+        event: Event,
+        jsonObject: JSONObject
+    ): PreyHttpResponse? {
         var preyHttpResponse: PreyHttpResponse? = null
         try {
             val url: String = getEventsUrlJson(context)
@@ -832,7 +842,7 @@ class PreyWebServices {
             parameters["info"] = event.info
             parameters["status"] = jsonObject.toString()
             PreyLogger.d("EVENT sendPreyHttpEvent url:$url")
-            PreyLogger.d(("EVENT name:" + event.name).toString() + " info:" + event.info)
+            PreyLogger.d("EVENT name:${event.name} info:${event.info}")
             PreyLogger.d("EVENT status:$jsonObject")
             val status = jsonObject.toString()
             preyHttpResponse = PreyRestHttpClient.getInstance(context)
@@ -840,9 +850,7 @@ class PreyWebServices {
             if (preyHttpResponse != null) {
                 val jsonString = preyHttpResponse.getResponseAsString()
                 if (jsonString != null && jsonString.length > 0) {
-                    val jsonObjectList = JSONParser().getJSONFromTxt(
-                        context, jsonString.toString()
-                    )
+                    val jsonObjectList = JSONParser().getJSONFromTxt(jsonString)
                     if (jsonObjectList != null && jsonObjectList.size > 0) {
                         ActionsController.getInstance().runActionJson(context, jsonObjectList)
                     }
@@ -855,8 +863,8 @@ class PreyWebServices {
     }
 
     @Throws(PreyException::class)
-    fun triggers(context: Context): String? {
-        val url = getDeviceUrlApiv2(context!!) + "/triggers.json"
+    override fun triggers(context: Context): String? {
+        val url = "${getDeviceUrlApiv2(context!!)}/triggers.json"
         PreyLogger.d("url:$url")
         var sb: String? = null
         try {
@@ -871,7 +879,7 @@ class PreyWebServices {
                 }
             }
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error, causa:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
             return null
         }
         return sb
@@ -879,10 +887,13 @@ class PreyWebServices {
 
     @Throws(PreyException::class)
     private fun getReportUrlJson(context: Context): String {
-        return getDeviceUrlApiv2(context) + "/reports.json"
+        return "${getDeviceUrlApiv2(context)}/reports.json"
     }
 
-    fun sendPreyHttpReport(context: Context, dataToSend: List<HttpDataService>?): PreyHttpResponse? {
+    override fun sendPreyHttpReport(
+        context: Context,
+        dataToSend: List<HttpDataService>?
+    ): PreyHttpResponse? {
         val preyConfig: PreyConfig = PreyConfig.getInstance(context)
 
         val parameters: MutableMap<String, String?> = HashMap()
@@ -890,7 +901,7 @@ class PreyWebServices {
         if (dataToSend != null) {
             for (httpDataService in dataToSend) {
                 if (httpDataService != null) {
-                    PreyLogger.d("REPORT sendPreyHttpReport size:" + httpDataService.getReportAsParameters().size)
+                    PreyLogger.d("REPORT sendPreyHttpReport size:${httpDataService.getReportAsParameters().size}")
                     parameters.putAll(httpDataService.getReportAsParameters())
                     if (httpDataService.getEntityFiles() != null && httpDataService.getEntityFiles()!!.size > 0) {
                         entityFiles.addAll(httpDataService.getEntityFiles()!!)
@@ -904,22 +915,23 @@ class PreyWebServices {
             PreyConfig.postUrl = null
             PreyLogger.d("report url:$url")
             if (entityFiles == null || entityFiles.size == 0) preyHttpResponse =
-                PreyRestHttpClient.getInstance(context).postAutenticationTimeout(context, url, parameters)
+                PreyRestHttpClient.getInstance(context)
+                    .postAutenticationTimeout(context, url, parameters)
             else preyHttpResponse = PreyRestHttpClient.getInstance(context!!)
                 .postAutentication(url, parameters, entityFiles)
-            PreyLogger.d("Report sent: " + (if (preyHttpResponse == null) "" else preyHttpResponse.getResponseAsString()))
+            PreyLogger.d("Report sent: ${(if (preyHttpResponse == null) "" else preyHttpResponse.getResponseAsString())}")
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Report wasn't send:" + e.message, e)
+            PreyLogger.e("Report wasn't send:${e.message}", e)
         }
         return preyHttpResponse
     }
 
 
     @Throws(java.lang.Exception::class)
-    fun uploadStatus(context: Context, uploadID: String): FileretrievalDto? {
+    override fun uploadStatus(context: Context, uploadID: String): FileretrievalDto? {
         var dto: FileretrievalDto? = null
         val uri: String =
-            PreyConfig.getInstance(context).getPreyUrl() + "upload/upload?uploadID=" + uploadID
+            "${PreyConfig.getInstance(context).getPreyUrl()}upload/upload?uploadID=${uploadID}"
         val response = PreyRestHttpClient.getInstance(context).get(uri, null)
         if (response != null) {
             val responseAsString = response.getResponseAsString()
@@ -951,8 +963,8 @@ class PreyWebServices {
     }
 
     @Throws(PreyException::class)
-    fun geofencing(context: Context): String? {
-        val url = getDeviceUrlApiv2(context) + "/geofencing.json"
+    override fun geofencing(context: Context): String? {
+        val url = "${getDeviceUrlApiv2(context)}/geofencing.json"
         PreyLogger.d("url:$url")
         var sb: String? = null
         val preyRestHttpClient = PreyRestHttpClient.getInstance(context)
@@ -968,19 +980,18 @@ class PreyWebServices {
                 }
             }
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error, causa:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
             return null
         }
         return sb
     }
 
-
-    fun getProfile(context: Context) {
+    override fun getProfile(context: Context) {
         try {
             val parameters = HashMap<String, String?>()
-            val apiv2: String = FileConfigReader.getInstance(context)!!.getApiV2()
-            val url: String =
-                PreyConfig.getInstance(context).getPreyUrl().plus(apiv2).plus("profile.json")
+            // val apiv2: String = FileConfigReader.getInstance(context)!!.getApiV2()
+            val url: String = getProfileUrl(context)
+            //     PreyConfig.getInstance(context).getPreyUrl().plus(apiv2).plus("profile.json")
             PreyLogger.d("url:$url")
             val response = PreyRestHttpClient.getInstance(
                 context!!
@@ -1011,9 +1022,9 @@ class PreyWebServices {
     }
 
     @Throws(PreyException::class)
-    fun getStatus(context: Context): JSONObject? {
+    override fun getStatus(context: Context): JSONObject? {
         var jsnobject: JSONObject? = null
-        val url = getDeviceUrlApiv2(context!!) + "/status.json"
+        val url = "${getDeviceUrlApiv2(context!!)}/status.json"
         PreyLogger.d("getStatus url:$url")
         var response: PreyHttpResponse? = null
         val preyRestHttpClient = PreyRestHttpClient.getInstance(
@@ -1031,14 +1042,14 @@ class PreyWebServices {
                 }
             }
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error, causa:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
             return null
         }
         return jsnobject
     }
 
     @Throws(java.lang.Exception::class)
-    fun getIPAddress(context: Context): String? {
+    override fun getIPAddress(context: Context): String? {
         val uri = "http://ifconfig.me/ip"
         val response = PreyRestHttpClient.getInstance(
             context
@@ -1052,22 +1063,22 @@ class PreyWebServices {
     }
 
     @Throws(PreyException::class)
-    fun getFileUrlJson(context: Context?): String {
-        return getDeviceUrlApiv2(context!!) + "/files.json"
+    override fun getFileUrlJson(context: Context?): String {
+        return "${getDeviceUrlApiv2(context!!)}/files.json"
     }
 
     @Throws(java.lang.Exception::class)
-    fun registerNewDeviceWithApiKeyEmail(
+    override fun registerNewDeviceWithApiKeyEmail(
         context: Context,
         apiKey: String,
         deviceType: String,
         name: String
     ): PreyAccountData? {
-        return registerNewDeviceWithApiKeyEmail(context, apiKey, null, deviceType, name)
+        return registerNewDeviceWithApiKeyEmail(context, apiKey, "", deviceType, name)
     }
 
     @Throws(java.lang.Exception::class)
-    fun registerNewDeviceWithApiKeyEmail(
+    override fun registerNewDeviceWithApiKeyEmail(
         context: Context,
         apiKey: String,
         email: String?,
@@ -1099,7 +1110,7 @@ class PreyWebServices {
         return newAccount
     }
 
-    fun validateName(context: Context, name: String): PreyName {
+    override fun validateName(context: Context, name: String): PreyName {
         val preyName = PreyName()
         try {
             val apiv2: String = FileConfigReader.getInstance(context)!!.getApiV2()
@@ -1113,17 +1124,22 @@ class PreyWebServices {
             jsonParam.put("name", name)
             jsonParam.put("lang", Locale.getDefault().language)
             val response = PreyRestHttpClient.getInstance(context)
-                .jsonMethodAutentication(context, url, UtilConnection.REQUEST_METHOD_POST, jsonParam)
-            PreyLogger.d("validateName getStatusCode:" + response!!.getStatusCode())
+                .jsonMethodAutentication(
+                    context,
+                    url,
+                    UtilConnection.REQUEST_METHOD_POST,
+                    jsonParam
+                )
+            PreyLogger.d("validateName getStatusCode:${response!!.getStatusCode()}")
             preyName.setCode(response!!.getStatusCode())
         } catch (e: java.lang.Exception) {
-            PreyLogger.d("validateName error validate:" + e.message)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         return preyName
     }
 
     @Throws(java.lang.Exception::class)
-    fun registerNewAccount(
+    override fun registerNewAccount(
         context: Context,
         name: String?,
         email: String?,
@@ -1147,7 +1163,7 @@ class PreyWebServices {
     }
 
     @Throws(java.lang.Exception::class)
-    fun registerNewAccount(
+    override fun registerNewAccount(
         context: Context,
         name: String?,
         email: String?,
@@ -1168,7 +1184,6 @@ class PreyWebServices {
         parameters["policy_rule_privacy_terms"] = privacy_terms
         parameters["mkt_newsletter"] = offers
         parameters["lang"] = Locale.getDefault().language
-
         var response: PreyHttpResponse? = null
         var xml: String? = ""
         try {
@@ -1179,18 +1194,19 @@ class PreyWebServices {
             response = PreyRestHttpClient.getInstance(context).post(url, parameters)
             if (response != null) {
                 xml = response.getResponseAsString()
-                PreyLogger.d("code:" + response.getStatusCode() + " xml:" + xml)
+                PreyLogger.d("code:${response.getStatusCode()} xml:${xml}")
             } else {
-                PreyLogger.d("response nulo")
+                PreyLogger.d("response null")
             }
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("error: " + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
             throw PreyException(
-                "{\"error\":[\"" + context.getText(com.prey.R.string.error_communication_exception)
-                    .toString() + "\"]}"
+                "{\"error\":[\"${
+                    context.getText(com.prey.R.string.error_communication_exception)
+                        .toString()
+                }\"]}"
             )
         }
-
         var apiKey = ""
         if (xml!!.contains("\"key\"")) {
             try {
@@ -1200,7 +1216,7 @@ class PreyWebServices {
             }
         } else {
             if (response != null && response.getStatusCode() > 299) {
-                PreyLogger.d("response.getStatusCode() >299 :" + response.getStatusCode())
+                PreyLogger.d("response.getStatusCode() >299 :${response.getStatusCode()}")
                 throw PreyException(xml)
             }
         }
@@ -1221,7 +1237,6 @@ class PreyWebServices {
         } else {
             throw PreyException(context.getString(R.string.error_cant_add_this_device, ""))
         }
-
         val newAccount = PreyAccountData()
         newAccount.setApiKey(apiKey)
         newAccount.setDeviceId(deviceId)
@@ -1231,7 +1246,7 @@ class PreyWebServices {
         return newAccount
     }
 
-    fun renameName(context: Context, name: String): PreyName {
+    override fun renameName(context: Context, name: String): PreyName {
         val preyName = PreyName()
         try {
             val apiv2: String = FileConfigReader.getInstance(context)!!.getApiV2()
@@ -1239,12 +1254,19 @@ class PreyWebServices {
             val deviceKey = config.getDeviceId()
             val url: String =
                 PreyConfig.getInstance(context).getPreyUrl().plus(apiv2).plus("devices/")
-                    .plus(deviceKey).plus(".json")
+                    .plus(deviceKey).plus("/events.json")
+            val jsonInfo = JSONObject()
+            jsonInfo.put("new_name", name)
             val jsonParam = JSONObject()
-            jsonParam.put("name", name)
-            jsonParam.put("lang", Locale.getDefault().language)
+            jsonParam.put("name", "device_renamed")
+            jsonParam.put("info", jsonInfo)
             val response = PreyRestHttpClient.getInstance(context)
-                .jsonMethodAutentication(context, url, UtilConnection.REQUEST_METHOD_PUT, jsonParam)
+                .jsonMethodAutentication(
+                    context,
+                    url,
+                    UtilConnection.REQUEST_METHOD_POST,
+                    jsonParam
+                )
             PreyLogger.d("renameName:${response!!.getStatusCode()}")
             preyName.setCode(response.getStatusCode())
             if (response.getStatusCode() == HttpURLConnection.HTTP_OK) {
@@ -1266,7 +1288,7 @@ class PreyWebServices {
                             val outJson1 = array2.getString(i) as String
                             if ("" == name_available_error) {
                                 val s = outJson1.substring(0, 1).uppercase(Locale.getDefault())
-                                name_available_error = s + outJson1.substring(1)
+                                name_available_error = "${s}${outJson1.substring(1)}"
                             } else {
                                 name_available_error += ", $outJson1"
                             }
@@ -1319,7 +1341,7 @@ class PreyWebServices {
     }
 
     @Throws(java.lang.Exception::class)
-    fun validToken(context: Context, token: String): Boolean {
+    override fun validToken(context: Context, token: String): Boolean {
         val json = JSONObject()
         json.put("token", token)
         json.put("action", "deploy")
@@ -1330,13 +1352,13 @@ class PreyWebServices {
         try {
             statusCode = response!!.getStatusCode()
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error validateToken:${ e.message}" , e)
+            PreyLogger.e("Error validateToken:${e.message}", e)
         }
         return statusCode == 200
     }
 
     @Throws(java.lang.Exception::class)
-    fun verifyEmail(context: Context, email: String): PreyVerify? {
+    override fun verifyEmail(context: Context, email: String): PreyVerify? {
         val apiKey: String? = PreyConfig.getInstance(context).getApiKey()
         val apiV2: String = FileConfigReader.getInstance(context)!!.getApiV2()
         val url: String = PreyConfig.getInstance(context).getPreyUrl().plus(apiV2)
@@ -1371,4 +1393,5 @@ class PreyWebServices {
             return instance!!
         }
     }
+
 }

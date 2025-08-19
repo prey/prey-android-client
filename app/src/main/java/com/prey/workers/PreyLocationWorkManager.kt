@@ -7,9 +7,12 @@
 package com.prey.workers
 
 import android.content.Context
-import androidx.work.PeriodicWorkRequest
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+
 import com.prey.PreyLogger
+
 import java.util.concurrent.TimeUnit
 
 /**
@@ -26,20 +29,11 @@ class PreyLocationWorkManager private constructor() {
         // Log a debug message to indicate that the location work request has been initiated.
         PreyLogger.i("AWARE PreyLocationWorkManager locationWork")
         val workManager = WorkManager.getInstance(context)
-        workManager.cancelAllWorkByTag(WORK_NAME)
-        // Create a PeriodicWorkRequest builder
-        val builder: PeriodicWorkRequest.Builder = PeriodicWorkRequest.Builder(
-            PreyLocationWorker::class.java,
-            15,
-            TimeUnit.MINUTES,
-            5,
-            TimeUnit.MINUTES
+        workManager.enqueueUniquePeriodicWork(
+            WORK_NAME,
+            ExistingPeriodicWorkPolicy.KEEP,
+            PeriodicWorkRequestBuilder<PreyLocationWorker>(15, TimeUnit.MINUTES).build()
         )
-            .addTag(WORK_NAME)
-        // Build the PeriodicWorkRequest
-        val workRequest: PeriodicWorkRequest = builder.build()
-        // Enqueue the work request
-        workManager.enqueue(workRequest)
     }
 
     /**
@@ -47,6 +41,7 @@ class PreyLocationWorkManager private constructor() {
      */
     companion object {
         const val WORK_NAME: String = "prey_location_work_manager"
+
         // The singleton instance of the PreyLocationWorkManager class.
         private var instance: PreyLocationWorkManager? = null
 
@@ -60,4 +55,5 @@ class PreyLocationWorkManager private constructor() {
         fun getInstance(): PreyLocationWorkManager =
             instance ?: PreyLocationWorkManager().also { instance = it }
     }
+
 }

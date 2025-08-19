@@ -29,7 +29,7 @@ class EventRetrieveDataOnline {
         try {
             onlineJSon.put("online", true)
         } catch (e: Exception) {
-            PreyLogger.e("Error:${e.message}" , e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         // Send the online data to the EventManager
         manager.receivesData(EventManager.ONLINE, onlineJSon)

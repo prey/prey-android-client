@@ -14,9 +14,9 @@ import android.view.Window
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import com.prey.PreyBatch
+import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.R
-import com.prey.net.PreyWebServices
 
 /**
  * This activity verifies that the installer has a valid token.
@@ -90,21 +90,20 @@ class SplashBatchActivity : FragmentActivity() {
             progressDialog!!.show()
         } catch (e: Exception) {
             // Log any exceptions that occur while creating the progress dialog
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
-
         try {
             // Reset the error message
             error = null
             // Get the token from PreyBatch
-            val token: String = PreyBatch.getInstance(context).getToken()
+            val token: String? = PreyConfig.getInstance(context).getTokenBatch()
             // Check if the token is null or empty
             if (token == null || "" == token) {
                 // Set the error message to "Error: Invalid token"
                 error = context.getString(R.string.error_token)
             } else {
                 // Validate the token using PreyWebServices
-                val validToken = PreyWebServices.getInstance()
+                val validToken = PreyConfig.getInstance(context).getWebServices()
                     .validToken(context, PreyBatch.getInstance(context).getToken())
                 // Check if the token is invalid
                 if (!validToken) {
@@ -116,10 +115,8 @@ class SplashBatchActivity : FragmentActivity() {
             // Set the error message to the exception message
             error = e.message
         }
-
         // Dismiss the progress dialog if it was created
         if (progressDialog != null) progressDialog!!.dismiss()
-
         // Check if an error occurred during token validation
         if (error == null) {
             // Create an intent to start WelcomeBatchActivity
@@ -127,6 +124,7 @@ class SplashBatchActivity : FragmentActivity() {
                 this@SplashBatchActivity,
                 WelcomeBatchActivity::class.java
             )
+            PreyConfig.getInstance(context).setActivityView(WELCOME_BATCH_ACTIVITY)
             // Start the WelcomeBatchActivity
             startActivity(intentPermission)
             // Finish the current activity
@@ -134,6 +132,13 @@ class SplashBatchActivity : FragmentActivity() {
         } else {
             // Display the error message in textSplash
             textSplash!!.text = error
+            PreyConfig.getInstance(context).setActivityView(SPLASH_BATCH_ACTIVITY_ERROR)
         }
     }
+
+    companion object {
+        const val WELCOME_BATCH_ACTIVITY = "WelcomeBatchActivity"
+        const val SPLASH_BATCH_ACTIVITY_ERROR = "SplashBatchActivityError"
+    }
+
 }

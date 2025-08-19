@@ -42,7 +42,7 @@ class PreyRestHttpClient(private val context: Context) {
             params,
             CONTENT_TYPE_URL_ENCODED
         )
-        PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
+        PreyLogger.d("Response from server: ${(response?.toString() ?: "")}")
         return response
     }
 
@@ -63,7 +63,7 @@ class PreyRestHttpClient(private val context: Context) {
             params,
             CONTENT_TYPE_URL_ENCODED
         )
-        PreyLogger.d("Response from server: " + (response!!.toString() ?: ""))
+        PreyLogger.d("Response from server: ${(response?.toString() ?: "")}")
         return response
     }
 
@@ -91,7 +91,7 @@ class PreyRestHttpClient(private val context: Context) {
                 CONTENT_TYPE_URL_ENCODED,
                 status
             )
-        PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
+        PreyLogger.d("Response from server: ${(response?.toString() ?: "")}")
         return response
     }
 
@@ -122,7 +122,7 @@ class PreyRestHttpClient(private val context: Context) {
             contentType,
             entityFiles
         )
-        PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
+        PreyLogger.d("Response from server: ${(response?.toString() ?: "")}")
         return response
     }
 
@@ -136,13 +136,14 @@ class PreyRestHttpClient(private val context: Context) {
      */
     @Throws(java.lang.Exception::class)
     fun get(url: String, params: MutableMap<String, String?>?): PreyHttpResponse? {
+        PreyLogger.d("get url: $url")
         val response: PreyHttpResponse? = UtilConnection.getInstance().connectionGet(
             context,
             url,
             params,
             CONTENT_TYPE_URL_ENCODED
         )
-        PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
+        PreyLogger.d("Response from server: ${(response?.toString() ?: "")}")
         return response
     }
 
@@ -171,7 +172,7 @@ class PreyRestHttpClient(private val context: Context) {
             user,
             pass
         )
-        PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
+        PreyLogger.d("Response from server: ${(response?.toString() ?: "")}")
         return response
     }
 
@@ -202,7 +203,7 @@ class PreyRestHttpClient(private val context: Context) {
             user,
             pass
         )
-        PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
+        PreyLogger.d("Response from server: ${(response?.toString() ?: "")}")
         return response
     }
 
@@ -222,7 +223,7 @@ class PreyRestHttpClient(private val context: Context) {
             params,
             CONTENT_TYPE_URL_ENCODED
         )
-        PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
+        PreyLogger.d("Response from server: ${(response?.toString() ?: "")}")
         return response
     }
 
@@ -290,7 +291,7 @@ class PreyRestHttpClient(private val context: Context) {
                 status,
                 correlation
             )
-        PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
+        PreyLogger.d("Response from server: ${(response?.toString() ?: "")}")
         return response
     }
 
@@ -366,7 +367,7 @@ class PreyRestHttpClient(private val context: Context) {
                 params,
                 CONTENT_TYPE_URL_ENCODED
             )
-        PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
+        PreyLogger.d("Response from server: ${(response?.toString() ?: "")}")
         return response
     }
 
@@ -392,7 +393,7 @@ class PreyRestHttpClient(private val context: Context) {
             params,
             CONTENT_TYPE_URL_ENCODED
         )
-        PreyLogger.d("Response from server: " + (response?.toString() ?: ""))
+        PreyLogger.d("Response from server: ${(response?.toString() ?: "")}")
         return response
     }
 
@@ -422,4 +423,5 @@ class PreyRestHttpClient(private val context: Context) {
             return instance ?: PreyRestHttpClient(context).also { instance = it }
         }
     }
+
 }

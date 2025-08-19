@@ -10,6 +10,7 @@ package com.prey
  * Represents a Prey verification result, containing a status code and description.
  */
 class PreyVerify {
+
     private var statusCode: Int = -1
     private var statusDescription: String? = null
     fun getStatusCode(): Int {
@@ -27,4 +28,5 @@ class PreyVerify {
     fun setStatusDescription(statusDescription: String?) {
         this.statusDescription = statusDescription
     }
+
 }

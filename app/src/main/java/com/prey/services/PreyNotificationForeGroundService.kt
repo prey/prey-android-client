@@ -9,6 +9,7 @@ package com.prey.services
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+
 import com.prey.PreyLogger
 
 class PreyNotificationForeGroundService : Service() {
@@ -35,4 +36,5 @@ class PreyNotificationForeGroundService : Service() {
         stopForeground(true)
         stopSelf()
     }
+
 }

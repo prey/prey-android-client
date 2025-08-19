@@ -19,7 +19,6 @@ import androidx.core.app.ActivityCompat
 
 import com.prey.backwardcompatibility.FroyoSupport
 import com.prey.managers.PreyConnectivityManager
-import com.prey.net.PreyWebServices
 
 import java.io.BufferedReader
 import java.io.File
@@ -122,22 +121,22 @@ class PreyPhone internal constructor(var context: Context) {
             }
             totalMemory = line.toLong() / 1024
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         } finally {
             try {
                 br!!.close()
             } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
+                PreyLogger.e("Error:${e.message}", e)
             }
             try {
                 ir!!.close()
             } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
+                PreyLogger.e("Error:${e.message}", e)
             }
             try {
                 fi!!.close()
             } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
+                PreyLogger.e("Error:${e.message}", e)
             }
         }
         return totalMemory
@@ -166,17 +165,17 @@ class PreyPhone internal constructor(var context: Context) {
             try {
                 br!!.close()
             } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
+                PreyLogger.e("Error:${e.message}", e)
             }
             try {
                 ir!!.close()
             } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
+                PreyLogger.e("Error:${e.message}", e)
             }
             try {
                 fi!!.close()
             } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
+                PreyLogger.e("Error:${e.message}", e)
             }
         }
         return cpuMaxFreq
@@ -211,7 +210,7 @@ class PreyPhone internal constructor(var context: Context) {
             try {
                 ssid = ssid.replace("\"".toRegex(), "")
             } catch (e: java.lang.Exception) {
-                PreyLogger.e("Error:" + e.message, e)
+                PreyLogger.e("Error:${e.message}", e)
             }
             wifi!!.setSsid(ssid)
             var i = 0
@@ -221,7 +220,7 @@ class PreyPhone internal constructor(var context: Context) {
                 try {
                     ssid = ssid.replace("\"".toRegex(), "")
                 } catch (e: java.lang.Exception) {
-                    PreyLogger.e("Error:" + e.message, e)
+                    PreyLogger.e("Error:${e.message}", e)
                 }
                 if (ssid == wifi!!.getSsid()) {
                     wifi!!.setSecurity(_wifi.getSecurity())
@@ -232,7 +231,7 @@ class PreyPhone internal constructor(var context: Context) {
                 i++
             }
         } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
     }
 
@@ -312,7 +311,7 @@ class PreyPhone internal constructor(var context: Context) {
     fun getIpAddress(): String {
         var ip = ""
         try {
-            ip = PreyWebServices.getInstance().getIPAddress(context)!!
+            ip = PreyConfig.getInstance(context).getWebServices().getIPAddress(context)!!
         } catch (e: Exception) {
             PreyLogger.e("Error:${e.message}", e)
         }
@@ -475,4 +474,5 @@ class PreyPhone internal constructor(var context: Context) {
 
         private const val REQUEST_READ_PHONE_STATE_PERMISSION = 225
     }
+
 }

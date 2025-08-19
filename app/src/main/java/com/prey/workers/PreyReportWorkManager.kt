@@ -9,7 +9,9 @@ package com.prey.workers
 import android.content.Context
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
+
 import com.prey.beta.actions.PreyBetaActionsRunner
+
 import java.util.concurrent.TimeUnit
 
 /**
@@ -40,7 +42,7 @@ private constructor() {
         val workRequest: PeriodicWorkRequest = builder.build()
         // Enqueue the work request
         workManager.enqueue(workRequest)
-        PreyBetaActionsRunner.getInstance(context).getInstructionsNewThread(context,false)
+        PreyBetaActionsRunner.getInstance(context).getInstructionsCoroutine(context, false)
     }
 
     companion object {
@@ -53,4 +55,5 @@ private constructor() {
             return instance!!
         }
     }
+
 }

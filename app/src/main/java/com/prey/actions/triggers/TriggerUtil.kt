@@ -99,7 +99,7 @@ object TriggerUtil {
                     PreyLogger.d("fecha<=until")
                 }
             } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
+                PreyLogger.e("Error: ${e.message}", e)
             }
             var isDay = false
             var i = 0
@@ -173,7 +173,7 @@ object TriggerUtil {
      */
     fun validateTrigger(trigger: TriggerDto): Boolean {
         val now = Date()
-        val listEvents = TriggerParse.TriggerEvents(trigger.getEvents()!!)
+        val listEvents = TriggerParse.TriggerEvents(trigger.getEvents())
         var j = 0
         while (listEvents != null && j < listEvents.size) {
             val event = listEvents[j]
@@ -305,4 +305,5 @@ object TriggerUtil {
         }
         return valid
     }
+
 }

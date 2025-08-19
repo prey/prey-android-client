@@ -38,27 +38,28 @@ class AwareGeofenceReceiver : BroadcastReceiver() {
                 PreyLogger.d("AWARE AwareGeofenceReceiver geofencingEvent null")
                 return
             }
-            if (geofencingEvent.hasError()) {
+            if (geofencingEvent.hasError() && !PreyConfig.getInstance(context).isTest()) {
                 PreyLogger.d("AWARE AwareGeofenceReceiver hasError:$geofencingEvent")
                 return
             }
             val geofenceTransition = geofencingEvent.geofenceTransition
-            PreyLogger.d("AWARE AwareGeofenceReceiver onReceive :" + (if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) "EXIT" else "ENTER"))
+            PreyLogger.d("AWARE AwareGeofenceReceiver onReceive :${(if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) "EXIT" else "ENTER")}")
             if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
                 val location = geofencingEvent.triggeringLocation
                 try {
-                    val preyLocation=PreyLocation(location)
+                    val preyLocation = PreyLocation(location)
                     PreyConfig.getInstance(context).setLocationAware(preyLocation)
                     PreyConfig.getInstance(context).setLocation(preyLocation);
                     AwareController.getInstance().sendAware(context, preyLocation)
                     AwareController.getInstance().initUpdateLocation(context)
                     AwareController.getInstance().registerGeofence(context)
                 } catch (e: Exception) {
-                    PreyLogger.e("AWARE AwareGeofenceReceiver error:" + e.message, e)
+                    PreyLogger.e("Error: ${e.message}", e)
                 }
             }
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
+
 }

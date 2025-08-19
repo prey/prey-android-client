@@ -59,7 +59,12 @@ class AwareScheduled {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerTime, interval, pendingIntent)
         } else {
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, triggerTime, interval, pendingIntent)
+            alarmManager.setInexactRepeating(
+                AlarmManager.RTC_WAKEUP,
+                triggerTime,
+                interval,
+                pendingIntent
+            )
         }
     }
 
@@ -80,4 +85,5 @@ class AwareScheduled {
             return instance ?: AwareScheduled().also { instance = it }
         }
     }
+
 }

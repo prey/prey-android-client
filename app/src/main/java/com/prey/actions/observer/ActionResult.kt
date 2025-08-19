@@ -22,4 +22,5 @@ class ActionResult {
      */
 
     var dataToSend: HttpDataService? = null
+
 }

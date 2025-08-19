@@ -7,17 +7,19 @@
 package com.prey.json.actions
 
 import android.content.Context
-
-import com.prey.actions.alarm.AlarmThread
-import com.prey.actions.observer.ActionResult
 import com.prey.PreyConfig
+import com.prey.PreyLogger
 import com.prey.PreyStatus
+import com.prey.actions.alarm.Alarm
+import com.prey.actions.observer.ActionResult
+import com.prey.json.UtilJson
 import org.json.JSONObject
 
 /**
  * Alarm class responsible for starting and stopping alarm functionality.
  */
-class Alarm   {
+class Alarm {
+
 
     /**
      * Starts the alarm with the given parameters.
@@ -28,11 +30,28 @@ class Alarm   {
      */
     fun start(context: Context, actionResults: List<ActionResult?>?, parameters: JSONObject?) {
         // Extract sound, message ID, and job ID from parameters
-        val sound = parameters?.getString("sound")
-        val messageId = parameters?.getString(PreyConfig.MESSAGE_ID)
-        val jobId = parameters?.getString(PreyConfig.JOB_ID)
+        var sound: String? = null
+        try {
+            sound = UtilJson.getStringValue(parameters, "sound")
+        } catch (e: Exception) {
+            PreyLogger.e("Error:${e.message}", e)
+        }
+        var messageId: String? = null
+        try {
+            messageId = UtilJson.getStringValue(parameters, PreyConfig.MESSAGE_ID)
+            PreyLogger.d("messageId:$messageId")
+        } catch (e: Exception) {
+            PreyLogger.e("Error:${e.message}", e)
+        }
+        var jobId: String? = null
+        try {
+            jobId = UtilJson.getStringValue(parameters, PreyConfig.JOB_ID)
+            PreyLogger.d("jobId:$jobId")
+        } catch (e: Exception) {
+            PreyLogger.e("Error:${e.message}", e)
+        }
         // Start the alarm thread with the extracted parameters
-        AlarmThread(context, sound ?: "", messageId, jobId).start()
+        Alarm(context, sound ?: "", messageId, jobId).start()
     }
 
     /**
@@ -44,7 +63,7 @@ class Alarm   {
      */
     fun stop(context: Context?, actionResults: List<ActionResult?>?, parameters: JSONObject?) {
         // Set alarm stop status using PreyStatus instance
-        PreyStatus.getInstance().setAlarmStop()
+        PreyStatus.getInstance().setStateOfAlarm(PreyStatus.AlarmState.FINISH)
     }
 
 }

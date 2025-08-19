@@ -29,12 +29,12 @@
                     android:gravity="center"
                     />
 
-                <SurfaceView
-                    android:id="@+id/surfaceView1"
-                    android:layout_width="1dp"
-                    android:layout_height="1dp"
 
-                    />
+
         </LinearLayout>
-
+        <TextureView
+            android:id="@+id/texture"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            />
 </FrameLayout>

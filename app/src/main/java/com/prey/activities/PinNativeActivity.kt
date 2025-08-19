@@ -83,10 +83,14 @@ class PinNativeActivity : Activity() {
                     cal.timeInMillis = Date().time
                     cal.add(Calendar.MINUTE, 1)
                     PreyConfig.getInstance(applicationContext).setTimeSecureLock(cal.timeInMillis)
+                    PreyConfig.getInstance(applicationContext)
+                        .setActivityView(ACTIVITY_PIN_BUTTON_OK)
                     finish()
                 } else {
                     PreyLogger.d("error")
                     editTextPin!!.setBackgroundColor(Color.RED)
+                    PreyConfig.getInstance(applicationContext)
+                        .setActivityView(ACTIVITY_PIN_BUTTON_ERROR)
                 }
             }
         }
@@ -102,9 +106,12 @@ class PinNativeActivity : Activity() {
         PreyLogger.d("PinNativeActivity unlock:$pinActivated")
         if (pinActivated == null || "" == pinActivated) {
             val intent = Intent(applicationContext, CloseActivity::class.java)
+            PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_PIN_CLOSE)
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
             finish()
+        } else {
+            PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_PIN_FORM)
         }
     }
 
@@ -123,4 +130,12 @@ class PinNativeActivity : Activity() {
             Toast.makeText(this, "keyboard hidden", Toast.LENGTH_SHORT).show()
         }
     }
+
+    companion object {
+        const val ACTIVITY_PIN_FORM: String = "ACTIVITY_PIN_FORM"
+        const val ACTIVITY_PIN_CLOSE: String = "ACTIVITY_PIN_CLOSE"
+        const val ACTIVITY_PIN_BUTTON_OK: String = "ACTIVITY_PIN_BUTTON_OK"
+        const val ACTIVITY_PIN_BUTTON_ERROR: String = "ACTIVITY_PIN_BUTTON_ERROR"
+    }
+
 }

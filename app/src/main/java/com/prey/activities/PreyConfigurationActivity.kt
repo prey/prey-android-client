@@ -7,7 +7,6 @@
 package com.prey.activities
 
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.preference.Preference.OnPreferenceClickListener
@@ -53,7 +52,10 @@ class PreyConfigurationActivity : PreferenceActivity() {
      */
     override fun onResume() {
         super.onResume()
-        if (!PreyStatus.getInstance().isPreyConfigurationActivityResume()) {
+        if (!PreyStatus.getInstance()
+                .isPreyConfigurationActivityResume() && !PreyConfig.getInstance(applicationContext)
+                .isTest()
+        ) {
             val intent = Intent(applicationContext, LoginActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             intent.putExtra("EXIT", true)
@@ -73,10 +75,10 @@ class PreyConfigurationActivity : PreferenceActivity() {
                 }
             } else p.isEnabled = false
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         p = findPreference("PREFS_ABOUT")
-        p.summary = ("Version " + preyConfig.getPreyVersion()).toString() + " - Prey Inc."
+        p.summary = "Version ${preyConfig.getPreyVersion()} - Prey Inc."
         val pGo = findPreference("PREFS_GOTO_WEB_CONTROL_PANEL")
         pGo.onPreferenceClickListener = OnPreferenceClickListener {
             val url: String = PreyConfig.getInstance(applicationContext).getPreyPanelUrl()
@@ -87,11 +89,16 @@ class PreyConfigurationActivity : PreferenceActivity() {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(intent)
             } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
+                PreyLogger.e("Error: ${e.message}", e)
             }
             false
         }
         PreyStatus.getInstance().setPreyConfigurationActivityResume(false)
+        PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_FORM)
+    }
+
+    companion object {
+        const val ACTIVITY_FORM: String = "ACTIVITY_FORM"
     }
 
 }

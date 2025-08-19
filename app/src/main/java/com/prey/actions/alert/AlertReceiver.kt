@@ -11,9 +11,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 
+import com.prey.PreyConfig
+import com.prey.PreyLogger
 import com.prey.activities.PopUpAlertActivity
 import com.prey.json.UtilJson
-import com.prey.net.PreyWebServices
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * A BroadcastReceiver that handles alert notifications.
@@ -29,8 +34,18 @@ class AlertReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         // Extract the notification ID, message ID, and reason from the Intent extras
         val notificationId = intent.getIntExtra(NOTIFICATION_ID_EXTRA, 0)
-        val messageId = intent.getStringExtra(MESSAGE_ID_EXTRA)
-        val reason = intent.getStringExtra(REASON_EXTRA)
+        var messageId: String? = ""
+        try {
+            messageId = intent.getStringExtra(MESSAGE_ID_EXTRA)
+        } catch (e: java.lang.Exception) {
+            PreyLogger.e("Error:${e.message}", e)
+        }
+        var reason: String? = ""
+        try {
+            reason = intent.getStringExtra(REASON_EXTRA)
+        } catch (e: java.lang.Exception) {
+            PreyLogger.e("Error:${e.message}", e)
+        }
         // Create a popup Intent action based on the notification ID
         val popupIntentAction = "${PopUpAlertActivity.POPUP_PREY}_${notificationId}"
         context.sendBroadcast(Intent(popupIntentAction))
@@ -39,14 +54,14 @@ class AlertReceiver : BroadcastReceiver() {
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(notificationId)
         // Send a notification result to the server in a separate thread
-        Thread {
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
+        CoroutineScope(Dispatchers.IO).launch {
+            PreyConfig.getInstance(context).getWebServices().sendNotifyActionResultPreyHttp(
                 context,
                 ACTION_RESULT_PROCESSED,
-                messageId!!,
+                messageId,
                 UtilJson.makeMapParam(START, ALERT, STOPPED, reason)
             )
-        }.start()
+        }
     }
 
     companion object {
@@ -58,4 +73,5 @@ class AlertReceiver : BroadcastReceiver() {
         private const val STOPPED = "stopped"
         private const val ACTION_RESULT_PROCESSED = "processed"
     }
+
 }

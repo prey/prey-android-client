@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
+import com.prey.PreyConfig
 
 import com.prey.R
 import com.prey.activities.js.CustomWebView
@@ -52,6 +53,7 @@ class SecurityActivity : AppCompatActivity() {
         setContentView(R.layout.webview)
         PreyLogger.d("SecurityActivity: onCreate")
         security()
+        PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_SECURITY)
     }
 
     /**
@@ -82,7 +84,7 @@ class SecurityActivity : AppCompatActivity() {
     fun security() {
         PreyLogger.d("CheckPasswordHtmlActivity: tryReport")
         val lng: String = PreyUtils.getLanguage()
-        val url = CheckPasswordHtmlActivity.URL_ONB + "#/" + lng + "/security"
+        val url = "${CheckPasswordHtmlActivity.URL_ONB}#/${lng}/security"
         settings()
         PreyLogger.d("_url:$url")
         myWebView.addJavascriptInterface(
@@ -91,4 +93,9 @@ class SecurityActivity : AppCompatActivity() {
         )
         myWebView.loadUrl(url)
     }
+
+    companion object {
+        const val ACTIVITY_SECURITY: String = "ACTIVITY_SECURITY"
+    }
+
 }

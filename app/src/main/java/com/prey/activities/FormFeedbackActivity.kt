@@ -18,6 +18,7 @@ import android.widget.EditText
 
 import com.prey.R
 import com.prey.FileConfigReader
+import com.prey.PreyConfig
 import com.prey.PreyUtils
 
 /**
@@ -52,9 +53,11 @@ class FormFeedbackActivity : PreyActivity() {
                 alert.setMessage(R.string.feedback_form_message)
                 alert.setView(textEntryView)
                 val input = textEntryView.findViewById(R.id.feedback_form_field_comment) as EditText
-                alert.setPositiveButton(R.string.feedback_form_button2,
+                alert.setPositiveButton(
+                    R.string.feedback_form_button2,
                     DialogInterface.OnClickListener { dialog, id -> finish() })
-                alert.setNegativeButton(R.string.feedback_form_button1,
+                alert.setNegativeButton(
+                    R.string.feedback_form_button1,
                     DialogInterface.OnClickListener { dialog, id ->
                         if (input != null) {
                             val context: Context = applicationContext
@@ -62,7 +65,9 @@ class FormFeedbackActivity : PreyActivity() {
                                 applicationContext
                             ).getEmailFeedback()
                             val subject = StringBuffer()
-                            subject.append(FileConfigReader.getInstance(context).getSubjectFeedback())
+                            subject.append(
+                                FileConfigReader.getInstance(context).getSubjectFeedback()
+                            )
                                 .append(" ")
                             subject.append(PreyUtils.randomAlphaNumeric(7).toUpperCase())
                             // Create an intent to send the email
@@ -82,6 +87,7 @@ class FormFeedbackActivity : PreyActivity() {
                         finish()
                     })
                 popup = alert.create()
+                PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_FORM_FEEDBACK)
             }
         }
         return popup!!
@@ -89,5 +95,7 @@ class FormFeedbackActivity : PreyActivity() {
 
     companion object {
         private const val SHOW_POPUP = 0
+        const val ACTIVITY_FORM_FEEDBACK: String = "ACTIVITY_FORM_FEEDBACK"
     }
+
 }

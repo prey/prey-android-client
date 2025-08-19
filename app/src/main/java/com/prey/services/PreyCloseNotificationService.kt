@@ -32,4 +32,5 @@ class PreyCloseNotificationService : Service() {
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         manager.cancel(EventFactory.NOTIFICATION_ID)
     }
+
 }

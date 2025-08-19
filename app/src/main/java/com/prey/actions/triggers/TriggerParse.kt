@@ -7,6 +7,7 @@
 package com.prey.actions.triggers
 
 import android.content.Context
+import com.prey.PreyConfig
 
 import com.prey.PreyLogger
 import com.prey.net.PreyWebServices
@@ -27,12 +28,15 @@ object TriggerParse {
     fun getJSONFromUrl(context: Context): List<TriggerDto>? {
         var json: String? = null
         try {
-            json = PreyWebServices.getInstance().triggers(context)
-            return getJSONFromTxt(context, json!!)
+            json = PreyConfig.getInstance(context).getWebServices().triggers(context)
+            if (json != null) {
+                return getJSONFromTxt(context, json)
+            }
         } catch (e: Exception) {
             PreyLogger.e("Error:${e.message}", e)
-            return null
+
         }
+        return null
     }
 
     /**
@@ -45,7 +49,7 @@ object TriggerParse {
     fun getJSONFromTxt(context: Context, jsonValue: String): List<TriggerDto>? {
         val listTrigger: MutableList<TriggerDto> = ArrayList()
         if (jsonValue != null && "" != jsonValue) {
-            var json = ("{\"prey\":$jsonValue").toString() + "}"
+            var json = "{\"prey\":${jsonValue}}"
             PreyLogger.d(json)
             try {
                 val jsnobject = JSONObject(json)
@@ -69,7 +73,7 @@ object TriggerParse {
                     listTrigger.add(trigger)
                 }
             } catch (e: java.lang.Exception) {
-                PreyLogger.e("Error:${e.message}", e)
+                PreyLogger.e("Error: ${e.message}", e)
                 return null
             }
         }
@@ -131,4 +135,5 @@ object TriggerParse {
         }
         return listTrigger
     }
+
 }

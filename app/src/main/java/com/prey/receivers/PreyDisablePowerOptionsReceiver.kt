@@ -6,7 +6,6 @@
  ******************************************************************************/
 package com.prey.receivers
 
-import android.annotation.TargetApi
 import android.app.KeyguardManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -20,6 +19,9 @@ import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPermission
 import com.prey.services.PreySecureService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 import org.json.JSONObject
 import java.util.Date
@@ -35,23 +37,20 @@ class PreyDisablePowerOptionsReceiver : BroadcastReceiver() {
      * @param context The Context in which the receiver is running.
      * @param intent The Intent being received.
      */
-    @TargetApi(Build.VERSION_CODES.ECLAIR_MR1)
     override fun onReceive(context: Context, intent: Intent) {
         val disablePowerOptions = PreyConfig.getInstance(context).isDisablePowerOptions()
         val canDrawOverlays = PreyPermission.canDrawOverlays(context)
         PreyLogger.d(
-            
-                "PreyDisablePowerOptionsReceiver disablePowerOptions:${disablePowerOptions} canDrawOverlays: ${canDrawOverlays}"
-
+            "PreyDisablePowerOptionsReceiver disablePowerOptions:${disablePowerOptions} canDrawOverlays: ${canDrawOverlays}"
         )
-        if (canDrawOverlays && disablePowerOptions) {
+        if (canDrawOverlays && disablePowerOptions && Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             if ("android.intent.action.CLOSE_SYSTEM_DIALOGS" == intent.action) {
                 val bundle = intent.extras
                 if (bundle != null) {
                     for (key in bundle.keySet()) {
                         val value = bundle[key]
                         PreyLogger.d(
-                                "PreyDisablePowerOptionsReceiver disablePowerOptions key:${key} value:${value}"
+                            "PreyDisablePowerOptionsReceiver disablePowerOptions key:${key} value:${value}"
                         )
                     }
                 }
@@ -64,12 +63,12 @@ class PreyDisablePowerOptionsReceiver : BroadcastReceiver() {
                     if (isScreenOn && reason != null) {
                         var extra = intent.getStringExtra(stringExtra)
                         PreyLogger.d(
-                                "PreyDisablePowerOptionsReceiver reason:${reason} flag:${flag} extra:${extra}"
+                            "PreyDisablePowerOptionsReceiver reason:${reason} flag:${flag} extra:${extra}"
                         )
                         val time = PreyConfig.getInstance(context).getTimeSecureLock()
                         val now = Date().time
                         PreyLogger.d(
-                                "PreyDisablePowerOptionsReceiver time:${time} now:${now} <${ (now < time)}",
+                            "PreyDisablePowerOptionsReceiver time:${time} now:${now} <${(now < time)}",
                         )
                         if (now < time) {
                             extra = ""
@@ -82,7 +81,7 @@ class PreyDisablePowerOptionsReceiver : BroadcastReceiver() {
                             val isOpenSecureService =
                                 PreyConfig.getInstance(context).isOpenSecureService()
                             PreyLogger.d(
-                                    "PreyDisablePowerOptionsReceiver pinNumber:${pinNumber} isOpenSecureService:${isOpenSecureService}"
+                                "PreyDisablePowerOptionsReceiver pinNumber:${pinNumber} isOpenSecureService:${isOpenSecureService}"
                             )
                             if ("globalactions" == reason && pinNumber != null && "" != pinNumber && pinNumber.length == 4) {
                                 PreyLogger.d("pinNumber:$pinNumber")
@@ -92,31 +91,32 @@ class PreyDisablePowerOptionsReceiver : BroadcastReceiver() {
                                     PreyConfig.getInstance(context).setViewSecure(true)
                                     val intentLock = Intent(context, PreySecureService::class.java)
                                     context.startService(intentLock)
-                                    object : Thread() {
-                                        override fun run() {
-                                            try {
-                                                val info = JSONObject()
-                                                info.put("PIN", pinNumber)
-                                                val event =
-                                                    Event(Event.ANDROID_LOCK_PIN, info.toString())
-                                                Thread(EventManagerRunner(context, event)).start()
-                                            } catch (e: Exception) {
-                                                PreyLogger.e("Error send Lock:" + e.message, e)
-                                            }
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        try {
+                                            val info = JSONObject()
+                                            info.put("PIN", pinNumber)
+                                            val event =
+                                                Event(Event.ANDROID_LOCK_PIN, info.toString())
+                                            EventManagerRunner(context, event)
+                                        } catch (e: Exception) {
+                                            PreyLogger.e("Error: ${e.message}", e)
                                         }
-                                    }.start()
+                                    }
                                 }
                             }
                         }
                     }
                 } catch (e: Exception) {
-                    PreyLogger.e("error:" + e.message, e)
+                    PreyLogger.e("Error: ${e.message}", e)
                 }
             }
+        } else {
+            PreyConfig.getInstance(context).setLastEvent("not_disablePowerOptions")
         }
     }
 
     companion object {
         var stringExtra: String = "prey"
     }
+
 }

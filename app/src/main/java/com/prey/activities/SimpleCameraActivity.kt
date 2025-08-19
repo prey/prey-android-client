@@ -35,6 +35,7 @@ import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
 import android.view.View
 import androidx.core.app.ActivityCompat
+import com.prey.PreyConfig
 
 import com.prey.R
 import com.prey.actions.picture.PictureUtil
@@ -48,22 +49,18 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
 
     private var textureView: TextureView? = null
     private var cameraId: String? = null
-    protected var cameraDevice: CameraDevice? = null
-    protected var cameraCaptureSessions: CameraCaptureSession? = null
-    protected var captureRequestBuilder: CaptureRequest.Builder? = null
+    private var cameraDevice: CameraDevice? = null
+    private var cameraCaptureSessions: CameraCaptureSession? = null
+    private var captureRequestBuilder: CaptureRequest.Builder? = null
     private var imageDimension: Size? = null
     private var imageReader: ImageReader? = null
     private val REQUEST_CAMERA_PERMISSION: Int = 200
     private var mBackgroundHandler: Handler? = null
     private var mBackgroundThread: HandlerThread? = null
-
-
-    var focus: String? = null
     private var screenIntOrientation = -1
     private var orientationManager: OrientationManager? = null
-
+    var focus: String? = null
     var camera: Camera? = null
-
     var mHolder: SurfaceHolder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +71,7 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
         try {
             kill = extras!!.getInt("kill")
         } catch (e: Exception) {
-            PreyLogger.e("report error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         PreyLogger.d("Kill:$kill")
         if (kill == 1) {
@@ -94,16 +91,15 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
                 )
                 orientationManager!!.enable()
             } catch (e: Exception) {
-                PreyLogger.e("report error:" + e.message, e)
+                PreyLogger.e("Error:${e.message}", e)
             }
         }
         textureView = findViewById<View>(R.id.texture) as TextureView
         checkNotNull(textureView)
         textureView!!.surfaceTextureListener = textureListener
         PictureUtil.getInstance(this).activity = this
+        PreyConfig.getInstance(applicationContext).setActivityView(SIMPLE_CAMERA_ACTIVITY)
     }
-
-
 
     var textureListener: SurfaceTextureListener = object : SurfaceTextureListener {
         override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
@@ -158,7 +154,7 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
             mBackgroundThread = null
             mBackgroundHandler = null
         } catch (e: Exception) {
-            PreyLogger.e("report error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
@@ -215,7 +211,7 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
                         buffer[bytes]
                         save(bytes)
                     } catch (e: Exception) {
-                        PreyLogger.e("report error:" + e.message, e)
+                        PreyLogger.e("Error: ${e.message}", e)
                     } finally {
                         image?.close()
                     }
@@ -248,7 +244,7 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
                                 mBackgroundHandler
                             )
                         } catch (e: Exception) {
-                            PreyLogger.e("report error:" + e.message, e)
+                            PreyLogger.e("Error: ${e.message}", e)
                         }
                     }
 
@@ -258,7 +254,7 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
                 mBackgroundHandler
             )
         } catch (e: Exception) {
-          //  PreyLogger.e("report error:" + e.message, e)
+          //  PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
@@ -287,7 +283,7 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
                 null
             )
         } catch (e: Exception) {
-            PreyLogger.e("report error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
@@ -322,7 +318,7 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
             }
             manager.openCamera(cameraId!!, stateCallback, null)
         } catch (e: Exception) {
-         //   PreyLogger.e("report error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
@@ -333,7 +329,7 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
                 captureRequestBuilder!!.build(), null, mBackgroundHandler
             )
         } catch (e: Exception) {
-         //   PreyLogger.e("report error:" + e.message, e)
+         //  PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
@@ -417,12 +413,12 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
         try {
             bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
         } catch (e: Exception) {
-            PreyLogger.e("report error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         try {
             scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight, Bitmap.Config.ARGB_8888)
         } catch (e: Exception) {
-            PreyLogger.e("report error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         val ratioX = actualWidth / options.outWidth.toFloat()
         val ratioY = actualHeight / options.outHeight.toFloat()
@@ -471,7 +467,7 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
                 true
             )
         } catch (e: Exception) {
-            PreyLogger.e("report error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         val out = ByteArrayOutputStream()
         scaledBitmap!!.compress(Bitmap.CompressFormat.JPEG, 85, out)
@@ -504,5 +500,8 @@ class SimpleCameraActivity : Activity()  , OrientationManager.OrientationListene
         return inSampleSize
     }
 
+    companion object {
+        const val SIMPLE_CAMERA_ACTIVITY="SimpleCameraActivity"
+    }
 
 }

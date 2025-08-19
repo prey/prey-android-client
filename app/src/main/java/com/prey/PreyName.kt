@@ -9,7 +9,9 @@ package com.prey
 /**
  * Represents a PreyName entity, encapsulating code, name, and error information.
  */
+
 class PreyName {
+
     private var code: Int = 0
     private var name: String? = null
     private var error: String? = null
@@ -37,4 +39,5 @@ class PreyName {
     fun setError(error: String?) {
         this.error = error
     }
+
 }

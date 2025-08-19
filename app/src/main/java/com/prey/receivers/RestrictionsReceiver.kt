@@ -35,11 +35,7 @@ class RestrictionsReceiver : BroadcastReceiver() {
             // Check if application restrictions are not null
             if (applicationRestrictions != null) {
                 // Log the application restrictions
-                PreyLogger.d(
-
-                    "RestrictionsReceiver restrictions applied: ${applicationRestrictions.toString()}"
-
-                )
+                PreyLogger.d("Restrictions applied: ${applicationRestrictions.toString()}")
                 // Handle the application restrictions
                 handleApplicationRestrictions(context, applicationRestrictions)
             } else {
@@ -48,7 +44,6 @@ class RestrictionsReceiver : BroadcastReceiver() {
             }
         }
     }
-
 
     /**
      * Handles the application restrictions.

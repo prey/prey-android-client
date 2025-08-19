@@ -15,8 +15,10 @@ import com.prey.activities.CheckPasswordHtmlActivity
 import com.prey.exceptions.PreyException
 import com.prey.PreyConfig
 import com.prey.PreyLogger
-import com.prey.net.PreyWebServices
 import com.prey.net.UtilConnection
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 import org.json.JSONObject
 
@@ -45,7 +47,7 @@ class PreyBetaActionsRunner(private val context: Context) : Runnable {
                     try {
                         jsonObject = getInstructions(context, true)
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                     if (jsonObject == null || jsonObject.size == 0) {
                         PreyLogger.d("nothing")
@@ -75,25 +77,25 @@ class PreyBetaActionsRunner(private val context: Context) : Runnable {
     }
 
     /**
-     * Retrieves instructions from the Prey web services in a new thread. This method is used to avoid blocking the main thread.
+     * Retrieves instructions from the Prey web services in Coroutine. This method is used to avoid blocking the main.
      *
      * @param context The context in which to retrieve instructions
      * @param close Whether to close the Prey activity after retrieving instructions
      * @throws PreyException If an error occurs during instruction retrieval
      */
     @Throws(PreyException::class)
-    fun getInstructionsNewThread(context: Context, close: Boolean) {
-        Thread {
+    fun getInstructionsCoroutine(context: Context, close: Boolean) {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
-                PreyLogger.d("_________New Thread")
+                PreyLogger.d("_________getInstructionsCoroutine")
                 val instructions = getInstructions(context, close)
                 if (instructions != null) {
                     runInstructions(instructions)
                 }
             } catch (e: PreyException) {
-                PreyLogger.e("_________getInstructionsNewThread:${e.message}", e)
+                PreyLogger.e("_________getInstructionsCoroutine:${e.message}", e)
             }
-        }.start()
+        }
 
     }
 
@@ -114,7 +116,8 @@ class PreyBetaActionsRunner(private val context: Context) : Runnable {
             if (close) {
                 context.sendBroadcast(Intent(CheckPasswordHtmlActivity.CLOSE_PREY))
             }
-            jsonObject = PreyWebServices.getInstance().getActionsJsonToPerform(context)
+            jsonObject =
+                PreyConfig.getInstance(context).getWebServices().getActionsJsonToPerform(context)
         } catch (e: PreyException) {
             PreyLogger.e("Exception getting device's xml instruction set", e)
             throw e
@@ -127,4 +130,5 @@ class PreyBetaActionsRunner(private val context: Context) : Runnable {
         fun getInstance(context: Context): PreyBetaActionsRunner =
             instance ?: PreyBetaActionsRunner(context).also { instance = it }
     }
+
 }

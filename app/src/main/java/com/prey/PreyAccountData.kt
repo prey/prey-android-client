@@ -84,4 +84,8 @@ class PreyAccountData {
     fun isMissing(): Boolean {
         return isMissing
     }
+
+    override fun toString(): String {
+        return "name:${name} - email:${email} - apiKey:${apiKey} - deviceId:${deviceId}"
+    }
 }

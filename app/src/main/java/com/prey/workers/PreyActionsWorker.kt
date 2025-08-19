@@ -9,10 +9,10 @@ package com.prey.workers
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.prey.actions.aware.AwareController
-import com.prey.PreyConfig
+
 import com.prey.PreyLogger
 import com.prey.beta.actions.PreyBetaActionsRunner
+
 import org.json.JSONObject
 
 /**
@@ -41,20 +41,22 @@ class PreyActionsWorker
         val context = applicationContext
         try {
             var jsonObject: List<JSONObject>? = null
-            jsonObject=PreyBetaActionsRunner.getInstance(context).getInstructions(context, true)
+            jsonObject = PreyBetaActionsRunner.getInstance(context).getInstructions(context, true)
             PreyLogger.d("AWARE runInstructions")
-            if (jsonObject!=null){
+            if (jsonObject != null) {
                 PreyBetaActionsRunner.getInstance(context).runInstructions(jsonObject)
             }
             return Result.success()
         } catch (e: NumberFormatException) {
-            PreyLogger.e("----------Error IncrementWorker:${ e.message}", e)
+            PreyLogger.e("----------Error IncrementWorker:${e.message}", e)
             return Result.failure()
         } catch (throwable: Throwable) {
-            PreyLogger.e("----------Error IncrementWorker:${throwable.message}",
+            PreyLogger.e(
+                "----------Error IncrementWorker:${throwable.message}",
                 throwable
             )
             return Result.failure()
         }
     }
+
 }

@@ -28,7 +28,8 @@ class AlarmScheduledReceiver : BroadcastReceiver() {
         try {
             PreyBetaController.getInstance().startPrey(context)
         } catch (e: Exception) {
-            PreyLogger.e("Error AlarmScheduledReceiver:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
+
 }

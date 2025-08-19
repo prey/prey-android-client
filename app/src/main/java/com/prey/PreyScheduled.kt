@@ -70,4 +70,5 @@ class PreyScheduled {
         fun getInstance(): PreyScheduled =
             instance ?: PreyScheduled().also { instance = it }
     }
+
 }

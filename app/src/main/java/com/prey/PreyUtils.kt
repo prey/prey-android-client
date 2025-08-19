@@ -30,16 +30,18 @@ object PreyUtils {
         return getDeviceType(act.applicationContext)
     }
 
-    const val LAPTOP: String = "Laptop"
+    private const val LAPTOP: String = "Laptop"
+    private const val TABLET: String = "Tablet"
+    private const val PHONE: String = "Phone"
 
     fun getDeviceType(context: Context): String {
         return if (isChromebook(context)) {
             LAPTOP
         } else {
             if (isTablet(context)) {
-                "Tablet"
+                TABLET
             } else {
-                "Phone"
+                PHONE
             }
         }
     }
@@ -53,12 +55,12 @@ object PreyUtils {
         try {
             vendor = Build.MANUFACTURER
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         try {
             name = Settings.Secure.getString(context.contentResolver, "bluetooth_name")
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         newName = if (name != null && "" != name) {
             name

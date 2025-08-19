@@ -13,6 +13,9 @@ import android.content.Intent
 import com.prey.events.factories.EventFactory
 import com.prey.events.manager.EventManagerRunner
 import com.prey.PreyConfig
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * EventReceiver is a BroadcastReceiver that listens for events and triggers the execution of the corresponding actions.
@@ -33,8 +36,9 @@ class EventReceiver : BroadcastReceiver() {
             val event = EventFactory.getEvent(context, intent)
             if (event != null) {
                 // If an event is found, execute it in a new thread
-                Thread(EventManagerRunner(context, event)).start()
+                CoroutineScope(Dispatchers.IO).launch { EventManagerRunner(context, event) }
             }
         }
     }
+
 }

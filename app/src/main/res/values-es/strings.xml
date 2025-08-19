@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="app_name">Prey</string>
-
-
     <string name="menu_title_1">estado de tu dispositivo</string>
     <string name="menu_title_2">SIN PROTECCIÓN AÚN.</string>
     <string name="menu_title_3">ESTAMOS CASI LISTOS</string>
     <string name="menu_title_4">Se necesitan permisos de Administrador</string>
     <string name="menu_title_5">Estos permisos permitirán a Prey proteger tu teléfono y ayudarte a controlarlo si se llega a perder o te lo roban. Tu información y privacidad están a salvo con nosotros.</string>
     <string name="menu_button_1">ACTIVAR PROTECCIÓN</string>
-
     <string name="signin_subtitle">cuenta Prey</string>
     <string name="signin_title">INGRESAR</string>
     <string name="field_email_signin">correo</string>
     <string name="field_password_signin">contraseña</string>
     <string name="button_signin">INGRESAR A MI CUENTA</string>
     <string name="link_signin">¿No tienes cuenta aún?</string>
-
     <string name="signup_subtitle">cuenta Prey</string>
     <string name="signup_title">REGÍSTRATE</string>
     <string name="field_name_signup">tu nombre</string>
@@ -24,12 +20,10 @@
     <string name="field_password_signup">contraseña</string>
     <string name="button_signup">CREAR MI NUEVA CUENTA</string>
     <string name="link_signup">¿Ya tienes una cuenta?</string>
-
     <string name="permission_error_title_1">estado de tu dispositivo</string>
     <string name="permission_error_title_2">DESPROTEGIDO.</string>
     <string name="permission_error_title_3">Prey utiliza el Permiso de Administrador de Dispositivo para su funciones de Borrado Remoto y Bloqueo.\nActivar el permiso te permitirá utilizar estas funcione de manera remota para combatir el robo de información.\nCon el Borrado Remoto puedes eliminar los datos de un equipo perdido, mientras que la función de Bloqueo impide el acceso con una pantalla de bloqueo y una contraseña.</string>
     <string name="permission_error_button_1">ACTIVAR PROTECCIÓN</string>
-
     <string name="protect_title_1">estado de tu dispositivo</string>
     <string name="protect_title_2">PROTEGIDO</string>
     <string name="protect_button_title_1">CONTROLAR REMOTAMENTE</string>
@@ -39,41 +33,32 @@
     <string name="protect_title_3">Ve el tour</string>
     <string name="protect_title_4">¿Qué puede hacer Prey? </string>
     <string name="protect_title_5">¿Cómo desinstalar Prey?</string>
-
     <string name="password_subtitle">Por tu seguridad, escribe tu contraseña, para entrar a la configuración de tu equipo.</string>
     <string name="password_button">INGRESAR</string>
     <string name="password_forgot">¿OLVIDASTE TU CONTRASEÑA?</string>
     <string name="password_hint">Escriba su contraseña</string>
-
     <string name="tour_01_title">DESCARGA PREY EN LOS DISPOSITIVOS QUE DESEES PROTEGER.</string>
     <string name="tour_01_subtitle">Funciona en todos los grandes sistemas operativos para permitirte seguir su rastro y activar funciones en todos tus dispositivos desde tu cuenta Prey.</string>
     <string name="tour_01_button">SIGUIENTE</string>
-
     <string name="tour_02_title">UBICACIÓN Y MUCHO MÁS</string>
     <string name="tour_02_subtitle">Una vez activado remotamente desde tu cuenta Prey, tu dispositivo reunirá y te enviará evidencia detallada, incluyendo una foto de quien lo está usando - muchas veces, información crucial que la policía necesita para entrar en acción.</string>
     <string name="tour_02_button">SIGUIENTE</string>
-
     <string name="tour_03_title">EVITAR ACCESO DESAUTORIZADO</string>
     <string name="tour_03_subtitle">Usa Prey para bloquear completamente tus dispositivos y eliminar contraseñas guardadas, para asegurarte de que nadie pueda ver tus cosas personales. Todo esto, consumiendo el mínimo de batería.</string>
     <string name="tour_03_button">SIGUIENTE</string>
-
     <string name="tour_04_title">LA PRIVACIDAD PRIMERO</string>
     <string name="tour_04_subtitle">La información sensible solo es recolectada cuando lo pidas, y es solo para tus ojos - nada es enviado sin tu permiso. Cuando quieras, puedes revisar nuestro código fuente para asegurarte de esto.</string>
     <string name="tour_04_button">SIGUIENTE</string>
-
     <string name="tour_05_title">NO TOMES SOLO NUESTRA PALABRA</string>
     <string name="tour_05_subtitle">Estoy eufórico y riendo de emoción porque realmente funcionó.</string>
     <string name="tour_05_button">SIGUIENTE</string>
-
     <string name="tour_06_title">GRATIS Y SIN TRUCO, PLANES PARA PROTECCIÓN MÁS COMPLETA</string>
     <string name="tour_06_subtitle">Prey es completamente gratis mientras tú quieras. ¡También tenemos planes con más características!</string>
     <string name="tour_06_button">AHORA, TÚ TIENES EL CONTROL</string>
-
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
-
     <string name="feedback_principal_title">Está todo bien?</string>
     <string name="feedback_principal_message">Al parecer llevas usando Prey por un buen tiempo. ¿Estarías dispuesto a darnos tu opinión?</string>
     <string name="feedback_principal_button1">Me encanta</string>
@@ -85,7 +70,6 @@
     <string name="feedback_form_button1">OK, enviar</string>
     <string name="feedback_form_button2">NO, gracias</string>
     <string name="feedback_form_send_email">Enviar correo</string>
-
     <string name="preferences_password_old">Contraseña actual</string>
     <string name="preferences_password_new">Nueva contraseña</string>
     <string name="preferences_password_confirm">Confirma la contraseña</string>
@@ -101,7 +85,7 @@
     <string name="preferences_detach_dialog_message">Se va a eliminar este equipo del Panel de Control. Esto además eliminará todos los reportes almacenados para este equipo.\n\n¿Estás seguro?</string>
     <string name="preferences_detach_dettaching_message">Removiendo el equipo.\nUn segundo…</string>
     <string name="preferences_admin_disabled_dialog_title">Permisos adicionales</string>
-     <string name="preferences_admin_disabled_dialog_message">Está a punto de conceder Prey privilegios de seguridad especial, que le permitirá bloquear de forma remota el dispositivo.\nHaga clic en Sí para continuar.</string>
+    <string name="preferences_admin_disabled_dialog_message">Está a punto de conceder Prey privilegios de seguridad especial, que le permitirá bloquear de forma remota el dispositivo.\nHaga clic en Sí para continuar.</string>
     <string name="preferences_disable_power_options_title">Bloquear Botón de Apagado</string>
     <string name="preferences_disable_power_options_summary">Evita que se apague tu equipo manualmente, al intentar apagar se pedirá tu PIN Prey. Una notificación queda visible debido a políticas de Android</string>
     <string name="preferences_disable_power_options_summary_old">Tu dispositivo no puede ser apagado si la pantalla está bloqueada</string>
@@ -120,15 +104,11 @@
     <string name="preferences_passwords_updating_dialog">Actualizando tu cuenta Prey.\nUn segundo…</string>
     <string name="preferences_passwords_successfully_changed">Tu contraseña fue cambiada exitosamente</string>
     <string name="preferences_admin_device_setting_uninstallation_password">Asignando contraseña de desinstalación</string>
-
     <string name="device_admin_label">Seguridad extra</string>
     <string name="device_admin_description">Prey utiliza permisos de administración para bloquear el dispositivo y para evitar su desinstalación. En caso de querer desinstalar Prey, es necesario quitar estos permisos.</string>
     <string name="device_added_congratulations_text">Has agregado exitosamente este equipo a tu cuenta Prey. A continuación verás las opciones de configuración.</string>
-
     <string name="location_notification_prefix">Geofix enviado:</string>
-
     <string name="popup_alert_title">Mensaje importante</string>
-
     <string name="error_title">¡Tenemos un problema!</string>
     <string name="error_communication_exception">Revisa tu conexión y vuelve a intentarlo.</string>
     <string name="error_communication_500">No pudimos comunicarnos con nuestros servidores debido a un error de conexión. por favor asegúrate de tener una conexión estable.</string>
@@ -139,40 +119,27 @@
     <string name="error_already_register">¿Ya está registrado?</string>
     <string name="error_mail_out_of_range">El largo de la dirección de correo debe ser entre %1$s y %2$s caracteres.</string>
     <string name="error_password_out_of_range">El largo de la contraseña debe ser entre %1$s y %2$s caracteres.</string>
-
     <string name="password_wrong">Contraseña incorrecta. Inténtalo nuevamente.</string>
     <string name="password_intents_exceed">Has fallado 3 veces.</string>
     <string name="password_checking_dialog">Comprobando tu contraseña…\n¡Un segundo!</string>
-    <string name="loading">Cargando,esper por favor..</string>
-
+    <string name="loading">Cargando, espere por favor..</string>
     <string name="set_old_user_loading">Agregando equipo a la cuenta…</string>
     <string name="set_old_user_no_more_devices_title">¡Oh, caramba!</string>
     <string name="set_old_user_no_more_devices_text">Alcanzaste el límite de equipos en tu cuenta gratuita. Elimina uno, o considera mejorar tu cuenta a un plan pago para expandir tu espacio y funciones: https://www.preyproject.com/es/precios</string>
     <string name="set_new_user_dialog_creating_popup">Creando la cuenta.\nUn segundo…</string>
-
     <string name="create_my_account">¡CREAR MI CUENTA!</string>
     <string name="creating_account_please_wait">Creando cuenta. Por favor espera…</string>
-
     <string name="new_account_congratulations_text">Has instalado exitosamente Prey en tu equipo.\nPara finalizar el proceso debes confirmar tu email haciendo clic en el enlace que te acabamos de enviar a %s.</string>
-
     <string name="updating_info_message">Actualizando información, un segundo…</string>
-
-
     <string name="geofence_not_available">Servicio Geofence no está disponible ahora</string>
     <string name="geofence_too_many_geofences">Su aplicación ha registrado demasiados geofences</string>
     <string name="geofence_too_many_pending_intents">Usted ha proporcionado demasiados PendingIntents</string>
     <string name="unknown_geofence_error">Error desconocido: el servicio Geofence no está disponible ahora</string>
-
     <string name="geofence_transition_entered">Entró</string>
     <string name="geofence_transition_exited">Salió</string>
     <string name="unknown_geofence_transition">Desconocido Transición</string>
-
     <string name="home_button">REGÍSTRATE</string>
     <string name="home_subtitle">¿Ya tienes una cuenta? <u>Iniciar sesión</u></string>
-
-
-
-
     <string name="home_text_0">Ashley usa Prey en todos sus dispositivos: su Macbook, su teléfono y su tablet Android. Un día, estando en el lugar y momento equivocado, alguien robó su tablet.</string>
     <string name="home_text_1">Saluden a Steve, suele robar objetos cuando ve la oportunidad.</string>
     <string name="home_text_2">Perder un dispositivo significa también perder datos, recuerdos y un equipo bastante caro.</string>
@@ -180,33 +147,17 @@
     <string name="home_text_4">Lo bueno es que Ashley tiene Prey activado. Ya recibió los reportes de su tablet robada y la policía tiene evidencia sólida para atrapar al ladrón.</string>
     <string name="home_text_5">Con el trabajo de Prey y la policía, Ashley pudo recuperar su dispositivo.</string>
     <string name="home_text_6">No esperes a que pase lo peor para actuar.\n<b>Regístrate, ingresa tus datos y configura Prey en tu teléfono.</b></string>
-
-
-
-    <!-- preferece -->
     <string name="preference_pin">PIN Prey</string>
     <string name="preference_pin_summary">Crea tu código PIN de 4 dígitos para activar el uso de la función de Bloqueo de Botón de apagado</string>
-    <!--<string name="preference_pin_summary">Crea tu código PIN de 4 dígitos para activar el uso de las acciones remotas vía comandos SMS y la función de Bloqueo de Botón de apagado</string>-->
-    <!--<string name="preference_pin_summary_subtitle">Este PIN se pedirá al utilizar comandos SMS o al bloquear el botón de apagado</string>-->
     <string name="preference_pin_summary_subtitle">Este PIN se pedirá al utilizar al bloquear el botón de apagado</string>
     <string name="preference_pin_dialog_title">Configura tu PIN de seguridad Prey</string>
-
     <string name="preference_pin_updating_dialog">Actualizando PIN Prey</string>
     <string name="preference_pin_successfully_changed">PIN Prey actualizado correctamente</string>
     <string name="preference_pin_removed">PIN Prey fue eliminado</string>
-
     <string name="preference_pin_save">Grabar PIN</string>
     <string name="preference_pin_remove">Borrar PIN</string>
-
     <string name="preference_sms">Comandos SMS</string>
     <string name="preference_sms_summary">Permite ejecutar acciones en tu dispositivo de forma remota, enviando instrucciones a través de un mensaje de texto</string>
-
-
-
-
-
-
-    <!-- preferece sms-->
     <string name="preference_sms_category_title">SMS</string>
     <string name="preference_sms_checkbox_title">Activar comandos SMS</string>
     <string name="preference_sms_checkbox_summary">Envía un mensaje de texto a tu teléfono con el comando que necesites y la acción se activará en tu dispositivo</string>
@@ -223,36 +174,22 @@
     <string name="preference_sms_command_alert_summary">Mostrará some_text como notificación del sistema</string>
     <string name="preference_sms_command_wipe">prey PIN wipe</string>
     <string name="preference_sms_command_wipe_summary">Borrará todos los datos del dispositivo: un “restablecimiento de fábrica”. Útil para proteger información privada, pero puede eliminar Prey. Usar con precaución!</string>
-
-
-    <!-- Location Low Battery  -->
     <string name="preferences_location_low_battery_options_title">Activar ubicación con batería baja</string>
     <string name="preferences_location_low_battery_options_summary">Obtiene la ubicación de su dispositivo cuando la batería se encuentra baja</string>
-
-    <!-- Warning Alert  -->
     <string name="warning_notification_title">¡Atención! Prey necesita permisos</string>
     <string name="warning_notification_body">Toca aquí para otorgar permisos </string>
-
     <string name="warning_title">Prey requiere múltiples permisos de Android para funcionar al máximo, estos son:</string>
     <string name="warning_body"><b>Permiso de Administrador</b>\nHabilita el borrado y bloqueo remoto con contraseña del móvil, utilizado para combatir el robo de datos en móviles.\n\n<b>Permisos de cámara: ubicación y estado</b>\nEsenciales a la hora de rastrear al equipo y de generar los reportes de evidencia cuando este se pierde, incluyen fotografías y datos del móvil.\n\n<b>Permiso de superposición</b>\nPermite que el bloqueo de pantalla de Prey sea robusto, ya que se presenta por encima de la interfaz, evitando toda interacción de navegación.\n\n<b>Acceso a llamadas y contacto</b>\nPrey utiliza este permiso para obtener y proveer al usuario el IMEI del móvil, no hace uso de los contactos ni realiza llamadas con el mismo.\n\n<b>Acceso multimedia y de archivos</b>\nPermite el uso de la función de recuperación de archivos y el borrado de datos, para salvar documentos en equipos perdidos o borrarlos.</string>
-
-
     <string name="warning_re_approve">Otorgar</string>
     <string name="warning_close">Cerrar</string>
-
     <string name="location_settings">Es necesario que actives todas las fuentes de ubicación en \"Ajustes  Ubicación\" para poder obtener su ubicación</string>
     <string name="go_to_settings">Ir a ajustes</string>
-
-
     <string name="error">Error</string>
     <string name="new_version_available">Existe una nueva versión disponible. ¿Deseas descargarla ahora?</string>
     <string name="accept">Aceptar</string>
     <string name="download">Descargar</string>
     <string name="ccontinue">Continuar</string>
     <string name="information">Información</string>
-
-
-    <!-- barcode -->
     <string name="permission_camera_rationale">Se necesita acceso a la cámara para la detección</string>
     <string name="no_camera_permission">Esta aplicación no se puede ejecutar porque no tiene el permiso de la cámara. La aplicación se cerrará ahora.</string>
     <string name="low_storage_error">Dependencias de detección de rostros no se pueden descargar debido a un almacenamiento dispositivo de baja</string>
@@ -265,10 +202,6 @@
     <string name="barcode_failure">No código de barras capturada</string>
     <string name="barcode_error">"Error al leer el código de barras: %1$s"</string>
     <string name="barcode_find_your_QR">Visita panel.preyproject.com/qr\n en tu computador y escanea el código QR</string>
-
-
-
-    <!-- Warning Android 7 Alert  -->
     <string name="warning_android7_notification_title">Prey necesita nuevos permisos en este dispositivo</string>
     <string name="warning_android7_notification_body">Aprovecha el bloqueo remoto mejorado para Android 7.</string>
     <string name="warning_android7_title">Nuevos permisos para un bloqueo fortificado!</string>
@@ -279,23 +212,16 @@
     <string name="lock_unlock">ACEPTAR</string>
     <string name="lock_close">CERRAR</string>
     <string name="disable_power_ready">Equipo activamente protegido por Prey</string>
-
     <string name="i_agree_terms_conditions">He leído y acepto los <u>Términos y Condiciones y la Política de Privacidad</u>.</string>
     <string name="i_confirm_i_am_over_16">Declaro ser mayor de 16 años.</string>
     <string name="i_offer">Quiero recibir anuncios de ofertas y promociones de Prey a mi casilla.</string>
-
     <string name="super_lock">Para apagar el dispositivo ingresa tu PIN y vuelve a intentarlo.</string>
-
     <string name="preferences_block_app_uninstall_summary">Evita la desinstalación de la app y bloquea el móvil con tu PIN Prey. Si hay un patrón o código de bloqueo activo, se utilizará en vez del PIN.</string>
     <string name="preferences_block_app_uninstall_title">Bloquear Desinstalación</string>
-
     <string name="preference_background_summary">A partir de Android 8.0, Prey debe mostrar una notificación para rastrear y activar zonas de control con la app en segundo plano.</string>
     <string name="preference_background_title">Correr en Segundo Plano</string>
-
-
     <string name="preferences_disable_power_alert_android9_title">No Disponible en Android 9 en adelante</string>
     <string name="preferences_disable_power_alert_android9_message">Esta función no está disponible en esta versión de Android por restricciones de Google.</string>
-
     <string name="preference_biometric_summary">Utiliza tu huella digital en vez de tu contraseña para ingresar a Configuraciones de la aplicación</string>
     <string name="preference_biometric_title">Iniciar Sesión con Huella</string>
     <string name="biometric_prompt_title">Activar Huella Digital</string>
@@ -303,41 +229,31 @@
     <string name="biometric_prompt_cancelled">Autenticación cancelada</string>
     <string name="biometric_prompt_error">Entra al menú de Configuraciones de la app con tu contraseña y activa la función.</string>
     <string name="biometric_touch">Toca el sensor de huella digital</string>
-
     <string name="password">Contraseña</string>
     <string name="password2">Seis dígitos</string>
     <string name="password_description">Ingrese su contraseña de Prey</string>
     <string name="password_description2">Código de seguridad de seis dígitos</string>
     <string name="use_password">Usar contraseña</string>
     <string name="use_fingerprint">Usar huella</string>
-
     <string name="picture">Picture</string>
     <string name="description_info">Info</string>
     <string name="request_permission">This sample needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
-
-
-
-
     <string name="pre_report_title">Este es un reporte de prueba. Estas alertas o mensajes no se mostrarán al crear uno real.</string>
     <string name="pre_report_camera1">Tomando fotografía frontal...</string>
     <string name="pre_report_camera2">Tomando fotografía trasera...</string>
     <string name="pre_report_location">Recolectando ubicación...</string>
     <string name="pre_report_public_ip">Recolectando IP local...</string>
-
     <string name="close_alert">Cerrar</string>
     <string name="title_alert">Alerta importante</string>
-
     <string name="permission_camera">Cámara</string>
     <string name="permission_phone">Teléfono</string>
     <string name="permission_storage">Almacenamiento</string>
     <string name="permission_location">Ubicación</string>
     <string name="permission_message_popup">El permiso de %1$s no fue dado, y esto afecta el funcionamiento de Prey. Por favor, otórgalo manualmente en las configuraciones.\n\nSeleccione Permisos -> Habilitar permiso</string>
     <string name="permission_manually">Permitir manualmente</string>
-
     <string name="email_resend">Si el correo ingresado es válido, recibirá las instrucciones de activación en breve.</string>
     <string name="permission_summary">Habilitar el servicio de accesibilidad para Prey permite bloquear todas las aplicaciones antes de que se abran cuando el dispositivo está marcado como perdido.</string>
-
     <string name="next">SIGUIENTE</string>
     <string name="skip">OMITIR</string>
     <string name="start">ENTENDIDO</string>
@@ -360,7 +276,6 @@
     <string name="onboarding03_body">Protege tus equipos y sus datos con acciones de seguridad remotas como el Bloqueo, el Borrado y la Alarma.</string>
     <string name="onboarding04_tit">RECUPERAR CON EVIDENCIA</string>
     <string name="onboarding04_body">Recibe reportes de evidencia con fotos, capturas de pantalla, redes WiFi cercanas, ubicaciones y más.</string>
-
     <string name="text_batch">Da un nombre a este dispositivo para identificarlo en Prey.</string>
     <string name="placehoder_batch">Escribe aquí</string>
     <string name="button_batch">Siguiente</string>
@@ -374,7 +289,7 @@
     <string name="preferences_uninstall_summary">¿Deseas continuar con el proceso de remover los permisos de Prey en este dipositivo? Recuerda reiniciar y luego desintalar.</string>
     <string name="finger_title">Ingresar con huella</string>
     <string name="finger_description">Permite a Prey usar tu huella digital para acceder a la configuración de aplicación.</string>
-
     <string name="restriction_title_setup_key">Clave de configuración</string>
     <string name="restriction_description_setup_key">Clave de cuenta</string>
+    <string name="permissions_not_granted_by_user">Permisos no otorgados por el usuario</string>
 </resources>

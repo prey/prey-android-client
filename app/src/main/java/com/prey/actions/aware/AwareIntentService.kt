@@ -31,7 +31,7 @@ class AwareIntentService : IntentService(PreyConfig.TAG) {
         val geofencingEvent = GeofencingEvent.fromIntent(intent!!)
         // If the geofencing event is not null, process it.
         if (geofencingEvent != null) {
-            PreyLogger.d("AWARE AwareIntentService event:" + (if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) "GEOFENCING_IN" else "GEOFENCING_OUT"))
+            PreyLogger.d("AWARE AwareIntentService event:${(if (geofencingEvent.geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) "GEOFENCING_IN" else "GEOFENCING_OUT")}")
             processGeofencingEvent(geofencingEvent)
         }
         stopSelf()
@@ -83,7 +83,7 @@ class AwareIntentService : IntentService(PreyConfig.TAG) {
                 AwareController.getInstance().sendAware(context, PreyLocation(location))
                 AwareController.getInstance().registerGeofence(context)
             } catch (e: Exception) {
-                PreyLogger.e("AWARE notifyGeofenceTransition error:" + e.message, e)
+                PreyLogger.e("AWARE notifyGeofenceTransition error:${e.message}", e)
             }
         }
     }
@@ -94,15 +94,12 @@ class AwareIntentService : IntentService(PreyConfig.TAG) {
      * @param i The error code.
      */
     private fun onError(i: Int) {
-        PreyLogger.d("AWARE onError in " + (if (i == Geofence.GEOFENCE_TRANSITION_ENTER) "GEOFENCING_IN" else "GEOFENCING_OUT"))
+        PreyLogger.d("AWARE onError in ${(if (i == Geofence.GEOFENCE_TRANSITION_ENTER) "GEOFENCING_IN" else "GEOFENCING_OUT")}")
     }
-
 
     companion object {
         const val GEOFENCING_OUT: String = "geofencing_out"
-
         const val GEOFENCING_IN: String = "geofencing_in"
     }
-
 
 }

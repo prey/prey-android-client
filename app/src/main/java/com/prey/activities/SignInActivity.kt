@@ -25,11 +25,8 @@ import com.prey.PreyAccountData
 import com.prey.PreyApp
 import com.prey.PreyConfig
 import com.prey.R
-import com.prey.barcodereader.BarcodeActivity
 import com.prey.PreyLogger
 import com.prey.PreyUtils
-import com.prey.net.PreyWebServices
-import com.prey.preferences.RunBackgroundCheckBoxPreference
 import com.prey.util.KeyboardStatusDetector
 
 /**
@@ -73,6 +70,7 @@ class SignInActivity : Activity() {
         editTextPassword.setTypeface(magdacleanmonoRegular)
         val keyboard = KeyboardStatusDetector()
         keyboard.registerActivity(this)
+        PreyConfig.getInstance(applicationContext).setActivityView(SIGN_IN_ACTIVITY_FORM)
         // Set click listener for sign in button
         buttonSignin.setOnClickListener {
             val email = emailText.text.toString()
@@ -113,24 +111,24 @@ class SignInActivity : Activity() {
             progressDialog.setCancelable(false)
             progressDialog.show()
         } catch (e: Exception) {
-            PreyLogger.e("error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         try {
             noMoreDeviceError = false
             error = null
             val accountData: PreyAccountData? =
-                PreyWebServices.getInstance().registerNewDeviceToAccount(
+                PreyConfig.getInstance(context).getWebServices().registerNewDeviceToAccount(
                     context,
                     mail, password, PreyUtils.getDeviceType(context)
                 )
             PreyConfig.getInstance(context).saveAccount(accountData!!)
             PreyConfig.getInstance(context).registerC2dm()
-            val email = PreyWebServices.getInstance().getEmail(context)
+            val email = PreyConfig.getInstance(context).getWebServices().getEmail(context)
             PreyConfig.getInstance(context).setEmail(email!!)
             PreyConfig.getInstance(context).setRunBackground(true)
-            PreyApp().run(context)
+            PreyApp().initialize(context)
         } catch (e: Exception) {
-            PreyLogger.e("error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
             error = e.message
         }
         try {
@@ -150,6 +148,7 @@ class SignInActivity : Activity() {
                     )
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
+                PreyConfig.getInstance(applicationContext).setActivityView(SIGN_IN_ACTIVITY_WELCOME)
                 intent.putExtras(bundle)
                 startActivity(intent)
                 finish()
@@ -161,14 +160,19 @@ class SignInActivity : Activity() {
                         R.string.ok
                     ) { dialog, which -> }.setCancelable(false)
                 alertDialog.show()
+                PreyConfig.getInstance(applicationContext).setActivityView(SIGN_IN_ACTIVITY_ERROR)
             }
         } catch (e: Exception) {
-            PreyLogger.e("error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
 
     companion object {
         private const val NO_MORE_DEVICES_WARNING = 0
         private const val ERROR = 3
+        const val SIGN_IN_ACTIVITY_FORM: String = "SIGN_IN_ACTIVITY_FORM"
+        const val SIGN_IN_ACTIVITY_ERROR: String = "SIGN_IN_ACTIVITY_ERROR"
+        const val SIGN_IN_ACTIVITY_WELCOME: String = "SIGN_IN_ACTIVITY_WELCOME"
     }
+
 }

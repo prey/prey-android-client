@@ -36,4 +36,5 @@ class TriggerActionDto {
     fun setAction(action: String?) {
         this.action = action
     }
+
 }

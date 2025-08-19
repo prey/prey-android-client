@@ -183,6 +183,8 @@ class TriggerOpenHelper(context: Context?) :
         const val COLUMN_NAME: String = "_name"
         const val COLUMN_EVENTS: String = "_events"
         const val COLUMN_ACTIONS: String = "_actions"
-        const val TRIGGER_TABLE_CREATE = "CREATE TABLE ${TRIGGER_TABLE_NAME} (${COLUMN_ID} TEXT PRIMARY KEY,  ${COLUMN_NAME} TEXT, ${COLUMN_EVENTS} TEXT, ${COLUMN_ACTIONS} TEXT );"
+        const val TRIGGER_TABLE_CREATE =
+            "CREATE TABLE ${TRIGGER_TABLE_NAME} (${COLUMN_ID} TEXT PRIMARY KEY,  ${COLUMN_NAME} TEXT, ${COLUMN_EVENTS} TEXT, ${COLUMN_ACTIONS} TEXT );"
     }
+
 }

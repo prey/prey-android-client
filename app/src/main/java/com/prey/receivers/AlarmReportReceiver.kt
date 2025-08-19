@@ -12,6 +12,9 @@ import android.content.Intent
 
 import com.prey.actions.report.ReportService
 import com.prey.PreyLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * AlarmReportReceiver is a BroadcastReceiver that listens for alarm events and triggers the ReportService.
@@ -29,13 +32,12 @@ class AlarmReportReceiver : BroadcastReceiver() {
             PreyLogger.d("______________________________")
             PreyLogger.d("______________________________")
             PreyLogger.d("----------AlarmReportReceiver onReceive")
-            object : Thread() {
-                override fun run() {
-                    ReportService().run(context)
-                }
-            }.start()
+            CoroutineScope(Dispatchers.IO).launch {
+                ReportService().run(context)
+            }
         } catch (e: Exception) {
-            PreyLogger.e("_______AlarmReportReceiver error:" + e.message, e)
+            PreyLogger.e("_______AlarmReportReceiver error: ${e.message}", e)
         }
     }
+
 }

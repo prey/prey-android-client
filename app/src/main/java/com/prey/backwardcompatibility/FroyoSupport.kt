@@ -6,28 +6,24 @@
  ******************************************************************************/
 package com.prey.backwardcompatibility
 
-import android.annotation.TargetApi
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
-import android.telephony.TelephonyManager
 import com.prey.exceptions.PreyException
-import com.prey.json.actions.Lock
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyUtils
-import com.prey.beta.actions.PreyBetaActionsRunner
-import com.prey.receivers.PreyDeviceAdmin
+import com.prey.actions.lock.LockAction
+import com.prey.receivers.PreyDeviceAdminReceiver
 
-@TargetApi(Build.VERSION_CODES.FROYO)
 class FroyoSupport private constructor(val context: Context) {
 
     private val policyManager =
         context.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
-    var deviceAdmin: ComponentName = ComponentName(context, PreyDeviceAdmin::class.java)
+    var deviceAdmin: ComponentName = ComponentName(context, PreyDeviceAdminReceiver::class.java)
 
     @Throws(PreyException::class)
     fun changePasswordAndLock(newPass: String?, lock: Boolean) {
@@ -35,8 +31,8 @@ class FroyoSupport private constructor(val context: Context) {
             PreyLogger.d("change0")
             if (isAdminActive()) {
                 PreyLogger.d("change1")
-                val isPatternSet = Lock().isPatternSet(context)
-                val isPassOrPinSet = Lock().isPassOrPinSet(context)
+                val isPatternSet = LockAction().isPatternSet(context)
+                val isPassOrPinSet = LockAction().isPassOrPinSet(context)
                 if (!isPatternSet && !isPassOrPinSet) {
                     try {
                         var length = 0
@@ -67,7 +63,7 @@ class FroyoSupport private constructor(val context: Context) {
                         if (lock) {
                             lockNow()
                         }
-                        PreyLogger.e("locked:" + e1.message, e1)
+                        PreyLogger.e("locked: ${e1.message}", e1)
                         throw PreyException("This device couldn't be locked")
                     }
                 }
@@ -84,11 +80,11 @@ class FroyoSupport private constructor(val context: Context) {
         if (isAdminActive()) policyManager.lockNow()
     }
 
-    fun isAdminActive(): Boolean  = if (!PreyUtils.isChromebook(context)) {
-            policyManager.isAdminActive(deviceAdmin)
-        } else {
-            true
-        }
+    fun isAdminActive(): Boolean = if (!PreyUtils.isChromebook(context)) {
+        policyManager.isAdminActive(deviceAdmin)
+    } else {
+        true
+    }
 
     fun removeAdminPrivileges() {
         policyManager.removeActiveAdmin(deviceAdmin)
@@ -102,7 +98,7 @@ class FroyoSupport private constructor(val context: Context) {
         return intent
     }
 
-    fun wipe() {
+    fun wipeData() {
         if (isAdminActive()) policyManager.wipeData(0)
     }
 
@@ -145,4 +141,5 @@ class FroyoSupport private constructor(val context: Context) {
         fun getInstance(context: Context): FroyoSupport =
             instance ?: FroyoSupport(context).also { instance = it }
     }
+
 }

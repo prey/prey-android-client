@@ -14,6 +14,7 @@ import android.os.StrictMode.VmPolicy
 import android.view.View
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
+import com.prey.PreyConfig
 import com.prey.R
 import com.prey.PreyLogger
 import com.prey.PreyUtils
@@ -65,6 +66,11 @@ class ChromeActivity : AppCompatActivity() {
         val language: String = PreyUtils.getLanguage()
         webView.loadUrl("${CheckPasswordHtmlActivity.URL_ONB}#/$language/chrome")
         webView.loadUrl("javascript:window.location.reload(true)")
+        PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_CHROME)
+    }
+
+    companion object {
+        const val ACTIVITY_CHROME: String = "ACTIVITY_CHROME"
     }
 
 }

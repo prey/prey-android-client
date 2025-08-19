@@ -1,0 +1,91 @@
+[versions]
+agp = "8.12.0"
+
+coreVersion = "1.6.1"
+espressoWeb = "3.6.1"
+
+firebaseAnalytics = "22.4.0"
+firebaseBom = "33.14.0"
+firebaseCore = "21.1.1"
+firebaseCrashlytics = "19.4.3"
+firebaseDatabase = "21.0.0"
+firebaseIid = "21.1.0"
+firebaseMessaging = "24.1.1"
+kotlin = "2.0.21"
+coreKtx = "1.16.0"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
+kotlinTestJunit = "1.8.22"
+
+constraintlayout = "2.2.1"
+lifecycleLivedataKtx = "2.9.0"
+lifecycleViewmodelKtx = "2.9.0"
+
+mockitoVersion = "5.17.0"
+mockkVersion ="1.13.17"
+navigationFragmentKtx = "2.9.0"
+navigationUiKtx = "2.9.0"
+google-services = "4.4.2"
+crashlytics = "3.0.3"
+
+rulesVersion = "1.0.2"
+
+lifecycleRuntimeKtx = "2.9.0"
+composeBom = "2025.05.01"
+activityCompose = "1.10.1"
+
+[libraries]
+androidx-espresso-web = { module = "androidx.test.espresso:espresso-web", version.ref = "espressoWeb" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-core = { module = "com.google.firebase:firebase-core", version.ref = "firebaseCore" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics", version.ref = "firebaseCrashlytics" }
+firebase-database = { module = "com.google.firebase:firebase-database", version.ref = "firebaseDatabase" }
+firebase-iid = { module = "com.google.firebase:firebase-iid", version.ref = "firebaseIid" }
+google-firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalytics" }
+google-firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-junit-ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "junitVersion" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+
+core = { module = "androidx.test:core", version.ref = "coreVersion" }
+core-ktx = { module = "androidx.test:core-ktx", version.ref = "coreVersion" }
+
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlinTestJunit" }
+
+mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoVersion" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoVersion" }
+io-mockk-mockk-agent = { module = "io.mockk:mockk-agent", version.ref = "mockkVersion" }
+io-mockk-mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockkVersion" }
+
+test-rules = { module = "com.android.support.test:rules", version.ref = "rulesVersion" }
+test-runner = { module = "com.android.support.test:runner", version.ref = "rulesVersion" }
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
+koverAndroidReport = { id = "org.jetbrains.kotlinx.kover", version = "0.9.1" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

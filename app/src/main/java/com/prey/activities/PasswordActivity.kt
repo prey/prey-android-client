@@ -9,8 +9,10 @@ package com.prey.activities
 import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Typeface
+import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
 import android.view.View
+import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -21,7 +23,10 @@ import com.prey.PreyStatus
 import com.prey.R
 import com.prey.events.Event
 import com.prey.events.manager.EventManagerRunner
-import com.prey.net.PreyWebServices
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Activity responsible for handling password entry and validation.
@@ -31,6 +36,20 @@ class PasswordActivity : PreyActivity() {
      * Counter for the number of wrong password intents.
      */
     var wrongPasswordIntents: Int = 0
+
+    /**
+     * Called when the activity is created.
+     * Initializes the activity and sets up the window feature.
+     *
+     * @param savedInstanceState The saved instance state, or null if not saved
+     */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        setContentView(R.layout.password2)
+        bindPasswordControls()
+        PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_PASSWORD)
+    }
 
     /**
      * Binds the password controls to their respective listeners.
@@ -85,7 +104,7 @@ class PasswordActivity : PreyActivity() {
         try {
             val apikey: String = PreyConfig.getInstance(context).getApiKey()!!
             PreyLogger.d("apikey:${apikey} password:${password}")
-            isPasswordOk = PreyWebServices.getInstance().checkPassword(
+            isPasswordOk = PreyConfig.getInstance(context).getWebServices().checkPassword(
                 this@PasswordActivity, apikey,
                 password
             )
@@ -125,12 +144,17 @@ class PasswordActivity : PreyActivity() {
             )
             PreyStatus.getInstance().setPreyConfigurationActivityResume(true)
             startActivity(intentConfiguration)
-            Thread(
+            CoroutineScope(Dispatchers.IO).launch {
                 EventManagerRunner(
                     this@PasswordActivity,
                     Event(Event.APPLICATION_OPENED)
                 )
-            ).start()
+            }
         }
     }
+
+    companion object {
+        const val ACTIVITY_PASSWORD: String = "ACTIVITY_PASSWORD"
+    }
+
 }

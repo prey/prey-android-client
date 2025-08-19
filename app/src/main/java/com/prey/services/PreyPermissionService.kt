@@ -7,9 +7,9 @@
 package com.prey.services
 
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+
 import com.prey.activities.OpenSettingsActivity
 
 class PreyPermissionService : Service() {
@@ -33,4 +33,5 @@ class PreyPermissionService : Service() {
         intentConfiguration.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intentConfiguration)
     }
+
 }

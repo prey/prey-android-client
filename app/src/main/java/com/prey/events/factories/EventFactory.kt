@@ -21,6 +21,9 @@ import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPermission
 import com.prey.net.UtilConnection
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -82,9 +85,9 @@ object EventFactory {
             }
             // Location mode changed or providers changed
             LOCATION_MODE_CHANGED, LOCATION_PROVIDERS_CHANGED -> {
-                Thread {
+                CoroutineScope(Dispatchers.IO).launch {
                     sendLocationAware(context)
-                }.start()
+                }
             }
             // Device shutdown
             ACTION_SHUTDOWN -> return Event(Event.TURNED_OFF)
@@ -171,7 +174,7 @@ object EventFactory {
      * @param context The application context.
      * @return True if airplane mode is enabled, false otherwise.
      */
-    private fun isAirplaneModeOn(context: Context): Boolean {
+    public fun isAirplaneModeOn(context: Context): Boolean {
         return Settings.System.getInt(
             context.contentResolver,
             Settings.System.AIRPLANE_MODE_ON,

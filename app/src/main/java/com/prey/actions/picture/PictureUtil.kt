@@ -55,15 +55,13 @@ class PictureUtil private constructor(var context: Context) {
                 //get current volume
                 currentVolume = mgr!!.getStreamVolume(AudioManager.STREAM_MUSIC)
                 PreyConfig.getInstance(context).setVolume(currentVolume)
-
-
                 do {
                     try {
                         getInstance(context).dataImagen = null
                         PreyLogger.d("report front attempts FRONT:$attempts")
                         val frontPicture = getPicture(context, BACK)
                         if (frontPicture != null) {
-                            PreyLogger.d("report data length front=" + frontPicture.size)
+                            PreyLogger.d("report data length front=${frontPicture.size}")
                             val file: InputStream = ByteArrayInputStream(frontPicture)
                             val entityFile = EntityFile()
                             entityFile.setFileInputStream(file)
@@ -71,13 +69,13 @@ class PictureUtil private constructor(var context: Context) {
                             entityFile.setFileName("picture.jpg")
                             entityFile.setName("picture")
                             entityFile.setFileType("image/png")
-                            entityFile.setFileId(sdf.format(Date()) + "_" + entityFile.getFileType())
+                            entityFile.setFileId("${sdf.format(Date())}_${entityFile.getFileType()}")
                             entityFile.setFileSize(frontPicture.size)
                             data.addEntityFile(entityFile)
                             attempts = maximum
                         }
                     } catch (e: Exception) {
-                        PreyLogger.e("report error:" + e.message, e)
+                        PreyLogger.e("report error:${e.message}", e)
                         PreyFirebaseCrashlytics.getInstance(context).recordException(e)
                     }
                     attempts++
@@ -91,7 +89,7 @@ class PictureUtil private constructor(var context: Context) {
                             PreyLogger.d("report back attempts BACK:$attempts")
                             val backPicture = getPicture(context, FRONT)
                             if (backPicture != null) {
-                                PreyLogger.d("report data length back=" + backPicture.size)
+                                PreyLogger.d("report data length back=${backPicture.size}")
                                 val file: InputStream = ByteArrayInputStream(backPicture)
                                 val entityFile = EntityFile()
                                 entityFile.setFileInputStream(file)
@@ -99,7 +97,7 @@ class PictureUtil private constructor(var context: Context) {
                                 entityFile.setFileName("screenshot.jpg")
                                 entityFile.setName("screenshot")
                                 entityFile.setFileType("image/png")
-                                entityFile.setFileId(sdf.format(Date()) + "_" + entityFile.getFileType())
+                                entityFile.setFileId("${sdf.format(Date())}_${entityFile.getFileType()}")
                                 entityFile.setFileSize(backPicture.size)
                                 data.addEntityFile(entityFile)
                                 attempts = maximum
@@ -121,7 +119,7 @@ class PictureUtil private constructor(var context: Context) {
             context.startActivity(intentCamera)
             context.sendBroadcast(Intent(CheckPasswordHtmlActivity.CLOSE_PREY))
         } catch (e: Exception) {
-            PreyLogger.e("report error:" + e.message, e)
+            PreyLogger.e("report error: ${e.message}", e)
             PreyFirebaseCrashlytics.getInstance(context).recordException(e)
         } finally {
             try {
@@ -135,7 +133,7 @@ class PictureUtil private constructor(var context: Context) {
                     )
                 }
             } catch (e: Exception) {
-                PreyLogger.e("report error:" + e.message, e)
+                PreyLogger.e("report error: ${e.message}", e)
                 PreyFirebaseCrashlytics.getInstance(context).recordException(e)
             }
         }
@@ -147,7 +145,7 @@ class PictureUtil private constructor(var context: Context) {
      *
      * @return byte array
      */
-    private fun getPicture(context: Context, focus: String): ByteArray? {
+    public fun getPicture(context: Context, focus: String): ByteArray? {
         var mgr: AudioManager? = null
         getInstance(context).dataImagen = null
         val streamType = AudioManager.STREAM_SYSTEM
@@ -171,13 +169,13 @@ class PictureUtil private constructor(var context: Context) {
                 }
             }
         } catch (e: Exception) {
-            PreyLogger.e("report error:" + e.message, e)
+            PreyLogger.e("report error:${e.message}", e)
         }
         while (getInstance(context).activity == null && i < 10) {
             try {
                 Thread.sleep(500)
             } catch (e: InterruptedException) {
-                PreyLogger.e("report error:" + e.message, e)
+                PreyLogger.e("report error: ${e.message}", e)
             }
             i++
         }
@@ -195,12 +193,12 @@ class PictureUtil private constructor(var context: Context) {
                 i++
             }
         } catch (e: InterruptedException) {
-            PreyLogger.e("report error:" + e.message, e)
+            PreyLogger.e("report error: ${e.message}", e)
         }
         try {
             Thread.sleep(1000)
         } catch (e: InterruptedException) {
-            PreyLogger.e("report error:" + e.message, e)
+            PreyLogger.e("report error: ${e.message}", e)
         }
         var out: ByteArray? = null
         if (getInstance(context).activity != null) {
@@ -220,7 +218,7 @@ class PictureUtil private constructor(var context: Context) {
                 )
             }
         } catch (e: Exception) {
-            PreyLogger.e("report error:" + e.message, e)
+            PreyLogger.e("report error: ${e.message}", e)
         }
         return out
     }
@@ -235,15 +233,14 @@ class PictureUtil private constructor(var context: Context) {
     }
 
     companion object {
-        private var instance: PictureUtil? = null
-        fun getInstance(context: Context): PictureUtil {
-            return instance ?: PictureUtil(context).also { instance = it }
-        }
-
         const val TAG: String = "memory"
         const val FRONT: String = "front"
         const val BACK: String = "back"
         const val DATA_ID: String = "webcam"
+        private var instance: PictureUtil? = null
+        fun getInstance(context: Context): PictureUtil {
+            return instance ?: PictureUtil(context).also { instance = it }
+        }
     }
 
 }

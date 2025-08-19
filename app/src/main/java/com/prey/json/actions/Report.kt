@@ -9,12 +9,11 @@ package com.prey.json.actions
 import android.content.Context
 import android.os.Build
 
+import com.prey.PreyConfig
+import com.prey.PreyLogger
 import com.prey.actions.observer.ActionResult
 import com.prey.actions.report.ReportScheduled
 import com.prey.json.UtilJson
-import com.prey.PreyConfig
-import com.prey.PreyLogger
-import com.prey.net.PreyWebServices
 import com.prey.services.ReportJobService
 
 import org.json.JSONObject
@@ -34,7 +33,13 @@ class Report {
      * @param parameters A JSONObject containing the report parameters.
      */
     fun get(context: Context, actionResults: List<ActionResult>?, parameters: JSONObject?) {
-        val jobId = parameters?.getString(PreyConfig.JOB_ID)
+        var jobId: String? = null
+        try {
+            jobId = UtilJson.getStringValue(parameters, PreyConfig.JOB_ID)
+            PreyLogger.d("jobId:${jobId}")
+        } catch (e: java.lang.Exception) {
+            PreyLogger.e("Error:${e.message}", e)
+        }
         var reason: String? = null
         if (jobId != null && "" != jobId) {
             reason = "{\"device_job_id\":\"$jobId\"}"
@@ -47,7 +52,7 @@ class Report {
         try {
             interval = UtilJson.getIntValue(parameters, "interval")
             PreyLogger.d("interval:${interval}")
-        } catch (e: Exception) {
+        } catch (e: java.lang.Exception) {
             interval = 0
         }
         var exclude: String? = ""
@@ -55,21 +60,31 @@ class Report {
             exclude = UtilJson.getStringValue(parameters, "exclude")
             PreyLogger.d("exclude:${exclude}")
         } catch (e: Exception) {
-            PreyLogger.e("Error:${e.message}",  e)
+            PreyLogger.e("Error:${e.message}", e)
         }
-        val messageId = parameters?.getString(PreyConfig.MESSAGE_ID) ?: ""
-        PreyConfig.getInstance(context).setIntervalReport("" + interval);
-        PreyConfig.getInstance(context).setExcludeReport(exclude!!);
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
+        var messageId: String? = null
+        try {
+            messageId = UtilJson.getStringValue(parameters, PreyConfig.MESSAGE_ID)
+            PreyLogger.d("messageId:${messageId}")
+        } catch (e: java.lang.Exception) {
+            PreyLogger.e("Error:${e.message}", e)
+        }
+        PreyConfig.getInstance(context).setIntervalReport("$interval");
+        try {
+            PreyConfig.getInstance(context).setExcludeReport(exclude!!);
+        } catch (Exception: Exception) {
+            PreyConfig.getInstance(context).setExcludeReport("");
+        }
+        PreyConfig.getInstance(context).getWebServices().sendNotifyActionResultPreyHttp(
             context,
             "processed",
             messageId,
             UtilJson.makeMapParam("get", "report", "started", reason)
         )
         PreyLogger.d("________start ReportScheduled")
-        ReportScheduled.getInstance(context)!!.run()
+        ReportScheduled.getInstance(context).run()
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            ReportJobService.schedule(context)
+            ReportJobService.scheduleJob(context)
         }
     }
 
@@ -82,12 +97,11 @@ class Report {
      */
     fun stop(context: Context, actionResults: List<ActionResult?>?, parameters: JSONObject?) {
         PreyLogger.d("________stop Report")
-        val messageId = parameters?.getString(PreyConfig.MESSAGE_ID) ?: ""
-        ReportScheduled.getInstance(context)!!.reset()
+        ReportScheduled.getInstance(context).reset()
         PreyConfig.getInstance(context).setMissing(false)
         PreyConfig.getInstance(context).setIntervalReport("")
         PreyConfig.getInstance(context).setExcludeReport("")
-        ReportJobService.cancel(context)
+        ReportJobService.cancelJob(context)
     }
 
     /**
@@ -126,7 +140,8 @@ class Report {
             parameters.put("interval", intervalReport)
             Report().get(context, null, parameters)
         } catch (e: Exception) {
-            PreyLogger.e("Error:${e.message}",  e)
+            PreyLogger.e("Error:${e.message}", e)
         }
     }
+
 }

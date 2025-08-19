@@ -62,7 +62,7 @@ class ReportScheduled private constructor(var context: Context) {
             }
             PreyLogger.d("----------start report [$minute] ReportScheduled")
         } catch (e: Exception) {
-            PreyLogger.e("----------Error ReportScheduled :${e.message}",e)
+            PreyLogger.e("----------Error ReportScheduled :${e.message}", e)
         }
     }
 
@@ -79,7 +79,7 @@ class ReportScheduled private constructor(var context: Context) {
                 PreyLogger.d("_________________shutdown report [$minute] alarmIntent")
                 minute = 0
             } catch (e: Exception) {
-                PreyLogger.e("----------Error ReportScheduled ::${e.message}",e)
+                PreyLogger.e("----------Error ReportScheduled ::${e.message}", e)
             }
         }
     }
@@ -90,4 +90,5 @@ class ReportScheduled private constructor(var context: Context) {
             return instance ?: ReportScheduled(context).also { instance = it }
         }
     }
+
 }

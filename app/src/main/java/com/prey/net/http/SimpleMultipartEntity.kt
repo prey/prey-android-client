@@ -63,7 +63,7 @@ class SimpleMultipartEntity {
         try {
             out.write(("\r\n--$boundary--\r\n").toByteArray())
         } catch (e: IOException) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
         isSetLast = true
     }
@@ -83,7 +83,7 @@ class SimpleMultipartEntity {
                 out.write(("\r\n--$boundary\r\n").toByteArray())
             }
         } catch (e: IOException) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
     }
 
@@ -136,20 +136,20 @@ class SimpleMultipartEntity {
             out.flush()
             outputStream.flush()
         } catch (e: IOException) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         } finally {
             if (outputStream != null) {
                 try {
                     outputStream.close()
                 } catch (e: IOException) {
-                    PreyLogger.e("Error:" + e.message, e)
+                    PreyLogger.e("Error:${e.message}", e)
                 }
             }
             if (fin != null) {
                 try {
                     fin.close()
                 } catch (e: IOException) {
-                    PreyLogger.e("Error:" + e.message, e)
+                    PreyLogger.e("Error:${e.message}", e)
                 }
             }
         }
@@ -167,7 +167,7 @@ class SimpleMultipartEntity {
         try {
             addPart(key, value.name, FileInputStream(value), isLast)
         } catch (e: FileNotFoundException) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error:${e.message}", e)
         }
     }
 

@@ -15,11 +15,11 @@ import android.os.Bundle
 import android.view.Window
 
 import com.prey.backwardcompatibility.FroyoSupport
-import com.prey.json.actions.Lock
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPermission
-import com.prey.services.CheckLockActivated
+import com.prey.actions.lock.LockAction
+import com.prey.services.CheckLockService
 import com.prey.services.PreyLockHtmlService
 import com.prey.services.PreyLockService
 
@@ -108,11 +108,11 @@ class LoginActivity : Activity() {
                 applicationContext.startService(
                     Intent(
                         applicationContext,
-                        CheckLockActivated::class.java
+                        CheckLockService::class.java
                     )
                 )
             } else {
-                Lock().lockWhenYouNocantDrawOverlays(applicationContext)
+                LockAction().lockWhenYouNocantDrawOverlays(applicationContext)
             }
         }
         val ready: Boolean = PreyConfig.getInstance(this).getProtectReady()
@@ -129,10 +129,14 @@ class LoginActivity : Activity() {
     private fun showLogin() {
         var intent: Intent? = null
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            PreyConfig.getInstance(applicationContext)
+                .setActivityView(ACTIVITY_LOGIN_CHECK_PASSWORD_HTML)
             intent = Intent(this@LoginActivity, CheckPasswordHtmlActivity::class.java)
         } else {
             val registered = PreyConfig.getInstance(this).isThisDeviceAlreadyRegisteredWithPrey()
             if (registered) {
+                PreyConfig.getInstance(applicationContext)
+                    .setActivityView(ACTIVITY_LOGIN_CHECK_PASSWORD)
                 intent = Intent(this@LoginActivity, CheckPasswordActivity::class.java)
             } else {
                 val canDrawOverlays = PreyPermission.canDrawOverlays(this)
@@ -141,13 +145,18 @@ class LoginActivity : Activity() {
                 PreyLogger.d("LoginActivity: isAdminActive:${isAdminActive}")
                 val configurated = canDrawOverlays && isAdminActive
                 intent = if (configurated) {
+                    PreyConfig.getInstance(applicationContext)
+                        .setActivityView(ACTIVITY_LOGIN_CHECK_SIGN_IN)
                     Intent(this@LoginActivity, SignInActivity::class.java)
                 } else {
+                    PreyConfig.getInstance(applicationContext)
+                        .setActivityView(ACTIVITY_LOGIN_CHECK_ONBOARDING)
                     Intent(this@LoginActivity, OnboardingActivity::class.java)
                 }
             }
         }
         if (PreyConfig.getInstance(this).isChromebook()) {
+            PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_LOGIN_CHECK_CHROME)
             intent = Intent(this@LoginActivity, ChromeActivity::class.java)
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -159,13 +168,15 @@ class LoginActivity : Activity() {
      * Shows the login batch activity.
      */
     private fun showLoginBatch() {
+        PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_LOGIN_CHECK_SPLASH)
         var intent: Intent? = null
         intent = Intent(this@LoginActivity, SplashBatchActivity::class.java)
         startActivity(intent)
         finish()
     }
 
-    private fun isThisDeviceAlreadyRegisteredWithPrey(): Boolean = PreyConfig.getInstance(this@LoginActivity)
+    private fun isThisDeviceAlreadyRegisteredWithPrey(): Boolean =
+        PreyConfig.getInstance(this@LoginActivity)
             .isThisDeviceAlreadyRegisteredWithPrey(false)
 
     private fun showFeedback(context: Context) {
@@ -174,8 +185,18 @@ class LoginActivity : Activity() {
         context.startActivity(popup)
     }
 
-    private fun isThereBatchInstallationKey(): Boolean{
-            val apiKeyBatch = PreyConfig.getInstance(this@LoginActivity).getApiKeyBatch()
-            return (apiKeyBatch != null && "" != apiKeyBatch)
-        }
+    private fun isThereBatchInstallationKey(): Boolean {
+        val apiKeyBatch = PreyConfig.getInstance(this@LoginActivity).getApiKeyBatch()
+        return (apiKeyBatch != null && "" != apiKeyBatch)
+    }
+
+    companion object {
+        const val ACTIVITY_LOGIN_CHECK_PASSWORD_HTML: String = "ACTIVITY_LOGIN_CHECK_PASSWORD_HTML"
+        const val ACTIVITY_LOGIN_CHECK_PASSWORD: String = "ACTIVITY_LOGIN_CHECK_PASSWORD"
+        const val ACTIVITY_LOGIN_CHECK_SIGN_IN: String = "ACTIVITY_LOGIN_CHECK_SIGN_IN"
+        const val ACTIVITY_LOGIN_CHECK_ONBOARDING: String = "ACTIVITY_LOGIN_CHECK_ONBOARDING"
+        const val ACTIVITY_LOGIN_CHECK_SPLASH: String = "ACTIVITY_LOGIN_CHECK_SPLASH"
+        const val ACTIVITY_LOGIN_CHECK_CHROME: String = "ACTIVITY_LOGIN_CHECK_CHROME"
+    }
+
 }

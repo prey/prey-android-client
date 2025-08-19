@@ -30,7 +30,7 @@ object UtilJson {
             json.put("target", target)
             json.put("status", status)
         } catch (e: JSONException) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         return json
     }
@@ -54,7 +54,7 @@ object UtilJson {
         try {
             json.put("reason", reason)
         } catch (e: JSONException) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         return json
     }
@@ -167,4 +167,5 @@ object UtilJson {
         }
         return out
     }
+
 }

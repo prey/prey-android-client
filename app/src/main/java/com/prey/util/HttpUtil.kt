@@ -38,7 +38,7 @@ class HttpUtil {
             inputStream = connection.getInputStream()
             contents = convertStreamToString(inputStream)
         } catch (e: Exception) {
-            PreyLogger.e("getContents error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         } finally {
             if (inputStream != null) {
                 try {
@@ -66,7 +66,7 @@ class HttpUtil {
             sb = StringBuilder()
             var line: String? = null
             while ((reader.readLine().also { line = it }) != null) {
-                sb.append(line + "\n")
+                sb.append("${line}\n")
             }
         } catch (e: Exception) {
         } finally {

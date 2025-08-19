@@ -91,7 +91,7 @@ class FileretrievalOpenHelper(context: Context?) :
     fun deleteFileretrieval(id: String) {
         val database = this.writableDatabase
         val deleteQuery =
-            "DELETE FROM  " + FILERETRIEVAL_TABLE_NAME + " where " + COLUMN_FILEID + "='" + id + "'"
+            "DELETE FROM ${FILERETRIEVAL_TABLE_NAME} where ${COLUMN_FILEID}='${id}'"
         PreyLogger.d("query:$deleteQuery")
         database.execSQL(deleteQuery)
         database.close()
@@ -118,7 +118,7 @@ class FileretrievalOpenHelper(context: Context?) :
             var cursor: Cursor? = null
             val list: MutableList<FileretrievalDto> = ArrayList()
             try {
-                val selectQuery = "SELECT  * FROM ${FILERETRIEVAL_TABLE_NAME}"
+                val selectQuery = "SELECT * FROM ${FILERETRIEVAL_TABLE_NAME}"
                 val database = this.readableDatabase
                 cursor = database.rawQuery(selectQuery, null)
                 if (cursor.moveToFirst()) {
@@ -175,7 +175,7 @@ class FileretrievalOpenHelper(context: Context?) :
                 try {
                     cursor.close()
                 } catch (e1: Exception) {
-                    PreyLogger.e("Error:${e1.message}", e1)
+                    PreyLogger.e("Error: ${e1.message}", e1)
                 }
             }
         }
@@ -193,4 +193,5 @@ class FileretrievalOpenHelper(context: Context?) :
         const val FILERETRIEVAL_TABLE_CREATE =
             "CREATE TABLE ${FILERETRIEVAL_TABLE_NAME} (${COLUMN_FILEID} TEXT PRIMARY KEY, ${COLUMN_PATH} TEXT,${COLUMN_SIZE} REAL,${COLUMN_STATUS} INTEGER);"
     }
+
 }

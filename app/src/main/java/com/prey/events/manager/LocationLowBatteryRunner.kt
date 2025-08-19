@@ -12,7 +12,6 @@ import com.prey.actions.observer.ActionsController
 import com.prey.json.parser.JSONParser
 import com.prey.PreyConfig
 import com.prey.PreyLogger
-import com.prey.backwardcompatibility.FroyoSupport
 
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -36,7 +35,7 @@ class LocationLowBatteryRunner(var context: Context) : Runnable {
             val jsonString =
                 "[ {\"command\": \"get\",\"target\": \"location_low_battery\",\"options\": {}}]"
             val jsonObjectList: List<JSONObject>? =
-                JSONParser().getJSONFromTxt(context, jsonString.toString())
+                JSONParser().getJSONFromTxt(jsonString)
             // If the list is not empty, run the corresponding action
             if (jsonObjectList != null && jsonObjectList.size > 0) {
                 ActionsController.getInstance().runActionJson(context, jsonObjectList)
@@ -93,4 +92,5 @@ class LocationLowBatteryRunner(var context: Context) : Runnable {
         fun getInstance(context: Context): LocationLowBatteryRunner =
             instance ?: LocationLowBatteryRunner(context).also { instance = it }
     }
+
 }

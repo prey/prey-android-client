@@ -75,6 +75,7 @@ class FeedbackActivity : PreyActivity() {
                     finish()
                 }
                 dialog = builder.create()
+                PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_FEEDBACK)
             }
         }
         return dialog!!
@@ -98,6 +99,7 @@ class FeedbackActivity : PreyActivity() {
                 val now = Date().time
                 now > twoWeeksLater
             }
+
             else -> false
         }
     }
@@ -107,5 +109,7 @@ class FeedbackActivity : PreyActivity() {
         private const val FLAG_FEEDBACK_INIT = 0
         private const val FLAG_FEEDBACK_C2DM = 1
         private const val FLAG_FEEDBACK_SEND = 2
+        const val ACTIVITY_FEEDBACK: String = "ACTIVITY_FEEDBACK"
     }
+
 }

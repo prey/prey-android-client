@@ -14,6 +14,7 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.prey.PreyConfig
 
 import com.prey.R
 
@@ -79,5 +80,11 @@ class PermissionActivity : AppCompatActivity() {
                 arrow3.setImageResource(R.drawable.down)
             }
         }
+        PreyConfig.getInstance(applicationContext).setActivityView(PERMISSION_FORM)
     }
+
+    companion object {
+        const val PERMISSION_FORM: String = "PERMISSION_FORM"
+    }
+
 }

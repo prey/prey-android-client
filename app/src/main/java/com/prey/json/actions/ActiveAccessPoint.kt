@@ -44,14 +44,18 @@ class ActiveAccessPoint : JsonAction() {
      * @param parameters     The JSON parameters.
      * @return The HTTP data service containing the active access point data.
      */
-    override fun run(context: Context, actionResults: MutableList<ActionResult>?, parameters: JSONObject?): HttpDataService {
+    override fun run(
+        context: Context,
+        actionResults: MutableList<ActionResult>?,
+        parameters: JSONObject?
+    ): HttpDataService {
         // Create a new HTTP data service for the active access point
-        val activeAccessPointData= HttpDataService("active_access_point")
+        val activeAccessPointData = HttpDataService("active_access_point")
         activeAccessPointData.setList(true)
-        val phone= PreyPhone.getInstance(context)
-        val wifi= phone.getWifi()
+        val phone = PreyPhone.getInstance(context)
+        val wifi = phone.getWifi()
         // Check if WiFi is enabled and available
-        if (wifi!=null && wifi.isWifiEnabled()) {
+        if (wifi != null && wifi.isWifiEnabled()) {
             val ssid = wifi.getSsid()
             // Check if the SSID is valid
             if (ssid != null && ssid.isNotEmpty() && ssid != "<unknown ssid>") {

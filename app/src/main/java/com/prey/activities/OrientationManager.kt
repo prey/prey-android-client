@@ -18,7 +18,7 @@ class OrientationManager : OrientationEventListener {
     }
 
     var screenOrientation: ScreenOrientation? = null
-    private var listener: OrientationListener? = null
+    var listener: OrientationListener? = null
 
     /**
      * Constructs an OrientationManager with the given context, rate, and listener.
@@ -90,4 +90,5 @@ class OrientationManager : OrientationEventListener {
     interface OrientationListener {
         fun onOrientationChange(screenOrientation: ScreenOrientation?)
     }
+
 }

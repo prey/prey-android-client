@@ -13,6 +13,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Window
+import com.prey.PreyConfig
 
 import com.prey.R
 import com.prey.events.factories.EventFactory
@@ -43,8 +44,14 @@ class OpenSettingsActivity : Activity() {
             val uri = Uri.fromParts("package", this.packageName, null)
             intentSetting.setData(uri)
             intentSetting.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            PreyConfig.getInstance(applicationContext).setActivityView(DETAILS_SETTINGS)
             this.startActivity(intentSetting)
         }
         finish()
     }
+
+    companion object {
+        const val DETAILS_SETTINGS: String = "DETAILS_SETTINGS"
+    }
+
 }

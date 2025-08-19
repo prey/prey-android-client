@@ -145,4 +145,5 @@ class EntityFile {
     fun setFileSize(size: Int) {
         fileSize = size
     }
+
 }

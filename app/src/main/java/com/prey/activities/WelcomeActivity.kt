@@ -84,6 +84,7 @@ class WelcomeActivity : FragmentActivity() {
             ready()
         } else {
             val intent = Intent(applicationContext, LoginActivity::class.java)
+            PreyConfig.getInstance(applicationContext).setActivityView(LOGIN_ACTIVITY)
             startActivity(intent)
             finish()
         }
@@ -94,10 +95,13 @@ class WelcomeActivity : FragmentActivity() {
      */
     fun ready() {
         PreyLogger.d("ready WelcomeActivity")
-        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Intent(applicationContext, CheckPasswordHtmlActivity::class.java)
+        var intent: Intent? = null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PreyConfig.getInstance(applicationContext).setActivityView(CHECK_PASSWORD_ACTIVITY)
+            intent = Intent(applicationContext, CheckPasswordHtmlActivity::class.java)
         } else {
-            Intent(applicationContext, DeviceReadyActivity::class.java)
+            PreyConfig.getInstance(applicationContext).setActivityView(DEVICE_READY_ACTIVITY)
+            intent = Intent(applicationContext, DeviceReadyActivity::class.java)
         }
         startActivity(intent)
         finish()
@@ -129,5 +133,9 @@ class WelcomeActivity : FragmentActivity() {
 
     companion object {
         private const val SECURITY_PRIVILEGES = 10
+        const val CHECK_PASSWORD_ACTIVITY = "CheckPasswordHtmlActivity"
+        const val DEVICE_READY_ACTIVITY = "DeviceReadyActivity"
+        const val LOGIN_ACTIVITY = "LoginActivity"
     }
+
 }

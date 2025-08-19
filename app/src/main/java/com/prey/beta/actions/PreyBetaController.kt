@@ -9,6 +9,9 @@ package com.prey.beta.actions
 import android.content.Context
 
 import com.prey.PreyConfig
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Controller class for Prey beta actions.
@@ -21,6 +24,7 @@ class PreyBetaController {
      * @param context The application context.
      */
     fun startPrey(context: Context) {
+        PreyConfig.getInstance(context).setLastEvent("start_prey")
         startPrey(context, null)
     }
 
@@ -33,10 +37,9 @@ class PreyBetaController {
     fun startPrey(context: Context, cmd: String?) {
         // Check if the device is already registered with Prey.
         if (PreyConfig.getInstance(context).isThisDeviceAlreadyRegisteredWithPrey()) {
-            Thread {
-                // Get the Prey beta actions runner instance and execute the actions.
+            CoroutineScope(Dispatchers.IO).launch {
                 PreyBetaActionsRunner.getInstance(context).execute()
-            }.start()
+            }
         }
     }
 

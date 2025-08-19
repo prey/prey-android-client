@@ -6,11 +6,14 @@
  ******************************************************************************/
 package com.prey.actions.location
 
+import android.Manifest
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
 import android.os.IBinder
+import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -42,17 +45,12 @@ class LastLocationService : Service() {
         startForegroundService(this)
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        super.onStartCommand(intent, flags, startId)
-        return START_STICKY
-    }
-
     /**
      * Starts the foreground service.
      *
      * @param context Context of the application
      */
-    fun startForegroundService(context: Context) {
+    private fun startForegroundService(context: Context) {
         PreyLogger.d("AWARE LocationUpdatesService Start foreground service.kt")
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
         mLocationCallback = object : LocationCallback() {
@@ -90,21 +88,43 @@ class LastLocationService : Service() {
     private fun getLastLocation(context: Context) {
         PreyLogger.d("LocationUpdatesService getLastLocation")
         try {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return
+            }
             mFusedLocationClient!!.lastLocation.addOnCompleteListener { task ->
                 PreyLogger.d("LocationUpdatesService onComplete kt")
                 if (task.isSuccessful && task.result != null) {
                     mLocation = task.result
                     PreyLogger.d(
-                        "AWARE LastLocationService lat__ :" + LocationUtil.round(
-                            mLocation!!.latitude
-                        ) + " lng:" + LocationUtil.round(
-                            mLocation!!.longitude
-                        ) + " acc:" + LocationUtil.round(
-                            mLocation!!.accuracy.toDouble()
-                        )
+                        "AWARE LastLocationService lat:${
+                            LocationUtil.round(
+                                mLocation!!.latitude
+                            )
+                        } lng:${
+                            LocationUtil.round(
+                                mLocation!!.longitude
+                            )
+                        } acc:${
+                            LocationUtil.round(
+                                mLocation!!.accuracy.toDouble()
+                            )
+                        }"
                     )
                     val preyLocation = PreyLocation(mLocation)
-
                     PreyConfig.getInstance(context).setLocation(preyLocation)
                     PreyConfig.getInstance(context).setLocationAware(preyLocation)
                     AwareController.getInstance().sendAware(context, preyLocation)
@@ -140,4 +160,5 @@ class LastLocationService : Service() {
         private const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2
     }
+
 }

@@ -33,6 +33,14 @@ class PasswordHtmlActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.webview)
         PreyLogger.d("PasswordHtmlActivity: onCreate")
+        val unlockPass: String? = PreyConfig.getInstance(applicationContext).getUnlockPass()
+        val isLock = unlockPass != null && "" != unlockPass
+        PreyLogger.d("PasswordHtmlActivity isLock:$isLock")
+        if (!isLock) {
+            PreyConfig.getInstance(this).setLoadUrl(URL_OUT)
+            finishAffinity()
+            return
+        }
         myWebView = findViewById<View>(R.id.install_browser) as WebView
         myWebView!!.setOnKeyListener { view, i, keyEvent ->
             CustomWebView.callDispatchKeyEvent(applicationContext, keyEvent)
@@ -47,36 +55,28 @@ class PasswordHtmlActivity : Activity() {
         settings.setSupportZoom(false)
         settings.builtInZoomControls = false
         val lng: String = PreyUtils.getLanguage()
-        var url = "%s#/%s/%s"
-        val lockMessage: String? = PreyConfig.getInstance(this).getLockMessage()
-        url = if (lockMessage != null && "" != lockMessage) {
-            String.format(url, CheckPasswordHtmlActivity.URL_ONB, lng, "lockmessage")
+        var url = "${CheckPasswordHtmlActivity.URL_ONB}#/${lng}/"
+        val lockMessage: String? = PreyConfig.getInstance(applicationContext).getLockMessage()
+        if (lockMessage != null && "" != lockMessage) {
+            url += URL_LOCK_WIH_MESSAGE
         } else {
-            String.format(url, CheckPasswordHtmlActivity.URL_ONB, lng, "lock")
+            url += URL_LOCK
         }
         myWebView!!.addJavascriptInterface(
             WebAppInterface(this, this),
             CheckPasswordHtmlActivity.JS_ALIAS
         )
+        PreyConfig.getInstance(applicationContext).setLoadUrl(url)
         myWebView!!.loadUrl(url)
+        PreyConfig.getInstance(this).setLoadUrl(url)
         myWebView!!.loadUrl("javascript:window.location.reload(true)")
         PreyConfig.getInstance(this).viewLock = myWebView
     }
 
-    /**
-     * Called when the activity is resumed.
-     */
-    override fun onResume() {
-        super.onResume()
-        val unlockPass: String? = PreyConfig.getInstance(applicationContext).getUnlockPass()
-        val isLock = unlockPass != null && "" != unlockPass
-        PreyLogger.d("PasswordHtmlActivity isLock:$isLock")
-        if (!isLock) {
-            finishAffinity()
-        }
+    companion object {
+        const val URL_LOCK: String = "lock"
+        const val URL_LOCK_WIH_MESSAGE: String = "lockmessage"
+        const val URL_OUT: String = "out"
     }
 
-    fun pfinish() {
-        finishAffinity()
-    }
 }

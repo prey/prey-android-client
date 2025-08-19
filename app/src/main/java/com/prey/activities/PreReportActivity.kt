@@ -1,403 +1,202 @@
-/*******************************************************************************
- * Created by Orlando Aliaga
- * Copyright 2025 Prey Inc. All rights reserved.
- * License: GPLv3
- * Full license at "/LICENSE"
- ******************************************************************************/
 package com.prey.activities
 
-import android.annotation.TargetApi
-import android.app.Activity
+import android.Manifest
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.ImageFormat
 import android.graphics.Matrix
-import android.graphics.Typeface
+import android.graphics.Paint
+import android.graphics.SurfaceTexture
 import android.hardware.Camera
 import android.hardware.SensorManager
+import android.hardware.camera2.CameraCaptureSession
+import android.hardware.camera2.CameraCaptureSession.CaptureCallback
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraDevice
+import android.hardware.camera2.CameraManager
+import android.hardware.camera2.CameraMetadata
+import android.hardware.camera2.CaptureRequest
+import android.hardware.camera2.TotalCaptureResult
+import android.media.Image
+import android.media.ImageReader
+import android.media.ImageReader.OnImageAvailableListener
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
+import android.util.Size
+import android.util.SparseIntArray
+import android.view.Surface
 import android.view.SurfaceHolder
-import android.view.SurfaceView
+import android.view.TextureView
+import android.view.TextureView.SurfaceTextureListener
 import android.view.View
-import android.widget.TextView
-import com.prey.R
+import androidx.activity.ComponentActivity
+import androidx.core.app.ActivityCompat
 import com.prey.PreyConfig
+import com.prey.PreyConfig.Companion.getInstance
 import com.prey.PreyLogger
+import com.prey.PreyLogger.Companion.e
 import com.prey.PreyPhone
-import com.prey.PreyWifi
-import com.prey.actions.location.LocationUtil
+import com.prey.R
+import com.prey.actions.location.LastLocationService
 import com.prey.actions.location.PreyLocation
+import com.prey.actions.picture.PictureUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.BufferedOutputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
+import java.util.Arrays
 
-class PreReportActivity : Activity(), SurfaceHolder.Callback,
-    OrientationManager.OrientationListener {
-    var focus: String = ""
-    var firstPicture: Boolean = false
-    var secondPicture: Boolean = false
-    var orientationManager: OrientationManager? = null
+class PreReportActivity : ComponentActivity(), OrientationManager.OrientationListener {
 
+    private var textureView: TextureView? = null
+    private var cameraId: String? = null
+    private var cameraDevice: CameraDevice? = null
+    private var cameraCaptureSessions: CameraCaptureSession? = null
+    private var captureRequestBuilder: CaptureRequest.Builder? = null
+    private var imageDimension: Size? = null
+    private var imageReader: ImageReader? = null
+    private val REQUEST_CAMERA_PERMISSION: Int = 200
+    private var mBackgroundHandler: Handler? = null
+    private var mBackgroundThread: HandlerThread? = null
+    var focus: String? = null
+    private var screenIntOrientation = -1
+    private var orientationManager: OrientationManager? = null
+    var camera: Camera? = null
     var mHolder: SurfaceHolder? = null
+    var lastLocationServiceIntent: Intent? = null
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.simple_camera2)
-        orientationManager = OrientationManager(
-            applicationContext, SensorManager.SENSOR_DELAY_NORMAL,
-            this
-        )
-        orientationManager!!.enable()
-        val surfaceView = findViewById<View>(R.id.surfaceView1) as SurfaceView
-        mHolder = surfaceView.holder
-        //TODO:cambiar
-        //mHolder.addCallback(this)
-        //mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS)
-        val titilliumWebBold =
-            Typeface.createFromAsset(assets, "fonts/Titillium_Web/TitilliumWeb-Bold.ttf")
-        val pre_report_title = findViewById<View>(R.id.pre_report_title) as TextView
-        pre_report_title.typeface = titilliumWebBold
-        cameraTask()
-    }
-
-    fun takePicture(context: Context, focus: String) {
         try {
-            if (camera != null) {
-                var parameters = camera!!.parameters
-                if (PreyConfig.getInstance(context).isEclairOrAbove()) {
-                    parameters = setParameters1(parameters)
-                }
-                parameters["iso"] = 400
-                if (PreyConfig.getInstance(context).isFroyoOrAbove()) {
-                    parameters = setParameters2(parameters)
-                }
-                camera!!.parameters = parameters
-            }
+            orientationManager = OrientationManager(
+                applicationContext, SensorManager.SENSOR_DELAY_NORMAL,
+                this
+            )
+            orientationManager!!.enable()
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
-        try {
-            if (camera != null) {
-                camera!!.takePicture(shutterCallback, rawCallback, jpegCallback)
-                PreyLogger.d("PreReportActivity open takePicture()")
-            }
-        } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
-        }
+        textureView = findViewById<View>(R.id.texture) as TextureView
     }
 
-    @TargetApi(5)
-    private fun setParameters1(parameters: Camera.Parameters): Camera.Parameters {
-        parameters.flashMode = Camera.Parameters.FLASH_MODE_OFF
-        parameters.whiteBalance = Camera.Parameters.WHITE_BALANCE_AUTO
-        parameters.sceneMode = Camera.Parameters.SCENE_MODE_AUTO
-        return parameters
-    }
+    override fun onResume() {
+        super.onResume()
+        startBackgroundThread()
+        // Start last location service
+        lastLocationServiceIntent = Intent(applicationContext, LastLocationService::class.java)
+        startService(lastLocationServiceIntent)
+        if (textureView!!.isAvailable) {
 
-    @TargetApi(8)
-    private fun setParameters2(parameters: Camera.Parameters): Camera.Parameters {
-        val progress = 0.5f
-        val min = parameters.minExposureCompensation // -3 on my phone
-        val max = parameters.maxExposureCompensation // 3 on my phone
-        val realProgress = progress - 0.5f
-        val value = if (realProgress < 0) {
-            -(realProgress * 2 * min).toInt()
         } else {
-            (realProgress * 2 * max).toInt()
+            textureView!!.surfaceTextureListener = textureListener
         }
-        PreyLogger.d("setExposureCompensation value:$value")
-        PreyLogger.d("setExposureCompensation   max:" + parameters.maxExposureCompensation)
-        parameters.exposureCompensation = value //parameters.getMaxExposureCompensation());
-        return parameters
+        //openCamera()
+        playWithCoroutines(applicationContext)
+        PreyConfig.getInstance(applicationContext).setActivityView(ACTIVITY_PRE_REPORT)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (camera != null) {
-            camera!!.stopPreview()
-            camera!!.release()
-            camera = null
+    private fun playWithCoroutines(context: Context) {
+        PreyLogger.d("playWithCoroutines 1 ${Thread.currentThread()}")
+        coroutineScope.launch {
+            PreyLogger.d("playWithCoroutines 2 ${Thread.currentThread()}")
+            execDelay(2, 1)
+
+            PreyLogger.d("playWithCoroutines 3 ${this.coroutineContext}")
         }
+        PreyLogger.d("Finished playWithCoroutines 4 ${Thread.currentThread()}")
     }
 
-    var shutterCallback: Camera.ShutterCallback = Camera.ShutterCallback { }
-
-    var rawCallback: Camera.PictureCallback =
-        Camera.PictureCallback { data, camera -> }
-
-    var jpegCallback: Camera.PictureCallback =
-        Camera.PictureCallback { data, camera ->
-            PreyLogger.d("PreReportActivity camera jpegCallback")
-            dataImagen = resizeImage(data)
-            try {
-                //Get route with Android 12 support
-                val path = getExternalFilesDir(null).toString() + "/Prey/"
-                PreyLogger.d("PreReportActivity path:$path")
-                try {
-                    File(path).mkdir()
-                } catch (e: Exception) {
-                    PreyLogger.e("Error:" + e.message, e)
-                }
-                val file = File("$path$focus.jpg")
-                val bos = BufferedOutputStream(FileOutputStream(file))
-                bos.write(dataImagen)
-                bos.flush()
-                bos.close()
-                if (dataImagen != null) {
-                    if (FRONT == focus) {
-                        firstPicture = true
-                    } else {
-                        secondPicture = true
-                    }
-                }
-            } catch (e: Exception) {
-                PreyLogger.e("PreReportActivity camera jpegCallback err" + e.message, e)
-            }
-        }
-
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        if (camera != null) {
-            try {
-                val parameters = camera!!.parameters
-                camera!!.parameters = parameters
-            } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
-            }
-            try {
-                camera!!.startPreview()
-            } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
-            }
-        }
-    }
-
-    override fun surfaceCreated(holder: SurfaceHolder) {
-        PreyLogger.d("PreReportActivity camera setPreviewDisplay()")
-        mHolder = holder
+    private suspend fun execDelay(delay: Long, index: Int) {
+        PreyLogger.d("execDelay $index ${Thread.currentThread()}")
+        PreyLogger.d("start $delay")
+        val progressDialog = ProgressDialog(this@PreReportActivity)
         try {
-            if (camera != null) camera!!.setPreviewDisplay(mHolder)
-        } catch (e: Exception) {
-            PreyLogger.e("Error PreviewDisplay:" + e.message, e)
-        }
-    }
-
-    override fun surfaceDestroyed(holder: SurfaceHolder) {
-        PreyLogger.d("PreReportActivity camera surfaceDestroyed()")
-        if (camera != null) {
-            try {
-                camera!!.stopPreview()
-            } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
-            }
-            try {
-                camera!!.release()
-            } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
-            }
-            camera = null
-        }
-    }
-
-    private var screenIntOrientation = -1
-
-    fun resizeImage(input: ByteArray): ByteArray {
-        try {
-            val original = BitmapFactory.decodeByteArray(input, 0, input.size)
-            val resized = Bitmap.createScaledBitmap(original, PHOTO_WIDTH, PHOTO_HEIGHT, true)
-            var resized2: Bitmap? = null
-            val matrix = Matrix()
-            PreyLogger.d("SimpleCameraActivity focus :$focus screenIntOrientation:$screenIntOrientation")
-            if (screenIntOrientation == CODE_PORTRAIT) {
-                if ("front" == focus) {
-                    matrix.postRotate(90f)
-                } else {
-                    matrix.postRotate(270f)
-                }
-            }
-            if (screenIntOrientation == CODE_REVERSED_PORTRAIT) {
-                if ("front" == focus) {
-                    matrix.postRotate(270f)
-                } else {
-                    matrix.postRotate(90f)
-                }
-            }
-            if (screenIntOrientation == CODE_LANDSCAPE) {
-                if ("front" == focus) {
-                    matrix.postRotate(0f)
-                } else {
-                    matrix.postRotate(0f)
-                }
-            }
-            if (screenIntOrientation == CODE_REVERSED_LANDSCAPE) {
-                if ("front" == focus) {
-                    matrix.postRotate(180f)
-                } else {
-                    matrix.postRotate(180f)
-                }
-            }
-            resized2 =
-                Bitmap.createBitmap(resized, 0, 0, resized.width, resized.height, matrix, true)
-            val blob = ByteArrayOutputStream()
-            resized2.compress(Bitmap.CompressFormat.JPEG, 100, blob)
-            return blob.toByteArray()
-        } catch (e: Exception) {
-            return input
-        }
-    }
-
-
-    fun cameraTask() {
-        var progressDialog: ProgressDialog? = null
-        var preyLocation: PreyLocation? = null
-
-        PreyLogger.d("PreReportActivity antes camera")
-        try {
-            progressDialog = ProgressDialog(this@PreReportActivity)
-            progressDialog!!.setMessage(
+            progressDialog.setMessage(
                 applicationContext.getText(R.string.pre_report_camera1).toString()
             )
-            progressDialog!!.isIndeterminate = true
-            progressDialog!!.setCancelable(false)
-            progressDialog!!.show()
-        } catch (e: Exception) {
+            progressDialog.setIndeterminate(true)
+            progressDialog.setCancelable(false)
+            progressDialog.show()
+        } catch (e: java.lang.Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
         }
-
+        focus =
+            PictureUtil.BACK
+        openCamera()
+        delay(delay * 1000)
+        takePicture(applicationContext)
+        closeCamera()
         try {
-            firstPicture = false
-            secondPicture = false
-            //Get route with Android 12 support
-            val path = getExternalFilesDir(null).toString() + "/Prey/"
-            val file1 = File(path + "" + FRONT + ".jpg")
-            file1.delete()
-            val file2 = File(path + "" + BACK + ".jpg")
-            file2.delete()
-            val file3 = File(path + "map.jpg")
-            file3.delete()
-            focus = FRONT
-            var f = 0
-            while (f < MAX_RETRIES) {
-                val cameraInfo = Camera.CameraInfo()
-                Camera.getCameraInfo(0, cameraInfo)
-                camera = Camera.open(0)
-                if (camera != null) {
-                    try {
-                        camera!!.setPreviewDisplay(mHolder)
-                        camera!!.startPreview()
-                    } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
-                    }
-                }
-                takePicture(applicationContext, focus)
-                var i = 0
-                while (i < 20 && !firstPicture) {
-                    Thread.sleep(500)
-                    i++
-                }
-                camera!!.stopPreview()
-                camera!!.release()
-                if (firstPicture) {
-                    f = MAX_RETRIES
-                }
-                f++
-            }
-            PreyLogger.d("PreReportActivity Camera 1 size:" + (if (dataImagen == null) -1 else dataImagen!!.size))
-        } catch (e: Exception) {
-            PreyLogger.e("Camera 1 error:" + e.message, e)
+            if (progressDialog != null) progressDialog.setMessage(
+                applicationContext.getText(R.string.pre_report_camera2).toString()
+            )
+        } catch (e: java.lang.Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
         }
+        focus =
+            PictureUtil.FRONT
+        openCamera()
+        delay(delay * 1000)
+        takePicture(applicationContext)
         try {
-            Thread.sleep(2000)
-            try {
-                if (progressDialog != null) progressDialog!!.setMessage(
-                    applicationContext.getText(
-                        R.string.pre_report_camera2
-                    ).toString()
-                )
-            } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
-            }
-            focus = BACK
-            var b = 0
-            while (b < MAX_RETRIES) {
-                val cameraInfo = Camera.CameraInfo()
-                Camera.getCameraInfo(1, cameraInfo)
-                camera = Camera.open(1)
-                if (camera != null) {
-                    try {
-                        camera!!.setPreviewDisplay(mHolder)
-                        camera!!.startPreview()
-                    } catch (e: Exception) {
-                        PreyLogger.e("Error:" + e.message, e)
-                    }
-                }
-                takePicture(applicationContext, focus)
-                var i = 0
-                while (i < 20 && !secondPicture) {
-                    Thread.sleep(500)
-                    i++
-                }
-                if (secondPicture) {
-                    b = MAX_RETRIES
-                }
-                b++
-            }
-            PreyLogger.d("PreReportActivity Camera 2 size:" + (if (dataImagen == null) -1 else dataImagen!!.size))
-        } catch (e: Exception) {
-            PreyLogger.e("Camera 2 error:" + e.message, e)
-        }
-        try {
-            if (progressDialog != null) progressDialog!!.setMessage(
+            if (progressDialog != null) progressDialog.setMessage(
                 applicationContext.getText(R.string.pre_report_location).toString()
             )
-        } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+        } catch (e: java.lang.Exception) {
+            e("PreReportActivity error:${e.message}", e)
         }
+        var preyLocation: PreyLocation? = null
         try {
-            preyLocation = LocationUtil.getLocation(applicationContext, null, true)
-            if (preyLocation != null && preyLocation.getLocation() != null && preyLocation.getLocation()!!.latitude != 0.0 && preyLocation.getLocation()!!.longitude != 0.0) {
-                PreyConfig.getInstance(applicationContext).setLocation(preyLocation)
+            preyLocation = getInstance(applicationContext).getLocation()
+            if (preyLocation != null && preyLocation.getLocation() != null
+            ) {
+                getInstance(applicationContext).setLocation(preyLocation)
             } else {
-                preyLocation = PreyConfig.getInstance(applicationContext).getLocation()
+                preyLocation = getInstance(applicationContext).getLocation()
             }
-        } catch (e: Exception) {
-            PreyLogger.e("error location:" + e.message, e)
+        } catch (e: java.lang.Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
         }
         try {
-            if (progressDialog != null) progressDialog!!.setMessage(
+            if (progressDialog != null) progressDialog.setMessage(
                 applicationContext.getText(R.string.pre_report_public_ip).toString()
             )
-        } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+        } catch (e: java.lang.Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
         }
         try {
-            val phone: PreyPhone = PreyPhone(applicationContext)
-            val publicIp: String = phone.getIpAddress()
-            PreyConfig.getInstance(applicationContext).setPublicIp(publicIp)
-            val wifiPhone: PreyWifi? = phone.getWifi()
-            val ssid =
-                if (wifiPhone == null || wifiPhone.getSsid() == null) "" else wifiPhone.getSsid()
+            val phone = PreyPhone(applicationContext)
+            val publicIp = phone.getIpAddress()
+            getInstance(applicationContext).setPublicIp(publicIp)
+            val wifiPhone = phone.getWifi()
+            val ssid = if (wifiPhone!!.getSsid() == null) "" else wifiPhone!!.getSsid()!!
             val model = Build.MODEL
             var vendor = "Google"
             try {
                 vendor = Build.MANUFACTURER
-            } catch (e: Exception) {
-                PreyLogger.e("Error:" + e.message, e)
+            } catch (e: java.lang.Exception) {
+                e("PreReportActivity error:${e.message}", e)
             }
-            val imei: String = phone.hardware!!.getSerialNumber()
-            PreyConfig.getInstance(applicationContext).setSsid(ssid!!)
-            PreyConfig.getInstance(applicationContext).setImei(imei)
-            PreyConfig.getInstance(applicationContext).setModel("$model $vendor")
-        } catch (e: Exception) {
-            PreyLogger.e("error public_ip:" + e.message, e)
-        }
-
-        PreyLogger.d("PreReportActivity post camera")
-        try {
-            if (progressDialog != null) progressDialog!!.dismiss()
-        } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            val imei = phone.hardware!!.getSerialNumber()
+            getInstance(applicationContext).setSsid(ssid)
+            getInstance(applicationContext).setImei(imei)
+            getInstance(applicationContext).setModel("$model $vendor")
+        } catch (e: java.lang.Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
         }
         val intent = Intent(applicationContext, ReportActivity::class.java)
         if (preyLocation != null) {
@@ -405,40 +204,425 @@ class PreReportActivity : Activity(), SurfaceHolder.Callback,
             intent.putExtra("lng", preyLocation.getLng())
         }
         startActivity(intent)
+        try {
+            stopService(lastLocationServiceIntent)
+        } catch (e: java.lang.Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
+        }
         finish()
-
+        PreyLogger.d("end $delay")
     }
 
-    override fun onOrientationChange(screenOrientation: OrientationManager.ScreenOrientation?) {
-        //TODO: cambiar
-        /* when (attr.screenOrientation) {
-             com.prey.activities.PreReportActivity.ScreenOrientation.PORTRAIT -> screenIntOrientation = 1
-             REVERSED_PORTRAIT -> screenIntOrientation = 2
-             REVERSED_LANDSCAPE -> screenIntOrientation = 3
-             LANDSCAPE -> screenIntOrientation = 4
-        }*/
-    }
-
-
-    companion object {
-        var activity: PreReportActivity? = null
-        var camera: Camera? = null
-        var mHolder: SurfaceHolder? = null
-        var dataImagen: ByteArray? = null
-        var BACK: String = "back"
-        var FRONT: String = "front"
-        const val CODE_PORTRAIT: Int = 1
-        const val CODE_REVERSED_PORTRAIT: Int = 2
-        const val CODE_REVERSED_LANDSCAPE: Int = 3
-        const val CODE_LANDSCAPE: Int = 4
-        const val MAX_RETRIES: Int = 5
-
-        private const val PHOTO_HEIGHT = 1024
-        private const val PHOTO_WIDTH = 768
-
-        enum class ScreenOrientation {
-            REVERSED_LANDSCAPE, LANDSCAPE, PORTRAIT, REVERSED_PORTRAIT
+    var textureListener: SurfaceTextureListener = object : SurfaceTextureListener {
+        override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+            openCamera()
         }
 
+        override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
+        }
+
+        override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+            return false
+        }
+
+        override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
+        }
     }
+
+    private val stateCallback: CameraDevice.StateCallback = object : CameraDevice.StateCallback() {
+        override fun onOpened(camera: CameraDevice) {
+            cameraDevice = camera
+            createCameraPreview()
+        }
+
+        override fun onDisconnected(camera: CameraDevice) {
+            cameraDevice!!.close()
+        }
+
+        override fun onError(camera: CameraDevice, error: Int) {
+            if (cameraDevice != null) {
+                cameraDevice!!.close()
+                cameraDevice = null
+            }
+        }
+    }
+
+    /**
+     * Method start jobs on the background
+     */
+    protected fun startBackgroundThread() {
+        mBackgroundThread = HandlerThread("Camera Background")
+        mBackgroundThread!!.start()
+        mBackgroundHandler = Handler(mBackgroundThread!!.looper)
+    }
+
+    /**
+     * Method stop jobs on the background
+     */
+    protected fun stopBackgroundThread() {
+        mBackgroundThread!!.quitSafely()
+        try {
+            mBackgroundThread!!.join()
+            mBackgroundThread = null
+            mBackgroundHandler = null
+        } catch (e: Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
+        }
+    }
+
+    /**
+     * Method take picture
+     */
+    fun takePicture(context: Context) {
+        if (null == cameraDevice) {
+            openCamera()
+        }
+        val manager = getSystemService(CAMERA_SERVICE) as CameraManager
+        try {
+            val characteristics = manager.getCameraCharacteristics(cameraDevice!!.id)
+            val streamConfigurationMap =
+                characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+            val width = 240
+            val height = 320
+            val reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1)
+            val outputSurfaces: MutableList<Surface> = ArrayList(2)
+            outputSurfaces.add(reader.surface)
+            outputSurfaces.add(Surface(textureView!!.surfaceTexture))
+            val captureBuilder =
+                cameraDevice!!.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
+            captureBuilder.addTarget(reader.surface)
+            captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
+            if (PictureUtil.FRONT == focus) {
+                val ORIENTATIONS = SparseIntArray()
+                ORIENTATIONS.append(Surface.ROTATION_0, 270)
+                ORIENTATIONS.append(Surface.ROTATION_90, 0)
+                ORIENTATIONS.append(Surface.ROTATION_180, 90)
+                ORIENTATIONS.append(Surface.ROTATION_270, 180)
+                captureBuilder.set(
+                    CaptureRequest.JPEG_ORIENTATION,
+                    ORIENTATIONS[screenIntOrientation]
+                )
+            } else {
+                val ORIENTATIONS = SparseIntArray()
+                ORIENTATIONS.append(Surface.ROTATION_0, 90)
+                ORIENTATIONS.append(Surface.ROTATION_90, 0)
+                ORIENTATIONS.append(Surface.ROTATION_180, 270)
+                ORIENTATIONS.append(Surface.ROTATION_270, 180)
+                captureBuilder.set(
+                    CaptureRequest.JPEG_ORIENTATION,
+                    ORIENTATIONS[screenIntOrientation]
+                )
+            }
+            val readerListener: OnImageAvailableListener = object : OnImageAvailableListener {
+                override fun onImageAvailable(reader: ImageReader) {
+                    var image: Image? = null
+                    try {
+                        image = reader.acquireLatestImage()
+                        val buffer = image.planes[0].buffer
+                        val bytes = ByteArray(buffer.capacity())
+                        buffer[bytes]
+                        save(bytes)
+                    } catch (e: Exception) {
+                        PreyLogger.e("Error: ${e.message}", e)
+                    } finally {
+                        image?.close()
+                    }
+                }
+
+                @Throws(IOException::class)
+                fun save(bytes: ByteArray) {
+                    val dataImagen = getCompressedBitmap(bytes)
+                    try {
+                        //Get route with Android 12 support
+                        val directoryPath = "${getExternalFilesDir(null).toString()}/Prey/"
+                        PreyLogger.d("PreReportActivity directoryPath:${directoryPath}")
+                        try {
+                            File(directoryPath).mkdir()
+                        } catch (e: java.lang.Exception) {
+                            PreyLogger.e("PreReportActivity error:${e.message}", e)
+                        }
+                        val file = File("$directoryPath$focus.jpg")
+                        PreyLogger.d("PreReportActivity file:$directoryPath$focus.jpg")
+                        val bos = BufferedOutputStream(FileOutputStream(file))
+                        bos.write(dataImagen)
+                        bos.flush()
+                        bos.close()
+                    } catch (e: java.lang.Exception) {
+                        PreyLogger.e("PreReportActivity error:${e.message}", e)
+                    }
+                }
+            }
+            reader.setOnImageAvailableListener(readerListener, mBackgroundHandler)
+            val captureListener: CaptureCallback = object : CaptureCallback() {
+                override fun onCaptureCompleted(
+                    session: CameraCaptureSession,
+                    request: CaptureRequest,
+                    result: TotalCaptureResult
+                ) {
+                    super.onCaptureCompleted(session, request, result)
+                    createCameraPreview()
+                }
+            }
+            cameraDevice!!.createCaptureSession(
+                outputSurfaces,
+                object : CameraCaptureSession.StateCallback() {
+                    override fun onConfigured(session: CameraCaptureSession) {
+                        try {
+                            session.capture(
+                                captureBuilder.build(),
+                                captureListener,
+                                mBackgroundHandler
+                            )
+                        } catch (e: Exception) {
+                            PreyLogger.e("Error: ${e.message}", e)
+                        }
+                    }
+
+                    override fun onConfigureFailed(session: CameraCaptureSession) {
+                    }
+                },
+                mBackgroundHandler
+            )
+        } catch (e: Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
+        }
+    }
+
+    protected fun createCameraPreview() {
+        try {
+            val texture = checkNotNull(textureView!!.surfaceTexture)
+            texture.setDefaultBufferSize(imageDimension!!.width, imageDimension!!.height)
+            val surface = Surface(texture)
+            captureRequestBuilder =
+                cameraDevice!!.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
+            captureRequestBuilder!!.addTarget(surface)
+            cameraDevice!!.createCaptureSession(
+                Arrays.asList(surface),
+                object : CameraCaptureSession.StateCallback() {
+                    override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
+                        if (null == cameraDevice) {
+                            return
+                        }
+                        cameraCaptureSessions = cameraCaptureSession
+                        updatePreview()
+                    }
+
+                    override fun onConfigureFailed(cameraCaptureSession: CameraCaptureSession) {
+                    }
+                },
+                null
+            )
+        } catch (e: Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
+        }
+    }
+
+    /**
+     * Method open camera
+     */
+    private fun openCamera() {
+        val manager = getSystemService(CAMERA_SERVICE) as CameraManager
+        try {
+            cameraId = if (PictureUtil.FRONT == focus) {
+                manager.cameraIdList[1]
+            } else {
+                manager.cameraIdList[0]
+            }
+            val characteristics = manager.getCameraCharacteristics(cameraId!!)
+            val map =
+                checkNotNull(characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP))
+            imageDimension = map.getOutputSizes(SurfaceTexture::class.java)[0]
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this@PreReportActivity,
+                    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    REQUEST_CAMERA_PERMISSION
+                )
+                return
+            }
+            manager.openCamera(cameraId!!, stateCallback, null)
+        } catch (e: Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
+        }
+    }
+
+    protected fun updatePreview() {
+        captureRequestBuilder!!.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
+        try {
+            if (cameraCaptureSessions != null) cameraCaptureSessions!!.setRepeatingRequest(
+                captureRequestBuilder!!.build(), null, mBackgroundHandler
+            )
+        } catch (e: Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
+        }
+    }
+
+    /**
+     * Method close camera
+     */
+    private fun closeCamera() {
+        if (null != cameraDevice) {
+            cameraDevice!!.close()
+            cameraDevice = null
+        }
+        if (null != imageReader) {
+            imageReader!!.close()
+            imageReader = null
+        }
+    }
+
+
+    override fun onPause() {
+        closeCamera()
+        stopBackgroundThread()
+        super.onPause()
+    }
+
+    /**
+     * Method set orientation
+     */
+    override fun onOrientationChange(screenOrientation: OrientationManager.ScreenOrientation?) {
+        when (screenOrientation) {
+            OrientationManager.ScreenOrientation.PORTRAIT -> screenIntOrientation = 0
+            OrientationManager.ScreenOrientation.REVERSED_PORTRAIT -> screenIntOrientation = 2
+            OrientationManager.ScreenOrientation.REVERSED_LANDSCAPE -> screenIntOrientation = 3
+            OrientationManager.ScreenOrientation.LANDSCAPE -> screenIntOrientation = 1
+            else -> screenIntOrientation = 0
+        }
+    }
+
+    /**
+     * Method to compress image
+     */
+    fun getCompressedBitmap(bytes: ByteArray): ByteArray {
+        val maxHeight = 1920.0f
+        val maxWidth = 1080.0f
+        var scaledBitmap: Bitmap? = null
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        var bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
+        var actualHeight = options.outHeight
+        var actualWidth = options.outWidth
+        var imgRatio = actualWidth.toFloat() / actualHeight.toFloat()
+        val maxRatio = maxWidth / maxHeight
+        if (actualHeight > maxHeight || actualWidth > maxWidth) {
+            if (imgRatio < maxRatio) {
+                imgRatio = maxHeight / actualHeight
+                actualWidth = (imgRatio * actualWidth).toInt()
+                actualHeight = maxHeight.toInt()
+            } else if (imgRatio > maxRatio) {
+                imgRatio = maxWidth / actualWidth
+                actualHeight = (imgRatio * actualHeight).toInt()
+                actualWidth = maxWidth.toInt()
+            } else {
+                actualHeight = maxHeight.toInt()
+                actualWidth = maxWidth.toInt()
+            }
+        }
+        options.inSampleSize = calculateInSampleSize(options, actualWidth, actualHeight)
+        options.inJustDecodeBounds = false
+        options.inDither = false
+        options.inPurgeable = true
+        options.inInputShareable = true
+        options.inTempStorage = ByteArray(16 * 1024)
+        try {
+            bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
+        } catch (e: Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
+        }
+        try {
+            scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight, Bitmap.Config.ARGB_8888)
+        } catch (e: Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
+        }
+        val ratioX = actualWidth / options.outWidth.toFloat()
+        val ratioY = actualHeight / options.outHeight.toFloat()
+        val middleX = actualWidth / 2.0f
+        val middleY = actualHeight / 2.0f
+        val scaleMatrix = Matrix()
+        scaleMatrix.setScale(ratioX, ratioY, middleX, middleY)
+        val canvas = Canvas(scaledBitmap!!)
+        canvas.setMatrix(scaleMatrix)
+        canvas.drawBitmap(
+            bmp,
+            middleX - bmp.width / 2,
+            middleY - bmp.height / 2,
+            Paint(Paint.FILTER_BITMAP_FLAG)
+        )
+        try {
+            val matrix = Matrix()
+            if (PictureUtil.FRONT == focus) {
+                if (screenIntOrientation == 0) {
+                    matrix.postRotate(270f)
+                } else if (screenIntOrientation == 1) {
+                    matrix.postRotate(0f)
+                } else if (screenIntOrientation == 2) {
+                    matrix.postRotate(90f)
+                } else {
+                    matrix.postRotate(180f)
+                }
+            } else {
+                if (screenIntOrientation == 0) {
+                    matrix.postRotate(90f)
+                } else if (screenIntOrientation == 1) {
+                    matrix.postRotate(0f)
+                } else if (screenIntOrientation == 2) {
+                    matrix.postRotate(270f)
+                } else {
+                    matrix.postRotate(180f)
+                }
+            }
+            scaledBitmap = Bitmap.createBitmap(
+                scaledBitmap,
+                0,
+                0,
+                scaledBitmap.width,
+                scaledBitmap.height,
+                matrix,
+                true
+            )
+        } catch (e: Exception) {
+            PreyLogger.e("Error: ${e.message}", e)
+        }
+        val out = ByteArrayOutputStream()
+        scaledBitmap!!.compress(Bitmap.CompressFormat.JPEG, 85, out)
+        return out.toByteArray()
+    }
+
+    /**
+     * Method calculates the size of the image
+     *
+     * @return size
+     */
+    private fun calculateInSampleSize(
+        options: BitmapFactory.Options,
+        reqWidth: Int,
+        reqHeight: Int
+    ): Int {
+        val height = options.outHeight
+        val width = options.outWidth
+        var inSampleSize = 1
+        if (height > reqHeight || width > reqWidth) {
+            val heightRatio = Math.round(height.toFloat() / reqHeight.toFloat())
+            val widthRatio = Math.round(width.toFloat() / reqWidth.toFloat())
+            inSampleSize = if (heightRatio < widthRatio) heightRatio else widthRatio
+        }
+        val totalPixels = (width * height).toFloat()
+        val totalReqPixelsCap = (reqWidth * reqHeight * 2).toFloat()
+        while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
+            inSampleSize++
+        }
+        return inSampleSize
+    }
+
+    companion object {
+        const val ACTIVITY_PRE_REPORT: String = "ACTIVITY_PRE_REPORT"
+    }
+
 }

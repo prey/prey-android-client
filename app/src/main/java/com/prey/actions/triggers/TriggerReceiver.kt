@@ -11,9 +11,11 @@ import android.content.Context
 import android.content.Intent
 
 import com.prey.actions.observer.ActionResult
-import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.util.ClassUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 import org.json.JSONException
 import org.json.JSONObject
@@ -50,7 +52,7 @@ abstract class TriggerReceiver : BroadcastReceiver() {
             var j = 0
             while (listEvents != null && j < listEvents.size) {
                 val event = listEvents[j]
-                PreyLogger.d("Trigger TriggerReceiver onReceive name:${name} event.type:${ event.getType()}")
+                PreyLogger.d("Trigger TriggerReceiver onReceive name:${name} event.type:${event.getType()}")
                 if (name == event.getType()) {
                     var process = true
                     val haveRange = TriggerUtil.haveRange(listEvents)
@@ -95,49 +97,42 @@ abstract class TriggerReceiver : BroadcastReceiver() {
             if (delay > 0) {
                 Thread.sleep((delay * 1000).toLong())
             }
-            object : Thread() {
-                override fun run() {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    PreyLogger.d("Trigger triggerName actionDto.action:${actionDto.getAction()}")
+                    val jsonObject = JSONObject(actionDto.getAction())
+                    PreyLogger.d("Trigger triggerName action:$jsonObject")
+                    PreyLogger.d("Trigger triggerName jsonObject:$jsonObject")
+                    val nameAction = jsonObject.getString("target")
+                    PreyLogger.d("Trigger triggerName nameAction:$nameAction")
+                    val methodAction = jsonObject.getString("command")
+                    PreyLogger.d("Trigger triggerName methodAction:$methodAction")
+                    var parametersAction: JSONObject? = null
                     try {
-                        PreyLogger.d("Trigger triggerName actionDto.action:${actionDto.getAction()}")
-                        val jsonObject = JSONObject(actionDto.getAction())
-                        PreyLogger.d("Trigger triggerName action:$jsonObject")
-                        PreyLogger.d("Trigger triggerName jsonObject:$jsonObject")
-                        val nameAction = jsonObject.getString("target")
-                        PreyLogger.d("Trigger triggerName nameAction:$nameAction")
-                        val methodAction = jsonObject.getString("command")
-                        PreyLogger.d("Trigger triggerName methodAction:$methodAction")
-                        var parametersAction: JSONObject? = null
-                        try {
-                            parametersAction = jsonObject.getJSONObject("options")
-                            PreyLogger.d("Trigger triggerName parametersAction:$parametersAction")
-                        } catch (e: JSONException) {
-                            PreyLogger.e("Error:${e.message}", e)
-                        }
-                        if (parametersAction == null) {
-                            parametersAction = JSONObject()
-                        }
-                        try {
-                            val messageId = jsonObject.getString(PreyConfig.MESSAGE_ID)
-                            parametersAction.put(PreyConfig.MESSAGE_ID, messageId)
-                        } catch (e: Exception) {
-                            PreyLogger.e("Error:${e.message}", e)
-                        }
-                        PreyLogger.d("Trigger nameAction:$nameAction methodAction:$methodAction parametersAction:$parametersAction")
-                        val listActions: MutableList<ActionResult> = ArrayList()
-                        ClassUtil.getInstance().execute(
-                            context,
-                            listActions,
-                            nameAction,
-                            methodAction,
-                            parametersAction,
-                            null
-                        )
-                    } catch (e: Exception) {
-                        PreyLogger.e("Trigger error:${e.message}", e)
+                        parametersAction = jsonObject.getJSONObject("options")
+                        PreyLogger.d("Trigger triggerName parametersAction:$parametersAction")
+                    } catch (e: JSONException) {
+                        PreyLogger.e("Error:${e.message}", e)
                     }
+                    if (parametersAction == null) {
+                        parametersAction = JSONObject()
+                    }
+                    PreyLogger.d("Trigger nameAction:$nameAction methodAction:$methodAction parametersAction:$parametersAction")
+                    val listActions: MutableList<ActionResult> = ArrayList()
+                    ClassUtil.getInstance().execute(
+                        context,
+                        listActions,
+                        nameAction,
+                        methodAction,
+                        parametersAction,
+                        null
+                    )
+                } catch (e: Exception) {
+                    PreyLogger.e("Trigger error:${e.message}", e)
                 }
-            }.start()
+            }
             z++
         }
     }
+
 }

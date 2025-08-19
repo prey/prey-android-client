@@ -8,9 +8,11 @@ package com.prey
 
 import android.content.Context
 
-import com.prey.net.PreyWebServices
-
 class PreyStatus {
+
+    enum class AlarmState {
+        BEGIN, WORKING, FINISH
+    }
 
     @JvmName("functionOfKotlin")
     fun isPreyConfigurationActivityResume(): Boolean {
@@ -26,19 +28,14 @@ class PreyStatus {
 
     var isPreyConfigurationActivityResume: Boolean = false
 
-    var isPreyPopUpOnclick: Boolean = false
+    var alarmState: AlarmState = AlarmState.BEGIN
 
-    var isTakenPicture: Boolean = false
-
-    var isAlarmStart: Boolean = false
-        private set
-
-    fun setAlarmStart() {
-        this.isAlarmStart = true
+    fun setStateOfAlarm(alarmState: AlarmState) {
+        this.alarmState = alarmState
     }
 
-    fun setAlarmStop() {
-        this.isAlarmStart = false
+    fun getStateOfAlarm(): AlarmState {
+        return alarmState
     }
 
     /**
@@ -50,7 +47,7 @@ class PreyStatus {
         var autoconnect = false
         var minutesToQueryServer: Int
         try {
-            val jsnobject = PreyWebServices.getInstance().getStatus(context)
+            val jsnobject = PreyConfig.getInstance(context).getWebServices().getStatus(context)
             if (jsnobject != null) {
                 PreyLogger.d("STATUS jsnobject :$jsnobject")
                 val jsnobjectSettings = jsnobject.getJSONObject("settings")
@@ -92,4 +89,5 @@ class PreyStatus {
             return instance ?: PreyStatus().also { instance = it }
         }
     }
+
 }

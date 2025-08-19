@@ -55,12 +55,12 @@ class TriggerGeoReceiver : TriggerReceiver() {
                                 process = validRange
                             }
                             if (process) {
-                                PreyLogger.d("Trigger triggerName trigger.getActions():${trigger.getActions()}" )
+                                PreyLogger.d("Trigger triggerName trigger.getActions():${trigger.getActions()}")
                                 executeActions(context, trigger.getActions())
                             }
                         }
                     } catch (e: Exception) {
-                        PreyLogger.e("Error:${e.message}" , e)
+                        PreyLogger.e("Error:${e.message}", e)
                     }
                 }
                 j++
@@ -68,4 +68,5 @@ class TriggerGeoReceiver : TriggerReceiver() {
             i++
         }
     }
+
 }

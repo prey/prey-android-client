@@ -17,8 +17,6 @@ import com.prey.actions.report.ReportScheduled
 import com.prey.activities.LoginActivity
 import com.prey.backwardcompatibility.FroyoSupport
 import com.prey.json.UtilJson
-import com.prey.net.PreyWebServices
-import com.prey.preferences.RunBackgroundCheckBoxPreference
 
 import org.json.JSONObject
 
@@ -43,7 +41,7 @@ class Detach {
             PreyLogger.e("Error:${e.message}", e)
         }
         if (isExpired) {
-            PreyConfig.getInstance(context).setInstallationStatus( "DEL")
+            PreyConfig.getInstance(context).setInstallationStatus("DEL")
             PreyLogger.d("Detach expired:%${isExpired}")
             // Call detachDevice with expiration flag
             detachDevice(context, true, false, false, isExpired)
@@ -94,22 +92,22 @@ class Detach {
         }
         PreyLogger.d("1:${error}")
         try {
-            PreyConfig.getInstance(context).setProtectAccount (false)
+            PreyConfig.getInstance(context).setProtectAccount(false)
         } catch (e: Exception) {
             error += e.message
         }
         try {
-            PreyConfig.getInstance(context).setProtectPrivileges (false)
+            PreyConfig.getInstance(context).setProtectPrivileges(false)
         } catch (e: Exception) {
             error += e.message
         }
         try {
-            PreyConfig.getInstance(context).setProtectTour  (false)
+            PreyConfig.getInstance(context).setProtectTour(false)
         } catch (e: Exception) {
             error += e.message
         }
         try {
-            PreyConfig.getInstance(context).setProtectReady  (false)
+            PreyConfig.getInstance(context).setProtectReady(false)
         } catch (e: Exception) {
             error += e.message
         }
@@ -131,7 +129,7 @@ class Detach {
         }
         PreyLogger.d("3:${error}")
         try {
-            PreyConfig.getInstance(context).setAware  (false)
+            PreyConfig.getInstance(context).setAware(false)
         } catch (e: Exception) {
             PreyLogger.e("Error:${e.message}", e)
         }
@@ -140,7 +138,7 @@ class Detach {
         } catch (e: Exception) {
             PreyLogger.e("Error:${e.message}", e)
         }
-        PreyConfig.getInstance(context).setPrefsBiometric  (false)
+        PreyConfig.getInstance(context).setPrefsBiometric(false)
         PreyLogger.d("5:${error}")
         try {
             ReportScheduled.getInstance(context)!!.reset()
@@ -148,7 +146,7 @@ class Detach {
             error += e.message
         }
         try {
-            PreyWebServices.getInstance().deleteDevice(context)
+            PreyConfig.getInstance(context).getWebServices().deleteDevice(context)
         } catch (e: Exception) {
             PreyLogger.e("Error:${e.message}", e)
         }
@@ -173,40 +171,40 @@ class Detach {
         try {
             PreyConfig.getInstance(context).removeApiKey()
         } catch (e: Exception) {
-            PreyLogger.e("Error:" + e.message, e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
         try {
-            PreyConfig.getInstance(context).setPinNumber ("")
+            PreyConfig.getInstance(context).setPinNumber("")
         } catch (e: Exception) {
             error = e.message
         }
         try {
-            PreyConfig.getInstance(context).setEmail  ("")
+            PreyConfig.getInstance(context).setEmail("")
         } catch (e: Exception) {
             error = e.message
         }
         PreyLogger.d("7:${error}")
         try {
-            PreyConfig.getInstance(context).setDeviceId  ("")
+            PreyConfig.getInstance(context).setDeviceId("")
         } catch (e: Exception) {
             error = e.message
         }
         try {
-            PreyConfig.getInstance(context).setApiKey ("")
+            PreyConfig.getInstance(context).setApiKey("")
         } catch (e: Exception) {
             error = e.message
         }
         PreyLogger.d("8:${error}")
         if (!isExpired) {
             try {
-                PreyConfig.getInstance(context).setInstallationStatus ("")
+                PreyConfig.getInstance(context).setInstallationStatus("")
             } catch (e: Exception) {
                 error = e.message
             }
         }
-        PreyLogger.d( "Email:%s"+ PreyConfig.getInstance(context).getEmail()!!)
-        PreyLogger.d( "DeviceId:%s"+ PreyConfig.getInstance(context).getDeviceId()!!)
-        PreyLogger.d( "ApiKey:%s"+ PreyConfig.getInstance(context).getApiKey()!!)
+        PreyLogger.d("Email:${PreyConfig.getInstance(context).getEmail()}")
+        PreyLogger.d("DeviceId:${PreyConfig.getInstance(context).getDeviceId()}")
+        PreyLogger.d("ApiKey:${PreyConfig.getInstance(context).getApiKey()}")
         if (removeCache) {
             try {
                 PreyConfig.getInstance(context).deleteCacheInstance(context)

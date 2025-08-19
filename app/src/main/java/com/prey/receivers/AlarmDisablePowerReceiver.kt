@@ -33,7 +33,8 @@ class AlarmDisablePowerReceiver : BroadcastReceiver() {
                 context.startService(Intent(context, PreyDisablePowerOptionsService::class.java))
             }
         } catch (e: Exception) {
-            PreyLogger.e( "Error: ${e.message}", e)
+            PreyLogger.e("Error: ${e.message}", e)
         }
     }
+
 }
