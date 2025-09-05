@@ -917,11 +917,17 @@ public class WebAppInterface {
         PreyLogger.d(String.format("rename:%s", newName));
         String out = null;
         try {
-            PreyName preyName = PreyWebServices.getInstance().renameName(mContext, newName);
             JSONObject json = new JSONObject();
-            json.put("code", preyName.getCode());
-            json.put("error", preyName.getError());
-            json.put("name", preyName.getName());
+            if (newName == null || newName.isEmpty()) {
+                json.put("code", 412);
+                json.put("error", mContext.getString(R.string.text_batch));
+                json.put("name", initName());
+            } else {
+                PreyName preyName = PreyWebServices.getInstance().renameName(mContext, newName);
+                json.put("code", preyName.getCode());
+                json.put("error", preyName.getError());
+                json.put("name", preyName.getName());
+            }
             out = json.toString();
             PreyLogger.d(String.format("rename out:%s", out));
         } catch (Exception e) {
