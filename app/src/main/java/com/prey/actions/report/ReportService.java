@@ -61,8 +61,10 @@ public class ReportService extends IntentService {
 		List<HttpDataService> listData = new ArrayList<HttpDataService>();
 		boolean isAirplaneModeOn = PreyPhone.isAirplaneModeOn(ctx);
 		PreyLogger.d(String.format("AWARE AwareController init isAirplaneModeOn:%s", isAirplaneModeOn));
+		boolean isTimeNextReport = PreyConfig.getPreyConfig(ctx).isTimeNextReport();
+		PreyLogger.d(String.format("REPORT init isTimeNextReport:%s", isTimeNextReport));
 		// Only proceed if location awareness is enabled and airplane mode is not on
-		if (!isAirplaneModeOn) {
+		if (!isAirplaneModeOn && isTimeNextReport) {
 			try {
 				PreyLogger.d("REPORT _____________start ReportService");
 				try {
@@ -139,6 +141,7 @@ public class ReportService extends IntentService {
 						if (response != null) {
 							PreyConfig.getPreyConfig(ctx).setLastEvent("report_send");
 							PreyLogger.d(String.format("REPORT response.getStatusCode():%s", response.getStatusCode()));
+							PreyConfig.getPreyConfig(ctx).setTimeNextReport();
 							// Check if the response status code is 409 (Conflict)
 							if (409 == response.getStatusCode()) {
 								// Reset the report schedule
