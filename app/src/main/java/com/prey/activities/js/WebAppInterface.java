@@ -919,7 +919,7 @@ public class WebAppInterface {
         try {
             JSONObject json = new JSONObject();
             if (newName == null || newName.isEmpty()) {
-                json.put("code", 412);
+                json.put("code", 400);
                 json.put("error", mContext.getString(R.string.text_batch));
                 json.put("name", initName());
             } else {
