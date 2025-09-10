@@ -18,6 +18,7 @@ import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 
 import androidx.core.app.ActivityCompat;
 
@@ -143,6 +144,12 @@ public class PictureUtil {
      * @return byte array
      */
     private static byte[] getPicture(Context ctx, String focus) {
+        PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
+        boolean isScreenOn = pm.isInteractive();
+        //If the screen is off, return null
+        if (!isScreenOn) {
+            return null;
+        }
         AudioManager mgr = null;
         SimpleCameraActivity.dataImagen = null;
         int streamType = AudioManager.STREAM_SYSTEM;
