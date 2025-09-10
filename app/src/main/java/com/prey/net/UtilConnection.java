@@ -478,6 +478,8 @@ public class UtilConnection {
             } catch (Exception e) {
                 // Log any errors that occur during the request
                 PreyLogger.e(String.format("Error connecting to url:%s error:" , uri, e.getMessage()), e);
+                // If error, increment the retry count and delay before retrying
+                retryCount++;
             }
         }
 

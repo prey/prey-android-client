@@ -67,8 +67,10 @@ public class AwareController {
             // Check if airplane mode is currently enabled on the device
             boolean isAirplaneModeOn = PreyPhone.isAirplaneModeOn(ctx);
             PreyLogger.d(String.format("AWARE AwareController init isAirplaneModeOn:%s", isAirplaneModeOn));
+            boolean isTimeLocationAware = PreyConfig.getPreyConfig(ctx).isTimeLocationAware();
+            PreyLogger.d(String.format("AWARE AwareController init isTimeLocationAware:%s", isTimeLocationAware));
             // Only proceed if location awareness is enabled and airplane mode is not on
-            if (isLocationAware && !isAirplaneModeOn) {
+            if (isLocationAware && !isAirplaneModeOn && isTimeLocationAware) {
                 PreyLocationManager.getInstance(ctx).setLastLocation(null);
                 PreyLocation locationNow = LocationUtil.getLocation(ctx, null, false);
                 if (locationNow != null && locationNow.getLat() != 0 && locationNow.getLng() != 0) {
@@ -267,6 +269,7 @@ public class AwareController {
                     // Set location aware data in config
                     PreyConfig.getPreyConfig(ctx).setLocationAware(locationNow);
                     PreyConfig.getPreyConfig(ctx).setAwareTime();
+                    PreyConfig.getPreyConfig(ctx).setTimeLocationAware();
                     // Check if response is "OK"
                     if ("OK".equals(response)) {
                         // The date of the last location sent correctly is saved (yyyy-MM-dd )

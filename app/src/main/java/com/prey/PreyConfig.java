@@ -41,7 +41,6 @@ import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
 public class PreyConfig {
 
     //Set false in production
@@ -191,6 +190,7 @@ public class PreyConfig {
     public static final String VOLUME= "VOLUME";
     public static final String DENY_NOTIFICATION= "DENY_NOTIFICATION";
     public static final String TIME_NEXT_PING = "TIME_NEXT_PING";
+    public static final String TIME_NEXT_REPORT = "TIME_NEXT_REPORT";
     private boolean securityPrivilegesAlreadyPrompted;
     private Context ctx;
     public static String postUrl = null;
@@ -1336,7 +1336,7 @@ public class PreyConfig {
     public void setTimeLocationAware(){
         Calendar cal= Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.MINUTE,1);
+        cal.add(Calendar.MINUTE,2);
         saveLong(TIME_LOCATION_AWARE,cal.getTimeInMillis());
     }
 
@@ -1781,6 +1781,34 @@ public class PreyConfig {
     public void setOrganizationId(String organizationId) {
         // Save the organization ID to the configuration
         saveString(ORGANIZATION_ID, organizationId);
+    }
+
+    /**
+     * Method add a minute to request report
+     */
+    public void setTimeNextReport() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.SECOND, 100);
+        saveLong(TIME_NEXT_REPORT, cal.getTimeInMillis());
+    }
+
+    public void removeTimeNextReport() {
+        saveLong(TIME_NEXT_REPORT, 0);
+    }
+
+    /**
+     * Method that returns if it should request report
+     *
+     * @return if you must ask
+     */
+    public boolean isTimeNextReport() {
+        long timeNextReport = getLong(TIME_NEXT_REPORT, 0);
+        PreyLogger.d("REPORT timeNextReport:"+timeNextReport);
+        if (timeNextReport == 0)
+            return true;
+        long timeNow = new Date().getTime();
+        return timeNow > timeNextReport;
     }
 
 }
