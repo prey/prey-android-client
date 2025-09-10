@@ -141,7 +141,9 @@ public class ReportService extends IntentService {
 						if (response != null) {
 							PreyConfig.getPreyConfig(ctx).setLastEvent("report_send");
 							PreyLogger.d(String.format("REPORT response.getStatusCode():%s", response.getStatusCode()));
-							PreyConfig.getPreyConfig(ctx).setTimeNextReport();
+							if (200 == response.getStatusCode() || 201 == response.getStatusCode()) {
+								PreyConfig.getPreyConfig(ctx).setTimeNextReport();
+							}
 							// Check if the response status code is 409 (Conflict)
 							if (409 == response.getStatusCode()) {
 								// Reset the report schedule

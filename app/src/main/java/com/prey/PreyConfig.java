@@ -1789,8 +1789,12 @@ public class PreyConfig {
     public void setTimeNextReport() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.MINUTE, 2);
+        cal.add(Calendar.SECOND, 100);
         saveLong(TIME_NEXT_REPORT, cal.getTimeInMillis());
+    }
+
+    public void removeTimeNextReport() {
+        saveLong(TIME_NEXT_REPORT, 0);
     }
 
     /**
@@ -1804,7 +1808,7 @@ public class PreyConfig {
         if (timeNextReport == 0)
             return true;
         long timeNow = new Date().getTime();
-        return timeNow < timeNextReport;
+        return timeNow > timeNextReport;
     }
 
 }
