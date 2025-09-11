@@ -81,7 +81,7 @@ class PreyWebServices : WebServicesInterface {
         parameters["plan"] = "free"
         parameters["model_name"] = model
         parameters["vendor_name"] = vendor
-        //  parameters = increaseData(context, parameters)
+        parameters = increaseData(context, parameters)
         val imei: String = PreyPhone.getInstance(context).getAndroidDeviceId()
         parameters["physical_address"] = imei
         val lang = Locale.getDefault().language
@@ -116,7 +116,7 @@ class PreyWebServices : WebServicesInterface {
         context: Context,
         parameters: HashMap<String, String?>
     ): HashMap<String, String?> {
-        val phone = PreyPhone(context)
+        val phone = PreyPhone.getInstance(context)
         val hardware: PreyHardware = phone.hardware!!
         var prefix = "hardware_attributes"
         parameters["$prefix[uuid]"] = hardware.getUuid()
@@ -1273,6 +1273,8 @@ class PreyWebServices : WebServicesInterface {
                 val out = response.getResponseAsString()
                 PreyConfig.getInstance(context).setDeviceName(name)
                 PreyLogger.d("renameName:${out}")
+                preyName.setError("")
+                preyName.setName(name)
             }
             if (response.getStatusCode() == 422) {
                 val out = response.getResponseAsString()

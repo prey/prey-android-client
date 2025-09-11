@@ -179,7 +179,7 @@ class PreReportActivity : ComponentActivity(), OrientationManager.OrientationLis
             PreyLogger.e("Error: ${e.message}", e)
         }
         try {
-            val phone = PreyPhone(applicationContext)
+            val phone = PreyPhone.getInstance(applicationContext)
             val publicIp = phone.getIpAddress()
             getInstance(applicationContext).setPublicIp(publicIp)
             val wifiPhone = phone.getWifi()

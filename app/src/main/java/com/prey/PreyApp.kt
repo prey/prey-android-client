@@ -22,6 +22,7 @@ import com.prey.workers.PreyLocationWorkManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 /**
  * The main application class for Prey.
@@ -61,10 +62,6 @@ class PreyApp : Application() {
         } catch (e: Exception) {
             PreyLogger.e("Error: ${e.message}", e)
         }
-        //PreyConfig.getInstance(applicationContext).setApikey("a8f6d96e347b")
-        //PreyConfig.getInstance(applicationContext).setDeviceId("57994d")
-        //PreyConfig.getInstance(applicationContext).setApikey("")
-        //PreyConfig.getInstance(applicationContext).setDeviceId("")
         initialize(this)
         runReceiver()
         PreyBetaController.getInstance().startPrey(applicationContext)

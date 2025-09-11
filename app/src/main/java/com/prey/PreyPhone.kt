@@ -32,7 +32,7 @@ import java.lang.reflect.Method
  *
  * This class encapsulates the device's hardware and Wi-Fi information.
  */
-class PreyPhone internal constructor(var context: Context) {
+class PreyPhone private constructor(var context: Context){
 
     var hardware: PreyHardware? = null
     private var listWifi: MutableList<PreyWifi>? = ArrayList<PreyWifi>()
@@ -43,7 +43,7 @@ class PreyPhone internal constructor(var context: Context) {
      *
      * This method updates the device's hardware information, available Wi-Fi networks, and current Wi-Fi connection.
      */
-    private fun init() {
+    init {
         updateHardware()
         updateListWifi()
         updateWifi()
@@ -335,10 +335,6 @@ class PreyPhone internal constructor(var context: Context) {
         PreyLogger.d("isAirplaneModeOn: ${isAirplaneModeOn}")
         // Return the result
         return isAirplaneModeOn
-    }
-
-    init {
-        init()
     }
 
     fun getDataState(): Int {
