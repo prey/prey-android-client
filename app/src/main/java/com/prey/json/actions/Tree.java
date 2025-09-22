@@ -157,7 +157,7 @@ public class Tree {
                 count += numberOfFilesInTheFolder(file);
             } else if (!file.getName().contains("trashed")) {
                 count++;
-                PreyLogger.d(String.format("tree count:%d %s", count, file.getPath()));
+                PreyLogger.d(String.format("Tree count:%d %s", count, file.getPath()));
             }
         }
         return count;
