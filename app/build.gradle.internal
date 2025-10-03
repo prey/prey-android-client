@@ -12,7 +12,7 @@ android {
 
         targetSdkVersion 33
 
-        versionCode 1000
+        versionCode 1001
         versionName '2.6.12'
 
         multiDexEnabled true
