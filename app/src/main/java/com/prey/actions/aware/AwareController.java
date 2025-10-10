@@ -144,7 +144,7 @@ public class AwareController {
                 GeofencingRequest geofencingRequest = builder.build();
                 if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     //Added for android 12
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, AwareGeofenceReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, new Intent(ctx, AwareGeofenceReceiver.class), Build.VERSION.SDK_INT < Build.VERSION_CODES.S ? PendingIntent.FLAG_CANCEL_CURRENT : PendingIntent.FLAG_MUTABLE);
                     LocationServices.getGeofencingClient(ctx).addGeofences(geofencingRequest, pendingIntent)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override

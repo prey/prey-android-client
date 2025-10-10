@@ -118,11 +118,48 @@ public class Tree {
                     json.put("isFile", true);
                     json.put("hidden", false);
                     array.put(json);
+                } else {
+                    int numberOfFiles = numberOfFilesInTheFolder(child);
+                    json.put("isEmpty", numberOfFiles == 0);
                 }
             }
         } catch (Exception e) {
             PreyLogger.e("Error getFilesRecursiveJSON:" + e.getMessage(), e);
         }
         return array;
+    }
+
+    /**
+     * Recursively counts files in a directory, excluding those with "trashed" in their names.
+     *
+     * @param folder The directory to count files in. Can be a file or directory.
+     * @return count of non-trash files in the directory and its subdirectories
+     */
+    private int numberOfFilesInTheFolder(File folder) {
+        if (folder == null) {
+            return 0;
+        }
+        // If it's a file, check if it's not trashed
+        if (folder.isFile()) {
+            if (!folder.getName().contains("trashed")) {
+                return 1;
+            }
+            return 0;
+        }
+        // If it's a directory, process its contents
+        File[] files = folder.listFiles();
+        if (files == null) {
+            return 0; // In case of I/O error, listFiles() returns null
+        }
+        int count = 0;
+        for (File file : files) {
+            if (file.isDirectory()) {
+                count += numberOfFilesInTheFolder(file);
+            } else if (!file.getName().contains("trashed")) {
+                count++;
+                PreyLogger.d(String.format("Tree count:%d %s", count, file.getPath()));
+            }
+        }
+        return count;
     }
 }
