@@ -1333,21 +1333,19 @@ public class PreyConfig {
         saveLong(TIME_C2DM,0);
     }
 
-    public void setTimeLocationAware(){
-        Calendar cal= Calendar.getInstance();
+    public void setTimeLocationAware() {
+        Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.MINUTE,2);
-        saveLong(TIME_LOCATION_AWARE,cal.getTimeInMillis());
+        cal.add(Calendar.MINUTE, 2);
+        saveLong(TIME_LOCATION_AWARE, cal.getTimeInMillis());
     }
 
-    public boolean isTimeLocationAware(){
-        long timeLocationAware=getLong(TIME_LOCATION_AWARE,0);
-        long timeNow=new Date().getTime();
-        if (timeNow<timeLocationAware){
-            return true;
-        } else {
-            return false;
-        }
+    public boolean isTimeLocationAware() {
+        long timeLocationAware = getLong(TIME_LOCATION_AWARE, 0);
+        Date dateLocationAware = new Date();
+        dateLocationAware.setTime(timeLocationAware);
+        long timeNow = new Date().getTime();
+        return timeNow > timeLocationAware;
     }
 
     public void setNoficationPopupId(int noficationPopupId){

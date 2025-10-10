@@ -182,7 +182,6 @@ public class EventFactory {
                 PreyLocation locationNow = LocationUtil.getLocation(ctx, null, false);
                 AwareController.sendAware(ctx, locationNow);
                 GeofenceController.verifyGeozone(ctx, locationNow);
-                PreyConfig.getPreyConfig(ctx).setTimeLocationAware();
             }
         } catch (Exception e) {
             PreyLogger.e("Error sendLocation:" + e.getMessage(), e);
