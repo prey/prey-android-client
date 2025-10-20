@@ -19,6 +19,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.exceptions.PreyException;
+import com.prey.exceptions.PreyFirebaseCrashlytics;
 import com.prey.json.actions.Lock;
 import com.prey.receivers.PreyDeviceAdmin;
 
@@ -149,6 +150,7 @@ public class FroyoSupport {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                     policyManager.wipeDevice(DevicePolicyManager.WIPE_RESET_PROTECTION_DATA);
                 } else {
+                    PreyFirebaseCrashlytics.getInstance(ctx).recordException(e);
                     throw e;
                 }
             }
