@@ -19,6 +19,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.exceptions.PreyException;
+import com.prey.exceptions.PreyFirebaseCrashlytics;
 import com.prey.json.actions.Lock;
 import com.prey.receivers.PreyDeviceAdmin;
 
@@ -123,9 +124,36 @@ public class FroyoSupport {
         return intent;
     }
 
+    /**
+     * Performs a factory reset/wipe of the device data.
+     * <p>
+     * This method attempts to wipe all data from the device using the DevicePolicyManager.
+     * It first tries to use the standard {@code wipeData(0)} method. If that fails and the device
+     * is running Android 14 (API 34, Upside Down Cake) or later, it will attempt to use
+     * the newer {@code wipeDevice(WIPE_RESET_PROTECTION_DATA)} method as a fallback.
+     *
+     * @throws Exception if the device administrator is not active or if the wipe operation fails.
+     *                  The exception message will contain a localized error string explaining
+     *                  the reason for the failure.
+     * @throws SecurityException if the caller does not have the required permissions to perform
+     *                          a device wipe operation.
+     *
+     * @see DevicePolicyManager#wipeData(int)
+     * @see DevicePolicyManager#wipeDevice(int)
+     * @see #isAdminActive()
+     */
     public void wipe() throws Exception {
         if (isAdminActive())
-            policyManager.wipeData(0);
+            try {
+                policyManager.wipeData(0);
+            } catch (Exception e) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    policyManager.wipeDevice(DevicePolicyManager.WIPE_RESET_PROTECTION_DATA);
+                } else {
+                    PreyFirebaseCrashlytics.getInstance(ctx).recordException(e);
+                    throw e;
+                }
+            }
         else
             throw new Exception(ctx.getString(R.string.administrator_disabled));
     }
