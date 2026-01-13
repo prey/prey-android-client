@@ -390,6 +390,15 @@
         <receiver android:name="com.prey.actions.alert.AlertReceiver" />
         <receiver android:name="com.prey.actions.triggers.TimeTriggerReceiver" />
 
+        <receiver
+            android:name="com.prey.receivers.MessageReceiver"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="com.prey.ACTION_MESSAGE"/>
+            </intent-filter>
+        </receiver>
+
         <!-- Services -->
         <service android:name="com.prey.services.LocationService" />
         <service android:name="com.prey.actions.location.LocationUpdatesService" />

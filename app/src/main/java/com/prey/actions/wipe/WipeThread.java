@@ -11,8 +11,10 @@ import com.prey.PreyLogger;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
+import com.prey.security.MessageProcessor;
 
 import android.content.Context;
+import android.os.Build;
 
 public class WipeThread extends Thread {
 
@@ -51,8 +53,13 @@ public class WipeThread extends Thread {
         try{
             if (wipe&&preyConfig.isFroyoOrAbove()){
                 PreyLogger.d("Wiping the device!!");
+                //If the extension is enabled, send a message
+                if (preyConfig.isDeviceAdminExtension()) {
+                    MessageProcessor.getInstance().send(ctx, MessageProcessor.ACTION_FACTORY_RESET);
+                } else {
                 PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","stopped",reason));
                 FroyoSupport.getInstance(ctx).wipe();
+                }
             }
         }catch(Exception e){
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","failed",e.getMessage()));
