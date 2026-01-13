@@ -1809,4 +1809,20 @@ public class PreyConfig {
         return timeNow > timeNextReport;
     }
 
+    public static final String DEVICE_ADMIN_EXTENSION = "DEVICE_ADMIN_EXTENSION";
+    /**
+     * Sets the enabled state for the device administrator extension.
+     * @param isEnabled true to enable, false to disable.
+     */
+    public void setDeviceAdminExtension(boolean isEnabled) {
+        this.saveBoolean(PreyConfig.DEVICE_ADMIN_EXTENSION, isEnabled);
+    }
+    /**
+     * Checks if the device administrator extension is enabled.
+     * @return true if enabled, false otherwise.
+     */
+    public boolean isDeviceAdminExtension() {
+        return getBoolean(PreyConfig.DEVICE_ADMIN_EXTENSION, false);
+    }
+
 }
