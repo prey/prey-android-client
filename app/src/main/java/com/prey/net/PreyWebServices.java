@@ -580,6 +580,8 @@ public class PreyWebServices {
         parameters.put(prefix + "[serial_number]", hardware.getSerialNumber());
         parameters.put(prefix + "[uuid]", hardware.getUuid());
         parameters.put(prefix + "[google_services]", String.valueOf(PreyUtils.isGooglePlayServicesAvailable(ctx)));
+        //Compilation is added during creation
+        parameters.put(prefix + "[android_compile_sdk]", String.valueOf(com.prey.BuildConfig.COMPILE_SDK_VERSION));
         int nic = 0;
         Wifi wifi = phone.getWifi();
         if (wifi != null) {
@@ -618,6 +620,8 @@ public class PreyWebServices {
                 parameters.put("hardware_attributes[serial_number]", hardware.getSerialNumber());
                 PreyConfig.getPreyConfig(ctx).setSentUuidSerialNumber(true);
             }
+            //Compilation is added when sending in data
+            parameters.put("hardware_attributes[android_compile_sdk]", String.valueOf(com.prey.BuildConfig.COMPILE_SDK_VERSION));
             try {
                 String url = getDataUrlJson(ctx);
                 PreyLogger.d("URL:" + url);

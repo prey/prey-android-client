@@ -12,12 +12,13 @@ android {
 
         targetSdk 35
 
-        versionCode 391
-        versionName '2.6.12'
+        versionCode 396
+        versionName '2.6.14'
 
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("int", "COMPILE_SDK_VERSION", "35")
     }
     buildTypes {
         release {
@@ -34,6 +35,9 @@ android {
     lint {
         abortOnError false
         checkReleaseBuilds false
+    }
+    buildFeatures {
+        buildConfig = true
     }
     namespace 'com.prey'
 }
