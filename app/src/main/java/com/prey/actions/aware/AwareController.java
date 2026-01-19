@@ -27,6 +27,7 @@ import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPhone;
+import com.prey.PreyStatus;
 import com.prey.actions.location.LocationUpdatesService;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
@@ -61,16 +62,22 @@ public class AwareController {
      */
     public void init(Context ctx) {
         try {
+            //recover settings of status
+            PreyStatus.getInstance().initConfig(ctx);
             // Check if location awareness is enabled in the Prey configuration
             boolean isLocationAware = PreyConfig.getPreyConfig(ctx).getAware();
             PreyLogger.d(String.format("AWARE AwareController init isLocationAware:%s", isLocationAware));
+            if (!isLocationAware) {
+                removeGeofence(ctx);
+                return;
+            }
             // Check if airplane mode is currently enabled on the device
             boolean isAirplaneModeOn = PreyPhone.isAirplaneModeOn(ctx);
             PreyLogger.d(String.format("AWARE AwareController init isAirplaneModeOn:%s", isAirplaneModeOn));
             boolean isTimeLocationAware = PreyConfig.getPreyConfig(ctx).isTimeLocationAware();
             PreyLogger.d(String.format("AWARE AwareController init isTimeLocationAware:%s", isTimeLocationAware));
             // Only proceed if location awareness is enabled and airplane mode is not on
-            if (isLocationAware && !isAirplaneModeOn && isTimeLocationAware) {
+            if (!isAirplaneModeOn && isTimeLocationAware) {
                 PreyLocationManager.getInstance(ctx).setLastLocation(null);
                 PreyLocation locationNow = LocationUtil.getLocation(ctx, null, false);
                 if (locationNow != null && locationNow.getLat() != 0 && locationNow.getLng() != 0) {
@@ -109,6 +116,17 @@ public class AwareController {
         }
     }
 
+    /**
+     * Removes a specific geofence identified by its request ID "AWARE".
+     * @param ctx The application or activity context.
+     */
+    public static void removeGeofence(final Context ctx) {
+        PreyLogger.d("AWARE remove Geofence");
+        List<String> listRemove = new ArrayList<String>();
+        listRemove.add(GEO_AWARE_NAME);
+        LocationServices.getGeofencingClient(ctx).removeGeofences(listRemove);
+    }
+
     public void run(final Context ctx) {
         PreyLogger.d("AWARE AwareController run");
         try {
@@ -116,9 +134,13 @@ public class AwareController {
             int notificationResponsiveness= FileConfigReader.getInstance(ctx).getGeofenceNotificationResponsiveness();
             int radiusAware= FileConfigReader.getInstance(ctx).getRadiusAware();
             //remove
-            List<String> listRemove = new ArrayList<String>();
-            listRemove.add(GEO_AWARE_NAME);
-            LocationServices.getGeofencingClient(ctx).removeGeofences(listRemove);
+            removeGeofence(ctx);
+            // Check if location awareness is enabled in the Prey configuration
+            boolean isLocationAware = PreyConfig.getPreyConfig(ctx).getAware();
+            if (!isLocationAware) {
+                PreyLogger.d("AWARE location awareness is not enabled");
+                return;
+            }
             //new
             PreyLocation locationOld=PreyConfig.getPreyConfig(ctx).getLocationAware();
             if (locationOld != null) {
@@ -279,6 +301,8 @@ public class AwareController {
                     }
                 }
             }
+        } else {
+            removeGeofence(ctx);
         }
         return preyResponse;
     }
