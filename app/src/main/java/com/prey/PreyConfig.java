@@ -1825,4 +1825,19 @@ public class PreyConfig {
         return getBoolean(PreyConfig.DEVICE_ADMIN_EXTENSION, false);
     }
 
+    public static final String SEND_COMPILATION = "SEND_COMPILATION";
+    /**
+     * Sets whether the compilation should be sent.
+     * @param sendCompilation true to sent, false otherwise.
+     */
+    public void sendCompilation(boolean sendCompilation) {
+        this.saveBoolean(PreyConfig.SEND_COMPILATION, sendCompilation);
+    }
+    /**
+     * Check if the compilation should be sent.
+     * @return true if sent, false otherwise.
+     */
+    public boolean isSendCompilation() {
+        return getBoolean(PreyConfig.SEND_COMPILATION, true);
+    }
 }
