@@ -69,6 +69,8 @@ public class AwareController {
             PreyLogger.d(String.format("AWARE AwareController init isLocationAware:%s", isLocationAware));
             if (!isLocationAware) {
                 removeGeofence(ctx);
+                //The last event is added
+                PreyConfig.getPreyConfig(ctx).setLastEvent("location_aware_error");
                 return;
             }
             // Check if airplane mode is currently enabled on the device
@@ -106,6 +108,8 @@ public class AwareController {
                     }
                     i++;
                 }
+                //The last event is added
+                PreyConfig.getPreyConfig(ctx).setLastEvent("location_aware_send");
                 PreyLocation locationNow2 = sendAware(ctx, locationAware);
                 if (locationNow2 != null) {
                     run(ctx);
@@ -278,7 +282,7 @@ public class AwareController {
                 StrictMode.setThreadPolicy(policy);
             }
             // Send location data using web services
-            preyResponse = PreyWebServices.getInstance().sendLocation(ctx, location);
+            preyResponse = PreyConfig.getPreyConfig(ctx).getWebServices().sendLocation(ctx, location);
             // Check if response is not null
             if (preyResponse != null) {
                 // Get status code and response from response object
