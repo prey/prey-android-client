@@ -49,7 +49,7 @@ import com.prey.json.parser.JSONParser;
 import com.prey.net.http.EntityFile;
 import com.prey.R;
 
-public class PreyWebServices {
+public class PreyWebServices implements WebServices {
 
     private static PreyWebServices _instance = null;
 

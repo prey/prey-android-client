@@ -54,31 +54,43 @@ public class MessageProcessor {
             switch (action) {
 
                 //I wake up and begin the union.
-                case ACTION_WAKE_UP -> send(context, ACTION_MATCH);
+                case ACTION_WAKE_UP -> {
+                    //The last event is added
+                    preyConfig.setLastEvent(Event.ANDROID_MATCH);
+                    send(context, ACTION_MATCH);
+                }
 
                 //I receive data and notify the panel.
                 case ACTION_MATCH -> {
                     startEvent(context, Event.ANDROID_MATCH_UP);
+                    //The last event is added
+                    preyConfig.setLastEvent(Event.ANDROID_MATCH_UP);
                     send(context, ACTION_MATCH_UP);
                 }
 
                 //I receive the enabled permission from the administrative permit of the extension and notify the panel.
                 case ACTION_DEVICE_ADMIN -> {
                     startEvent(context, Event.ANDROID_DEVICE_ADMIN);
-                    send(context, ACTION_DEVICE_ADMIN);
+                    //The last event is added
+                    preyConfig.setLastEvent(ACTION_DEVICE_ADMIN);
+                    send(context, Event.ANDROID_DEVICE_ADMIN);
                     preyConfig.setDeviceAdminExtension(true);
                 }
 
                 //I receive the disabled permission from the administrative permit of the extension and notify the panel.
                 case ACTION_REVOKED_DEVICE_ADMIN -> {
                     startEvent(context, Event.ANDROID_REVOKED_DEVICE_ADMIN);
-                    send(context, ACTION_REVOKED_DEVICE_ADMIN);
+                    //The last event is added
+                    preyConfig.setLastEvent(ACTION_REVOKED_DEVICE_ADMIN);
+                    send(context, Event.ANDROID_REVOKED_DEVICE_ADMIN);
                     preyConfig.setDeviceAdminExtension(false);
                 }
 
                 //I received that I initiated the factory reset and notify the panel.
                 case ACTION_FACTORY_RESET -> {
                     String messageId = "";
+                    //The last event is added
+                    preyConfig.setLastEvent(Event.ANDROID_FACTORY_RESET);
                     startEvent(context, Event.ANDROID_FACTORY_RESET);
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
                             context, "processed",
@@ -90,6 +102,8 @@ public class MessageProcessor {
                 case ACTION_FACTORY_RESET_ERROR -> {
                     String messageId = "";
                     String errorString = json.getString("error");
+                    //The last event is added
+                    preyConfig.setLastEvent(Event.ANDROID_FACTORY_RESET_ERROR);
                     startEvent(context, Event.ANDROID_FACTORY_RESET_ERROR, errorString);
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
                             context, "failed",

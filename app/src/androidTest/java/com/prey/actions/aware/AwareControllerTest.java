@@ -1,23 +1,62 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2026 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.actions.aware;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.location.PreyLocation;
 import com.prey.net.PreyHttpResponse;
+import com.prey.net.FakeWebServices;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 
+/**
+ * Test suite for the {@link AwareController} class.
+ *
+ * <p>This class contains a comprehensive set of unit tests to verify the functionality
+ * of the location-aware feature controller. It ensures that the controller behaves
+ * correctly under various conditions, such as when the feature is enabled or disabled,
+ * and when processing different location data points.
+ *
+ * <p>Key functionalities tested include:
+ * <ul>
+ *     <li>Initialization logic based on server settings ({@code location_aware} flag).</li>
+ *     <li>The logic for deciding whether to send a location update based on the distance traveled
+ *         (the {@code mustSendAware} method).</li>
+ *     <li>The direct sending of location data ({@code sendNowAware}) and its handling of
+ *         invalid inputs like null or zero-coordinate locations.</li>
+ * </ul>
+ *
+ * <p>The test setup initializes a large set of {@link PreyLocation} objects to simulate a
+ * device's movement history, allowing for realistic testing of distance and time-based
+ * conditions. Mock web services ({@link FakeWebServices}) are used to simulate
+ * server responses and isolate the controller's logic.
+ *
+ * @see AwareController
+ * @see PreyLocation
+ * @see FakeWebServices
+ */
 public class AwareControllerTest {
     Context ctx;
+    PreyConfig preyConfig;
     private PreyLocation locationNull;
     private PreyLocation locationZero;
     private PreyLocation location01;
@@ -56,6 +95,7 @@ public class AwareControllerTest {
     @Before
     public void setUp() throws Exception {
         ctx = ApplicationProvider.getApplicationContext();
+        preyConfig = PreyConfig.getPreyConfig(ctx);
         locationNull = null;
         locationZero = new PreyLocation(0, 0, 0f, 0, sdf.parse("2023-09-03T18:29:56.000Z").getTime(), "native");
         location01 = new PreyLocation(38.7166081, -9.1765765, 3.83f, 0, sdf.parse("2023-09-03T18:29:56.000Z").getTime(), "native");
@@ -88,6 +128,109 @@ public class AwareControllerTest {
         location28 = new PreyLocation(39.9127509, -8.7990496, 3.f, 0, sdf.parse("2023-09-04T14:06:20.000Z").getTime(), "native");
         location29 = new PreyLocation(40.1578164, -8.8578124, 12.62f, 0, sdf.parse("2023-09-04T19:16:26.000Z").getTime(), "native");
         location30 = new PreyLocation(40.1586107, -8.8488221, 13.7f, 0, sdf.parse("2023-09-04T19:16:32.000Z").getTime(), "native");
+    }
+
+
+    // Centralized constants for JSON keys
+    private static final class JsonKeys {
+        private JsonKeys() {
+        } // Non-instantiable
+
+        public static final String AUTO_UPDATE = "auto_update";
+        public static final String SEND_CRASH_REPORTS = "send_crash_reports";
+        public static final String LOCATION_AWARE = "location_aware";
+        public static final String SETTINGS = "settings";
+        public static final String LOCAL = "local";
+        public static final String GLOBAL = "global";
+        public static final String STATUS = "status";
+        public static final String MISSING = "missing";
+        public static final String DELAY = "delay";
+        public static final String EXCLUDE = "exclude";
+        public static final String MINUTES_TO_QUERY_SERVER = "minutes_to_query_server";
+        public static final String RUNNING_ACTIONS = "running_actions";
+    }
+
+
+    /**
+     * Creates a mock JSON object simulating a server status response for testing purposes.
+     * This JSON includes settings and status information, with the "location_aware"
+     * setting being configurable via the parameter.
+     *
+     * @param locationAware A boolean value to set for the "location_aware" setting in the
+     *                      generated JSON. True if location awareness is enabled, false otherwise.
+     * @return A {@link JSONObject} representing the mocked server status. Returns an empty
+     * JSONObject if an exception occurs during creation.
+     */
+    public JSONObject createJsonStatusAware(boolean locationAware) {
+        try {
+            JSONObject globalSettings = new JSONObject()
+                    .put(JsonKeys.AUTO_UPDATE, true)
+                    .put(JsonKeys.SEND_CRASH_REPORTS, true);
+
+            JSONObject localSettings = new JSONObject()
+                    .put(JsonKeys.LOCATION_AWARE, locationAware);
+
+            JSONObject settings = new JSONObject()
+                    .put(JsonKeys.LOCAL, localSettings)
+                    .put(JsonKeys.GLOBAL, globalSettings);
+
+            JSONObject status = new JSONObject()
+                    .put(JsonKeys.MISSING, false)
+                    .put(JsonKeys.DELAY, 25)
+                    .put(JsonKeys.EXCLUDE, new JSONArray()); // Use a new array
+
+            return new JSONObject()
+                    .put(JsonKeys.SETTINGS, settings)
+                    .put(JsonKeys.STATUS, status)
+                    .put(JsonKeys.MINUTES_TO_QUERY_SERVER, 10)
+                    .put(JsonKeys.RUNNING_ACTIONS, new JSONArray()); // Use another new array
+
+        } catch (JSONException e) {
+            // With valid, non-null keys and supported values, this exception is unlikely.
+            // It points to a developer error if it occurs.
+            PreyLogger.e("Failed to create status JSON due to a programming error.", e);
+
+            // Return an empty JSONObject or null to prevent a crash downstream,
+            // though propagating the error might be better.
+            return new JSONObject();
+        }
+    }
+
+    /**
+     * Tests that a "location_aware_send" event is triggered when the AwareController is initialized
+     * and the "location_aware" setting is enabled in the device's status configuration. This verifies
+     * that the location-aware tracking starts as expected.
+     */
+    @Test
+    public void shouldSendLocationAwareEvent_whenAwareIsTurnedOn() {
+        // Arrange: Set up the configuration and mock the web service response
+        FakeWebServices testWebServices = new FakeWebServices();
+        JSONObject json = createJsonStatusAware(true);
+        testWebServices.setStatus(json);
+        preyConfig.setWebServices(testWebServices);
+        preyConfig.setTimeLocationAware(0);
+
+        AwareController.getInstance().init(ctx);
+        assertEquals("location_aware_send", preyConfig.getLastEvent());
+    }
+
+    /**
+     * Tests that the correct "location aware false" event is sent when the
+     * location-aware feature is turned off in the device's settings fetched from the server.
+     * It sets up a mock server response where `location_aware` is false, initializes
+     * the {@link AwareController}, and then verifies that the last event recorded in
+     * {@link PreyConfig} is "location_aware_error".
+     */
+    @Test
+    public void shouldSendLocationAwareEvent_whenAwareIsTurnedOff() {
+        // Arrange: Set up the configuration and mock the web service response
+        FakeWebServices testWebServices = new FakeWebServices();
+        JSONObject json = createJsonStatusAware(false);
+        testWebServices.setStatus(json);
+        preyConfig.setWebServices(testWebServices);
+
+        AwareController.getInstance().init(ctx);
+        assertEquals("location_aware_error", preyConfig.getLastEvent());
     }
 
     @Test
@@ -270,16 +413,33 @@ public class AwareControllerTest {
         assertFalse(AwareController.mustSendAware(ctx, location30, location29, maxDistance));//.77
     }
 
+    /**
+     * Tests the {@code sendNowAware} method to verify its handling of different location inputs.
+     * This test checks three scenarios:
+     * 1. A null location, which should result in no action (returns null).
+     * 2. A location with zero coordinates, also expected to be ignored (returns null).
+     * 3. A valid location, which should trigger a successful send to the server,
+     * verified by a non-null response and an HTTP_OK status code.
+     * Any exceptions during the process are logged.
+     */
     @Test
     public void mustSendAware() {
         try {
+            // Create a mock HTTP response that simulates a server ok
+            PreyHttpResponse okHttpResponse = new PreyHttpResponse(HttpURLConnection.HTTP_OK, "OK");
+
+            FakeWebServices testWebServices = new FakeWebServices();
+            testWebServices.setPreyHttpResponse(okHttpResponse);
+            preyConfig.setWebServices(testWebServices);
+            preyConfig.setAware(true);
+
             assertNull(AwareController.sendNowAware(ctx, locationNull));
             assertNull(AwareController.sendNowAware(ctx, locationZero));
             PreyHttpResponse response = AwareController.sendNowAware(ctx, location01);
             assertNotNull(response);
             assertEquals(response.getStatusCode(), HttpURLConnection.HTTP_OK);
         } catch (Exception e) {
-            PreyLogger.e("error mustSendAware:" + e.getMessage(), e);
+            PreyLogger.e(String.format("error mustSendAware:%s", e.getMessage()), e);
         }
     }
 
