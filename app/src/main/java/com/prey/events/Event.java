@@ -23,12 +23,6 @@ public class Event {
     public static final String DEVICE_ADDED = "device_added";
     public static final String NATIVE_LOCK = "native_lock";
     public static final String ANDROID_LOCK_PIN = "android_lock_pin";
-    public static final String ANDROID_MATCH = "android_match";
-    public static final String ANDROID_MATCH_UP = "android_match_up";
-    public static final String ANDROID_DEVICE_ADMIN = "android_device_admin";
-    public static final String ANDROID_REVOKED_DEVICE_ADMIN = "android_revoked_device_admin";
-    public static final String ANDROID_FACTORY_RESET = "android_factory_reset";
-    public static final String ANDROID_FACTORY_RESET_ERROR = "android_factory_error";
     private String name;
     private String info;
     private boolean alwaysSend;
