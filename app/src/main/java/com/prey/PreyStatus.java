@@ -80,7 +80,8 @@ public class PreyStatus {
         boolean autoconnect = false;
         int minutesToQueryServer;
         try {
-            JSONObject jsnobject = PreyWebServices.getInstance().getStatus(ctx);
+            //Obtains services to use between implementation or the fake
+            JSONObject jsnobject = PreyConfig.getPreyConfig(ctx).getWebServices().getStatus(ctx);
             if (jsnobject != null) {
                 PreyLogger.d("STATUS jsnobject :" + jsnobject);
                 JSONObject jsnobjectSettings = jsnobject.getJSONObject("settings");

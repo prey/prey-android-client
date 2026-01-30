@@ -36,11 +36,14 @@ import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.net.UtilConnection;
+import com.prey.net.WebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+
 public class PreyConfig {
 
     //Set false in production
@@ -1340,6 +1343,18 @@ public class PreyConfig {
         saveLong(TIME_LOCATION_AWARE, cal.getTimeInMillis());
     }
 
+    /**
+     * Sets a specific timestamp for the next location aware check.
+     * This allows for scheduling the check at a precise time,
+     * overriding the default 2-minute interval.
+     *
+     * @param timeLocationAware The exact time in milliseconds since the epoch
+     *                          when the next location aware check should be allowed.
+     */
+    public void setTimeLocationAware(long timeLocationAware) {
+        saveLong(TIME_LOCATION_AWARE, timeLocationAware);
+    }
+
     public boolean isTimeLocationAware() {
         long timeLocationAware = getLong(TIME_LOCATION_AWARE, 0);
         Date dateLocationAware = new Date();
@@ -1807,6 +1822,51 @@ public class PreyConfig {
             return true;
         long timeNow = new Date().getTime();
         return timeNow > timeNextReport;
+    }
+
+    public static final String SEND_COMPILATION = "SEND_COMPILATION";
+    /**
+     * Sets whether the compilation should be sent.
+     * @param sendCompilation true to sent, false otherwise.
+     */
+    public void sendCompilation(boolean sendCompilation) {
+        this.saveBoolean(PreyConfig.SEND_COMPILATION, sendCompilation);
+    }
+    /**
+     * Check if the compilation should be sent.
+     * @return true if sent, false otherwise.
+     */
+    public boolean isSendCompilation() {
+        return getBoolean(PreyConfig.SEND_COMPILATION, true);
+    }
+
+    /**
+     * The web services implementation used for network communication.
+     * This field is initialized with a default singleton instance but can be replaced,
+     * primarily for testing purposes to allow mocking of web service calls.
+     */
+    private WebServices webServices = PreyWebServices.getInstance();
+
+    /**
+     * Sets the web services implementation for this configuration.
+     * This is primarily used for testing purposes to inject a mock or test-specific
+     * implementation of the {@link WebServices} interface.
+     *
+     * @param webServices The {@link WebServices} implementation to be used.
+     */
+    public void setWebServices(WebServices webServices) {
+        this.webServices = webServices;
+    }
+
+    /**
+     * Gets the instance of the web services handler.
+     * This is used for making API calls to the Prey backend.
+     * It allows for swapping the implementation, for example, with a mock for testing.
+     *
+     * @return The current {@link WebServices} instance.
+     */
+    public WebServices getWebServices() {
+        return webServices;
     }
 
 }
