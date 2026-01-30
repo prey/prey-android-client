@@ -49,7 +49,7 @@ import com.prey.json.parser.JSONParser;
 import com.prey.net.http.EntityFile;
 import com.prey.R;
 
-public class PreyWebServices {
+public class PreyWebServices implements WebServices {
 
     private static PreyWebServices _instance = null;
 
@@ -580,6 +580,8 @@ public class PreyWebServices {
         parameters.put(prefix + "[serial_number]", hardware.getSerialNumber());
         parameters.put(prefix + "[uuid]", hardware.getUuid());
         parameters.put(prefix + "[google_services]", String.valueOf(PreyUtils.isGooglePlayServicesAvailable(ctx)));
+        //Compilation is added during creation
+        parameters.put(prefix + "[android_compile_sdk]", String.valueOf(com.prey.BuildConfig.COMPILE_SDK_VERSION));
         int nic = 0;
         Wifi wifi = phone.getWifi();
         if (wifi != null) {
@@ -618,17 +620,25 @@ public class PreyWebServices {
                 parameters.put("hardware_attributes[serial_number]", hardware.getSerialNumber());
                 PreyConfig.getPreyConfig(ctx).setSentUuidSerialNumber(true);
             }
+            //Compilation is added when sending in data
+            if (PreyConfig.getPreyConfig(ctx).isSendCompilation()) {
+                parameters.put("hardware_attributes[android_compile_sdk]", String.valueOf(com.prey.BuildConfig.COMPILE_SDK_VERSION));
+            }
             try {
                 String url = getDataUrlJson(ctx);
-                PreyLogger.d("URL:" + url);
+                PreyLogger.d(String.format("URL:%s", url));
                 PreyConfig.postUrl = null;
-                if(UtilConnection.isInternetAvailable(ctx)) {
+                if (UtilConnection.isInternetAvailable(ctx)) {
                     if (entityFiles.size() == 0) {
                         preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
                     } else {
                         preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, entityFiles);
                     }
-                    PreyLogger.d("Data sent_: " + (preyHttpResponse==null?"":preyHttpResponse.getResponseAsString()));
+                    int statusCode = preyHttpResponse.getStatusCode();
+                    if (statusCode == HttpURLConnection.HTTP_OK) {
+                        PreyConfig.getPreyConfig(ctx).sendCompilation(false);
+                    }
+                    PreyLogger.d(String.format("Data sent_: %s", (preyHttpResponse == null ? "" : preyHttpResponse.getResponseAsString())));
                 }
             } catch (Exception e) {
                 PreyLogger.e("Data wasn't send", e);
