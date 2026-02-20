@@ -1,12 +1,10 @@
 <p align="center">
-  <img src="https://pbs.twimg.com/profile_images/1194256576451878913/Yhl6jBE4_400x400.jpg" alt="Prey: Android client" height="200" width="200"/>
+  <img src="https://repository-images.githubusercontent.com/1000650/9f546780-e0b6-11ea-9e53-a82f8e775fbb" alt="Prey: iOS client" height="200" width="400"/>
 </p>
 
 Here you will find all the source code for the [current](https://play.google.com/store/apps/details?id=com.prey) and in development releases of the Prey client for Android devices.
 
-Prey is the most complete anti-theft application! It lets you track and locate your lost or stolen device. Locate and recover your device with geolocation and many more features.
-
-> Prey is a freemium web service for tracking and monitoring laptops, smartphones and other electronic devices, based on an open-source software agent that connects to a host computer, also referred to as the control panel. The host can signal the agent, prompting it to reply with information about its current location, and can trigger various other actions.
+Prey is a SaaS platform for device tracking, monitoring, data protection, and device management. Its open-source agent runs on endpoints and connects to a centralized control panel, enabling organizations to locate devices, enforce security policies, protect sensitive data, and manage their entire fleet remotely.
 
 ## Features
 
@@ -17,14 +15,14 @@ Prey is the most complete anti-theft application! It lets you track and locate y
 
 ## Requirements
 
-- Android Studio 1.0
-- Android 2.3+
+- Android Studio Ladybug or newer
+- JDK 17
+- Gradle 8.7
+- Android Gradle Plugin 8.11.1
+- Android 5.0 (Lollipop, API 21) or higher.
+- Google Play Services required (for location, maps, and Firebase)
 
 ---
-
-## Contact
-
-Follow Prey Project on Twitter ([@PreyProject](https://twitter.com/PreyProject))
 
 ### Authors
 
@@ -33,6 +31,6 @@ Follow Prey Project on Twitter ([@PreyProject](https://twitter.com/PreyProject))
 
 ## Legal
 
-Copyright © 2010-2016, Prey Inc.
+Copyright © 2026 Prey, Inc. All rights reserved.
 Released under the GPLv3 license.
 For full details see the LICENSE file included in this distribution.
