@@ -6,34 +6,32 @@
  ******************************************************************************/
 package com.prey;
 
+import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Build;
 
+import androidx.core.app.ActivityCompat;
 import androidx.multidex.MultiDex;
+import androidx.work.WorkManager;
 
 import com.google.firebase.FirebaseApp;
 
-import com.prey.actions.aware.AwareController;
-import com.prey.actions.aware.AwareScheduled;
+import com.prey.actions.aware.AwareInitialLocationProvider;
 import com.prey.actions.fileretrieval.FileretrievalController;
-import com.prey.actions.geofences.GeofenceController;
-import com.prey.actions.location.daily.LocationScheduled;
+import com.prey.actions.location.daily.DailyLocationUtil;
 import com.prey.actions.report.ReportScheduled;
 import com.prey.actions.report.ReportService;
 import com.prey.actions.triggers.TriggerController;
 import com.prey.activities.LoginActivity;
-import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.factories.EventFactory;
 import com.prey.events.receivers.EventReceiver;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
-import com.prey.services.AwareJobService;
 import com.prey.services.PreyDisablePowerOptionsService;
-import com.prey.services.PreyJobService;
-import com.prey.workers.PreyWorker;
 
 import java.util.Date;
 import java.util.Map;
@@ -69,7 +67,6 @@ public class PreyApp extends Application {
         } catch (Exception e) {
             PreyLogger.e(String.format("Error FirebaseApp: %s", e.getMessage()), e);
         }
-        PreyBetaController.startPrey(getApplicationContext());
     }
 
     public void run(final Context ctx) {
@@ -94,6 +91,7 @@ public class PreyApp extends Application {
             PreyConfig.getPreyConfig(ctx).setSessionId(sessionId);
             final boolean missing = PreyConfig.getPreyConfig(ctx).isMissing();
             PreyLogger.d(String.format("missing: %b", missing));
+            WorkManager.getInstance(ctx).cancelAllWork();
             if (deviceKey != null && !"".equals(deviceKey)) {
                 new Thread() {
                     public void run() {
@@ -105,20 +103,15 @@ public class PreyApp extends Application {
                             PreyConfig.getPreyConfig(ctx).setDeviceName(initName);
                         }
                         PreyStatus.getInstance().initConfig(ctx);
-                        boolean accessCoarseLocation = PreyPermission.canAccessCoarseLocation(ctx);
-                        boolean accessFineLocation = PreyPermission.canAccessFineLocation(ctx);
-                        boolean canAccessBackgroundLocation = PreyPermission.canAccessBackgroundLocation(ctx);
                         boolean verifyNotification = EventFactory.verifyNotification(ctx);
                         if (!verifyNotification) {
                             EventFactory.notification(ctx);
                         }
-                        boolean isGooglePlayServicesAvailable = PreyUtils.isGooglePlayServicesAvailable(ctx);
-                        if (isGooglePlayServicesAvailable && (accessCoarseLocation || accessFineLocation) && canAccessBackgroundLocation) {
-                            GeofenceController.getInstance().run(ctx);
-                            AwareController.getInstance().init(ctx);
-                            AwareScheduled.getInstance(ctx).run();
-                            LocationScheduled.getInstance().run(ctx);
-                            PreyWorker.getInstance().startPeriodicWork(ctx);
+                        if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                            new AwareInitialLocationProvider(ctx).init();
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                DailyLocationUtil.INSTANCE.enqueueDailyCheck(ctx);
+                            }
                         }
                         FileretrievalController.getInstance().run(ctx);
                         TriggerController.getInstance().run(ctx);
@@ -129,16 +122,6 @@ public class PreyApp extends Application {
                             }
                         }
                         if (!PreyConfig.getPreyConfig(ctx).isChromebook()) {
-                            try {
-                                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    PreyJobService.schedule(ctx);
-                                    if (isGooglePlayServicesAvailable) {
-                                        AwareJobService.schedule(ctx);
-                                    }
-                                }
-                            } catch (Exception e) {
-                                PreyLogger.e(String.format("error jobService.schedule : %s", e.getMessage()), e);
-                            }
                             if (PreyConfig.getPreyConfig(ctx).isRunBackground()) {
                                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
                             }

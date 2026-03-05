@@ -15,6 +15,7 @@ import android.net.wifi.WifiManager;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPhone;
+import com.prey.actions.location.daily.DailyLocationUtil;
 import com.prey.events.Event;
 import com.prey.events.factories.EventFactory;
 import com.prey.events.retrieves.EventRetrieveDataBattery;
@@ -59,7 +60,7 @@ public class EventManager {
                         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                         ssid = wifiInfo.getSSID();
                         PreyLogger.d("i[" + i + "]ssid:" + ssid);
-                        if (!"<unknown ssid>".equals(ssid)) {
+                        if (ssid.contains("unknown ssid")) {
                             type_connect="wifi";
                             break;
                         }
@@ -93,6 +94,7 @@ public class EventManager {
                         event.setName(Event.MOBILE_CONNECTED);
                         event.setInfo(networkClass);
                         type_connect="mobile";
+                        DailyLocationUtil.INSTANCE.enqueueDailyCheck(ctx);
                         break;
                     }
                 }

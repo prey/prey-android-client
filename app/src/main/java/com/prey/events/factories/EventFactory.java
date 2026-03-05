@@ -13,41 +13,29 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.PreyPhone;
-import com.prey.R;
-import com.prey.actions.aware.AwareController;
-import com.prey.actions.geofences.GeofenceController;
-import com.prey.actions.location.LocationUtil;
-import com.prey.actions.location.PreyLocation;
+
+import com.prey.actions.aware.AwareInitialLocationProvider;
+import com.prey.actions.location.daily.DailyLocationUtil;
 import com.prey.actions.triggers.BatteryTriggerReceiver;
 import com.prey.actions.triggers.SimTriggerReceiver;
-import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.Event;
+import com.prey.json.actions.Location;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.UtilConnection;
-import com.prey.services.PreyCloseNotificationService;
-import com.prey.services.PreyPermissionService;
 
 public class EventFactory {
 
@@ -96,7 +84,10 @@ public class EventFactory {
         ) {
             new Thread() {
                 public void run() {
-                    sendLocationAware(ctx);
+                   // sendLocationAware(ctx);
+                    if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        new AwareInitialLocationProvider(ctx).init();
+                    }
                 }
             }.start();
         }
@@ -126,7 +117,7 @@ public class EventFactory {
                 if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
                     PreyLogger.d("getEvent wifiState connected");
                     info.put("connected", "wifi");
-                    PreyBetaController.startPrey(ctx);
+                    DailyLocationUtil.INSTANCE.enqueueDailyCheck(ctx);
                 }
                 if (wifiState == WifiManager.WIFI_STATE_DISABLED) {
                     PreyLogger.d("getEvent mobile connected");
@@ -159,7 +150,7 @@ public class EventFactory {
                     }
                 }
                 if (connected) {
-                    PreyBetaController.startPrey(ctx);
+                    DailyLocationUtil.INSTANCE.enqueueDailyCheck(ctx);
                 }
             }
         }
@@ -167,7 +158,7 @@ public class EventFactory {
             PreyLogger.d("EventFactory USER_PRESENT");
             int minuteScheduled = PreyConfig.getPreyConfig(ctx).getMinuteScheduled();
             if (minuteScheduled > 0) {
-                PreyBetaController.startPrey(ctx, null);
+          //      PreyBetaController.startPrey(ctx, null);
             }
             return null;
         }
@@ -179,9 +170,7 @@ public class EventFactory {
             boolean isTimeLocationAware = PreyConfig.getPreyConfig(ctx).isTimeLocationAware();
             PreyLogger.d("sendLocation isTimeLocationAware:" + isTimeLocationAware);
             if (!isTimeLocationAware) {
-                PreyLocation locationNow = LocationUtil.getLocation(ctx, null, false);
-                AwareController.sendAware(ctx, locationNow);
-                GeofenceController.verifyGeozone(ctx, locationNow);
+                new Location().get(ctx, new JSONObject());
             }
         } catch (Exception e) {
             PreyLogger.e("Error sendLocation:" + e.getMessage(), e);

@@ -40,8 +40,8 @@ public class CheckLockActivated extends Service {
                     }
                     try {
                         Thread.sleep(1000);
-                        if (!Lock.canDrawOverlays(ctx)) {
-                            Lock.lockWhenYouNocantDrawOverlays(ctx);
+                        if (!Lock.INSTANCE.canDrawOverlays(ctx)) {
+                            Lock.INSTANCE.lockWhenYouNocantDrawOverlays(ctx);
                             stopSelf();
                             break;
                         }

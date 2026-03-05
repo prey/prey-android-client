@@ -11,7 +11,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.prey.PreyConfig;
@@ -19,13 +18,10 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.PreyPhone;
 import com.prey.actions.HttpDataService;
-import com.prey.actions.observer.ActionResult;
 import com.prey.json.UtilJson;
-import com.prey.net.PreyHttpResponse;
+import com.prey.json.actions.Report;
 import com.prey.net.PreyWebServices;
-import com.prey.net.http.EntityFile;
 import com.prey.receivers.AlarmReportReceiver;
-import com.prey.util.ClassUtil;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -85,76 +81,9 @@ public class ReportService extends IntentService {
 						alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 					}
 				}
-				// Get the excluded reports from the prey config
-				String exclude = PreyConfig.getPreyConfig(ctx).getExcludeReport();
-				// Create a JSON array to store the reports to be sent
-				JSONArray jsonArray = new JSONArray();
 				// Log a debug message indicating the start of the report
 				PreyLogger.d(String.format("REPORT start:%s", interval));
-				// Add reports to the JSON array if they are not excluded
-				if (!exclude.contains("picture"))
-					jsonArray.put(new String("picture"));
-				if (!exclude.contains("location"))
-					jsonArray.put(new String("location"));
-				if (!exclude.contains("access_points_list"))
-					jsonArray.put(new String("access_points_list"));
-				if (!exclude.contains("active_access_point"))
-					jsonArray.put(new String("active_access_point"));
-				// Try to execute the reports
-				try {
-					// Create a list to store the action results
-					List<ActionResult> lista = new ArrayList<ActionResult>();
-					// Iterate over the reports in the JSON array
-					for (int i = 0; i < jsonArray.length(); i++) {
-						// If the prey config is missing, execute the report
-						if (PreyConfig.getPreyConfig(ctx).isMissing()) {
-							String nameAction = jsonArray.getString(i);
-							PreyLogger.d(String.format("nameAction:%s", nameAction));
-							String methodAction = "report";
-							JSONObject parametersAction = null;
-							listData = ClassUtil.execute(ctx, lista, nameAction, methodAction, parametersAction, listData);
-						}
-					}
-				} catch (Exception e) {
-					PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
-				}
-				int parms = 0;
-				for (int i = 0; listData != null && i < listData.size(); i++) {
-					HttpDataService httpDataService = listData.get(i);
-					parms = parms + httpDataService.getDataAsParameters().size();
-					if (httpDataService.getEntityFiles() != null) {
-						for (int j = 0; j < httpDataService.getEntityFiles().size(); j++) {
-							EntityFile entity = httpDataService.getEntityFiles().get(j);
-							if (entity != null && entity.getLength() > 0) {
-								parms = parms + 1;
-							}
-						}
-					}
-				}
-				// Check if the device is in a missing state
-				if (PreyConfig.getPreyConfig(ctx).isMissing()) {
-					// Check if there are any report parameters to send
-					if (parms > 0) {
-						// Send the report to the server using the PreyWebServices instance
-						PreyHttpResponse response = PreyWebServices.getInstance().sendPreyHttpReport(ctx, listData);
-						// Check if the response is not null
-						if (response != null) {
-							PreyConfig.getPreyConfig(ctx).setLastEvent("report_send");
-							PreyLogger.d(String.format("REPORT response.getStatusCode():%s", response.getStatusCode()));
-							if (200 == response.getStatusCode() || 201 == response.getStatusCode()) {
-								PreyConfig.getPreyConfig(ctx).setTimeNextReport();
-							}
-							// Check if the response status code is 409 (Conflict)
-							if (409 == response.getStatusCode()) {
-								// Reset the report schedule
-								ReportScheduled.getInstance(ctx).reset();
-								PreyConfig.getPreyConfig(ctx).setMissing(false);
-								PreyConfig.getPreyConfig(ctx).setIntervalReport("");
-								PreyConfig.getPreyConfig(ctx).setExcludeReport("");
-							}
-						}
-					}
-				}
+				new Report().startReport(ctx,new JSONObject());
 			} catch (Exception e) {
 				PreyLogger.e(String.format("Error report:%s", e.getMessage()), e);
 				PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "failed", null, UtilJson.makeMapParam("get", "report", "failed", e.getMessage()));

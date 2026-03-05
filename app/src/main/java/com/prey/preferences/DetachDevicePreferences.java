@@ -62,7 +62,7 @@ public class DetachDevicePreferences extends DialogPreference {
 
         @Override
         protected Void doInBackground(Void... unused) {
-            error= Detach.detachDevice(getContext());
+            error= Detach.INSTANCE.detachDevice(getContext(),   true, true, false);
             PreyLogger.d("Error:"+error);
             return null;
         }

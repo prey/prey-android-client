@@ -21,9 +21,6 @@ import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.beta.services.PreyBetaRunnerService;
 import com.prey.exceptions.PreyException;
 import com.prey.json.parser.JSONParser;
-import com.prey.managers.PreyConnectivityManager;
-import com.prey.managers.PreyTelephonyManager;
-import com.prey.net.PreyWebServices;
 import com.prey.net.UtilConnection;
 
 public class PreyBetaActionsRunner implements Runnable {
@@ -97,8 +94,7 @@ public class PreyBetaActionsRunner implements Runnable {
             if(close) {
                 ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
             }
-            jsonObject = PreyWebServices.getInstance().getActionsJsonToPerform(ctx);
-        } catch (PreyException e) {
+        } catch (Exception e) {
             PreyLogger.e("Exception getting device's xml instruction set", e);
             throw e;
         }

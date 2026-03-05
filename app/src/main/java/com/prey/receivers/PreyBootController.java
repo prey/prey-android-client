@@ -16,12 +16,13 @@ import android.os.Bundle;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
-import com.prey.beta.actions.PreyBetaController;
 import com.prey.json.actions.Report;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyLockHtmlService;
 import com.prey.services.PreyLockService;
+
+import org.json.JSONObject;
 
 public class PreyBootController extends BroadcastReceiver {
 
@@ -31,7 +32,13 @@ public class PreyBootController extends BroadcastReceiver {
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
             String interval = PreyConfig.getPreyConfig(context).getIntervalReport();
             if (interval != null && !"".equals(interval)) {
-                Report.run(context, Integer.parseInt(interval));
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put("interval", interval);
+                    new Report().get(context, json);
+                }catch (Exception e){
+                    PreyLogger.e("Error:"+e.getMessage(),e);
+                }
             }
             final Context ctx = context;
             new Thread() {
@@ -74,15 +81,6 @@ public class PreyBootController extends BroadcastReceiver {
                                 }
                             }
                         }
-                    } catch (Exception e) {
-                        PreyLogger.e("Error:"+e.getMessage(),e);
-                    }
-                }
-            }.start();
-            new Thread() {
-                public void run() {
-                    try {
-                        PreyBetaController.startPrey(ctx);
                     } catch (Exception e) {
                         PreyLogger.e("Error:"+e.getMessage(),e);
                     }

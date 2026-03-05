@@ -20,7 +20,6 @@ import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
@@ -376,7 +375,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
                 PreyLogger.e("Error:"+e.getMessage(),e);
             }
             try{
-                preyLocation = LocationUtil.getLocation(getApplicationContext(), null, true);
+                preyLocation = LocationUtil.INSTANCE.getLocation(getApplicationContext());
                 if (preyLocation != null && preyLocation.getLocation()!=null && preyLocation.getLocation().getLatitude() != 0 && preyLocation.getLocation().getLongitude() !=0) {
                     PreyConfig.getPreyConfig(getApplicationContext()).setLocation(preyLocation);
                 }else{

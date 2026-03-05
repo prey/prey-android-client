@@ -40,7 +40,6 @@ import com.prey.PreyVerify;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.fileretrieval.FileretrievalDto;
 import com.prey.actions.location.PreyLocation;
-import com.prey.actions.location.PreyLocationManager;
 import com.prey.actions.observer.ActionsController;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 import com.prey.events.Event;
@@ -497,11 +496,11 @@ public class PreyWebServices implements WebServices {
         return PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey);
     }
 
-    private String getDeviceUrlJson(Context ctx) throws PreyException {
+    public String getDeviceUrlJson(Context ctx) throws PreyException {
         return getDeviceUrlApiv2(ctx).concat(".json");
     }
 
-    private String getReportUrlJson(Context ctx) throws PreyException {
+    public String getReportUrlJson(Context ctx) throws PreyException {
         return getDeviceUrlApiv2(ctx).concat("/reports.json");
     }
 
@@ -513,12 +512,12 @@ public class PreyWebServices implements WebServices {
         return getDeviceUrlApiv2(ctx).concat("/data.json");
     }
 
-    private String getEventsUrlJson(Context ctx) throws PreyException {
+    public String getEventsUrlJson(Context ctx) throws PreyException {
         return getDeviceUrlApiv2(ctx).concat("/events");
     }
 
-    private String getResponseUrlJson(Context ctx) throws PreyException {
-        return getDeviceUrlApiv2(ctx).concat("/response");
+    public String getResponseUrlJson(Context ctx) throws PreyException {
+        return getDeviceUrlApiv2(ctx).concat("/response.json");
     }
 
     public String getInfoUrlJson(Context ctx) throws PreyException {
@@ -1359,7 +1358,6 @@ public class PreyWebServices implements WebServices {
             PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         if (location != null) {
-            PreyLocationManager.getInstance(ctx).setLastLocation(location);
             PreyConfig.getPreyConfig(ctx).setLocation(location);
         }
         return location;

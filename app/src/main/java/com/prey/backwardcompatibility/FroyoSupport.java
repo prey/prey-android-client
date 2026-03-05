@@ -48,8 +48,8 @@ public class FroyoSupport {
             PreyLogger.d("change0");
             if (isAdminActive()) {
                 PreyLogger.d("change1");
-                boolean isPatternSet=Lock.isPatternSet(ctx);
-                boolean isPassOrPinSet= Lock.isPassOrPinSet(ctx);
+                boolean isPatternSet= Lock.INSTANCE.isPatternSet(ctx);
+                boolean isPassOrPinSet= Lock.INSTANCE.isPassOrPinSet(ctx);
                 if( !isPatternSet&&!isPassOrPinSet) {
                     try {
                         int length=0;

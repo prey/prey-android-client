@@ -24,20 +24,13 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
-import com.prey.PreyAccountData;
-import com.prey.PreyApp;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.PreyStatus;
 import com.prey.PreyUtils;
 import com.prey.R;
-import com.prey.actions.aware.AwareController;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.LoginActivity;
 import com.prey.activities.PermissionInformationActivity;
-import com.prey.json.actions.Location;
-import com.prey.net.PreyWebServices;
-import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
 public class BarcodeActivity extends Activity   {
 
@@ -180,7 +173,7 @@ public class BarcodeActivity extends Activity   {
                 String message = getString(R.string.device_added_congratulations_text);
                 Bundle bundle = new Bundle();
                 bundle.putString("message", message);
-                bundle.putString("nexturl", "tryReport");
+                bundle.putString("nexturl", "loadUrl");
                 PreyConfig.getPreyConfig(getApplicationContext()).setCamouflageSet(true);
                 Intent intent = null;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

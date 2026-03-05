@@ -23,7 +23,6 @@ import android.view.Window;
 import androidx.core.app.ActivityCompat;
 
 import com.prey.PreyLogger;
-import com.prey.actions.aware.AwareController;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.services.PreyOverlayService;
 
@@ -83,15 +82,6 @@ public class PermissionInformationActivity extends PreyActivity {
                     }
                 }
                 PreyConfig.getPreyConfig(PermissionInformationActivity.this).setProtectReady(true);
-                new Thread() {
-                    public void run() {
-                        try{
-                            AwareController.getInstance().init(getApplicationContext());
-                        }catch(Exception e){
-                            PreyLogger.e("Error:"+e.getMessage(),e);
-                        }
-                    }
-                }.start();
                 try {
                     if(intentPermission!=null) {
                         startActivity(intentPermission);

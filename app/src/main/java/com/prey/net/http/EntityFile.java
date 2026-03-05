@@ -18,6 +18,17 @@ public class EntityFile {
     private int length;
     private String fileName;
 
+    public byte[] getBytes() {
+        return bytes;
+    }
+
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
+    }
+
+    private  byte[] bytes;
+
+
     /**
      * Method return the file name
      * @return file name

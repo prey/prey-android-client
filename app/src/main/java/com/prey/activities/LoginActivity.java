@@ -9,7 +9,6 @@ package com.prey.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -75,7 +74,7 @@ public class LoginActivity extends Activity {
                 getApplicationContext().startService(intentLock);
                 getApplicationContext().startService(new Intent(getApplicationContext(), CheckLockActivated.class));
             } else {
-                Lock.lockWhenYouNocantDrawOverlays(getApplicationContext());
+                Lock.INSTANCE.lockWhenYouNocantDrawOverlays(getApplicationContext());
             }
         }
         boolean ready = PreyConfig.getPreyConfig(this).getProtectReady();

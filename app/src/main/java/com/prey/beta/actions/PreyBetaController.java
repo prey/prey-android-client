@@ -12,6 +12,7 @@ import android.content.Intent;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.beta.services.PreyBetaRunnerService;
+import com.prey.json.parser.JsonCommandDispatcher;
 
 public class PreyBetaController {
 
@@ -21,24 +22,14 @@ public class PreyBetaController {
 
     public static void startPrey(Context ctx, final String cmd) {
         PreyConfig config = PreyConfig.getPreyConfig(ctx);
-        PreyLogger.d("startPrey:"+config.isThisDeviceAlreadyRegisteredWithPrey());
+        PreyLogger.d("startPrey:" + config.isThisDeviceAlreadyRegisteredWithPrey());
         if (config.isThisDeviceAlreadyRegisteredWithPrey()) {
             config.setRun(true);
-            final Context context = ctx;
-            new Thread(new Runnable() {
-                public void run() {
-                    try{
-                        context.stopService(new Intent(context, PreyBetaRunnerService.class));
-                        Intent intentStart = new Intent(context, PreyBetaRunnerService.class);
-                        if (cmd != null) {
-                            intentStart.putExtra("cmd", cmd);
-                        }
-                        context.startService(intentStart);
-                    }catch (Exception e){
-                        PreyLogger.e("error:"+e.getMessage(),e);
-                    }
-                }
-            }).start();
+            if (cmd == null || cmd.isEmpty()) {
+                JsonCommandDispatcher.INSTANCE.getActionsJsonArray(ctx);
+            } else {
+                JsonCommandDispatcher.INSTANCE.getActionsJson(ctx, cmd);
+            }
         }
     }
 

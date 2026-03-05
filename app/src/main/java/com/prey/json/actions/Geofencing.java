@@ -8,8 +8,6 @@ package com.prey.json.actions;
 
 import android.content.Context;
 
-import com.prey.PreyLogger;
-import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.observer.ActionResult;
 
 import org.json.JSONObject;

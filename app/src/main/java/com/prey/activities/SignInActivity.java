@@ -40,6 +40,8 @@ import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.util.KeyboardStatusDetector;
 import com.prey.util.KeyboardVisibilityListener;
 
+import org.json.JSONObject;
+
 public class SignInActivity extends Activity {
 
     private static final int NO_MORE_DEVICES_WARNING = 0;
@@ -169,7 +171,7 @@ public class SignInActivity extends Activity {
                 PreyConfig.getPreyConfig(ctx).setRunBackground(true);
                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
                 new PreyApp().run(ctx);
-                new Location().get(ctx, null, null);
+                new Location().get(ctx, new JSONObject());
             } catch (Exception e) {
                 PreyLogger.e("error:"+e.getMessage(),e);
                 error = e.getMessage();

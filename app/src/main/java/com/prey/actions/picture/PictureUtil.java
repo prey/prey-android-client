@@ -74,6 +74,7 @@ public class PictureUtil {
                             entityFile.setType("image/png");
                             entityFile.setIdFile(sdf.format(new Date()) + "_" + entityFile.getType());
                             entityFile.setLength(frontPicture.length);
+                            entityFile.setBytes(frontPicture);
                             data.addEntityFile(entityFile);
                             attempts = maximum;
                         }
@@ -102,6 +103,7 @@ public class PictureUtil {
                                 entityFile.setType("image/png");
                                 entityFile.setIdFile(sdf.format(new Date()) + "_" + entityFile.getType());
                                 entityFile.setLength(backPicture.length);
+                                entityFile.setBytes(backPicture);
                                 data.addEntityFile(entityFile);
                                 attempts = maximum;
                             }

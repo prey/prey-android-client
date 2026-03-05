@@ -60,7 +60,7 @@ public class UtilConnection {
         return android.util.Base64.encodeToString((user + ":" + password).getBytes(), android.util.Base64.NO_WRAP);
     }
 
-    private static String getUserAgent(PreyConfig preyConfig) {
+    public static String getUserAgent(PreyConfig preyConfig) {
         return "Prey/".concat(preyConfig.getPreyVersion()).concat(" (Android " + PreyUtils.getBuildVersionRelease() + ")");
     }
 

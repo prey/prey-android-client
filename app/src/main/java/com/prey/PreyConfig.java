@@ -28,7 +28,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.prey.actions.aware.AwareController;
 import com.prey.actions.location.PreyLocation;
 import com.prey.activities.FeedbackActivity;
 import com.prey.json.actions.Location;
@@ -39,10 +38,10 @@ import com.prey.net.UtilConnection;
 import com.prey.net.WebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
+import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class PreyConfig {
 
@@ -1759,8 +1758,7 @@ public class PreyConfig {
                     public void run() {
                         try {
                             PreyStatus.getInstance().initConfig(ctx);
-                            AwareController.getInstance().init(ctx);
-                            new Location().get(ctx, null, null);
+                            new Location().get(ctx, new JSONObject());
                         } catch (Exception e) {
                             // Log any errors that occur during initialization
                             PreyLogger.e("Error:" + e.getMessage(), e);

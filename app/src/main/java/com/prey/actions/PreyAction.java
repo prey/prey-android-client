@@ -14,7 +14,6 @@ import java.util.Map;
 import android.content.Context;
 
 import com.prey.actions.camera.CameraAction;
-import com.prey.actions.location.LocationNotifierAction;
 import com.prey.actions.observer.ActionJob;
 import com.prey.exceptions.PreyException;
 
@@ -35,7 +34,6 @@ public abstract class PreyAction {
     private static HashMap<String, PreyAction> getAvailablesActions() {
         if (preyActions == null) {
             HashMap<String, PreyAction> actions = new HashMap<String, PreyAction>();
-            actions.put(LocationNotifierAction.DATA_ID, new LocationNotifierAction());
             actions.put(RingtonePlayerAction.DATA_ID, new RingtonePlayerAction());
             actions.put(Mp3PlayerAction.DATA_ID, new Mp3PlayerAction());
             actions.put(PopUpAlertAction.DATA_ID, new PopUpAlertAction());

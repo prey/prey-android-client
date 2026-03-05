@@ -16,23 +16,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.Settings;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyProperties;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.biometric.BiometricPrompt;
-import androidx.fragment.app.FragmentActivity;
-
 import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
 import com.prey.PreyApp;
@@ -43,7 +31,7 @@ import com.prey.PreyPermission;
 import com.prey.PreyUtils;
 import com.prey.PreyVerify;
 import com.prey.R;
-import com.prey.actions.location.LocationUpdatesService;
+import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.CloseActivity;
@@ -61,7 +49,7 @@ import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyDisablePowerOptionsService;
-import com.prey.services.PreyJobService;
+
 import com.prey.services.PreyLockHtmlService;
 import com.prey.services.PreySecureService;
 
@@ -70,18 +58,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.net.HttpURLConnection;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.security.spec.ECGenParameterSpec;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
-import java.util.concurrent.Executor;
 
 public class WebAppInterface {
 
@@ -126,8 +104,8 @@ public class WebAppInterface {
         String model = PreyConfig.getPreyConfig(mContext).getModel();
         String imei = PreyConfig.getPreyConfig(mContext).getImei();
         PreyLocation preyLocation = PreyConfig.getPreyConfig(mContext).getLocation();
-        String lat = "" + LocationUpdatesService.round(preyLocation.getLat());
-        String lng = "" + LocationUpdatesService.round(preyLocation.getLng());
+        String lat = "" + LocationUtil.INSTANCE.round(preyLocation.getLat());
+        String lng = "" + LocationUtil.INSTANCE.round(preyLocation.getLng());
         String public_ip = PreyConfig.getPreyConfig(mContext).getPublicIp().trim();
         String json = "{\"lat\":\"" + lat + "\",\"lng\":\"" + lng + "\",\"ssid\":\"" + ssid + "\",\"public_ip\":\"" + public_ip + "\",\"imei\":\"" + imei + "\",\"model\": \"" + model + "\"}";
         PreyLogger.d("getData:" + json);
@@ -246,7 +224,6 @@ public class WebAppInterface {
     public void changeScheduler(String minuteScheduled) {
         PreyLogger.d("changeScheduler:" + minuteScheduled);
         PreyConfig.getPreyConfig(mContext).setMinuteScheduled(Integer.parseInt(minuteScheduled));
-        PreyJobService.schedule(mContext);
     }
 
     @JavascriptInterface
@@ -333,7 +310,7 @@ public class WebAppInterface {
                 RunBackgroundCheckBoxPreference.notifyReady(mContext);
                 PreyConfig.getPreyConfig(mContext).setInstallationStatus("");
                 new PreyApp().run(mContext);
-                new Location().get(mContext, null, null);
+                new Location().get(mContext, new JSONObject());
             }
         } catch (Exception e) {
             PreyLogger.d(String.format("mylogin error1:%s", e.getMessage()));
@@ -726,7 +703,7 @@ public class WebAppInterface {
             PreyConfig.getPreyConfig(ctx).setRunBackground(true);
             PreyConfig.getPreyConfig(ctx).setInstallationStatus("Pending");
             new PreyApp().run(ctx);
-            new Location().get(ctx, null, null);
+            new Location().get(ctx, new JSONObject());
         } catch (Exception e) {
             error = e.getMessage();
             PreyLogger.e("error:" + error, e);
@@ -840,7 +817,7 @@ public class WebAppInterface {
 
         @Override
         protected Void doInBackground(Void... unused) {
-            error = Detach.detachDevice(mContext);
+            error = Detach.INSTANCE.detachDevice(mContext,   true, true, false);
             PreyLogger.d("error:" + error);
             return null;
         }

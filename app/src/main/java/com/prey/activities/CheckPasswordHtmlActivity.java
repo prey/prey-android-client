@@ -44,22 +44,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import com.prey.PreyAccountData;
-import com.prey.PreyApp;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
-import com.prey.PreyStatus;
 import com.prey.PreyUtils;
 import com.prey.R;
 
-import com.prey.actions.aware.AwareController;
 import com.prey.activities.js.CustomWebView;
 import com.prey.activities.js.WebAppInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
-import com.prey.json.actions.Location;
-import com.prey.net.PreyWebServices;
-import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyAccessibilityService;
 import com.prey.services.PreyOverlayService;
 
