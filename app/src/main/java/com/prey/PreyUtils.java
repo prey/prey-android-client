@@ -73,11 +73,7 @@ public class PreyUtils {
 
     public static boolean isTablet(Context ctx) {
         try {
-            DisplayMetrics dm = ctx.getResources().getDisplayMetrics();
-            float screenWidth = dm.widthPixels / dm.xdpi;
-            float screenHeight = dm.heightPixels / dm.ydpi;
-            double size = Math.sqrt(Math.pow(screenWidth, 2) + Math.pow(screenHeight, 2));
-            return size >= 7.0;
+            return PreyUtilsKt.INSTANCE.isTablet(ctx);
         } catch (Throwable t) {
             return false;
         }
