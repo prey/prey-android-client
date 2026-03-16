@@ -171,7 +171,7 @@ public class SignInActivity extends Activity {
                 PreyConfig.getPreyConfig(ctx).setRunBackground(true);
                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
                 new PreyApp().run(ctx);
-                new Location().get(ctx, new JSONObject());
+                Location.INSTANCE.getCoroutine(ctx, new JSONObject());
             } catch (Exception e) {
                 PreyLogger.e("error:"+e.getMessage(),e);
                 error = e.getMessage();

@@ -12,11 +12,11 @@ import android.webkit.MimeTypeMap
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.json.CommandTarget
-import com.prey.json.UtilJson
 import com.prey.net.PreyWebServices
 import com.prey.net.PreyWebServicesKt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
@@ -33,11 +33,20 @@ import java.io.File
  * The process is executed asynchronously in a coroutine. It notifies the server about the
  * "started", "stopped", and "failed" states of the operation.
  */
-class Tree : CommandTarget {
+class Tree : CommandTarget, BaseAction() {
 
-    override fun execute(context: Context, command: String, options: JSONObject): Any? {
-        return when (command) {
-            "get" -> get(context, options)
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.Default + job)
+
+    companion object {
+        const val TARGET = "tree"
+        const val PATH = "path"
+        const val DEPTH ="depth"
+    }
+
+    override fun execute(context: Context, command: String, options: JSONObject) {
+        when (command) {
+            CMD_GET -> scope.launch { get(context, options) }
             else -> throw IllegalArgumentException("Unknown command: $command")
         }
     }
@@ -64,60 +73,31 @@ class Tree : CommandTarget {
      * @param options A JSONObject containing the parameters for the file tree retrieval,
      *                such as `path`, `depth`, and `job_id`.
      */
-    fun get(context: Context, options: JSONObject) {
-        PreyLogger.d("Tree get options_:${options}")
-        CoroutineScope(Dispatchers.IO).launch {
-            var messageId: String? = null
-            try {
-                messageId = options.getString(PreyConfig.MESSAGE_ID)
-            } catch (e: Exception) {
-                PreyLogger.e("Error:${e.message}", e)
+    suspend fun get(context: Context, options: JSONObject) {
+        PreyLogger.d("Tree get options:${options}")
+        val messageId = options.optString(PreyConfig.MESSAGE_ID, null)
+        val jobId = options.optString(PreyConfig.JOB_ID, null)
+        val reason = jobId?.let { "{\"device_job_id\":\"$it\"}" }
+        try {
+            PreyLogger.d("Tree started")
+            PreyWebServicesKt.notify(context, CMD_GET, TARGET, STATUS_STARTED, reason)
+            val depth = if (options.has(DEPTH)) options.getInt(DEPTH) else 1
+            var path: String = options.getString(PATH)
+            if ("sdcard" == path) {
+                path = "/"
             }
-            var reason: String? = null
-            try {
-                val jobId = options.getString(PreyConfig.JOB_ID)
-                reason = "{\"device_job_id\":\"${jobId}\"}"
-                PreyLogger.d("jobId:${jobId}")
-            } catch (e: Exception) {
-                PreyLogger.e("Error:${e.message}", e)
-            }
-            try {
-                PreyLogger.d("Tree started")
-                PreyWebServicesKt.sendNotifyActions(
-                    context,
-                    UtilJson.makeJsonResponse("get", "tree", "started", reason),
-                    messageId
-                )
-                var depth = 1
-                try {
-                    depth = options.getInt("depth")
-                } catch (e: Exception) {
-                    PreyLogger.e("Error:${e.message}", e)
-                }
-                var path: String = options.getString("path")
-                if ("sdcard" == path) {
-                    path = "/"
-                }
-                val pathBase = Environment.getExternalStorageDirectory().toString()
-                val dir = File("${pathBase}${path}")
-                val array: JSONArray = getFilesRecursiveJSON(pathBase, dir, depth - 1)
-                val jsonTree = JSONObject()
-                jsonTree.put("tree", array.toString())
-                val response = PreyWebServices.getInstance().sendTree(context, jsonTree)
-                PreyLogger.d("Tree stopped response:${response.getStatusCode()}")
-                PreyWebServicesKt.sendNotifyActions(
-                    context,
-                    UtilJson.makeJsonResponse("get", "tree", "stopped", reason)
-                )
-                PreyLogger.d("Tree stopped")
-            } catch (e: Exception) {
-                PreyWebServicesKt.sendNotifyActions(
-                    context,
-                    UtilJson.makeJsonResponse("get", "tree", "failed", e.message),
-                    messageId
-                )
-                PreyLogger.e("Tree failed:${e.message}", e)
-            }
+            val pathBase = Environment.getExternalStorageDirectory().toString()
+            val dir = File("${pathBase}${path}")
+            val array: JSONArray = getFilesRecursiveJSON(pathBase, dir, depth - 1)
+            val jsonTree = JSONObject()
+            jsonTree.put("tree", array.toString())
+            val response = PreyWebServices.getInstance().sendTree(context, jsonTree)
+            PreyLogger.d("Tree stopped response:${response.statusCode}")
+            PreyWebServicesKt.notify(context, CMD_GET, TARGET, STATUS_STOPPED, reason, messageId)
+            PreyLogger.d("Tree stopped")
+        } catch (e: Exception) {
+            PreyWebServicesKt.notify(context, CMD_GET, TARGET, STATUS_FAILED, e.message)
+            PreyLogger.e("Tree failed:${e.message}", e)
         }
     }
 
@@ -212,7 +192,7 @@ class Tree : CommandTarget {
                 count += numberOfFilesInTheFolder(file)
             } else if (!file.getName().contains("trashed")) {
                 count++
-                PreyLogger.d("Tree count:$count path:${file.getPath()}")
+                //PreyLogger.d("Tree count:$count path:${file.getPath()}")
             }
         }
         return count

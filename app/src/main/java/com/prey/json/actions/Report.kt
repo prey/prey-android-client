@@ -27,6 +27,7 @@ import com.prey.net.UtilConnection
 import com.prey.services.ReportJobService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
@@ -62,14 +63,21 @@ import kotlin.math.roundToInt
  *
  * This class implements [CommandTarget] to integrate with the remote command system.
  */
-class Report : CommandTarget {
+class Report : CommandTarget, BaseAction() {
 
-    override fun execute(context: Context, command: String, options: JSONObject): Any? {
-        return when (command) {
-            "get" -> get(context, options)
-            "stop" -> stop(context, options)
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.Default + job)
+
+    override fun execute(context: Context, command: String, options: JSONObject) {
+        when (command) {
+            CMD_GET -> getCoroutine(context, options)
+            CMD_STOP -> stop(context, options)
             else -> throw IllegalArgumentException("Unknown command: $command")
         }
+    }
+
+    fun getCoroutine(context: Context, options: JSONObject){
+        scope.launch { get(context, options) }
     }
 
     /**
@@ -87,29 +95,20 @@ class Report : CommandTarget {
      * @param context The application context.
      * @param options A JSONObject containing configuration parameters for the reporting process.
      */
-    fun get(context: Context, options: JSONObject) {
+    suspend fun get(context: Context, options: JSONObject) {
         PreyLogger.d("Report get options:${options}")
         val lastReportStartDate = Date().getTime()
-        PreyLogger.d("lastReportStartDate:${lastReportStartDate}")
-        PreyConfig.getPreyConfig(context).setLastReportStartDate(lastReportStartDate)
-        PreyConfig.getPreyConfig(context).setMissing(true)
-        var interval = 0
-        try {
-            interval = options.getInt("interval")
-            PreyLogger.d("interval:${interval}")
-        } catch (e: Exception) {
-            interval = 10
-        }
-        var exclude: String = ""
-        try {
-            exclude = options.getString("exclude")
-            PreyLogger.d("exclude:${exclude}")
-        } catch (e: Exception) {
-            PreyLogger.e("Error:${e.message}", e)
-        }
-        PreyConfig.getPreyConfig(context).setIntervalReport("$interval")
-        PreyConfig.getPreyConfig(context).setExcludeReport(exclude)
-        PreyConfig.getPreyConfig(context).removeTimeNextReport()
+        PreyLogger.d("Report lastReportStartDate:${lastReportStartDate}")
+        val config = PreyConfig.getPreyConfig(context)
+        config.lastReportStartDate = lastReportStartDate
+        config.isMissing = true
+        val interval = if (options.has("interval")) options.getInt("interval") else 10
+        PreyLogger.d("Report interval:${interval}")
+        val exclude = if (options.has("exclude")) options.getString("exclude") else ""
+        PreyLogger.d("Report exclude:${exclude}")
+        config.setIntervalReport("$interval")
+        config.excludeReport = exclude
+        config.removeTimeNextReport()
         ReportScheduled.getInstance(context).run()
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             ReportJobService.schedule(context)
@@ -118,126 +117,139 @@ class Report : CommandTarget {
         startReport(context, JSONObject())
     }
 
+    /**
+     * Stops the device reporting process and resets the device's missing status.
+     *
+     * This function is triggered when a "stop" command is received. It performs the following actions:
+     * - Resets the scheduled reporting tasks via [ReportScheduled].
+     * - Updates the [PreyConfig] to mark the device as no longer missing.
+     * - Clears the reporting interval and exclusion settings.
+     * - Cancels any background jobs currently managed by [ReportJobService].
+     *
+     * @param context The application context.
+     * @param options A JSONObject containing configuration parameters (currently used for logging).
+     */
     fun stop(context: Context, options: JSONObject) {
         PreyLogger.d("Report stop options:${options}")
         ReportScheduled.getInstance(context).reset()
-        PreyConfig.getPreyConfig(context).setMissing(false)
-        PreyConfig.getPreyConfig(context).setIntervalReport("")
-        PreyConfig.getPreyConfig(context).setExcludeReport("")
+        val config = PreyConfig.getPreyConfig(context)
+        config.isMissing = false
+        config.intervalReport = ""
+        config.excludeReport = ""
         ReportJobService.cancel(context)
     }
 
-    fun startReport(context: Context, options: JSONObject) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val listWifi = listWifi(context)
-                val wifiInfo = getWifi(context)
-                val location = getLocation(context)
-                var accuracy = location?.accuracy!!.toDouble()
-                accuracy = (accuracy * 100.0).roundToInt() / 100.0
-                PreyLogger.d("latitude:${location?.latitude}")
-                PreyLogger.d("longitude:${location?.longitude}")
-                PreyLogger.d("accuracy:${accuracy}")
-                val picture = PictureUtil.getPicture(context)
-                PreyLogger.d("report3 2")
-                val entity1 = picture.entityFiles.get(0)
-                val entity2 = picture.entityFiles.get(1)
-                val mediaType = "image/*".toMediaType()
-                val multipart = MultipartBody.Builder()
-                multipart.setType(MultipartBody.FORM)
-                multipart.addFormDataPart("location[lat]", "${location?.latitude}")
-                multipart.addFormDataPart("location[lng]", "${location?.longitude}")
-                multipart.addFormDataPart("location[method]", "native")
-                multipart.addFormDataPart("location[accuracy]", "${accuracy}")
-                if (wifiInfo != null) {
-                    multipart.addFormDataPart("active_access_point[ssid]", "{${wifiInfo.ssid}}")
-                    listWifi.forEach { scan ->
-                        if (scan.SSID == wifiInfo.ssid) {
-                            multipart.addFormDataPart(
-                                "active_access_point[security]",
-                                "{${scan.capabilities}}"
-                            )
-                            multipart.addFormDataPart(
-                                "active_access_point[mac_address]",
-                                "{${scan.BSSID}}"
-                            )
-                            multipart.addFormDataPart(
-                                "active_access_point[signal_strength]",
-                                "{${scan.level}}"
-                            )
-                            multipart.addFormDataPart(
-                                "active_access_point[channel]",
-                                "{${PreyPhone.channelsFrequency.indexOf(Integer.valueOf(scan.frequency))}}"
-                            )
-                        }
-                    }
-                }
-                var i = 0
+    fun startReportCoroutine(context: Context, options: JSONObject){
+        scope.launch { startReport(context, options) }
+    }
+    suspend fun startReport(context: Context, options: JSONObject) {
+        try {
+            val listWifi = listWifi(context)
+            val wifiInfo = getWifi(context)
+            val location = getLocation(context)
+            var accuracy = location?.accuracy!!.toDouble()
+            accuracy = (accuracy * 100.0).roundToInt() / 100.0
+            PreyLogger.d("latitude:${location?.latitude}")
+            PreyLogger.d("longitude:${location?.longitude}")
+            PreyLogger.d("accuracy:${accuracy}")
+            val picture = PictureUtil.getPicture(context)
+            PreyLogger.d("report3 2")
+            val entity1 = picture.entityFiles.get(0)
+            val entity2 = picture.entityFiles.get(1)
+            val mediaType = "image/*".toMediaType()
+            val multipart = MultipartBody.Builder()
+            multipart.setType(MultipartBody.FORM)
+            multipart.addFormDataPart("location[lat]", "${location?.latitude}")
+            multipart.addFormDataPart("location[lng]", "${location?.longitude}")
+            multipart.addFormDataPart("location[method]", "native")
+            multipart.addFormDataPart("location[accuracy]", "${accuracy}")
+            if (wifiInfo != null) {
+                multipart.addFormDataPart("active_access_point[ssid]", "{${wifiInfo.ssid}}")
                 listWifi.forEach { scan ->
-                    multipart.addFormDataPart("access_points_list[${i}][ssid]", "${scan.SSID}");
-                    multipart.addFormDataPart(
-                        "access_points_list[${i}][security]",
-                        "${scan.capabilities}"
-                    );
-                    multipart.addFormDataPart(
-                        "access_points_list[${i}][mac_address]",
-                        "${scan.BSSID}"
-                    );
-                    multipart.addFormDataPart(
-                        "access_points_list[${i}][signal_strength]",
-                        "${scan.level}"
-                    );
-                    multipart.addFormDataPart(
-                        "access_points_list[${i}][channel]",
-                        "${PreyPhone.channelsFrequency.indexOf(Integer.valueOf(scan.frequency))}"
-                    );
-                    i++
-                }
-                if (entity1 != null) {
-                    multipart.addFormDataPart(
-                        "picture",
-                        "picture.png",
-                        RequestBody.create(mediaType, entity1.bytes)
-                    )
-                }
-                if (entity2 != null) {
-                    multipart.addFormDataPart(
-                        "screenshot",
-                        "screenshot.png",
-                        RequestBody.create(mediaType, entity2.bytes)
-                    )
-                }
-                val body = multipart.build()
-                val preyConfig = PreyConfig.getPreyConfig(context)
-                val authorization = UtilConnection.getAuthorization(preyConfig)
-                val userAgent = UtilConnection.getUserAgent(preyConfig)
-                val request = Request.Builder()
-                    .url(PreyWebServices.getInstance().getReportUrlJson(context))
-                    .post(body)
-                    .addHeader("User-Agent", userAgent)
-                    .addHeader("Origin", "android:com.prey")
-                    .addHeader("Authorization", authorization)
-                    .build()
-                PreyLogger.d("report 3")
-                val client = OkHttpClient()
-                client.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        PreyLogger.e("Error: ${e.message}", e)
+                    if (scan.SSID == wifiInfo.ssid) {
+                        multipart.addFormDataPart(
+                            "active_access_point[security]",
+                            "{${scan.capabilities}}"
+                        )
+                        multipart.addFormDataPart(
+                            "active_access_point[mac_address]",
+                            "{${scan.BSSID}}"
+                        )
+                        multipart.addFormDataPart(
+                            "active_access_point[signal_strength]",
+                            "{${scan.level}}"
+                        )
+                        multipart.addFormDataPart(
+                            "active_access_point[channel]",
+                            "{${PreyPhone.channelsFrequency.indexOf(Integer.valueOf(scan.frequency))}}"
+                        )
                     }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        response.use {
-                            if (!response.isSuccessful) {
-                                PreyLogger.d("Unexpected code $response")
-                            } else {
-                                PreyLogger.d("Report Response: ${response.body?.string()}")
-                            }
+                }
+            }
+            var i = 0
+            listWifi.forEach { scan ->
+                multipart.addFormDataPart("access_points_list[${i}][ssid]", "${scan.SSID}");
+                multipart.addFormDataPart(
+                    "access_points_list[${i}][security]",
+                    "${scan.capabilities}"
+                );
+                multipart.addFormDataPart(
+                    "access_points_list[${i}][mac_address]",
+                    "${scan.BSSID}"
+                );
+                multipart.addFormDataPart(
+                    "access_points_list[${i}][signal_strength]",
+                    "${scan.level}"
+                );
+                multipart.addFormDataPart(
+                    "access_points_list[${i}][channel]",
+                    "${PreyPhone.channelsFrequency.indexOf(Integer.valueOf(scan.frequency))}"
+                );
+                i++
+            }
+            if (entity1 != null) {
+                multipart.addFormDataPart(
+                    "picture",
+                    "picture.png",
+                    RequestBody.create(mediaType, entity1.bytes)
+                )
+            }
+            if (entity2 != null) {
+                multipart.addFormDataPart(
+                    "screenshot",
+                    "screenshot.png",
+                    RequestBody.create(mediaType, entity2.bytes)
+                )
+            }
+            val body = multipart.build()
+            val preyConfig = PreyConfig.getPreyConfig(context)
+            val authorization = UtilConnection.getAuthorization(preyConfig)
+            val userAgent = UtilConnection.getUserAgent(preyConfig)
+            val request = Request.Builder()
+                .url(PreyWebServices.getInstance().getReportUrlJson(context))
+                .post(body)
+                .addHeader("User-Agent", userAgent)
+                .addHeader("Origin", "android:com.prey")
+                .addHeader("Authorization", authorization)
+                .build()
+            PreyLogger.d("report 3")
+            val client = OkHttpClient()
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    PreyLogger.e("Error: ${e.message}", e)
+                }
+                override fun onResponse(call: Call, response: Response) {
+                    response.use {
+                        if (!response.isSuccessful) {
+                            PreyLogger.d("Unexpected code $response")
+                        } else {
+                            PreyLogger.d("Report Response: ${response.body?.string()}")
                         }
                     }
-                })
-            } catch (e: Exception) {
-                PreyLogger.e("Unexpected code ${e.message}", e)
-            }
+                }
+            })
+        } catch (e: Exception) {
+            PreyLogger.e("Unexpected code ${e.message}", e)
         }
     }
 

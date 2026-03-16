@@ -82,14 +82,9 @@ public class EventFactory {
         }
         if (LOCATION_PROVIDERS_CHANGED.equals(intent.getAction()) || LOCATION_MODE_CHANGED.equals(intent.getAction())
         ) {
-            new Thread() {
-                public void run() {
-                   // sendLocationAware(ctx);
-                    if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        new AwareInitialLocationProvider(ctx).init();
-                    }
-                }
-            }.start();
+            if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                new AwareInitialLocationProvider(ctx).init();
+            }
         }
         if (ACTION_SHUTDOWN.equals(intent.getAction())) {
             return new Event(Event.TURNED_OFF);
@@ -154,14 +149,6 @@ public class EventFactory {
                 }
             }
         }
-        if (USER_PRESENT.equals(intent.getAction())) {
-            PreyLogger.d("EventFactory USER_PRESENT");
-            int minuteScheduled = PreyConfig.getPreyConfig(ctx).getMinuteScheduled();
-            if (minuteScheduled > 0) {
-          //      PreyBetaController.startPrey(ctx, null);
-            }
-            return null;
-        }
         return null;
     }
 
@@ -170,7 +157,7 @@ public class EventFactory {
             boolean isTimeLocationAware = PreyConfig.getPreyConfig(ctx).isTimeLocationAware();
             PreyLogger.d("sendLocation isTimeLocationAware:" + isTimeLocationAware);
             if (!isTimeLocationAware) {
-                new Location().get(ctx, new JSONObject());
+                Location.INSTANCE.getCoroutine(ctx, new JSONObject());
             }
         } catch (Exception e) {
             PreyLogger.e("Error sendLocation:" + e.getMessage(), e);

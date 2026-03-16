@@ -38,10 +38,13 @@ import com.prey.net.UtilConnection;
 import com.prey.net.WebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class PreyConfig {
 
@@ -427,7 +430,7 @@ public class PreyConfig {
     }
 
     public String getApiKey(){
-        return getString(PreyConfig.API_KEY, null);
+        return getString(PreyConfig.API_KEY, "");
     }
 
     public void setApiKey(String apikey){
@@ -435,7 +438,7 @@ public class PreyConfig {
     }
 
     public String getDeviceId(){
-        return getString(PreyConfig.DEVICE_ID, null);
+        return getString(PreyConfig.DEVICE_ID, "");
     }
 
     public void setDeviceId(String deviceId){
@@ -1758,7 +1761,7 @@ public class PreyConfig {
                     public void run() {
                         try {
                             PreyStatus.getInstance().initConfig(ctx);
-                            new Location().get(ctx, new JSONObject());
+                            Location.INSTANCE.getCoroutine(ctx, new JSONObject());
                         } catch (Exception e) {
                             // Log any errors that occur during initialization
                             PreyLogger.e("Error:" + e.getMessage(), e);
@@ -1865,6 +1868,81 @@ public class PreyConfig {
      */
     public WebServices getWebServices() {
         return webServices;
+    }
+
+    private final List<String> actions = new ArrayList<String>();
+
+    /**
+     * Adds an action to the internal list of performed or received actions based on the
+     * properties of a JSON object. The action is stored as a concatenated string
+     * representing the command, target, status, and optional reason.
+     *
+     * @param jsonObject The JSON object containing the action details (command, target, status, and optionally reason).
+     * @throws JSONException If any of the required keys are missing from the JSON object.
+     */
+    public void addActions(JSONObject jsonObject) throws JSONException {
+        StringBuilder sb = new StringBuilder();
+        sb.append(jsonObject.getString("command")).append("_");
+        sb.append(jsonObject.getString("target")).append("_");
+        sb.append(jsonObject.getString("status"));
+        if (jsonObject.has("reason"))
+            sb.append("_").append(jsonObject.getString("reason"));
+        String action = sb.toString();
+        PreyLogger.d(String.format("addActions:%s",action));
+        actions.add(action);
+    }
+
+    /**
+     * Iterates through the list of stored actions and logs each one to the
+     * PreyLogger for debugging and tracking purposes.
+     */
+    public void showActions() {
+        for (String a : actions) {
+            PreyLogger.d(String.format("showActions:%s", a));
+        }
+    }
+
+    /**
+     * Checks if the specified action string is present within the internal list of actions.
+     * It performs a partial match check against each stored action string.
+     *
+     * @param action The string to search for within the recorded actions.
+     * @return true if any recorded action contains the specified string, false otherwise.
+     */
+    public boolean containsActions(String action) {
+        for (String a : actions) {
+            if (a.contains(action))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Clears the internal list of stored actions.
+     */
+    public void deleteActions() {
+        actions.clear();
+    }
+
+    public static final String SERIAL_MDM = "SERIAL_MDM";
+
+    /**
+     * Retrieves the stored MDM (Mobile Device Management) serial number.
+     *
+     * @return The MDM serial number as a String, or an empty string if it has not been set.
+     */
+    public String getSerialMDM() {
+        return getString(SERIAL_MDM, "");
+    }
+
+    /**
+     * Sets the serial number provided by the MDM (Mobile Device Management) server.
+     * This identifier is used to link the device with specific management profiles.
+     *
+     * @param serialMDM The MDM serial number to be stored.
+     */
+    public void setSerialMDM(String serialMDM) {
+        saveString(SERIAL_MDM, serialMDM);
     }
 
 }

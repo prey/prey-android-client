@@ -22,12 +22,12 @@ import org.json.JSONObject
  * @see CommandTarget
  * @see TriggerController
  */
-class Triggers : CommandTarget {
+class Triggers : CommandTarget, BaseAction() {
 
-    override fun execute(context: Context, command: String, options: JSONObject): Any? {
-        return when (command) {
-            "start" -> start(context, options)
-            "stop" -> stop(context, options)
+    override fun execute(context: Context, command: String, options: JSONObject) {
+        when (command) {
+            CMD_GET -> start(context, options)
+            CMD_STOP -> stop(context, options)
             else -> throw IllegalArgumentException("Unknown command: $command")
         }
     }

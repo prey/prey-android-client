@@ -28,12 +28,13 @@ public class UtilJson {
         return json;
     }
 
-    public static JSONObject makeJsonResponse(String command,String target,String status,String reason){
-        JSONObject json=makeJsonResponse(command, target, status);
+    public static JSONObject makeJsonResponse(String command, String target, String status, String reason) {
+        JSONObject json = makeJsonResponse(command, target, status);
         try {
-            json.put("reason", reason);
+            if (reason != null)
+                json.put("reason", reason);
         } catch (JSONException e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         return json;
     }

@@ -15,6 +15,7 @@ import com.prey.exceptions.PreyException;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -48,5 +49,15 @@ public interface WebServices {
      * @return A {@link PreyHttpResponse} object representing the server's response.
      */
     public PreyHttpResponse sendLocation(Context ctx,JSONObject jsonParam);
+
+    /**
+     * Uploads a file to the Prey servers.
+     *
+     * @param ctx      The application context.
+     * @param file     The file to be uploaded.
+     * @param uploadID The unique identifier for the upload process.
+     * @param total    The total size of the file in bytes.
+     */
+    public int uploadFile(Context ctx, File file, String uploadID, long total)  throws PreyException;
 
 }

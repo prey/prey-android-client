@@ -44,7 +44,7 @@ import com.prey.actions.observer.ActionsController;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 import com.prey.events.Event;
 import com.prey.exceptions.PreyException;
-import com.prey.json.parser.JSONParser;
+import com.prey.json.parser.JsonCommandDispatcher;
 import com.prey.net.http.EntityFile;
 import com.prey.R;
 
@@ -565,6 +565,11 @@ public class PreyWebServices implements WebServices {
     public HashMap<String, String> increaseData(Context ctx, HashMap<String, String> parameters) {
         PreyPhone phone = new PreyPhone(ctx);
         Hardware hardware = phone.getHardware();
+        String serial = hardware.getSerialNumber();
+        String serialMDM = PreyConfig.getPreyConfig(ctx).getSerialMDM();
+        if (serialMDM != null && !serialMDM.isEmpty()) {
+            serial = serialMDM;
+        }
         String prefix = "hardware_attributes";
         parameters.put(prefix + "[uuid]", hardware.getUuid());
         parameters.put(prefix + "[bios_vendor]", hardware.getBiosVendor());
@@ -576,7 +581,7 @@ public class PreyWebServices implements WebServices {
         parameters.put(prefix + "[cpu_speed]", hardware.getCpuSpeed());
         parameters.put(prefix + "[cpu_cores]", hardware.getCpuCores());
         parameters.put(prefix + "[ram_size]", "" + hardware.getTotalMemory());
-        parameters.put(prefix + "[serial_number]", hardware.getSerialNumber());
+        parameters.put(prefix + "[serial_number]", serial);
         parameters.put(prefix + "[uuid]", hardware.getUuid());
         parameters.put(prefix + "[google_services]", String.valueOf(PreyUtils.isGooglePlayServicesAvailable(ctx)));
         //Compilation is added during creation
@@ -699,10 +704,7 @@ public class PreyWebServices implements WebServices {
             if(preyHttpResponse!=null) {
                 String jsonString = preyHttpResponse.getResponseAsString();
                 if (jsonString != null && jsonString.length() > 0) {
-                    List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
-                    if (jsonObjectList != null && jsonObjectList.size() > 0) {
-                        ActionsController.getInstance(ctx).runActionJson(ctx, jsonObjectList);
-                    }
+                    JsonCommandDispatcher.INSTANCE.getActionsJson(ctx, jsonString.toString());
                 }
             }
         } catch (Exception e) {
@@ -771,12 +773,6 @@ public class PreyWebServices implements WebServices {
             PreyLogger.e("Report wasn't send:" + e.getMessage(), e);
         }
         return preyHttpResponse;
-    }
-
-    public List<JSONObject> getActionsJsonToPerform(Context ctx) throws PreyException {
-        String url = getDeviceUrlJson(ctx);
-        List<JSONObject> lista = new JSONParser().getJSONFromUrl(ctx, url);
-        return lista;
     }
 
     public PreyHttpResponse sendContact(Context ctx, HashMap<String, String> parameters) {

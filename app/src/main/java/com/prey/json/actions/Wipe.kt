@@ -11,10 +11,10 @@ import com.prey.PreyLogger
 import com.prey.actions.wipe.WipeUtil
 import com.prey.backwardcompatibility.FroyoSupport
 import com.prey.json.CommandTarget
-import com.prey.json.UtilJson
 import com.prey.net.PreyWebServicesKt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -32,12 +32,20 @@ import org.json.JSONObject
  * The `stop` command is a placeholder that notifies the backend that the wipe command
  * has been "stopped", although the wipe process itself, once started, is generally irreversible.
  */
-class Wipe : CommandTarget {
+class Wipe : CommandTarget, BaseAction() {
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.Default + job)
 
-    override fun execute(context: Context, command: String, options: JSONObject): Any? {
-        return when (command) {
-            "start" -> start(context, options)
-            "stop" -> stop(context, options)
+    companion object {
+        private const val TARGET = "wipe"
+        private const val OPT_FACTORY_RESET = "factory_reset"
+        private const val OPT_WIPE_SIM = "wipe_sim"
+    }
+
+    override fun execute(context: Context, command: String, options: JSONObject) {
+        when (command) {
+            CMD_START -> scope.launch { start(context, options) }
+            CMD_STOP -> scope.launch { stop(context, options) }
             else -> throw IllegalArgumentException("Unknown command: $command")
         }
     }
@@ -58,75 +66,52 @@ class Wipe : CommandTarget {
      * @param context The application context, used for accessing system services and sending notifications.
      * @param options A [JSONObject] containing the specific wipe commands, such as `factory_reset` or `wipe_sim`.
      */
-    fun start(context: Context, options: JSONObject) {
+    suspend fun start(context: Context, options: JSONObject) {
         PreyLogger.d("Wipe start options:${options}")
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                PreyWebServicesKt.sendNotifyActions(
-                    context,
-                    UtilJson.makeJsonResponse("start", "wipe", "started")
-                )
-                var wipe = false
-                var deleteSD = false
-                var factoryReset = ""
-                try {
-                    factoryReset = options.getString("factory_reset")
-                } catch (e: Exception) {
+        try {
+            PreyWebServicesKt.notify(context, CMD_START, TARGET, STATUS_STARTED)
+            val isFactoryReset = options.optBooleanLegacy(OPT_FACTORY_RESET)
+            val isWipeSdCard = options.optBooleanLegacy(OPT_WIPE_SIM)
+            if (isWipeSdCard) {
+                WipeUtil.deleteSD()
+                if (!isFactoryReset) {
+                    PreyWebServicesKt.notify(context, CMD_START, TARGET, STATUS_STOPPED)
                 }
-                if ("on" == factoryReset || "y" == factoryReset || "true" == factoryReset) {
-                    wipe = true
-                }
-                var wipeSim = ""
-                try {
-                    wipeSim = options.getString("wipe_sim")
-                } catch (e: Exception) {
-                }
-                if ("on" == wipeSim || "y" == wipeSim || "true" == wipeSim) {
-                    deleteSD = true
-                }
-                if (deleteSD) {
-                    WipeUtil.deleteSD()
-                    if (!wipe) {
-                        val jsonData2 = JSONObject()
-                        jsonData2.put("command", "start")
-                        jsonData2.put("target", "wipe")
-                        jsonData2.put("status", "stopped")
-                        PreyWebServicesKt.sendNotifyActions(
-                            context,
-                            UtilJson.makeJsonResponse("start", "wipe", "stopped")
-                        )
-                    }
-                }
-                if (wipe) {
-                    PreyLogger.d("Wiping the device!!")
-                    val jsonData2 = JSONObject()
-                    jsonData2.put("command", "start")
-                    jsonData2.put("target", "wipe")
-                    jsonData2.put("status", "stopped")
-                    PreyWebServicesKt.sendNotifyActions(
-                        context,
-                        UtilJson.makeJsonResponse("start", "wipe", "stopped")
-                    )
-                    FroyoSupport.getInstance(context).wipe()
-                }
-            } catch (e: Exception) {
-                PreyWebServicesKt.sendNotifyActions(
-                    context,
-                    UtilJson.makeJsonResponse("start", "wipe", "stopped", e.message)
-                )
-                PreyLogger.e("Error Wipe:${e.message}", e)
             }
+            if (isFactoryReset) {
+                PreyLogger.d("Wiping the device!!")
+                PreyWebServicesKt.notify(context, CMD_START, TARGET, STATUS_STOPPED)
+                FroyoSupport.getInstance(context).wipe()
+            }
+        } catch (e: Exception) {
+            PreyWebServicesKt.notify(context, CMD_START, TARGET, STATUS_FAILED, e.message)
+            PreyLogger.e("Error Wipe:${e.message}", e)
         }
     }
 
-    fun stop(context: Context, options: JSONObject) {
+    /**
+     * Stops the wipe process and notifies the backend service.
+     *
+     * This function sends a notification to the Prey web service indicating that the
+     * wipe command has reached a "stopped" state. Since a factory reset is usually
+     * irreversible once initiated, this method primarily serves to synchronize the
+     * action status with the web panel.
+     *
+     * @param context The application context used for web service communication.
+     */
+    suspend fun stop(context: Context, options: JSONObject) {
         PreyLogger.d("Wipe stop options:${options}")
-        CoroutineScope(Dispatchers.IO).launch {
-            PreyWebServicesKt.sendNotifyActions(
-                context,
-                UtilJson.makeJsonResponse("stop", "wipe", "stopped")
-            )
-        }
+        PreyWebServicesKt.notify(context, CMD_STOP, TARGET, STATUS_STOPPED)
+    }
+
+    /**
+     * Extension to handle Prey's legacy logic where booleans
+     * can come as "on", "and", "true", or actual booleans.
+     */
+    private fun JSONObject.optBooleanLegacy(key: String): Boolean {
+        if (!has(key)) return false
+        val value = optString(key).lowercase()
+        return value == "on" || value == "y" || value == "true" || optBoolean(key, false)
     }
 
 }

@@ -310,7 +310,7 @@ public class WebAppInterface {
                 RunBackgroundCheckBoxPreference.notifyReady(mContext);
                 PreyConfig.getPreyConfig(mContext).setInstallationStatus("");
                 new PreyApp().run(mContext);
-                new Location().get(mContext, new JSONObject());
+                Location.INSTANCE.getCoroutine(mContext, new JSONObject());
             }
         } catch (Exception e) {
             PreyLogger.d(String.format("mylogin error1:%s", e.getMessage()));
@@ -703,7 +703,7 @@ public class WebAppInterface {
             PreyConfig.getPreyConfig(ctx).setRunBackground(true);
             PreyConfig.getPreyConfig(ctx).setInstallationStatus("Pending");
             new PreyApp().run(ctx);
-            new Location().get(ctx, new JSONObject());
+            Location.INSTANCE.getCoroutine(ctx, new JSONObject());
         } catch (Exception e) {
             error = e.getMessage();
             PreyLogger.e("error:" + error, e);

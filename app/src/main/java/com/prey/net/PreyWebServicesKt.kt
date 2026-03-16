@@ -12,6 +12,7 @@ import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.actions.aware.AwareStore
 import com.prey.actions.location.LocationUtil
+import com.prey.json.UtilJson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
@@ -79,14 +80,6 @@ object PreyWebServicesKt {
         }
     }
 
-    suspend fun sendNotifyActions(context: Context, jsonData: JSONObject) {
-        sendNotifyActions(context, jsonData, null)
-    }
-
-    suspend fun sendNotifyActions(context: Context, jsonData: JSONObject, correlationId: String?) {
-        sendNotifyActions(context, jsonData, correlationId, null)
-    }
-
     /**
      * Sends a notification or response for an executed action to the Prey servers.
      *
@@ -105,8 +98,10 @@ object PreyWebServicesKt {
      *         `false` otherwise (e.g., network error, server error).
      */
     suspend fun sendNotifyActions(
-        context: Context, jsonData: JSONObject, correlationId: String?, status: String?
+        context: Context, jsonData: JSONObject?, correlationId: String?, status: String?
     ): Boolean = withContext(Dispatchers.IO) {
+        if (jsonData == null) return@withContext false
+        PreyLogger.d("sendNotifyActions jsonData:${jsonData}")
         val contentType = "application/json; charset=utf-8".toMediaType()
         val body = jsonData.toString().toRequestBody(contentType)
         val url = PreyWebServices.getInstance().getResponseUrlJson(context)
@@ -128,12 +123,42 @@ object PreyWebServicesKt {
                 val result = response.isSuccessful
                 if (result) {
                     PreyLogger.d("sendNotifyActions body:${response.body?.string()}")
+                    PreyConfig.getPreyConfig(context).addActions(jsonData)
                 }
                 return@withContext result
             }
         } catch (e: IOException) {
             PreyLogger.e("sendNotifyActions error:${e.message}", e)
             return@withContext false
+        }
+    }
+
+    /**
+     * Constructs and sends a notification response to the Prey server for a specific command.
+     *
+     * This method simplifies the notification process by wrapping the parameters into a JSON
+     * object and delegating the network request to [sendNotifyActions].
+     *
+     * @param context The application context.
+     * @param command The name of the action/command being reported (e.g., "get_location").
+     * @param target The target of the command.
+     * @param status The current status of the action execution (e.g., "started", "finished").
+     * @param reason An optional description or error message regarding the status.
+     * @param messageId An optional correlation ID to link this notification to a specific request.
+     * @param progress An optional string representing the execution progress.
+     */
+    suspend fun notify(
+        context: Context,
+        command: String,
+        target: String,
+        status: String,
+        reason: String? = null,
+        messageId: String? = null,
+        progress: String? = null
+    ) {
+        withContext(Dispatchers.IO) {
+            val json = UtilJson.makeJsonResponse(command, target, status, reason)
+            sendNotifyActions(context, json, messageId, progress)
         }
     }
 

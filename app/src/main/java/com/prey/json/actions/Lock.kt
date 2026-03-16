@@ -26,7 +26,6 @@ import com.prey.events.Event
 import com.prey.events.manager.EventManagerRunner
 import com.prey.exceptions.PreyException
 import com.prey.json.CommandTarget
-import com.prey.json.UtilJson
 import com.prey.net.PreyWebServicesKt
 import com.prey.services.AppAccessibilityService
 import com.prey.services.CheckLockActivated
@@ -34,6 +33,7 @@ import com.prey.services.PreyLockHtmlService
 import com.prey.services.PreyLockService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -55,13 +55,16 @@ import org.json.JSONObject
  * Unlocking reverses these actions, removing overlays, resetting passwords, and restoring
  * normal device operation.
  */
-object Lock : CommandTarget {
+object Lock : CommandTarget, BaseAction() {
 
-    override fun execute(context: Context, command: String, options: JSONObject): Any? {
-        return when (command) {
-            "start" -> start(context, options)
-            "stop" -> stop(context, options)
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.Default + job)
+    private const val TARGET = "lock"
 
+    override fun execute(context: Context, command: String, options: JSONObject) {
+        when (command) {
+            CMD_START -> scope.launch { start(context, options) }
+            CMD_STOP -> scope.launch { stop(context, options) }
             else -> throw IllegalArgumentException("Unknown command: $command")
         }
     }
@@ -82,78 +85,49 @@ object Lock : CommandTarget {
      *        - [PreyConfig.UNLOCK_PASS]: The password required to unlock the device.
      *        - [PreyConfig.LOCK_MESSAGE]: The custom message to display on the lock screen.
      */
-    fun start(context: Context, options: JSONObject) {
+    suspend fun start(context: Context, options: JSONObject) {
         PreyLogger.d("Lock start options:${options}")
+        val messageId = options.optString(PreyConfig.MESSAGE_ID, null)
+        val jobId = options.optString(PreyConfig.JOB_ID, null)
+        val reason = jobId?.let { "{\"device_job_id\":\"$it\"}" }
         try {
-            var messageId: String? = null
-            if (options != null && options.has(PreyConfig.MESSAGE_ID)) {
-                messageId = options.getString(PreyConfig.MESSAGE_ID)
-                PreyLogger.d("messageId:${messageId}")
-            }
-            var reason: String? = null
-            var jobId: String? = null
-            if (options != null && options.has(PreyConfig.JOB_ID)) {
-                jobId = options.getString(PreyConfig.JOB_ID)
-                reason = "{\"device_job_id\":\"${jobId}\"}"
-                PreyLogger.d("jobId:${jobId}")
-                PreyConfig.getPreyConfig(context).setJobIdLock(jobId)
-            }
             var unlock: String? = null
-            if (options != null && options.has(PreyConfig.UNLOCK_PASS)) {
+            if (options.has(PreyConfig.UNLOCK_PASS)) {
                 unlock = options.getString(PreyConfig.UNLOCK_PASS)
-                PreyConfig.getPreyConfig(context).setUnlockPass(unlock)
+                PreyConfig.getPreyConfig(context).unlockPass = unlock
             }
-            if (options != null && options.has(PreyConfig.LOCK_MESSAGE)) {
+            if (options.has(PreyConfig.LOCK_MESSAGE)) {
                 val lockMessage: String = options.getString(PreyConfig.LOCK_MESSAGE)
-                PreyConfig.getPreyConfig(context).setLockMessage(lockMessage)
+                PreyConfig.getPreyConfig(context).lockMessage = lockMessage
             } else {
-                PreyConfig.getPreyConfig(context).setLockMessage("")
+                PreyConfig.getPreyConfig(context).lockMessage = ""
             }
-            lock(context, unlock, messageId, reason, jobId)
+            lock(context, unlock, messageId, reason)
         } catch (e: Exception) {
             PreyLogger.e("Error:${e.message}", e)
-            CoroutineScope(Dispatchers.IO).launch {
-                PreyWebServicesKt.sendNotifyActions(
-                    context,
-                    UtilJson.makeJsonResponse("start", "lock", "failed", e.message)
-                )
-            }
+            PreyWebServicesKt.notify(context, CMD_START, TARGET, STATUS_FAILED, e.message, messageId)
         }
     }
 
-    fun stop(context: Context, options: JSONObject) {
+    suspend fun stop(context: Context, options: JSONObject) {
         PreyLogger.d("Lock stop options:${options}")
         try {
-            var messageId: String? = null
-            if (options != null && options.has(PreyConfig.MESSAGE_ID)) {
-                messageId = options.getString(PreyConfig.MESSAGE_ID)
-                PreyLogger.d("messageId:${messageId}")
-            }
+            val messageId = options.optString(PreyConfig.MESSAGE_ID, null)
             var reason = "{\"origin\":\"panel\"}"
-
-            if (options != null && options.has(PreyConfig.JOB_ID)) {
+            if (options.has(PreyConfig.JOB_ID)) {
                 val jobId: String = options.getString(PreyConfig.JOB_ID)
                 PreyLogger.d("jobId:${jobId}")
                 reason = "{\"device_job_id\":\"${jobId}\",\"origin\":\"panel\"}"
             }
-            val jobIdLock = PreyConfig.getPreyConfig(context).getJobIdLock()
+            val jobIdLock = PreyConfig.getPreyConfig(context).jobIdLock
             if (jobIdLock != null && "" != jobIdLock) {
                 reason = "{\"device_job_id\":\"${jobIdLock}\",\"origin\":\"panel\"}"
-                PreyConfig.getPreyConfig(context).setJobIdLock("")
+                PreyConfig.getPreyConfig(context).jobIdLock = ""
             }
-            PreyConfig.getPreyConfig(context).setLockMessage("")
+            PreyConfig.getPreyConfig(context).lockMessage = ""
             PreyConfig.getPreyConfig(context).setLock(false)
             PreyConfig.getPreyConfig(context).deleteUnlockPass()
-            if (PreyConfig.getPreyConfig(context).isMarshmallowOrAbove()) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    PreyWebServicesKt.sendNotifyActions(
-                        context,
-                        UtilJson.makeJsonResponse("start", "lock", "stopped", reason),
-                        messageId,
-                        "processed"
-                    )
-                }
-                Thread.sleep(3000)
+            if (PreyConfig.getPreyConfig(context).isMarshmallowOrAbove) {
                 val canAccessibility = PreyPermission.isAccessibilityServiceEnabled(context)
                 val canDrawOverlays = PreyPermission.canDrawOverlays(context)
                 if (canDrawOverlays || canAccessibility) {
@@ -187,12 +161,7 @@ object Lock : CommandTarget {
                         screenLock.release()
                         Thread.sleep(2000)
                         reason = "{\"origin\":\"panel\"}"
-                        CoroutineScope(Dispatchers.IO).launch {
-                            PreyWebServicesKt.sendNotifyActions(
-                                context,
-                                UtilJson.makeJsonResponse("start", "lock", "stopped", reason)
-                            )
-                        }
+
                     } catch (e: java.lang.Exception) {
                         throw PreyException(e)
                     }
@@ -209,46 +178,27 @@ object Lock : CommandTarget {
                         screenLock.acquire()
                         screenLock.release()
                     }
-                    Thread.sleep(2000)
                     reason = "{\"origin\":\"panel\"}"
-                    CoroutineScope(Dispatchers.IO).launch {
-                        PreyWebServicesKt.sendNotifyActions(
-                            context,
-                            UtilJson.makeJsonResponse("start", "lock", "stopped", reason)
-                        )
-                    }
                 } catch (e: java.lang.Exception) {
                     throw PreyException(e)
                 }
             }
+            Thread.sleep(2000)
+            PreyWebServicesKt.notify(context, CMD_STOP, TARGET, STATUS_STOPPED, reason)
         } catch (e: java.lang.Exception) {
             PreyLogger.e("Error:${e.message}", e)
-            CoroutineScope(Dispatchers.IO).launch {
-                PreyWebServicesKt.sendNotifyActions(
-                    context,
-                    UtilJson.makeJsonResponse("start", "lock", "failed", e.message)
-                )
-            }
+            PreyWebServicesKt.notify(context, CMD_STOP, TARGET, STATUS_FAILED, e.message)
         }
     }
 
-
-    fun lock(
+    suspend fun lock(
         context: Context,
         unlock: String?,
         messageId: String?,
-        reason: String?,
-        deviceJobId: String?
+        reason: String?
     ) {
-        PreyLogger.d(
-            String.format(
-                "lock unlock:%s messageId:%s reason:%s",
-                unlock,
-                messageId,
-                reason
-            )
-        )
-        PreyConfig.getPreyConfig(context).setUnlockPass(unlock)
+        PreyLogger.d("lock unlock:${unlock} messageId:${messageId} reason:${reason}")
+        PreyConfig.getPreyConfig(context).unlockPass = unlock
         PreyConfig.getPreyConfig(context).setLock(true)
         PreyLogger.d("lock 1")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -270,7 +220,7 @@ object Lock : CommandTarget {
                 }
                 if (accessibility) {
                     PreyLogger.d("lock 4")
-                    PreyConfig.getPreyConfig(context).setOverLock(false)
+                    PreyConfig.getPreyConfig(context).overLock = false
                     val intentAccessibility = Intent(context, AppAccessibilityService::class.java)
                     context.startService(intentAccessibility)
                     var intentPasswordActivity: Intent? = null
@@ -292,55 +242,33 @@ object Lock : CommandTarget {
             PreyLogger.d("lock 6")
             lockOld(context)
         }
-        Thread(object : Runnable {
-            override fun run() {
-                try {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        PreyWebServicesKt.sendNotifyActions(
-                            context,
-                            UtilJson.makeJsonResponse("start", "lock", "started", reason),
-                            messageId,
-                            "processed"
-                        )
-                    }
-                } catch (e: java.lang.Exception) {
-                    PreyLogger.e("Error sendNotifyAction:${e.message}", e)
-                }
-            }
-        }).start()
+        PreyWebServicesKt.notify(context, CMD_START, TARGET, STATUS_STARTED, reason)
     }
 
     fun lockWhenYouNocantDrawOverlays(context: Context) {
         val accessibility = PreyPermission.isAccessibilityServiceEnabled(context)
         val canDrawOverlays = PreyPermission.canDrawOverlays(context)
         val unlockPass = PreyConfig.getPreyConfig(context).getUnlockPass()
-        PreyLogger.d(
-            String.format(
-                "DeviceAdmin lockWhenYouNocantDrawOverlays unlockPass: %s accessibility: %s canDrawOverlays: %s",
-                unlockPass,
-                accessibility,
-                canDrawOverlays
-            )
-        )
+        PreyLogger.d("lockWhenYouNocantDrawOverlays unlockPass: ${unlockPass} accessibility: ${accessibility} canDrawOverlays: ${canDrawOverlays}")
         val isAccessibilityServiceEnabled = PreyPermission.isAccessibilityServiceEnabled(context)
         if (unlockPass != null && "" != unlockPass) {
             if (!canDrawOverlays(context) && !isAccessibilityServiceEnabled) {
                 val isPatternSet = isPatternSet(context)
                 val isPassOrPinSet = isPassOrPinSet(context)
-                PreyLogger.d("CheckLockActivated isPatternSet:${isPatternSet}")
-                PreyLogger.d("CheckLockActivated  isPassOrPinSet:${isPassOrPinSet}")
+                PreyLogger.d("lockWhenYouNocantDrawOverlays isPatternSet:${isPatternSet}")
+                PreyLogger.d("lockWhenYouNocantDrawOverlays isPassOrPinSet:${isPassOrPinSet}")
                 if (isPatternSet || isPassOrPinSet) {
                     FroyoSupport.getInstance(context).lockNow()
                     Thread(EventManagerRunner(context, Event(Event.NATIVE_LOCK))).start()
                 } else {
                     try {
                         FroyoSupport.getInstance(context).changePasswordAndLock(
-                            PreyConfig.getPreyConfig(context).getUnlockPass(),
+                            unlockPass,
                             true
                         )
                         Thread(EventManagerRunner(context, Event(Event.NATIVE_LOCK))).start()
                     } catch (e: java.lang.Exception) {
-                        PreyLogger.e("Error FroyoSupport changePasswordAndLock:${e.message}", e)
+                        PreyLogger.e("Error lockWhenYouNocantDrawOverlays:${e.message}", e)
                     }
                 }
             }

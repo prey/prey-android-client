@@ -57,7 +57,7 @@ object JsonCommandDispatcher {
      * and the values are the [KClass] references to the action classes that implement [CommandTarget].
      * The target name from the JSON is formatted (capitalized) before being used to look up a class in this map.
      */
-    private val allowedTargets = mapOf(
+    val allowedTargets = mapOf(
         "Alert" to Alert::class,
         "Location" to Location::class,
         "Alarm" to Alarm::class,

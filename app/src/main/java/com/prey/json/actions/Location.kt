@@ -11,7 +11,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Looper
-import androidx.core.app.ActivityCompat
+import androidx.annotation.RequiresPermission
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -21,12 +22,13 @@ import com.google.android.gms.location.Priority
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.json.CommandTarget
-import com.prey.json.UtilJson
 import com.prey.net.PreyWebServicesKt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeoutOrNull
 import org.json.JSONObject
 import kotlin.coroutines.resume
 
@@ -42,13 +44,23 @@ import kotlin.coroutines.resume
  * The process is asynchronous, managed by coroutines, and includes sending
  * "started" and "stopped" notifications to the backend to track the job's lifecycle.
  */
-class Location : CommandTarget {
+object Location : CommandTarget, BaseAction() {
 
-    override fun execute(context: Context, command: String, options: JSONObject): Any? {
-        return when (command) {
-            "get" -> get(context, options)
+    // It is recommended to use a Scope linked to the app or service lifecycle
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.Default + job)
+    private const val TARGET = "location"
+    private const val LOCATION_TIMEOUT = 30_000L // 30 maximum waiting time seconds
+
+    override fun execute(context: Context, command: String, options: JSONObject) {
+        when (command) {
+            CMD_GET -> getCoroutine(context, options)
             else -> throw IllegalArgumentException("Unknown command: $command")
         }
+    }
+
+    fun getCoroutine(context: Context, options: JSONObject) {
+        scope.launch { get(context, options) }
     }
 
     /**
@@ -68,62 +80,56 @@ class Location : CommandTarget {
      * @param options A [JSONObject] containing command parameters, expected to include
      *                `PreyConfig.MESSAGE_ID` and `PreyConfig.JOB_ID`.
      */
-    fun get(context: Context, options: JSONObject) {
-        CoroutineScope(Dispatchers.IO).launch {
-            var messageId: String? = null
-            try {
-                messageId = options.getString(PreyConfig.MESSAGE_ID)
-                PreyLogger.d("messageId:${messageId}")
-            } catch (e: java.lang.Exception) {
+    suspend fun get(context: Context, options: JSONObject) {
+        val messageId = options.optString(PreyConfig.MESSAGE_ID, null)
+        val jobId = options.optString(PreyConfig.JOB_ID, null)
+        val reason = jobId?.let { "{\"device_job_id\":\"$it\"}" }
+        PreyWebServicesKt.notify(context, CMD_GET, TARGET, STATUS_STARTED, reason, messageId)
+        PreyLogger.d("Location get 3")
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            PreyLogger.d("Permission denied for location")
+            PreyWebServicesKt.notify(context, CMD_GET, TARGET, STATUS_FAILED, "permission_denied")
+            return
+        }
+        try {
+            // We added a timeout so that the coroutine doesn't remain suspended forever if the GPS fails.
+            val location = withTimeoutOrNull(LOCATION_TIMEOUT) {
+                getLocation(context)
             }
-            var reason: String? = null
-            try {
-                val jobId = options.getString(PreyConfig.JOB_ID)
-                reason = "{\"device_job_id\":\"${jobId}\"}"
-                PreyLogger.d("jobId:${jobId}")
-            } catch (e: java.lang.Exception) {
-            }
-            PreyWebServicesKt.sendNotifyActions(
-                context,
-                UtilJson.makeJsonResponse("get", "location", "started"),
-                messageId,
-                reason
-            )
-            val location = getLocation(context)
             if (location != null) {
+                PreyLogger.d("Location obtained: ${location.latitude}, ${location.longitude}")
                 PreyWebServicesKt.doSendLocation(context, location, false)
-                PreyWebServicesKt.sendNotifyActions(
-                    context,
-                    UtilJson.makeJsonResponse("get", "location", "stopped")
-                )
+                PreyWebServicesKt.notify(context, CMD_GET, TARGET, STATUS_STOPPED)
+            } else {
+                PreyLogger.d("Location could not be obtained (Timeout or Null)")
+                PreyWebServicesKt.notify(context, CMD_GET, TARGET, STATUS_FAILED, "location_null_or_timeout")
             }
+        } catch (e: Exception) {
+            PreyLogger.e("Error in localization process: ${e.message}", e)
+            PreyWebServicesKt.notify(context, CMD_GET, TARGET, STATUS_FAILED, e.message)
         }
     }
 
     private lateinit var fusedClient: FusedLocationProviderClient
-    private suspend fun getLocation(context: Context): Location? =
+
+    @RequiresPermission("android.permission.ACCESS_FINE_LOCATION")
+    suspend fun getLocation(context: Context): Location? =
         suspendCancellableCoroutine { cont ->
             val request = LocationRequest.Builder(
                 Priority.PRIORITY_HIGH_ACCURACY,
                 0
             ).setMaxUpdates(1).build()
-            if (ActivityCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                fusedClient = LocationServices.getFusedLocationProviderClient(context)
-                fusedClient.requestLocationUpdates(
-                    request,
-                    object : LocationCallback() {
-                        override fun onLocationResult(result: LocationResult) {
-                            fusedClient.removeLocationUpdates(this)
-                            cont.resume(result.lastLocation)
-                        }
-                    },
-                    Looper.getMainLooper()
-                )
-            }
+            fusedClient = LocationServices.getFusedLocationProviderClient(context)
+            fusedClient.requestLocationUpdates(
+                request,
+                object : LocationCallback() {
+                    override fun onLocationResult(result: LocationResult) {
+                        fusedClient.removeLocationUpdates(this)
+                        cont.resume(result.lastLocation)
+                    }
+                },
+                Looper.getMainLooper()
+            )
         }
 
 }

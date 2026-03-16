@@ -65,4 +65,13 @@ object AwareStore {
         )
     }
 
+    fun remove(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        prefs.edit {
+            remove(LocationUtil.LAT)
+            remove(LocationUtil.LNG)
+            remove(TIME)
+        }
+    }
+
 }

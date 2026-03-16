@@ -37,9 +37,9 @@ public class Missing {
             PreyHttpResponse response = PreyWebServices.getInstance().setMissing(ctx, "true");
             if (response != null) {
                 int code = response.getStatusCode();
-                PreyLogger.d("Missing code:" + code);
+                PreyLogger.d(String.format("Missing code:%s", code));
                 if (code == HttpURLConnection.HTTP_OK || code == HttpURLConnection.HTTP_CREATED) {
-                    new Report().get(ctx, new JSONObject());
+                    new Report().getCoroutine(ctx, new JSONObject());
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "missing", "stopped", reason));
                 } else {
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "missing", "failed", "code:" + code));

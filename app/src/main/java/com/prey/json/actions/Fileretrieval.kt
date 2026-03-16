@@ -13,12 +13,8 @@ import com.prey.PreyLogger
 import com.prey.actions.fileretrieval.FileretrievalDatasource
 import com.prey.actions.fileretrieval.FileretrievalDto
 import com.prey.json.CommandTarget
-import com.prey.json.UtilJson
-import com.prey.net.PreyWebServices
 import com.prey.net.PreyWebServicesKt
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.File
 import java.net.HttpURLConnection
@@ -33,11 +29,18 @@ import java.net.HttpURLConnection
  *
  * The primary command handled is "start", which initiates the process.
  */
-class Fileretrieval : CommandTarget {
+class Fileretrieval : CommandTarget, BaseAction() {
 
-    override fun execute(context: Context, command: String, options: JSONObject): Any? {
-        return when (command) {
-            "start" -> start(context, options)
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.Default + job)
+
+    companion object {
+        private const val TARGET = "fileretrieval"
+    }
+
+    override fun execute(context: Context, command: String, options: JSONObject) {
+        when (command) {
+            CMD_START -> scope.launch { start(context, options) }
             else -> throw IllegalArgumentException("Unknown command: $command")
         }
     }
@@ -63,67 +66,43 @@ class Fileretrieval : CommandTarget {
      *                and "file_id" (a unique identifier for the upload task). It may also contain
      *                "message_id" and "job_id" for tracking purposes.
      */
-    fun start(context: Context, options: JSONObject) {
-        PreyLogger.d("Fileretrieval start options:${options}")
-        var messageId: String? = null
-        try {
-            messageId = options.getString(PreyConfig.MESSAGE_ID)
-            PreyLogger.d("messageId:${messageId}")
-        } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error:${e.message}", e)
-        }
-        var reason: String? = null
-        try {
-            val jobId = options.getString(PreyConfig.JOB_ID)
-            reason = "{\"device_job_id\":\"${jobId}\"}"
-            PreyLogger.d("jobId:${jobId}")
-        } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error:${e.message}", e)
-        }
+    suspend fun start(context: Context, options: JSONObject) {
+        val messageId = options.optString(PreyConfig.MESSAGE_ID, null)
+        val jobId = options.optString(PreyConfig.JOB_ID, null)
+        val reason = jobId?.let { "{\"device_job_id\":\"$it\"}" }
         try {
             PreyLogger.d("Fileretrieval started")
-            CoroutineScope(Dispatchers.IO).launch {
-                PreyWebServicesKt.sendNotifyActions(
-                    context,
-                    UtilJson.makeJsonResponse("start", "fileretrieval", "started", reason),
-                    messageId,
-                    "processed",
-                )
+            PreyWebServicesKt.notify(context, CMD_START, TARGET, STATUS_STARTED, reason, messageId, "processed")
+            val path = options.optString("path")
+            val fileId = options.optString("file_id")
+            if (fileId.isNullOrBlank() || fileId == "null") {
+                throw IllegalArgumentException("file_id is missing or invalid")
             }
-            val path: String = options.getString("path")
-            val fileId: String = options.getString("file_id")
-            if (fileId == null || "" == fileId || "null" == fileId) {
-                throw Exception("file_id null")
+            val file = File(Environment.getExternalStorageDirectory(), path)
+            if (!file.exists()) {
+                throw NoSuchFileException(file, reason = "File not found at path")
             }
-            val file = File("${Environment.getExternalStorageDirectory().toString()}/${path}")
-            val fileDto = FileretrievalDto()
-            fileDto.setFileId(fileId)
-            fileDto.setPath(path)
-            fileDto.setSize(file.length())
-            fileDto.setStatus(0)
             val datasource = FileretrievalDatasource(context)
+            val fileDto = FileretrievalDto().apply {
+                setFileId(fileId)
+                setPath(path)
+                setSize(file.length())
+                setStatus(0)
+            }
             datasource.createFileretrieval(fileDto)
-            PreyLogger.d("Fileretrieval started uploadFile")
-            val responseCode = PreyWebServices.getInstance().uploadFile(context, file, fileId, 0)
-            PreyLogger.d("Fileretrieval responseCode uploadFile :${responseCode}")
+            PreyLogger.d("Fileretrieval starting upload: $fileId")
+            val responseCode = PreyConfig.getPreyConfig(context).webServices.uploadFile(context, file, fileId, 0)
             if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
                 datasource.deleteFileretrieval(fileId)
+                PreyWebServicesKt.notify(context, CMD_START, TARGET, STATUS_STOPPED, reason)
+                PreyLogger.d("Fileretrieval completed successfully")
+            } else {
+                throw Exception("Server returned code: $responseCode")
             }
-            CoroutineScope(Dispatchers.IO).launch {
-                PreyWebServicesKt.sendNotifyActions(
-                    context,
-                    UtilJson.makeJsonResponse("start", "fileretrieval", "stopped", reason),
-                )
-            }
-            PreyLogger.d("Fileretrieval stopped")
         } catch (e: Exception) {
-            CoroutineScope(Dispatchers.IO).launch {
-                PreyWebServicesKt.sendNotifyActions(
-                    context,
-                    UtilJson.makeJsonResponse("start", "fileretrieval", "failed", e.message),
-                )
-            }
-            PreyLogger.e("Fileretrieval failed:${e.message}", e)
+            PreyLogger.e("Fileretrieval failed: ${e.message}", e)
+            val reason = e.message ?: "Unknown error"
+            PreyWebServicesKt.notify(context, CMD_START, TARGET, STATUS_FAILED, reason)
         }
     }
 

@@ -8,7 +8,6 @@ package com.prey.json.actions
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.actions.fileretrieval.FileretrievalController
@@ -37,11 +36,11 @@ import org.json.JSONObject
  * 2. An "expired" detachment, typically when a subscription ends, which performs a partial cleanup
  *    but marks the installation as deleted.
  */
-object Detach : CommandTarget {
+object Detach : CommandTarget, BaseAction() {
 
-    override fun execute(context: Context, command: String, options: JSONObject): Any? {
-        return when (command) {
-            "start" -> start(context, options)
+    override fun execute(context: Context, command: String, options: JSONObject) {
+        when (command) {
+            CMD_START -> start(context, options)
             else -> throw IllegalArgumentException("Unknown command: $command")
         }
     }
@@ -63,171 +62,97 @@ object Detach : CommandTarget {
      */
     fun start(context: Context, options: JSONObject) {
         PreyLogger.d("Detach start options:${options}")
-        var expired = false
-        try {
-            expired = options.getBoolean("expired")
-        } catch (e: Exception) {
-
-        }
+        val expired = options.optBoolean("expired", false)
+        PreyLogger.d("Detach expired:${expired}")
         if (expired) {
-            PreyConfig.getPreyConfig(context).setInstallationStatus("DEL")
-            PreyLogger.d("Detach expired:${expired}")
-            detachDevice(context, false, false, expired)
+            PreyConfig.getPreyConfig(context).installationStatus = "DEL"
+            detachDevice(context, removePermissions = false, removeCache = false, expired = true)
         } else {
-            detachDevice(context, true, true, false)
+            detachDevice(context, removePermissions = true, removeCache = true, expired = false)
         }
     }
 
+    /**
+     * Executes the core logic to detach the device from the Prey service and perform local cleanup.
+     *
+     * This method orchestrates several cleanup tasks:
+     * 1. Resets security and privacy configuration flags.
+     * 2. Revokes device administrator privileges if requested.
+     * 3. Stops background services, location tracking, and clears scheduled reports/retrieved files.
+     */
     fun detachDevice(
         context: Context,
         removePermissions: Boolean,
         removeCache: Boolean,
         expired: Boolean
     ): String? {
-        PreyLogger.d("Detach detachDevice")
-        var error: String? = null
-        try {
-            PreyConfig.getPreyConfig(context).setSecurityPrivilegesAlreadyPrompted(false)
-        } catch (e: Exception) {
-            PreyLogger.e("Error:${e.message}", e)
+        PreyLogger.d("Detach detachDevice initiated")
+        val errors = mutableListOf<String>()
+        val config = PreyConfig.getPreyConfig(context)
+        //Reset Security and Privacy Flags
+        with(config) {
+            protectAccount = false
+            protectPrivileges = false
+            protectTour = false
+            protectReady = false
+            aware = false
+            prefsBiometric = false
         }
-        PreyLogger.d("1:${error}")
-        try {
-            PreyConfig.getPreyConfig(context).setProtectAccount(false)
-        } catch (e: Exception) {
-            error += e.message
-        }
-        try {
-            PreyConfig.getPreyConfig(context).setProtectPrivileges(false)
-        } catch (e: Exception) {
-            error += e.message
-        }
-        try {
-            PreyConfig.getPreyConfig(context).setProtectTour(false)
-        } catch (e: Exception) {
-            error += e.message
-        }
-        try {
-            PreyConfig.getPreyConfig(context).setProtectReady(false)
-        } catch (e: Exception) {
-            error += e.message
-        }
-        PreyLogger.d("2:${error}")
-        try {
-            if (removePermissions) {
+        //Administrator Permissions Management
+        if (removePermissions) {
+            runCatching {
                 val fSupport = FroyoSupport.getInstance(context)
-                if (fSupport.isAdminActive()) {
+                if (fSupport.isAdminActive) {
                     fSupport.removeAdminPrivileges()
                 }
+            }.onFailure { e ->
+                PreyLogger.e("Error removing admin privileges: ${e.message}", e)
+                errors.add("AdminPrivileges: ${e.message}")
             }
-        } catch (e: Exception) {
-            PreyLogger.e("Error:${e.message}", e)
         }
-        try {
+        //Cleaning Services and Background
+        runCatching {
             RunBackgroundCheckBoxPreference.notifyCancel(context)
-            PreyConfig.getPreyConfig(context).removeLocationAware()
-        } catch (e: Exception) {
-            PreyLogger.e("Error:${e.message}", e)
-        }
-        PreyLogger.d("3:${error}")
-        try {
-            PreyConfig.getPreyConfig(context).setAware(false)
-        } catch (e: Exception) {
-            PreyLogger.e("Error:${e.message}", e)
-        }
-        PreyLogger.d("4:${error}")
-        try {
+            config.removeLocationAware()
             FileretrievalController.getInstance().deleteAll(context)
-        } catch (e: Exception) {
-            PreyLogger.e("Error:${e.message}", e)
-        }
-        PreyConfig.getPreyConfig(context).setPrefsBiometric(false)
-        PreyLogger.d("5:${error}")
-        try {
             ReportScheduled.getInstance(context).reset()
-        } catch (e: Exception) {
-            error += e.message
-        }
-        try {
+        }.onFailure { PreyLogger.d("Error cleaning services: ${it.message}") }
+        //Notify the Server (Remote Deletion)
+        runCatching {
             PreyWebServices.getInstance().deleteDevice(context)
-        } catch (e: Exception) {
-            PreyLogger.e("Error:${e.message}", e)
+        }.onFailure { PreyLogger.d("Error deleting device from web services: ${it.message}") }
+        //Identity and Credential Cleansing
+        with(config) {
+            removeDeviceId()
+            removeEmail()
+            removeApiKey()
+            pinNumber = ""
+            email = ""
+            deviceId = ""
+            apiKey = ""
+            if (!expired) {
+                installationStatus = ""
+            }
+            PreyLogger.d("Verification -> Email: $email, DeviceId: $deviceId, ApiKey: $apiKey")
         }
-        PreyLogger.d("6:${error}")
         if (removeCache) {
-            try {
-                PreyConfig.getPreyConfig(context).wipeData()
-            } catch (e: Exception) {
-                error += e.message
+            runCatching { config.wipeData() }
+                .onFailure { errors.add("WipeData: ${it.message}") }
+            runCatching { PreyConfig.deleteCacheInstance(context) }
+                .onFailure { errors.add("DeleteCache: ${it.message}") }
+        }
+        //Final Navigation
+        runCatching {
+            val intent = Intent(context, CheckPasswordHtmlActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra("nexturl", "loadUrl")
             }
-        }
-        try {
-            PreyConfig.getPreyConfig(context).removeDeviceId()
-        } catch (e: Exception) {
-            error += e.message
-        }
-        try {
-            PreyConfig.getPreyConfig(context).removeEmail()
-        } catch (e: Exception) {
-            error += e.message
-        }
-        try {
-            PreyConfig.getPreyConfig(context).removeApiKey()
-        } catch (e: Exception) {
-            PreyLogger.e("Error:${e.message}", e)
-        }
-        try {
-            PreyConfig.getPreyConfig(context).setPinNumber("")
-        } catch (e: Exception) {
-            error = e.message
-        }
-        try {
-            PreyConfig.getPreyConfig(context).setEmail("")
-        } catch (e: Exception) {
-            error = e.message
-        }
-        PreyLogger.d("7:${error}")
-        try {
-            PreyConfig.getPreyConfig(context).setDeviceId("")
-        } catch (e: Exception) {
-            error = e.message
-        }
-        try {
-            PreyConfig.getPreyConfig(context).setApiKey("")
-        } catch (e: Exception) {
-            error = e.message
-        }
-        PreyLogger.d("8:${error}")
-        if (!expired) {
-            try {
-                PreyConfig.getPreyConfig(context).setInstallationStatus("")
-            } catch (e: Exception) {
-                error = e.message
-            }
-        }
-        val email = PreyConfig.getPreyConfig(context).email
-        val deviceId = PreyConfig.getPreyConfig(context).deviceId
-        val apiKey = PreyConfig.getPreyConfig(context).apiKey
-        PreyLogger.d("Email:${email}")
-        PreyLogger.d("DeviceId:${deviceId}")
-        PreyLogger.d("ApiKey:${apiKey}")
-        if (removeCache) {
-            try {
-                PreyConfig.deleteCacheInstance(context)
-            } catch (e: Exception) {
-                PreyLogger.e("Error:${e.message}", e)
-            }
-        }
-        try {
-            val bundle = Bundle()
-            bundle.putString("nexturl", "loadUrl")
-            val intent: Intent = Intent(context, CheckPasswordHtmlActivity::class.java)
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.putExtras(bundle)
             context.startActivity(intent)
-        } catch (e: Exception) {
-            PreyLogger.e("Error:${e.message}", e)
+        }.onFailure { e ->
+            PreyLogger.e("Error starting activity: ${e.message}", e)
+            errors.add("Navigation: ${e.message}")
         }
-        return error
+        return if (errors.isEmpty()) null else errors.joinToString("\n")
     }
+
 }

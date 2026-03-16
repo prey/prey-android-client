@@ -11,8 +11,6 @@ import android.content.DialogInterface;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 
-import com.prey.beta.actions.PreyBetaController;
-
 public class StartPreyPreference extends DialogPreference {
 
     public StartPreyPreference(Context context, AttributeSet attrs) {
@@ -22,9 +20,6 @@ public class StartPreyPreference extends DialogPreference {
     @Override
     public void onClick(DialogInterface dialog, int which) {
         super.onClick(dialog, which);
-        if (which == DialogInterface.BUTTON_POSITIVE) {
-            PreyBetaController.startPrey(getContext());
-        }
     }
 
 }

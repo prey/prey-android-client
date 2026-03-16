@@ -15,5 +15,5 @@ import org.json.JSONObject
  * identified by a string and processing any associated options provided in a JSONObject.
  */
 interface CommandTarget {
-    fun execute(context: Context, command: String, options: JSONObject): Any?
+    fun execute(context: Context, command: String, options: JSONObject)
 }

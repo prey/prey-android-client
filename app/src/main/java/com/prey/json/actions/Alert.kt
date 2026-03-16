@@ -6,18 +6,20 @@
  ******************************************************************************/
 package com.prey.json.actions
 
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.R
@@ -26,10 +28,10 @@ import com.prey.actions.alert.AlertReceiver
 import com.prey.actions.alert.CustomTypefaceSpan
 import com.prey.activities.PopUpAlertActivity
 import com.prey.json.CommandTarget
-import com.prey.json.UtilJson
 import com.prey.net.PreyWebServicesKt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -46,11 +48,19 @@ import org.json.JSONObject
  * and the notification will show this message and provide an option for the user to dismiss it.
  * Dismissing the alert notifies the Prey server that the action has been acknowledged.
  */
-class Alert : CommandTarget {
+class Alert : CommandTarget, BaseAction() {
 
-    override fun execute(context: Context, command: String, options: JSONObject): Any? {
-        return when (command) {
-            "start" -> start(context, options)
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.Default + job)
+
+    companion object {
+        private const val TARGET = "alert"
+        const val CHANNEL_ALERT_ID = "CHANNEL_ALERT_ID"
+    }
+
+    override fun execute(context: Context, command: String, options: JSONObject) {
+        when (command) {
+            CMD_START -> scope.launch { start(context, options) }
             else -> throw IllegalArgumentException("Unknown command: $command")
         }
     }
@@ -69,231 +79,202 @@ class Alert : CommandTarget {
      * @param options A [JSONObject] containing the data for the alert, expecting keys like
      *                "alert_message" (or "message"), "message_id", and "job_id".
      */
-    fun start(context: Context, options: JSONObject) {
+    suspend fun start(context: Context, options: JSONObject) {
         PreyLogger.d("Alert start options:${options}")
         val notificationId = AlertConfig.getAlertConfig(context).getNotificationId()
-        var alertMessage: String? = ""
-        try {
-            alertMessage = options.getString("alert_message")
-        } catch (e: java.lang.Exception) {
-            try {
-                alertMessage = options.getString("message")
-            } catch (e2: java.lang.Exception) {
-                PreyLogger.e("Error:${e2.message}", e2)
-            }
-        }
-        var messageId: String = ""
-        try {
-            if (options.has(PreyConfig.MESSAGE_ID)) {
-                messageId = options.getString(PreyConfig.MESSAGE_ID)
-                PreyLogger.d(String.format("messageId:%s", messageId))
-            }
-        } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error:${e.message}", e)
-        }
-        var reason: String? = null
-        try {
-            if (options.has(PreyConfig.JOB_ID)) {
-                val jobId = options.getString(PreyConfig.JOB_ID)
-                reason = "{\"device_job_id\":\"${jobId}\"}"
-                PreyLogger.d("jobId:${jobId}")
-            }
-        } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error:${e.message}", e)
-        }
+        val alertMessage = options.optString("alert_message", null)
+        val messageId = options.optString(PreyConfig.MESSAGE_ID, null)
+        val jobId = options.optString(PreyConfig.JOB_ID, null)
+        val reason = jobId?.let { "{\"device_job_id\":\"$it\"}" }
         if (alertMessage == null)
             return
-        CoroutineScope(Dispatchers.IO).launch {
-            PreyWebServicesKt.sendNotifyActions(
-                context,
-                UtilJson.makeJsonResponse("start", "alert", "started", reason),
-                messageId
-            )
-            fullscreen(context, alertMessage, notificationId, messageId)
-            notification(context, alertMessage, notificationId, messageId, reason)
-        }
-    }
-
-    /**
-     * Displays a full-screen alert message.
-     *
-     * This function launches a `PopUpAlertActivity` to show a modal, full-screen alert
-     * that overlays other applications. It's used to deliver high-priority messages to the user.
-     * The activity is started with flags to ensure it's a new task, clearing any previous
-     * instances.
-     *
-     * @param context The application context, used to start the activity and access system services.
-     * @param alertMessage The main message content to be displayed in the full-screen alert.
-     * @param notificationId The unique ID for the associated notification, used to manage it later.
-     * @param messageId The unique identifier for this specific message command, used for tracking.
-     */
-    fun fullscreen(context: Context, alertMessage: String, notificationId: Int, messageId: String) {
         try {
-            PreyConfig.getPreyConfig(context).setNoficationPopupId(notificationId)
-            PreyLogger.d("started alert")
-            val title = "title"
-            val bundle = Bundle()
-            bundle.putString("title_message", title)
-            bundle.putString("alert_message", alertMessage)
-            val popup = Intent(context, PopUpAlertActivity::class.java)
-            popup.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            popup.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-            popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            popup.putExtras(bundle)
-            popup.putExtra("description_message", alertMessage)
-            popup.putExtra("notificationId", notificationId)
-            context.startActivity(popup)
-        } catch (e: java.lang.Exception) {
-            PreyLogger.e("Error PopUpAlert:${e.message}", e)
+            showFullscreenAlert(context, alertMessage, notificationId)
+            createNotification(context, alertMessage, notificationId, messageId, reason)
+            PreyWebServicesKt.notify(context, CMD_START, TARGET, STATUS_STARTED, reason, messageId)
+        } catch (e: Exception) {
+            PreyWebServicesKt.notify(context, CMD_START, TARGET, STATUS_FAILED, e.message, messageId)
         }
     }
 
     /**
-     * Creates and displays a system notification for an alert.
+     * Launches the full-screen alert activity.
      *
-     * This function is responsible for building and showing a notification to the user.
-     * It handles different Android versions, creating a notification channel for Oreo and above.
-     * For newer devices (Marshmallow and up), it uses custom layouts (`RemoteViews`) for both
-     * the collapsed and expanded states of the notification, allowing for custom fonts and styling.
-     * The expanded layout is chosen based on the length of the `alertMessage`.
-     * For older devices, it falls back to a standard `NotificationCompat.Builder` with a `BigTextStyle`.
+     * This method persists the notification ID in the configuration, prepares an intent
+     * for [PopUpAlertActivity], and starts the activity with the necessary flags to
+     * ensure it appears as a new task even when called from a background context.
      *
-     * The notification includes a "close" action that, when tapped, broadcasts an intent to
-     * `AlertReceiver` to handle the dismissal logic, such as sending a confirmation to the server.
-     *
-     * @param context The application context, used to access system services and resources.
-     * @param alertMessage The primary message content to be displayed in the notification.
-     * @param notificationId The unique integer identifier for this notification.
-     * @param messageId The unique string identifier for the message that triggered this alert.
-     * @param reason An optional JSON string containing additional data, like a job ID,
-     *               to be sent back when the notification is actioned.
+     * @param context The application context.
+     * @param alertMessage The message to be displayed in the alert.
+     * @param notificationId The unique identifier for the notification associated with this alert.
+     * @throws Exception If there is an error while starting the activity.
      */
-    fun notification(
+    @Throws(Exception::class)
+    fun showFullscreenAlert(
+        context: Context,
+        alertMessage: String,
+        notificationId: Int
+    ) {
+        PreyConfig.getPreyConfig(context).noficationPopupId = notificationId
+        PreyLogger.d("Starting fullscreen alert: $notificationId")
+        val popupIntent = Intent(context, PopUpAlertActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+            //Pass extras directly (we avoid creating a Bundle manually if it's not necessary)
+            putExtra("title_message", "title")
+            putExtra("description_message", alertMessage)
+            putExtra(
+                "alert_message",
+                alertMessage
+            )
+            putExtra("notificationId", notificationId)
+        }
+        //Start the activity
+        context.startActivity(popupIntent)
+    }
+
+    /**
+     * Creates and displays a high-priority system notification for the security alert.
+     *
+     * This method handles the complete notification lifecycle:
+     * 1. Validates POST_NOTIFICATIONS permissions for Android 13+.
+     * 2. Initializes the notification channel for Android Oreo+.
+     * 3. Configures a [PendingIntent] to handle dismissal via [AlertReceiver].
+     * 4. Selects a dynamic layout based on the message length for modern Android versions (Marshmallow+).
+     * 5. Falls back to standard [NotificationCompat.BigTextStyle] for older versions.
+     * 6. Triggers the notification through the [NotificationManager].
+     *
+     * @param context The application context.
+     * @param alertMessage The text message to display within the notification.
+     * @param notificationId A unique integer ID used to identify the notification and its dismissal intent.
+     * @param messageId The optional ID of the message from the server, used for tracking responses.
+     * @param reason An optional JSON string containing metadata (like job ID) related to why the alert was triggered.
+     */
+    fun createNotification(
         context: Context,
         alertMessage: String,
         notificationId: Int,
-        messageId: String,
-        reason: String?
+        messageId: String?,
+        reason: String? = null
     ) {
-        try {
-            val NOTIFICATION_CHANNEL_ID = "10002"
-            PreyLogger.d("started alert")
-            PreyLogger.d("alertMessage:${alertMessage}")
-            val CHANNEL_ID = "CHANNEL_ALERT_ID"
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val name: CharSequence = "prey_alert"
-                val channel = NotificationChannel(
-                    CHANNEL_ID,
-                    name, NotificationManager.IMPORTANCE_HIGH
-                )
-                channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC)
-                val notificationManager: NotificationManager =
-                    context.getSystemService<NotificationManager?>(NotificationManager::class.java)
-                notificationManager.createNotificationChannel(channel)
+        //Permission Validation (Fixed for Android 13+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                PreyLogger.d("Permission POST_NOTIFICATIONS not granted. Skipping notification.")
+                return
             }
-            PreyLogger.d("notificationId:${notificationId}")
-            val buttonIntent = Intent(context, AlertReceiver::class.java)
-            buttonIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            buttonIntent.setAction("$notificationId")
-            buttonIntent.putExtra("notificationId", notificationId)
-            buttonIntent.putExtra("messageId", messageId)
-            if (reason != null) {
-                buttonIntent.putExtra("reason", reason)
-            }
-            val btPendingIntent =
-                PendingIntent.getBroadcast(context, 0, buttonIntent, PendingIntent.FLAG_MUTABLE)
-            val notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                val builder: NotificationCompat.Builder = NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.icon2)
-                    .setContentTitle(context.getString(R.string.title_alert))
-                    .setStyle(NotificationCompat.BigTextStyle().bigText(alertMessage))
-                    .addAction(
-                        R.drawable.xx2,
-                        context.getString(R.string.close_alert),
-                        btPendingIntent
-                    )
-                    .setDeleteIntent(btPendingIntent)
-                    .setContentIntent(btPendingIntent)
-                    .setAutoCancel(true)
-                notificationManager.notify(notificationId, builder.build())
-            } else {
-                var contentViewBig: RemoteViews? = null
-                if (alertMessage.length <= 70) {
-                    PreyLogger.d("custom_notification1 length:${alertMessage.length}")
-                    contentViewBig =
-                        RemoteViews(context.getPackageName(), R.layout.custom_notification1)
-                } else {
-                    if (alertMessage.length <= 170) {
-                        PreyLogger.d("custom_notification2 length:${alertMessage.length}")
-                        contentViewBig =
-                            RemoteViews(context.getPackageName(), R.layout.custom_notification2)
-                    } else {
-                        PreyLogger.d("custom_notification3 length:${alertMessage.length}")
-                        contentViewBig =
-                            RemoteViews(context.getPackageName(), R.layout.custom_notification3)
-                    }
-                }
-                val contentViewSmall: RemoteViews =
-                    RemoteViews(context.getPackageName(), R.layout.custom_notification_small)
-                contentViewBig!!.setOnClickPendingIntent(R.id.noti_button, btPendingIntent)
-                val regularBold = "fonts/Regular/regular-bold.otf"
-                val regularBook = "fonts/Regular/regular-book.otf"
-                val notiBody = SpannableStringBuilder(alertMessage)
-                notiBody.setSpan(
-                    CustomTypefaceSpan(context, regularBook),
-                    0,
-                    notiBody.length,
-                    Spanned.SPAN_EXCLUSIVE_INCLUSIVE
-                )
-                contentViewBig.setTextViewText(R.id.noti_body, notiBody)
-                val maxlength = 45
-                var descriptionSmall: String? = alertMessage
-                if (alertMessage.length > maxlength) {
-                    descriptionSmall = "${alertMessage.substring(0, maxlength)}.."
-                }
-                val notiBodySmall = SpannableStringBuilder(descriptionSmall)
-                notiBodySmall.setSpan(
-                    CustomTypefaceSpan(context, regularBook),
-                    0,
-                    notiBodySmall.length,
-                    Spanned.SPAN_EXCLUSIVE_INCLUSIVE
-                )
-                contentViewSmall.setTextViewText(R.id.noti_body, notiBodySmall)
-                val close_alert: String? = context.getString(R.string.close_alert)
-                PreyLogger.d("close_alert:${close_alert}")
-                val notiButton = SpannableStringBuilder(close_alert)
-                notiButton.setSpan(
-                    CustomTypefaceSpan(context, regularBold),
-                    0,
-                    notiButton.length,
-                    Spanned.SPAN_EXCLUSIVE_INCLUSIVE
-                )
-                contentViewBig.setTextViewText(R.id.noti_button, notiButton)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val notification: Notification.Builder =
-                        Notification.Builder(context, CHANNEL_ID)
-                            .setSmallIcon(R.drawable.icon2)
-                            .setCustomContentView(contentViewSmall)
-                            .setCustomBigContentView(contentViewBig)
-                            .setDeleteIntent(btPendingIntent)
-                            .setAutoCancel(true)
-                    notificationManager.notify(notificationId, notification.build())
-                } else {
-                    val builder: NotificationCompat.Builder = NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.icon2)
-                        .setCustomContentView(contentViewSmall)
-                        .setCustomBigContentView(contentViewBig)
-                        .setDeleteIntent(btPendingIntent)
-                        .setAutoCancel(true)
-                    notificationManager.notify(notificationId, builder.build())
-                }
-            }
-            PreyConfig.getPreyConfig(context).setNextAlert(true)
-        } catch (e: Exception) {
-            PreyLogger.e("failed alert:${e.message}", e)
         }
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        //Create Channel (Oreo+ Only)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ALERT_ID,
+                "prey_alert",
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                description = context.getString(R.string.channel_security_alerts)
+            }
+            notificationManager.createNotificationChannel(channel)
+        }
+        //Configure the PendingIntent
+        val buttonIntent = Intent(context, AlertReceiver::class.java).apply {
+            action = "ACTION_DISMISS_$notificationId"
+            putExtra("notificationId", notificationId)
+            putExtra("messageId", messageId)
+            reason?.let { putExtra("reason", it) }
+        }
+        //Flags: IMMUTABLE is preferable unless you need to modify the intent later
+        val pendingFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+        val btPendingIntent =
+            PendingIntent.getBroadcast(context, notificationId, buttonIntent, pendingFlags)
+        //Base construction
+        val builder = NotificationCompat.Builder(context, CHANNEL_ALERT_ID).apply {
+            setSmallIcon(R.drawable.icon2)
+            setDeleteIntent(btPendingIntent)
+            setAutoCancel(true)
+            setPriority(NotificationCompat.PRIORITY_HIGH)
+            setCategory(NotificationCompat.CATEGORY_ALARM)
+        }
+        //Differentiation of Layouts (M+) vs Standard (Pre-M)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val layoutRes = when {
+                alertMessage.length <= 70 -> R.layout.custom_notification1
+                alertMessage.length <= 170 -> R.layout.custom_notification2
+                else -> R.layout.custom_notification3
+            }
+            val contentViewBig = RemoteViews(context.packageName, layoutRes)
+            val contentViewSmall =
+                RemoteViews(context.packageName, R.layout.custom_notification_small)
+            applyCustomFonts(context, contentViewBig, contentViewSmall, alertMessage)
+            contentViewBig.setOnClickPendingIntent(R.id.noti_button, btPendingIntent)
+            builder.setCustomContentView(contentViewSmall)
+            builder.setCustomBigContentView(contentViewBig)
+            //It maintains the system header style (app icon, time, etc.)
+            builder.setStyle(NotificationCompat.DecoratedCustomViewStyle())
+        } else {
+            builder.setContentTitle(context.getString(R.string.title_alert))
+                .setContentText(alertMessage)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(alertMessage))
+                .addAction(R.drawable.xx2, context.getString(R.string.close_alert), btPendingIntent)
+                .setContentIntent(btPendingIntent)
+        }
+        //Launch and persist
+        notificationManager.notify(notificationId, builder.build())
+        PreyConfig.getPreyConfig(context).isNextAlert = true
+    }
+
+    /**
+     * Applies custom fonts and formatting to the notification layouts using [Spannable
+     */
+    private fun applyCustomFonts(
+        context: Context,
+        bigView: RemoteViews,
+        smallView: RemoteViews,
+        message: String
+    ) {
+        val regularBold = "fonts/Regular/regular-bold.otf"
+        val regularBook = "fonts/Regular/regular-book.otf"
+        //Main body
+        val spannableMessage = SpannableStringBuilder(message).apply {
+            setSpan(
+                CustomTypefaceSpan(context, regularBook),
+                0,
+                length,
+                Spanned.SPAN_EXCLUSIVE_INCLUSIVE
+            )
+        }
+        bigView.setTextViewText(R.id.noti_body, spannableMessage)
+        //Text for small view (truncated)
+        val smallText = if (message.length > 45) "${message.substring(0, 45)}.." else message
+        val spannableSmall = SpannableStringBuilder(smallText).apply {
+            setSpan(
+                CustomTypefaceSpan(context, regularBook),
+                0,
+                length,
+                Spanned.SPAN_EXCLUSIVE_INCLUSIVE
+            )
+        }
+        smallView.setTextViewText(R.id.noti_body, spannableSmall)
+        //Lock button
+        val closeText = context.getString(R.string.close_alert)
+        val spannableButton = SpannableStringBuilder(closeText).apply {
+            setSpan(
+                CustomTypefaceSpan(context, regularBold),
+                0,
+                length,
+                Spanned.SPAN_EXCLUSIVE_INCLUSIVE
+            )
+        }
+        bigView.setTextViewText(R.id.noti_button, spannableButton)
     }
 
 }

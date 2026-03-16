@@ -8,8 +8,10 @@ package com.prey.services
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.prey.PreyConfig
 import com.prey.PreyLogger
-import com.prey.beta.actions.PreyBetaController
+import com.prey.json.parser.JsonCommandDispatcher.getActionsJson
+import com.prey.json.parser.JsonCommandDispatcher.getActionsJsonArray
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -20,7 +22,16 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             // Process the data payload here
             val cmd = remoteMessage.data.get("cmd")
             PreyLogger.d("___ cmd: $cmd")
-            PreyBetaController.startPrey(this,cmd);
+            val config = PreyConfig.getPreyConfig(applicationContext)
+            PreyLogger.d("startPrey:" + config.isThisDeviceAlreadyRegisteredWithPrey())
+            if (config.isThisDeviceAlreadyRegisteredWithPrey()) {
+                config.isRun = true
+                if (cmd.isNullOrEmpty()) {
+                    getActionsJsonArray(applicationContext)
+                } else {
+                    getActionsJson(applicationContext, cmd)
+                }
+            }
         }
     }
 
