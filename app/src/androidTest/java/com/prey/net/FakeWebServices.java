@@ -14,6 +14,7 @@ import com.prey.exceptions.PreyException;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
@@ -95,6 +96,10 @@ public class FakeWebServices implements WebServices {
     @Override
     public PreyHttpResponse sendLocation(Context ctx, JSONObject jsonParam) {
         return preyHttpResponse;
+    }
+
+    public int uploadFile(Context ctx, File file, String uploadID, long total)  throws PreyException{
+        return HttpURLConnection.HTTP_OK;
     }
 
 }
