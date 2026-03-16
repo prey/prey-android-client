@@ -57,7 +57,7 @@ class AwareGeofenceManagerImpl(
         if (!hasPermission()) return
         PreyLogger.i("createOrReplace lat:${location.latitude} long:${location.longitude} radius:$radius")
         client.removeGeofences(listOf(GEOFENCE_ID))
-            .addOnCompleteListener  {
+            .addOnCompleteListener {
                 PreyLogger.i("addOnCompleteListener")
                 val geofence = Geofence.Builder()
                     .setRequestId(GEOFENCE_ID)
@@ -76,8 +76,7 @@ class AwareGeofenceManagerImpl(
                     .build()
                 client.addGeofences(
                     GeofencingRequest.Builder()
-                        .setInitialTrigger(0  )
-                       // .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_EXIT  )
+                        .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_EXIT)
                         .addGeofence(geofence)
                         .build(),
                     pendingIntent
