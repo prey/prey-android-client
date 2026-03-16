@@ -109,6 +109,15 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             RestrictionsManager restrictionsManager = (RestrictionsManager) context.getSystemService(Context.RESTRICTIONS_SERVICE);
             // Retrieve the application restrictions
             Bundle restrictions = restrictionsManager.getApplicationRestrictions();
+            if (restrictions != null && restrictions.containsKey("serial")) {
+                // Retrieve the enterprise serial from the restrictions bundle
+                String serialEnterprise = restrictions.getString("serial");
+                // Check if the enterprise serial is not null and not empty
+                if (serialEnterprise != null && !serialEnterprise.isEmpty()) {
+                    // Set the serial the Prey configuration
+                    PreyConfig.getPreyConfig(context).setSerialMDM(serialEnterprise);
+                }
+            }
             if (restrictions != null && restrictions.containsKey("enterprise_name")) {
                 // Retrieve the enterprise name from the restrictions bundle
                 String enterpriseName = restrictions.getString("enterprise_name");
