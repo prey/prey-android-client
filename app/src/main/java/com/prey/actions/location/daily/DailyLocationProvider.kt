@@ -13,45 +13,52 @@ import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.resume
 
 /**
- * Provides access to the device's location using the Google Play Services Fused Location Provider.
+ * Utility object responsible for retrieving high-precision location data.
  *
- * This class abstracts the complexities of interacting with the [FusedLocationProviderClient]
- * and provides a coroutine-friendly way to retrieve the current location.
- *
- * @property context The application context used to initialize the location services.
+ * This provider leverages the Fused Location Provider API to obtain the most accurate
+ * current location, applying specific constraints on accuracy and timeout to ensure
+ * data quality for daily tracking routines.
  */
-class DailyLocationProvider(context: Context) {
-
-    private val fusedClient =
-        LocationServices.getFusedLocationProviderClient(context)
+object DailyLocationProvider {
 
     /**
-     * Retrieves the current location of the device.
+     * Fetches the current device location with high precision using the Fused Location Provider.
      *
-     * This function uses the Fused Location Provider to request a single location update
-     * with high accuracy. It will attempt to return a location that is at most 60 seconds old
-     * or request a fresh one if necessary.
-     *
-     * @return The current [Location] if successfully retrieved, or `null` if the location
-     *         could not be determined or an error occurred.
-     * @throws SecurityException If the required location permissions are not granted.
+     * This function attempts to retrieve a location with [Priority.PRIORITY_HIGH_ACCURACY].
+     * It includes a 30-second timeout and enforces an accuracy threshold of 75 meters.
      */
     @RequiresPermission("android.permission.ACCESS_FINE_LOCATION")
-    suspend fun getCurrentLocation(): Location? =
-        suspendCancellableCoroutine { cont ->
-            val request = CurrentLocationRequest.Builder()
-                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-                .setMaxUpdateAgeMillis(60_000)
-                .build()
-            fusedClient.getCurrentLocation(request, null)
-                .addOnSuccessListener { location ->
-                    cont.resume(location)
+    suspend fun fetchPreciseLocation(context: Context): Location? {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+        return withTimeoutOrNull(30_000) { //30-second time limit
+            suspendCancellableCoroutine { continuation ->
+                try {
+                    //High-precision configuration
+                    val currentLocationRequest = CurrentLocationRequest.Builder()
+                        .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                        .setMaxUpdateAgeMillis(60_000) //Do not use locations older than 60 seconds
+                        .build()
+                    fusedLocationClient.getCurrentLocation(currentLocationRequest, null)
+                        .addOnSuccessListener { location: Location? ->
+                            if (location != null && location.accuracy <= 75f) {
+                                continuation.resume(location)
+                            } else {
+                                //Insufficient accuracy or null, will retry in 30 minutes
+                                continuation.resume(null)
+                            }
+                        }
+                        .addOnFailureListener {
+                            continuation.resume(null)
+                        }
+                } catch (e: SecurityException) {
+                    continuation.resume(null)
                 }
-                .addOnFailureListener {
-                    cont.resume(null)
-                }
+            }
         }
+    }
+
 }

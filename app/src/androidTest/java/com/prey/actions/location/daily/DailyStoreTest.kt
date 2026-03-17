@@ -35,4 +35,23 @@ class DailyStoreTest {
         assertTrue(result)
     }
 
+    @Test
+    fun wasSentToday_returnsFalse_afterRemovingSent() {
+        // Arrange
+        DailyStore.markSent(context)
+        // Act
+        DailyStore.removeSent(context)
+        val result = DailyStore.wasSentToday(context)
+        // Assert
+        assertFalse("Debería volver a false después de ejecutar removeSent", result)
+    }
+
+    @Test
+    fun persistenceTest_dataIsStillThere_whenRechecking() {
+        // Este test simula que la app se cierra y se abre (re-leyendo los SharedPreferences)
+        DailyStore.markSent(context)
+        val result = DailyStore.wasSentToday(context)
+        assertTrue("Los datos deben persistir en SharedPreferences", result)
+    }
+
 }

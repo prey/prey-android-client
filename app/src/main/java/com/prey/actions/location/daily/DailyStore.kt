@@ -8,74 +8,66 @@ package com.prey.actions.location.daily
 
 import android.content.Context
 import com.prey.PreyLogger
-import java.util.Calendar
 import androidx.core.content.edit
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
- * Manages the persistence of the last execution time for daily location reports.
- * This object uses [android.content.SharedPreferences] to track whether an action
- * has already been performed during the current calendar day.
+ * Utility object that manages the persistent storage of the last time a daily action was performed.
+ *
+ * This class uses [android.content.SharedPreferences] to store a date string (formatted as yyyy-MM-dd)
  */
 object DailyStore{
 
     private const val PREFS = "daily_location"
     private const val LAST_SENT = "last_sent"
+    private const val DATE_FORMAT = "yyyy-MM-dd"
 
     /**
-     * Checks if the action was already performed during the current calendar day.
+     * Checks if a daily location report has already been recorded as sent for the current day.
      *
-     * This method compares the timestamp of the last execution stored in [android.content.SharedPreferences]
-     * against the start of the current day (00:00:00).
-     *
-     * @param context The application context used to access shared preferences.
-     * @return `true` if the action was recorded today, `false` otherwise.
+     * @param context The application context to access SharedPreferences.
+     * @return `true` if the last sent date stored matches today's date, `false` otherwise.
      */
     fun wasSentToday(context: Context): Boolean {
-        val prefs =
-            context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        val lastSentMillis = prefs.getLong(LAST_SENT, 0L)
-        val calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }
-        val todayStartMillis = calendar.timeInMillis
-        val wasSentToday = lastSentMillis >= todayStartMillis
-        PreyLogger.d("wasSentToday: $wasSentToday")
-        return wasSentToday
+        val savedDay = getPrefs(context).getString(LAST_SENT, "")
+        val today = getFormattedDate(Date())
+        return savedDay == today
     }
 
     /**
-     * Records the current timestamp as the last time a report was successfully sent.
-     * This updates the persistent storage to ensure that [wasSentToday] returns true
-     * for the remainder of the current day.
+     * Marks the current date as sent in the shared preferences.
+     * This is used to track whether the daily location report has already been processed for today.
+     *
+     * @param context The context used to access shared preferences.
+     */
+    fun markSent(context: Context) {
+        val today = getFormattedDate(Date())
+        PreyLogger.i("markSent: $today")
+        getPrefs(context).edit {
+            putString(LAST_SENT, today)
+        }
+    }
+
+    /**
+     * Removes the stored record of the last day a report was sent.
+     * This resets the daily status, causing [wasSentToday] to return false.
      *
      * @param context The application context used to access SharedPreferences.
      */
-    fun markSent(context: Context) {
-        PreyLogger.d("markSent")
-        val prefs =
-            context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        prefs.edit {
-            putLong(LAST_SENT, System.currentTimeMillis())
+    fun removeSent(context: Context) {
+        PreyLogger.d("removeSent")
+        getPrefs(context).edit {
+            remove(LAST_SENT)
         }
     }
 
-    /**
-     * Removes the timestamp of the last sent execution from the shared preferences.
-     * This effectively resets the daily status, causing [wasSentToday] to return false.
-     *
-     * @param context The application context to access SharedPreferences.
-     */
-    fun removeSent(context: Context) {
-        PreyLogger.d("removeSent")
-        val prefs =
-            context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        prefs.edit {
-            remove(LAST_SENT)
-        }
+    private fun getPrefs(context: Context) =
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+
+    private fun getFormattedDate(date: Date): String {
+        return SimpleDateFormat(DATE_FORMAT, Locale.US).format(date)
     }
 
 }
