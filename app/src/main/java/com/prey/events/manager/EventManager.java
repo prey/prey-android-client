@@ -25,6 +25,7 @@ import com.prey.events.retrieves.EventRetrieveDataOnline;
 import com.prey.events.retrieves.EventRetrieveDataUptime;
 import com.prey.events.retrieves.EventRetrieveDataWifi;
 import com.prey.events.retrieves.EventRetrieveDataMinWifi;
+import com.prey.json.actions.LocationLowBattery;
 import com.prey.managers.PreyConnectivityManager;
 
 public class EventManager {
@@ -172,7 +173,7 @@ public class EventManager {
                         if(PreyConfig.getPreyConfig(ctx).isLocationLowBattery()) {
                             PreyLogger.d("LocationLowBatteryRunner.isValid(ctx):"+ LocationLowBatteryRunner.isValid(ctx));
                             if (LocationLowBatteryRunner.isValid(ctx)) {
-                                new Thread(new LocationLowBatteryRunner(ctx)).start();
+                                LocationLowBattery.INSTANCE.getCoroutine(ctx,new JSONObject());
                                 try{
                                     jsonObjectStatus.put("locationLowBattery",true);
                                 }catch(Exception e){

@@ -50,7 +50,7 @@ object Location : CommandTarget, BaseAction() {
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.Default + job)
     private const val TARGET = "location"
-    private const val LOCATION_TIMEOUT = 30_000L // 30 maximum waiting time seconds
+    const val LOCATION_TIMEOUT = 30_000L // 30 maximum waiting time seconds
 
     override fun execute(context: Context, command: String, options: JSONObject) {
         when (command) {

@@ -9,39 +9,13 @@ package com.prey.events.manager;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-
-import org.json.JSONObject;
-
 import android.content.Context;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.actions.observer.ActionsController;
-import com.prey.events.Event;
-import com.prey.json.parser.JSONParser;
 
-public class LocationLowBatteryRunner implements Runnable {
-
-    private Context ctx = null;
-
-    public LocationLowBatteryRunner(Context ctx) {
-        this.ctx = ctx;
-    }
-
-    public void run() {
-        PreyLogger.d("EVENT LocationLowBatteryRunner");
-        try {
-            String jsonString = "[ {\"command\": \"get\",\"target\": \"location_low_battery\",\"options\": {}}]";
-            List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
-            if (jsonObjectList != null && jsonObjectList.size() > 0) {
-                ActionsController.getInstance(ctx).runActionJson(ctx, jsonObjectList);
-            }
-        } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
-        }
-    }
+public class LocationLowBatteryRunner  {
 
     private static  SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy hh:mm:ss", Locale.getDefault());
 

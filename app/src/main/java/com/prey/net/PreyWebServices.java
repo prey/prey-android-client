@@ -615,13 +615,18 @@ public class PreyWebServices implements WebServices {
         PreyHttpResponse preyHttpResponse = null;
         if(parameters.size()>0||entityFiles.size()>0) {
             Hardware hardware = new PreyPhone(ctx).getHardware();
+            String serial = hardware.getSerialNumber();
+            String serialMDM = PreyConfig.getPreyConfig(ctx).getSerialMDM();
+            if (serialMDM != null && !serialMDM.isEmpty()) {
+                serial = serialMDM;
+            }
             if (!PreyConfig.getPreyConfig(ctx).isSendData() && hardware.getTotalMemory() > 0) {
                 PreyConfig.getPreyConfig(ctx).setSendData(true);
                 parameters.put("hardware_attributes[ram_size]", "" + hardware.getTotalMemory());
             }
             if (!"".equals(hardware.getUuid()) && !PreyConfig.getPreyConfig(ctx).isSentUuidSerialNumber()) {
                 parameters.put("hardware_attributes[uuid]", hardware.getUuid());
-                parameters.put("hardware_attributes[serial_number]", hardware.getSerialNumber());
+                parameters.put("hardware_attributes[serial_number]", serial);
                 PreyConfig.getPreyConfig(ctx).setSentUuidSerialNumber(true);
             }
             //Compilation is added when sending in data
