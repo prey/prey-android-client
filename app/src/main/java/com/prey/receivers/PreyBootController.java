@@ -35,7 +35,7 @@ public class PreyBootController extends BroadcastReceiver {
                 try {
                     JSONObject json = new JSONObject();
                     json.put("interval", interval);
-                    new Report().getCoroutine(context, json);
+                    Report.INSTANCE.getCoroutine(context, json);
                 }catch (Exception e){
                     PreyLogger.e("Error:"+e.getMessage(),e);
                 }

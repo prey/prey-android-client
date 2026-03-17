@@ -83,7 +83,7 @@ public class ReportService extends IntentService {
 				}
 				// Log a debug message indicating the start of the report
 				PreyLogger.d(String.format("REPORT start:%s", interval));
-				new Report().startReportCoroutine(ctx,new JSONObject());
+				Report.INSTANCE.startReportCoroutine(ctx);
 			} catch (Exception e) {
 				PreyLogger.e(String.format("Error report:%s", e.getMessage()), e);
 				PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "failed", null, UtilJson.makeMapParam("get", "report", "failed", e.getMessage()));

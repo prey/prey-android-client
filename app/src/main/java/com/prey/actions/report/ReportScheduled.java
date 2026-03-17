@@ -40,12 +40,14 @@ public class ReportScheduled {
 			  Intent intent = new Intent(context, AlarmReportReceiver.class);
 			  pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_MUTABLE);
 			  alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+			  long intervalMillis  = 1000L * 60 * minute;
+			  long triggerAtMillis = System.currentTimeMillis() + intervalMillis;
 			  if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
 				  PreyLogger.d("----------setRepeating");
-				  alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * minute, pendingIntent);
+				  alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis, intervalMillis, pendingIntent);
 			  } else {
 				  PreyLogger.d("----------setInexactRepeating");
-				  alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() , 1000 * 60 * minute, pendingIntent);
+				  alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis , intervalMillis, pendingIntent);
 			  }
 			  PreyLogger.d("----------start report [" + minute + "] ReportScheduled");
 		  }catch(Exception e){

@@ -8,7 +8,7 @@ package com.prey;
 
 import android.content.Context;
 
-import com.prey.net.PreyWebServices;
+import com.prey.json.actions.Report;
 
 import org.json.JSONObject;
 
@@ -84,6 +84,15 @@ public class PreyStatus {
             JSONObject jsnobject = PreyConfig.getPreyConfig(ctx).getWebServices().getStatus(ctx);
             if (jsnobject != null) {
                 PreyLogger.d("STATUS jsnobject :" + jsnobject);
+                JSONObject objectStatus = jsnobject.getJSONObject("status");
+                try {
+                    boolean missing = objectStatus.getBoolean("missing");
+                    if (!missing) {
+                        Report.INSTANCE.stop(ctx, new JSONObject());
+                    }
+                } catch (Exception e) {
+                    PreyLogger.d("Error get status.missing");
+                }
                 JSONObject jsnobjectSettings = jsnobject.getJSONObject("settings");
                 try {
                     JSONObject jsnobjectLocal = jsnobjectSettings.getJSONObject("local");

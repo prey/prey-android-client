@@ -39,7 +39,7 @@ public class Missing {
                 int code = response.getStatusCode();
                 PreyLogger.d(String.format("Missing code:%s", code));
                 if (code == HttpURLConnection.HTTP_OK || code == HttpURLConnection.HTTP_CREATED) {
-                    new Report().getCoroutine(ctx, new JSONObject());
+                    Report.INSTANCE.getCoroutine(ctx, new JSONObject());
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "missing", "stopped", reason));
                 } else {
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "missing", "failed", "code:" + code));
@@ -66,7 +66,7 @@ public class Missing {
                 int code = response.getStatusCode();
                 PreyLogger.d("Missing code:" + code);
                 if (code == HttpURLConnection.HTTP_OK || code == HttpURLConnection.HTTP_CREATED) {
-                    new Report().stop(ctx, new JSONObject());
+                    Report.INSTANCE.stop(ctx, new JSONObject());
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("stop", "missing", "stopped", reason));
                 } else {
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "missing", "failed", "code:" + code));

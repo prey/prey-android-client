@@ -18,10 +18,10 @@ import java.util.Locale
  *
  * This class uses [android.content.SharedPreferences] to store a date string (formatted as yyyy-MM-dd)
  */
-object DailyStore{
+object DailyStore {
 
     private const val PREFS = "daily_location"
-    private const val LAST_SENT = "last_sent"
+    private const val LAST_SENT_KEY = "last_sent_key"
     private const val DATE_FORMAT = "yyyy-MM-dd"
 
     /**
@@ -31,7 +31,7 @@ object DailyStore{
      * @return `true` if the last sent date stored matches today's date, `false` otherwise.
      */
     fun wasSentToday(context: Context): Boolean {
-        val savedDay = getPrefs(context).getString(LAST_SENT, "")
+        val savedDay = getPrefs(context).getString(LAST_SENT_KEY, "")
         val today = getFormattedDate(Date())
         return savedDay == today
     }
@@ -46,7 +46,7 @@ object DailyStore{
         val today = getFormattedDate(Date())
         PreyLogger.i("markSent: $today")
         getPrefs(context).edit {
-            putString(LAST_SENT, today)
+            putString(LAST_SENT_KEY, today)
         }
     }
 
@@ -59,7 +59,7 @@ object DailyStore{
     fun removeSent(context: Context) {
         PreyLogger.d("removeSent")
         getPrefs(context).edit {
-            remove(LAST_SENT)
+            remove(LAST_SENT_KEY)
         }
     }
 
