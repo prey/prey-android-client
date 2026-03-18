@@ -48,7 +48,7 @@ class DailyStoreTest {
 
     @Test
     fun persistenceTest_dataIsStillThere_whenRechecking() {
-        // Este test simula que la app se cierra y se abre (re-leyendo los SharedPreferences)
+        //This test simulates the app closing and reopening (re-reading the SharedPreferences)
         DailyStore.markSent(context)
         val result = DailyStore.wasSentToday(context)
         assertTrue("The data must persist in SharedPreferences", result)

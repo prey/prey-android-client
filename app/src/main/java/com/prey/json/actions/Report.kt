@@ -348,7 +348,7 @@ object Report : CommandTarget, BaseAction() {
             //to obtain the WifiInfo object for backward compatibility.
             wifiMgr?.connectionInfo?.takeIf { it.networkId != -1 }
         } catch (e: Exception) {
-            PreyLogger.e("Error al obtener WifiInfo: ${e.message}", e)
+            PreyLogger.e("Error obtaining WifiInfo: ${e.message}", e)
             null
         }
     }
