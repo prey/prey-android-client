@@ -21,22 +21,22 @@ class PreyLocationTest {
         every { mockLocation.longitude } returns -70.66
         every { mockLocation.accuracy } returns 10f
         every { mockLocation.altitude } returns 500.0
-        val preyLoc = PreyLocation(mockLocation)
-        assertEquals(-33.45, preyLoc.lat, 0.001)
-        assertEquals(-70.66, preyLoc.lng, 0.001)
-        assertEquals(10f, preyLoc.accuracy)
-        assertEquals("native", preyLoc.method)
+        val preyLocation = PreyLocation(mockLocation)
+        assertEquals(-33.45, preyLocation.lat, 0.001)
+        assertEquals(-70.66, preyLocation.lng, 0.001)
+        assertEquals(10f, preyLocation.accuracy)
+        assertEquals("native", preyLocation.method)
     }
 
     @Test
     fun isValid_should_return_false_if_latitude_or_longitude_is_zero() {
-        val locCero = PreyLocation()
-        locCero.lat = 0.0
-        locCero.lng = 0.0
-        assertFalse(locCero.isValid)
-        locCero.lat = 10.5
-        locCero.lng = 20.5
-        assertTrue(locCero.isValid)
+        val preyLocation = PreyLocation()
+        preyLocation.lat = 0.0
+        preyLocation.lng = 0.0
+        assertFalse(preyLocation.isValid)
+        preyLocation.lat = 10.5
+        preyLocation.lng = 20.5
+        assertTrue(preyLocation.isValid)
     }
 
 }

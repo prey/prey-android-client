@@ -16,16 +16,16 @@ class LocationUtilTest {
 
     @Test
     fun round_must_limit_to_6_decimals() {
-        val valorLargo = -33.123456789
-        val resultado = LocationUtil.round(valorLargo)
-        assertEquals(-33.123457, resultado, 0.000001)
+        val longValue = -33.123456789
+        val result = LocationUtil.round(longValue)
+        assertEquals(-33.123457, result, 0.000001)
     }
 
     @Test
     fun distance_must_return_0_if_a_location_is_null() {
-        val loc = PreyLocation()
-        val dist = LocationUtil.distance(loc, null)
-        assertEquals(0.0, dist, 0.0)
+        val preyLocation = PreyLocation()
+        val distance = LocationUtil.distance(preyLocation, null)
+        assertEquals(0.0, distance, 0.0)
     }
 
     @Test

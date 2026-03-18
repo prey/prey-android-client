@@ -4,7 +4,6 @@ import android.content.Context
 import android.location.Location
 import androidx.test.core.app.ApplicationProvider
 import androidx.work.ListenableWorker
-import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import com.prey.PreyUtilsKt
 import com.prey.net.PreyWebServicesKt
@@ -67,7 +66,7 @@ class DailyLocationWorkerTest {
         coEvery { DailyLocationProvider.fetchPreciseLocation(any()) } returns mockLocation
         val worker = TestListenableWorkerBuilder<DailyLocationWorker>(context).build()
         val result = worker.doWork()
-        //Debe retornar retry porque 150 > 75
+        //It should return retry because 150 > 75
         assertEquals(ListenableWorker.Result.retry(), result)
     }
 

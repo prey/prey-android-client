@@ -37,7 +37,7 @@ class AlarmTest {
         }
         alarm.execute(context, BaseAction.CMD_START, options)
         Thread.sleep(2000)
-        assertTrue("El estado de la alarma debería ser 'Started'",
+        assertTrue("The state of alarm should be 'Started'",
             PreyStatus.getInstance().isAlarmStart
         )
     }

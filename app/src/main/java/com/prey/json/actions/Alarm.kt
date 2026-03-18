@@ -64,7 +64,7 @@ class Alarm : CommandTarget, BaseAction() {
             //Prepare MediaPlayer
             val resId = getSoundResource(soundName)
             mediaPlayer = MediaPlayer.create(context, resId).apply {
-                isLooping = false // Lo controlamos con el loop de tiempo
+                isLooping = false // We control it with the time loop
                 setOnCompletionListener {
                     PreyLogger.d("Sound playback completed naturally")
                 }
