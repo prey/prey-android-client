@@ -1739,6 +1739,10 @@ public class PreyConfig {
             // Get the device type and name
             String deviceType = PreyUtils.getDeviceType(ctx);
             String nameDevice = PreyUtils.getNameDevice(ctx);
+            String serialNumber = getSerialNumber();
+            if (serialNumber != null && !"".equals(serialNumber)) {
+                nameDevice = nameDevice + " - SN " + serialNumber;
+            }
             PreyLogger.d(String.format("apikey:%s type:%s nameDevice:%s", apiKey, deviceType, nameDevice));
             // Register the device with the API key, device type, and name
             PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, apiKey, deviceType, nameDevice);
@@ -1794,6 +1798,29 @@ public class PreyConfig {
     public void setOrganizationId(String organizationId) {
         // Save the organization ID to the configuration
         saveString(ORGANIZATION_ID, organizationId);
+    }
+
+    /**
+     * Key for storing the serial number received from MDM restrictions in the configuration.
+     */
+    public static final String SERIAL_NUMBER = "SERIAL_NUMBER";
+
+    /**
+     * Retrieves the serial number received from MDM restrictions.
+     *
+     * @return The serial number, or an empty string if not set.
+     */
+    public String getSerialNumber() {
+        return getString(SERIAL_NUMBER, "");
+    }
+
+    /**
+     * Sets the serial number received from MDM restrictions.
+     *
+     * @param serialNumber The serial number to set.
+     */
+    public void setSerialNumber(String serialNumber) {
+        saveString(SERIAL_NUMBER, serialNumber);
     }
 
     /**

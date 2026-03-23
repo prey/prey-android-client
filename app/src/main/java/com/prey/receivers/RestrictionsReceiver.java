@@ -65,6 +65,15 @@ public class RestrictionsReceiver extends BroadcastReceiver {
                     PreyConfig.getPreyConfig(context).setOrganizationId(enterpriseName);
                 }
             }
+            // Check if the restrictions bundle contains the "serial_number" from MDM
+            if (restrictions != null && restrictions.containsKey("serial_number")) {
+                // Retrieve the serial number provided by MDM
+                String serialNumber = restrictions.getString("serial_number");
+                if (serialNumber != null && !"".equals(serialNumber)) {
+                    // Store the MDM serial number in the configuration
+                    PreyConfig.getPreyConfig(context).setSerialNumber(serialNumber);
+                }
+            }
             // Check if the restrictions bundle is not null and contains the "setup_key"
             if (restrictions != null && restrictions.containsKey("setup_key")) {
                 // Get the setup key from the restrictions bundle
