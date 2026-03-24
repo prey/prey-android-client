@@ -787,12 +787,6 @@ public class PreyConfig {
     public String getPreyGooglePlay() {
         return FileConfigReader.getInstance(this.ctx).getPreyGooglePlay();
     }
-    public String getPreyUninstallUrl() {
-        return FileConfigReader.getInstance(this.ctx).getPreyUninstall();
-    }
-    public String getPreyUninstallEsUrl() {
-        return FileConfigReader.getInstance(this.ctx).getPreyUninstallEs();
-    }
     public String getApiKeyBatch() {
         return PreyBatch.getInstance(this.ctx).getApiKeyBatch();
     }
