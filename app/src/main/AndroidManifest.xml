@@ -378,8 +378,6 @@
 
         <!-- Services -->
         <service android:name="com.prey.services.PreyBootService" />
-        <service android:name="com.prey.services.PreyRunnerService" />
-        <service android:name="com.prey.beta.services.PreyBetaRunnerService" />
         <service android:name="com.prey.actions.report.ReportService" />
         <service android:name="com.prey.actions.fileretrieval.FileretrievalService" />
         <service android:name="com.prey.services.PreyLockService" />
