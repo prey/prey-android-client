@@ -54,10 +54,12 @@ public class RestrictionsReceiver extends BroadcastReceiver {
      * @param restrictions The Bundle containing the application restrictions.
      */
     public static void handleApplicationRestrictions(Context context, Bundle restrictions) {
+        PreyLogger.i(String.format("handleApplicationRestrictions restrictions: %s", restrictions != null ? restrictions.toString() : "null"));
         // These values are read always, even if the device is already registered
         if (restrictions != null && restrictions.containsKey("enterprise_name")) {
             // Retrieve the enterprise name from the restrictions bundle
             String enterpriseName = restrictions.getString("enterprise_name");
+            PreyLogger.i(String.format("handleApplicationRestrictions enterprise_name: %s", enterpriseName));
             // Check if the enterprise name is not null and not empty
             if (enterpriseName != null && !"".equals(enterpriseName)) {
                 // Set the organization ID in the Prey configuration
@@ -68,17 +70,21 @@ public class RestrictionsReceiver extends BroadcastReceiver {
         if (restrictions != null && restrictions.containsKey("serial_number")) {
             // Retrieve the serial number provided by MDM
             String serialNumber = restrictions.getString("serial_number");
+            PreyLogger.i(String.format("handleApplicationRestrictions serial_number: %s", serialNumber));
             if (serialNumber != null && !"".equals(serialNumber)) {
                 // Store the MDM serial number in the configuration
                 PreyConfig.getPreyConfig(context).setSerialNumber(serialNumber);
             }
         }
         // Check if the device is already registered with Prey
-        if (!PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey()) {
+        boolean registered = PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey();
+        PreyLogger.i(String.format("handleApplicationRestrictions registered: %s", registered));
+        if (!registered) {
             // Check if the restrictions bundle is not null and contains the "setup_key"
             if (restrictions != null && restrictions.containsKey("setup_key")) {
                 // Get the setup key from the restrictions bundle
                 String setupKey = restrictions.getString("setup_key");
+                PreyLogger.i(String.format("handleApplicationRestrictions setup_key: %s", setupKey));
                 // Check if the setup key is not null and not empty
                 if (setupKey != null && !"".equals(setupKey)) {
                     try {

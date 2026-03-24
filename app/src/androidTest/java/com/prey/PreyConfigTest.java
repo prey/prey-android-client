@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -127,6 +128,69 @@ public class PreyConfigTest {
         assertFalse("The sendCompilation flag should be false after a successful send", preyConfig.isSendCompilation());
     }
 
+
+    /**
+     * Verifies that the serial number received from MDM restrictions can be stored and retrieved
+     * correctly from PreyConfig.
+     *
+     * <p><b>Scenario:</b> A serial number is set via {@code setSerialNumber()}.
+     *
+     * <p><b>Expected Outcome:</b> The same value is returned by {@code getSerialNumber()}.
+     */
+    @Test
+    public void givenSerialNumber_whenSet_thenCanBeRetrieved() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+
+        // Act
+        preyConfig.setSerialNumber("SN-TEST-1234");
+
+        // Assert
+        assertEquals("Serial number should be retrievable after being set",
+                "SN-TEST-1234", preyConfig.getSerialNumber());
+    }
+
+    /**
+     * Verifies that the serial number defaults to an empty string when not set.
+     *
+     * <p><b>Scenario:</b> The serial number is cleared by setting it to an empty string.
+     *
+     * <p><b>Expected Outcome:</b> {@code getSerialNumber()} returns an empty string.
+     */
+    @Test
+    public void givenNoSerialNumber_whenRetrieved_thenReturnsEmptyString() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setSerialNumber("");
+
+        // Act
+        String serialNumber = preyConfig.getSerialNumber();
+
+        // Assert
+        assertEquals("Serial number should default to empty string",
+                "", serialNumber);
+    }
+
+    /**
+     * Verifies that setting a new serial number overwrites the previous value.
+     *
+     * <p><b>Scenario:</b> A serial number is set, then updated with a new value.
+     *
+     * <p><b>Expected Outcome:</b> The latest value is returned by {@code getSerialNumber()}.
+     */
+    @Test
+    public void givenExistingSerialNumber_whenUpdated_thenNewValueIsReturned() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setSerialNumber("OLD-SN");
+
+        // Act
+        preyConfig.setSerialNumber("NEW-SN");
+
+        // Assert
+        assertEquals("Serial number should reflect the latest value",
+                "NEW-SN", preyConfig.getSerialNumber());
+    }
 
     /**
      * Creates a list of HttpDataService objects containing location data ready to be sent.
