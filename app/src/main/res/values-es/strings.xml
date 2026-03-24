@@ -383,5 +383,7 @@
     <string name="restriction_description_serial_number">Número de serie del dispositivo</string>
     <string name="restriction_title_device_name">Nombre del dispositivo</string>
     <string name="restriction_description_device_name">Nombre personalizado del dispositivo</string>
+    <string name="restriction_title_imei">IMEI</string>
+    <string name="restriction_description_imei">IMEI del dispositivo</string>
     <string name="administrator_disabled">El componente de administrador dado no está actualmente activo y deshabilitado en el sistema.</string>
 </resources>

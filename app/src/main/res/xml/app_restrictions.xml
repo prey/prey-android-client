@@ -29,4 +29,11 @@
         android:description="@string/restriction_description_device_name"
         android:defaultValue="" />
 
+    <restriction
+        android:key="imei"
+        android:title="@string/restriction_title_imei"
+        android:restrictionType="string"
+        android:description="@string/restriction_description_imei"
+        android:defaultValue="" />
+
 </restrictions>

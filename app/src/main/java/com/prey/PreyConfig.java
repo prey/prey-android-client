@@ -1854,6 +1854,29 @@ public class PreyConfig {
     }
 
     /**
+     * Key for storing the IMEI received from MDM restrictions in the configuration.
+     */
+    public static final String MDM_IMEI = "MDM_IMEI";
+
+    /**
+     * Retrieves the IMEI received from MDM restrictions.
+     *
+     * @return The IMEI, or an empty string if not set.
+     */
+    public String getMdmImei() {
+        return getString(MDM_IMEI, "");
+    }
+
+    /**
+     * Sets the IMEI received from MDM restrictions.
+     *
+     * @param imei The IMEI to set.
+     */
+    public void setMdmImei(String imei) {
+        saveString(MDM_IMEI, imei);
+    }
+
+    /**
      * Method add a minute to request report
      */
     public void setTimeNextReport() {
