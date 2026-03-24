@@ -193,6 +193,369 @@ public class PreyConfigTest {
     }
 
     /**
+     * Verifies that the IMEI received from MDM can be stored and retrieved correctly.
+     *
+     * <p><b>Scenario:</b> An IMEI is set via {@code setImei()}.
+     *
+     * <p><b>Expected Outcome:</b> The same value is returned by {@code getImei()}.
+     */
+    @Test
+    public void givenImei_whenSet_thenCanBeRetrieved() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+
+        // Act
+        preyConfig.setImei("354123456789012");
+
+        // Assert
+        assertEquals("IMEI should be retrievable after being set",
+                "354123456789012", preyConfig.getImei());
+    }
+
+    /**
+     * Verifies that the IMEI defaults to an empty string when not set.
+     *
+     * <p><b>Scenario:</b> The IMEI is cleared by setting it to an empty string.
+     *
+     * <p><b>Expected Outcome:</b> {@code getImei()} returns an empty string.
+     */
+    @Test
+    public void givenNoImei_whenRetrieved_thenReturnsEmptyString() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setImei("");
+
+        // Act
+        String imei = preyConfig.getImei();
+
+        // Assert
+        assertEquals("IMEI should default to empty string",
+                "", imei);
+    }
+
+    /**
+     * Verifies that setting a new IMEI overwrites the previous value.
+     *
+     * <p><b>Scenario:</b> An IMEI is set, then updated with a new value.
+     *
+     * <p><b>Expected Outcome:</b> The latest value is returned by {@code getImei()}.
+     */
+    @Test
+    public void givenExistingImei_whenUpdated_thenNewValueIsReturned() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setImei("111111111111111");
+
+        // Act
+        preyConfig.setImei("222222222222222");
+
+        // Assert
+        assertEquals("IMEI should reflect the latest value",
+                "222222222222222", preyConfig.getImei());
+    }
+
+    /**
+     * Verifies that the MDM device name can be stored and retrieved correctly.
+     *
+     * <p><b>Scenario:</b> A device name is set via {@code setMdmDeviceName()}.
+     *
+     * <p><b>Expected Outcome:</b> The same value is returned by {@code getMdmDeviceName()}.
+     */
+    @Test
+    public void givenMdmDeviceName_whenSet_thenCanBeRetrieved() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+
+        // Act
+        preyConfig.setMdmDeviceName("Office Laptop 001");
+
+        // Assert
+        assertEquals("MDM device name should be retrievable after being set",
+                "Office Laptop 001", preyConfig.getMdmDeviceName());
+    }
+
+    /**
+     * Verifies that the MDM device name defaults to an empty string when not set.
+     *
+     * <p><b>Scenario:</b> The MDM device name is cleared by setting it to an empty string.
+     *
+     * <p><b>Expected Outcome:</b> {@code getMdmDeviceName()} returns an empty string.
+     */
+    @Test
+    public void givenNoMdmDeviceName_whenRetrieved_thenReturnsEmptyString() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setMdmDeviceName("");
+
+        // Act
+        String deviceName = preyConfig.getMdmDeviceName();
+
+        // Assert
+        assertEquals("MDM device name should default to empty string",
+                "", deviceName);
+    }
+
+    /**
+     * Verifies that setting a new MDM device name overwrites the previous value.
+     *
+     * <p><b>Scenario:</b> A device name is set, then updated with a new value.
+     *
+     * <p><b>Expected Outcome:</b> The latest value is returned by {@code getMdmDeviceName()}.
+     */
+    @Test
+    public void givenExistingMdmDeviceName_whenUpdated_thenNewValueIsReturned() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setMdmDeviceName("Old Name");
+
+        // Act
+        preyConfig.setMdmDeviceName("New Name");
+
+        // Assert
+        assertEquals("MDM device name should reflect the latest value",
+                "New Name", preyConfig.getMdmDeviceName());
+    }
+
+    /**
+     * Verifies that the organization ID can be stored and retrieved correctly.
+     *
+     * <p><b>Scenario:</b> An organization ID is set via {@code setOrganizationId()}.
+     *
+     * <p><b>Expected Outcome:</b> The same value is returned by {@code getOrganizationId()}.
+     */
+    @Test
+    public void givenOrganizationId_whenSet_thenCanBeRetrieved() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+
+        // Act
+        preyConfig.setOrganizationId("prey-inc");
+
+        // Assert
+        assertEquals("Organization ID should be retrievable after being set",
+                "prey-inc", preyConfig.getOrganizationId());
+    }
+
+    // =========================================================================
+    // Tests for buildDeviceName — device name construction for registration
+    // =========================================================================
+
+    /**
+     * Verifies that when an MDM device name is set, {@code buildDeviceName} returns it
+     * regardless of the default name or serial number.
+     *
+     * <p><b>Scenario:</b> MDM provides a custom device name via restrictions.
+     *
+     * <p><b>Expected Outcome:</b> The MDM device name takes priority over default name + serial number.
+     */
+    @Test
+    public void givenMdmDeviceNameSet_whenBuildingName_thenMdmNameIsUsed() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setMdmDeviceName("Office Phone 001");
+        preyConfig.setSerialNumber("R8YX100J1WN");
+
+        // Act
+        String result = preyConfig.buildDeviceName("samsung SM-A145R");
+
+        // Assert
+        assertEquals("MDM device name should take priority",
+                "Office Phone 001", result);
+    }
+
+    /**
+     * Verifies that when no MDM device name is set but a serial number is available,
+     * the device name is built as "defaultName - SN serialNumber".
+     *
+     * <p><b>Scenario:</b> MDM provides a serial number but no custom device name.
+     *
+     * <p><b>Expected Outcome:</b> The name is the default name appended with the serial number.
+     */
+    @Test
+    public void givenSerialNumberOnly_whenBuildingName_thenNameIncludesSerialNumber() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setMdmDeviceName("");
+        preyConfig.setSerialNumber("R8YX100J1WN");
+
+        // Act
+        String result = preyConfig.buildDeviceName("samsung SM-A145R");
+
+        // Assert
+        assertEquals("Device name should include serial number suffix",
+                "samsung SM-A145R - SN R8YX100J1WN", result);
+    }
+
+    /**
+     * Verifies that when neither MDM device name nor serial number are set,
+     * the default device name is returned as-is.
+     *
+     * <p><b>Scenario:</b> No MDM data is available (non-MDM device).
+     *
+     * <p><b>Expected Outcome:</b> The default name is returned unchanged.
+     */
+    @Test
+    public void givenNoMdmData_whenBuildingName_thenDefaultNameIsUsed() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setMdmDeviceName("");
+        preyConfig.setSerialNumber("");
+
+        // Act
+        String result = preyConfig.buildDeviceName("samsung SM-A145R");
+
+        // Assert
+        assertEquals("Default device name should be returned when no MDM data",
+                "samsung SM-A145R", result);
+    }
+
+    /**
+     * Verifies that MDM device name takes priority even when it differs significantly
+     * from the actual device model.
+     *
+     * <p><b>Scenario:</b> MDM sets a custom organizational name unrelated to the device model.
+     *
+     * <p><b>Expected Outcome:</b> The MDM name is used, ignoring the default name entirely.
+     */
+    @Test
+    public void givenMdmDeviceNameSet_whenBuildingName_thenSerialNumberIsIgnored() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setMdmDeviceName("CEO-Phone-2026");
+        preyConfig.setSerialNumber("ABC123");
+
+        // Act
+        String result = preyConfig.buildDeviceName("Google Pixel 9");
+
+        // Assert
+        assertEquals("MDM device name should be used, serial number suffix should not be appended",
+                "CEO-Phone-2026", result);
+    }
+
+    // =========================================================================
+    // Tests for increaseData — hardware attributes sent to server
+    // =========================================================================
+
+    /**
+     * Verifies that {@code increaseData} includes the serial number from MDM restrictions
+     * in the hardware attributes parameters.
+     *
+     * <p><b>Scenario:</b> A serial number is stored in PreyConfig from MDM.
+     *
+     * <p><b>Expected Outcome:</b> The parameters map contains the MDM serial number
+     * under the key {@code hardware_attributes[serial_number]}.
+     */
+    @Test
+    public void givenSerialNumberFromMdm_whenIncreasingData_thenSerialNumberIsInParameters() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setSerialNumber("MDM-SN-9999");
+        HashMap<String, String> parameters = new HashMap<String, String>();
+
+        // Act
+        parameters = PreyWebServices.getInstance().increaseData(context, parameters);
+
+        // Assert
+        assertEquals("Serial number from MDM should be in hardware_attributes",
+                "MDM-SN-9999", parameters.get("hardware_attributes[serial_number]"));
+    }
+
+    /**
+     * Verifies that {@code increaseData} sends an empty serial number when no MDM
+     * serial number is configured.
+     *
+     * <p><b>Scenario:</b> No serial number is stored in PreyConfig (non-MDM device).
+     *
+     * <p><b>Expected Outcome:</b> The parameters map contains an empty string
+     * under the key {@code hardware_attributes[serial_number]}.
+     */
+    @Test
+    public void givenNoSerialNumber_whenIncreasingData_thenSerialNumberIsEmpty() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setSerialNumber("");
+        HashMap<String, String> parameters = new HashMap<String, String>();
+
+        // Act
+        parameters = PreyWebServices.getInstance().increaseData(context, parameters);
+
+        // Assert
+        assertEquals("Serial number should be empty when no MDM data",
+                "", parameters.get("hardware_attributes[serial_number]"));
+    }
+
+    // =========================================================================
+    // Tests for resolveImei — IMEI resolution for device registration
+    // =========================================================================
+
+    /**
+     * Verifies that when an IMEI is set from MDM, {@code resolveImei} returns it.
+     *
+     * <p><b>Scenario:</b> MDM provides a real IMEI via restrictions.
+     *
+     * <p><b>Expected Outcome:</b> The MDM IMEI is returned.
+     */
+    @Test
+    public void givenMdmImei_whenResolvingImei_thenMdmImeiIsReturned() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setImei("354123456789012");
+
+        // Act
+        String result = PreyConfig.getPreyConfig(context).resolveImei();
+
+        // Assert
+        assertEquals("IMEI from MDM should be returned",
+                "354123456789012", result);
+    }
+
+    /**
+     * Verifies that when no MDM IMEI is set, {@code resolveImei} falls back to
+     * the Android device ID.
+     *
+     * <p><b>Scenario:</b> No MDM IMEI is configured (non-MDM device).
+     *
+     * <p><b>Expected Outcome:</b> The Android device ID is returned (a non-empty string).
+     */
+    @Test
+    public void givenNoMdmImei_whenResolvingImei_thenAndroidDeviceIdIsReturned() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setImei("");
+
+        // Act
+        String result = PreyConfig.getPreyConfig(context).resolveImei();
+
+        // Assert
+        assertTrue("Android device ID should be returned when no MDM IMEI",
+                result != null && !result.isEmpty());
+        // Should NOT be the MDM IMEI we cleared
+        assertFalse("Result should not be empty string",
+                "".equals(result));
+    }
+
+    /**
+     * Verifies that when an MDM IMEI is set, the Android device ID is not used.
+     *
+     * <p><b>Scenario:</b> MDM provides an IMEI that differs from the Android device ID.
+     *
+     * <p><b>Expected Outcome:</b> The MDM IMEI is returned, not the Android device ID.
+     */
+    @Test
+    public void givenMdmImei_whenResolvingImei_thenAndroidDeviceIdIsNotUsed() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setImei("999000111222333");
+
+        // Act
+        String result = PreyConfig.getPreyConfig(context).resolveImei();
+
+        // Assert
+        assertEquals("MDM IMEI should take priority over Android device ID",
+                "999000111222333", result);
+    }
+
+    /**
      * Creates a list of HttpDataService objects containing location data ready to be sent.
      *
      * @return An ArrayList containing the HttpDataService object. Returns an empty list if the input location is null.

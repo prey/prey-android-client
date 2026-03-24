@@ -38,6 +38,8 @@ public class RestrictionsReceiverTest {
         // Clear previous values to ensure test isolation
         preyConfig.setSerialNumber("");
         preyConfig.setOrganizationId("");
+        preyConfig.setMdmDeviceName("");
+        preyConfig.setImei("");
     }
 
     /**
@@ -86,13 +88,13 @@ public class RestrictionsReceiverTest {
     }
 
     /**
-     * Verifies that both serial_number and enterprise_name are stored when the restrictions
-     * bundle contains both keys simultaneously.
+     * Verifies that all MDM restriction values are stored when the restrictions
+     * bundle contains all keys simultaneously.
      *
-     * <p><b>Scenario:</b> MDM sends a restrictions bundle with serial_number, enterprise_name,
-     * and setup_key (common in real MDM deployments).
+     * <p><b>Scenario:</b> MDM sends a restrictions bundle with all supported keys
+     * (common in real MDM deployments).
      *
-     * <p><b>Expected Outcome:</b> Both values should be correctly stored in PreyConfig.
+     * <p><b>Expected Outcome:</b> All values should be correctly stored in PreyConfig.
      */
     @Test
     public void givenAllRestrictionsKeys_whenHandled_thenAllValuesAreStored() {
@@ -100,6 +102,8 @@ public class RestrictionsReceiverTest {
         Bundle restrictions = new Bundle();
         restrictions.putString("enterprise_name", "my-organization");
         restrictions.putString("serial_number", "ABC-9999");
+        restrictions.putString("device_name", "Office Phone 001");
+        restrictions.putString("imei", "354123456789012");
         restrictions.putString("setup_key", "some-api-key");
 
         // Act
@@ -110,6 +114,10 @@ public class RestrictionsReceiverTest {
                 "my-organization", preyConfig.getOrganizationId());
         assertEquals("Serial number should be stored",
                 "ABC-9999", preyConfig.getSerialNumber());
+        assertEquals("Device name should be stored",
+                "Office Phone 001", preyConfig.getMdmDeviceName());
+        assertEquals("IMEI should be stored",
+                "354123456789012", preyConfig.getImei());
     }
 
     /**
@@ -136,29 +144,6 @@ public class RestrictionsReceiverTest {
     }
 
     /**
-     * Verifies that a null restrictions bundle does not cause a crash.
-     *
-     * <p><b>Scenario:</b> The restrictions bundle is null (e.g., MDM not configured).
-     *
-     * <p><b>Expected Outcome:</b> No exception is thrown and stored values remain unchanged.
-     */
-    @Test
-    public void givenNullRestrictions_whenHandled_thenNoCrash() {
-        // Arrange
-        preyConfig.setSerialNumber("EXISTING-SN");
-        preyConfig.setOrganizationId("existing-org");
-
-        // Act
-        RestrictionsReceiver.handleApplicationRestrictions(context, null);
-
-        // Assert
-        assertEquals("Serial number should remain unchanged",
-                "EXISTING-SN", preyConfig.getSerialNumber());
-        assertEquals("Organization ID should remain unchanged",
-                "existing-org", preyConfig.getOrganizationId());
-    }
-
-    /**
      * Verifies that an empty restrictions bundle does not affect stored values.
      *
      * <p><b>Scenario:</b> MDM sends an empty restrictions bundle with no keys.
@@ -170,6 +155,8 @@ public class RestrictionsReceiverTest {
         // Arrange
         preyConfig.setSerialNumber("EXISTING-SN");
         preyConfig.setOrganizationId("existing-org");
+        preyConfig.setMdmDeviceName("Existing Device");
+        preyConfig.setImei("111222333444555");
         Bundle restrictions = new Bundle();
 
         // Act
@@ -180,24 +167,29 @@ public class RestrictionsReceiverTest {
                 "EXISTING-SN", preyConfig.getSerialNumber());
         assertEquals("Organization ID should remain unchanged",
                 "existing-org", preyConfig.getOrganizationId());
+        assertEquals("Device name should remain unchanged",
+                "Existing Device", preyConfig.getMdmDeviceName());
+        assertEquals("IMEI should remain unchanged",
+                "111222333444555", preyConfig.getImei());
     }
 
     /**
-     * Verifies that serial_number and enterprise_name are processed even when the device
+     * Verifies that all MDM values are processed even when the device
      * is already registered with Prey (setup_key is ignored but other values are still read).
      *
-     * <p><b>Scenario:</b> A device already registered receives updated MDM restrictions
-     * with a new serial_number.
+     * <p><b>Scenario:</b> A device already registered receives updated MDM restrictions.
      *
-     * <p><b>Expected Outcome:</b> The serial_number should be updated regardless of
+     * <p><b>Expected Outcome:</b> All values except setup_key should be updated regardless of
      * registration status.
      */
     @Test
-    public void givenRegisteredDevice_whenRestrictionsUpdated_thenSerialNumberIsStillStored() {
+    public void givenRegisteredDevice_whenRestrictionsUpdated_thenValuesAreStillStored() {
         // Arrange
         Bundle restrictions = new Bundle();
         restrictions.putString("serial_number", "NEW-SN-UPDATE");
         restrictions.putString("enterprise_name", "updated-org");
+        restrictions.putString("device_name", "Updated Device");
+        restrictions.putString("imei", "999888777666555");
 
         // Act
         RestrictionsReceiver.handleApplicationRestrictions(context, restrictions);
@@ -207,6 +199,130 @@ public class RestrictionsReceiverTest {
                 "NEW-SN-UPDATE", preyConfig.getSerialNumber());
         assertEquals("Organization ID should be updated even for registered devices",
                 "updated-org", preyConfig.getOrganizationId());
+        assertEquals("Device name should be updated even for registered devices",
+                "Updated Device", preyConfig.getMdmDeviceName());
+        assertEquals("IMEI should be updated even for registered devices",
+                "999888777666555", preyConfig.getImei());
+    }
+
+    /**
+     * Verifies that the device name from MDM restrictions is correctly stored in PreyConfig.
+     *
+     * <p><b>Scenario:</b> MDM sends a restrictions bundle containing a "device_name" key.
+     *
+     * <p><b>Expected Outcome:</b> The device name should be saved in PreyConfig and retrievable
+     * via {@code getMdmDeviceName()}.
+     */
+    @Test
+    public void givenDeviceNameInRestrictions_whenHandled_thenDeviceNameIsStored() {
+        // Arrange
+        Bundle restrictions = new Bundle();
+        restrictions.putString("device_name", "Sales Team Phone 42");
+
+        // Act
+        RestrictionsReceiver.handleApplicationRestrictions(context, restrictions);
+
+        // Assert
+        assertEquals("Device name should be stored from MDM restrictions",
+                "Sales Team Phone 42", preyConfig.getMdmDeviceName());
+    }
+
+    /**
+     * Verifies that an empty device_name in the restrictions bundle does not overwrite
+     * a previously stored value.
+     *
+     * <p><b>Scenario:</b> MDM sends a restrictions bundle where device_name is an empty string.
+     *
+     * <p><b>Expected Outcome:</b> The previously stored device name should remain unchanged.
+     */
+    @Test
+    public void givenEmptyDeviceName_whenHandled_thenPreviousValueIsPreserved() {
+        // Arrange
+        preyConfig.setMdmDeviceName("Existing Device");
+        Bundle restrictions = new Bundle();
+        restrictions.putString("device_name", "");
+
+        // Act
+        RestrictionsReceiver.handleApplicationRestrictions(context, restrictions);
+
+        // Assert
+        assertEquals("Previous device name should be preserved when MDM sends empty value",
+                "Existing Device", preyConfig.getMdmDeviceName());
+    }
+
+    /**
+     * Verifies that the IMEI from MDM restrictions is correctly stored in PreyConfig.
+     *
+     * <p><b>Scenario:</b> MDM sends a restrictions bundle containing an "imei" key.
+     *
+     * <p><b>Expected Outcome:</b> The IMEI should be saved in PreyConfig and retrievable
+     * via {@code getImei()}.
+     */
+    @Test
+    public void givenImeiInRestrictions_whenHandled_thenImeiIsStored() {
+        // Arrange
+        Bundle restrictions = new Bundle();
+        restrictions.putString("imei", "354123456789012");
+
+        // Act
+        RestrictionsReceiver.handleApplicationRestrictions(context, restrictions);
+
+        // Assert
+        assertEquals("IMEI should be stored from MDM restrictions",
+                "354123456789012", preyConfig.getImei());
+    }
+
+    /**
+     * Verifies that an empty IMEI in the restrictions bundle does not overwrite
+     * a previously stored value.
+     *
+     * <p><b>Scenario:</b> MDM sends a restrictions bundle where imei is an empty string.
+     *
+     * <p><b>Expected Outcome:</b> The previously stored IMEI should remain unchanged.
+     */
+    @Test
+    public void givenEmptyImei_whenHandled_thenPreviousValueIsPreserved() {
+        // Arrange
+        preyConfig.setImei("111222333444555");
+        Bundle restrictions = new Bundle();
+        restrictions.putString("imei", "");
+
+        // Act
+        RestrictionsReceiver.handleApplicationRestrictions(context, restrictions);
+
+        // Assert
+        assertEquals("Previous IMEI should be preserved when MDM sends empty value",
+                "111222333444555", preyConfig.getImei());
+    }
+
+    /**
+     * Verifies that null restrictions bundle preserves all previously stored values
+     * including device_name and imei.
+     *
+     * <p><b>Scenario:</b> All MDM values are set, then null restrictions are received.
+     *
+     * <p><b>Expected Outcome:</b> No values are modified in PreyConfig.
+     */
+    @Test
+    public void givenNullRestrictions_whenHandled_thenAllValuesPreserved() {
+        // Arrange
+        preyConfig.setSerialNumber("EXISTING-SN");
+        preyConfig.setOrganizationId("existing-org");
+        preyConfig.setMdmDeviceName("Existing Device");
+        preyConfig.setImei("111222333444555");
+
+        // Act
+        RestrictionsReceiver.handleApplicationRestrictions(context, null);
+
+        // Assert
+        assertEquals("Serial number should remain unchanged",
+                "EXISTING-SN", preyConfig.getSerialNumber());
+        assertEquals("Organization ID should remain unchanged",
+                "existing-org", preyConfig.getOrganizationId());
+        assertEquals("Device name should remain unchanged",
+                "Existing Device", preyConfig.getMdmDeviceName());
+        assertEquals("IMEI should remain unchanged",
+                "111222333444555", preyConfig.getImei());
     }
 
 }
