@@ -31,7 +31,7 @@ class ReportTest {
         val options = JSONObject().apply {
             put("interval", 20)
         }
-        Report().get(context, options)
+        Report.get(context, options)
         Thread.sleep(1000)
         Assert.assertTrue(config.isMissing)
         Assert.assertEquals(config.intervalReport, "20")
@@ -40,7 +40,7 @@ class ReportTest {
     @Test
     fun test_report_stop() {
         val options = JSONObject()
-        Report().stop(context, options)
+        Report.stop(context, options)
         Assert.assertFalse(config.isMissing)
         Assert.assertEquals(config.intervalReport, "")
     }
