@@ -25,7 +25,6 @@ import androidx.core.app.ActivityCompat;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
-import com.prey.actions.camera.CameraAction;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.SimpleCameraActivity;
 import com.prey.exceptions.PreyFirebaseCrashlytics;
@@ -35,6 +34,7 @@ public class PictureUtil {
 
     public static String FRONT = "front";
     public static String BACK = "back";
+    public static final String DATA_ID = "webcam";
 
     /**
      * Method obtains the images of the cameras with retry of 4 times per camera
@@ -56,7 +56,7 @@ public class PictureUtil {
                 //get current volume
                 currentVolume = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
                 PreyConfig.getPreyConfig(ctx).setVolume(currentVolume);
-                data = new HttpDataService(CameraAction.DATA_ID);
+                data = new HttpDataService(DATA_ID);
                 data.setList(true);
                 do {
                     try {

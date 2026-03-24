@@ -26,7 +26,7 @@ import com.prey.PreyStatus;
 import com.prey.R;
 import com.prey.activities.PreyConfigurationActivity;
 import com.prey.events.Event;
-import com.prey.events.manager.EventManagerRunner;
+import com.prey.events.manager.EventManager;
 
 import org.json.JSONObject;
 
@@ -94,7 +94,7 @@ public class ChangePinPreferences extends DialogPreference {
                         JSONObject info = new JSONObject();
                         info.put("pin", pin);
                         Event event = new Event(Event.PIN_CHANGED, info.toString());
-                        new EventManagerRunner(getContext(), event).run();
+                        EventManager.INSTANCE.processCoroutine(getContext(),event);
                     }
                 } catch (Exception e) {
                     PreyLogger.e("Error:"+e.getMessage(),e);

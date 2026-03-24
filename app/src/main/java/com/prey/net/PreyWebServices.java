@@ -40,7 +40,6 @@ import com.prey.PreyVerify;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.fileretrieval.FileretrievalDto;
 import com.prey.actions.location.PreyLocation;
-import com.prey.actions.observer.ActionsController;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 import com.prey.events.Event;
 import com.prey.exceptions.PreyException;
@@ -513,7 +512,7 @@ public class PreyWebServices implements WebServices {
     }
 
     public String getEventsUrlJson(Context ctx) throws PreyException {
-        return getDeviceUrlApiv2(ctx).concat("/events");
+        return getDeviceUrlApiv2(ctx).concat("/events.json");
     }
 
     public String getResponseUrlJson(Context ctx) throws PreyException {

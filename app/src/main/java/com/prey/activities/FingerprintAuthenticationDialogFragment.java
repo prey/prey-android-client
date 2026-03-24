@@ -30,7 +30,7 @@ import com.prey.PreyPermission;
 import com.prey.PreyStatus;
 import com.prey.R;
 import com.prey.events.Event;
-import com.prey.events.manager.EventManagerRunner;
+import com.prey.events.manager.EventManager;
 import com.prey.net.PreyWebServices;
 
 public class FingerprintAuthenticationDialogFragment  extends DialogFragment   implements FingerprintHelper.FingerprintHelperListener{
@@ -278,7 +278,7 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
                     PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     mCtx.startActivity(intent);
-                    new Thread(new EventManagerRunner(mCtx, new Event(Event.APPLICATION_OPENED))).start();
+                    EventManager.INSTANCE.processCoroutine(mCtx, new Event(Event.APPLICATION_OPENED));
                     dismiss();
                 }else {
                     Intent intent = new Intent(mCtx, PanelWebActivity.class);

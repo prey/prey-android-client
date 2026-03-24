@@ -103,10 +103,6 @@ public class PreyApp extends Application {
                             PreyConfig.getPreyConfig(ctx).setDeviceName(initName);
                         }
                         PreyStatus.getInstance().initConfig(ctx);
-                        boolean verifyNotification = EventFactory.verifyNotification(ctx);
-                        if (!verifyNotification) {
-                            EventFactory.notification(ctx);
-                        }
                         if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                             new AwareInitialLocationProvider(ctx).init();
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -23,7 +23,7 @@ import com.prey.activities.PasswordHtmlActivity
 import com.prey.activities.PasswordNativeActivity
 import com.prey.backwardcompatibility.FroyoSupport
 import com.prey.events.Event
-import com.prey.events.manager.EventManagerRunner
+import com.prey.events.manager.EventManager
 import com.prey.exceptions.PreyException
 import com.prey.json.CommandTarget
 import com.prey.net.PreyWebServicesKt
@@ -259,14 +259,14 @@ object Lock : CommandTarget, BaseAction() {
                 PreyLogger.d("lockWhenYouNocantDrawOverlays isPassOrPinSet:${isPassOrPinSet}")
                 if (isPatternSet || isPassOrPinSet) {
                     FroyoSupport.getInstance(context).lockNow()
-                    Thread(EventManagerRunner(context, Event(Event.NATIVE_LOCK))).start()
+                    EventManager.processCoroutine(context, Event(Event.NATIVE_LOCK))
                 } else {
                     try {
                         FroyoSupport.getInstance(context).changePasswordAndLock(
                             unlockPass,
                             true
                         )
-                        Thread(EventManagerRunner(context, Event(Event.NATIVE_LOCK))).start()
+                        EventManager.processCoroutine(context, Event(Event.NATIVE_LOCK))
                     } catch (e: java.lang.Exception) {
                         PreyLogger.e("Error lockWhenYouNocantDrawOverlays:${e.message}", e)
                     }

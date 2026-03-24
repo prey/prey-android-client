@@ -12,7 +12,9 @@ import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.actions.aware.AwareStore
 import com.prey.actions.location.LocationUtil
+import com.prey.events.Event
 import com.prey.json.UtilJson
+import com.prey.net.PreyWebServicesKt.sendNotifyActions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
@@ -185,16 +187,16 @@ object PreyWebServicesKt {
     suspend fun doSendLocation(
         context: Context, location: Location, isAware: Boolean
     ): Boolean = withContext(Dispatchers.IO) {
-        PreyLogger.i("doSendLocation:")
+        PreyLogger.d("doSendLocation:")
         if (isAware) {
             val previous = AwareStore.load(context)
             var distanceInMeters = -1f
             if (previous != null) {
                 distanceInMeters = location.distanceTo(previous.location)
             }
-            PreyLogger.i("distanceInMeters:${distanceInMeters}")
+            PreyLogger.d("distanceInMeters:${distanceInMeters}")
             if (distanceInMeters in 0.0..250.0) {
-                PreyLogger.i("distanceInMeters return")
+                PreyLogger.d("distanceInMeters return")
                 return@withContext false
             }
         }
@@ -236,6 +238,66 @@ object PreyWebServicesKt {
         } catch (e: IOException) {
             PreyLogger.e("doSendLocation error:${e.message}", e)
             return@withContext false
+        }
+    }
+
+    /**
+     * Reports a specific device event to the Prey server via an HTTP POST request.
+     *
+     * This function constructs a JSON payload containing the event's name, information, and
+     * additional metadata. It also includes the metadata in the `X-Prey-Status` header.
+     * The request is authenticated using the device's credentials and user agent.
+     *
+     * This is a suspending function that executes the network call on the [Dispatchers.IO]
+     * coroutine dispatcher to ensure the calling thread is not blocked.
+     *
+     * @param context The application context, used to retrieve server URLs and device configuration.
+     * @param event An [Event] object containing the name and basic information of the event.
+     * @param extraData A [JSONObject] containing supplementary data or status information to be sent.
+     * @return The response body as a [String] if the request was successful; `null` if the
+     *         server returned an error or if an exception occurred during the process.
+     */
+    suspend fun sendPreyHttpEvent(
+        context: Context,
+        event: Event,
+        extraData: JSONObject
+    ): String? = withContext(Dispatchers.IO) {
+        //JSON Payload Construction
+        val rootJson = JSONObject().apply {
+            put("name", event.name)
+            put("info", event.info)
+            put("status", extraData)
+        }
+        val jsonString = rootJson.toString()
+        PreyLogger.d("sendPreyHttpEvent jsonString: $jsonString")
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val body = jsonString.toRequestBody(mediaType)
+        //Request configuration
+        val preyConfig = PreyConfig.getPreyConfig(context)
+        val url = PreyWebServices.getInstance().getEventsUrlJson(context)
+        PreyLogger.d("sendPreyHttpEvent url:${url}")
+        val request = Request.Builder()
+            .url(url)
+            .addHeader("Authorization", UtilConnection.getAuthorization(preyConfig))
+            .addHeader("X-Prey-Status", extraData.toString())
+            .addHeader("User-Agent", UtilConnection.getUserAgent(preyConfig))
+            .post(body)
+            .build()
+        //Execution and response management
+        try {
+            client.newCall(request).execute().use { response ->
+                val responseBody = response.body?.string()
+                if (response.isSuccessful) {
+                    PreyLogger.d("sendPreyHttpEvent successful Code:${response.code} responseBody:${responseBody}")
+                    responseBody
+                } else {
+                    PreyLogger.d("sendPreyHttpEvent error Code:${response.code}")
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            PreyLogger.e("Unexpected error in sendPreyHttpEvent", e)
+            null
         }
     }
 
@@ -286,6 +348,30 @@ object PreyWebServicesKt {
         } catch (e: IOException) {
             PreyLogger.e("doSendLocation send error:${e.message}", e)
             return false
+        }
+    }
+
+    /**
+     * Retrieves the device's current public IP address.
+     *
+     * This function performs a synchronous GET request to an external service (ifconfig.me)
+     * to determine the external-facing IP address of the network the device is connected to.
+     *
+     * @return The public IP address as a trimmed [String] if successful; `null` if the
+     *         request fails, returns a non-success status code, or an exception occurs.
+     */
+    fun getIPAddress(): String? {
+        val request = Request.Builder()
+            .url("https://ifconfig.me/ip")
+            .build()
+        return try {
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) return null
+                response.body?.string()?.trim()
+            }
+        } catch (e: Exception) {
+            PreyLogger.e("Connection error:${e.message}",e)
+            null
         }
     }
 

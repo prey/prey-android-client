@@ -31,8 +31,6 @@ public class PreyCloseNotificationService extends Service {
      */
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
-        NotificationManager manager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
-        manager.cancel(EventFactory.NOTIFICATION_ID);
     }
 
 }

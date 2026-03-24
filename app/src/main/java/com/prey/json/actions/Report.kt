@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Created by Orlando Aliaga
+ * Copyright 2026 Prey Inc. All rights reserved.
+ * License: GPLv3
+ * Full license at "/LICENSE"
+ ******************************************************************************/
 package com.prey.json.actions
 
 import android.Manifest
@@ -19,6 +25,7 @@ import com.google.android.gms.location.Priority
 import com.prey.PreyConfig
 import com.prey.PreyLogger
 import com.prey.PreyPhone
+import com.prey.PreyPhoneKt
 import com.prey.actions.picture.PictureUtil
 import com.prey.actions.report.ReportScheduled
 import com.prey.json.CommandTarget
@@ -184,11 +191,11 @@ object Report : CommandTarget, BaseAction() {
                     multipart.addFormDataPart("location[accuracy]", accuracy.toString())
                 }
             }
-            val listWifi = listWifi(context)
+            val listWifi = PreyPhoneKt.getListWifi(context)
             //Active access point
             if (!exclude.contains("active_access_point")) {
                 PreyLogger.d("startReport active_access_point")
-                getWifi(context)?.let { wifiInfo ->
+                PreyPhoneKt.getWifi(context)?.let { wifiInfo ->
                     multipart.addFormDataPart("active_access_point[ssid]", "{${wifiInfo.ssid}}")
                     listWifi.find { it.SSID == wifiInfo.ssid }?.let { scan ->
                         addWifiToMultipart(multipart, "active_access_point", scan)
@@ -289,68 +296,5 @@ object Report : CommandTarget, BaseAction() {
                 )
             }
         }
-
-    /**
-     * Scans and retrieves a list of nearby Wi-Fi access points.
-     *
-     * This function checks for the necessary location permissions required to perform a
-     * Wi-Fi scan on Android. If permissions are granted, it attempts to retrieve the
-     * latest scan results from the [WifiManager].
-     *
-     * @param context The application context used to check permissions and access system services.
-     * @return A list of [ScanResult] containing information about nearby access points.
-     *         Returns an empty list if permissions are missing or the Wi-Fi service is unavailable.
-     */
-    private fun listWifi(context: Context): List<ScanResult> {
-        //Cleaner permit verification
-        val hasLocationPermission = ActivityCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-        if (!hasLocationPermission) {
-            PreyLogger.d("Location permission not granted to scan WiFi")
-            return emptyList()
-        }
-        //Secure service acquisition
-        val wifiMgr = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
-        //Handling nulls and defensive return
-        return wifiMgr?.scanResults ?: emptyList()
-    }
-
-    /**
-     * Retrieves information about the currently connected Wi-Fi network.
-     *
-     * This function performs a permission check for `ACCESS_FINE_LOCATION`, which is required
-     * on modern Android versions to access Wi-Fi metadata like the SSID. It uses the
-     * `WifiManager.connectionInfo` API to maintain backward compatibility for retrieving
-     * active connection details.
-     *
-     * @param context The application context used to check permissions and access system services.
-     * @return A [WifiInfo] object containing details of the current connection if the device
-     *         is associated with an access point; `null` if permissions are missing, an error
-     *         occurs, or the device is not connected to Wi-Fi.
-     */
-    private fun getWifi(context: Context): WifiInfo? {
-        //Centralized permission verification
-        val hasLocation = ActivityCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-        if (!hasLocation) {
-            PreyLogger.d("Location permission denied for getWifi")
-            return null
-        }
-        //Using applicationContext to avoid memory leaks
-        val wifiMgr = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
-        //Information gathering (Depreciation management)
-        return try {
-            //Although connectionInfo is deprecated, it remains the most direct way
-            //to obtain the WifiInfo object for backward compatibility.
-            wifiMgr?.connectionInfo?.takeIf { it.networkId != -1 }
-        } catch (e: Exception) {
-            PreyLogger.e("Error obtaining WifiInfo: ${e.message}", e)
-            null
-        }
-    }
 
 }

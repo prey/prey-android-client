@@ -14,7 +14,7 @@ import com.prey.PreyLogger;
 import com.prey.actions.observer.ActionResult;
 import com.prey.backwardcompatibility.AboveCupcakeSupport;
 import com.prey.events.Event;
-import com.prey.events.manager.EventManagerRunner;
+import com.prey.events.manager.EventManager;
 
 import org.json.JSONObject;
 
@@ -48,7 +48,7 @@ public class SyncName {
                     JSONObject info = new JSONObject();
                     info.put("new_name", newName);
                     Event event = new Event(Event.DEVICE_RENAMED, info.toString());
-                    new EventManagerRunner(ctx, event).run();
+                    EventManager.INSTANCE.processCoroutine(ctx,event);
                 } catch (Exception e) {
                     PreyLogger.e("Error:"+e.getMessage(),e);
                 }

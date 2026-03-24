@@ -9,6 +9,8 @@ package com.prey.actions.location;
 import android.location.Location;
 import android.location.LocationManager;
 
+import androidx.annotation.NonNull;
+
 public class PreyLocation {
 
     private double lat;
@@ -84,6 +86,7 @@ public class PreyLocation {
         return this.timestamp;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return String.format("lat:%s - lng:%s - acc:%s - method:%s",lat,lng,accuracy,method);
@@ -99,14 +102,6 @@ public class PreyLocation {
 
     public void setAccuracy(float accuracy) {
         this.accuracy = accuracy;
-    }
-
-    public double getAltitude() {
-        return altitude;
-    }
-
-    public void setAltitude(double altitude) {
-        this.altitude = altitude;
     }
 
     public long getTimestamp() { return timestamp; }

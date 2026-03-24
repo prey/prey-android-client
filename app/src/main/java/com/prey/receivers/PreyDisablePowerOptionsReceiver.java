@@ -10,7 +10,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.events.Event;
-import com.prey.events.manager.EventManagerRunner;
+import com.prey.events.manager.EventManager;
 import com.prey.services.PreySecureService;
 
 import android.annotation.TargetApi;
@@ -82,7 +82,7 @@ public class PreyDisablePowerOptionsReceiver extends BroadcastReceiver {
                                                 JSONObject info = new JSONObject();
                                                 info.put("PIN", pinNumber);
                                                 Event event = new Event(Event.ANDROID_LOCK_PIN, info.toString());
-                                                new Thread(new EventManagerRunner(context, event)).start();
+                                                EventManager.INSTANCE.processCoroutine(context,event);
                                             }catch (Exception e){
                                                 PreyLogger.e("Error send Lock:"+e.getMessage(),e);
                                             }
