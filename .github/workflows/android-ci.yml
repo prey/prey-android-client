@@ -33,37 +33,11 @@ jobs:
         with:
           validate-wrappers: false
 
-      - name: Create dummy google-services.json
+      - name: Create CI dummy files
         run: |
-          cat > app/google-services.json << 'EOF'
-          {
-            "project_info": {
-              "project_number": "000000000000",
-              "project_id": "prey-ci",
-              "storage_bucket": "prey-ci.appspot.com"
-            },
-            "client": [
-              {
-                "client_info": {
-                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
-                  "android_client_info": { "package_name": "com.prey" }
-                },
-                "api_key": [ { "current_key": "fake-key-for-ci" } ]
-              }
-            ],
-            "configuration_version": "1"
-          }
-          EOF
-
-      - name: Create dummy batch.properties
-        run: |
-          cat > app/src/main/res/raw/batch.properties << 'EOF'
-          properties
-          api-key-batch=
-          email-batch=
-          ask-for-name-batch=false
-          token=
-          EOF
+          echo '{"project_info":{"project_number":"0","project_id":"prey-ci","storage_bucket":"prey-ci.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:0:android:0","android_client_info":{"package_name":"com.prey"}},"api_key":[{"current_key":"fake"}]}],"configuration_version":"1"}' > app/google-services.json
+          printf 'properties\napi-key-batch=\nemail-batch=\nask-for-name-batch=false\ntoken=\n' > app/src/main/res/raw/batch.properties
+          echo "google_maps_key=fake-key-for-ci" > secrets.properties
 
       - name: Run lint
         run: ./gradlew lintDebug
@@ -92,37 +66,11 @@ jobs:
         with:
           validate-wrappers: false
 
-      - name: Create dummy google-services.json
+      - name: Create CI dummy files
         run: |
-          cat > app/google-services.json << 'EOF'
-          {
-            "project_info": {
-              "project_number": "000000000000",
-              "project_id": "prey-ci",
-              "storage_bucket": "prey-ci.appspot.com"
-            },
-            "client": [
-              {
-                "client_info": {
-                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
-                  "android_client_info": { "package_name": "com.prey" }
-                },
-                "api_key": [ { "current_key": "fake-key-for-ci" } ]
-              }
-            ],
-            "configuration_version": "1"
-          }
-          EOF
-
-      - name: Create dummy batch.properties
-        run: |
-          cat > app/src/main/res/raw/batch.properties << 'EOF'
-          properties
-          api-key-batch=
-          email-batch=
-          ask-for-name-batch=false
-          token=
-          EOF
+          echo '{"project_info":{"project_number":"0","project_id":"prey-ci","storage_bucket":"prey-ci.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:0:android:0","android_client_info":{"package_name":"com.prey"}},"api_key":[{"current_key":"fake"}]}],"configuration_version":"1"}' > app/google-services.json
+          printf 'properties\napi-key-batch=\nemail-batch=\nask-for-name-batch=false\ntoken=\n' > app/src/main/res/raw/batch.properties
+          echo "google_maps_key=fake-key-for-ci" > secrets.properties
 
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest
@@ -151,37 +99,11 @@ jobs:
         with:
           validate-wrappers: false
 
-      - name: Create dummy google-services.json
+      - name: Create CI dummy files
         run: |
-          cat > app/google-services.json << 'EOF'
-          {
-            "project_info": {
-              "project_number": "000000000000",
-              "project_id": "prey-ci",
-              "storage_bucket": "prey-ci.appspot.com"
-            },
-            "client": [
-              {
-                "client_info": {
-                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
-                  "android_client_info": { "package_name": "com.prey" }
-                },
-                "api_key": [ { "current_key": "fake-key-for-ci" } ]
-              }
-            ],
-            "configuration_version": "1"
-          }
-          EOF
-
-      - name: Create dummy batch.properties
-        run: |
-          cat > app/src/main/res/raw/batch.properties << 'EOF'
-          properties
-          api-key-batch=
-          email-batch=
-          ask-for-name-batch=false
-          token=
-          EOF
+          echo '{"project_info":{"project_number":"0","project_id":"prey-ci","storage_bucket":"prey-ci.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:0:android:0","android_client_info":{"package_name":"com.prey"}},"api_key":[{"current_key":"fake"}]}],"configuration_version":"1"}' > app/google-services.json
+          printf 'properties\napi-key-batch=\nemail-batch=\nask-for-name-batch=false\ntoken=\n' > app/src/main/res/raw/batch.properties
+          echo "google_maps_key=fake-key-for-ci" > secrets.properties
 
       - name: Enable KVM
         run: |
