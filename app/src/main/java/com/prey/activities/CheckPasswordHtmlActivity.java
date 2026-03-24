@@ -145,6 +145,16 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
                 PreyConfig.getPreyConfig(context).setSerialNumber(serialNumber);
             }
         }
+        // Check if the restrictions bundle contains the "device_name" from MDM
+        if (restrictions != null && restrictions.containsKey("device_name")) {
+            // Retrieve the device name provided by MDM
+            String deviceName = restrictions.getString("device_name");
+            PreyLogger.i(String.format("resolveRestrictions device_name: %s", deviceName));
+            if (deviceName != null && !"".equals(deviceName)) {
+                // Store the MDM device name in the configuration
+                PreyConfig.getPreyConfig(context).setMdmDeviceName(deviceName);
+            }
+        }
         // Check if the device is already registered with Prey
         boolean registered = PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey();
         PreyLogger.i(String.format("resolveRestrictions registered: %s", registered));

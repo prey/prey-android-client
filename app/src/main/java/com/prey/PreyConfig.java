@@ -1738,10 +1738,17 @@ public class PreyConfig {
         if (!isThisDeviceAlreadyRegisteredWithPrey()) {
             // Get the device type and name
             String deviceType = PreyUtils.getDeviceType(ctx);
-            String nameDevice = PreyUtils.getNameDevice(ctx);
-            String serialNumber = getSerialNumber();
-            if (serialNumber != null && !"".equals(serialNumber)) {
-                nameDevice = nameDevice + " - SN " + serialNumber;
+            // Use MDM device name if provided, otherwise build name from device info + serial number
+            String mdmDeviceName = getMdmDeviceName();
+            String nameDevice;
+            if (mdmDeviceName != null && !"".equals(mdmDeviceName)) {
+                nameDevice = mdmDeviceName;
+            } else {
+                nameDevice = PreyUtils.getNameDevice(ctx);
+                String serialNumber = getSerialNumber();
+                if (serialNumber != null && !"".equals(serialNumber)) {
+                    nameDevice = nameDevice + " - SN " + serialNumber;
+                }
             }
             PreyLogger.d(String.format("apikey:%s type:%s nameDevice:%s", apiKey, deviceType, nameDevice));
             // Register the device with the API key, device type, and name
@@ -1821,6 +1828,29 @@ public class PreyConfig {
      */
     public void setSerialNumber(String serialNumber) {
         saveString(SERIAL_NUMBER, serialNumber);
+    }
+
+    /**
+     * Key for storing the device name received from MDM restrictions in the configuration.
+     */
+    public static final String MDM_DEVICE_NAME = "MDM_DEVICE_NAME";
+
+    /**
+     * Retrieves the device name received from MDM restrictions.
+     *
+     * @return The device name, or an empty string if not set.
+     */
+    public String getMdmDeviceName() {
+        return getString(MDM_DEVICE_NAME, "");
+    }
+
+    /**
+     * Sets the device name received from MDM restrictions.
+     *
+     * @param deviceName The device name to set.
+     */
+    public void setMdmDeviceName(String deviceName) {
+        saveString(MDM_DEVICE_NAME, deviceName);
     }
 
     /**
