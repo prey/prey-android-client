@@ -59,8 +59,8 @@ public class RestrictionsReceiver extends BroadcastReceiver {
             return;
         }
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
-        // TODO: Remove debug logs after testing MDM restrictions
-        PreyLogger.i(String.format("saveRestrictionValues restrictions: %s", restrictions.toString()));
+
+        PreyLogger.d(String.format("saveRestrictionValues restrictions: %s", restrictions.toString()));
         saveStringRestriction(restrictions, "enterprise_name", value -> preyConfig.setOrganizationId(value));
         saveStringRestriction(restrictions, "serial_number", value -> preyConfig.setSerialNumber(value));
         saveStringRestriction(restrictions, "device_name", value -> preyConfig.setMdmDeviceName(value));
@@ -77,8 +77,8 @@ public class RestrictionsReceiver extends BroadcastReceiver {
     private static void saveStringRestriction(Bundle restrictions, String key, java.util.function.Consumer<String> setter) {
         if (restrictions.containsKey(key)) {
             String value = restrictions.getString(key);
-            // TODO: Remove debug logs after testing MDM restrictions
-            PreyLogger.i(String.format("saveStringRestriction %s: %s", key, value));
+    
+            PreyLogger.d(String.format("saveStringRestriction %s: %s", key, value));
             if (value != null && !"".equals(value)) {
                 setter.accept(value);
             }
@@ -97,11 +97,11 @@ public class RestrictionsReceiver extends BroadcastReceiver {
             return null;
         }
         boolean registered = PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey();
-        // TODO: Remove debug logs after testing MDM restrictions
-        PreyLogger.i(String.format("getSetupKey registered: %s", registered));
+
+        PreyLogger.d(String.format("getSetupKey registered: %s", registered));
         if (!registered && restrictions.containsKey("setup_key")) {
             String setupKey = restrictions.getString("setup_key");
-            PreyLogger.i(String.format("getSetupKey setup_key: %s", setupKey));
+            PreyLogger.d(String.format("getSetupKey setup_key: %s", setupKey));
             if (setupKey != null && !"".equals(setupKey)) {
                 return setupKey;
             }
