@@ -15,6 +15,7 @@ import com.prey.json.actions.Detach
 import com.prey.json.actions.Fileretrieval
 import com.prey.json.actions.Location
 import com.prey.json.actions.Lock
+import com.prey.json.actions.Ping
 import com.prey.json.actions.Report
 import com.prey.json.actions.Tree
 import com.prey.json.actions.Triggers
@@ -67,16 +68,35 @@ object JsonCommandDispatcher {
         "Wipe" to Wipe::class,
         "Tree" to Tree::class,
         "Report" to Report::class,
-        "Triggers" to Triggers::class
+        "Triggers" to Triggers::class,
+        "Ping" to Ping::class
     )
 
+    /**
+     * Parses a JSON command string and dispatches it for execution.
+     *
+     * This function processes the provided [jsonString] asynchronously on the [Dispatchers.IO] thread.
+     */
     fun getActionsJson(context: Context, jsonString: String) {
         CoroutineScope(Dispatchers.IO).launch {
+            if (jsonString == "" || jsonString == "OK") return@launch
             val json = JSONObject(jsonString)
             dispatchJson(context, json)
         }
     }
 
+    /**
+     * Fetches a JSON array of pending actions from the Prey web service and dispatches them.
+     *
+     * This function initiates a network request via [PreyWebServicesKt.getActionsJson] to retrieve
+     * commands assigned to the device. If the response is not empty, it parses the resulting
+     * string into a [JSONArray] and passes it to [dispatchArray] for individual processing.
+     *
+     * The operation is performed asynchronously within a coroutine scoped to [Dispatchers.IO]
+     * to prevent blocking the calling thread during network I/O or JSON parsing.
+     *
+     * @param context The application context used for web service communication and action execution.
+     */
     fun getActionsJsonArray(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             val actions = PreyWebServicesKt.getActionsJson(context)
@@ -87,6 +107,15 @@ object JsonCommandDispatcher {
         }
     }
 
+    /**
+     * Iterates through a [JSONArray] of command objects and dispatches each one.
+     *
+     * This function processes multiple commands in sequence by extracting each [JSONObject]
+     * from the array and passing it to [dispatchJson].
+     *
+     * @param context The application context.
+     * @param jsonArray A [JSONArray] containing one or more command objects to be executed.
+     */
     fun dispatchArray(context: Context, jsonArray: JSONArray) {
         PreyLogger.d("JsonCommandDispatcher jsonArray:${jsonArray}")
         for (i in 0 until jsonArray.length()) {
