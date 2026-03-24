@@ -392,4 +392,6 @@
     <string name="restriction_title_imei">IMEI</string>
     <string name="restriction_description_imei">Device IMEI</string>
     <string name="administrator_disabled">The given administrator component is not currently active disabled in the system.</string>
+    <!-- Override this value in secrets.properties or local builds. Do not commit real API keys. -->
+    <string name="google_maps_key"></string>
 </resources>
