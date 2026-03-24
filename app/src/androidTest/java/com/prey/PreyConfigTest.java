@@ -353,7 +353,7 @@ public class PreyConfigTest {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
         preyConfig.setMdmDeviceName("Office Phone 001");
-        preyConfig.setMdmSerialNumber("R8YX100J1WN");
+        preyConfig.setMdmSerialNumber("R1YX100J1ON");
 
         // Act
         String result = preyConfig.buildDeviceName("samsung SM-A145R");
@@ -365,7 +365,7 @@ public class PreyConfigTest {
 
     /**
      * Verifies that when no MDM device name is set but a serial number is available,
-     * the device name is built as "defaultName - SN serialNumber".
+     * the device name is built as "defaultName - serialNumber".
      *
      * <p><b>Scenario:</b> MDM provides a serial number but no custom device name.
      *
@@ -376,14 +376,14 @@ public class PreyConfigTest {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
         preyConfig.setMdmDeviceName("");
-        preyConfig.setMdmSerialNumber("R8YX100J1WN");
+        preyConfig.setMdmSerialNumber("R1YX100J1ON");
 
         // Act
         String result = preyConfig.buildDeviceName("samsung SM-A145R");
 
         // Assert
         assertEquals("Device name should include serial number suffix",
-                "samsung SM-A145R - SN R8YX100J1WN", result);
+                "samsung SM-A145R - R1YX100J1ON", result);
     }
 
     /**
