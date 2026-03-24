@@ -1289,7 +1289,7 @@ public class PreyConfig {
      *
      * @return The IMEI, or an empty string if not set.
      */
-    public String getImei() {
+    public String getMdmImei() {
         return getString(MDM_IMEI, "");
     }
 
@@ -1298,7 +1298,7 @@ public class PreyConfig {
      *
      * @param imei The IMEI to set.
      */
-    public void setImei(String imei) {
+    public void setMdmImei(String imei) {
         saveString(MDM_IMEI, imei);
     }
 
@@ -1757,7 +1757,7 @@ public class PreyConfig {
         if (mdmDeviceName != null && !"".equals(mdmDeviceName)) {
             return mdmDeviceName;
         }
-        String serialNumber = getSerialNumber();
+        String serialNumber = getMdmSerialNumber();
         if (serialNumber != null && !"".equals(serialNumber)) {
             return defaultName + " - SN " + serialNumber;
         }
@@ -1771,7 +1771,7 @@ public class PreyConfig {
      * @return The resolved IMEI or Android device ID.
      */
     public String resolveImei() {
-        String mdmImei = getImei();
+        String mdmImei = getMdmImei();
         if (mdmImei != null && !"".equals(mdmImei)) {
             return mdmImei;
         }
@@ -1826,7 +1826,7 @@ public class PreyConfig {
      *
      * @return The organization ID, or an empty string if not set.
      */
-    public String getOrganizationId() {
+    public String getMdmOrganizationId() {
         // Retrieve the organization ID from the configuration, defaulting to an empty string if not set
         return getString(ORGANIZATION_ID, "");
     }
@@ -1836,7 +1836,7 @@ public class PreyConfig {
      *
      * @param organizationId The organization ID to set.
      */
-    public void setOrganizationId(String organizationId) {
+    public void setMdmOrganizationId(String organizationId) {
         // Save the organization ID to the configuration
         saveString(ORGANIZATION_ID, organizationId);
     }
@@ -1851,7 +1851,7 @@ public class PreyConfig {
      *
      * @return The serial number, or an empty string if not set.
      */
-    public String getSerialNumber() {
+    public String getMdmSerialNumber() {
         return getString(SERIAL_NUMBER, "");
     }
 
@@ -1860,7 +1860,7 @@ public class PreyConfig {
      *
      * @param serialNumber The serial number to set.
      */
-    public void setSerialNumber(String serialNumber) {
+    public void setMdmSerialNumber(String serialNumber) {
         saveString(SERIAL_NUMBER, serialNumber);
     }
 

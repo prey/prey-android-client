@@ -151,11 +151,11 @@ public class FroyoSupport {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             try {
                 // Retrieve the organization ID from the PreyConfig
-                String organizationId = PreyConfig.getPreyConfig(ctx).getOrganizationId();
+                String organizationId = PreyConfig.getPreyConfig(ctx).getMdmOrganizationId();
                 // Check if the organization ID is not null and not empty
                 if (organizationId != null && !"".equals(organizationId)) {
                     // Set the organization ID before attempting to retrieve the enrollment-specific ID
-                    policyManager.setOrganizationId(PreyConfig.getPreyConfig(ctx).getOrganizationId());
+                    policyManager.setOrganizationId(PreyConfig.getPreyConfig(ctx).getMdmOrganizationId());
                     // Attempt to retrieve the enrollment-specific ID using the DevicePolicyManager
                     id = policyManager.getEnrollmentSpecificId();
                 }
