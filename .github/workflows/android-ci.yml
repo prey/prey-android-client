@@ -1,3 +1,12 @@
+# Android CI Pipeline
+# Runs 3 jobs in parallel:
+#   - Lint: static analysis (~2 min)
+#   - Unit Tests: Robolectric tests on JVM, no emulator needed (~1 min)
+#   - Instrumented Tests: runs on Android emulator (~8-10 min)
+# Total time is the slowest job (~10 min).
+# If the emulator job is unstable in CI, you can safely disable it
+# and rely on Robolectric tests only.
+
 name: Android CI
 
 on:
@@ -56,6 +65,9 @@ jobs:
           token=
           EOF
 
+      - name: Create dummy secrets.properties
+        run: echo "google_maps_key=fake-key-for-ci" > secrets.properties
+
       - name: Run lint
         run: ./gradlew lintDebug
 
@@ -66,8 +78,8 @@ jobs:
           name: lint-results
           path: app/build/reports/lint-results-debug.html
 
-  test:
-    name: Instrumented Tests
+  unit-test:
+    name: Unit Tests (Robolectric)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -115,6 +127,71 @@ jobs:
           token=
           EOF
 
+      - name: Create dummy secrets.properties
+        run: echo "google_maps_key=fake-key-for-ci" > secrets.properties
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest
+
+      - name: Upload unit test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: app/build/reports/tests/testDebugUnitTest/
+
+  instrumented-test:
+    name: Instrumented Tests (Emulator)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          validate-wrappers: false
+
+      - name: Create dummy google-services.json
+        run: |
+          cat > app/google-services.json << 'EOF'
+          {
+            "project_info": {
+              "project_number": "000000000000",
+              "project_id": "prey-ci",
+              "storage_bucket": "prey-ci.appspot.com"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
+                  "android_client_info": { "package_name": "com.prey" }
+                },
+                "api_key": [ { "current_key": "fake-key-for-ci" } ]
+              }
+            ],
+            "configuration_version": "1"
+          }
+          EOF
+
+      - name: Create dummy batch.properties
+        run: |
+          cat > app/src/main/res/raw/batch.properties << 'EOF'
+          properties
+          api-key-batch=
+          email-batch=
+          ask-for-name-batch=false
+          token=
+          EOF
+
+      - name: Create dummy secrets.properties
+        run: echo "google_maps_key=fake-key-for-ci" > secrets.properties
+
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -128,9 +205,9 @@ jobs:
           arch: x86_64
           script: ./gradlew connectedDebugAndroidTest
 
-      - name: Upload test results
+      - name: Upload instrumented test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: instrumented-test-results
           path: app/build/reports/androidTests/connected/
