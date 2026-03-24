@@ -1733,23 +1733,46 @@ public class PreyConfig {
      * @param apiKey The API key to register the device with.
      * @throws Exception If there is an error during the registration process.
      */
+    /**
+     * Builds the device name for registration.
+     * If an MDM device name is provided, it takes priority.
+     * Otherwise, builds the name from device info and appends serial number if available.
+     *
+     * @param defaultName The default device name (e.g., from bluetooth or vendor+model).
+     * @return The resolved device name.
+     */
+    public String buildDeviceName(String defaultName) {
+        String mdmDeviceName = getMdmDeviceName();
+        if (mdmDeviceName != null && !"".equals(mdmDeviceName)) {
+            return mdmDeviceName;
+        }
+        String serialNumber = getSerialNumber();
+        if (serialNumber != null && !"".equals(serialNumber)) {
+            return defaultName + " - SN " + serialNumber;
+        }
+        return defaultName;
+    }
+
+    /**
+     * Resolves the IMEI to use for device identification.
+     * Uses IMEI from MDM restrictions if available, otherwise falls back to Android device ID.
+     *
+     * @return The resolved IMEI or Android device ID.
+     */
+    public String resolveImei() {
+        String mdmImei = getImei();
+        if (mdmImei != null && !"".equals(mdmImei)) {
+            return mdmImei;
+        }
+        return new PreyPhone(ctx).getHardware().getAndroidDeviceId();
+    }
+
     public void registerNewDeviceWithApiKey(String apiKey) throws Exception {
         // Check if the device is already registered with Prey
         if (!isThisDeviceAlreadyRegisteredWithPrey()) {
             // Get the device type and name
             String deviceType = PreyUtils.getDeviceType(ctx);
-            // Use MDM device name if provided, otherwise build name from device info + serial number
-            String mdmDeviceName = getMdmDeviceName();
-            String nameDevice;
-            if (mdmDeviceName != null && !"".equals(mdmDeviceName)) {
-                nameDevice = mdmDeviceName;
-            } else {
-                nameDevice = PreyUtils.getNameDevice(ctx);
-                String serialNumber = getSerialNumber();
-                if (serialNumber != null && !"".equals(serialNumber)) {
-                    nameDevice = nameDevice + " - SN " + serialNumber;
-                }
-            }
+            String nameDevice = buildDeviceName(PreyUtils.getNameDevice(ctx));
             PreyLogger.d(String.format("apikey:%s type:%s nameDevice:%s", apiKey, deviceType, nameDevice));
             // Register the device with the API key, device type, and name
             PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, apiKey, deviceType, nameDevice);
@@ -1863,7 +1886,7 @@ public class PreyConfig {
      *
      * @return The IMEI, or an empty string if not set.
      */
-    public String getMdmImei() {
+    public String getImei() {
         return getString(MDM_IMEI, "");
     }
 
@@ -1872,7 +1895,7 @@ public class PreyConfig {
      *
      * @param imei The IMEI to set.
      */
-    public void setMdmImei(String imei) {
+    public void setImei(String imei) {
         saveString(MDM_IMEI, imei);
     }
 

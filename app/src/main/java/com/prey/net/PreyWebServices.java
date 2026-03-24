@@ -176,15 +176,7 @@ public class PreyWebServices implements WebServices {
 
         parameters = increaseData(ctx, parameters);
 
-        // Use IMEI from MDM if available, otherwise use Android device ID
-        String mdmImei = PreyConfig.getPreyConfig(ctx).getMdmImei();
-        String imei;
-        if (mdmImei != null && !"".equals(mdmImei)) {
-            imei = mdmImei;
-        } else {
-            imei = new PreyPhone(ctx).getHardware().getAndroidDeviceId();
-        }
-        parameters.put("physical_address", imei);
+        parameters.put("physical_address", PreyConfig.getPreyConfig(ctx).resolveImei());
         String lang=Locale.getDefault().getLanguage();
         parameters.put("lang",lang);
 
@@ -584,7 +576,6 @@ public class PreyWebServices implements WebServices {
         parameters.put(prefix + "[cpu_cores]", hardware.getCpuCores());
         parameters.put(prefix + "[ram_size]", "" + hardware.getTotalMemory());
         parameters.put(prefix + "[serial_number]", PreyConfig.getPreyConfig(ctx).getSerialNumber());
-        parameters.put(prefix + "[uuid]", hardware.getUuid());
         parameters.put(prefix + "[google_services]", String.valueOf(PreyUtils.isGooglePlayServicesAvailable(ctx)));
         //Compilation is added during creation
         parameters.put(prefix + "[android_compile_sdk]", String.valueOf(com.prey.BuildConfig.COMPILE_SDK_VERSION));
