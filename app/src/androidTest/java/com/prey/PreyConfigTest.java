@@ -133,9 +133,9 @@ public class PreyConfigTest {
      * Verifies that the serial number received from MDM restrictions can be stored and retrieved
      * correctly from PreyConfig.
      *
-     * <p><b>Scenario:</b> A serial number is set via {@code setSerialNumber()}.
+     * <p><b>Scenario:</b> A serial number is set via {@code setMdmSerialNumber()}.
      *
-     * <p><b>Expected Outcome:</b> The same value is returned by {@code getSerialNumber()}.
+     * <p><b>Expected Outcome:</b> The same value is returned by {@code getMdmSerialNumber()}.
      */
     @Test
     public void givenSerialNumber_whenSet_thenCanBeRetrieved() {
@@ -143,11 +143,11 @@ public class PreyConfigTest {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
 
         // Act
-        preyConfig.setSerialNumber("SN-TEST-1234");
+        preyConfig.setMdmSerialNumber("SN-TEST-1234");
 
         // Assert
         assertEquals("Serial number should be retrievable after being set",
-                "SN-TEST-1234", preyConfig.getSerialNumber());
+                "SN-TEST-1234", preyConfig.getMdmSerialNumber());
     }
 
     /**
@@ -155,16 +155,16 @@ public class PreyConfigTest {
      *
      * <p><b>Scenario:</b> The serial number is cleared by setting it to an empty string.
      *
-     * <p><b>Expected Outcome:</b> {@code getSerialNumber()} returns an empty string.
+     * <p><b>Expected Outcome:</b> {@code getMdmSerialNumber()} returns an empty string.
      */
     @Test
     public void givenNoSerialNumber_whenRetrieved_thenReturnsEmptyString() {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
-        preyConfig.setSerialNumber("");
+        preyConfig.setMdmSerialNumber("");
 
         // Act
-        String serialNumber = preyConfig.getSerialNumber();
+        String serialNumber = preyConfig.getMdmSerialNumber();
 
         // Assert
         assertEquals("Serial number should default to empty string",
@@ -176,28 +176,28 @@ public class PreyConfigTest {
      *
      * <p><b>Scenario:</b> A serial number is set, then updated with a new value.
      *
-     * <p><b>Expected Outcome:</b> The latest value is returned by {@code getSerialNumber()}.
+     * <p><b>Expected Outcome:</b> The latest value is returned by {@code getMdmSerialNumber()}.
      */
     @Test
     public void givenExistingSerialNumber_whenUpdated_thenNewValueIsReturned() {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
-        preyConfig.setSerialNumber("OLD-SN");
+        preyConfig.setMdmSerialNumber("OLD-SN");
 
         // Act
-        preyConfig.setSerialNumber("NEW-SN");
+        preyConfig.setMdmSerialNumber("NEW-SN");
 
         // Assert
         assertEquals("Serial number should reflect the latest value",
-                "NEW-SN", preyConfig.getSerialNumber());
+                "NEW-SN", preyConfig.getMdmSerialNumber());
     }
 
     /**
      * Verifies that the IMEI received from MDM can be stored and retrieved correctly.
      *
-     * <p><b>Scenario:</b> An IMEI is set via {@code setImei()}.
+     * <p><b>Scenario:</b> An IMEI is set via {@code setMdmImei()}.
      *
-     * <p><b>Expected Outcome:</b> The same value is returned by {@code getImei()}.
+     * <p><b>Expected Outcome:</b> The same value is returned by {@code getMdmImei()}.
      */
     @Test
     public void givenImei_whenSet_thenCanBeRetrieved() {
@@ -205,11 +205,11 @@ public class PreyConfigTest {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
 
         // Act
-        preyConfig.setImei("354123456789012");
+        preyConfig.setMdmImei("354123456789012");
 
         // Assert
         assertEquals("IMEI should be retrievable after being set",
-                "354123456789012", preyConfig.getImei());
+                "354123456789012", preyConfig.getMdmImei());
     }
 
     /**
@@ -217,16 +217,16 @@ public class PreyConfigTest {
      *
      * <p><b>Scenario:</b> The IMEI is cleared by setting it to an empty string.
      *
-     * <p><b>Expected Outcome:</b> {@code getImei()} returns an empty string.
+     * <p><b>Expected Outcome:</b> {@code getMdmImei()} returns an empty string.
      */
     @Test
     public void givenNoImei_whenRetrieved_thenReturnsEmptyString() {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
-        preyConfig.setImei("");
+        preyConfig.setMdmImei("");
 
         // Act
-        String imei = preyConfig.getImei();
+        String imei = preyConfig.getMdmImei();
 
         // Assert
         assertEquals("IMEI should default to empty string",
@@ -238,20 +238,20 @@ public class PreyConfigTest {
      *
      * <p><b>Scenario:</b> An IMEI is set, then updated with a new value.
      *
-     * <p><b>Expected Outcome:</b> The latest value is returned by {@code getImei()}.
+     * <p><b>Expected Outcome:</b> The latest value is returned by {@code getMdmImei()}.
      */
     @Test
     public void givenExistingImei_whenUpdated_thenNewValueIsReturned() {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
-        preyConfig.setImei("111111111111111");
+        preyConfig.setMdmImei("111111111111111");
 
         // Act
-        preyConfig.setImei("222222222222222");
+        preyConfig.setMdmImei("222222222222222");
 
         // Assert
         assertEquals("IMEI should reflect the latest value",
-                "222222222222222", preyConfig.getImei());
+                "222222222222222", preyConfig.getMdmImei());
     }
 
     /**
@@ -319,9 +319,9 @@ public class PreyConfigTest {
     /**
      * Verifies that the organization ID can be stored and retrieved correctly.
      *
-     * <p><b>Scenario:</b> An organization ID is set via {@code setOrganizationId()}.
+     * <p><b>Scenario:</b> An organization ID is set via {@code setMdmOrganizationId()}.
      *
-     * <p><b>Expected Outcome:</b> The same value is returned by {@code getOrganizationId()}.
+     * <p><b>Expected Outcome:</b> The same value is returned by {@code getMdmOrganizationId()}.
      */
     @Test
     public void givenOrganizationId_whenSet_thenCanBeRetrieved() {
@@ -329,11 +329,11 @@ public class PreyConfigTest {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
 
         // Act
-        preyConfig.setOrganizationId("prey-inc");
+        preyConfig.setMdmOrganizationId("prey-inc");
 
         // Assert
         assertEquals("Organization ID should be retrievable after being set",
-                "prey-inc", preyConfig.getOrganizationId());
+                "prey-inc", preyConfig.getMdmOrganizationId());
     }
 
     // =========================================================================
@@ -353,7 +353,7 @@ public class PreyConfigTest {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
         preyConfig.setMdmDeviceName("Office Phone 001");
-        preyConfig.setSerialNumber("R8YX100J1WN");
+        preyConfig.setMdmSerialNumber("R8YX100J1WN");
 
         // Act
         String result = preyConfig.buildDeviceName("samsung SM-A145R");
@@ -376,7 +376,7 @@ public class PreyConfigTest {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
         preyConfig.setMdmDeviceName("");
-        preyConfig.setSerialNumber("R8YX100J1WN");
+        preyConfig.setMdmSerialNumber("R8YX100J1WN");
 
         // Act
         String result = preyConfig.buildDeviceName("samsung SM-A145R");
@@ -399,7 +399,7 @@ public class PreyConfigTest {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
         preyConfig.setMdmDeviceName("");
-        preyConfig.setSerialNumber("");
+        preyConfig.setMdmSerialNumber("");
 
         // Act
         String result = preyConfig.buildDeviceName("samsung SM-A145R");
@@ -422,7 +422,7 @@ public class PreyConfigTest {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
         preyConfig.setMdmDeviceName("CEO-Phone-2026");
-        preyConfig.setSerialNumber("ABC123");
+        preyConfig.setMdmSerialNumber("ABC123");
 
         // Act
         String result = preyConfig.buildDeviceName("Google Pixel 9");
@@ -449,7 +449,7 @@ public class PreyConfigTest {
     public void givenSerialNumberFromMdm_whenIncreasingData_thenSerialNumberIsInParameters() {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
-        preyConfig.setSerialNumber("MDM-SN-9999");
+        preyConfig.setMdmSerialNumber("MDM-SN-9999");
         HashMap<String, String> parameters = new HashMap<String, String>();
 
         // Act
@@ -473,7 +473,7 @@ public class PreyConfigTest {
     public void givenNoSerialNumber_whenIncreasingData_thenSerialNumberIsEmpty() {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
-        preyConfig.setSerialNumber("");
+        preyConfig.setMdmSerialNumber("");
         HashMap<String, String> parameters = new HashMap<String, String>();
 
         // Act
@@ -499,7 +499,7 @@ public class PreyConfigTest {
     public void givenMdmImei_whenResolvingImei_thenMdmImeiIsReturned() {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
-        preyConfig.setImei("354123456789012");
+        preyConfig.setMdmImei("354123456789012");
 
         // Act
         String result = PreyConfig.getPreyConfig(context).resolveImei();
@@ -521,7 +521,7 @@ public class PreyConfigTest {
     public void givenNoMdmImei_whenResolvingImei_thenAndroidDeviceIdIsReturned() {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
-        preyConfig.setImei("");
+        preyConfig.setMdmImei("");
 
         // Act
         String result = PreyConfig.getPreyConfig(context).resolveImei();
@@ -545,7 +545,7 @@ public class PreyConfigTest {
     public void givenMdmImei_whenResolvingImei_thenAndroidDeviceIdIsNotUsed() {
         // Arrange
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
-        preyConfig.setImei("999000111222333");
+        preyConfig.setMdmImei("999000111222333");
 
         // Act
         String result = PreyConfig.getPreyConfig(context).resolveImei();

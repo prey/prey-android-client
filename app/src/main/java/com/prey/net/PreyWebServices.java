@@ -575,7 +575,7 @@ public class PreyWebServices implements WebServices {
         parameters.put(prefix + "[cpu_speed]", hardware.getCpuSpeed());
         parameters.put(prefix + "[cpu_cores]", hardware.getCpuCores());
         parameters.put(prefix + "[ram_size]", "" + hardware.getTotalMemory());
-        parameters.put(prefix + "[serial_number]", PreyConfig.getPreyConfig(ctx).getSerialNumber());
+        parameters.put(prefix + "[serial_number]", PreyConfig.getPreyConfig(ctx).getMdmSerialNumber());
         parameters.put(prefix + "[google_services]", String.valueOf(PreyUtils.isGooglePlayServicesAvailable(ctx)));
         //Compilation is added during creation
         parameters.put(prefix + "[android_compile_sdk]", String.valueOf(com.prey.BuildConfig.COMPILE_SDK_VERSION));
@@ -614,7 +614,7 @@ public class PreyWebServices implements WebServices {
             }
             if (!"".equals(hardware.getUuid()) && !PreyConfig.getPreyConfig(ctx).isSentUuidSerialNumber()) {
                 parameters.put("hardware_attributes[uuid]", hardware.getUuid());
-                parameters.put("hardware_attributes[serial_number]", PreyConfig.getPreyConfig(ctx).getSerialNumber());
+                parameters.put("hardware_attributes[serial_number]", PreyConfig.getPreyConfig(ctx).getMdmSerialNumber());
                 PreyConfig.getPreyConfig(ctx).setSentUuidSerialNumber(true);
             }
             //Compilation is added when sending in data

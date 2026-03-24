@@ -124,7 +124,7 @@ public class WebAppInterface {
     public String getData() {
         String ssid = PreyConfig.getPreyConfig(mContext).getSsid();
         String model = PreyConfig.getPreyConfig(mContext).getModel();
-        String imei = PreyConfig.getPreyConfig(mContext).getImei();
+        String imei = PreyConfig.getPreyConfig(mContext).getMdmImei();
         PreyLocation preyLocation = PreyConfig.getPreyConfig(mContext).getLocation();
         String lat = "" + LocationUpdatesService.round(preyLocation.getLat());
         String lng = "" + LocationUpdatesService.round(preyLocation.getLng());
