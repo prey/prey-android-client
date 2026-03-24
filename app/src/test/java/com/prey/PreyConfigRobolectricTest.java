@@ -130,7 +130,7 @@ public class PreyConfigRobolectricTest {
     @Test
     public void givenMdmDeviceNameSet_whenBuildingName_thenMdmNameIsUsed() {
         preyConfig.setMdmDeviceName("Office Phone 001");
-        preyConfig.setMdmSerialNumber("R8YX100J1WN");
+        preyConfig.setMdmSerialNumber("R1YX100J1ON");
 
         String result = preyConfig.buildDeviceName("samsung SM-A145R");
 
@@ -139,11 +139,11 @@ public class PreyConfigRobolectricTest {
 
     @Test
     public void givenSerialNumberOnly_whenBuildingName_thenNameIncludesSerialNumber() {
-        preyConfig.setMdmSerialNumber("R8YX100J1WN");
+        preyConfig.setMdmSerialNumber("R1YX100J1ON");
 
         String result = preyConfig.buildDeviceName("samsung SM-A145R");
 
-        assertEquals("samsung SM-A145R - SN R8YX100J1WN", result);
+        assertEquals("samsung SM-A145R - R1YX100J1ON", result);
     }
 
     @Test

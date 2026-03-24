@@ -1753,7 +1753,7 @@ public class PreyConfig {
         }
         String serialNumber = getMdmSerialNumber();
         if (serialNumber != null && !"".equals(serialNumber)) {
-            return defaultName + " - SN " + serialNumber;
+            return defaultName + " - " + serialNumber;
         }
         return defaultName;
     }
