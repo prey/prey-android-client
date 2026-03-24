@@ -176,7 +176,14 @@ public class PreyWebServices implements WebServices {
 
         parameters = increaseData(ctx, parameters);
 
-        String imei = new PreyPhone(ctx).getHardware().getAndroidDeviceId();
+        // Use IMEI from MDM if available, otherwise use Android device ID
+        String mdmImei = PreyConfig.getPreyConfig(ctx).getMdmImei();
+        String imei;
+        if (mdmImei != null && !"".equals(mdmImei)) {
+            imei = mdmImei;
+        } else {
+            imei = new PreyPhone(ctx).getHardware().getAndroidDeviceId();
+        }
         parameters.put("physical_address", imei);
         String lang=Locale.getDefault().getLanguage();
         parameters.put("lang",lang);

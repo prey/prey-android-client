@@ -86,6 +86,16 @@ public class RestrictionsReceiver extends BroadcastReceiver {
                 PreyConfig.getPreyConfig(context).setMdmDeviceName(deviceName);
             }
         }
+        // Check if the restrictions bundle contains the "imei" from MDM
+        if (restrictions != null && restrictions.containsKey("imei")) {
+            // Retrieve the IMEI provided by MDM
+            String imei = restrictions.getString("imei");
+            PreyLogger.i(String.format("handleApplicationRestrictions imei: %s", imei));
+            if (imei != null && !"".equals(imei)) {
+                // Store the MDM IMEI in the configuration
+                PreyConfig.getPreyConfig(context).setMdmImei(imei);
+            }
+        }
         // Check if the device is already registered with Prey
         boolean registered = PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey();
         PreyLogger.i(String.format("handleApplicationRestrictions registered: %s", registered));
