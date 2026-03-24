@@ -65,9 +65,6 @@ jobs:
           token=
           EOF
 
-      - name: Create dummy secrets.properties
-        run: echo "google_maps_key=fake-key-for-ci" > secrets.properties
-
       - name: Run lint
         run: ./gradlew lintDebug
 
@@ -127,9 +124,6 @@ jobs:
           token=
           EOF
 
-      - name: Create dummy secrets.properties
-        run: echo "google_maps_key=fake-key-for-ci" > secrets.properties
-
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest
 
@@ -188,9 +182,6 @@ jobs:
           ask-for-name-batch=false
           token=
           EOF
-
-      - name: Create dummy secrets.properties
-        run: echo "google_maps_key=fake-key-for-ci" > secrets.properties
 
       - name: Enable KVM
         run: |
