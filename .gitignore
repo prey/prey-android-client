@@ -7,4 +7,5 @@ app/google-services.json
 /build/reports
 secrets.properties
 app/src/main/res/raw/batch.properties
+app/src/main/res/raw/config.properties
 app/build.gradle.dev
