@@ -184,7 +184,6 @@ public class PreyWebServices implements WebServices {
         PreyHttpResponse response = null;
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices.json");
-            PreyLogger.d("url:" + url);
             response = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
             if (response == null) {
                 throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, "[" + -1 + "]"));
