@@ -9,3 +9,5 @@ secrets.properties
 app/src/main/res/raw/batch.properties
 app/src/main/res/raw/config.properties
 app/build.gradle.dev
+local.properties
+*.iml
