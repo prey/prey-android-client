@@ -1,3 +1,8 @@
 /app/build
 /.idea
 /.gradle
+/app/debug
+/app/release
+app/google-services.json
+/app/release
+/build/reports
