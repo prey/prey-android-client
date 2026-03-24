@@ -38,6 +38,7 @@ jobs:
           echo '{"project_info":{"project_number":"0","project_id":"prey-ci","storage_bucket":"prey-ci.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:0:android:0","android_client_info":{"package_name":"com.prey"}},"api_key":[{"current_key":"fake"}]}],"configuration_version":"1"}' > app/google-services.json
           printf 'properties\napi-key-batch=\nemail-batch=\nask-for-name-batch=false\ntoken=\n' > app/src/main/res/raw/batch.properties
           echo "google_maps_key=fake-key-for-ci" > secrets.properties
+          printf 'properties\nprey-campaign=ci\nprey-panel=https://localhost\ngcm-id-prefix=0\nprey-domain=localhost\nprey-subdomain=panel\nemail-feedback=ci@test.com\nsubject-feedback=CI\napi-v2=/api/v2/\nscheduled=false\nminute-scheduled=15\ntimeout-report=60\ngeofence-maximum-accuracy=100\nprey-jwt=fake\nprey-google-play=https://play.google.com\ngeofence-loitering-delay=300000\ndistance-location=50\ngeofence-notification-responsiveness=30000\ndistance-aware=100\nradius-aware=200\nprey-terms=https://localhost/terms\nprey-terms-es=https://localhost/es/terms\nprey-forgot=https://localhost/forgot\nopen-pin=false\n' > app/src/main/res/raw/config.properties
 
       - name: Run lint
         run: ./gradlew lintDebug
@@ -71,6 +72,7 @@ jobs:
           echo '{"project_info":{"project_number":"0","project_id":"prey-ci","storage_bucket":"prey-ci.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:0:android:0","android_client_info":{"package_name":"com.prey"}},"api_key":[{"current_key":"fake"}]}],"configuration_version":"1"}' > app/google-services.json
           printf 'properties\napi-key-batch=\nemail-batch=\nask-for-name-batch=false\ntoken=\n' > app/src/main/res/raw/batch.properties
           echo "google_maps_key=fake-key-for-ci" > secrets.properties
+          printf 'properties\nprey-campaign=ci\nprey-panel=https://localhost\ngcm-id-prefix=0\nprey-domain=localhost\nprey-subdomain=panel\nemail-feedback=ci@test.com\nsubject-feedback=CI\napi-v2=/api/v2/\nscheduled=false\nminute-scheduled=15\ntimeout-report=60\ngeofence-maximum-accuracy=100\nprey-jwt=fake\nprey-google-play=https://play.google.com\ngeofence-loitering-delay=300000\ndistance-location=50\ngeofence-notification-responsiveness=30000\ndistance-aware=100\nradius-aware=200\nprey-terms=https://localhost/terms\nprey-terms-es=https://localhost/es/terms\nprey-forgot=https://localhost/forgot\nopen-pin=false\n' > app/src/main/res/raw/config.properties
 
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest
@@ -104,6 +106,7 @@ jobs:
           echo '{"project_info":{"project_number":"0","project_id":"prey-ci","storage_bucket":"prey-ci.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:0:android:0","android_client_info":{"package_name":"com.prey"}},"api_key":[{"current_key":"fake"}]}],"configuration_version":"1"}' > app/google-services.json
           printf 'properties\napi-key-batch=\nemail-batch=\nask-for-name-batch=false\ntoken=\n' > app/src/main/res/raw/batch.properties
           echo "google_maps_key=fake-key-for-ci" > secrets.properties
+          printf 'properties\nprey-campaign=ci\nprey-panel=https://localhost\ngcm-id-prefix=0\nprey-domain=localhost\nprey-subdomain=panel\nemail-feedback=ci@test.com\nsubject-feedback=CI\napi-v2=/api/v2/\nscheduled=false\nminute-scheduled=15\ntimeout-report=60\ngeofence-maximum-accuracy=100\nprey-jwt=fake\nprey-google-play=https://play.google.com\ngeofence-loitering-delay=300000\ndistance-location=50\ngeofence-notification-responsiveness=30000\ndistance-aware=100\nradius-aware=200\nprey-terms=https://localhost/terms\nprey-terms-es=https://localhost/es/terms\nprey-forgot=https://localhost/forgot\nopen-pin=false\n' > app/src/main/res/raw/config.properties
 
       - name: Enable KVM
         run: |
