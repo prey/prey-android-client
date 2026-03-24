@@ -48,73 +48,81 @@ public class RestrictionsReceiver extends BroadcastReceiver {
     }
 
     /**
-     * Handles the application restrictions.
+     * Stores MDM restriction values into PreyConfig.
+     * These values are read always, even if the device is already registered.
+     *
+     * @param context      The Context in which the restrictions are being handled.
+     * @param restrictions The Bundle containing the application restrictions.
+     */
+    public static void saveRestrictionValues(Context context, Bundle restrictions) {
+        if (restrictions == null) {
+            return;
+        }
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        // TODO: Remove debug logs after testing MDM restrictions
+        PreyLogger.i(String.format("saveRestrictionValues restrictions: %s", restrictions.toString()));
+        saveStringRestriction(restrictions, "enterprise_name", value -> preyConfig.setOrganizationId(value));
+        saveStringRestriction(restrictions, "serial_number", value -> preyConfig.setSerialNumber(value));
+        saveStringRestriction(restrictions, "device_name", value -> preyConfig.setMdmDeviceName(value));
+        saveStringRestriction(restrictions, "imei", value -> preyConfig.setImei(value));
+    }
+
+    /**
+     * Reads a string restriction from the bundle and applies it if non-empty.
+     *
+     * @param restrictions The Bundle containing the application restrictions.
+     * @param key          The restriction key to read.
+     * @param setter       The consumer to apply the value.
+     */
+    private static void saveStringRestriction(Bundle restrictions, String key, java.util.function.Consumer<String> setter) {
+        if (restrictions.containsKey(key)) {
+            String value = restrictions.getString(key);
+            // TODO: Remove debug logs after testing MDM restrictions
+            PreyLogger.i(String.format("saveStringRestriction %s: %s", key, value));
+            if (value != null && !"".equals(value)) {
+                setter.accept(value);
+            }
+        }
+    }
+
+    /**
+     * Returns the setup_key from the restrictions bundle if available and the device is not registered.
+     *
+     * @param context      The Context.
+     * @param restrictions The Bundle containing the application restrictions.
+     * @return The setup key, or null if not available or device is already registered.
+     */
+    public static String getSetupKey(Context context, Bundle restrictions) {
+        if (restrictions == null) {
+            return null;
+        }
+        boolean registered = PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey();
+        // TODO: Remove debug logs after testing MDM restrictions
+        PreyLogger.i(String.format("getSetupKey registered: %s", registered));
+        if (!registered && restrictions.containsKey("setup_key")) {
+            String setupKey = restrictions.getString("setup_key");
+            PreyLogger.i(String.format("getSetupKey setup_key: %s", setupKey));
+            if (setupKey != null && !"".equals(setupKey)) {
+                return setupKey;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Handles the application restrictions: saves values and registers device if needed.
      *
      * @param context      The Context in which the restrictions are being handled.
      * @param restrictions The Bundle containing the application restrictions.
      */
     public static void handleApplicationRestrictions(Context context, Bundle restrictions) {
-        PreyLogger.i(String.format("handleApplicationRestrictions restrictions: %s", restrictions != null ? restrictions.toString() : "null"));
-        // These values are read always, even if the device is already registered
-        if (restrictions != null && restrictions.containsKey("enterprise_name")) {
-            // Retrieve the enterprise name from the restrictions bundle
-            String enterpriseName = restrictions.getString("enterprise_name");
-            PreyLogger.i(String.format("handleApplicationRestrictions enterprise_name: %s", enterpriseName));
-            // Check if the enterprise name is not null and not empty
-            if (enterpriseName != null && !"".equals(enterpriseName)) {
-                // Set the organization ID in the Prey configuration
-                PreyConfig.getPreyConfig(context).setOrganizationId(enterpriseName);
-            }
-        }
-        // Check if the restrictions bundle contains the "serial_number" from MDM
-        if (restrictions != null && restrictions.containsKey("serial_number")) {
-            // Retrieve the serial number provided by MDM
-            String serialNumber = restrictions.getString("serial_number");
-            PreyLogger.i(String.format("handleApplicationRestrictions serial_number: %s", serialNumber));
-            if (serialNumber != null && !"".equals(serialNumber)) {
-                // Store the MDM serial number in the configuration
-                PreyConfig.getPreyConfig(context).setSerialNumber(serialNumber);
-            }
-        }
-        // Check if the restrictions bundle contains the "device_name" from MDM
-        if (restrictions != null && restrictions.containsKey("device_name")) {
-            // Retrieve the device name provided by MDM
-            String deviceName = restrictions.getString("device_name");
-            PreyLogger.i(String.format("handleApplicationRestrictions device_name: %s", deviceName));
-            if (deviceName != null && !"".equals(deviceName)) {
-                // Store the MDM device name in the configuration
-                PreyConfig.getPreyConfig(context).setMdmDeviceName(deviceName);
-            }
-        }
-        // Check if the restrictions bundle contains the "imei" from MDM
-        if (restrictions != null && restrictions.containsKey("imei")) {
-            // Retrieve the IMEI provided by MDM
-            String imei = restrictions.getString("imei");
-            PreyLogger.i(String.format("handleApplicationRestrictions imei: %s", imei));
-            if (imei != null && !"".equals(imei)) {
-                // Store the MDM IMEI in the configuration
-                PreyConfig.getPreyConfig(context).setImei(imei);
-            }
-        }
-        // Check if the device is already registered with Prey
-        boolean registered = PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey();
-        PreyLogger.i(String.format("handleApplicationRestrictions registered: %s", registered));
-        if (!registered) {
-            // Check if the restrictions bundle is not null and contains the "setup_key"
-            if (restrictions != null && restrictions.containsKey("setup_key")) {
-                // Get the setup key from the restrictions bundle
-                String setupKey = restrictions.getString("setup_key");
-                PreyLogger.i(String.format("handleApplicationRestrictions setup_key: %s", setupKey));
-                // Check if the setup key is not null and not empty
-                if (setupKey != null && !"".equals(setupKey)) {
-                    try {
-                        // Attempt to register a new device with the setup key
-                        PreyConfig.getPreyConfig(context).registerNewDeviceWithApiKey(setupKey);
-                    } catch (Exception e) {
-                        // Log any errors that occur during registration
-                        PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
-                    }
-                }
+        saveRestrictionValues(context, restrictions);
+        String setupKey = getSetupKey(context, restrictions);
+        if (setupKey != null) {
+            try {
+                PreyConfig.getPreyConfig(context).registerNewDeviceWithApiKey(setupKey);
+            } catch (Exception e) {
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
             }
         }
     }
