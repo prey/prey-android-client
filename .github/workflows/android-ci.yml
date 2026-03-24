@@ -11,7 +11,7 @@ name: Android CI
 
 on:
   push:
-    branches: [ master, chore/mdm-serial-number ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
