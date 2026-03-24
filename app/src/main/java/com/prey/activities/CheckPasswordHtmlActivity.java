@@ -63,8 +63,6 @@ import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyAccessibilityService;
 import com.prey.services.PreyOverlayService;
 
-import android.widget.Toast;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -118,12 +116,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         Bundle restrictions = restrictionsManager.getApplicationRestrictions();
         String restrictionsLog = restrictions != null ? restrictions.toString() : "null";
         PreyLogger.i(String.format("resolveRestrictions restrictions: %s", restrictionsLog));
-        // TODO: Remove this Toast after debugging MDM restrictions
-        try {
-            Toast.makeText(context, "MDM restrictions: " + restrictionsLog, Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            PreyLogger.e(String.format("Error showing toast: %s", e.getMessage()), e);
-        }
+
         // These values are read always, even if the device is already registered
         if (restrictions != null && restrictions.containsKey("enterprise_name")) {
             // Retrieve the enterprise name from the restrictions bundle
