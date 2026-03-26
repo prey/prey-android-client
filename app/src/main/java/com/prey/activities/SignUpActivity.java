@@ -30,7 +30,7 @@ import android.widget.TextView;
 
 import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
-import com.prey.PreyApp;
+import com.prey.PreyApp2;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
@@ -208,7 +208,7 @@ public class SignUpActivity extends Activity {
                 PreyConfig.getPreyConfig(ctx).setEmail(email);
                 PreyConfig.getPreyConfig(ctx).setRunBackground(true);
                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
-                new PreyApp().run(ctx);
+                new PreyApp2().run(ctx);
             } catch (Exception e) {
                 error = e.getMessage();
                 PreyLogger.e("e.getMessage():"+e.getMessage(),e);

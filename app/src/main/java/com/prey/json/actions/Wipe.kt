@@ -7,8 +7,8 @@
 package com.prey.json.actions
 
 import android.content.Context
+import android.os.Environment
 import com.prey.PreyLogger
-import com.prey.actions.wipe.WipeUtil
 import com.prey.backwardcompatibility.FroyoSupport
 import com.prey.json.CommandTarget
 import com.prey.net.PreyWebServicesKt
@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.io.File
 
 /**
  * A [CommandTarget] responsible for handling device wipe operations.
@@ -73,7 +74,7 @@ class Wipe : CommandTarget, BaseAction() {
             val isFactoryReset = options.optBooleanLegacy(OPT_FACTORY_RESET)
             val isWipeSdCard = options.optBooleanLegacy(OPT_WIPE_SIM)
             if (isWipeSdCard) {
-                WipeUtil.deleteSD()
+                deleteSD()
                 if (!isFactoryReset) {
                     PreyWebServicesKt.notify(context, CMD_START, TARGET, STATUS_STOPPED)
                 }
@@ -114,4 +115,38 @@ class Wipe : CommandTarget, BaseAction() {
         return value == "on" || value == "y" || value == "true" || optBoolean(key, false)
     }
 
+    /**
+     * Deletes all content from the external storage (SD card) if it is currently mounted and writable.
+     *
+     * This function checks the state of the external storage. If it is in the [Environment.MEDIA_MOUNTED]
+     * state, it retrieves the root directory and performs a recursive deletion of all files and folders.
+     * Logs the status of the operation and provides feedback if the storage is unavailable or read-only.
+     */
+    fun deleteSD() {
+        val state = Environment.getExternalStorageState()
+        PreyLogger.d("External storage state: $state")
+        if (Environment.MEDIA_MOUNTED == state) {
+            val rootDir = Environment.getExternalStorageDirectory()
+            deleteRecursive(rootDir)
+        } else {
+            PreyLogger.d("Storage not mounted or read-only: $state")
+        }
+    }
+
+    /**
+     * Recursively deletes a file or directory and all its contents.
+     *
+     */
+    fun deleteRecursive(fileOrDirectory: File) {
+        if (!fileOrDirectory.exists()) return
+        if (fileOrDirectory.isDirectory) {
+            fileOrDirectory.listFiles()?.forEach { child ->
+                deleteRecursive(child)
+            }
+        }
+        val deleted = fileOrDirectory.delete()
+        if (!deleted) {
+            PreyLogger.d("Could not delete: ${fileOrDirectory.absolutePath}")
+        }
+    }
 }

@@ -23,7 +23,7 @@ import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 import com.prey.FileConfigReader;
 import com.prey.PreyAccountData;
-import com.prey.PreyApp;
+import com.prey.PreyApp2;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyName;
@@ -102,7 +102,7 @@ public class WebAppInterface {
     public String getData() {
         String ssid = PreyConfig.getPreyConfig(mContext).getSsid();
         String model = PreyConfig.getPreyConfig(mContext).getModel();
-        String imei = PreyConfig.getPreyConfig(mContext).getImei();
+        String imei = PreyConfig.getPreyConfig(mContext).getMdmImei();
         PreyLocation preyLocation = PreyConfig.getPreyConfig(mContext).getLocation();
         String lat = "" + LocationUtil.INSTANCE.round(preyLocation.getLat());
         String lng = "" + LocationUtil.INSTANCE.round(preyLocation.getLng());
@@ -309,7 +309,7 @@ public class WebAppInterface {
                 PreyConfig.getPreyConfig(mContext).setRunBackground(true);
                 RunBackgroundCheckBoxPreference.notifyReady(mContext);
                 PreyConfig.getPreyConfig(mContext).setInstallationStatus("");
-                new PreyApp().run(mContext);
+                new PreyApp2().run(mContext);
                 Location.INSTANCE.getCoroutine(mContext, new JSONObject());
             }
         } catch (Exception e) {
@@ -702,7 +702,7 @@ public class WebAppInterface {
             PreyConfig.getPreyConfig(ctx).setEmail(email);
             PreyConfig.getPreyConfig(ctx).setRunBackground(true);
             PreyConfig.getPreyConfig(ctx).setInstallationStatus("Pending");
-            new PreyApp().run(ctx);
+            new PreyApp2().run(ctx);
             Location.INSTANCE.getCoroutine(ctx, new JSONObject());
         } catch (Exception e) {
             error = e.getMessage();

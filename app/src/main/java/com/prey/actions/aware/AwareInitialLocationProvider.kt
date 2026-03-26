@@ -68,13 +68,13 @@ class AwareInitialLocationProvider(private val context: Context) {
      */
     @RequiresPermission("android.permission.ACCESS_FINE_LOCATION")
     fun init() {
-        PreyLogger.i("AwareInitialLocationProvider")
+        PreyLogger.d("AwareInitialLocationProvider")
         AwareInitialLocationProvider(context)
             .getInitialLocation { location ->
-                PreyLogger.i("init location lat:${location.latitude} lng:${location.longitude} acc:${location.accuracy}")
+                PreyLogger.d("init location lat:${location.latitude} lng:${location.longitude} acc:${location.accuracy}")
                 AwareGeofenceManagerImpl(context)
                     .createOrReplace(location, radius = 300f)
-                PreyLogger.i("sendNowAware");
+                PreyLogger.d("sendNowAware");
                 CoroutineScope(Dispatchers.IO).launch {
                     LocationSender.sendLocationAware(context, location);
                 }

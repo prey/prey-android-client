@@ -21,14 +21,10 @@ import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.prey.PreyAccountData;
-import com.prey.PreyApp;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
-import com.prey.net.PreyWebServices;
-import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
 public class WelcomeBatchActivity extends FragmentActivity {
 

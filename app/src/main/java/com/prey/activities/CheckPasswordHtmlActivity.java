@@ -53,6 +53,7 @@ import com.prey.R;
 import com.prey.activities.js.CustomWebView;
 import com.prey.activities.js.WebAppInterface;
 import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.receivers.RestrictionsReceiver;
 import com.prey.services.PreyAccessibilityService;
 import com.prey.services.PreyOverlayService;
 
@@ -103,40 +104,14 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
      * @param context The Context in which the restrictions are being resolved.
      */
     private void resolveRestrictions(Context context) {
-        // Check if the device is already registered with Prey
-        if (!PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey()) {
-            // Get the RestrictionsManager instance
-            RestrictionsManager restrictionsManager = (RestrictionsManager) context.getSystemService(Context.RESTRICTIONS_SERVICE);
-            // Retrieve the application restrictions
-            Bundle restrictions = restrictionsManager.getApplicationRestrictions();
-            if (restrictions != null && restrictions.containsKey("serial")) {
-                // Retrieve the enterprise serial from the restrictions bundle
-                String serialEnterprise = restrictions.getString("serial");
-                // Check if the enterprise serial is not null and not empty
-                if (serialEnterprise != null && !serialEnterprise.isEmpty()) {
-                    // Set the serial the Prey configuration
-                    PreyConfig.getPreyConfig(context).setSerialMDM(serialEnterprise);
-                }
-            }
-            if (restrictions != null && restrictions.containsKey("enterprise_name")) {
-                // Retrieve the enterprise name from the restrictions bundle
-                String enterpriseName = restrictions.getString("enterprise_name");
-                // Check if the enterprise name is not null and not empty
-                if (enterpriseName != null && !"".equals(enterpriseName)) {
-                    // Set the organization ID in the Prey configuration
-                    PreyConfig.getPreyConfig(context).setOrganizationId(enterpriseName);
-                }
-            }
-            // Check if the restrictions bundle is not null and contains the "setup_key"
-            if (restrictions != null && restrictions.containsKey("setup_key")) {
-                // Get the setup key from the restrictions bundle
-                String setupKey = restrictions.getString("setup_key");
-                // Check if the setup key is not null and not empty
-                if (setupKey != null && !"".equals(setupKey)) {
-                    // Execute the AddDeviceWithRestriction task with the setup key
-                    new AddDeviceWithRestriction().execute(setupKey);
-                }
-            }
+        RestrictionsManager restrictionsManager = (RestrictionsManager) context.getSystemService(Context.RESTRICTIONS_SERVICE);
+        Bundle restrictions = restrictionsManager.getApplicationRestrictions();
+        // Save MDM restriction values (enterprise_name, serial_number, device_name, imei)
+        RestrictionsReceiver.saveRestrictionValues(context, restrictions);
+        // If the device is not registered, attempt registration with the setup_key via AsyncTask
+        String setupKey = RestrictionsReceiver.getSetupKey(context, restrictions);
+        if (setupKey != null) {
+            new AddDeviceWithRestriction().execute(setupKey);
         }
     }
 

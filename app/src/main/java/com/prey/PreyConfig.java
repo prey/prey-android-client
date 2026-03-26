@@ -789,12 +789,7 @@ public class PreyConfig {
     public String getPreyGooglePlay() {
         return FileConfigReader.getInstance(this.ctx).getPreyGooglePlay();
     }
-    public String getPreyUninstallUrl() {
-        return FileConfigReader.getInstance(this.ctx).getPreyUninstall();
-    }
-    public String getPreyUninstallEsUrl() {
-        return FileConfigReader.getInstance(this.ctx).getPreyUninstallEs();
-    }
+
     public String getApiKeyBatch() {
         return PreyBatch.getInstance(this.ctx).getApiKeyBatch();
     }
@@ -1286,11 +1281,27 @@ public class PreyConfig {
         saveString(SSID, ssid);
     }
 
-    public String getImei() {
-        return getString(IMEI, "");
+    /**
+     * Key for storing the IMEI received from MDM restrictions in the configuration.
+     */
+    public static final String MDM_IMEI = "MDM_IMEI";
+
+    /**
+     * Retrieves the IMEI received from MDM restrictions.
+     *
+     * @return The IMEI, or an empty string if not set.
+     */
+    public String getMdmImei() {
+        return getString(MDM_IMEI, "");
     }
-    public void setImei(String imei) {
-        saveString(IMEI, imei);
+
+    /**
+     * Sets the IMEI received from MDM restrictions.
+     *
+     * @param imei The IMEI to set.
+     */
+    public void setMdmImei(String imei) {
+        saveString(MDM_IMEI, imei);
     }
 
     public String getModel() {
@@ -1735,12 +1746,52 @@ public class PreyConfig {
      * @param apiKey The API key to register the device with.
      * @throws Exception If there is an error during the registration process.
      */
+    /**
+     * Builds the device name for registration.
+     * If an MDM device name is provided, it takes priority.
+     * Otherwise, builds the name from device info and appends serial number if available.
+     *
+     * @param defaultName The default device name (e.g., from bluetooth or vendor+model).
+     * @return The resolved device name.
+     */
+    public String buildDeviceName(String defaultName) {
+        String mdmDeviceName = getMdmDeviceName();
+        if (mdmDeviceName != null && !mdmDeviceName.isEmpty()) {
+            return mdmDeviceName;
+        }
+        String serialNumber = getMdmSerialNumber();
+        if (serialNumber != null && !serialNumber.isEmpty()) {
+            return defaultName + " - " + serialNumber;
+        }
+        return defaultName;
+    }
+
+    /**
+     * Resolves the IMEI to use for device identification.
+     * Uses IMEI from MDM restrictions if available, otherwise falls back to Android device ID.
+     *
+     * @return The resolved IMEI or Android device ID.
+     */
+    public String resolveImei() {
+        String mdmImei = getMdmImei();
+        if (mdmImei != null && !mdmImei.isEmpty()) {
+            return mdmImei;
+        }
+        return new PreyPhone(ctx).getHardware().getAndroidDeviceId();
+    }
+
+    /**
+     * Registers a new device with the given API key.
+     *
+     * @param apiKey The API key to register the device with.
+     * @throws Exception If there is an error during the registration process.
+     */
     public void registerNewDeviceWithApiKey(String apiKey) throws Exception {
         // Check if the device is already registered with Prey
         if (!isThisDeviceAlreadyRegisteredWithPrey()) {
             // Get the device type and name
             String deviceType = PreyUtils.getDeviceType(ctx);
-            String nameDevice = PreyUtils.getNameDevice(ctx);
+            String nameDevice = buildDeviceName(PreyUtils.getNameDevice(ctx));
             PreyLogger.d(String.format("apikey:%s type:%s nameDevice:%s", apiKey, deviceType, nameDevice));
             // Register the device with the API key, device type, and name
             PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, apiKey, deviceType, nameDevice);
@@ -1755,7 +1806,7 @@ public class PreyConfig {
                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
                 PreyConfig.getPreyConfig(ctx).setInstallationStatus("");
                 // Run the Prey app
-                new PreyApp().run(ctx);
+                new PreyApp2().run(ctx);
                 // Start a new thread to initialize PreyStatus and Location
                 new Thread() {
                     public void run() {
@@ -1782,7 +1833,7 @@ public class PreyConfig {
      *
      * @return The organization ID, or an empty string if not set.
      */
-    public String getOrganizationId() {
+    public String getMdmOrganizationId() {
         // Retrieve the organization ID from the configuration, defaulting to an empty string if not set
         return getString(ORGANIZATION_ID, "");
     }
@@ -1792,9 +1843,55 @@ public class PreyConfig {
      *
      * @param organizationId The organization ID to set.
      */
-    public void setOrganizationId(String organizationId) {
+    public void setMdmOrganizationId(String organizationId) {
         // Save the organization ID to the configuration
         saveString(ORGANIZATION_ID, organizationId);
+    }
+
+    /**
+     * Key for storing the serial number received from MDM restrictions in the configuration.
+     */
+    public static final String SERIAL_NUMBER = "SERIAL_NUMBER";
+
+    /**
+     * Retrieves the serial number received from MDM restrictions.
+     *
+     * @return The serial number, or an empty string if not set.
+     */
+    public String getMdmSerialNumber() {
+        return getString(SERIAL_NUMBER, "");
+    }
+
+    /**
+     * Sets the serial number received from MDM restrictions.
+     *
+     * @param serialNumber The serial number to set.
+     */
+    public void setMdmSerialNumber(String serialNumber) {
+        saveString(SERIAL_NUMBER, serialNumber);
+    }
+
+    /**
+     * Key for storing the device name received from MDM restrictions in the configuration.
+     */
+    public static final String MDM_DEVICE_NAME = "MDM_DEVICE_NAME";
+
+    /**
+     * Retrieves the device name received from MDM restrictions.
+     *
+     * @return The device name, or an empty string if not set.
+     */
+    public String getMdmDeviceName() {
+        return getString(MDM_DEVICE_NAME, "");
+    }
+
+    /**
+     * Sets the device name received from MDM restrictions.
+     *
+     * @param deviceName The device name to set.
+     */
+    public void setMdmDeviceName(String deviceName) {
+        saveString(MDM_DEVICE_NAME, deviceName);
     }
 
     /**
@@ -1922,27 +2019,6 @@ public class PreyConfig {
      */
     public void deleteActions() {
         actions.clear();
-    }
-
-    public static final String SERIAL_MDM = "SERIAL_MDM";
-
-    /**
-     * Retrieves the stored MDM (Mobile Device Management) serial number.
-     *
-     * @return The MDM serial number as a String, or an empty string if it has not been set.
-     */
-    public String getSerialMDM() {
-        return getString(SERIAL_MDM, "");
-    }
-
-    /**
-     * Sets the serial number provided by the MDM (Mobile Device Management) server.
-     * This identifier is used to link the device with specific management profiles.
-     *
-     * @param serialMDM The MDM serial number to be stored.
-     */
-    public void setSerialMDM(String serialMDM) {
-        saveString(SERIAL_MDM, serialMDM);
     }
 
 }

@@ -30,13 +30,14 @@ import com.prey.activities.LoginActivity;
 import com.prey.events.factories.EventFactory;
 import com.prey.events.receivers.EventReceiver;
 import com.prey.net.PreyWebServices;
+import com.prey.net.PreyWebServicesKt;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyDisablePowerOptionsService;
 
 import java.util.Date;
 import java.util.Map;
 
-public class PreyApp extends Application {
+public class PreyApp2 extends Application {
 
     public long mLastPause;
     private EventReceiver eventReceiver = new EventReceiver();
@@ -97,8 +98,8 @@ public class PreyApp extends Application {
                     public void run() {
                         PreyConfig.getPreyConfig(ctx).registerC2dm();
                         PreyWebServices.getInstance().getProfile(ctx);
-                        String initName = PreyWebServices.getInstance().getNameDevice(ctx);
-                        if (initName != null && !"".equals(initName)) {
+                        String initName=null;//PreyWebServicesKt.INSTANCE.getNameDevice(ctx);
+                        if (initName != null && !initName.isEmpty()) {
                             PreyLogger.d(String.format("initName: %s", initName));
                             PreyConfig.getPreyConfig(ctx).setDeviceName(initName);
                         }

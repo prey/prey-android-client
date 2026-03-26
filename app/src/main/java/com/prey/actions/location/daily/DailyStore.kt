@@ -44,7 +44,7 @@ object DailyStore {
      */
     fun markSent(context: Context) {
         val today = getFormattedDate(Date())
-        PreyLogger.i("markSent: $today")
+        PreyLogger.d("markSent: $today")
         getPrefs(context).edit {
             putString(LAST_SENT_KEY, today)
         }

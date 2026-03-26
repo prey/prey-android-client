@@ -174,8 +174,7 @@ public class PreyWebServices implements WebServices {
 
         parameters = increaseData(ctx, parameters);
 
-        String imei = new PreyPhone(ctx).getHardware().getAndroidDeviceId();
-        parameters.put("physical_address", imei);
+        parameters.put("physical_address", PreyConfig.getPreyConfig(ctx).resolveImei());
         String lang=Locale.getDefault().getLanguage();
         parameters.put("lang",lang);
 
@@ -531,6 +530,11 @@ public class PreyWebServices implements WebServices {
         return getDeviceUrlApiv2(ctx).concat("/missing");
     }
 
+    public String getProfileUrl(Context ctx) throws PreyException {
+        return getDeviceUrlApiv2(ctx).concat("/profile.json");
+    }
+
+
     private String getDeviceUrlApiv2(Context ctx) throws PreyException {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         String deviceKey = preyConfig.getDeviceId();
@@ -564,11 +568,6 @@ public class PreyWebServices implements WebServices {
     public HashMap<String, String> increaseData(Context ctx, HashMap<String, String> parameters) {
         PreyPhone phone = new PreyPhone(ctx);
         Hardware hardware = phone.getHardware();
-        String serial = hardware.getSerialNumber();
-        String serialMDM = PreyConfig.getPreyConfig(ctx).getSerialMDM();
-        if (serialMDM != null && !serialMDM.isEmpty()) {
-            serial = serialMDM;
-        }
         String prefix = "hardware_attributes";
         parameters.put(prefix + "[uuid]", hardware.getUuid());
         parameters.put(prefix + "[bios_vendor]", hardware.getBiosVendor());
@@ -580,8 +579,7 @@ public class PreyWebServices implements WebServices {
         parameters.put(prefix + "[cpu_speed]", hardware.getCpuSpeed());
         parameters.put(prefix + "[cpu_cores]", hardware.getCpuCores());
         parameters.put(prefix + "[ram_size]", "" + hardware.getTotalMemory());
-        parameters.put(prefix + "[serial_number]", serial);
-        parameters.put(prefix + "[uuid]", hardware.getUuid());
+        parameters.put(prefix + "[serial_number]", PreyConfig.getPreyConfig(ctx).getMdmSerialNumber());
         parameters.put(prefix + "[google_services]", String.valueOf(PreyUtils.isGooglePlayServicesAvailable(ctx)));
         //Compilation is added during creation
         parameters.put(prefix + "[android_compile_sdk]", String.valueOf(com.prey.BuildConfig.COMPILE_SDK_VERSION));
@@ -614,18 +612,13 @@ public class PreyWebServices implements WebServices {
         PreyHttpResponse preyHttpResponse = null;
         if(parameters.size()>0||entityFiles.size()>0) {
             Hardware hardware = new PreyPhone(ctx).getHardware();
-            String serial = hardware.getSerialNumber();
-            String serialMDM = PreyConfig.getPreyConfig(ctx).getSerialMDM();
-            if (serialMDM != null && !serialMDM.isEmpty()) {
-                serial = serialMDM;
-            }
             if (!PreyConfig.getPreyConfig(ctx).isSendData() && hardware.getTotalMemory() > 0) {
                 PreyConfig.getPreyConfig(ctx).setSendData(true);
                 parameters.put("hardware_attributes[ram_size]", "" + hardware.getTotalMemory());
             }
             if (!"".equals(hardware.getUuid()) && !PreyConfig.getPreyConfig(ctx).isSentUuidSerialNumber()) {
                 parameters.put("hardware_attributes[uuid]", hardware.getUuid());
-                parameters.put("hardware_attributes[serial_number]", serial);
+                parameters.put("hardware_attributes[serial_number]", PreyConfig.getPreyConfig(ctx).getMdmSerialNumber());
                 PreyConfig.getPreyConfig(ctx).setSentUuidSerialNumber(true);
             }
             //Compilation is added when sending in data

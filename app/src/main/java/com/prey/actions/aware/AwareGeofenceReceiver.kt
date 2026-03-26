@@ -56,7 +56,7 @@ class AwareGeofenceReceiver : BroadcastReceiver() {
      * @param intent The Intent containing the geofence event details.
      */
     override fun onReceive(context: Context, intent: Intent) {
-        PreyLogger.i("AwareGeofenceReceiver onReceive");
+        PreyLogger.d("AwareGeofenceReceiver onReceive");
         val event = GeofencingEvent.fromIntent(intent) ?: return
         if (event.hasError()) return
         if (event.geofenceTransition != Geofence.GEOFENCE_TRANSITION_EXIT) return
@@ -68,7 +68,7 @@ class AwareGeofenceReceiver : BroadcastReceiver() {
         val fused = LocationServices.getFusedLocationProviderClient(context)
         fused.lastLocation.addOnSuccessListener { location ->
             location ?: return@addOnSuccessListener
-            PreyLogger.i("onReceive lastLocation location lat:${location.latitude} lng:${location.longitude} acc:${location.accuracy}")
+            PreyLogger.d("onReceive lastLocation location lat:${location.latitude} lng:${location.longitude} acc:${location.accuracy}")
             val previous = AwareStore.load(context)
             val now = System.currentTimeMillis()
             val radius = if (previous != null) {

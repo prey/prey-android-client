@@ -55,10 +55,10 @@ class AwareGeofenceManagerImpl(
     @RequiresPermission("android.permission.ACCESS_FINE_LOCATION")
     fun createOrReplace(location: Location, radius: Float) {
         if (!hasPermission()) return
-        PreyLogger.i("createOrReplace lat:${location.latitude} long:${location.longitude} radius:$radius")
+        PreyLogger.d("createOrReplace lat:${location.latitude} long:${location.longitude} radius:$radius")
         client.removeGeofences(listOf(GEOFENCE_ID))
             .addOnCompleteListener {
-                PreyLogger.i("addOnCompleteListener")
+                PreyLogger.d("addOnCompleteListener")
                 val geofence = Geofence.Builder()
                     .setRequestId(GEOFENCE_ID)
                     .setCircularRegion(
@@ -81,7 +81,7 @@ class AwareGeofenceManagerImpl(
                         .build(),
                     pendingIntent
                 )
-                PreyLogger.i("addGeofences")
+                PreyLogger.d("addGeofences")
             }
     }
 

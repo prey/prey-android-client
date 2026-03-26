@@ -27,7 +27,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.prey.PreyApp;
+import com.prey.PreyApp2;
 import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
@@ -170,7 +170,7 @@ public class SignInActivity extends Activity {
                 PreyConfig.getPreyConfig(ctx).setEmail(email);
                 PreyConfig.getPreyConfig(ctx).setRunBackground(true);
                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
-                new PreyApp().run(ctx);
+                new PreyApp2().run(ctx);
                 Location.INSTANCE.getCoroutine(ctx, new JSONObject());
             } catch (Exception e) {
                 PreyLogger.e("error:"+e.getMessage(),e);

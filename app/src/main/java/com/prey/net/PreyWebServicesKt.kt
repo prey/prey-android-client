@@ -15,14 +15,19 @@ import com.prey.actions.location.LocationUtil
 import com.prey.events.Event
 import com.prey.json.UtilJson
 import com.prey.net.PreyWebServicesKt.sendNotifyActions
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.future.future
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
+import java.util.concurrent.CompletableFuture
 import kotlin.math.roundToInt
 
 /**
@@ -38,6 +43,56 @@ import kotlin.math.roundToInt
 object PreyWebServicesKt {
 
     private val client = OkHttpClient()
+    private val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()
+
+    /**
+     * Internal helper to construct an OkHttp [Request.Builder] with common Prey headers.
+     *
+     * This method centralizes the logic for adding required authentication and user-agent
+     * headers to every outgoing request.
+     *
+     * @param url The full destination URL for the request.
+     * @param context The application context, used to retrieve the current [PreyConfig].
+     * @param method The HTTP method to use (e.g., "GET", "POST", "PUT"). Defaults to "GET".
+     * @param body The optional [RequestBody] for methods that send data (like POST).
+     * @return A [Request.Builder] initialized with the URL, headers, and method.
+     */
+    private fun buildRequest(
+        url: String,
+        context: Context,
+        method: String = "GET",
+        body: RequestBody? = null
+    ): Request.Builder {
+        val config = PreyConfig.getPreyConfig(context)
+        return Request.Builder()
+            .url(url)
+            .addHeader("Authorization", UtilConnection.getAuthorization(config))
+            .addHeader("User-Agent", UtilConnection.getUserAgent(config))
+            .method(method, body)
+    }
+
+    /**
+     * Converts a [Location] object into a [JSONObject] formatted for the Prey web services.
+     *
+     * This extension function extracts coordinates and accuracy, rounding the accuracy to
+     * two decimal places. It structures the data within a "location" root object required
+     * by the server API.
+     *
+     * @param force If `true`, adds a force flag to the location data, typically used to
+     *              override server-side throttling or movement filters.
+     * @return A [JSONObject] containing the formatted location metadata.
+     */
+    private fun Location.toPreyJson(force: Boolean = false): JSONObject {
+        val accuracy = (this.accuracy * 100.0).roundToInt() / 100.0
+        val locationData = JSONObject().apply {
+            put(LocationUtil.LAT, latitude)
+            put(LocationUtil.LNG, longitude)
+            put(LocationUtil.ACC, accuracy)
+            put(LocationUtil.METHOD, "native")
+            if (force) put(LocationUtil.FORCE, true)
+        }
+        return JSONObject().put("location", locationData)
+    }
 
     /**
      * Fetches pending actions for the device from the Prey server.
@@ -59,16 +114,11 @@ object PreyWebServicesKt {
     suspend fun getActionsJson(context: Context): String? = withContext(Dispatchers.IO) {
         val url = PreyWebServices.getInstance().getDeviceUrlJson(context)
         PreyLogger.d("getActionsJson url:${url}")
-        val preyConfig = PreyConfig.getPreyConfig(context)
-        val authorization = UtilConnection.getAuthorization(preyConfig)
-        val userAgent = UtilConnection.getUserAgent(preyConfig)
-        val request = Request.Builder().url(url).addHeader("Authorization", authorization)
-            .addHeader("User-Agent", userAgent).get().build()
+        val request = buildRequest(url, context).build()
         try {
             client.newCall(request).execute().use { response ->
                 PreyLogger.d("getActionsJson code:${response.code}")
-                val result = response.isSuccessful
-                if (result) {
+                if (response.isSuccessful) {
                     val body = response.body?.string()
                     PreyLogger.d("getActionsJson body:${body}")
                     return@withContext body
@@ -77,7 +127,7 @@ object PreyWebServicesKt {
                 }
             }
         } catch (e: IOException) {
-            PreyLogger.e("sendNotifyActions error:${e.message}", e)
+            PreyLogger.e("getActionsJson error:${e.message}", e)
             return@withContext null
         }
     }
@@ -103,31 +153,19 @@ object PreyWebServicesKt {
         context: Context, jsonData: JSONObject?, correlationId: String?, status: String?
     ): Boolean = withContext(Dispatchers.IO) {
         if (jsonData == null) return@withContext false
-        PreyLogger.d("sendNotifyActions jsonData:${jsonData}")
-        val contentType = "application/json; charset=utf-8".toMediaType()
-        val body = jsonData.toString().toRequestBody(contentType)
         val url = PreyWebServices.getInstance().getResponseUrlJson(context)
-        PreyLogger.d("sendNotifyActions url $url jsonData: $jsonData")
-        val preyConfig = PreyConfig.getPreyConfig(context)
-        val authorization = UtilConnection.getAuthorization(preyConfig)
-        val userAgent = UtilConnection.getUserAgent(preyConfig)
-        val request = Request.Builder().url(url).addHeader("Authorization", authorization)
-            .addHeader("User-Agent", userAgent).post(body)
-        if (correlationId != null) {
-            request.addHeader("X-Prey-Correlation-ID", correlationId)
-        }
-        if (status != null) {
-            request.addHeader("X-Prey-Status", status)
-        }
+        val body = jsonData.toString().toRequestBody(JSON_MEDIA_TYPE)
+        val requestBuilder = buildRequest(url, context, "POST", body)
+        correlationId?.let { requestBuilder.addHeader("X-Prey-Correlation-ID", it) }
+        status?.let { requestBuilder.addHeader("X-Prey-Status", it) }
         try {
-            client.newCall(request.build()).execute().use { response ->
+            client.newCall(requestBuilder.build()).execute().use { response ->
                 PreyLogger.d("sendNotifyActions code:${response.code}")
-                val result = response.isSuccessful
-                if (result) {
+                if (response.isSuccessful) {
                     PreyLogger.d("sendNotifyActions body:${response.body?.string()}")
                     PreyConfig.getPreyConfig(context).addActions(jsonData)
                 }
-                return@withContext result
+                return@withContext response.isSuccessful
             }
         } catch (e: IOException) {
             PreyLogger.e("sendNotifyActions error:${e.message}", e)
@@ -165,83 +203,6 @@ object PreyWebServicesKt {
     }
 
     /**
-     * Sends the device's location to the Prey server.
-     *
-     * This function packages the provided [Location] object into a JSON payload and POSTs it
-     * to the Prey API. If the `isAware` flag is true, it first checks the distance from the
-     * last reported location. If the device has moved less than 250 meters, the new location
-     * is not sent, to avoid redundant updates. On a successful transmission, the current
-     * location is saved as the last known location.
-     *
-     * This operation is performed on a background thread.
-     *
-     * @param context The application context.
-     * @param location The location data to send.
-     * @param isAware A boolean flag indicating if the location report is for Aware mode.
-     *                This triggers a check to prevent sending updates if the location hasn't
-     *                changed significantly.
-     * @return `true` if the location was sent successfully, `false` otherwise (including
-     *         if the location was not sent due to minimal distance change in Aware mode,
-     *         or if a network error occurred).
-     */
-    suspend fun doSendLocation(
-        context: Context, location: Location, isAware: Boolean
-    ): Boolean = withContext(Dispatchers.IO) {
-        PreyLogger.d("doSendLocation:")
-        if (isAware) {
-            val previous = AwareStore.load(context)
-            var distanceInMeters = -1f
-            if (previous != null) {
-                distanceInMeters = location.distanceTo(previous.location)
-            }
-            PreyLogger.d("distanceInMeters:${distanceInMeters}")
-            if (distanceInMeters in 0.0..250.0) {
-                PreyLogger.d("distanceInMeters return")
-                return@withContext false
-            }
-        }
-        PreyLogger.d("doSendLocation doSend")
-        val accuracy = (location.accuracy * 100.0).roundToInt() / 100.0
-        // Create JSON object for location data
-        val json = JSONObject()
-        json.put(LocationUtil.LAT, location.latitude)
-        json.put(LocationUtil.LNG, location.longitude)
-        json.put(LocationUtil.ACC, accuracy)
-        json.put(LocationUtil.METHOD, "native")
-        val jsonData = JSONObject()
-        // Put location data into location wrapper
-        jsonData.put("location", json)
-        val mediaType = "application/json; charset=utf-8".toMediaType()
-        val body = jsonData.toString().toRequestBody(mediaType)
-        val preyConfig = PreyConfig.getPreyConfig(context)
-        val authorization = UtilConnection.getAuthorization(preyConfig)
-        val userAgent = UtilConnection.getUserAgent(preyConfig)
-        val url = if (isAware) {
-            PreyWebServices.getInstance().getDataUrlJson(context)
-            //PreyWebServices.getInstance().getLocationUrlJson(context)
-        } else {
-            PreyWebServices.getInstance().getDataUrlJson(context)
-        }
-        PreyLogger.d("doSendLocation url $url jsonData: $jsonData")
-        val request = Request.Builder().url(url).addHeader("Authorization", authorization)
-            .addHeader("User-Agent", userAgent).post(body).build()
-        try {
-            client.newCall(request).execute().use { response ->
-                val result = response.isSuccessful
-                PreyLogger.d("doSendLocation result:${result}")
-                if (result) {
-                    PreyLogger.d("doSendLocation body:${response.body?.string()}")
-                    AwareStore.save(context, location)
-                }
-                return@withContext result
-            }
-        } catch (e: IOException) {
-            PreyLogger.e("doSendLocation error:${e.message}", e)
-            return@withContext false
-        }
-    }
-
-    /**
      * Reports a specific device event to the Prey server via an HTTP POST request.
      *
      * This function constructs a JSON payload containing the event's name, information, and
@@ -268,35 +229,25 @@ object PreyWebServicesKt {
             put("info", event.info)
             put("status", extraData)
         }
-        val jsonString = rootJson.toString()
-        PreyLogger.d("sendPreyHttpEvent jsonString: $jsonString")
-        val mediaType = "application/json; charset=utf-8".toMediaType()
-        val body = jsonString.toRequestBody(mediaType)
-        //Request configuration
-        val preyConfig = PreyConfig.getPreyConfig(context)
         val url = PreyWebServices.getInstance().getEventsUrlJson(context)
-        PreyLogger.d("sendPreyHttpEvent url:${url}")
-        val request = Request.Builder()
-            .url(url)
-            .addHeader("Authorization", UtilConnection.getAuthorization(preyConfig))
+        val body = rootJson.toString().toRequestBody(JSON_MEDIA_TYPE)
+        val request = buildRequest(url, context, "POST", body)
             .addHeader("X-Prey-Status", extraData.toString())
-            .addHeader("User-Agent", UtilConnection.getUserAgent(preyConfig))
-            .post(body)
             .build()
         //Execution and response management
         try {
             client.newCall(request).execute().use { response ->
-                val responseBody = response.body?.string()
                 if (response.isSuccessful) {
-                    PreyLogger.d("sendPreyHttpEvent successful Code:${response.code} responseBody:${responseBody}")
+                    val responseBody = response.body?.string()
+                    PreyLogger.d("sendPreyHttpEvent successful:${response.code} responseBody:${responseBody}")
                     responseBody
                 } else {
-                    PreyLogger.d("sendPreyHttpEvent error Code:${response.code}")
+                    PreyLogger.d("sendPreyHttpEvent code:${response.code}")
                     null
                 }
             }
         } catch (e: Exception) {
-            PreyLogger.e("Unexpected error in sendPreyHttpEvent", e)
+            PreyLogger.e("sendPreyHttpEvent Unexpected error:${e.message}", e)
             null
         }
     }
@@ -312,42 +263,104 @@ object PreyWebServicesKt {
      * @return `true` if the location was successfully sent and received by the server, `false` otherwise.
      */
     fun sendDailyLocation(context: Context, location: Location): Boolean {
-        PreyLogger.d("DailyLocationSender send")
-        val accuracy = (location.accuracy * 100.0).roundToInt() / 100.0
-        // Create JSON object for location data
-        val json = JSONObject()
-        json.put(LocationUtil.LAT, location.latitude)
-        json.put(LocationUtil.LNG, location.longitude)
-        json.put(LocationUtil.ACC, accuracy)
-        json.put(LocationUtil.METHOD, "native")
-        json.put(LocationUtil.FORCE, true)
-        val jsonData = JSONObject()
-        // Put location data into location wrapper
-        jsonData.put("location", json)
-        val mediaType = "application/json; charset=utf-8".toMediaType()
-        val body = jsonData.toString().toRequestBody(mediaType)
-        val preyConfig = PreyConfig.getPreyConfig(context)
-        val authorization = UtilConnection.getAuthorization(preyConfig)
-        val userAgent = UtilConnection.getUserAgent(preyConfig)
+        PreyLogger.d("sendDailyLocation")
         val url = PreyWebServices.getInstance().getDataUrlJson(context)
         //var url = PreyWebServices.getInstance().getLocationUrlJson(context)
-        PreyLogger.d("url:${url}")
-        val request =
-            Request.Builder().url(url).post(body).addHeader("Authorization", authorization)
-                .addHeader("User-Agent", userAgent).build()
+        val body = location.toPreyJson(true).toString().toRequestBody(JSON_MEDIA_TYPE)
+        val request = buildRequest(url, context, "POST", body).build()
+        PreyLogger.d("doSendLocation url $url jsonData: $location.toPreyJson()")
         try {
             client.newCall(request).execute().use { response ->
-                PreyLogger.d("LocationSender send code:${response.code}")
-                val result = response.isSuccessful
-                PreyLogger.d("LocationSender send result:${result}")
-                if (result) {
-                    PreyLogger.d("LocationSender send body:${response.body?.string()}")
+                if (response.isSuccessful) {
+                    PreyLogger.d("sendDailyLocation body:${response.body?.string()}")
                 }
-                return result
+                return response.isSuccessful
             }
         } catch (e: IOException) {
-            PreyLogger.e("doSendLocation send error:${e.message}", e)
+            PreyLogger.e("sendDailyLocation error:${e.message}", e)
             return false
+        }
+    }
+
+    /**
+     * Sends the current location to the Prey server, with optional smart filtering for Aware mode.
+     *
+     * In Aware mode ([isAware] is true), this function implements a distance-based filter to
+     * avoid redundant uploads; if the device has moved 250 meters or less since the last
+     * reported location, the upload is skipped to conserve battery and bandwidth.
+     *
+     * Successful uploads result in the location being cached locally via [AwareStore] for
+     * future distance comparisons.
+     *
+     * @param context The application context used for configuration and storage.
+     * @param location The [Location] object containing the coordinates and accuracy.
+     * @param isAware Whether the request is triggered by Aware mode. If true, enables distance filtering.
+     * @return `true` if the location was successfully sent to the server, `false` if the
+     *         upload was skipped due to proximity, or if a network error occurred.
+     */
+    suspend fun doSendLocation(
+        context: Context, location: Location, isAware: Boolean
+    ): Boolean = withContext(Dispatchers.IO) {
+        PreyLogger.d("doSendLocation")
+        if (isAware) {
+            val previous = AwareStore.load(context)
+            if (previous != null && location.distanceTo(previous.location) <= 250) {
+                return@withContext false
+            }
+        }
+        val url = if (isAware) {
+            PreyWebServices.getInstance().getDataUrlJson(context)
+            //PreyWebServices.getInstance().getLocationUrlJson(context)
+        } else {
+            PreyWebServices.getInstance().getDataUrlJson(context)
+        }
+        val body = location.toPreyJson().toString().toRequestBody(JSON_MEDIA_TYPE)
+        val request = buildRequest(url, context, "POST", body).build()
+        PreyLogger.d("doSendLocation url $url jsonData: $location.toPreyJson()")
+        try {
+            client.newCall(request).execute().use { response ->
+                if (response.isSuccessful) {
+                    PreyLogger.d("doSendLocation body:${response.body?.string()}")
+                    AwareStore.save(context, location)
+                }
+                return@withContext response.isSuccessful
+            }
+        } catch (e: IOException) {
+            PreyLogger.e("doSendLocation error:${e.message}", e)
+            return@withContext false
+        }
+    }
+
+    /**
+     * Retrieves the name of the device as registered on the Prey server.
+     *
+     * This function performs an authenticated GET request to the device information URL.
+     * It parses the resulting JSON response to extract the "name" field.
+     *
+     * This is a suspending function that executes the network operation on the
+     * [Dispatchers.IO] coroutine dispatcher.
+     *
+     * @param context The application context used to retrieve device configurations and URLs.
+     * @return The name of the device if the request is successful and the "name" field exists;
+     *         `null` if the request fails, the response is empty, or an error occurs during parsing.
+     */
+     suspend fun getNameDevice(context: Context): String? = withContext(Dispatchers.IO){
+        val url = PreyWebServices.getInstance().getInfoUrlJson(context)
+        val request = buildRequest(url, context).build()
+        try {
+            client.newCall(request).execute().use { response ->
+                val body = response.body?.string()
+                PreyLogger.d("getNameDevice code:${response.code} | success:${response.isSuccessful}")
+                if (response.isSuccessful && !body.isNullOrBlank()) {
+                    JSONObject(body).optString("name", null)
+                } else {
+                    PreyLogger.d("getNameDevice failed: ${response.message}")
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            PreyLogger.e("getNameDevice error: ${e.message}", e)
+            null
         }
     }
 
@@ -360,19 +373,41 @@ object PreyWebServicesKt {
      * @return The public IP address as a trimmed [String] if successful; `null` if the
      *         request fails, returns a non-success status code, or an exception occurs.
      */
-    fun getIPAddress(): String? {
+    suspend fun getIPAddress(): String? = withContext(Dispatchers.IO) {
         val request = Request.Builder()
             .url("https://ifconfig.me/ip")
             .build()
-        return try {
+        try {
             client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) return null
-                response.body?.string()?.trim()
+                if (response.isSuccessful) response.body?.string()?.trim() else null
             }
         } catch (e: Exception) {
-            PreyLogger.e("Connection error:${e.message}",e)
+            PreyLogger.e("Connection error:${e.message}", e)
             null
         }
     }
+
+
+    suspend fun getProfile(context: Context): String? = withContext(Dispatchers.IO) {
+        val url = PreyWebServices.getInstance().getProfileUrl(context)
+        PreyLogger.d("getProfile url:${url}")
+        val request = buildRequest(url, context).build()
+        try {
+            client.newCall(request).execute().use { response ->
+                PreyLogger.d("getProfile code:${response.code}")
+                if (response.isSuccessful) {
+                    val body = response.body?.string()
+                    PreyLogger.d("getProfile body:${body}")
+                    return@withContext body
+                } else {
+                    return@withContext null
+                }
+            }
+        } catch (e: IOException) {
+            PreyLogger.e("getProfile error:${e.message}", e)
+            return@withContext null
+        }
+    }
+
 
 }

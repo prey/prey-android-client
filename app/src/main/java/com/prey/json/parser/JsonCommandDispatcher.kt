@@ -17,6 +17,7 @@ import com.prey.json.actions.Location
 import com.prey.json.actions.Lock
 import com.prey.json.actions.Ping
 import com.prey.json.actions.Report
+import com.prey.json.actions.SyncName
 import com.prey.json.actions.Tree
 import com.prey.json.actions.Triggers
 import com.prey.json.actions.Wipe
@@ -69,7 +70,8 @@ object JsonCommandDispatcher {
         "Tree" to Tree::class,
         "Report" to Report::class,
         "Triggers" to Triggers::class,
-        "Ping" to Ping::class
+        "Ping" to Ping::class,
+        "SyncName" to SyncName::class
     )
 
     /**
