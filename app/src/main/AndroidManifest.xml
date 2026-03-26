@@ -70,8 +70,7 @@
         android:required="true" />
 
     <application
-        android:name="com.prey.PreyApp"
-        android:allowBackup="false"
+            android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
@@ -79,7 +78,8 @@
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:enableOnBackInvokedCallback="true"
-        android:theme="@style/Theme.AppCompat" >
+        android:theme="@style/Theme.AppCompat"
+            android:name=".PreyApp">
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
@@ -97,13 +97,12 @@
 
         <!-- Exported added for android 12 -->
         <activity
-            android:name="com.prey.activities.LoginActivity"
-            android:clearTaskOnLaunch="true"
+                android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleInstance"
             android:noHistory="true"
             android:exported="true"
-            >
+                android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -155,28 +154,25 @@
             />
 
         <activity
-            android:name="com.prey.activities.SignInActivity"
-            android:configChanges="keyboardHidden|orientation"
+                android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
 
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            />
+                android:name=".activities.SignInActivity" />
 
         <activity
-            android:name="com.prey.activities.SignUpActivity"
-            android:configChanges="keyboardHidden|orientation"
+                android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
 
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            />
+                android:name=".activities.SignUpActivity" />
 
 
         <activity
-            android:name="com.prey.activities.DeviceReadyActivity"
-            android:configChanges="keyboardHidden|orientation"
+                android:configChanges="keyboardHidden|orientation"
             android:noHistory="true"
 
-            />
+                android:name=".activities.DeviceReadyActivity" />
 
         <activity
             android:name=".activities.WelcomeActivity"
@@ -198,110 +194,101 @@
             />
 
         <activity
-            android:name="com.prey.activities.CheckPasswordActivity"
-            android:launchMode="singleInstance"
+                android:launchMode="singleInstance"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
-            />
+                android:name=".activities.CheckPasswordActivity" />
 
         <!-- remove noHistory="true -->
         <activity
-            android:name="com.prey.activities.CheckPasswordHtmlActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"
+                android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
-              />
+                android:name=".activities.CheckPasswordHtmlActivity" />
 
         <!-- New Activity for Chromebook -->
         <activity
-            android:name="com.prey.activities.ChromeActivity"
-            android:launchMode="singleTask"
+                android:launchMode="singleTask"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
-            />
+                android:name=".activities.ChromeActivity" />
 
         <activity
-            android:name="com.prey.activities.PreyConfigurationActivity"
-            android:configChanges="orientation|keyboardHidden"
+                android:configChanges="orientation|keyboardHidden"
 
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
             android:noHistory="true"
-            android:theme="@android:style/Theme.NoTitleBar" />
+            android:theme="@android:style/Theme.NoTitleBar"
+                android:name=".activities.PreyConfigurationActivity" />
         <activity
-            android:name="com.prey.activities.PopUpAlertActivity"
 
-            android:clearTaskOnLaunch="true"
+                android:clearTaskOnLaunch="true"
             android:noHistory = "true"
             android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+                android:name=".activities.PopUpAlertActivity" />
         <activity
-            android:name="com.prey.activities.FeedbackActivity"
 
-            android:clearTaskOnLaunch="true"
+                android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+                android:name=".activities.FeedbackActivity" />
         <activity
-            android:name="com.prey.activities.FormFeedbackActivity"
 
-            android:clearTaskOnLaunch="true"
+                android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+                android:name=".activities.FormFeedbackActivity" />
 
         <activity
-            android:name="com.prey.activities.CameraActivity"
-            android:clearTaskOnLaunch="true"
+                android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
 
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+                android:name=".activities.CameraActivity" />
         <activity
-            android:name="com.prey.activities.SimpleCameraActivity"
-            android:theme="@style/Theme.Transparent"
+                android:theme="@style/Theme.Transparent"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
-             />
+                android:name=".activities.SimpleCameraActivity" />
 
         <activity
-            android:name="com.prey.activities.PermissionInformationActivity"
-            android:configChanges="keyboardHidden|orientation"
-            />
+                android:configChanges="keyboardHidden|orientation"
+                android:name=".activities.PermissionInformationActivity" />
 
         <activity
-            android:name="com.prey.activities.PasswordNativeActivity"
-            android:launchMode="singleInstance"
+                android:launchMode="singleInstance"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
-            />
+                android:name=".activities.PasswordNativeActivity" />
         <activity
-            android:name="com.prey.activities.PasswordHtmlActivity"
-            android:launchMode="singleInstance"
+                android:launchMode="singleInstance"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
-            />
+                android:name=".activities.PasswordHtmlActivity" />
         <activity
-            android:name="com.prey.activities.PinNativeActivity"
-            android:launchMode="singleInstance"
+                android:launchMode="singleInstance"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
-            />
+                android:name=".activities.PinNativeActivity" />
         <activity
-            android:name="com.prey.activities.OpenSettingsActivity"
-            android:launchMode="singleInstance"
+                android:launchMode="singleInstance"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
-            />
+                android:name=".activities.OpenSettingsActivity" />
 
         <!-- Exported added for android 12 -->
         <receiver
-            android:name="com.prey.receivers.PreyBootController"
-            android:enabled="true"
+                android:enabled="true"
             android:exported="true"
-            android:label="PreyBootController" >
+            android:label="PreyBootController"
+                android:name=".receivers.PreyBootController">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -309,9 +296,8 @@
 
         <!-- Exported added for android 12 -->
         <receiver
-            android:name="com.prey.events.receivers.EventReceiver"
-            android:exported="true"
-            >
+                android:exported="true"
+                android:name=".events.receivers.EventReceiver">
             <intent-filter android:priority="20000">
 
                 <!-- TURNED ON/OFF -->
@@ -346,24 +332,22 @@
 
         </receiver>
 
-        <receiver android:name="com.prey.receivers.AlarmReportReceiver" />
-        <receiver android:name="com.prey.actions.aware.AlarmAwareReceiver" />
-        <receiver android:name="com.prey.receivers.AlarmScheduledReceiver" />
-        <receiver android:name="com.prey.actions.location.daily.AlarmLocationReceiver" />
+        <receiver android:name=".receivers.AlarmReportReceiver" />
+        <receiver android:name=".actions.aware.AlarmAwareReceiver" />
+        <receiver android:name=".receivers.AlarmScheduledReceiver" />
+        <receiver android:name=".actions.location.daily.AlarmLocationReceiver" />
 
         <receiver
-            android:name="com.prey.receivers.GeofenceReceiver"
-            android:exported="true"
-            >
+                android:exported="true"
+                android:name=".receivers.GeofenceReceiver">
             <intent-filter>
                 <action android:name="android.location.MODE_CHANGED" />
                 <action android:name="android.location.PROVIDERS_CHANGED" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.prey.receivers.AwareGeofenceReceiver"
-            android:exported="true"
-            >
+                android:exported="true"
+                android:name=".receivers.AwareGeofenceReceiver">
             <intent-filter>
                 <action android:name="android.location.MODE_CHANGED" />
                 <action android:name="android.location.PROVIDERS_CHANGED" />
@@ -372,10 +356,10 @@
 
         <!-- Exported added for android 12 -->
         <receiver
-            android:name="com.prey.receivers.PreyDeviceAdmin"
-            android:label="@string/device_admin_label"
+                android:label="@string/device_admin_label"
             android:exported="true"
-            android:permission="android.permission.BIND_DEVICE_ADMIN" >
+            android:permission="android.permission.BIND_DEVICE_ADMIN"
+                android:name=".receivers.PreyDeviceAdmin">
             <meta-data
                 android:name="android.app.device_admin"
                 android:resource="@xml/security_policies" />
@@ -385,40 +369,40 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.prey.actions.autoconnect.AutoConnectAlarmReceiver" />
+        <receiver android:name=".actions.autoconnect.AutoConnectAlarmReceiver" />
 
-        <receiver android:name="com.prey.actions.alert.AlertReceiver" />
-        <receiver android:name="com.prey.actions.triggers.TimeTriggerReceiver" />
+        <receiver android:name=".actions.alert.AlertReceiver" />
+        <receiver android:name=".actions.triggers.TimeTriggerReceiver" />
 
         <!-- Services -->
-        <service android:name="com.prey.services.LocationService" />
-        <service android:name="com.prey.actions.location.LocationUpdatesService" />
-        <service android:name="com.prey.services.PreyBootService" />
-        <service android:name="com.prey.services.PreyRunnerService" />
-        <service android:name="com.prey.beta.services.PreyBetaRunnerService" />
-        <service android:name="com.prey.actions.report.ReportService" />
-        <service android:name="com.prey.actions.geofences.GeofenceIntentService" />
-        <service android:name="com.prey.actions.aware.AwareIntentService" />
-        <service android:name="com.prey.actions.fileretrieval.FileretrievalService" />
-        <service android:name="com.prey.services.PreyLockService" />
-        <service android:name="com.prey.services.PreyLockHtmlService" />
-        <service android:name="com.prey.services.CheckLockActivated" />
-        <service android:name="com.prey.services.PreyOverlayService" />
+        <service android:name=".services.LocationService" />
+        <service android:name=".actions.location.LocationUpdatesService" />
+        <service android:name=".services.PreyBootService" />
+        <service android:name=".services.PreyRunnerService" />
+        <service android:name=".beta.services.PreyBetaRunnerService" />
+        <service android:name=".actions.report.ReportService" />
+        <service android:name=".actions.geofences.GeofenceIntentService" />
+        <service android:name=".actions.aware.AwareIntentService" />
+        <service android:name=".actions.fileretrieval.FileretrievalService" />
+        <service android:name=".services.PreyLockService" />
+        <service android:name=".services.PreyLockHtmlService" />
+        <service android:name=".services.CheckLockActivated" />
+        <service android:name=".services.PreyOverlayService" />
 
 
-        <service android:name="com.prey.services.PreyNotificationForeGroundService" />
+        <service android:name=".services.PreyNotificationForeGroundService" />
 
-        <service android:name="com.prey.actions.autoconnect.AutoConnectService" />
+        <service android:name=".actions.autoconnect.AutoConnectService" />
 
-        <service android:name="com.prey.services.ActivityIntentService" />
+        <service android:name=".services.ActivityIntentService" />
 
-        <receiver android:name="com.prey.receivers.AlarmDisablePowerReceiver" />
+        <receiver android:name=".receivers.AlarmDisablePowerReceiver" />
 
         <!-- Exported added for android 12 -->
         <receiver
-            android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver"
-            android:enabled="true"
-            android:exported="true" >
+                android:enabled="true"
+            android:exported="true"
+                android:name=".receivers.PreyDisablePowerOptionsReceiver">
             <intent-filter android:priority="20000">
                 <action android:name="android.intent.action.CLOSE_SYSTEM_DIALOGS" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -429,9 +413,9 @@
             BroadcastReceiver that listens for changes in application restrictions.
         -->
         <receiver
-            android:name="com.prey.receivers.RestrictionsReceiver"
-            android:enabled="true"
-            android:exported="true" >
+                android:enabled="true"
+            android:exported="true"
+                android:name=".receivers.RestrictionsReceiver">
             <!--
                 Intent filter that specifies the action this receiver is interested in.
                 In this case, it's the APPLICATION_RESTRICTIONS_CHANGED action, which
@@ -442,48 +426,51 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="com.prey.services.PreyDisablePowerOptionsService" />
-        <service android:name="com.prey.services.PreySecureService" />
+        <service android:name=".services.PreyDisablePowerOptionsService" />
+        <service android:name=".services.PreySecureService" />
 
         <!-- Exported added for android 12 -->
         <!-- [START firebase_service] -->
         <service
-            android:name="com.prey.services.MyFirebaseMessagingService"
-            android:exported="true" >
+                android:exported="true"
+                android:name=".services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
         <!-- [END firebase_service] -->
 
-        <service android:name="com.prey.services.PreyJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+        <service
+                android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"
+                android:name=".services.PreyJobService" />
 
-        <service android:name="com.prey.services.AwareJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+        <service
+                android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"
+                android:name=".services.AwareJobService" />
 
-        <service android:name="com.prey.services.AutoconnectJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+        <service
+                android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"
+                android:name=".services.AutoconnectJobService" />
 
-        <service android:name="com.prey.services.ReportJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+        <service
+                android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"
+                android:name=".services.ReportJobService" />
 
-        <service android:name="com.prey.services.PreyAccessibilityService" />
-        <service android:name="com.prey.services.PreyStorageService" />
-        <service android:name="com.prey.services.PreyPermissionService" />
-        <service android:name="com.prey.services.PreyCloseNotificationService" />
+        <service android:name=".services.PreyAccessibilityService" />
+        <service android:name=".services.PreyStorageService" />
+        <service android:name=".services.PreyPermissionService" />
+        <service android:name=".services.PreyCloseNotificationService" />
 
         <!-- Exported added for android 12 -->
         <service
-            android:name="com.prey.services.AppAccessibilityService"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+                android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:enabled="true"
             android:exported="true"
-            >
+                android:name=".services.AppAccessibilityService">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService"/>
             </intent-filter>
