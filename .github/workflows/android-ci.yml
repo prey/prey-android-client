@@ -1,0 +1,129 @@
+# Android CI Pipeline
+# Runs 3 jobs in parallel:
+#   - Lint: static analysis (~2 min)
+#   - Unit Tests: Robolectric tests on JVM, no emulator needed (~1 min)
+#   - Instrumented Tests: runs on Android emulator (~8-10 min)
+# Total time is the slowest job (~10 min).
+# If the emulator job is unstable in CI, you can safely disable it
+# and rely on Robolectric tests only.
+
+name: Android CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          validate-wrappers: false
+
+      - name: Create CI dummy files
+        run: |
+          echo '{"project_info":{"project_number":"0","project_id":"prey-ci","storage_bucket":"prey-ci.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:0:android:0","android_client_info":{"package_name":"com.prey"}},"api_key":[{"current_key":"fake"}]}],"configuration_version":"1"}' > app/google-services.json
+          printf 'properties\napi-key-batch=\nemail-batch=\nask-for-name-batch=false\ntoken=\n' > app/src/main/res/raw/batch.properties
+          echo "google_maps_key=fake-key-for-ci" > secrets.properties
+          printf 'properties\nprey-campaign=ci\nprey-panel=https://localhost\ngcm-id-prefix=0\nprey-domain=localhost\nprey-subdomain=panel\nemail-feedback=ci@test.com\nsubject-feedback=CI\napi-v2=/api/v2/\nscheduled=false\nminute-scheduled=15\ntimeout-report=60\ngeofence-maximum-accuracy=100\nprey-jwt=fake\nprey-google-play=https://play.google.com\ngeofence-loitering-delay=300000\ndistance-location=50\ngeofence-notification-responsiveness=30000\ndistance-aware=100\nradius-aware=200\nprey-terms=https://localhost/terms\nprey-terms-es=https://localhost/es/terms\nprey-forgot=https://localhost/forgot\nopen-pin=false\n' > app/src/main/res/raw/config.properties
+
+      - name: Run lint
+        run: ./gradlew lintDebug
+
+      - name: Upload lint results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-results
+          path: app/build/reports/lint-results-debug.html
+
+  unit-test:
+    name: Unit Tests (Robolectric)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          validate-wrappers: false
+
+      - name: Create CI dummy files
+        run: |
+          echo '{"project_info":{"project_number":"0","project_id":"prey-ci","storage_bucket":"prey-ci.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:0:android:0","android_client_info":{"package_name":"com.prey"}},"api_key":[{"current_key":"fake"}]}],"configuration_version":"1"}' > app/google-services.json
+          printf 'properties\napi-key-batch=\nemail-batch=\nask-for-name-batch=false\ntoken=\n' > app/src/main/res/raw/batch.properties
+          echo "google_maps_key=fake-key-for-ci" > secrets.properties
+          printf 'properties\nprey-campaign=ci\nprey-panel=https://localhost\ngcm-id-prefix=0\nprey-domain=localhost\nprey-subdomain=panel\nemail-feedback=ci@test.com\nsubject-feedback=CI\napi-v2=/api/v2/\nscheduled=false\nminute-scheduled=15\ntimeout-report=60\ngeofence-maximum-accuracy=100\nprey-jwt=fake\nprey-google-play=https://play.google.com\ngeofence-loitering-delay=300000\ndistance-location=50\ngeofence-notification-responsiveness=30000\ndistance-aware=100\nradius-aware=200\nprey-terms=https://localhost/terms\nprey-terms-es=https://localhost/es/terms\nprey-forgot=https://localhost/forgot\nopen-pin=false\n' > app/src/main/res/raw/config.properties
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest
+
+      - name: Upload unit test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: app/build/reports/tests/testDebugUnitTest/
+
+  instrumented-test:
+    name: Instrumented Tests (Emulator)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          validate-wrappers: false
+
+      - name: Create CI dummy files
+        run: |
+          echo '{"project_info":{"project_number":"0","project_id":"prey-ci","storage_bucket":"prey-ci.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:0:android:0","android_client_info":{"package_name":"com.prey"}},"api_key":[{"current_key":"fake"}]}],"configuration_version":"1"}' > app/google-services.json
+          printf 'properties\napi-key-batch=\nemail-batch=\nask-for-name-batch=false\ntoken=\n' > app/src/main/res/raw/batch.properties
+          echo "google_maps_key=fake-key-for-ci" > secrets.properties
+          printf 'properties\nprey-campaign=ci\nprey-panel=https://localhost\ngcm-id-prefix=0\nprey-domain=localhost\nprey-subdomain=panel\nemail-feedback=ci@test.com\nsubject-feedback=CI\napi-v2=/api/v2/\nscheduled=false\nminute-scheduled=15\ntimeout-report=60\ngeofence-maximum-accuracy=100\nprey-jwt=fake\nprey-google-play=https://play.google.com\ngeofence-loitering-delay=300000\ndistance-location=50\ngeofence-notification-responsiveness=30000\ndistance-aware=100\nradius-aware=200\nprey-terms=https://localhost/terms\nprey-terms-es=https://localhost/es/terms\nprey-forgot=https://localhost/forgot\nopen-pin=false\n' > app/src/main/res/raw/config.properties
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run instrumented tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          script: ./gradlew connectedDebugAndroidTest
+
+      - name: Upload instrumented test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: instrumented-test-results
+          path: app/build/reports/androidTests/connected/

@@ -176,15 +176,13 @@ public class PreyWebServices implements WebServices {
 
         parameters = increaseData(ctx, parameters);
 
-        String imei = new PreyPhone(ctx).getHardware().getAndroidDeviceId();
-        parameters.put("physical_address", imei);
+        parameters.put("physical_address", PreyConfig.getPreyConfig(ctx).resolveImei());
         String lang=Locale.getDefault().getLanguage();
         parameters.put("lang",lang);
 
         PreyHttpResponse response = null;
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices.json");
-            PreyLogger.d("url:" + url);
             response = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
             if (response == null) {
                 throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, "[" + -1 + "]"));
@@ -577,8 +575,7 @@ public class PreyWebServices implements WebServices {
         parameters.put(prefix + "[cpu_speed]", hardware.getCpuSpeed());
         parameters.put(prefix + "[cpu_cores]", hardware.getCpuCores());
         parameters.put(prefix + "[ram_size]", "" + hardware.getTotalMemory());
-        parameters.put(prefix + "[serial_number]", hardware.getSerialNumber());
-        parameters.put(prefix + "[uuid]", hardware.getUuid());
+        parameters.put(prefix + "[serial_number]", PreyConfig.getPreyConfig(ctx).getMdmSerialNumber());
         parameters.put(prefix + "[google_services]", String.valueOf(PreyUtils.isGooglePlayServicesAvailable(ctx)));
         //Compilation is added during creation
         parameters.put(prefix + "[android_compile_sdk]", String.valueOf(com.prey.BuildConfig.COMPILE_SDK_VERSION));
@@ -617,7 +614,7 @@ public class PreyWebServices implements WebServices {
             }
             if (!"".equals(hardware.getUuid()) && !PreyConfig.getPreyConfig(ctx).isSentUuidSerialNumber()) {
                 parameters.put("hardware_attributes[uuid]", hardware.getUuid());
-                parameters.put("hardware_attributes[serial_number]", hardware.getSerialNumber());
+                parameters.put("hardware_attributes[serial_number]", PreyConfig.getPreyConfig(ctx).getMdmSerialNumber());
                 PreyConfig.getPreyConfig(ctx).setSentUuidSerialNumber(true);
             }
             //Compilation is added when sending in data

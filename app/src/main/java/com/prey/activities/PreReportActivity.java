@@ -404,9 +404,9 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
                 } catch (Exception e) {
                     PreyLogger.e("Error:"+e.getMessage(),e);
                 }
-                String imei = phone.getHardware().getSerialNumber();
+                String imei = PreyConfig.getPreyConfig(getApplicationContext()).resolveImei();
                 PreyConfig.getPreyConfig(getApplicationContext()).setSsid(ssid);
-                PreyConfig.getPreyConfig(getApplicationContext()).setImei(imei);
+                PreyConfig.getPreyConfig(getApplicationContext()).setMdmImei(imei);
                 PreyConfig.getPreyConfig(getApplicationContext()).setModel(model + " " + vendor);
             } catch (Exception e) {
                 PreyLogger.e("error public_ip:" + e.getMessage(), e);

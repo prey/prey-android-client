@@ -189,7 +189,7 @@ public class SimpleVideoActivity extends Activity implements
             Class clsCamera;
             clsCamera = Class.forName("android.hardware.Camera");
             Method methodGetNumberOfCameras = clsCamera.getMethod("getNumberOfCameras", noparams);
-            Integer numberOfCamerasInt = (Integer) methodGetNumberOfCameras.invoke(null, null);
+            Integer numberOfCamerasInt = (Integer) methodGetNumberOfCameras.invoke(null, (Object[]) null);
             if (numberOfCamerasInt != null) {
                 if (numberOfCamerasInt == 1) {
                     mCamera = getCamera(0, clsCamera);
@@ -215,7 +215,7 @@ public class SimpleVideoActivity extends Activity implements
             param[0] = Integer.TYPE;
             Method methodOpen = clsCamera.getMethod("open", param);
             Integer[] input = {Integer.valueOf(idx)};
-            mCamera = (Camera) methodOpen.invoke(null, input);
+            mCamera = (Camera) methodOpen.invoke(null, (Object[]) input);
             PreyLogger.d("Camera.open(camIdx)");
         } catch (RuntimeException e) {
             PreyLogger.d("Camera failed to open: " + e.getMessage());
