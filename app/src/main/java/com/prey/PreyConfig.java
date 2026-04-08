@@ -1604,6 +1604,8 @@ public class PreyConfig {
         saveBoolean(PreyConfig.MSP_ACCOUNT, mspAccount);
     }
 
+
+
     public boolean getStart() {
         return getBoolean(PreyConfig.START, true);
     }

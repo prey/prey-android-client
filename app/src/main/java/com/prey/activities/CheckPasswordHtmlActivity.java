@@ -566,11 +566,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, intent);
         if (requestCode == FILE_CHOOSER_RESULT_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                Uri uri = intent.getData();
-                if (uri != null && uri.toString().startsWith("content:")) {
-                    String fileName = getFileNameHelp(getApplicationContext(), uri);
-                    PreyConfig.getPreyConfig(this).setFileHelp(fileName);
-                }
             }
         }
     }

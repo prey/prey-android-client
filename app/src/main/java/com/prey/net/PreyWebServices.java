@@ -1021,10 +1021,6 @@ public class PreyWebServices implements WebServices {
                 PreyConfig.getPreyConfig(ctx).setProAccount(pro_account);
                 boolean twoStepEnabled = jsnobject.getBoolean("two_step_enabled?");
                 PreyConfig.getPreyConfig(ctx).setTwoStep(twoStepEnabled);
-                if (jsnobject.has("contact_form_for_free")) {
-                    boolean contactFormForFree = jsnobject.getBoolean("contact_form_for_free");
-                    PreyConfig.getPreyConfig(ctx).setContactFormForFree(contactFormForFree);
-                }
                 if (jsnobject.has("msp_account")) {
                     boolean mspAccount = jsnobject.getBoolean("msp_account");
                     PreyConfig.getPreyConfig(ctx).setMspAccount(mspAccount);
