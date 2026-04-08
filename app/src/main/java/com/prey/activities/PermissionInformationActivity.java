@@ -74,10 +74,7 @@ public class PermissionInformationActivity extends PreyActivity {
                     PreyLogger.d("PermissionInformationActivity: skipping device admin prompt (MDM managed)");
                 }
                 Intent intentPermission = null;
-                boolean canDrawOverlays = true;
-                if(!canDrawOverlays) {
-                    askForPermissionAndroid7();
-                }else{
+                {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         intentPermission = new Intent(PermissionInformationActivity.this, CheckPasswordHtmlActivity.class);
                     } else {
@@ -121,11 +118,6 @@ public class PermissionInformationActivity extends PreyActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
     };
 
-    @TargetApi(Build.VERSION_CODES.M)
-    public void askForPermissionAndroid7() {
-        // Overlay permission no longer needed
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         PreyLogger.d("PermissionInformationActivity: onRequestPermissionsResult");
@@ -135,23 +127,14 @@ public class PermissionInformationActivity extends PreyActivity {
         boolean canAccessStorage = PreyPermission.canAccessStorage(this);
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
                 && canAccessStorage  ) {
-            boolean canDrawOverlays = true;
-            if (!canDrawOverlays) {
-                askForPermissionAndroid7();
-            } else {
-                if (!canDrawOverlays) {
-                    askForAdminActive();
-                } else {
-                        finish();
-                        Intent intent = null;
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            intent = new Intent(this, CheckPasswordHtmlActivity.class);
-                        }else{
-                            intent = new Intent(this, CheckPasswordActivity.class);
-                        }
-                        startActivity(intent);
-                }
+            finish();
+            Intent intent = null;
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent = new Intent(this, CheckPasswordHtmlActivity.class);
+            }else{
+                intent = new Intent(this, CheckPasswordActivity.class);
             }
+            startActivity(intent);
         }
     }
 

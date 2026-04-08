@@ -367,10 +367,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             Manifest.permission.READ_MEDIA_VIDEO
     };
 
-    @TargetApi(Build.VERSION_CODES.M)
-    public void askForPermissionAndroid7() {
-        // Overlay permission no longer needed
-    }
+
 
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermission() {
@@ -482,23 +479,10 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
                 && canAccessStorage) {
             PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 1");
-            boolean canDrawOverlays = true;
-            if (!canDrawOverlays) {
-                PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 2");
-                askForPermissionAndroid7();
-            } else {
-                PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 3");
-                if (!canDrawOverlays) {
-                    PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 4");
-                    askForAdminActive();
-                } else {
-                    PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 5");
-                    Intent intentLogin = new Intent(this, LoginActivity.class);
-                    intentLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intentLogin);
-                    finish();
-                }
-            }
+            Intent intentLogin = new Intent(this, LoginActivity.class);
+            intentLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intentLogin);
+            finish();
         }
         /*
         Set notification permission response
