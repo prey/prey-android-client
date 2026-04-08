@@ -47,6 +47,7 @@ import com.prey.actions.location.LocationUpdatesService;
 import com.prey.actions.location.PreyLocation;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.CloseActivity;
+import com.prey.activities.LockScreenActivity;
 import com.prey.activities.LoginActivity;
 import com.prey.activities.PanelWebActivity;
 import com.prey.activities.PasswordHtmlActivity;
@@ -107,6 +108,10 @@ public class WebAppInterface {
     }
 
     public WebAppInterface(Context context, PasswordHtmlActivity activity) {
+        mContext = context;
+    }
+
+    public WebAppInterface(Context context, LockScreenActivity activity) {
         mContext = context;
     }
 
