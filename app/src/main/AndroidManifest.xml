@@ -273,6 +273,14 @@
         <activity
                 android:launchMode="singleInstance"
             android:noHistory="true"
+            android:lockTaskMode="if_whitelisted"
+            android:excludeFromRecents="true"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="keyboardHidden|orientation"
+                android:name=".activities.LockScreenActivity" />
+        <activity
+                android:launchMode="singleInstance"
+            android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
                 android:name=".activities.PinNativeActivity" />
@@ -475,6 +483,18 @@
                 <action android:name="android.accessibilityservice.AccessibilityService"/>
             </intent-filter>
             <meta-data android:name="android.accessibilityservice" android:resource="@xml/accessibilityservice"/>
+        </service>
+
+        <service
+                android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:enabled="true"
+            android:exported="true"
+                android:name=".services.SecurityAccessibilityService">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+            <meta-data android:name="android.accessibilityservice"
+                android:resource="@xml/security_accessibility_service"/>
         </service>
 
     </application>
