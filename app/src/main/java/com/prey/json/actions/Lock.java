@@ -28,6 +28,7 @@ import com.prey.PreyPermission;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
 import com.prey.activities.CloseActivity;
+import com.prey.activities.LockScreenActivity;
 import com.prey.activities.PasswordHtmlActivity;
 import com.prey.activities.PasswordNativeActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
@@ -102,60 +103,14 @@ public class Lock extends JsonAction {
             PreyConfig.getPreyConfig(ctx).setLockMessage("");
             PreyConfig.getPreyConfig(ctx).setLock(false);
             PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
-            if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove()){
-                Thread.sleep(1000);
-                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId,UtilJson.makeMapParam("start", "lock", "stopped",reason));
-                Thread.sleep(2000);
-                boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(ctx);
-                boolean canDrawOverlays=PreyPermission.canDrawOverlays(ctx);
-                if(canDrawOverlays||canAccessibility) {
-                    if(canDrawOverlays) {
-                        try {
-                            View view = PreyConfig.getPreyConfig(ctx).viewLock;
-                            WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
-                            if (wm != null && view != null) {
-                                wm.removeView(view);
-                                PreyConfig.getPreyConfig(ctx).viewLock = null;
-                            } else {
-                                android.os.Process.killProcess(android.os.Process.myPid());
-                            }
-                        }catch (Exception e){
-                            android.os.Process.killProcess(android.os.Process.myPid());
-                        }
-                    }
-                    Intent intentClose = new Intent(ctx, CloseActivity.class);
-                    intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ctx.startActivity(intentClose);
-                }else{
-                    try{
-                        FroyoSupport.getInstance(ctx).changePasswordAndLock("", true);
-                        WakeLock screenLock = ((PowerManager) ctx.getSystemService(Context.POWER_SERVICE)).newWakeLock(
-                                PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, PreyConfig.TAG);
-                        screenLock.acquire();
-                        screenLock.release();
-                        Thread.sleep(2000);
-                        reason="{\"origin\":\"panel\"}";
-                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped",reason));
-                    }catch(Exception e){
-                        throw new PreyException(e);
-                    }
-                }
-            }else{
-                try{
-                    if(!PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() ) {
-                        FroyoSupport.getInstance(ctx).changePasswordAndLock("", true);
-                        WakeLock screenLock = ((PowerManager) ctx.getSystemService(Context.POWER_SERVICE)).newWakeLock(
-                                PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, PreyConfig.TAG);
-                        screenLock.acquire();
-                        screenLock.release();
-                    }
-                    Thread.sleep(2000);
-                    reason="{\"origin\":\"panel\"}";
-                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped",reason));
-                }catch(Exception e){
-                    throw new PreyException(e);
-                }
-            }
+            Thread.sleep(1000);
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "lock", "stopped", reason));
+            Thread.sleep(2000);
+
+            // Close LockScreenActivity (it checks unlockPass in onResume and finishes)
+            Intent intentClose = new Intent(ctx, CloseActivity.class);
+            intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            ctx.startActivity(intentClose);
         } catch (Exception e) {
             PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage()));
@@ -172,93 +127,59 @@ public class Lock extends JsonAction {
         }
     }
 
-    public void lock(final Context ctx, String unlock,final String messageId,final String reason,String device_job_id) {
-        PreyLogger.d(String.format("lock unlock:%s messageId:%s reason:%s",unlock,messageId,reason));
+    public void lock(final Context ctx, String unlock, final String messageId, final String reason, String device_job_id) {
+        PreyLogger.d(String.format("lock unlock:%s messageId:%s reason:%s", unlock, messageId, reason));
         PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
         PreyConfig.getPreyConfig(ctx).setLock(true);
-        PreyLogger.d("lock 1");
-        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            boolean accessibility=PreyPermission.isAccessibilityServiceEnabled(ctx);
-            boolean canDrawOverlays=PreyPermission.canDrawOverlays(ctx);
-            if(canDrawOverlays||accessibility) {
-                if (canDrawOverlays) {
-                    Intent intentPreyLock = null;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        PreyLogger.d("lock 2");
-                        intentPreyLock = new Intent(ctx, PreyLockHtmlService.class);
-                    } else {
-                        PreyLogger.d("lock 3");
-                        intentPreyLock = new Intent(ctx, PreyLockService.class);
-                    }
-                    ctx.startService(intentPreyLock);
-                    Intent intentCheckLock = new Intent(ctx, CheckLockActivated.class);
-                    ctx.startService(intentCheckLock);
-                }
-                if (accessibility) {
-                        PreyLogger.d("lock 4");
-                        PreyConfig.getPreyConfig(ctx).setOverLock(false);
-                        Intent intentAccessibility = new Intent(ctx, AppAccessibilityService.class);
-                        ctx.startService(intentAccessibility);
-                        Intent intentPasswordActivity = null;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            intentPasswordActivity = new Intent(ctx, PasswordHtmlActivity.class);
-                        } else {
-                            intentPasswordActivity = new Intent(ctx, PasswordNativeActivity.class);
-                        }
-                        intentPasswordActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        ctx.startActivity(intentPasswordActivity);
-                }
-                //Lock immediately, as if the lock screen timeout has expired
-                FroyoSupport.getInstance(ctx).lockNow();
-            } else {
-                PreyLogger.d("lock 5");
-                Lock.lockWhenYouNocantDrawOverlays(ctx);
-            }
-        }else{
-            PreyLogger.d("lock 6");
-            Lock.lockOld(ctx);
-        }
+
+        // Launch LockScreenActivity with startLockTask() — primary lock mechanism
+        Intent lockIntent = new Intent(ctx, LockScreenActivity.class);
+        lockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        ctx.startActivity(lockIntent);
+
+        // Also start the monitoring service as backup
+        Intent intentCheckLock = new Intent(ctx, CheckLockActivated.class);
+        ctx.startService(intentCheckLock);
+
+        // Lock device screen immediately
+        FroyoSupport.getInstance(ctx).lockNow();
+
+        // Notify server
         new Thread(new Runnable() {
             public void run() {
                 try {
                     Thread.sleep(2000);
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "lock", "started", reason));
-                }catch(Exception e){
-                    PreyLogger.e("Error sendNotifyAction:"+e.getMessage(),e);
+                } catch (Exception e) {
+                    PreyLogger.e("Error sendNotifyAction:" + e.getMessage(), e);
                 }
             }
         }).start();
     }
 
-    public static void sendUnLock(final Context context){
+    public static void sendUnLock(final Context context) {
         new Thread(new Runnable() {
             public void run() {
-                String unlockPass=PreyConfig.getPreyConfig(context).getUnlockPass();
+                String unlockPass = PreyConfig.getPreyConfig(context).getUnlockPass();
                 PreyLogger.d("sendUnLock unlockPass:" + unlockPass);
-                if (unlockPass!=null && !"".equals(unlockPass)) {
-                    if (PreyConfig.getPreyConfig(context).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(context)) {
-                        PreyLogger.d("sendUnLock nothing");
-                    } else {
-                        PreyLogger.d("sendUnLock deleteUnlockPass");
-                        PreyConfig.getPreyConfig(context).setUnlockPass("");
-                        Intent intentClose = new Intent(context, CloseActivity.class);
-                        intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intentClose);
-                        Intent intentAccessibility = new Intent(context, AppAccessibilityService.class);
-                        context.stopService(intentAccessibility);
-                        final Context ctx = context;
-                        new Thread() {
-                            public void run() {
-                                String jobIdLock = PreyConfig.getPreyConfig(ctx).getJobIdLock();
-                                String reason = "{\"origin\":\"user\"}";
-                                if (jobIdLock != null && !"".equals(jobIdLock)) {
-                                    reason = "{\"origin\":\"user\",\"device_job_id\":\"" + jobIdLock + "\"}";
-                                    PreyConfig.getPreyConfig(ctx).setJobIdLock("");
-                                }
-                                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
+                if (unlockPass != null && !"".equals(unlockPass)) {
+                    PreyConfig.getPreyConfig(context).setUnlockPass("");
+                    PreyConfig.getPreyConfig(context).setLock(false);
+                    Intent intentClose = new Intent(context, CloseActivity.class);
+                    intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intentClose);
+                    final Context ctx = context;
+                    new Thread() {
+                        public void run() {
+                            String jobIdLock = PreyConfig.getPreyConfig(ctx).getJobIdLock();
+                            String reason = "{\"origin\":\"user\"}";
+                            if (jobIdLock != null && !"".equals(jobIdLock)) {
+                                reason = "{\"origin\":\"user\",\"device_job_id\":\"" + jobIdLock + "\"}";
+                                PreyConfig.getPreyConfig(ctx).setJobIdLock("");
                             }
-                        }.start();
-                    }
+                            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
+                        }
+                    }.start();
                 }
             }
         }).start();
