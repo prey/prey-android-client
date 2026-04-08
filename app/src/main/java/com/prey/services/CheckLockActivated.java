@@ -41,10 +41,6 @@ public class CheckLockActivated extends Service {
                     }
                     try {
                         Thread.sleep(2000);
-                        // Re-launch LockScreenActivity if it's not in foreground
-                        Intent lockIntent = new Intent(ctx, LockScreenActivity.class);
-                        lockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        ctx.startActivity(lockIntent);
                     } catch (Exception e) {
                         PreyLogger.e("CheckLockActivated Error:" + e.getMessage(), e);
                     }

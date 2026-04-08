@@ -12,7 +12,7 @@ import android.view.accessibility.AccessibilityEvent
 
 import com.prey.PreyConfig
 import com.prey.PreyLogger
-import com.prey.activities.LockScreenActivity
+import com.prey.activities.PasswordHtmlActivity
 
 class SecurityAccessibilityService : AccessibilityService() {
 
@@ -25,7 +25,16 @@ class SecurityAccessibilityService : AccessibilityService() {
 
             if (!packageName.startsWith("com.prey")) {
                 PreyLogger.d("SecurityAccessibilityService: blocked $packageName, relaunching lock")
-                val intent = Intent(applicationContext, LockScreenActivity::class.java).apply {
+
+                // Collapse status bar if user pulled it down
+                try {
+                    performGlobalAction(GLOBAL_ACTION_BACK)
+                } catch (e: Exception) {
+                    PreyLogger.e("SecurityAccessibilityService: collapse failed: ${e.message}", e)
+                }
+
+                // Relaunch lock screen activity
+                val intent = Intent(applicationContext, PasswordHtmlActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 }
                 applicationContext.startActivity(intent)
