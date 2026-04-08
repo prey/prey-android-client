@@ -1471,22 +1471,6 @@ public class PreyConfig {
         return getBoolean(PreyConfig.PERMISSION_LOCATION, true);
     }
 
-    public String getHelpFile() {
-        return getString(HELP_FILE, "");
-    }
-
-    public void setFileHelp(String fileHelp) {
-        saveString(HELP_FILE, fileHelp);
-    }
-
-    public boolean getHelpFormForFree() {
-        return getBoolean(PreyConfig.CONTACT_FORM_FOR_FREE, false);
-    }
-
-    public void setContactFormForFree(boolean contactFree) {
-        saveBoolean(PreyConfig.CONTACT_FORM_FOR_FREE, contactFree);
-    }
-
     public boolean getViewSecure(){
         return getBoolean(PreyConfig.VIEW_SECURE, false);
     }

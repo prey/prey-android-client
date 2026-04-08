@@ -1216,56 +1216,6 @@ public class PreyWebServices implements WebServices {
     }
 
     /**
-     * Method to send the help
-     *
-     * @param ctx
-     * @param subject
-     * @param message
-     * @return help result
-     * @throws Exception
-     */
-    public PreyHttpResponse sendHelp(Context ctx, String subject, String message) throws Exception {
-        Map<String, String> params = new HashMap<>();
-        params.put("support_category", "support");
-        params.put("message", message);
-        params.put("support_topic", subject);
-        List<EntityFile> entityFiles = null;
-        try {
-            PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-            File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "preyHelp");
-            String displayName = preyConfig.getHelpFile();
-            PreyLogger.d(String.format("displayName:%s", displayName));
-            if (displayName != null && !"".equals(displayName)) {
-                entityFiles = new ArrayList<>();
-                File initialFile = new File(dir, displayName);
-                InputStream inputStream =
-                        new DataInputStream(new FileInputStream(initialFile));
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmZ");
-                EntityFile entityFile = new EntityFile();
-                entityFile.setFile(inputStream);
-                entityFile.setMimeType("image/jpeg");
-                entityFile.setName("file");
-                entityFile.setFilename(displayName);
-                entityFile.setType("image/jpeg");
-                entityFile.setIdFile(sdf.format(new Date()) + "_" + entityFile.getType());
-                entityFiles.add(entityFile);
-            }
-        } catch (Exception e) {
-            PreyLogger.d(String.format("Error contact:%s", e.getMessage()));
-        }
-        String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-        String uri = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("contact");
-        PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).sendHelp(ctx, uri, params, entityFiles);
-        File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), PreyConfig.HELP_DIRECTORY);
-        File[] files = dir.listFiles();
-        for (int i = 0; files != null && i < files.length; i++) {
-            File file = files[i];
-            file.delete();
-        }
-        return response;
-    }
-
-    /**
      * Method to valid token
      *
      * @param ctx
