@@ -1872,6 +1872,24 @@ public class PreyConfig {
      */
     public static final String MDM_IMEI = "MDM_IMEI";
 
+    /**
+     * Key for storing the skip manual permissions flag received from MDM restrictions.
+     */
+    public static final String MDM_SKIP_MANUAL_PERMISSIONS = "MDM_SKIP_MANUAL_PERMISSIONS";
+
+    /**
+     * Returns whether MDM has configured the app to skip manual permission prompts.
+     */
+    public boolean isMdmSkipManualPermissions() {
+        return getBoolean(MDM_SKIP_MANUAL_PERMISSIONS, false);
+    }
+
+    /**
+     * Sets the skip manual permissions flag from MDM restrictions.
+     */
+    public void setMdmSkipManualPermissions(boolean skip) {
+        saveBoolean(MDM_SKIP_MANUAL_PERMISSIONS, skip);
+    }
 
     /**
      * Method add a minute to request report

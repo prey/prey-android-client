@@ -36,4 +36,11 @@
         android:description="@string/restriction_description_imei"
         android:defaultValue="" />
 
+    <restriction
+        android:key="skip_manual_permissions"
+        android:title="@string/restriction_title_skip_manual_permissions"
+        android:restrictionType="bool"
+        android:description="@string/restriction_description_skip_manual_permissions"
+        android:defaultValue="false" />
+
 </restrictions>
