@@ -337,6 +337,71 @@ public class PreyConfigTest {
     }
 
     // =========================================================================
+    // Tests for MDM Skip Manual Permissions
+    // =========================================================================
+
+    /**
+     * Verifies that the skip manual permissions flag can be stored and retrieved.
+     *
+     * <p><b>Scenario:</b> The flag is set to true via {@code setMdmSkipManualPermissions()}.
+     *
+     * <p><b>Expected Outcome:</b> {@code isMdmSkipManualPermissions()} returns true.
+     */
+    @Test
+    public void givenSkipManualPermissions_whenSetTrue_thenReturnsTrue() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+
+        // Act
+        preyConfig.setMdmSkipManualPermissions(true);
+
+        // Assert
+        assertTrue("Skip manual permissions should be true after being set",
+                preyConfig.isMdmSkipManualPermissions());
+    }
+
+    /**
+     * Verifies that the skip manual permissions flag defaults to false.
+     *
+     * <p><b>Scenario:</b> The flag is explicitly set to false.
+     *
+     * <p><b>Expected Outcome:</b> {@code isMdmSkipManualPermissions()} returns false.
+     */
+    @Test
+    public void givenSkipManualPermissions_whenSetFalse_thenReturnsFalse() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+
+        // Act
+        preyConfig.setMdmSkipManualPermissions(false);
+
+        // Assert
+        assertFalse("Skip manual permissions should be false",
+                preyConfig.isMdmSkipManualPermissions());
+    }
+
+    /**
+     * Verifies that updating skip manual permissions from true to false works correctly.
+     *
+     * <p><b>Scenario:</b> The flag is set to true, then updated to false.
+     *
+     * <p><b>Expected Outcome:</b> The latest value (false) is returned.
+     */
+    @Test
+    public void givenSkipManualPermissionsTrue_whenUpdatedToFalse_thenReturnsFalse() {
+        // Arrange
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+        preyConfig.setMdmSkipManualPermissions(true);
+
+        // Act
+        preyConfig.setMdmSkipManualPermissions(false);
+
+        // Assert
+        assertFalse("Skip manual permissions should reflect the latest value",
+                preyConfig.isMdmSkipManualPermissions());
+    }
+
+    // =========================================================================
     // Tests for buildDeviceName — device name construction for registration
     // =========================================================================
 

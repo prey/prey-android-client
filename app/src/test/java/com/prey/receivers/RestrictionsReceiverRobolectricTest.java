@@ -20,6 +20,8 @@ import org.robolectric.annotation.Config;
 import androidx.test.core.app.ApplicationProvider;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Robolectric test suite for the {@link RestrictionsReceiver} class.
@@ -42,6 +44,7 @@ public class RestrictionsReceiverRobolectricTest {
         preyConfig.setMdmOrganizationId("");
         preyConfig.setMdmDeviceName("");
         preyConfig.setMdmImei("");
+        preyConfig.setMdmSkipManualPermissions(false);
     }
 
     @Test
@@ -131,6 +134,40 @@ public class RestrictionsReceiverRobolectricTest {
         assertEquals("existing-org", preyConfig.getMdmOrganizationId());
         assertEquals("Existing Device", preyConfig.getMdmDeviceName());
         assertEquals("111222333444555", preyConfig.getMdmImei());
+    }
+
+    @Test
+    public void givenSkipManualPermissionsTrue_whenHandled_thenFlagIsStored() {
+        Bundle restrictions = new Bundle();
+        restrictions.putBoolean("skip_manual_permissions", true);
+
+        RestrictionsReceiver.saveRestrictionValues(context, restrictions);
+
+        assertTrue(preyConfig.isMdmSkipManualPermissions());
+    }
+
+    @Test
+    public void givenSkipManualPermissionsFalse_whenHandled_thenFlagIsFalse() {
+        preyConfig.setMdmSkipManualPermissions(true);
+
+        Bundle restrictions = new Bundle();
+        restrictions.putBoolean("skip_manual_permissions", false);
+
+        RestrictionsReceiver.saveRestrictionValues(context, restrictions);
+
+        assertFalse(preyConfig.isMdmSkipManualPermissions());
+    }
+
+    @Test
+    public void givenNoSkipManualPermissionsKey_whenHandled_thenFlagIsPreserved() {
+        preyConfig.setMdmSkipManualPermissions(true);
+
+        Bundle restrictions = new Bundle();
+        restrictions.putString("serial_number", "SN-1234");
+
+        RestrictionsReceiver.saveRestrictionValues(context, restrictions);
+
+        assertTrue(preyConfig.isMdmSkipManualPermissions());
     }
 
     @Test

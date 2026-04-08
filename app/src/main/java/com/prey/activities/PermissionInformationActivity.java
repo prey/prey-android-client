@@ -69,7 +69,11 @@ public class PermissionInformationActivity extends PreyActivity {
                 askForPermission();
             }
         }
-        if (FroyoSupport.getInstance(this).isAdminActive()) {
+        boolean skipManualPermissions = PreyConfig.getPreyConfig(this).isMdmSkipManualPermissions();
+        if (FroyoSupport.getInstance(this).isAdminActive() || skipManualPermissions) {
+                if (skipManualPermissions) {
+                    PreyLogger.d("PermissionInformationActivity: skipping device admin prompt (MDM managed)");
+                }
                 Intent intentPermission = null;
                 boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
                 if(!canDrawOverlays) {
