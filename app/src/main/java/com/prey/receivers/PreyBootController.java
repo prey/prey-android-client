@@ -16,12 +16,10 @@ import android.os.Bundle;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
+import com.prey.activities.PasswordHtmlActivity;
 import com.prey.beta.actions.PreyBetaController;
 import com.prey.json.actions.Report;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
-import com.prey.services.PreyDisablePowerOptionsService;
-import com.prey.services.PreyLockHtmlService;
-import com.prey.services.PreyLockService;
 
 public class PreyBootController extends BroadcastReceiver {
 
@@ -36,18 +34,6 @@ public class PreyBootController extends BroadcastReceiver {
             final Context ctx = context;
             new Thread() {
                 public void run() {
-                    try {
-                        boolean disablePowerOptions = PreyConfig.getPreyConfig(ctx).isDisablePowerOptions();
-                        if (disablePowerOptions) {
-                            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                                ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
-                            }
-                        } else {
-                            ctx.stopService(new Intent(ctx, PreyDisablePowerOptionsService.class));
-                        }
-                    } catch (Exception e) {
-                        PreyLogger.e("Error:"+e.getMessage(),e);
-                    }
                     try {
                         boolean runBackground = PreyConfig.getPreyConfig(ctx).isRunBackground();
                         if (runBackground) {
@@ -66,13 +52,9 @@ public class PreyBootController extends BroadcastReceiver {
                         String unlockPass = PreyConfig.getPreyConfig(ctx).getUnlockPass();
                         PreyLogger.d("unlockPass:" + unlockPass);
                         if (unlockPass != null && !"".equals(unlockPass)) {
-                            if (PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(ctx)) {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                    ctx.startService(new Intent(ctx, PreyLockHtmlService.class));
-                                }else{
-                                    ctx.startService(new Intent(ctx, PreyLockService.class));
-                                }
-                            }
+                            Intent lockIntent = new Intent(ctx, PasswordHtmlActivity.class);
+                            lockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            ctx.startActivity(lockIntent);
                         }
                     } catch (Exception e) {
                         PreyLogger.e("Error:"+e.getMessage(),e);

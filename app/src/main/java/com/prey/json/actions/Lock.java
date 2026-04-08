@@ -40,8 +40,6 @@ import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 import com.prey.services.AppAccessibilityService;
 import com.prey.services.CheckLockActivated;
-import com.prey.services.PreyLockHtmlService;
-import com.prey.services.PreyLockService;
 
 public class Lock extends JsonAction {
 

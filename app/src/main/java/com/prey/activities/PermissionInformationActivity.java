@@ -25,7 +25,6 @@ import androidx.core.app.ActivityCompat;
 import com.prey.PreyLogger;
 import com.prey.actions.aware.AwareController;
 import com.prey.backwardcompatibility.FroyoSupport;
-import com.prey.services.PreyOverlayService;
 
 public class PermissionInformationActivity extends PreyActivity {
 
@@ -159,9 +158,7 @@ public class PermissionInformationActivity extends PreyActivity {
     }
 
     private void startOverlayService() {
-        PreyLogger.d("PermissionInformationActivity: startOverlayService");
-        Intent intentOverlay = new Intent(getApplicationContext(), PreyOverlayService.class);
-        startService(intentOverlay);
+        // Overlay service removed — no longer needed
     }
 
     public void askForAdminActive() {

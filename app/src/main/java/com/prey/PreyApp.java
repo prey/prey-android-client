@@ -31,7 +31,6 @@ import com.prey.events.receivers.EventReceiver;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.AwareJobService;
-import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyJobService;
 import com.prey.workers.PreyWorker;
 
@@ -141,15 +140,6 @@ public class PreyApp extends Application {
                             }
                             if (PreyConfig.getPreyConfig(ctx).isRunBackground()) {
                                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
-                            }
-                            if (PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()) {
-                                try {
-                                    if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                                        ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
-                                    }
-                                } catch (Exception e) {
-                                    PreyLogger.e(String.format("error startService PreyDisablePowerOptionsService : %s", e.getMessage()), e);
-                                }
                             }
                         }
                     }

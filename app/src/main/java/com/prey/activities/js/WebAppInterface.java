@@ -61,10 +61,7 @@ import com.prey.json.actions.Location;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
-import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyJobService;
-import com.prey.services.PreyLockHtmlService;
-import com.prey.services.PreySecureService;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -92,8 +89,6 @@ public class WebAppInterface {
     private boolean noMoreDeviceError = false;
     private String from = "setting";
     private CheckPasswordHtmlActivity mActivity;
-    private PreySecureService preySecureService=null;
-    private PreyLockHtmlService preyLockHtmlService=null;
 
     public WebAppInterface() {
     }
@@ -115,15 +110,6 @@ public class WebAppInterface {
         mContext = context;
     }
 
-    public WebAppInterface(Context context, PreyLockHtmlService preyLockHtmlService) {
-        mContext = context;
-        this.preyLockHtmlService=preyLockHtmlService;
-    }
-
-    public WebAppInterface(Context context, PreySecureService service) {
-        mContext = context;
-        this.preySecureService=service;
-    }
 
     @JavascriptInterface
     public String getData() {
@@ -572,11 +558,7 @@ public class WebAppInterface {
             cal.add(Calendar.MINUTE, -1);
             PreyConfig.getPreyConfig(mContext).setTimeSecureLock(cal.getTimeInMillis());
             PreyConfig.getPreyConfig(mContext).setOpenSecureService(false);
-            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                mContext.startService(new Intent(mContext, PreyDisablePowerOptionsService.class));
-            }
         } else {
-            mContext.stopService(new Intent(mContext, PreyDisablePowerOptionsService.class));
         }
     }
 
@@ -633,19 +615,6 @@ public class WebAppInterface {
             } else if (mContext instanceof PasswordHtmlActivity) {
                 ((PasswordHtmlActivity) mContext).pfinish();
             } else {
-                // Overlay service fallback
-                if (preyLockHtmlService != null) {
-                    try {
-                        preyLockHtmlService.stop();
-                        View viewLock = PreyConfig.getPreyConfig(ctx).viewLock;
-                        if (viewLock != null) {
-                            WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
-                            wm.removeView(viewLock);
-                        }
-                    } catch (Exception e) {
-                        PreyLogger.e("Error removing overlay: " + e.getMessage(), e);
-                    }
-                }
                 Intent intentClose = new Intent(ctx, CloseActivity.class);
                 intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 ctx.startActivity(intentClose);
@@ -1006,89 +975,19 @@ public class WebAppInterface {
         return false;
     }
 
-    /**
-     * Method to open screen disable power button
-     */
     @JavascriptInterface
     public void openPin() {
-        long time = PreyConfig.getPreyConfig(mContext).getTimeSecureLock();
-        long now = new Date().getTime();
-        String extra = null;
-        if (now < time) {
-            extra = "";
-            return;
-        }
-        String pinNumber = PreyConfig.getPreyConfig(mContext).getPinNumber();
-        boolean disablePowerOptions = PreyConfig.getPreyConfig(mContext).getDisablePowerOptions();
-        if (pinNumber == null || "".equals(pinNumber)) {
-            extra = "";
-            return;
-        }
-        if (!disablePowerOptions) {
-            extra = "";
-            return;
-        }
-        if (extra == null) {
-            try {
-                PreyConfig.getPreyConfig(mContext).setViewSecure(true);
-                Intent intentLock = new Intent(mContext, PreySecureService.class);
-                mContext.startService(intentLock);
-                mActivity.finish();
-            } catch (Exception e) {
-                PreyLogger.e(String.format("Error CLOSE_SYSTEM:%s", e.getMessage()), e);
-            }
-        }
+        // PIN/power button feature removed
     }
 
-    /**
-     * Method to close screen disable power button
-     */
     @JavascriptInterface
     public void closePin() {
-        try {
-            if (preySecureService == null) {
-                android.os.Process.killProcess(android.os.Process.myPid());
-            } else {
-                this.preySecureService.stop();
-            }
-        } catch (Exception e) {
-            PreyLogger.e(String.format("closePin error :%s", e.getMessage()), e);
-            android.os.Process.killProcess(android.os.Process.myPid());
-        }
+        // PIN/power button feature removed
     }
 
-    /**
-     * Method to unlock off the screen disable the power button
-     *
-     * @param pinNumber
-     * @return returns an empty json if it is ok and if not the error
-     */
     @JavascriptInterface
     public String unpin(String pinNumber) {
-        String out = "";
-        try {
-            JSONObject json = new JSONObject();
-            PreyLogger.d(String.format("unpin:%s", pinNumber));
-            String _pinNumber = PreyConfig.getPreyConfig(mContext).getPinNumber();
-            if (_pinNumber.equals(pinNumber)) {
-                PreyConfig.getPreyConfig(mContext).setPinActivated("");
-                PreyConfig.getPreyConfig(mContext).setOpenSecureService(false);
-                PreyConfig.getPreyConfig(mContext).setCounterOff(0);
-                Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis(new Date().getTime());
-                cal.add(Calendar.MINUTE, 2);
-                PreyConfig.getPreyConfig(mContext).setTimeSecureLock(cal.getTimeInMillis());
-                closePin();
-                out = json.toString();
-            } else {
-                PreyLogger.d("error");
-                json.put("error", new JSONArray().put(mContext.getString(R.string.password_wrong)));
-                out = json.toString();
-            }
-        } catch (Exception e) {
-            PreyLogger.e(String.format("Error unpin:%s", e.getMessage()), e);
-        }
-        return out;
+        return "{}";
     }
 
     /**

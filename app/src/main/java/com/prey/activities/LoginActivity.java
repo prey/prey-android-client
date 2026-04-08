@@ -21,8 +21,6 @@ import com.prey.PreyPermission;
 import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.json.actions.Lock;
 import com.prey.services.CheckLockActivated;
-import com.prey.services.PreyLockHtmlService;
-import com.prey.services.PreyLockService;
 
 public class LoginActivity extends Activity {
 
@@ -57,26 +55,11 @@ public class LoginActivity extends Activity {
     }
 
     private void startup() {
-        Intent intentLock = null;
         String unlockPass = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
         if (unlockPass != null && !"".equals(unlockPass)) {
-            boolean canDrawOverlays = PreyPermission.canDrawOverlays(getApplicationContext());
-            boolean accessibility = PreyPermission.isAccessibilityServiceEnabled(getApplicationContext());
-            if (PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() &&
-                    (canDrawOverlays||accessibility)) {
-                PreyLogger.d("Login Boot finished. PreyLockService");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    PreyLogger.d("login 2");
-                    intentLock = new Intent(getApplicationContext(), PreyLockHtmlService.class);
-                } else {
-                    PreyLogger.d("login 3");
-                    intentLock = new Intent(getApplicationContext(), PreyLockService.class);
-                }
-                getApplicationContext().startService(intentLock);
-                getApplicationContext().startService(new Intent(getApplicationContext(), CheckLockActivated.class));
-            } else {
-                Lock.lockWhenYouNocantDrawOverlays(getApplicationContext());
-            }
+            Intent lockIntent = new Intent(getApplicationContext(), PasswordHtmlActivity.class);
+            lockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(lockIntent);
         }
         boolean ready = PreyConfig.getPreyConfig(this).getProtectReady();
         if (isThereBatchInstallationKey() && !ready) {

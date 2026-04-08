@@ -62,7 +62,6 @@ import com.prey.json.actions.Location;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyAccessibilityService;
-import com.prey.services.PreyOverlayService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -377,9 +376,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     }
 
     private void startOverlayService() {
-        PreyLogger.d("CheckPasswordHtmlActivity: startOverlayService");
-        Intent intentOverlay = new Intent(getApplicationContext(), PreyOverlayService.class);
-        startService(intentOverlay);
+        // Overlay service removed — no longer needed
     }
 
     @TargetApi(Build.VERSION_CODES.M)

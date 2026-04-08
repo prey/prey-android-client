@@ -20,7 +20,6 @@ import com.prey.activities.PanelWebActivity;
 import com.prey.activities.SecurityActivity;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
-import com.prey.services.PreyLockHtmlService;
 
 public class CustomWebView {
 
@@ -65,8 +64,6 @@ public class CustomWebView {
                 PreyConfig.getPreyConfig(ctx).setInputWebview("");
                 if (unlock != null && !"".equals(unlock) && unlock.equals(inputWebview)) {
                     PreyConfig.getPreyConfig(ctx).setUnlockPass("");
-                    Intent intent = new Intent(ctx, PreyLockHtmlService.class);
-                    ctx.stopService(intent);
                     new Thread() {
                         public void run() {
                             String jobIdLock = PreyConfig.getPreyConfig(ctx).getJobIdLock();
