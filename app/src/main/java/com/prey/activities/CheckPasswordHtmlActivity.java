@@ -272,7 +272,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessStorage:%s", canAccessStorage));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessBackgroundLocation:%s", canAccessBackgroundLocation));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canScheduleExactAlarms:%s", canScheduleExactAlarms));
-            boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+            boolean canDrawOverlays = true;
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canDrawOverlays:%s", canDrawOverlays));
             boolean canAccessibility = PreyPermission.isAccessibilityServiceView(this);
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessibility:%s", canAccessibility));
@@ -372,11 +372,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         PreyLogger.d("CheckPasswordHtmlActivity: askForPermissionAndroid7");
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
         startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
-        startOverlayService();
-    }
-
-    private void startOverlayService() {
-        // Overlay service removed — no longer needed
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -489,11 +484,10 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
                 && canAccessStorage) {
             PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 1");
-            boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+            boolean canDrawOverlays = true;
             if (!canDrawOverlays) {
                 PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 2");
                 askForPermissionAndroid7();
-                startOverlayService();
             } else {
                 PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 3");
                 if (!canDrawOverlays) {

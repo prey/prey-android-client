@@ -70,10 +70,9 @@ public class PermissionInformationActivity extends PreyActivity {
         }
         if (FroyoSupport.getInstance(this).isAdminActive()) {
                 Intent intentPermission = null;
-                boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+                boolean canDrawOverlays = true;
                 if(!canDrawOverlays) {
                     askForPermissionAndroid7();
-                    startOverlayService();
                 }else{
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         intentPermission = new Intent(PermissionInformationActivity.this, CheckPasswordHtmlActivity.class);
@@ -123,7 +122,6 @@ public class PermissionInformationActivity extends PreyActivity {
         PreyLogger.d("PermissionInformationActivity: askForPermissionAndroid7");
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
         startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
-        startOverlayService();
     }
     public static int OVERLAY_PERMISSION_REQ_CODE = 5473;
 
@@ -136,10 +134,9 @@ public class PermissionInformationActivity extends PreyActivity {
         boolean canAccessStorage = PreyPermission.canAccessStorage(this);
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
                 && canAccessStorage  ) {
-            boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+            boolean canDrawOverlays = true;
             if (!canDrawOverlays) {
                 askForPermissionAndroid7();
-                startOverlayService();
             } else {
                 if (!canDrawOverlays) {
                     askForAdminActive();
@@ -155,10 +152,6 @@ public class PermissionInformationActivity extends PreyActivity {
                 }
             }
         }
-    }
-
-    private void startOverlayService() {
-        // Overlay service removed — no longer needed
     }
 
     public void askForAdminActive() {

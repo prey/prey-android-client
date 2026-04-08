@@ -78,7 +78,7 @@ public class LoginActivity extends Activity {
             if (registered) {
                 intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
             } else {
-                boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+                boolean canDrawOverlays = true;
                 PreyLogger.d(String.format("LoginActivity: canDrawOverlays:%b", canDrawOverlays));
                 boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
                 PreyLogger.d(String.format("LoginActivity: isAdminActive:%b", isAdminActive));

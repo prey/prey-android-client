@@ -99,16 +99,7 @@ public class PreyPermission {
         }
     }
 
-    public static boolean canDrawOverlays(Context ctx) {
-        if(PreyConfig.getPreyConfig(ctx).isChromebook()){
-            return true;
-        }
-        boolean canDrawOverlays=true;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            canDrawOverlays = Settings.canDrawOverlays(ctx);
-        }
-        return canDrawOverlays;
-    }
+
 
     public static  boolean checkBiometricSupport(Context ctx) {
         return BiometricManager.from(ctx).canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS;

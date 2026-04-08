@@ -164,7 +164,7 @@ public class WebAppInterface {
     }
     @JavascriptInterface
     public boolean initDrawOverlay() {
-        boolean canDrawOverlays = PreyPermission.canDrawOverlays(mContext);
+        boolean canDrawOverlays = true;
         return canDrawOverlays;
     }
 
@@ -934,7 +934,7 @@ public class WebAppInterface {
         PreyLogger.d("skipLocation");
         boolean canAccessCamera = PreyPermission.canAccessCamera(mContext);
         boolean canAccessStorage = PreyPermission.canAccessStorage(mContext);
-        boolean canDrawOverlays = PreyPermission.canDrawOverlays(mContext);
+        boolean canDrawOverlays = true;
         boolean isAdminActive = FroyoSupport.getInstance(mContext).isAdminActive();
         return canAccessCamera&&canAccessStorage&&canDrawOverlays&&canDrawOverlays&&isAdminActive;
     }
