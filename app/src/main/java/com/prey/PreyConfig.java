@@ -47,7 +47,7 @@ import java.util.Locale;
 public class PreyConfig {
 
     //Set false in production
-    public static final boolean LOG_DEBUG_ENABLED = true;
+    public static final boolean LOG_DEBUG_ENABLED = false;
     private static PreyConfig cachedInstance = null;
     public static final String TAG = "PREY";
     private static final String HTTP = "https://";

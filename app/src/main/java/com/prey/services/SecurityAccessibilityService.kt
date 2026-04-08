@@ -8,6 +8,8 @@ package com.prey.services
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import android.view.accessibility.AccessibilityEvent
 
 import com.prey.PreyConfig
@@ -15,6 +17,8 @@ import com.prey.PreyLogger
 import com.prey.activities.PasswordHtmlActivity
 
 class SecurityAccessibilityService : AccessibilityService() {
+
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         try {
@@ -24,20 +28,20 @@ class SecurityAccessibilityService : AccessibilityService() {
             val packageName = event?.packageName?.toString() ?: return
 
             if (!packageName.startsWith("com.prey")) {
-                PreyLogger.d("SecurityAccessibilityService: blocked $packageName, relaunching lock")
+                // Dismiss any system dialog
+                performGlobalAction(GLOBAL_ACTION_BACK)
 
-                // Collapse status bar if user pulled it down
-                try {
-                    performGlobalAction(GLOBAL_ACTION_BACK)
-                } catch (e: Exception) {
-                    PreyLogger.e("SecurityAccessibilityService: collapse failed: ${e.message}", e)
-                }
-
-                // Relaunch lock screen activity
+                // Relaunch lock screen
                 val intent = Intent(applicationContext, PasswordHtmlActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 }
                 applicationContext.startActivity(intent)
+
+                // Follow-up dismissals to close status bar faster
+                handler.postDelayed({ performGlobalAction(GLOBAL_ACTION_BACK) }, 50)
+                handler.postDelayed({ performGlobalAction(GLOBAL_ACTION_BACK) }, 150)
             }
         } catch (e: Exception) {
             PreyLogger.e("SecurityAccessibilityService error: ${e.message}", e)

@@ -94,10 +94,7 @@ public class PreyLockHtmlService extends Service{
             layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
             layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
             layoutParams.format = PixelFormat.TRANSLUCENT;
-            layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-                | WindowManager.LayoutParams.FLAG_FULLSCREEN
-                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+            layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             } else {

@@ -132,24 +132,10 @@ public class Lock extends JsonAction {
         PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
         PreyConfig.getPreyConfig(ctx).setLock(true);
 
-        boolean canDrawOverlays = PreyPermission.canDrawOverlays(ctx);
-        boolean accessibility = PreyPermission.isAccessibilityServiceEnabled(ctx);
-
-        if (canDrawOverlays) {
-            // Overlay-based lock (consumer mode)
-            Intent intentPreyLock = new Intent(ctx, PreyLockHtmlService.class);
-            ctx.startService(intentPreyLock);
-            Intent intentCheckLock = new Intent(ctx, CheckLockActivated.class);
-            ctx.startService(intentCheckLock);
-        }
-
-        if (accessibility) {
-            // Accessibility service brings lock back if user escapes
-            PreyConfig.getPreyConfig(ctx).setOverLock(false);
-            Intent intentPasswordActivity = new Intent(ctx, PasswordHtmlActivity.class);
-            intentPasswordActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            ctx.startActivity(intentPasswordActivity);
-        }
+        // Launch fullscreen lock activity — accessibility service relaunches if user escapes
+        Intent intentPasswordActivity = new Intent(ctx, PasswordHtmlActivity.class);
+        intentPasswordActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        ctx.startActivity(intentPasswordActivity);
 
         // Lock device screen immediately
         FroyoSupport.getInstance(ctx).lockNow();
