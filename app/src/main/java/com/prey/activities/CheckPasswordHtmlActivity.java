@@ -273,10 +273,11 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canScheduleExactAlarms:%s", canScheduleExactAlarms));
             boolean canDrawOverlays = true;
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canDrawOverlays:%s", canDrawOverlays));
-            boolean canAccessibility = PreyPermission.isAccessibilityServiceView(this);
-            PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessibility:%s", canAccessibility));
-            boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
-            PreyLogger.d(String.format("CheckPasswordHtmlActivity: isAdminActive:%s", isAdminActive));
+            boolean skipManualPermissions = PreyConfig.getPreyConfig(this).isMdmSkipManualPermissions();
+            boolean canAccessibility = skipManualPermissions || PreyPermission.isAccessibilityServiceView(this);
+            PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessibility:%s skipManual:%s", canAccessibility, skipManualPermissions));
+            boolean isAdminActive = skipManualPermissions || FroyoSupport.getInstance(this).isAdminActive();
+            PreyLogger.d(String.format("CheckPasswordHtmlActivity: isAdminActive:%s skipManual:%s", isAdminActive, skipManualPermissions));
             boolean isStorage = PreyPermission.isExternalStorageManagerView(this);
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: isStorage:%s", isStorage));
             boolean configurated = (canAccessFineLocation || canAccessCoarseLocation) && canAccessBackgroundLocation && canAccessCamera

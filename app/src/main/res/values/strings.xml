@@ -382,15 +382,17 @@
     <string name="finger_description">Allows Prey to enter the app configuration using only your fingerprint.</string>
 
     <string name="restriction_title_setup_key">Setup key</string>
-    <string name="restriction_description_setup_key">Account key</string>
+    <string name="restriction_description_setup_key">(Required) Setup key used to register the device</string>
     <string name="restriction_title_enterprise_name">Enterprise name</string>
-    <string name="restriction_description_enterprise_name">Organization identifier</string>
+    <string name="restriction_description_enterprise_name">(Optional) Organization identifier</string>
     <string name="restriction_title_serial_number">Serial number</string>
-    <string name="restriction_description_serial_number">Device serial number</string>
+    <string name="restriction_description_serial_number">(Required) Device serial number</string>
     <string name="restriction_title_device_name">Device name</string>
-    <string name="restriction_description_device_name">Custom device name</string>
+    <string name="restriction_description_device_name">(Required) Custom device name</string>
     <string name="restriction_title_imei">IMEI</string>
-    <string name="restriction_description_imei">Device IMEI</string>
+    <string name="restriction_description_imei">(Required) Device IMEI</string>
+    <string name="restriction_title_skip_manual_permissions">Skip Manual Permissions</string>
+    <string name="restriction_description_skip_manual_permissions">(Optional) Skips Device Admin and Accessibility prompts. Prey Lock will be unavailable; only native MDM wipe will work.</string>
     <string name="administrator_disabled">The given administrator component is not currently active disabled in the system.</string>
 
 </resources>
