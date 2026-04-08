@@ -19,7 +19,6 @@ import com.prey.PreyLogger;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.exceptions.PreyException;
-import com.prey.json.actions.Lock;
 import com.prey.receivers.PreyDeviceAdmin;
 
 @TargetApi(Build.VERSION_CODES.FROYO)
@@ -48,8 +47,8 @@ public class FroyoSupport {
             PreyLogger.d("change0");
             if (isAdminActive()) {
                 PreyLogger.d("change1");
-                boolean isPatternSet=Lock.isPatternSet(ctx);
-                boolean isPassOrPinSet= Lock.isPassOrPinSet(ctx);
+                boolean isPatternSet = false;
+                boolean isPassOrPinSet = ((android.app.KeyguardManager) ctx.getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure();
                 if( !isPatternSet&&!isPassOrPinSet) {
                     try {
                         int length=0;

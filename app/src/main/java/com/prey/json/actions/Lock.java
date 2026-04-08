@@ -40,8 +40,6 @@ import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
 import com.prey.services.AppAccessibilityService;
 import com.prey.services.CheckLockActivated;
-import com.prey.services.PreyLockHtmlService;
-import com.prey.services.PreyLockService;
 
 public class Lock extends JsonAction {
 
@@ -181,68 +179,6 @@ public class Lock extends JsonAction {
         }).start();
     }
 
-    public static void lockWhenYouNocantDrawOverlays(Context ctx) {
-        boolean accessibility=PreyPermission.isAccessibilityServiceEnabled(ctx);
-        boolean canDrawOverlays=PreyPermission.canDrawOverlays(ctx);
-        String unlockPass=PreyConfig.getPreyConfig(ctx).getUnlockPass();
-        PreyLogger.d(String.format("DeviceAdmin lockWhenYouNocantDrawOverlays unlockPass: %s accessibility: %s canDrawOverlays: %s",unlockPass,accessibility,canDrawOverlays));
-        boolean isAccessibilityServiceEnabled=PreyPermission.isAccessibilityServiceEnabled(ctx);
-        if (unlockPass!=null && !"".equals(unlockPass)) {
-            if (!canDrawOverlays(ctx) &&!isAccessibilityServiceEnabled) {
-                    boolean isPatternSet = isPatternSet(ctx);
-                    boolean isPassOrPinSet = isPassOrPinSet(ctx);
-                    PreyLogger.d("CheckLockActivated isPatternSet:" + isPatternSet);
-                    PreyLogger.d("CheckLockActivated  isPassOrPinSet:" + isPassOrPinSet);
-                    if (isPatternSet || isPassOrPinSet) {
-                        FroyoSupport.getInstance(ctx).lockNow();
-                        new Thread(new EventManagerRunner(ctx, new Event(Event.NATIVE_LOCK))).start();
-                    } else {
-                        try {
-                            FroyoSupport.getInstance(ctx).changePasswordAndLock(PreyConfig.getPreyConfig(ctx).getUnlockPass(), true);
-                            new Thread(new EventManagerRunner(ctx, new Event(Event.NATIVE_LOCK))).start();
-                        } catch (Exception e) {
-                            PreyLogger.e("Error FroyoSupport changePasswordAndLock:"+e.getMessage(),e);
-                        }
-                    }
-            }
-        }
-    }
-
-    public static void lockOld(Context ctx) {
-        boolean accessibility=PreyPermission.isAccessibilityServiceEnabled(ctx);
-        boolean canDrawOverlays=PreyPermission.canDrawOverlays(ctx);
-        String unlockPass=PreyConfig.getPreyConfig(ctx).getUnlockPass();
-        PreyLogger.d("DeviceAdmin lockWhenYouNocantDrawOverlays unlockPass1:" + unlockPass+" accessibility:" + accessibility+" canDrawOverlays:"+canDrawOverlays);
-        if (unlockPass!=null && !"".equals(unlockPass)) {
-            boolean isPatternSet = isPatternSet(ctx);
-            boolean isPassOrPinSet = isPassOrPinSet(ctx);
-            PreyLogger.d("CheckLockActivated isPatternSet:" + isPatternSet);
-            PreyLogger.d("CheckLockActivated  isPassOrPinSet:" + isPassOrPinSet);
-            if (isPatternSet || isPassOrPinSet) {
-                FroyoSupport.getInstance(ctx).lockNow();
-            } else {
-                try {
-                    FroyoSupport.getInstance(ctx).changePasswordAndLock(PreyConfig.getPreyConfig(ctx).getUnlockPass(), true);
-                } catch (Exception e) {
-                    PreyLogger.e("error lockold:"+e.getMessage(),e);
-                }
-            }
-        }
-    }
-
-    public static boolean canDrawOverlays(Context ctx) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        return Settings.canDrawOverlays(ctx);
-    }
-
-    /**
-     * @return true if pattern set, false if not (or if an issue when checking)
-     */
-    public static boolean isPatternSet(Context ctx) {
-            return false;
-    }
 
     /**
      * @return true if pass or pin set

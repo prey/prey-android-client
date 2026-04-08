@@ -62,7 +62,6 @@ import com.prey.json.actions.Location;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyAccessibilityService;
-import com.prey.services.PreyOverlayService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -124,7 +123,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
     private WebView myWebView = null;
 
-    public static int OVERLAY_PERMISSION_REQ_CODE = 5469;
     public static int FILE_CHOOSER_RESULT_CODE = 6969;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -273,7 +271,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessStorage:%s", canAccessStorage));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessBackgroundLocation:%s", canAccessBackgroundLocation));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canScheduleExactAlarms:%s", canScheduleExactAlarms));
-            boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+            boolean canDrawOverlays = true;
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canDrawOverlays:%s", canDrawOverlays));
             boolean canAccessibility = PreyPermission.isAccessibilityServiceView(this);
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessibility:%s", canAccessibility));
@@ -370,16 +368,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermissionAndroid7() {
-        PreyLogger.d("CheckPasswordHtmlActivity: askForPermissionAndroid7");
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-        startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
-        startOverlayService();
-    }
-
-    private void startOverlayService() {
-        PreyLogger.d("CheckPasswordHtmlActivity: startOverlayService");
-        Intent intentOverlay = new Intent(getApplicationContext(), PreyOverlayService.class);
-        startService(intentOverlay);
+        // Overlay permission no longer needed
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -492,11 +481,10 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
                 && canAccessStorage) {
             PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 1");
-            boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+            boolean canDrawOverlays = true;
             if (!canDrawOverlays) {
                 PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 2");
                 askForPermissionAndroid7();
-                startOverlayService();
             } else {
                 PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 3");
                 if (!canDrawOverlays) {
@@ -578,11 +566,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, intent);
         if (requestCode == FILE_CHOOSER_RESULT_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                Uri uri = intent.getData();
-                if (uri != null && uri.toString().startsWith("content:")) {
-                    String fileName = getFileNameHelp(getApplicationContext(), uri);
-                    PreyConfig.getPreyConfig(this).setFileHelp(fileName);
-                }
             }
         }
     }

@@ -25,7 +25,6 @@ import androidx.core.app.ActivityCompat;
 import com.prey.PreyLogger;
 import com.prey.actions.aware.AwareController;
 import com.prey.backwardcompatibility.FroyoSupport;
-import com.prey.services.PreyOverlayService;
 
 public class PermissionInformationActivity extends PreyActivity {
 
@@ -71,10 +70,9 @@ public class PermissionInformationActivity extends PreyActivity {
         }
         if (FroyoSupport.getInstance(this).isAdminActive()) {
                 Intent intentPermission = null;
-                boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+                boolean canDrawOverlays = true;
                 if(!canDrawOverlays) {
                     askForPermissionAndroid7();
-                    startOverlayService();
                 }else{
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         intentPermission = new Intent(PermissionInformationActivity.this, CheckPasswordHtmlActivity.class);
@@ -121,12 +119,8 @@ public class PermissionInformationActivity extends PreyActivity {
 
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermissionAndroid7() {
-        PreyLogger.d("PermissionInformationActivity: askForPermissionAndroid7");
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-        startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
-        startOverlayService();
+        // Overlay permission no longer needed
     }
-    public static int OVERLAY_PERMISSION_REQ_CODE = 5473;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -137,10 +131,9 @@ public class PermissionInformationActivity extends PreyActivity {
         boolean canAccessStorage = PreyPermission.canAccessStorage(this);
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
                 && canAccessStorage  ) {
-            boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+            boolean canDrawOverlays = true;
             if (!canDrawOverlays) {
                 askForPermissionAndroid7();
-                startOverlayService();
             } else {
                 if (!canDrawOverlays) {
                     askForAdminActive();
@@ -156,12 +149,6 @@ public class PermissionInformationActivity extends PreyActivity {
                 }
             }
         }
-    }
-
-    private void startOverlayService() {
-        PreyLogger.d("PermissionInformationActivity: startOverlayService");
-        Intent intentOverlay = new Intent(getApplicationContext(), PreyOverlayService.class);
-        startService(intentOverlay);
     }
 
     public void askForAdminActive() {

@@ -27,7 +27,7 @@ class SecurityAccessibilityService : AccessibilityService() {
 
             val packageName = event?.packageName?.toString() ?: return
 
-            if (!packageName.startsWith("com.prey")) {
+            if (!packageName.startsWith("com.prey") && !isInputMethod(packageName)) {
                 // Dismiss any system dialog
                 performGlobalAction(GLOBAL_ACTION_BACK)
 
@@ -45,6 +45,15 @@ class SecurityAccessibilityService : AccessibilityService() {
             }
         } catch (e: Exception) {
             PreyLogger.e("SecurityAccessibilityService error: ${e.message}", e)
+        }
+    }
+
+    private fun isInputMethod(packageName: String): Boolean {
+        return try {
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+            imm.enabledInputMethodList.any { it.packageName == packageName }
+        } catch (e: Exception) {
+            false
         }
     }
 

@@ -7,13 +7,13 @@
 # If the emulator job is unstable in CI, you can safely disable it
 # and rely on Robolectric tests only.
 
-name: Android CI
+name: CI
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches: [develop, master]
+  push:
+    branches: [develop, master]
 
 jobs:
   lint:
