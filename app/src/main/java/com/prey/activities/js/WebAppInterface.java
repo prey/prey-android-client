@@ -47,6 +47,7 @@ import com.prey.actions.location.LocationUpdatesService;
 import com.prey.actions.location.PreyLocation;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.CloseActivity;
+import com.prey.activities.LockScreenActivity;
 import com.prey.activities.LoginActivity;
 import com.prey.activities.PanelWebActivity;
 import com.prey.activities.PasswordHtmlActivity;
@@ -107,6 +108,10 @@ public class WebAppInterface {
     }
 
     public WebAppInterface(Context context, PasswordHtmlActivity activity) {
+        mContext = context;
+    }
+
+    public WebAppInterface(Context context, LockScreenActivity activity) {
         mContext = context;
     }
 
@@ -604,64 +609,50 @@ public class WebAppInterface {
         if (unlock != null && !"".equals(unlock) && unlock.equals(key)) {
             PreyConfig.getPreyConfig(mContext).setInputWebview("");
             PreyConfig.getPreyConfig(ctx).setUnlockPass("");
+            PreyConfig.getPreyConfig(ctx).setLock(false);
             PreyConfig.getPreyConfig(ctx).setOpenSecureService(false);
-            boolean overLock=PreyConfig.getPreyConfig(ctx).getOverLock();
-            final boolean canDrawOverlays=PreyPermission.canDrawOverlays(ctx);
-            PreyLogger.d("lock key:"+key+"  unlock:"+unlock +" overLock:"+overLock  +" canDrawOverlays:"+canDrawOverlays);
+
+            // Notify server
             new Thread() {
                 public void run() {
-                        String reason = "{\"origin\":\"user\"}";
-                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
+                    String jobIdLock = PreyConfig.getPreyConfig(ctx).getJobIdLock();
+                    String reason = "{\"origin\":\"user\"}";
+                    if (jobIdLock != null && !"".equals(jobIdLock)) {
+                        reason = "{\"origin\":\"user\",\"device_job_id\":\"" + jobIdLock + "\"}";
+                        PreyConfig.getPreyConfig(ctx).setJobIdLock("");
+                    }
+                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "stopped", reason));
                 }
             }.start();
-            try{
-                Thread.sleep(2000);
-            }catch(Exception e){PreyLogger.e("Error sleep:"+e.getMessage(),e);}
-            if(overLock){
-                if((unlock == null || "".equals(unlock))){
-                    PreyLogger.d("lock accc " );
-                    PreyConfig.getPreyConfig(ctx).setOverLock(false);
-                    if (preyLockHtmlService != null) {
+
+            try { Thread.sleep(1000); } catch (Exception e) { }
+
+            // If running inside LockScreenActivity, call unlockAndFinish to stop lock task
+            if (mContext instanceof LockScreenActivity) {
+                ((LockScreenActivity) mContext).unlockAndFinish();
+            } else if (mContext instanceof PasswordHtmlActivity) {
+                ((PasswordHtmlActivity) mContext).pfinish();
+            } else {
+                // Overlay service fallback
+                if (preyLockHtmlService != null) {
+                    try {
                         preyLockHtmlService.stop();
-                    } else {
-                        int pid = android.os.Process.myPid();
-                        android.os.Process.killProcess(pid);
+                        View viewLock = PreyConfig.getPreyConfig(ctx).viewLock;
+                        if (viewLock != null) {
+                            WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
+                            wm.removeView(viewLock);
+                        }
+                    } catch (Exception e) {
+                        PreyLogger.e("Error removing overlay: " + e.getMessage(), e);
                     }
                 }
+                Intent intentClose = new Intent(ctx, CloseActivity.class);
+                intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                ctx.startActivity(intentClose);
             }
-            new Thread() {
-                public void run() {
-                    if(canDrawOverlays) {
-                        try {
-                            if (preyLockHtmlService != null) {
-                                preyLockHtmlService.stop();
-                                View viewLock = PreyConfig.getPreyConfig(ctx).viewLock;
-                                if (viewLock != null) {
-                                    WindowManager wm = (WindowManager) ctx.getSystemService(ctx.WINDOW_SERVICE);
-                                    wm.removeView(viewLock);
-                                } else {
-                                    android.os.Process.killProcess(android.os.Process.myPid());
-                                }
-                            }
-                        } catch (Exception e) {
-                            android.os.Process.killProcess(android.os.Process.myPid());
-                        }
-                    }
-                    Intent intentClose = new Intent(ctx, CloseActivity.class);
-                    intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ctx.startActivity(intentClose);
-                        try {
-                            Thread.sleep(2000);
-                        } catch (Exception e) {
-                            PreyLogger.e("Error sleep:"+e.getMessage(),e);
-                        }
-                        ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
+            error2 = "{\"ok\":\"ok\"}";
 
-                }
-            }.start();
-            error2="{\"ok\":\"ok\"}";
-
-        }else {
+        } else {
             error2 = "{\"error\":[\"" + mContext.getString(R.string.password_wrong) + "\"]}";
         }
         PreyLogger.d("error2:"+error2);

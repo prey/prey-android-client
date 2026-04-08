@@ -9,10 +9,17 @@ package com.prey.services;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.beta.actions.PreyBetaController;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+
+    @Override
+    public void onNewToken(String token) {
+        PreyLogger.d("FIREBASE onNewToken: " + token);
+        PreyConfig.sendToken(this, token);
+    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {

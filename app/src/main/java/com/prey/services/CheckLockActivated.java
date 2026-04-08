@@ -13,6 +13,7 @@ import android.os.IBinder;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.activities.LockScreenActivity;
 import com.prey.json.actions.Lock;
 
 public class CheckLockActivated extends Service {
@@ -32,19 +33,14 @@ public class CheckLockActivated extends Service {
             public void run() {
                 boolean run = true;
                 while (run) {
-                    String unlockPass=PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
-                    if (unlockPass==null || "".equals(unlockPass)) {
+                    String unlockPass = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
+                    if (unlockPass == null || "".equals(unlockPass)) {
                         run = false;
                         stopSelf();
                         break;
                     }
                     try {
-                        Thread.sleep(1000);
-                        if (!Lock.canDrawOverlays(ctx)) {
-                            Lock.lockWhenYouNocantDrawOverlays(ctx);
-                            stopSelf();
-                            break;
-                        }
+                        Thread.sleep(2000);
                     } catch (Exception e) {
                         PreyLogger.e("CheckLockActivated Error:" + e.getMessage(), e);
                     }

@@ -11,3 +11,4 @@ app/src/main/res/raw/config.properties
 app/build.gradle.dev
 local.properties
 *.iml
+docs/*
