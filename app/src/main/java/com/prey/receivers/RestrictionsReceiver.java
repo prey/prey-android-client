@@ -65,6 +65,12 @@ public class RestrictionsReceiver extends BroadcastReceiver {
         saveStringRestriction(restrictions, "serial_number", value -> preyConfig.setMdmSerialNumber(value));
         saveStringRestriction(restrictions, "device_name", value -> preyConfig.setMdmDeviceName(value));
         saveStringRestriction(restrictions, "imei", value -> preyConfig.setMdmImei(value));
+
+        if (restrictions.containsKey("skip_manual_permissions")) {
+            boolean skip = restrictions.getBoolean("skip_manual_permissions", false);
+            PreyLogger.d(String.format("saveRestrictionValues skip_manual_permissions: %s", skip));
+            preyConfig.setMdmSkipManualPermissions(skip);
+        }
     }
 
     /**
