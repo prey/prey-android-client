@@ -102,6 +102,9 @@ public class PreyPermission {
 
 
     public static  boolean checkBiometricSupport(Context ctx) {
+        if (!PreyConfig.BIOMETRIC_ENABLED) {
+            return false;
+        }
         return BiometricManager.from(ctx).canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS;
     }
 
