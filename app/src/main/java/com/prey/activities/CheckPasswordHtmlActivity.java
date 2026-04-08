@@ -123,7 +123,6 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
     private WebView myWebView = null;
 
-    public static int OVERLAY_PERMISSION_REQ_CODE = 5469;
     public static int FILE_CHOOSER_RESULT_CODE = 6969;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -369,9 +368,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
 
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermissionAndroid7() {
-        PreyLogger.d("CheckPasswordHtmlActivity: askForPermissionAndroid7");
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-        startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
+        // Overlay permission no longer needed
     }
 
     @TargetApi(Build.VERSION_CODES.M)

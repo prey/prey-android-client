@@ -119,11 +119,8 @@ public class PermissionInformationActivity extends PreyActivity {
 
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermissionAndroid7() {
-        PreyLogger.d("PermissionInformationActivity: askForPermissionAndroid7");
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-        startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
+        // Overlay permission no longer needed
     }
-    public static int OVERLAY_PERMISSION_REQ_CODE = 5473;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
