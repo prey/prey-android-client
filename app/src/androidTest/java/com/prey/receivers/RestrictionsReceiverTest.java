@@ -17,6 +17,7 @@ import org.junit.Test;
 import androidx.test.core.app.ApplicationProvider;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -40,6 +41,7 @@ public class RestrictionsReceiverTest {
         preyConfig.setMdmOrganizationId("");
         preyConfig.setMdmDeviceName("");
         preyConfig.setMdmImei("");
+        preyConfig.setMdmSkipManualPermissions(false);
     }
 
     /**
@@ -293,6 +295,100 @@ public class RestrictionsReceiverTest {
         // Assert
         assertEquals("Previous IMEI should be preserved when MDM sends empty value",
                 "111222333444555", preyConfig.getMdmImei());
+    }
+
+    /**
+     * Verifies that skip_manual_permissions=true from MDM restrictions is correctly stored.
+     *
+     * <p><b>Scenario:</b> MDM sends a restrictions bundle with skip_manual_permissions=true.
+     *
+     * <p><b>Expected Outcome:</b> The flag should be true in PreyConfig.
+     */
+    @Test
+    public void givenSkipManualPermissionsTrue_whenHandled_thenFlagIsStored() {
+        // Arrange
+        Bundle restrictions = new Bundle();
+        restrictions.putBoolean("skip_manual_permissions", true);
+
+        // Act
+        RestrictionsReceiver.handleApplicationRestrictions(context, restrictions);
+
+        // Assert
+        assertTrue("Skip manual permissions flag should be true",
+                preyConfig.isMdmSkipManualPermissions());
+    }
+
+    /**
+     * Verifies that skip_manual_permissions=false from MDM disables the flag.
+     *
+     * <p><b>Scenario:</b> MDM sends skip_manual_permissions=false after it was previously true.
+     *
+     * <p><b>Expected Outcome:</b> The flag should be false in PreyConfig.
+     */
+    @Test
+    public void givenSkipManualPermissionsFalse_whenHandled_thenFlagIsFalse() {
+        // Arrange
+        preyConfig.setMdmSkipManualPermissions(true);
+        Bundle restrictions = new Bundle();
+        restrictions.putBoolean("skip_manual_permissions", false);
+
+        // Act
+        RestrictionsReceiver.handleApplicationRestrictions(context, restrictions);
+
+        // Assert
+        assertFalse("Skip manual permissions flag should be false",
+                preyConfig.isMdmSkipManualPermissions());
+    }
+
+    /**
+     * Verifies that when skip_manual_permissions key is absent, the existing value is preserved.
+     *
+     * <p><b>Scenario:</b> MDM sends restrictions without the skip_manual_permissions key.
+     *
+     * <p><b>Expected Outcome:</b> The previously stored flag value should remain unchanged.
+     */
+    @Test
+    public void givenNoSkipManualPermissionsKey_whenHandled_thenFlagIsPreserved() {
+        // Arrange
+        preyConfig.setMdmSkipManualPermissions(true);
+        Bundle restrictions = new Bundle();
+        restrictions.putString("serial_number", "SN-1234");
+
+        // Act
+        RestrictionsReceiver.handleApplicationRestrictions(context, restrictions);
+
+        // Assert
+        assertTrue("Skip manual permissions flag should be preserved when key is absent",
+                preyConfig.isMdmSkipManualPermissions());
+    }
+
+    /**
+     * Verifies that skip_manual_permissions is included when all restriction keys are sent.
+     *
+     * <p><b>Scenario:</b> MDM sends all supported keys including skip_manual_permissions.
+     *
+     * <p><b>Expected Outcome:</b> All values including the boolean flag should be correctly stored.
+     */
+    @Test
+    public void givenAllRestrictionsWithSkipPermissions_whenHandled_thenAllValuesAreStored() {
+        // Arrange
+        Bundle restrictions = new Bundle();
+        restrictions.putString("enterprise_name", "my-organization");
+        restrictions.putString("serial_number", "ABC-9999");
+        restrictions.putString("device_name", "Office Phone 001");
+        restrictions.putString("imei", "354123456789012");
+        restrictions.putBoolean("skip_manual_permissions", true);
+
+        // Act
+        RestrictionsReceiver.handleApplicationRestrictions(context, restrictions);
+
+        // Assert
+        assertEquals("my-organization", preyConfig.getMdmOrganizationId());
+        assertEquals("ABC-9999", preyConfig.getMdmSerialNumber());
+        assertEquals("Office Phone 001", preyConfig.getMdmDeviceName());
+        assertEquals("354123456789012", preyConfig.getMdmImei());
+        assertTrue("Skip manual permissions should be stored",
+                preyConfig.isMdmSkipManualPermissions());
     }
 
     /**
