@@ -30,6 +30,7 @@ import java.lang.reflect.Field;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -132,6 +133,62 @@ public class PermissionInformationActivityRobolectricTest {
         PermissionInformationActivity activity = controller.create().resume().get();
 
         assertTrue("Activity should finish when both admin and skip are active",
+                activity.isFinishing());
+    }
+
+    // =========================================================================
+    // Draw Overlays + skipManualPermissions
+    // =========================================================================
+
+    /**
+     * When skipManualPermissions is false, admin is active, and overlay is not granted,
+     * the activity should prompt for overlay permission (ACTION_MANAGE_OVERLAY_PERMISSION).
+     */
+    @Test
+    public void givenAdminActiveNoSkipNoOverlay_whenShowScreen_thenPromptsForOverlay() {
+        preyConfig.setMdmSkipManualPermissions(false);
+        setDeviceAdminActive(true);
+        // Robolectric SDK 30: Settings.canDrawOverlays() returns false by default
+
+        ActivityController<PermissionInformationActivity> controller =
+                Robolectric.buildActivity(PermissionInformationActivity.class);
+        PermissionInformationActivity activity = controller.create().resume().get();
+        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
+
+        // Should have launched overlay permission prompt
+        ShadowActivity.IntentForResult intentForResult =
+                shadowActivity.getNextStartedActivityForResult();
+        assertNotNull("Should prompt for overlay permission", intentForResult);
+        assertEquals(android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                intentForResult.intent.getAction());
+    }
+
+    /**
+     * When skipManualPermissions is true and overlay is not granted,
+     * the activity should skip the overlay prompt and proceed.
+     * This is the key MDM scenario for draw overlays.
+     */
+    @Test
+    public void givenSkipEnabledNoOverlay_whenShowScreen_thenSkipsOverlayPrompt() {
+        preyConfig.setMdmSkipManualPermissions(true);
+        setDeviceAdminActive(false);
+        // Robolectric SDK 30: Settings.canDrawOverlays() returns false by default
+
+        ActivityController<PermissionInformationActivity> controller =
+                Robolectric.buildActivity(PermissionInformationActivity.class);
+        PermissionInformationActivity activity = controller.create().resume().get();
+        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
+
+        // Should NOT prompt for overlay — should navigate forward instead
+        ShadowActivity.IntentForResult intentForResult =
+                shadowActivity.getNextStartedActivityForResult();
+        if (intentForResult != null) {
+            // If an intent was launched, it should NOT be the overlay permission prompt
+            String action = intentForResult.intent.getAction();
+            assertTrue("Should not prompt for overlay when MDM skip is enabled",
+                    action == null || !action.equals(android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION));
+        }
+        assertTrue("Activity should finish when MDM skip bypasses overlay",
                 activity.isFinishing());
     }
 
