@@ -1,4 +1,4 @@
-[![CI](https://github.com/prey/prey-android-client/actions/workflows/android-ci.yml/badge.svg)](https://github.com/prey/prey-android-client/actions/workflows/android-ci.yml)
+[![CI](https://github.com/prey/prey-android-client/actions/workflows/ci.yml/badge.svg)](https://github.com/prey/prey-android-client/actions/workflows/ci.yml)
 
 <p align="center">
   <img src="https://repository-images.githubusercontent.com/1000650/9f546780-e0b6-11ea-9e53-a82f8e775fbb" alt="Prey: iOS client" height="200" width="400"/>
