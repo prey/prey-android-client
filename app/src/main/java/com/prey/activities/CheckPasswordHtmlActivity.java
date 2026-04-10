@@ -273,9 +273,9 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessStorage:%s", canAccessStorage));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessBackgroundLocation:%s", canAccessBackgroundLocation));
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canScheduleExactAlarms:%s", canScheduleExactAlarms));
-            boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
-            PreyLogger.d(String.format("CheckPasswordHtmlActivity: canDrawOverlays:%s", canDrawOverlays));
             boolean skipManualPermissions = PreyConfig.getPreyConfig(this).isMdmSkipManualPermissions();
+            boolean canDrawOverlays = skipManualPermissions || PreyPermission.canDrawOverlays(this);
+            PreyLogger.d(String.format("CheckPasswordHtmlActivity: canDrawOverlays:%s skipManual:%s", canDrawOverlays, skipManualPermissions));
             boolean canAccessibility = skipManualPermissions || PreyPermission.isAccessibilityServiceView(this);
             PreyLogger.d(String.format("CheckPasswordHtmlActivity: canAccessibility:%s skipManual:%s", canAccessibility, skipManualPermissions));
             boolean isAdminActive = skipManualPermissions || FroyoSupport.getInstance(this).isAdminActive();
@@ -493,7 +493,8 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         if (canAccessFineLocation && canAccessCoarseLocation && canAccessCamera
                 && canAccessStorage) {
             PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 1");
-            boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+            boolean skipManual = PreyConfig.getPreyConfig(this).isMdmSkipManualPermissions();
+            boolean canDrawOverlays = skipManual || PreyPermission.canDrawOverlays(this);
             if (!canDrawOverlays) {
                 PreyLogger.d("CheckPasswordHtmlActivity: onRequestPermissionsResult 2");
                 askForPermissionAndroid7();

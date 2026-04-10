@@ -75,7 +75,7 @@ public class PermissionInformationActivity extends PreyActivity {
                     PreyLogger.d("PermissionInformationActivity: skipping device admin prompt (MDM managed)");
                 }
                 Intent intentPermission = null;
-                boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
+                boolean canDrawOverlays = skipManualPermissions || PreyPermission.canDrawOverlays(this);
                 if(!canDrawOverlays) {
                     askForPermissionAndroid7();
                     startOverlayService();
