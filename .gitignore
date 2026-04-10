@@ -13,4 +13,3 @@ local.properties
 *.iml
 /docs
 *.keystore
-app/src/main/res/values/google_maps_api.xml
