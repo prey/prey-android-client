@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'checkstyle'
 
-// Load secrets for release builds (google_maps_key, signing, etc.)
-def secretsFile = rootProject.file("secrets.properties")
-def secrets = new Properties()
-if (secretsFile.exists()) {
-    secrets.load(new FileInputStream(secretsFile))
+task checkstyle(type: Checkstyle) {
+    source 'src/main/java', 'src/test/java'
+    include '**/*.java'
+    classpath = files()
+    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
 }
 
 android {
@@ -19,15 +20,13 @@ android {
 
         targetSdk 35
 
-        versionCode 397
-        versionName '2.6.15'
+        versionCode 401
+        versionName '2.6.16'
 
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("int", "COMPILE_SDK_VERSION", "35")
-        // google_maps_key: reads from secrets.properties if available, empty string otherwise
-        resValue "string", "google_maps_key", secrets.getProperty("google_maps_key", "")
     }
 
     buildTypes {

@@ -77,6 +77,7 @@ public class PreyConfig {
     public static final String PREFS_BLOCK_APP_UNINSTALL = "PREFS_BLOCK_APP_UNINSTALL";
     public static final String PREFS_RUN_BACKGROUND = "PREFS_RUN_BACKGROUND";
     public static final String PREFS_USE_BIOMETRIC = "PREFS_USE_BIOMETRIC";
+    public static final boolean BIOMETRIC_ENABLED = false;
     public static final String PREFS_BACKGROUND = "PREFS_BACKGROUND";
     public static final String IS_LOCK_SET = "IS_LOCK_SET";
     public static final String NEXT_ALERT = "NEXT_ALERT";
@@ -719,6 +720,9 @@ public class PreyConfig {
     }
 
     public boolean getUseBiometric() {
+        if (!BIOMETRIC_ENABLED) {
+            return false;
+        }
         return getBoolean(PreyConfig.PREFS_USE_BIOMETRIC, false);
     }
 
@@ -1886,6 +1890,24 @@ public class PreyConfig {
      */
     public static final String MDM_IMEI = "MDM_IMEI";
 
+    /**
+     * Key for storing the skip manual permissions flag received from MDM restrictions.
+     */
+    public static final String MDM_SKIP_MANUAL_PERMISSIONS = "MDM_SKIP_MANUAL_PERMISSIONS";
+
+    /**
+     * Returns whether MDM has configured the app to skip manual permission prompts.
+     */
+    public boolean isMdmSkipManualPermissions() {
+        return getBoolean(MDM_SKIP_MANUAL_PERMISSIONS, false);
+    }
+
+    /**
+     * Sets the skip manual permissions flag from MDM restrictions.
+     */
+    public void setMdmSkipManualPermissions(boolean skip) {
+        saveBoolean(MDM_SKIP_MANUAL_PERMISSIONS, skip);
+    }
 
     /**
      * Method add a minute to request report

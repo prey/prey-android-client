@@ -255,19 +255,19 @@
     <string name="information">Information</string>
 
 
-    <!-- barcode -->
+    <!-- QR code -->
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
-    <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
-    <string name="title_activity_main">Barcode Reader Sample</string>
-    <string name="barcode_header">Click &quot;Read Barcode&quot; to read a barcode</string>
-    <string name="read_barcode">Read Barcode</string>
+    <string name="low_storage_error">QR detector dependencies cannot be downloaded due to low device storage</string>
+    <string name="title_activity_main">QR Code Reader</string>
+    <string name="barcode_header">Click &quot;Read QR Code&quot; to scan a QR code</string>
+    <string name="read_barcode">Read QR Code</string>
     <string name="auto_focus">Auto Focus</string>
     <string name="use_flash">Use Flash</string>
-    <string name="barcode_success">Barcode read successfully</string>
-    <string name="barcode_failure">No barcode captured</string>
-    <string name="barcode_error">"Error reading barcode: %1$s"</string>
-    <string name="barcode_find_your_QR">Visit panel.preyproject.com/qr\n on your computer an scan the QR code</string>
+    <string name="barcode_success">QR code read successfully</string>
+    <string name="barcode_failure">No QR code captured</string>
+    <string name="barcode_error">"Error reading QR code: %1$s"</string>
+    <string name="barcode_find_your_QR">Visit panel.preyproject.com/qr\n on your computer and scan the QR code</string>
 
 
 
@@ -382,15 +382,17 @@
     <string name="finger_description">Allows Prey to enter the app configuration using only your fingerprint.</string>
 
     <string name="restriction_title_setup_key">Setup key</string>
-    <string name="restriction_description_setup_key">Account key</string>
+    <string name="restriction_description_setup_key">(Required) Setup key used to register the device</string>
     <string name="restriction_title_enterprise_name">Enterprise name</string>
-    <string name="restriction_description_enterprise_name">Organization identifier</string>
+    <string name="restriction_description_enterprise_name">(Optional) Organization identifier</string>
     <string name="restriction_title_serial_number">Serial number</string>
-    <string name="restriction_description_serial_number">Device serial number</string>
+    <string name="restriction_description_serial_number">(Required) Device serial number</string>
     <string name="restriction_title_device_name">Device name</string>
-    <string name="restriction_description_device_name">Custom device name</string>
+    <string name="restriction_description_device_name">(Required) Custom device name</string>
     <string name="restriction_title_imei">IMEI</string>
-    <string name="restriction_description_imei">Device IMEI</string>
+    <string name="restriction_description_imei">(Required) Device IMEI</string>
+    <string name="restriction_title_skip_manual_permissions">Skip Manual Permissions</string>
+    <string name="restriction_description_skip_manual_permissions">(Optional) Skips Device Admin and Accessibility prompts. Prey Lock will be unavailable; only native MDM wipe will work.</string>
     <string name="administrator_disabled">The given administrator component is not currently active disabled in the system.</string>
 
 </resources>

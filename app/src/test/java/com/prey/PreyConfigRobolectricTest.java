@@ -17,6 +17,8 @@ import org.robolectric.annotation.Config;
 import androidx.test.core.app.ApplicationProvider;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Robolectric test suite for the {@link PreyConfig} class.
@@ -40,6 +42,7 @@ public class PreyConfigRobolectricTest {
         preyConfig.setMdmImei("");
         preyConfig.setMdmDeviceName("");
         preyConfig.setMdmOrganizationId("");
+        preyConfig.setMdmSkipManualPermissions(false);
     }
 
     // =========================================================================
@@ -121,6 +124,34 @@ public class PreyConfigRobolectricTest {
     @Test
     public void givenNoOrganizationId_whenRetrieved_thenReturnsEmptyString() {
         assertEquals("", preyConfig.getMdmOrganizationId());
+    }
+
+    // =========================================================================
+    // MDM Skip Manual Permissions
+    // =========================================================================
+
+    @Test
+    public void givenSkipManualPermissions_whenSetTrue_thenReturnsTrue() {
+        preyConfig.setMdmSkipManualPermissions(true);
+        assertTrue(preyConfig.isMdmSkipManualPermissions());
+    }
+
+    @Test
+    public void givenSkipManualPermissions_whenSetFalse_thenReturnsFalse() {
+        preyConfig.setMdmSkipManualPermissions(false);
+        assertFalse(preyConfig.isMdmSkipManualPermissions());
+    }
+
+    @Test
+    public void givenNoSkipManualPermissions_whenRetrieved_thenDefaultsFalse() {
+        assertFalse(preyConfig.isMdmSkipManualPermissions());
+    }
+
+    @Test
+    public void givenSkipManualPermissionsTrue_whenUpdatedToFalse_thenReturnsFalse() {
+        preyConfig.setMdmSkipManualPermissions(true);
+        preyConfig.setMdmSkipManualPermissions(false);
+        assertFalse(preyConfig.isMdmSkipManualPermissions());
     }
 
     // =========================================================================

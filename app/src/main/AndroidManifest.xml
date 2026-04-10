@@ -99,6 +99,7 @@
         <activity
                 android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             android:launchMode="singleInstance"
             android:noHistory="true"
             android:exported="true"
@@ -112,49 +113,60 @@
 
         <activity android:name=".activities.OnboardingActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             />
 
         <activity android:name=".activities.PermissionActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             />
 
         <activity android:name=".activities.PrivacyActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             />
 
         <activity android:name=".activities.CloseActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             />
 
         <activity android:name=".activities.SecurityActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
               />
 
         <activity android:name=".activities.ReportActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
               />
 
         <activity android:name=".activities.PreReportActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
              />
 
         <activity
             android:name=".barcodereader.BarcodeActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             />
 
         <activity android:name=".barcodereader.BarcodeCaptureActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             />
 
         <activity
             android:name=".activities.PanelWebActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true"
             />
 
         <activity
                 android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true"
 
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
@@ -162,6 +174,7 @@
 
         <activity
                 android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true"
 
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
@@ -170,6 +183,7 @@
 
         <activity
                 android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true"
 
                 android:name=".activities.DeviceReadyActivity" />
@@ -177,12 +191,14 @@
         <activity
             android:name=".activities.WelcomeActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true"
             />
 
         <activity
             android:name=".activities.WelcomeBatchActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true"
             />
 
@@ -190,6 +206,7 @@
         <activity
             android:name=".activities.SplashBatchActivity"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             android:noHistory="true"
             />
 
@@ -198,12 +215,14 @@
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
                 android:name=".activities.CheckPasswordActivity" />
 
         <!-- remove noHistory="true -->
         <activity
                 android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
                 android:name=".activities.CheckPasswordHtmlActivity" />
 
         <!-- New Activity for Chromebook -->
@@ -212,11 +231,12 @@
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
                 android:name=".activities.ChromeActivity" />
 
         <activity
                 android:configChanges="orientation|keyboardHidden"
-
+            android:screenOrientation="portrait"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
             android:noHistory="true"
@@ -227,35 +247,40 @@
                 android:clearTaskOnLaunch="true"
             android:noHistory = "true"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
                 android:name=".activities.PopUpAlertActivity" />
         <activity
 
                 android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
                 android:name=".activities.FeedbackActivity" />
         <activity
 
                 android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
                 android:name=".activities.FormFeedbackActivity" />
 
         <activity
                 android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
-
+            android:screenOrientation="portrait"
             android:launchMode="singleTask"
                 android:name=".activities.CameraActivity" />
         <activity
                 android:theme="@style/Theme.Transparent"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
                 android:name=".activities.SimpleCameraActivity" />
 
         <activity
                 android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
                 android:name=".activities.PermissionInformationActivity" />
 
         <activity
@@ -263,24 +288,28 @@
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
                 android:name=".activities.PasswordNativeActivity" />
         <activity
                 android:launchMode="singleInstance"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
                 android:name=".activities.PasswordHtmlActivity" />
         <activity
                 android:launchMode="singleInstance"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
                 android:name=".activities.PinNativeActivity" />
         <activity
                 android:launchMode="singleInstance"
             android:noHistory="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
                 android:name=".activities.OpenSettingsActivity" />
 
         <!-- Exported added for android 12 -->
