@@ -77,6 +77,7 @@ public class PreyConfig {
     public static final String PREFS_BLOCK_APP_UNINSTALL = "PREFS_BLOCK_APP_UNINSTALL";
     public static final String PREFS_RUN_BACKGROUND = "PREFS_RUN_BACKGROUND";
     public static final String PREFS_USE_BIOMETRIC = "PREFS_USE_BIOMETRIC";
+    public static final boolean BIOMETRIC_ENABLED = false;
     public static final String PREFS_BACKGROUND = "PREFS_BACKGROUND";
     public static final String IS_LOCK_SET = "IS_LOCK_SET";
     public static final String NEXT_ALERT = "NEXT_ALERT";
@@ -719,6 +720,9 @@ public class PreyConfig {
     }
 
     public boolean getUseBiometric() {
+        if (!BIOMETRIC_ENABLED) {
+            return false;
+        }
         return getBoolean(PreyConfig.PREFS_USE_BIOMETRIC, false);
     }
 
