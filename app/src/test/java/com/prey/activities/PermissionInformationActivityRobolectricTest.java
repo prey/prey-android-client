@@ -9,7 +9,6 @@ package com.prey.activities;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 
 import com.prey.PreyConfig;
 import com.prey.backwardcompatibility.FroyoSupport;
@@ -31,7 +30,6 @@ import java.lang.reflect.Field;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -96,7 +94,6 @@ public class PermissionInformationActivityRobolectricTest {
         ActivityController<PermissionInformationActivity> controller =
                 Robolectric.buildActivity(PermissionInformationActivity.class);
         PermissionInformationActivity activity = controller.create().resume().get();
-        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
 
         // Should NOT prompt for admin privileges — admin is already active
         // Instead it should finish and navigate forward
@@ -116,7 +113,6 @@ public class PermissionInformationActivityRobolectricTest {
         ActivityController<PermissionInformationActivity> controller =
                 Robolectric.buildActivity(PermissionInformationActivity.class);
         PermissionInformationActivity activity = controller.create().resume().get();
-        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
 
         // Should NOT prompt for admin — skipManualPermissions overrides
         assertTrue("Activity should finish when MDM skip is enabled", activity.isFinishing());
