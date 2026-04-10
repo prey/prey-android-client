@@ -12,3 +12,4 @@ app/build.gradle.dev
 local.properties
 *.iml
 /docs
+*.keystore
