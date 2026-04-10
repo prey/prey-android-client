@@ -19,8 +19,8 @@ android {
 
         targetSdk 35
 
-        versionCode 397
-        versionName '2.6.15'
+        versionCode 398
+        versionName '2.6.16'
 
         multiDexEnabled true
 
