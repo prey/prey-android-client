@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'checkstyle'
+
+task checkstyle(type: Checkstyle) {
+    source 'src/main/java', 'src/test/java'
+    include '**/*.java'
+    classpath = files()
+    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+}
 
 android {
     namespace 'com.prey'
