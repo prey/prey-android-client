@@ -124,8 +124,10 @@ public class BarcodeActivity extends Activity   {
                         }
                     }
                 } else {
-                    statusMessage.setText(R.string.barcode_failure);
-                    PreyLogger.d("No barcode captured, intent data is null");
+                    // User pressed back on the camera, go back to previous screen
+                    PreyLogger.d("No QR code captured, intent data is null");
+                    onBackPressed();
+                    return;
                 }
             } else {
                 statusMessage.setText(String.format(getString(R.string.barcode_error),
