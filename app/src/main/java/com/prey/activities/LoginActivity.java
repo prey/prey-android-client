@@ -10,20 +10,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.RestrictionsManager;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
-import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.json.actions.Lock;
 import com.prey.services.CheckLockActivated;
 import com.prey.services.PreyLockHtmlService;
-import com.prey.services.PreyLockService;
 
 public class LoginActivity extends Activity {
 
@@ -63,16 +59,9 @@ public class LoginActivity extends Activity {
         if (unlockPass != null && !"".equals(unlockPass)) {
             boolean canDrawOverlays = PreyPermission.canDrawOverlays(getApplicationContext());
             boolean accessibility = PreyPermission.isAccessibilityServiceEnabled(getApplicationContext());
-            if (PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() &&
-                    (canDrawOverlays||accessibility)) {
+            if (canDrawOverlays || accessibility) {
                 PreyLogger.d("Login Boot finished. PreyLockService");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    PreyLogger.d("login 2");
-                    intentLock = new Intent(getApplicationContext(), PreyLockHtmlService.class);
-                } else {
-                    PreyLogger.d("login 3");
-                    intentLock = new Intent(getApplicationContext(), PreyLockService.class);
-                }
+                intentLock = new Intent(getApplicationContext(), PreyLockHtmlService.class);
                 getApplicationContext().startService(intentLock);
                 getApplicationContext().startService(new Intent(getApplicationContext(), CheckLockActivated.class));
             } else {
@@ -90,29 +79,7 @@ public class LoginActivity extends Activity {
     }
 
     private void showLogin() {
-        Intent intent = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);
-        } else {
-            boolean registered = PreyConfig.getPreyConfig(this).isThisDeviceAlreadyRegisteredWithPrey();
-            if (registered) {
-                intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
-            } else {
-                boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
-                PreyLogger.d(String.format("LoginActivity: canDrawOverlays:%b", canDrawOverlays));
-                boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
-                PreyLogger.d(String.format("LoginActivity: isAdminActive:%b", isAdminActive));
-                boolean configurated = canDrawOverlays && isAdminActive;
-                if (configurated) {
-                    intent = new Intent(LoginActivity.this, SignInActivity.class);
-                } else {
-                    intent = new Intent(LoginActivity.this, OnboardingActivity.class);
-                }
-            }
-        }
-        if (PreyConfig.getPreyConfig(this).isChromebook()) {
-            intent = new Intent(LoginActivity.this, ChromeActivity.class);
-        }
+        Intent intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

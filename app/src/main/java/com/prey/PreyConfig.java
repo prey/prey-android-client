@@ -1090,10 +1090,6 @@ public class PreyConfig {
         saveString(PreyConfig.LAST_EVENT_GEO, lastEventGeo);
     }
 
-    public boolean isChromebook() {
-        return ctx.getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
-    }
-
     public String getJobIdLock(){
         return getString(PreyConfig.JOB_ID_LOCK, "");
     }

@@ -100,14 +100,7 @@ public class PreyPermission {
     }
 
     public static boolean canDrawOverlays(Context ctx) {
-        if(PreyConfig.getPreyConfig(ctx).isChromebook()){
-            return true;
-        }
-        boolean canDrawOverlays=true;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            canDrawOverlays = Settings.canDrawOverlays(ctx);
-        }
-        return canDrawOverlays;
+        return Settings.canDrawOverlays(ctx);
     }
 
     public static  boolean checkBiometricSupport(Context ctx) {
