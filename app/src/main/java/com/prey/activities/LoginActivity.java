@@ -9,6 +9,7 @@ package com.prey.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.RestrictionsManager;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -79,7 +80,9 @@ public class LoginActivity extends Activity {
             }
         }
         boolean ready = PreyConfig.getPreyConfig(this).getProtectReady();
-        if (isThereBatchInstallationKey() && !ready) {
+        if (!ready && hasMdmSetupKey()) {
+            showMdmSplash();
+        } else if (isThereBatchInstallationKey() && !ready) {
             showLoginBatch();
         } else {
             showLogin();
@@ -130,6 +133,29 @@ public class LoginActivity extends Activity {
         Intent popup = new Intent(ctx, FeedbackActivity.class);
         popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ctx.startActivity(popup);
+    }
+
+    private boolean hasMdmSetupKey() {
+        if (PreyConfig.getPreyConfig(this).isThisDeviceAlreadyRegisteredWithPrey()) {
+            return false;
+        }
+        try {
+            RestrictionsManager manager = (RestrictionsManager) getSystemService(Context.RESTRICTIONS_SERVICE);
+            Bundle restrictions = manager.getApplicationRestrictions();
+            if (restrictions != null && restrictions.containsKey("setup_key")) {
+                String setupKey = restrictions.getString("setup_key");
+                return setupKey != null && !"".equals(setupKey);
+            }
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error hasMdmSetupKey: %s", e.getMessage()), e);
+        }
+        return false;
+    }
+
+    private void showMdmSplash() {
+        Intent intent = new Intent(LoginActivity.this, SplashMdmActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private boolean isThereBatchInstallationKey() {
