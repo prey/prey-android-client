@@ -150,12 +150,7 @@ public class PermissionInformationActivity extends PreyActivity {
                     askForAdminActive();
                 } else {
                         finish();
-                        Intent intent = null;
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            intent = new Intent(this, CheckPasswordHtmlActivity.class);
-                        }else{
-                            intent = new Intent(this, CheckPasswordActivity.class);
-                        }
+                        Intent intent = new Intent(this, CheckPasswordHtmlActivity.class);
                         startActivity(intent);
                 }
             }

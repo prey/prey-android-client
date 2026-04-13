@@ -2,30 +2,10 @@
 <resources>
     <string name="app_name">Prey</string>
 
-    <string name="protect_title_1">estado de tu dispositivo</string>
-    <string name="protect_title_2">PROTEGIDO</string>
-
-    <string name="password_subtitle">Por tu seguridad, escribe tu contraseña, para entrar a la configuración de tu equipo.</string>
-    <string name="password_button">INGRESAR</string>
-    <string name="password_forgot">¿OLVIDASTE TU CONTRASEÑA?</string>
-    <string name="password_hint">Escriba su contraseña</string>
-
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
-
-    <string name="feedback_principal_title">Está todo bien?</string>
-    <string name="feedback_principal_message">Al parecer llevas usando Prey por un buen tiempo. ¿Estarías dispuesto a darnos tu opinión?</string>
-    <string name="feedback_principal_button1">Me encanta</string>
-    <string name="feedback_principal_button2">Necesita mejoras</string>
-    <string name="feedback_principal_button3">No, gracias</string>
-    <string name="feedback_form_title">Contacta con Prey</string>
-    <string name="feedback_form_message">¿Qué cambiarías de Prey si pudieras?</string>
-    <string name="feedback_form_field_hint_comment">Toda opinión es bienvenida.</string>
-    <string name="feedback_form_button1">OK, enviar</string>
-    <string name="feedback_form_button2">NO, gracias</string>
-    <string name="feedback_form_send_email">Enviar correo</string>
 
     <string name="preferences_password_old">Contraseña actual</string>
     <string name="preferences_password_new">Nueva contraseña</string>
@@ -90,23 +70,7 @@
 
     <string name="preference_pin_remove">Borrar PIN</string>
 
-    <string name="preference_sms">Comandos SMS</string>
-
     <!-- preferece sms-->
-    <string name="preference_sms_category_title">SMS</string>
-    <string name="preference_sms_checkbox_title">Activar comandos SMS</string>
-    <string name="preference_sms_checkbox_summary">Envía un mensaje de texto a tu teléfono con el comando que necesites y la acción se activará en tu dispositivo</string>
-    <string name="preference_sms_category_available">Comandos disponibles</string>
-    <string name="preference_sms_command_location">prey PIN location phone_number</string>
-    <string name="preference_sms_command_location_summary">Envía la geolocalización del dispositivo por SMS a phone_number</string>
-    <string name="preference_sms_command_lock">prey PIN lock lock_PIN</string>
-    <string name="preference_sms_command_lock_summary">Bloquea la pantalla del dispositivo hasta que se ingrese la clave lock_PIN</string>
-    <string name="preference_sms_command_unlock">prey PIN unlock</string>
-    <string name="preference_sms_command_unlock_summary">Desbloquea la pantalla del dispositivo, útil al olvidar una contraseña</string>
-    <string name="preference_sms_command_alarm">prey PIN alarm</string>
-    <string name="preference_sms_command_alarm_summary">Hará sonar una alarma</string>
-    <string name="preference_sms_command_alert">prey PIN alert some_text</string>
-    <string name="preference_sms_command_alert_summary">Mostrará some_text como notificación del sistema</string>
 
     <!-- Location Low Battery  -->
 
@@ -159,17 +123,6 @@
 
     <string name="email_resend">Si el correo ingresado es válido, recibirá las instrucciones de activación en breve.</string>
     <string name="permission_summary">Habilitar el servicio de accesibilidad para Prey permite bloquear todas las aplicaciones antes de que se abran cuando el dispositivo está marcado como perdido.</string>
-
-    <string name="permiso_tit">PREY NECESITA ESTOS PERMISOS PARA PROTEGER COMPLETAMENTE TU EQUIPO</string>
-    <string name="permiso_cat1">ACCEDER A UBICACIÓN, ARCHIVOS Y CONTENIDO MULTIMEDIA</string>
-    <string name="permiso_des1"><b>ACCEDER A LA UBICACIÓN DEL DISPOSITIVO</b>\nLa ubicación del equipo es necesaria para rastreo y el uso de zonas de control.\n\n<b>TOMAR FOTOS Y GRABAR VIDEOS</b>\nLa generación de reportes de evidencia de robo con fotografías requiere este permiso.\n\n<b>ACCEDER A FOTOS, CONTENIDO MULTIMEDIA Y ARCHIVOS</b>\nLa Recuperación de Archivos requiere este permiso para extraer archivos de forma remota.</string>
-    <string name="permiso_cat2">ACCESO APP DE ADMINISTRADOR</string>
-    <string name="permiso_des2"><b>ACTIVAR APP DE ADMINISTRADOR</b>\nPrey puede activar otras funcionalidades de seguridad con la app de administrador, como el Borrado Remoto, el Bloqueo Remoto, o el Bloqueo de Desinstalación.</string>
-    <string name="permiso_cat3">SOBREPONER APLICACIÓN</string>
-    <string name="permiso_des3"><b>SOBREPONER APLICACIÓN</b>\nAl activar un Bloqueo Remoto, Prey utiliza este permiso para mostrar una pantalla de bloqueo sobre otras apps.</string>
-    <string name="link_privacy">TU PRIVACIDAD</string>
-    <string name="privacy_info">Las funcionalidades de la aplicación solo se activan mediante la activación previa desde el panel de control y requieren que otorgues los permisos correspondientes desde tu dispositivo.\n\nNinguno de tus datos se vende o envía a terceros para ningún propósito. No se utilizarán para ningún otro propósito que no sea entregar o mejorar las funcionalidades de la aplicación.Todos los datos se procesan cifrados por medio de SSL.</string>
-    <string name="privacy_home">VOLVER</string>
 
     <string name="text_batch">Da un nombre a este dispositivo para identificarlo en Prey.</string>
     <string name="placehoder_batch">Escribe aquí</string>

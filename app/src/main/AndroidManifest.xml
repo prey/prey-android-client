@@ -165,15 +165,6 @@
             />
 
         <activity
-                android:launchMode="singleInstance"
-            android:noHistory="true"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-                android:name=".activities.CheckPasswordActivity" />
-
-        <!-- remove noHistory="true -->
-        <activity
                 android:windowSoftInputMode="stateHidden|adjustResize"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
