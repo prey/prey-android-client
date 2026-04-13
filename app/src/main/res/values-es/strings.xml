@@ -10,7 +10,6 @@
     <string name="preferences_password_old">Contraseña actual</string>
     <string name="preferences_password_new">Nueva contraseña</string>
     <string name="preferences_password_confirm">Confirma la contraseña</string>
-    <string name="preferences_config_title">Configuración principal</string>
     <string name="preferences_go_to_control_panel_title">Administrar tus Dispositivos</string>
     <string name="preferences_go_to_control_panel_summary">Ir a tu cuenta Prey</string>
     <string name="preferences_admin_enabled_title">Quitar Permisos Extra</string>
@@ -45,11 +44,9 @@
     <string name="error_communication_500">No pudimos comunicarnos con nuestros servidores debido a un error de conexión. por favor asegúrate de tener una conexión estable.</string>
     <string name="error_cant_add_this_device">El equipo no se pudo agregar a tu cuenta Prey. Revisa el email y contraseña que ingresaste. %s</string>
     <string name="error_cant_report_forgotten_password">La contraseña no se pudo reportar como olvidada. Por favor inténtalo nuevamente.</string>
-    <string name="error_password_out_of_range">El largo de la contraseña debe ser entre %1$s y %2$s caracteres.</string>
 
     <string name="password_wrong">Contraseña incorrecta. Inténtalo nuevamente.</string>
     <string name="password_intents_exceed">Has fallado 3 veces.</string>
-    <string name="password_checking_dialog">Comprobando tu contraseña…\n¡Un segundo!</string>
     <string name="loading">Cargando,esper por favor..</string>
 
     <string name="set_old_user_loading">Agregando equipo a la cuenta…</string>
@@ -58,17 +55,13 @@
     <string name="updating_info_message">Actualizando información, un segundo…</string>
 
     <!-- preferece -->
-    <string name="preference_pin">PIN Prey</string>
-    <string name="preference_pin_summary">Crea tu código PIN de 4 dígitos para activar el uso de la función de Bloqueo de Botón de apagado</string>
-    <!--<string name="preference_pin_summary">Crea tu código PIN de 4 dígitos para activar el uso de las acciones remotas vía comandos SMS y la función de Bloqueo de Botón de apagado</string>-->
+    <!---->
     <!--<string name="preference_pin_summary_subtitle">Este PIN se pedirá al utilizar comandos SMS o al bloquear el botón de apagado</string>-->
     <string name="preference_pin_summary_subtitle">Este PIN se pedirá al utilizar al bloquear el botón de apagado</string>
 
     <string name="preference_pin_updating_dialog">Actualizando PIN Prey</string>
     <string name="preference_pin_successfully_changed">PIN Prey actualizado correctamente</string>
     <string name="preference_pin_removed">PIN Prey fue eliminado</string>
-
-    <string name="preference_pin_remove">Borrar PIN</string>
 
     <!-- preferece sms-->
 
@@ -93,9 +86,6 @@
     <!-- Warning Android 7 Alert  -->
     <string name="lock_access_denied">El dispositivo ha sido bloqueado por su propietario en la protección de su privacidad, y la propiedad.\n\nIntroduzca la contraseña para desbloquear.</string>
     <string name="lock_unlock">ACEPTAR</string>
-
-    <string name="preference_background_summary">A partir de Android 8.0, Prey debe mostrar una notificación para rastrear y activar zonas de control con la app en segundo plano.</string>
-    <string name="preference_background_title">Correr en Segundo Plano</string>
 
     <string name="preferences_disable_power_alert_android9_title">No Disponible en Android 9 en adelante</string>
     <string name="preferences_disable_power_alert_android9_message">Esta función no está disponible en esta versión de Android por restricciones de Google.</string>
@@ -127,8 +117,6 @@
     <string name="text_batch">Da un nombre a este dispositivo para identificarlo en Prey.</string>
     <string name="placehoder_batch">Escribe aquí</string>
     <string name="button_batch">Siguiente</string>
-    <string name="uninstall_prey">¿Cómo desinstalar Prey?</string>
-    <string name="uninstall_prey_link">https://ayuda.preyproject.com/article/226-como-desinstalar-prey#android</string>
     <string name="error_token">La identificación de cuenta ha expirado o ha sido revocado, por favor contacta a tu administrador.</string>
     <string name="preferences_uninstall_summary">¿Deseas continuar con el proceso de remover los permisos de Prey en este dipositivo? Recuerda reiniciar y luego desintalar.</string>
     <string name="finger_title">Ingresar con huella</string>

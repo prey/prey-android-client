@@ -8,8 +8,7 @@
 
     <string name="preferences_password_old">Current password</string> 
     <string name="preferences_password_new">New password</string>
-     <string name="preferences_password_confirm">Confirm password</string> 
-    <string name="preferences_config_title">Manage Your Devices</string>
+     <string name="preferences_password_confirm">Confirm password</string>
     <string name="preferences_go_to_control_panel_title">Manage Your Devices</string>
      <string name="preferences_go_to_control_panel_summary">Go to your Prey account</string>
     <string name="preferences_admin_enabled_title">Revoke extra permissions</string> 
@@ -44,12 +43,10 @@
     <string name="error_communication_exception">Check your settings and try again.</string> 
     <string name="error_communication_500">We couldn\'t reach our servers due to a connection error. please ensure you have a stable connection.</string>
     <string name="error_cant_add_this_device">Can\'t add this device to your prey account. Please check again the email and password provided. %s</string>
-     <string name="error_cant_report_forgotten_password">Can\'t report forgotten password. Please try again later.</string>
-     <string name="error_password_out_of_range">Password length must be between %1$s and %2$s characters.</string> 
+     <string name="error_cant_report_forgotten_password">Can\'t report forgotten password. Please try again later.</string> 
 
     <string name="password_wrong">Wrong password. Try again.</string> 
-    <string name="password_intents_exceed">You have failed 3 times. Sorry!</string> 
-    <string name="password_checking_dialog">Checking your password…\nJust a sec!</string>
+    <string name="password_intents_exceed">You have failed 3 times. Sorry!</string>
 
     <string name="loading">Loading, please wait..</string>
 
@@ -59,16 +56,13 @@
     <string name="updating_info_message">Updating information, please wait…</string>
 
     <!-- preferece -->
-    <string name="preference_pin">Prey security PIN</string>
-    <string name="preference_pin_summary">Create your 4 digit PIN code to activate the use the OFF Button Lock feature</string>
-    <!--<string name="preference_pin_summary">Create your 4 digit PIN code to activate the use of remote actions via SMS commands and the OFF Button Lock feature</string>-->
+    <!---->
     <!--<string name="preference_pin_summary_subtitle">This PIN number will be requested when using SMS commands or the OFF button <lock></lock></string>-->
     <string name="preference_pin_summary_subtitle">This PIN number will be requested when using the OFF button</string>
 
     <string name="preference_pin_updating_dialog">Updating Prey PIN</string>
     <string name="preference_pin_successfully_changed">Prey PIN set successfully</string>
     <string name="preference_pin_removed">Prey PIN removed successfully</string>
-    <string name="preference_pin_remove">Remove PIN</string>
 
     <!-- preferece sms-->
 
@@ -95,9 +89,6 @@
     <string name="lock_access_denied">The device has been blocked by its owner to protect both privacy and property.\n\nEnter the password to unlock.</string>
 
     <string name="lock_unlock">ENTER</string>
-
-    <string name="preference_background_summary">As of Android 8.0, Prey needs to display a notification to run as a background app and actively track the device and its control zone triggers.</string>
-    <string name="preference_background_title">Run in Background</string>
 
     <string name="preferences_disable_power_alert_android9_title">Not Available in Android 9 and up</string>
     <string name="preferences_disable_power_alert_android9_message">This feature is not availabe due to Google\'s policy restrictions in this Android version</string>
@@ -129,8 +120,6 @@
     <string name="text_batch">Give this device a name to identify it in Prey.</string>
     <string name="placehoder_batch">Type here</string>
     <string name="button_batch">Next</string>
-    <string name="uninstall_prey">How to uninstall Prey?</string>
-    <string name="uninstall_prey_link">https://help.preyproject.com/article/190-how-to-uninstall-prey#android</string>
     <string name="error_token">The account identification has expired or has been revoked, please contact your administrator.</string>
     <string name="preferences_uninstall_summary">Do you want to continue with the process of removing Prey permissions on this device? Remember to reboot and then uninstall.</string>
     <string name="finger_title">Login with fingerprint</string>
