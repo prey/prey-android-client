@@ -165,20 +165,6 @@
             />
 
         <activity
-                android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:noHistory="true"
-
-                android:name=".activities.DeviceReadyActivity" />
-
-        <activity
-            android:name=".activities.WelcomeActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:noHistory="true"
-            />
-
-        <activity
             android:name=".activities.WelcomeBatchActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
