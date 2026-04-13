@@ -287,13 +287,6 @@ public class UtilConnection {
         return response;
     }
 
-    public static boolean pageOffline(String uri){
-        if (uri!=null && uri.indexOf("devices.json")<0 && uri.indexOf("data.json")<0 && uri.indexOf("profile.xml")<0 && uri.indexOf("signup.json")<0){
-            return true;
-        }
-        return false;
-    }
-
     private static void saveFile(String idFile,ByteArrayOutputStream outputStream){
         FileOutputStream fileOutputStream = null;
         ByteArrayInputStream byteArrayInputStream = null;

@@ -46,30 +46,18 @@ public class AlertThread extends Thread {
 
     public void run() {
         final int notificationId = AlertConfig.getAlertConfig(ctx).getNotificationId();
-        if (PreyUtils.isChromebook(ctx)) {
+        if (fullscreen_notification) {
             new Thread() {
                 public void run() {
                     fullscreen(notificationId);
                 }
             }.start();
-        }else {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                fullscreen(notificationId);
-            }else{
-                if (fullscreen_notification) {
-                    new Thread() {
-                        public void run() {
-                            fullscreen(notificationId);
-                        }
-                    }.start();
-                }
-                new Thread() {
-                    public void run() {
-                        notification(notificationId);
-                    }
-                }.start();
-            }
         }
+        new Thread() {
+            public void run() {
+                notification(notificationId);
+            }
+        }.start();
     }
 
     public void notification(int notificationId) {
@@ -185,16 +173,6 @@ public class AlertThread extends Thread {
             popup.putExtra("description_message", description);
             popup.putExtra("notificationId", notificationId);
             ctx.startActivity(popup);
-            if(PreyUtils.isChromebook(ctx)||Build.VERSION.SDK_INT < Build.VERSION_CODES.N){
-                new Thread() {
-                    public void run() {
-                        String reason = null;
-                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "started", reason));
-                        try{sleep(2000);}catch (Exception e){PreyLogger.e("Error sleep:"+e.getMessage(),e);}
-                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "stopped", reason));
-                    }
-                }.start();
-            }
         } catch (Exception e) {
             PreyLogger.e("Error PopUpAlert:"+e.getMessage(),e);
         }

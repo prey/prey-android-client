@@ -128,28 +128,24 @@ public class PreyApp extends Application {
                                 new ReportService().run(ctx);
                             }
                         }
-                        if (!PreyConfig.getPreyConfig(ctx).isChromebook()) {
+                        try {
+                            PreyJobService.schedule(ctx);
+                            if (isGooglePlayServicesAvailable) {
+                                AwareJobService.schedule(ctx);
+                            }
+                        } catch (Exception e) {
+                            PreyLogger.e(String.format("error jobService.schedule : %s", e.getMessage()), e);
+                        }
+                        if (PreyConfig.getPreyConfig(ctx).isRunBackground()) {
+                            RunBackgroundCheckBoxPreference.notifyReady(ctx);
+                        }
+                        if (PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()) {
                             try {
-                                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    PreyJobService.schedule(ctx);
-                                    if (isGooglePlayServicesAvailable) {
-                                        AwareJobService.schedule(ctx);
-                                    }
+                                if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                                    ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
                                 }
                             } catch (Exception e) {
-                                PreyLogger.e(String.format("error jobService.schedule : %s", e.getMessage()), e);
-                            }
-                            if (PreyConfig.getPreyConfig(ctx).isRunBackground()) {
-                                RunBackgroundCheckBoxPreference.notifyReady(ctx);
-                            }
-                            if (PreyConfig.getPreyConfig(ctx).isDisablePowerOptions()) {
-                                try {
-                                    if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                                        ctx.startService(new Intent(ctx, PreyDisablePowerOptionsService.class));
-                                    }
-                                } catch (Exception e) {
-                                    PreyLogger.e(String.format("error startService PreyDisablePowerOptionsService : %s", e.getMessage()), e);
-                                }
+                                PreyLogger.e(String.format("error startService PreyDisablePowerOptionsService : %s", e.getMessage()), e);
                             }
                         }
                     }

@@ -169,23 +169,6 @@
             android:screenOrientation="portrait"
             android:noHistory="true"
 
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-                android:name=".activities.SignInActivity" />
-
-        <activity
-                android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:noHistory="true"
-
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-                android:name=".activities.SignUpActivity" />
-
-
-        <activity
-                android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:noHistory="true"
-
                 android:name=".activities.DeviceReadyActivity" />
 
         <activity
@@ -224,15 +207,6 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
                 android:name=".activities.CheckPasswordHtmlActivity" />
-
-        <!-- New Activity for Chromebook -->
-        <activity
-                android:launchMode="singleTask"
-            android:noHistory="true"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-                android:name=".activities.ChromeActivity" />
 
         <activity
                 android:configChanges="orientation|keyboardHidden"
@@ -505,6 +479,11 @@
             </intent-filter>
             <meta-data android:name="android.accessibilityservice" android:resource="@xml/accessibilityservice"/>
         </service>
+
+        <activity
+            android:name=".activities.SplashMdmActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
 
     </application>
 

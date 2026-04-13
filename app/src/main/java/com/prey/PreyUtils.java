@@ -33,14 +33,10 @@ public class PreyUtils {
     public static final String LAPTOP="Laptop";
 
     public static String getDeviceType(Context ctx) {
-        if (isChromebook(ctx)) {
-            return LAPTOP;
+        if (isTablet(ctx)) {
+            return "Tablet";
         } else {
-            if (isTablet(ctx)) {
-                return "Tablet";
-            } else {
-                return "Phone";
-            }
+            return "Phone";
         }
     }
 
@@ -65,10 +61,6 @@ public class PreyUtils {
             newName = vendor + " " + model;
         }
         return newName;
-    }
-
-    public static boolean isChromebook(Context ctx) {
-        return PreyConfig.getPreyConfig(ctx).isChromebook();
     }
 
     public static boolean isTablet(Context ctx) {

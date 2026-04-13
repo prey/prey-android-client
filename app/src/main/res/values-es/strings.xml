@@ -17,14 +17,6 @@
     <string name="button_signin">INGRESAR A MI CUENTA</string>
     <string name="link_signin">¿No tienes cuenta aún?</string>
 
-    <string name="signup_subtitle">cuenta Prey</string>
-    <string name="signup_title">REGÍSTRATE</string>
-    <string name="field_name_signup">tu nombre</string>
-    <string name="field_email_signup">correo</string>
-    <string name="field_password_signup">contraseña</string>
-    <string name="button_signup">CREAR MI NUEVA CUENTA</string>
-    <string name="link_signup">¿Ya tienes una cuenta?</string>
-
     <string name="permission_error_title_1">estado de tu dispositivo</string>
     <string name="permission_error_title_2">DESPROTEGIDO.</string>
     <string name="permission_error_title_3">Prey utiliza el Permiso de Administrador de Dispositivo para su funciones de Borrado Remoto y Bloqueo.\nActivar el permiso te permitirá utilizar estas funcione de manera remota para combatir el robo de información.\nCon el Borrado Remoto puedes eliminar los datos de un equipo perdido, mientras que la función de Bloqueo impide el acceso con una pantalla de bloqueo y una contraseña.</string>
@@ -388,4 +380,8 @@
     <string name="restriction_title_skip_manual_permissions">Omitir permisos manuales</string>
     <string name="restriction_description_skip_manual_permissions">(Opcional) Omite los permisos de Device Admin y Accesibilidad. El bloqueo de Prey no estará disponible; solo funcionará el borrado nativo del MDM.</string>
     <string name="administrator_disabled">El componente de administrador dado no está actualmente activo y deshabilitado en el sistema.</string>
+
+    <string name="mdm_loading_title">Cargando configuraciones de tu administrador</string>
+    <string name="mdm_loading_error">No se pudo completar la configuración. Contacta a tu administrador.</string>
+
 </resources>

@@ -1090,10 +1090,6 @@ public class PreyConfig {
         saveString(PreyConfig.LAST_EVENT_GEO, lastEventGeo);
     }
 
-    public boolean isChromebook() {
-        return ctx.getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
-    }
-
     public String getJobIdLock(){
         return getString(PreyConfig.JOB_ID_LOCK, "");
     }
@@ -1808,6 +1804,12 @@ public class PreyConfig {
                             // Log any errors that occur during initialization
                             PreyLogger.e("Error:" + e.getMessage(), e);
                         }
+                    }
+                }.start();
+                // Send permission status to backend post-registration
+                new Thread() {
+                    public void run() {
+                        com.prey.json.actions.ListPermissions.sendPermissions(ctx);
                     }
                 }.start();
             }

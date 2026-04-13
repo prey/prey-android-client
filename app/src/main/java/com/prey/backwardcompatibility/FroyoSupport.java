@@ -104,11 +104,7 @@ public class FroyoSupport {
     }
 
     public boolean isAdminActive() {
-        if(!PreyUtils.isChromebook(ctx)){
-            return policyManager.isAdminActive(deviceAdmin);
-        } else{
-            return true;
-        }
+        return policyManager.isAdminActive(deviceAdmin);
     }
 
     public void removeAdminPrivileges() {
