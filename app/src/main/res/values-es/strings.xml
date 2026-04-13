@@ -2,24 +2,8 @@
 <resources>
     <string name="app_name">Prey</string>
 
-    <string name="menu_title_1">estado de tu dispositivo</string>
-    <string name="menu_title_2">SIN PROTECCIÓN AÚN.</string>
-    <string name="menu_title_3">ESTAMOS CASI LISTOS</string>
-    <string name="menu_title_4">Se necesitan permisos de Administrador</string>
-    <string name="menu_title_5">Estos permisos permitirán a Prey proteger tu teléfono y ayudarte a controlarlo si se llega a perder o te lo roban. Tu información y privacidad están a salvo con nosotros.</string>
-    <string name="menu_button_1">ACTIVAR PROTECCIÓN</string>
-
-    <string name="permission_error_title_1">estado de tu dispositivo</string>
-    <string name="permission_error_title_2">DESPROTEGIDO.</string>
-    <string name="permission_error_title_3">Prey utiliza el Permiso de Administrador de Dispositivo para su funciones de Borrado Remoto y Bloqueo.\nActivar el permiso te permitirá utilizar estas funcione de manera remota para combatir el robo de información.\nCon el Borrado Remoto puedes eliminar los datos de un equipo perdido, mientras que la función de Bloqueo impide el acceso con una pantalla de bloqueo y una contraseña.</string>
-    <string name="permission_error_button_1">ACTIVAR PROTECCIÓN</string>
-
     <string name="protect_title_1">estado de tu dispositivo</string>
     <string name="protect_title_2">PROTEGIDO</string>
-    <string name="protect_button_title_1">CONTROLAR REMOTAMENTE</string>
-    <string name="protect_button_subtitle_1">DESDE TU CUENTA PREY</string>
-    <string name="protect_button_title_2">CONFIGURAR</string>
-    <string name="protect_button_subtitle_2">PREY</string>
 
     <string name="password_subtitle">Por tu seguridad, escribe tu contraseña, para entrar a la configuración de tu equipo.</string>
     <string name="password_button">INGRESAR</string>
@@ -93,9 +77,6 @@
 
     <string name="updating_info_message">Actualizando información, un segundo…</string>
 
-    <string name="home_button">REGÍSTRATE</string>
-    <string name="home_subtitle">¿Ya tienes una cuenta? <u>Iniciar sesión</u></string>
-
     <!-- preferece -->
     <string name="preference_pin">PIN Prey</string>
     <string name="preference_pin_summary">Crea tu código PIN de 4 dígitos para activar el uso de la función de Bloqueo de Botón de apagado</string>
@@ -148,9 +129,6 @@
     <!-- Warning Android 7 Alert  -->
     <string name="lock_access_denied">El dispositivo ha sido bloqueado por su propietario en la protección de su privacidad, y la propiedad.\n\nIntroduzca la contraseña para desbloquear.</string>
     <string name="lock_unlock">ACEPTAR</string>
-    <string name="lock_close">CERRAR</string>
-
-    <string name="super_lock">Para apagar el dispositivo ingresa tu PIN y vuelve a intentarlo.</string>
 
     <string name="preference_background_summary">A partir de Android 8.0, Prey debe mostrar una notificación para rastrear y activar zonas de control con la app en segundo plano.</string>
     <string name="preference_background_title">Correr en Segundo Plano</string>
@@ -159,12 +137,8 @@
     <string name="preferences_disable_power_alert_android9_message">Esta función no está disponible en esta versión de Android por restricciones de Google.</string>
 
     <string name="biometric_prompt_error">Entra al menú de Configuraciones de la app con tu contraseña y activa la función.</string>
-    <string name="biometric_touch">Toca el sensor de huella digital</string>
 
     <string name="password">Contraseña</string>
-    <string name="password2">Seis dígitos</string>
-    <string name="password_description">Ingrese su contraseña de Prey</string>
-    <string name="password_description2">Código de seguridad de seis dígitos</string>
     <string name="use_password">Usar contraseña</string>
     <string name="use_fingerprint">Usar huella</string>
 
@@ -186,9 +160,6 @@
     <string name="email_resend">Si el correo ingresado es válido, recibirá las instrucciones de activación en breve.</string>
     <string name="permission_summary">Habilitar el servicio de accesibilidad para Prey permite bloquear todas las aplicaciones antes de que se abran cuando el dispositivo está marcado como perdido.</string>
 
-    <string name="next">SIGUIENTE</string>
-    <string name="skip">OMITIR</string>
-    <string name="start">ENTENDIDO</string>
     <string name="permiso_tit">PREY NECESITA ESTOS PERMISOS PARA PROTEGER COMPLETAMENTE TU EQUIPO</string>
     <string name="permiso_cat1">ACCEDER A UBICACIÓN, ARCHIVOS Y CONTENIDO MULTIMEDIA</string>
     <string name="permiso_des1"><b>ACCEDER A LA UBICACIÓN DEL DISPOSITIVO</b>\nLa ubicación del equipo es necesaria para rastreo y el uso de zonas de control.\n\n<b>TOMAR FOTOS Y GRABAR VIDEOS</b>\nLa generación de reportes de evidencia de robo con fotografías requiere este permiso.\n\n<b>ACCEDER A FOTOS, CONTENIDO MULTIMEDIA Y ARCHIVOS</b>\nLa Recuperación de Archivos requiere este permiso para extraer archivos de forma remota.</string>
@@ -196,18 +167,9 @@
     <string name="permiso_des2"><b>ACTIVAR APP DE ADMINISTRADOR</b>\nPrey puede activar otras funcionalidades de seguridad con la app de administrador, como el Borrado Remoto, el Bloqueo Remoto, o el Bloqueo de Desinstalación.</string>
     <string name="permiso_cat3">SOBREPONER APLICACIÓN</string>
     <string name="permiso_des3"><b>SOBREPONER APLICACIÓN</b>\nAl activar un Bloqueo Remoto, Prey utiliza este permiso para mostrar una pantalla de bloqueo sobre otras apps.</string>
-    <string name="permiso_link">IR A PERMISOS</string>
     <string name="link_privacy">TU PRIVACIDAD</string>
     <string name="privacy_info">Las funcionalidades de la aplicación solo se activan mediante la activación previa desde el panel de control y requieren que otorgues los permisos correspondientes desde tu dispositivo.\n\nNinguno de tus datos se vende o envía a terceros para ningún propósito. No se utilizarán para ningún otro propósito que no sea entregar o mejorar las funcionalidades de la aplicación.Todos los datos se procesan cifrados por medio de SSL.</string>
     <string name="privacy_home">VOLVER</string>
-    <string name="onboarding01_tit">TU CENTRO DE SEGURIDAD</string>
-    <string name="onboarding01_body">Ingresa a tu panel en línea desde cualquier lugar o plataforma y realiza acciones de seguridad en tu dispositivo.</string>
-    <string name="onboarding02_tit">RASTREA Y ENCUENTRA</string>
-    <string name="onboarding02_body">Ubica dónde se encuentra tu móvil, laptop o tablet y detecta cuando este se mueve.</string>
-    <string name="onboarding03_tit">REACCIONA Y PROTEGE</string>
-    <string name="onboarding03_body">Protege tus equipos y sus datos con acciones de seguridad remotas como el Bloqueo, el Borrado y la Alarma.</string>
-    <string name="onboarding04_tit">RECUPERAR CON EVIDENCIA</string>
-    <string name="onboarding04_body">Recibe reportes de evidencia con fotos, capturas de pantalla, redes WiFi cercanas, ubicaciones y más.</string>
 
     <string name="text_batch">Da un nombre a este dispositivo para identificarlo en Prey.</string>
     <string name="placehoder_batch">Escribe aquí</string>
@@ -239,5 +201,10 @@
 
     <string name="mdm_loading_title">Cargando configuraciones de tu administrador</string>
     <string name="mdm_loading_error">No se pudo completar la configuración. Contacta a tu administrador.</string>
+
+    <string name="biometric_touch">Toca el sensor de huella digital</string>
+    <string name="password2">Seis dígitos</string>
+    <string name="password_description">Ingrese su contraseña de Prey</string>
+    <string name="password_description2">Código de seguridad de seis dígitos</string>
 
 </resources>
