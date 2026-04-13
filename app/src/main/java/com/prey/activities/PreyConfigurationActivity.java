@@ -23,7 +23,7 @@ public class PreyConfigurationActivity extends PreferenceActivity {
 
     public void onBackPressed(){
         Intent intent = null;
-        intent = new Intent(getApplication(), CheckPasswordActivity.class);
+        intent = new Intent(getApplication(), CheckPasswordHtmlActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();

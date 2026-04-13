@@ -30,7 +30,6 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.prey.actions.aware.AwareController;
 import com.prey.actions.location.PreyLocation;
-import com.prey.activities.FeedbackActivity;
 import com.prey.json.actions.Location;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.PreyHttpResponse;
@@ -805,10 +804,6 @@ public class PreyConfig {
 
     public void setFlagFeedback(int flagFeedback) {
         saveInt(PreyConfig.FLAG_FEEDBACK, flagFeedback);
-    }
-
-    public boolean showFeedback() {
-        return FeedbackActivity.showFeedback(getLong(PreyConfig.INSTALLATION_DATE, 0), getFlagFeedback());
     }
 
     public void setAccountVerified(boolean accountVerified) {
