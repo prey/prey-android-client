@@ -122,14 +122,7 @@ public class SignInActivity extends Activity {
                     new AddDeviceToAccount().execute(email, password, PreyUtils.getDeviceType(ctx));
             }
         });
-        linkSignin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+        linkSignin.setVisibility(View.GONE);
         ImageView imageViewQr=(ImageView)findViewById(R.id.imageViewQR);
         imageViewQr.setOnClickListener(new View.OnClickListener() {
             @Override

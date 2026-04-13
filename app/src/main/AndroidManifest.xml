@@ -177,15 +177,6 @@
             android:screenOrientation="portrait"
             android:noHistory="true"
 
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-                android:name=".activities.SignUpActivity" />
-
-
-        <activity
-                android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:noHistory="true"
-
                 android:name=".activities.DeviceReadyActivity" />
 
         <activity

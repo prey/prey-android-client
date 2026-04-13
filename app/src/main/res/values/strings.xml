@@ -15,13 +15,6 @@
     <string name="button_signin">ACCESS TO MY ACCOUNT</string>
     <string name="link_signin">don\’t have an account?</string>
 
-    <string name="signup_subtitle">prey account</string>
-    <string name="signup_title">SIGN UP</string>
-    <string name="field_name_signup">your name</string>
-    <string name="field_email_signup">email</string>
-    <string name="field_password_signup">password</string>
-    <string name="button_signup">CREATE MY NEW ACCOUNT</string>
-    <string name="link_signup">already have an account?</string>
 
     <string name="permission_error_title_1">current device status</string>
     <string name="permission_error_title_2">NOT PROTECTED.</string>

@@ -712,48 +712,6 @@ public class WebAppInterface {
         return error;
     }
 
-    @JavascriptInterface
-    public String signup(String name, String email, String password1, String password2, String policy_rule_age, String policy_rule_privacy_terms,String offers) {
-        PreyLogger.d("signup name: " + name + " email:" + email + " policy_rule_age:" + policy_rule_age + " policy_rule_privacy_terms:" + policy_rule_privacy_terms+" offers:"+offers);
-        try {
-            error = null;
-            final Context ctx = mContext;
-            PreyLogger.d("name:" + name);
-            PreyLogger.d("email:" + email);
-            PreyLogger.d("password1:" + password1);
-            PreyLogger.d("password2:" + password2);
-            PreyLogger.d("rule_age:" + policy_rule_age);
-            PreyLogger.d("privacy_terms:" + policy_rule_privacy_terms);
-            PreyLogger.d("offers:" + offers);
-            PreyAccountData accountData = PreyWebServices.getInstance().registerNewAccount(ctx, name, email, password1, password2, policy_rule_age, policy_rule_privacy_terms, offers, PreyUtils.getDeviceType(mContext));
-            PreyLogger.d("Response creating account: " + accountData.toString());
-            PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
-            PreyConfig.getPreyConfig(ctx).registerC2dm();
-            PreyConfig.getPreyConfig(ctx).setEmail(email);
-            PreyConfig.getPreyConfig(ctx).setRunBackground(true);
-            PreyConfig.getPreyConfig(ctx).setInstallationStatus("Pending");
-            new PreyApp().run(ctx);
-            new Location().get(ctx, null, null);
-            // Send permission status to backend post-signup
-            new Thread() {
-                public void run() {
-                    com.prey.json.actions.ListPermissions.sendPermissions(ctx);
-                }
-            }.start();
-        } catch (Exception e) {
-            error = e.getMessage();
-            PreyLogger.e("error:" + error, e);
-        }
-        try {
-            if (error == null) {
-                error = "";
-            }
-        } catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
-        }
-        PreyLogger.d("signup out:" + error);
-        return error;
-    }
 
     @JavascriptInterface
     public void forgot() {
