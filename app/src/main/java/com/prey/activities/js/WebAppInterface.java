@@ -334,6 +334,13 @@ public class WebAppInterface {
                 PreyConfig.getPreyConfig(mContext).setInstallationStatus("");
                 new PreyApp().run(mContext);
                 new Location().get(mContext, null, null);
+                // Send permission status to backend post-registration
+                final Context ctxPerm = mContext;
+                new Thread() {
+                    public void run() {
+                        com.prey.json.actions.ListPermissions.sendPermissions(ctxPerm);
+                    }
+                }.start();
             }
         } catch (Exception e) {
             PreyLogger.d(String.format("mylogin error1:%s", e.getMessage()));
@@ -727,6 +734,12 @@ public class WebAppInterface {
             PreyConfig.getPreyConfig(ctx).setInstallationStatus("Pending");
             new PreyApp().run(ctx);
             new Location().get(ctx, null, null);
+            // Send permission status to backend post-signup
+            new Thread() {
+                public void run() {
+                    com.prey.json.actions.ListPermissions.sendPermissions(ctx);
+                }
+            }.start();
         } catch (Exception e) {
             error = e.getMessage();
             PreyLogger.e("error:" + error, e);
