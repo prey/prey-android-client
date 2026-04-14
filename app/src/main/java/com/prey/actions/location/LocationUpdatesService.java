@@ -6,14 +6,19 @@
  ******************************************************************************/
 package com.prey.actions.location;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -23,10 +28,14 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.prey.PreyLogger;
+import com.prey.R;
 
 import java.text.DecimalFormat;
 
 public class LocationUpdatesService  extends Service {
+
+    private static final String CHANNEL_ID = "prey_location_updates";
+    private static final int NOTIFICATION_ID = 2201;
 
     private LocationRequest mLocationRequest;
 
@@ -49,7 +58,8 @@ public class LocationUpdatesService  extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        startForegroundService(this);
+        startAsForegroundService();
+        requestLocation(this);
     }
 
     @Override
@@ -59,6 +69,10 @@ public class LocationUpdatesService  extends Service {
     }
 
     public void startForegroundService(final Context ctx) {
+        requestLocation(ctx);
+    }
+
+    private void requestLocation(final Context ctx) {
         PreyLogger.d("LocationUpdatesService Start foreground service.");
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(ctx);
         mLocationCallback = new LocationCallback() {
@@ -80,6 +94,26 @@ public class LocationUpdatesService  extends Service {
              PreyLogger.e( "LocationUpdatesService error " + unlikely.getMessage(),unlikely);
         }
         getLastLocation(ctx);
+    }
+
+    private void startAsForegroundService() {
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && notificationManager != null) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Prey location",
+                    NotificationManager.IMPORTANCE_LOW
+            );
+            notificationManager.createNotificationChannel(channel);
+        }
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.icon2)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.pre_report_location))
+                .setOngoing(true)
+                .build();
+        startForeground(NOTIFICATION_ID, notification);
     }
 
     private void createLocationRequest() {
@@ -142,6 +176,11 @@ public class LocationUpdatesService  extends Service {
             stopSelf();
         } catch (Exception e) {
             PreyLogger.e( "error." + e.getMessage(),e);
+        }
+        try {
+            stopForeground(true);
+        } catch (Exception e) {
+            PreyLogger.e("error." + e.getMessage(), e);
         }
     }
 

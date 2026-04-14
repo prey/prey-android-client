@@ -31,6 +31,7 @@ import com.prey.json.UtilJson;
 import com.prey.managers.PreyWifiManager;
 import com.prey.net.PreyWebServices;
 import com.prey.services.LocationService;
+import com.prey.util.ServiceStartCompat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -211,11 +212,7 @@ public class LocationUtil {
         PreyLocation preyLocation = null;
         Intent intentLocation = new Intent(ctx, LocationUpdatesService.class);
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                ctx.startService(intentLocation);
-            } else {
-                ctx.startService(intentLocation);
-            }
+            ServiceStartCompat.startServiceCompat(ctx, intentLocation);
             int i = 0;
             PreyLocationManager.getInstance(ctx).setLastLocation(null);
             while (i < MAXIMUM_OF_ATTEMPTS2) {

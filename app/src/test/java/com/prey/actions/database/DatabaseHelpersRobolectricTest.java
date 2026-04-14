@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Created by OpenAI Codex
+ * Created by Prey
  * Copyright 2026 Prey Inc. All rights reserved.
  * License: GPLv3
  * Full license at "/LICENSE"

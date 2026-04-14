@@ -62,6 +62,7 @@
 
     <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
@@ -319,10 +320,14 @@
 
         <!-- Services -->
         <service android:name=".services.LocationService" />
-        <service android:name=".actions.location.LocationUpdatesService" />
+        <service
+            android:name=".actions.location.LocationUpdatesService"
+            android:foregroundServiceType="location" />
         <service android:name=".services.PreyBootService" />
         <service android:name=".services.PreyRunnerService" />
-        <service android:name=".beta.services.PreyBetaRunnerService" />
+        <service
+            android:name=".beta.services.PreyBetaRunnerService"
+            android:foregroundServiceType="dataSync" />
         <service android:name=".actions.report.ReportService" />
         <service android:name=".actions.geofences.GeofenceIntentService" />
         <service android:name=".actions.aware.AwareIntentService" />

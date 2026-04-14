@@ -12,6 +12,7 @@ import android.content.Intent;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.beta.services.PreyBetaRunnerService;
+import com.prey.util.ServiceStartCompat;
 
 public class PreyBetaController {
 
@@ -33,7 +34,7 @@ public class PreyBetaController {
                         if (cmd != null) {
                             intentStart.putExtra("cmd", cmd);
                         }
-                        context.startService(intentStart);
+                        ServiceStartCompat.startServiceCompat(context, intentStart);
                     }catch (Exception e){
                         PreyLogger.e("error:"+e.getMessage(),e);
                     }
@@ -47,4 +48,3 @@ public class PreyBetaController {
     }
 
 }
-
