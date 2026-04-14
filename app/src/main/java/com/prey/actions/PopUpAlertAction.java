@@ -10,12 +10,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.prey.PreyLogger;
+import com.prey.actions.alert.AlertConfig;
+import com.prey.actions.alert.AlertThread;
 import com.prey.actions.observer.ActionJob;
-import com.prey.activities.PopUpAlertActivity;
 
 public class PopUpAlertAction extends PreyAction {
 
@@ -38,10 +38,11 @@ public class PopUpAlertAction extends PreyAction {
             Map.Entry<String, String> entry = it.next();
             bundle.putString(entry.getKey(), entry.getValue());
         }
-        Intent popup = new Intent(ctx, PopUpAlertActivity.class);
-        popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        popup.putExtras(bundle);
-        ctx.startActivity(popup);
+        String message = bundle.getString("alert_message");
+        if (message == null) {
+            message = bundle.getString("message");
+        }
+        new AlertThread(ctx, message, null, null, true).fullscreen(AlertConfig.getAlertConfig(ctx).getNotificationId());
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {

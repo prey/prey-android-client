@@ -100,10 +100,11 @@ public class TriggerOpenHelper extends SQLiteOpenHelper {
 
     public List<TriggerDto> getAllTriggers() {
         Cursor cursor = null;
+        SQLiteDatabase database = null;
         List<TriggerDto> list = new ArrayList<TriggerDto>();
         try {
             String selectQuery = "SELECT  * FROM " + TRIGGER_TABLE_NAME;
-            SQLiteDatabase database = this.getReadableDatabase();
+            database = this.getReadableDatabase();
             cursor = database.rawQuery(selectQuery, null);
             if (cursor.moveToFirst()) {
                 do {
@@ -124,15 +125,22 @@ public class TriggerOpenHelper extends SQLiteOpenHelper {
                 } catch (Exception e1) {
                 }
             }
+            if (database != null) {
+                try {
+                    database.close();
+                } catch (Exception e1) {
+                }
+            }
         }
         return list;
     }
 
     public TriggerDto getTrigger(String id) {
         Cursor cursor = null;
+        SQLiteDatabase database = null;
         TriggerDto trigger = null;
         try {
-            SQLiteDatabase database = this.getReadableDatabase();
+            database = this.getReadableDatabase();
             String selectQuery = "SELECT * FROM " + TRIGGER_TABLE_NAME + " where " + COLUMN_ID + "='" + id + "'";
             cursor = database.rawQuery(selectQuery, null);
             if (cursor.moveToFirst()) {
@@ -150,6 +158,12 @@ public class TriggerOpenHelper extends SQLiteOpenHelper {
             if (cursor != null) {
                 try {
                     cursor.close();
+                } catch (Exception e1) {
+                }
+            }
+            if (database != null) {
+                try {
+                    database.close();
                 } catch (Exception e1) {
                 }
             }

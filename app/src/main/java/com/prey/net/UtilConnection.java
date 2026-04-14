@@ -111,6 +111,13 @@ public class UtilConnection {
         return connection(preyConfig,uri,params,REQUEST_METHOD_POST,contentType,getAuthorization(preyConfig),status,null,correlationId);
     }
 
+    static void addHeaderIfValuePresent(HttpURLConnection connection, String headerName, String value) {
+        if (value != null) {
+            connection.addRequestProperty(headerName, value);
+            PreyLogger.d(headerName + ":" + value);
+        }
+    }
+
     public static final PreyHttpResponse connection(PreyConfig preyConfig,String uri, Map<String, String> params,String requestMethod,String contentType,String authorization,String status,List<EntityFile> entityFiles,String correlationId) throws Exception {
         PreyHttpResponse response=null;
         URL url = new URL(uri);
@@ -145,29 +152,15 @@ public class UtilConnection {
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     connection.setRequestMethod(requestMethod);
                     connection.setRequestProperty("Accept", "*/*");
-                    if (contentType != null) {
-                        PreyLogger.d("Content-Type:" + contentType);
-                        connection.addRequestProperty("Content-Type", contentType);
-                    }
-                    if (authorization != null) {
-                        connection.addRequestProperty("Authorization", authorization);
-                        PreyLogger.d("Authorization:" + authorization);
-                    }
-                    if (status != null) {
-                        connection.addRequestProperty("X-Prey-Status", status);
-                        PreyLogger.d("X-Prey-Status:" + status);
-                    }
-
-                    if (correlationId != null) {
-                        connection.addRequestProperty("X-Prey-Correlation-ID", correlationId);
-                        PreyLogger.d("X-Prey-Correlation-ID:" + correlationId);
-                    }
+                    addHeaderIfValuePresent(connection, "Content-Type", contentType);
+                    addHeaderIfValuePresent(connection, "Authorization", authorization);
+                    addHeaderIfValuePresent(connection, "X-Prey-Status", status);
+                    addHeaderIfValuePresent(connection, "X-Prey-Correlation-ID", correlationId);
                     String deviceId = preyConfig.getDeviceId();
                     if (deviceId != null) {
                         connection.addRequestProperty("X-Prey-Device-ID", deviceId);
                         PreyLogger.d("X-Prey-Device-ID:" + deviceId);
-                        connection.addRequestProperty("X-Prey-State", status);
-                        PreyLogger.d("X-Prey-State:" + status);
+                        addHeaderIfValuePresent(connection, "X-Prey-State", status);
                     }
 
                     connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));

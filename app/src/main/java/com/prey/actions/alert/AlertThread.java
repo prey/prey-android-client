@@ -21,7 +21,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.widget.RemoteViews;
@@ -46,18 +45,24 @@ public class AlertThread extends Thread {
 
     public void run() {
         final int notificationId = AlertConfig.getAlertConfig(ctx).getNotificationId();
-        if (fullscreen_notification) {
-            new Thread() {
-                public void run() {
-                    fullscreen(notificationId);
-                }
-            }.start();
+        notification(notificationId);
+    }
+
+    static Intent buildPopupIntent(Context context, String description, int notificationId) {
+        Intent popup = new Intent(context, PopUpAlertActivity.class);
+        popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        popup.putExtra("alert_message", description);
+        popup.putExtra("description_message", description);
+        popup.putExtra("notificationId", notificationId);
+        return popup;
+    }
+
+    private PendingIntent buildPopupPendingIntent(int notificationId) {
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            flags = flags | PendingIntent.FLAG_IMMUTABLE;
         }
-        new Thread() {
-            public void run() {
-                notification(notificationId);
-            }
-        }.start();
+        return PendingIntent.getActivity(ctx, notificationId, buildPopupIntent(ctx, description, notificationId), flags);
     }
 
     public void notification(int notificationId) {
@@ -79,6 +84,7 @@ public class AlertThread extends Thread {
                 reason = "{\"device_job_id\":\"" + jobId + "\"}";
             }
             PreyLogger.d("notificationId:" + notificationId);
+            PendingIntent popupPendingIntent = buildPopupPendingIntent(notificationId);
             Intent buttonIntent = new Intent(ctx, AlertReceiver.class);
             buttonIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             buttonIntent.setAction("" + notificationId);
@@ -94,8 +100,13 @@ public class AlertThread extends Thread {
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
                         .addAction(R.drawable.xx2, ctx.getString(R.string.close_alert), btPendingIntent)
                         .setDeleteIntent(btPendingIntent)
-                        .setContentIntent(btPendingIntent)
+                        .setContentIntent(popupPendingIntent)
                         .setAutoCancel(true);
+                if (fullscreen_notification) {
+                    builder.setPriority(NotificationCompat.PRIORITY_MAX)
+                            .setCategory(NotificationCompat.CATEGORY_ALARM)
+                            .setFullScreenIntent(popupPendingIntent, true);
+                }
                 notificationManager.notify(notificationId, builder.build());
             }else {
                 RemoteViews contentViewBig =null;
@@ -136,16 +147,27 @@ public class AlertThread extends Thread {
                             .setSmallIcon(R.drawable.icon2)
                             .setCustomContentView(contentViewSmall)
                             .setCustomBigContentView(contentViewBig)
+                            .setContentIntent(popupPendingIntent)
                             .setDeleteIntent(btPendingIntent)
                             .setAutoCancel(true);
+                    if (fullscreen_notification) {
+                        notification.setCategory(Notification.CATEGORY_ALARM)
+                                .setFullScreenIntent(popupPendingIntent, true);
+                    }
                     notificationManager.notify(notificationId, notification.build());
                 } else {
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx)
                             .setSmallIcon(R.drawable.icon2)
                             .setCustomContentView(contentViewSmall)
                             .setCustomBigContentView(contentViewBig)
+                            .setContentIntent(popupPendingIntent)
                             .setDeleteIntent(btPendingIntent)
                             .setAutoCancel(true);
+                    if (fullscreen_notification) {
+                        builder.setPriority(NotificationCompat.PRIORITY_MAX)
+                                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                                .setFullScreenIntent(popupPendingIntent, true);
+                    }
                     notificationManager.notify(notificationId, builder.build());
                 }
             }
@@ -160,19 +182,7 @@ public class AlertThread extends Thread {
     public void fullscreen(final int notificationId){
         try {
             PreyConfig.getPreyConfig(ctx).setNoficationPopupId(notificationId);
-            PreyLogger.d("started alert");
-            String title = "title";
-            Bundle bundle = new Bundle();
-            bundle.putString("title_message", title);
-            bundle.putString("alert_message", description);
-            Intent popup = new Intent(ctx, PopUpAlertActivity.class);
-            popup.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            popup.setFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-            popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            popup.putExtras(bundle);
-            popup.putExtra("description_message", description);
-            popup.putExtra("notificationId", notificationId);
-            ctx.startActivity(popup);
+            notification(notificationId);
         } catch (Exception e) {
             PreyLogger.e("Error PopUpAlert:"+e.getMessage(),e);
         }

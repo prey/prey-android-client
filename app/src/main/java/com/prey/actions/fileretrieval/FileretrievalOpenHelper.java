@@ -101,10 +101,11 @@ public class FileretrievalOpenHelper extends SQLiteOpenHelper {
 
     public List<FileretrievalDto> getAllFileretrieval() {
         Cursor cursor =null;
+        SQLiteDatabase database = null;
         List<FileretrievalDto> list = new ArrayList<FileretrievalDto>();
         try {
             String selectQuery = "SELECT  * FROM " + FILERETRIEVAL_TABLE_NAME;
-            SQLiteDatabase database = this.getReadableDatabase();
+            database = this.getReadableDatabase();
             cursor = database.rawQuery(selectQuery, null);
             if (cursor.moveToFirst()) {
                 do {
@@ -122,15 +123,19 @@ public class FileretrievalOpenHelper extends SQLiteOpenHelper {
             if(cursor!=null){
                 try{cursor.close();}catch (Exception e1){}
             }
+            if(database!=null){
+                try{database.close();}catch (Exception e1){}
+            }
         }
         return list;
     }
 
     public FileretrievalDto getFileretrieval(String id) {
         Cursor cursor =null;
+        SQLiteDatabase database = null;
         FileretrievalDto dto = null;
         try {
-            SQLiteDatabase database = this.getReadableDatabase();
+            database = this.getReadableDatabase();
             String selectQuery = "SELECT * FROM " + FILERETRIEVAL_TABLE_NAME + " where " + COLUMN_FILEID + "='" + id + "'";
             cursor = database.rawQuery(selectQuery, null);
             if (cursor.moveToFirst()) {
@@ -147,6 +152,9 @@ public class FileretrievalOpenHelper extends SQLiteOpenHelper {
         }finally {
             if(cursor!=null){
                 try{cursor.close();}catch (Exception e1){}
+            }
+            if(database!=null){
+                try{database.close();}catch (Exception e1){}
             }
         }
         return dto;
