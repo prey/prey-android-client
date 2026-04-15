@@ -1810,6 +1810,12 @@ public class PreyConfig {
                         }
                     }
                 }.start();
+                // Send permission status to backend post-registration
+                new Thread() {
+                    public void run() {
+                        com.prey.json.actions.ListPermissions.sendPermissions(ctx);
+                    }
+                }.start();
             }
         }
     }
