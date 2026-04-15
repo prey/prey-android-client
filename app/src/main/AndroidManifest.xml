@@ -326,7 +326,7 @@
         <service android:name=".services.PreyBootService" />
         <service android:name=".services.PreyRunnerService" />
         <service
-            android:name=".beta.services.PreyBetaRunnerService"
+            android:name=".services.PreyCommandRunnerService"
             android:foregroundServiceType="dataSync" />
         <service android:name=".actions.report.ReportService" />
         <service android:name=".actions.geofences.GeofenceIntentService" />

@@ -12,7 +12,7 @@ import android.content.Intent;
 
 import androidx.test.core.app.ApplicationProvider;
 
-import com.prey.beta.services.PreyBetaRunnerService;
+import com.prey.services.PreyCommandRunnerService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +34,7 @@ public class AlarmScheduledReceiverRobolectricTest {
         new AlarmScheduledReceiver().onReceive(context, new Intent("test"));
 
         assertNotNull(context.foregroundIntent);
-        assertEquals(PreyBetaRunnerService.class.getName(), context.foregroundIntent.getComponent().getClassName());
+        assertEquals(PreyCommandRunnerService.class.getName(), context.foregroundIntent.getComponent().getClassName());
         assertNull(context.backgroundIntent);
     }
 

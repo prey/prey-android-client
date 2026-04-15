@@ -4,7 +4,7 @@
  * License: GPLv3
  * Full license at "/LICENSE"
  ******************************************************************************/
-package com.prey.beta.services;
+package com.prey.services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -19,18 +19,10 @@ import androidx.core.app.NotificationCompat;
 
 import com.prey.PreyLogger;
 import com.prey.R;
-import com.prey.beta.actions.PreyBetaActionsRunnner;
 import com.prey.actions.observer.ActionsController;
+import com.prey.beta.actions.PreyBetaActionsRunnner;
 
-/**
- * This class wraps Prey execution as a services, allowing the OS to kill it and
- * starting it again in case of low resources. This way we ensure Prey will be
- * running until explicity stop it.
- *
- * @author Carlos Yaconi H.
- *
- */
-public class PreyBetaRunnerService extends Service {
+public class PreyCommandRunnerService extends Service {
 
     private static final String CHANNEL_ID = "prey_runner";
     private static final int NOTIFICATION_ID = 2202;
@@ -38,13 +30,9 @@ public class PreyBetaRunnerService extends Service {
     private final IBinder mBinder = new LocalBinder();
     public static boolean running = false;
 
-    /**
-     * Class for clients to access. Because we know this service always runs in
-     * the same process as its clients, we don't need to deal with IPC.
-     */
     public class LocalBinder extends Binder {
-        PreyBetaRunnerService getService() {
-            return PreyBetaRunnerService.this;
+        PreyCommandRunnerService getService() {
+            return PreyCommandRunnerService.this;
         }
     }
 
@@ -57,23 +45,23 @@ public class PreyBetaRunnerService extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
-        String cmd=null;
-        try{
+        String cmd = null;
+        try {
             if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey("cmd")) {
                 cmd = intent.getExtras().getString("cmd");
             }
-        }catch(Exception e){
-            PreyLogger.e("Error:"+e.getMessage(),e);
+        } catch (Exception e) {
+            PreyLogger.e("Error:" + e.getMessage(), e);
         }
-        PreyLogger.d("PreyRunnerService has been started...:"+cmd);
+        PreyLogger.d("PreyCommandRunnerService has been started...:" + cmd);
         PreyBetaActionsRunnner exec = new PreyBetaActionsRunnner(cmd);
         running = true;
-        exec.run(PreyBetaRunnerService.this);
+        exec.run(PreyCommandRunnerService.this);
     }
 
     @Override
     public void onDestroy() {
-        ActionsController.getInstance(PreyBetaRunnerService.this).finishRunningJosb();
+        ActionsController.getInstance(PreyCommandRunnerService.this).finishRunningJosb();
         running = false;
         try {
             stopForeground(true);
@@ -106,5 +94,4 @@ public class PreyBetaRunnerService extends Service {
                 .build();
         startForeground(NOTIFICATION_ID, notification);
     }
-
 }

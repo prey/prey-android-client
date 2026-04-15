@@ -11,7 +11,7 @@ import android.content.Intent;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.beta.services.PreyBetaRunnerService;
+import com.prey.services.PreyCommandRunnerService;
 import com.prey.util.ServiceStartCompat;
 
 public class PreyBetaController {
@@ -29,8 +29,8 @@ public class PreyBetaController {
             new Thread(new Runnable() {
                 public void run() {
                     try{
-                        context.stopService(new Intent(context, PreyBetaRunnerService.class));
-                        Intent intentStart = new Intent(context, PreyBetaRunnerService.class);
+                        context.stopService(new Intent(context, PreyCommandRunnerService.class));
+                        Intent intentStart = new Intent(context, PreyCommandRunnerService.class);
                         if (cmd != null) {
                             intentStart.putExtra("cmd", cmd);
                         }
@@ -44,7 +44,7 @@ public class PreyBetaController {
     }
 
     public static void stopPrey(Context ctx) {
-        ctx.stopService(new Intent(ctx, PreyBetaRunnerService.class));
+        ctx.stopService(new Intent(ctx, PreyCommandRunnerService.class));
     }
 
 }

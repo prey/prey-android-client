@@ -18,7 +18,7 @@ import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionsController;
 import com.prey.activities.CheckPasswordHtmlActivity;
-import com.prey.beta.services.PreyBetaRunnerService;
+import com.prey.services.PreyCommandRunnerService;
 import com.prey.exceptions.PreyException;
 import com.prey.json.parser.JSONParser;
 import com.prey.managers.PreyConnectivityManager;
@@ -70,7 +70,7 @@ public class PreyBetaActionsRunner implements Runnable {
             }
             PreyLogger.d("Prey execution has finished!!");
         }
-        ctx.stopService(new Intent(ctx, PreyBetaRunnerService.class));
+        ctx.stopService(new Intent(ctx, PreyCommandRunnerService.class));
     }
 
     public static List<JSONObject> getInstructionsNewThread(Context ctx, String cmd,final boolean close) throws PreyException {
