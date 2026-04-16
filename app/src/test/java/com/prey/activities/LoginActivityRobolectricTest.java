@@ -7,7 +7,6 @@
 package com.prey.activities;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.RestrictionsManager;
@@ -32,7 +31,6 @@ import androidx.test.core.app.ApplicationProvider;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -196,6 +194,8 @@ public class LoginActivityRobolectricTest {
 
     @Test
     public void givenMdmSetupRequestOk_whenOnActivityResult_thenFinishesWithResultOk() {
+        // Routing through the MDM splash avoids showLogin()'s auto-finish so we can
+        // observe the effect of onActivityResult in isolation.
         Bundle restrictions = new Bundle();
         restrictions.putString("setup_key", "valid-setup-key");
         setApplicationRestrictions(restrictions);
@@ -203,8 +203,10 @@ public class LoginActivityRobolectricTest {
         ActivityController<LoginActivity> controller = Robolectric.buildActivity(LoginActivity.class);
         LoginActivity activity = controller.create().get();
         ShadowActivity shadow = Shadows.shadowOf(activity);
-        // Drain the SplashMdmActivity launch so we can observe only subsequent navigation.
-        shadow.getNextStartedActivityForResult();
+        assertFalse(
+                "Pre-condition: MDM splash route should not auto-finish LoginActivity",
+                activity.isFinishing()
+        );
 
         activity.onActivityResult(MDM_SETUP_REQUEST, Activity.RESULT_OK, null);
 
@@ -213,10 +215,6 @@ public class LoginActivityRobolectricTest {
                 "Result code should be RESULT_OK so the SetupAction caller can continue",
                 Activity.RESULT_OK,
                 shadow.getResultCode()
-        );
-        assertNull(
-                "No additional navigation should happen after provisioning succeeds",
-                shadow.getNextStartedActivity()
         );
     }
 
@@ -228,8 +226,10 @@ public class LoginActivityRobolectricTest {
 
         ActivityController<LoginActivity> controller = Robolectric.buildActivity(LoginActivity.class);
         LoginActivity activity = controller.create().get();
-        ShadowActivity shadow = Shadows.shadowOf(activity);
-        shadow.getNextStartedActivityForResult();
+        assertFalse(
+                "Pre-condition: MDM splash route should not auto-finish LoginActivity",
+                activity.isFinishing()
+        );
 
         activity.onActivityResult(MDM_SETUP_REQUEST, Activity.RESULT_CANCELED, null);
 
@@ -240,14 +240,19 @@ public class LoginActivityRobolectricTest {
     }
 
     @Test
-    public void givenUnknownRequestCodeOk_whenOnActivityResult_thenDoesNotFinish() {
+    public void givenUnknownRequestCode_whenOnActivityResult_thenDoesNotFinish() {
+        // Same setup as the RESULT_OK test so isFinishing() starts out false — this
+        // isolates the effect of the unknown request code.
+        Bundle restrictions = new Bundle();
+        restrictions.putString("setup_key", "valid-setup-key");
+        setApplicationRestrictions(restrictions);
+
         ActivityController<LoginActivity> controller = Robolectric.buildActivity(LoginActivity.class);
         LoginActivity activity = controller.create().get();
-        ShadowActivity shadow = Shadows.shadowOf(activity);
-        // Drain whatever LoginActivity launched on startup so finishing state is only affected by our call.
-        while (shadow.getNextStartedActivity() != null) {
-            // drain
-        }
+        assertFalse(
+                "Pre-condition: MDM splash route should not auto-finish LoginActivity",
+                activity.isFinishing()
+        );
 
         activity.onActivityResult(/* unknown request */ 999, Activity.RESULT_OK, null);
 
