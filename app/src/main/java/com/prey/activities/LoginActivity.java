@@ -152,10 +152,21 @@ public class LoginActivity extends Activity {
         return false;
     }
 
+    private static final int MDM_SETUP_REQUEST = 100;
+
     private void showMdmSplash() {
         Intent intent = new Intent(LoginActivity.this, SplashMdmActivity.class);
-        startActivity(intent);
-        finish();
+        startActivityForResult(intent, MDM_SETUP_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MDM_SETUP_REQUEST && resultCode == RESULT_OK) {
+            // Propagate result to provisioning setup wizard (SetupAction)
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 
     private boolean isThereBatchInstallationKey() {
