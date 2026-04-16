@@ -61,8 +61,14 @@ public class SplashMdmActivity extends FragmentActivity {
         @Override
         protected void onPostExecute(Boolean registered) {
             if (registered) {
-                // Signal completion to provisioning setup wizard (SetupAction)
+                // Signal completion to caller (provisioning setup wizard or LoginActivity)
                 setResult(RESULT_OK);
+                // If launched normally (not as SetupAction), navigate to main screen
+                if (getCallingActivity() == null) {
+                    Intent intent = new Intent(SplashMdmActivity.this, CheckPasswordHtmlActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 finish();
             } else {
                 progressBar.setVisibility(View.GONE);
