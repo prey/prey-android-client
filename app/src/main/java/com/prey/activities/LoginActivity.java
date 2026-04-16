@@ -57,6 +57,10 @@ public class LoginActivity extends Activity {
         startup();
     }
 
+    private int mdmRetryCount = 0;
+    private static final int MDM_MAX_RETRIES = 10;
+    private static final int MDM_RETRY_DELAY_MS = 2000;
+
     private void startup() {
         Intent intentLock = null;
         String unlockPass = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
@@ -82,11 +86,31 @@ public class LoginActivity extends Activity {
         boolean ready = PreyConfig.getPreyConfig(this).getProtectReady();
         if (!ready && hasMdmSetupKey()) {
             showMdmSplash();
+        } else if (!ready && isProvisioningSetupAction() && mdmRetryCount < MDM_MAX_RETRIES) {
+            // SetupAction launched during provisioning but managed config not yet available — retry
+            mdmRetryCount++;
+            PreyLogger.d(String.format("LoginActivity: waiting for managed config (retry %d/%d)", mdmRetryCount, MDM_MAX_RETRIES));
+            new android.os.Handler().postDelayed(this::startup, MDM_RETRY_DELAY_MS);
         } else if (isThereBatchInstallationKey() && !ready) {
             showLoginBatch();
         } else {
             showLogin();
         }
+    }
+
+    private boolean isProvisioningSetupAction() {
+        // During provisioning, the app is launched by the setup wizard
+        // Check if device is still provisioning (not fully set up yet)
+        try {
+            android.app.admin.DevicePolicyManager dpm = (android.app.admin.DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
+            if (dpm != null && !dpm.isDeviceOwnerApp(getPackageName())) {
+                // Not device owner yet — likely during provisioning
+                return getCallingActivity() != null;
+            }
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error isProvisioningSetupAction: %s", e.getMessage()), e);
+        }
+        return getCallingActivity() != null;
     }
 
     private void showLogin() {

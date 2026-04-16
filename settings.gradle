@@ -1,1 +1,9 @@
+def flavor = providers.gradleProperty('buildFlavor').getOrElse('default')
+
 include ':app'
+
+if (flavor == 'internal') {
+    project(':app').buildFileName = 'build.gradle.internal'
+} else if (flavor == 'dev') {
+    project(':app').buildFileName = 'build.gradle.dev'
+}
