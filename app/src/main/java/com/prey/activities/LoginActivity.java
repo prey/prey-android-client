@@ -64,7 +64,7 @@ public class LoginActivity extends Activity {
     private void startup() {
         Intent intentLock = null;
         String unlockPass = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
-        if (unlockPass != null && !"".equals(unlockPass)) {
+        if (unlockPass != null && !unlockPass.isEmpty()) {
             boolean canDrawOverlays = PreyPermission.canDrawOverlays(getApplicationContext());
             boolean accessibility = PreyPermission.isAccessibilityServiceEnabled(getApplicationContext());
             if (PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() &&
@@ -168,7 +168,7 @@ public class LoginActivity extends Activity {
             Bundle restrictions = manager.getApplicationRestrictions();
             if (restrictions != null && restrictions.containsKey("setup_key")) {
                 String setupKey = restrictions.getString("setup_key");
-                return setupKey != null && !"".equals(setupKey);
+                return setupKey != null && !setupKey.isEmpty();
             }
         } catch (Exception e) {
             PreyLogger.e(String.format("Error hasMdmSetupKey: %s", e.getMessage()), e);
@@ -195,7 +195,7 @@ public class LoginActivity extends Activity {
 
     private boolean isThereBatchInstallationKey() {
         String apiKeyBatch = PreyConfig.getPreyConfig(LoginActivity.this).getApiKeyBatch();
-        return (apiKeyBatch != null && !"".equals(apiKeyBatch));
+        return (apiKeyBatch != null && !apiKeyBatch.isEmpty());
     }
 
 }
