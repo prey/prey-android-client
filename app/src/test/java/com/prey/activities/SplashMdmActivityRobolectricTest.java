@@ -149,8 +149,8 @@ public class SplashMdmActivityRobolectricTest {
         );
         assertEquals(
                 "Status text should show the error copy",
-                com.prey.R.string.mdm_loading_error,
-                activity.stubStatus.lastSetTextResId
+                context.getString(com.prey.R.string.mdm_loading_error),
+                activity.stubStatus.lastSetText == null ? null : activity.stubStatus.lastSetText.toString()
         );
         assertFalse("Activity should remain visible to display the error", activity.isFinishing());
         assertNull(
@@ -233,19 +233,21 @@ public class SplashMdmActivityRobolectricTest {
         }
     }
 
-    /** TextView that records the last setText(int) resource id for assertions. */
+    /** TextView that records the last text set via any setText(...) overload. */
     public static class RecordingTextView extends TextView {
-        int lastSetTextResId;
+        CharSequence lastSetText;
 
         RecordingTextView(Context context) {
             super(context);
         }
 
+        // setText(int) and setText(CharSequence) are final in TextView, but they
+        // both ultimately delegate to this overload, which is not final.
         @Override
-        public void setText(int resid) {
-            lastSetTextResId = resid;
-            // Intentionally do not call super: the test asserts on the recorded
-            // resource id and resolving the string is not part of what's under test.
+        public void setText(CharSequence text, BufferType type) {
+            lastSetText = text;
+            // Intentionally do not call super: avoids font/paint resolution
+            // that is unnecessary for what's under test.
         }
     }
 

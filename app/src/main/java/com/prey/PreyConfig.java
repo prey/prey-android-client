@@ -1759,6 +1759,10 @@ public class PreyConfig {
         if (serialNumber != null && !"".equals(serialNumber)) {
             return defaultName + " - " + serialNumber;
         }
+        String workEmail = resolveWorkEmail();
+        if (workEmail != null && !"".equals(workEmail)) {
+            return workEmail;
+        }
         return defaultName;
     }
 
@@ -1883,6 +1887,17 @@ public class PreyConfig {
      */
     public void setMdmDeviceName(String deviceName) {
         saveString(MDM_DEVICE_NAME, deviceName);
+    }
+
+    /**
+     * Resolves the user's work email from the first Google account registered
+     * on the device — typically the work profile account under Android Enterprise
+     * (work profile apps see the work Google account, not the personal one).
+     *
+     * @return The work email, or null if no account is available.
+     */
+    public String resolveWorkEmail() {
+        return PreyEmail.getEmail(ctx);
     }
 
     /**

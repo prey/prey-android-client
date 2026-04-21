@@ -49,6 +49,12 @@ android {
         buildConfig = true
     }
     namespace 'com.prey'
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 

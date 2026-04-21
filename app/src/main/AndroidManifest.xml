@@ -53,9 +53,9 @@
     <!-- This app has permission to register and receive message -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <permission android:name="com.prey.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <permission android:name="${applicationId}.permission.C2D_MESSAGE" android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.prey.permission.C2D_MESSAGE" />
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
     <!-- This app has permission to camera -->
     <uses-permission android:name="android.permission.CAMERA" />
