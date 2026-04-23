@@ -171,7 +171,6 @@ public class SplashMdmActivityRobolectricTest {
         MdmKeyedAppStateReporter.setFactoryForTests(context -> new MdmKeyedAppStateReporter(reporter));
         try {
             preyConfig.setNotificationId("push-token");
-            preyConfig.setMdmSetupLocationSent(true);
             HeadlessSplashMdmActivity activity = createHeadlessActivity();
 
             invokeOnPostExecute(activity, Boolean.TRUE);
@@ -219,28 +218,6 @@ public class SplashMdmActivityRobolectricTest {
         MdmKeyedAppStateReporter.setFactoryForTests(context -> new MdmKeyedAppStateReporter(reporter));
         try {
             preyConfig.setNotificationId("");
-            preyConfig.setMdmSetupLocationSent(true);
-            HeadlessSplashMdmActivity activity = createHeadlessActivity();
-            ShadowActivity shadow = Shadows.shadowOf(activity);
-
-            invokeOnPostExecute(activity, Boolean.TRUE);
-
-            assertEquals(0, reporter.getNumberOfUploads());
-            assertEquals(Activity.RESULT_CANCELED, shadow.getResultCode());
-            assertFalse(activity.isFinishing());
-        } finally {
-            MdmKeyedAppStateReporter.resetFactoryForTests();
-        }
-    }
-
-    @Test
-    public void givenRegistrationSucceededWithoutConfirmedLocationUpload_whenPostExecute_thenDoesNotEmitLinkedKeyedState()
-            throws Exception {
-        FakeKeyedAppStatesReporter reporter = new FakeKeyedAppStatesReporter();
-        MdmKeyedAppStateReporter.setFactoryForTests(context -> new MdmKeyedAppStateReporter(reporter));
-        try {
-            preyConfig.setNotificationId("push-token");
-            preyConfig.setMdmSetupLocationSent(false);
             HeadlessSplashMdmActivity activity = createHeadlessActivity();
             ShadowActivity shadow = Shadows.shadowOf(activity);
 

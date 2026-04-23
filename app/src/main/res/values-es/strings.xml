@@ -390,7 +390,7 @@
     <string name="administrator_disabled">El componente de administrador dado no está actualmente activo y deshabilitado en el sistema.</string>
 
     <string name="mdm_loading_title">Cargando configuraciones de tu administrador</string>
-    <string name="mdm_loading_prerequisites">Preparando token push y ubicación…</string>
+    <string name="mdm_loading_prerequisites">Sincronizando con el servidor…</string>
     <string name="mdm_loading_finalizing">Finalizando configuración…</string>
     <string name="mdm_loading_error">No se pudo completar la configuración. Contacta a tu administrador.</string>
 

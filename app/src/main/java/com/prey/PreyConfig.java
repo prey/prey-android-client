@@ -169,7 +169,6 @@ public class PreyConfig {
     public static final String PREFS_BIOMETRIC = "PREFS_BIOMETRIC";
     public static final String INSTALLATION_STATUS = "INSTALLATION_STATUS";
     public static final String LOCATION_INFO = "LOCATION_INFO";
-    public static final String MDM_SETUP_LOCATION_SENT = "MDM_SETUP_LOCATION_SENT";
     public static final String CAPS_LOCK_ON = "CAPS_LOCK_ON";
     public static final String VERIFICATE_BIOMETRIC = "VERIFICATE_BIOMETRIC";
     public static final String TYPE_BIOMETRIC = "TYPE_BIOMETRIC";
@@ -914,14 +913,6 @@ public class PreyConfig {
     }
     public boolean isRegisterC2dm(){
         return registerC2dm;
-    }
-
-    public void setMdmSetupLocationSent(boolean sent) {
-        saveBoolean(PreyConfig.MDM_SETUP_LOCATION_SENT, sent);
-    }
-
-    public boolean isMdmSetupLocationSent() {
-        return getBoolean(PreyConfig.MDM_SETUP_LOCATION_SENT, false);
     }
 
     public String getIntervalReport(){
@@ -1804,7 +1795,6 @@ public class PreyConfig {
                 PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
                 PreyConfig.getPreyConfig(ctx).setNotificationId("");
                 PreyConfig.getPreyConfig(ctx).setRegisterC2dm(false);
-                PreyConfig.getPreyConfig(ctx).setMdmSetupLocationSent(false);
                 // Register C2DM
                 PreyConfig.getPreyConfig(ctx).registerC2dm();
                 // Get the email associated with the account

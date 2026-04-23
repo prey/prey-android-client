@@ -33,14 +33,11 @@ public class MdmSetupPrerequisitesTest {
         context = ApplicationProvider.getApplicationContext();
         preyConfig = PreyConfig.getPreyConfig(context);
         preyConfig.setNotificationId("");
-        preyConfig.setMdmSetupLocationSent(false);
     }
 
     @Test
-    public void waitUntilReady_returnsTrueWhenPushTokenAlreadyConfirmedAndLocationUploadSucceeds() {
-        FakeLocationUploader uploader = new FakeLocationUploader(true);
+    public void waitUntilReady_returnsTrueWhenPushTokenAlreadyConfirmed() {
         MdmSetupPrerequisites prerequisites = new MdmSetupPrerequisites(
-                uploader,
                 millis -> {
                 },
                 () -> 0L
@@ -50,15 +47,11 @@ public class MdmSetupPrerequisitesTest {
         boolean ready = prerequisites.waitUntilReady(context, 1L);
 
         assertTrue(ready);
-        assertTrue(preyConfig.isMdmSetupLocationSent());
-        assertTrue(uploader.invoked);
     }
 
     @Test
     public void waitUntilReady_returnsFalseWhenPushTokenWasNotConfirmed() {
-        FakeLocationUploader uploader = new FakeLocationUploader(true);
         MdmSetupPrerequisites prerequisites = new MdmSetupPrerequisites(
-                uploader,
                 millis -> {
                 },
                 new IncrementingClock()
@@ -67,26 +60,6 @@ public class MdmSetupPrerequisitesTest {
         boolean ready = prerequisites.waitUntilReady(context, 1000L);
 
         assertFalse(ready);
-        assertTrue(preyConfig.isMdmSetupLocationSent());
-        assertTrue(uploader.invoked);
-    }
-
-    private static class FakeLocationUploader implements MdmSetupPrerequisites.LocationUploader {
-        private final boolean result;
-        private boolean invoked;
-
-        private FakeLocationUploader(boolean result) {
-            this.result = result;
-        }
-
-        @Override
-        public boolean upload(Context context) {
-            invoked = true;
-            if (result) {
-                PreyConfig.getPreyConfig(context).setMdmSetupLocationSent(true);
-            }
-            return result;
-        }
     }
 
     private static class IncrementingClock implements MdmSetupPrerequisites.Clock {
