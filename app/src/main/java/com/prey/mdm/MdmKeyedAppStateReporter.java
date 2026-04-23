@@ -13,14 +13,19 @@ public class MdmKeyedAppStateReporter {
     public static final String SETUP_STATE_KEY = "mdm_setup";
     public static final String SETUP_STATE_DATA_LINKED = "linked";
     private static final String SETUP_STATE_MESSAGE = "Prey MDM setup completed";
+    private static Factory factory = MdmKeyedAppStateReporter::new;
 
     private final KeyedAppStatesReporter reporter;
+
+    public interface Factory {
+        MdmKeyedAppStateReporter create(Context context);
+    }
 
     public MdmKeyedAppStateReporter(Context context) {
         this(KeyedAppStatesReporter.create(context.getApplicationContext()));
     }
 
-    MdmKeyedAppStateReporter(KeyedAppStatesReporter reporter) {
+    public MdmKeyedAppStateReporter(KeyedAppStatesReporter reporter) {
         this.reporter = reporter;
     }
 
@@ -30,10 +35,18 @@ public class MdmKeyedAppStateReporter {
 
     public static void reportSetupLinked(Context context) {
         try {
-            new MdmKeyedAppStateReporter(context).reportSetupLinked();
+            factory.create(context).reportSetupLinked();
         } catch (RuntimeException e) {
             PreyLogger.e("Error reporting keyed app state", e);
         }
+    }
+
+    public static void setFactoryForTests(Factory testFactory) {
+        factory = testFactory;
+    }
+
+    public static void resetFactoryForTests() {
+        factory = MdmKeyedAppStateReporter::new;
     }
 
     static KeyedAppState buildSetupLinkedState() {

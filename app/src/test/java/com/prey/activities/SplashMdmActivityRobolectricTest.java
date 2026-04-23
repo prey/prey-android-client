@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.prey.PreyConfig;
+import com.prey.mdm.MdmKeyedAppStateReporter;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,6 +33,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import androidx.enterprise.feedback.FakeKeyedAppStatesReporter;
 import androidx.test.core.app.ApplicationProvider;
 
 import static org.junit.Assert.assertEquals;
@@ -160,6 +162,22 @@ public class SplashMdmActivityRobolectricTest {
         invokeOnPostExecute(activity, Boolean.TRUE);
 
         assertTrue("Successful MDM setup should mark the app as ready", preyConfig.getProtectReady());
+    }
+
+    @Test
+    public void givenRegistrationSucceeded_whenPostExecute_thenDoesNotEmitLinkedKeyedState()
+            throws Exception {
+        FakeKeyedAppStatesReporter reporter = new FakeKeyedAppStatesReporter();
+        MdmKeyedAppStateReporter.setFactoryForTests(context -> new MdmKeyedAppStateReporter(reporter));
+        try {
+            HeadlessSplashMdmActivity activity = createHeadlessActivity();
+
+            invokeOnPostExecute(activity, Boolean.TRUE);
+
+            assertEquals("Splash should not acknowledge setup completion to the MDM", 0, reporter.getNumberOfUploads());
+        } finally {
+            MdmKeyedAppStateReporter.resetFactoryForTests();
+        }
     }
 
     // =========================================================================
