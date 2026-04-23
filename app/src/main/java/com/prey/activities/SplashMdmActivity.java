@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
+import com.prey.mdm.MdmKeyedAppStateReporter;
 import com.prey.receivers.RestrictionsReceiver;
 
 public class SplashMdmActivity extends FragmentActivity {
@@ -64,6 +65,7 @@ public class SplashMdmActivity extends FragmentActivity {
         protected void onPostExecute(Boolean registered) {
             if (registered) {
                 PreyConfig.getPreyConfig(getApplicationContext()).setProtectReady(true);
+                MdmKeyedAppStateReporter.reportSetupLinked(getApplicationContext());
                 // Signal completion to caller (provisioning setup wizard or LoginActivity)
                 setResult(RESULT_OK);
                 // Android Device Policy setup actions may not set a callingActivity,

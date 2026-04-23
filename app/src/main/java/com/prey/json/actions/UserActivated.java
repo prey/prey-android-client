@@ -16,7 +16,6 @@ import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.json.JsonAction;
-import com.prey.mdm.MdmKeyedAppStateReporter;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 
 import org.json.JSONObject;
@@ -32,7 +31,6 @@ public class UserActivated  extends JsonAction {
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
         PreyConfig.getPreyConfig(ctx).setInstallationStatus("OK");
-        MdmKeyedAppStateReporter.reportSetupLinked(ctx);
         try {
             RunBackgroundCheckBoxPreference.notifyReady(ctx);
             new PreyApp().run(ctx);

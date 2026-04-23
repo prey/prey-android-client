@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.enterprise.feedback.FakeKeyedAppStatesReporter;
-import androidx.enterprise.feedback.KeyedAppState;
 import androidx.test.core.app.ApplicationProvider;
 
 import com.prey.activities.CheckPasswordHtmlActivity;
@@ -50,17 +49,14 @@ public class UserActivatedRobolectricTest {
     }
 
     @Test
-    public void start_setsInstallationOk_emitsLinkedKeyedState_andLaunchesMainFlow() {
+    public void start_setsInstallationOk_andLaunchesMainFlow_withoutEmittingLinkedKeyedState() {
         FakeKeyedAppStatesReporter reporter = new FakeKeyedAppStatesReporter();
         MdmKeyedAppStateReporter.setFactoryForTests(ctx -> new MdmKeyedAppStateReporter(reporter));
 
         new UserActivated().start(context, null, null);
 
         assertEquals("OK", preyConfig.getInstallationStatus());
-        assertEquals(1, reporter.getNumberOfUploads());
-        KeyedAppState state = reporter.getUploadedKeyedAppStatesByKey().get(MdmKeyedAppStateReporter.SETUP_STATE_KEY);
-        assertNotNull(state);
-        assertEquals(MdmKeyedAppStateReporter.SETUP_STATE_DATA_LINKED, state.getData());
+        assertEquals(0, reporter.getNumberOfUploads());
 
         ShadowApplication shadowApplication = Shadows.shadowOf((android.app.Application) context);
         Intent nextIntent = shadowApplication.getNextStartedActivity();

@@ -165,7 +165,7 @@ public class SplashMdmActivityRobolectricTest {
     }
 
     @Test
-    public void givenRegistrationSucceeded_whenPostExecute_thenDoesNotEmitLinkedKeyedState()
+    public void givenRegistrationSucceeded_whenPostExecute_thenEmitsLinkedKeyedState()
             throws Exception {
         FakeKeyedAppStatesReporter reporter = new FakeKeyedAppStatesReporter();
         MdmKeyedAppStateReporter.setFactoryForTests(context -> new MdmKeyedAppStateReporter(reporter));
@@ -174,7 +174,7 @@ public class SplashMdmActivityRobolectricTest {
 
             invokeOnPostExecute(activity, Boolean.TRUE);
 
-            assertEquals("Splash should not acknowledge setup completion to the MDM", 0, reporter.getNumberOfUploads());
+            assertEquals("Splash should acknowledge setup completion to the MDM once registration succeeds", 1, reporter.getNumberOfUploads());
         } finally {
             MdmKeyedAppStateReporter.resetFactoryForTests();
         }
