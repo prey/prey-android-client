@@ -22,9 +22,12 @@ import androidx.fragment.app.FragmentActivity;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
+import com.prey.mdm.MdmKeyedAppStateReporter;
 import com.prey.receivers.RestrictionsReceiver;
 
 public class SplashMdmActivity extends FragmentActivity {
+    private static final String EXTRA_LAUNCHED_AS_SETUP_ACTION =
+            "com.google.android.apps.work.clouddpc.EXTRA_LAUNCHED_AS_SETUP_ACTION";
 
     private TextView textStatus;
     private ProgressBar progressBar;
@@ -61,10 +64,13 @@ public class SplashMdmActivity extends FragmentActivity {
         @Override
         protected void onPostExecute(Boolean registered) {
             if (registered) {
+                PreyConfig.getPreyConfig(getApplicationContext()).setProtectReady(true);
+                MdmKeyedAppStateReporter.reportSetupLinked(getApplicationContext());
                 // Signal completion to caller (provisioning setup wizard or LoginActivity)
                 setResult(RESULT_OK);
-                // If launched normally (not as SetupAction), navigate to main screen
-                if (getCallingActivity() == null) {
+                // Android Device Policy setup actions may not set a callingActivity,
+                // so rely on the official setup-action intent extra instead.
+                if (!wasLaunchedAsSetupAction() && getCallingActivity() == null) {
                     Intent intent = new Intent(SplashMdmActivity.this, CheckPasswordHtmlActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -75,5 +81,10 @@ public class SplashMdmActivity extends FragmentActivity {
                 textStatus.setText(R.string.mdm_loading_error);
             }
         }
+    }
+
+    private boolean wasLaunchedAsSetupAction() {
+        Intent intent = getIntent();
+        return intent != null && intent.getBooleanExtra(EXTRA_LAUNCHED_AS_SETUP_ACTION, false);
     }
 }

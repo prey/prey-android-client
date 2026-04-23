@@ -26,6 +26,8 @@ import com.prey.services.PreyLockHtmlService;
 import com.prey.services.PreyLockService;
 
 public class LoginActivity extends Activity {
+    private static final String EXTRA_LAUNCHED_AS_SETUP_ACTION =
+            "com.google.android.apps.work.clouddpc.EXTRA_LAUNCHED_AS_SETUP_ACTION";
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -99,16 +101,9 @@ public class LoginActivity extends Activity {
     }
 
     private boolean isProvisioningSetupAction() {
-        // During provisioning, the app is launched by the setup wizard
-        // Check if device is still provisioning (not fully set up yet)
-        try {
-            android.app.admin.DevicePolicyManager dpm = (android.app.admin.DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
-            if (dpm != null && !dpm.isDeviceOwnerApp(getPackageName())) {
-                // Not device owner yet — likely during provisioning
-                return getCallingActivity() != null;
-            }
-        } catch (Exception e) {
-            PreyLogger.e(String.format("Error isProvisioningSetupAction: %s", e.getMessage()), e);
+        Intent intent = getIntent();
+        if (intent != null && intent.getBooleanExtra(EXTRA_LAUNCHED_AS_SETUP_ACTION, false)) {
+            return true;
         }
         return getCallingActivity() != null;
     }
@@ -180,6 +175,9 @@ public class LoginActivity extends Activity {
 
     private void showMdmSplash() {
         Intent intent = new Intent(LoginActivity.this, SplashMdmActivity.class);
+        if (isProvisioningSetupAction()) {
+            intent.putExtra(EXTRA_LAUNCHED_AS_SETUP_ACTION, true);
+        }
         startActivityForResult(intent, MDM_SETUP_REQUEST);
     }
 

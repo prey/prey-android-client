@@ -42,6 +42,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 30)
 public class LoginActivityRobolectricTest {
+    private static final String EXTRA_LAUNCHED_AS_SETUP_ACTION =
+            "com.google.android.apps.work.clouddpc.EXTRA_LAUNCHED_AS_SETUP_ACTION";
 
     private Context context;
     private PreyConfig preyConfig;
@@ -124,6 +126,28 @@ public class LoginActivityRobolectricTest {
         assertTrue(
                 "Target should be SplashMdmActivity",
                 next.intent.getComponent().getClassName().contains("SplashMdmActivity")
+        );
+    }
+
+    @Test
+    public void givenSetupActionLaunch_whenStartupShowsMdmSplash_thenPropagatesSetupActionExtra() {
+        Bundle restrictions = new Bundle();
+        restrictions.putString("setup_key", "valid-setup-key");
+        setApplicationRestrictions(restrictions);
+
+        Intent setupActionIntent = new Intent(ApplicationProvider.getApplicationContext(), LoginActivity.class);
+        setupActionIntent.putExtra(EXTRA_LAUNCHED_AS_SETUP_ACTION, true);
+
+        ActivityController<LoginActivity> controller = Robolectric.buildActivity(LoginActivity.class, setupActionIntent);
+        LoginActivity activity = controller.create().get();
+
+        ShadowActivity shadow = Shadows.shadowOf(activity);
+        ShadowActivity.IntentForResult next = shadow.getNextStartedActivityForResult();
+
+        assertNotNull("Should start SplashMdmActivity for result", next);
+        assertTrue(
+                "Splash intent should preserve the setup-action hint",
+                next.intent.getBooleanExtra(EXTRA_LAUNCHED_AS_SETUP_ACTION, false)
         );
     }
 

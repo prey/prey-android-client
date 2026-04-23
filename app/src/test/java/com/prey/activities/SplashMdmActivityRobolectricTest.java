@@ -129,6 +129,39 @@ public class SplashMdmActivityRobolectricTest {
         );
     }
 
+    @Test
+    public void givenRegistrationSucceededFromSetupActionWithoutCaller_whenPostExecute_thenFinishesWithResultOkAndNoNavigation()
+            throws Exception {
+        HeadlessSplashMdmActivity activity = createHeadlessActivity();
+        ShadowActivity shadow = Shadows.shadowOf(activity);
+        drainStartedActivities(shadow);
+        activity.getIntent().putExtra("com.google.android.apps.work.clouddpc.EXTRA_LAUNCHED_AS_SETUP_ACTION", true);
+
+        invokeOnPostExecute(activity, Boolean.TRUE);
+
+        assertEquals(
+                "Result code should be RESULT_OK for Android Device Policy setup actions",
+                Activity.RESULT_OK,
+                shadow.getResultCode()
+        );
+        assertTrue("Activity should finish to return control to Android Device Policy", activity.isFinishing());
+        assertNull(
+                "Should NOT navigate away when launched as a setup action even if there is no calling activity",
+                shadow.getNextStartedActivity()
+        );
+    }
+
+    @Test
+    public void givenRegistrationSucceeded_whenPostExecute_thenMarksProtectReady()
+            throws Exception {
+        preyConfig.setProtectReady(false);
+        HeadlessSplashMdmActivity activity = createHeadlessActivity();
+
+        invokeOnPostExecute(activity, Boolean.TRUE);
+
+        assertTrue("Successful MDM setup should mark the app as ready", preyConfig.getProtectReady());
+    }
+
     // =========================================================================
     // onPostExecute — failure path
     // =========================================================================

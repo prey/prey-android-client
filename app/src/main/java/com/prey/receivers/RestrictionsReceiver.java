@@ -38,8 +38,9 @@ public class RestrictionsReceiver extends BroadcastReceiver {
             if (applicationRestrictions != null) {
                 // Log the application restrictions
                 PreyLogger.d(String.format("RestrictionsReceiver restrictions applied: %s", applicationRestrictions.toString()));
-                // Handle the application restrictions
-                handleApplicationRestrictions(context, applicationRestrictions);
+                // Persist managed config values, but defer setup registration until the
+                // explicit setup flow launches SplashMdmActivity.
+                saveRestrictionValues(context, applicationRestrictions);
             } else {
                 // Log if no application restrictions are found
                 PreyLogger.d("RestrictionsReceiver no restrictions found");

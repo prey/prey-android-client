@@ -7,6 +7,8 @@
 package com.prey.receivers;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.RestrictionsManager;
 import android.os.Bundle;
 
 import com.prey.PreyConfig;
@@ -15,7 +17,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowRestrictionsManager;
 
 import androidx.test.core.app.ApplicationProvider;
 
@@ -45,6 +49,8 @@ public class RestrictionsReceiverRobolectricTest {
         preyConfig.setMdmDeviceName("");
         preyConfig.setMdmImei("");
         preyConfig.setMdmSkipManualPermissions(false);
+        preyConfig.setDeviceId("");
+        preyConfig.setApiKey("");
     }
 
     @Test
@@ -185,6 +191,28 @@ public class RestrictionsReceiverRobolectricTest {
         assertEquals("existing-org", preyConfig.getMdmOrganizationId());
         assertEquals("Existing Device", preyConfig.getMdmDeviceName());
         assertEquals("111222333444555", preyConfig.getMdmImei());
+    }
+
+    @Test
+    public void givenRestrictionsChangedBroadcast_whenSetupKeyPresent_thenOnlyStoresRestrictionsAndDoesNotRegisterDevice() {
+        Bundle restrictions = new Bundle();
+        restrictions.putString("setup_key", "valid-setup-key");
+        restrictions.putString("serial_number", "SN-1234");
+        setApplicationRestrictions(restrictions);
+
+        Intent intent = new Intent(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
+        new RestrictionsReceiver().onReceive(context, intent);
+
+        assertEquals("SN-1234", preyConfig.getMdmSerialNumber());
+        assertEquals("", preyConfig.getDeviceId());
+        assertFalse(preyConfig.isThisDeviceAlreadyRegisteredWithPrey());
+    }
+
+    private void setApplicationRestrictions(Bundle restrictions) {
+        RestrictionsManager manager =
+                (RestrictionsManager) context.getSystemService(Context.RESTRICTIONS_SERVICE);
+        ShadowRestrictionsManager shadow = Shadows.shadowOf(manager);
+        shadow.setApplicationRestrictions(restrictions);
     }
 
 }
