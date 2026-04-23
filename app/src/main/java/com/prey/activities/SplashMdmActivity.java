@@ -23,6 +23,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.mdm.MdmKeyedAppStateReporter;
+import com.prey.mdm.MdmSetupPrerequisites;
 import com.prey.receivers.RestrictionsReceiver;
 
 public class SplashMdmActivity extends FragmentActivity {
@@ -43,17 +44,25 @@ public class SplashMdmActivity extends FragmentActivity {
         new MdmRegistrationTask().execute();
     }
 
-    private class MdmRegistrationTask extends AsyncTask<Void, Void, Boolean> {
+    private class MdmRegistrationTask extends AsyncTask<Void, String, Boolean> {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
             Context ctx = getApplicationContext();
             try {
+                publishProgress(getString(R.string.mdm_loading_title));
                 RestrictionsManager manager = (RestrictionsManager) ctx.getSystemService(Context.RESTRICTIONS_SERVICE);
                 Bundle restrictions = manager.getApplicationRestrictions();
                 if (restrictions != null && !restrictions.isEmpty()) {
                     RestrictionsReceiver.handleApplicationRestrictions(ctx, restrictions);
-                    return PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey();
+                    if (PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
+                        publishProgress(getString(R.string.mdm_loading_prerequisites));
+                        boolean ready = new MdmSetupPrerequisites().waitUntilReady(ctx);
+                        if (ready) {
+                            publishProgress(getString(R.string.mdm_loading_finalizing));
+                        }
+                        return ready;
+                    }
                 }
             } catch (Exception e) {
                 PreyLogger.e(String.format("Error SplashMdmActivity: %s", e.getMessage()), e);
@@ -62,8 +71,15 @@ public class SplashMdmActivity extends FragmentActivity {
         }
 
         @Override
+        protected void onProgressUpdate(String... values) {
+            if (values != null && values.length > 0 && textStatus != null) {
+                textStatus.setText(values[0]);
+            }
+        }
+
+        @Override
         protected void onPostExecute(Boolean registered) {
-            if (registered) {
+            if (registered && new MdmSetupPrerequisites().isReady(getApplicationContext())) {
                 PreyConfig.getPreyConfig(getApplicationContext()).setProtectReady(true);
                 MdmKeyedAppStateReporter.reportSetupLinked(getApplicationContext());
                 // Signal completion to caller (provisioning setup wizard or LoginActivity)
@@ -77,6 +93,7 @@ public class SplashMdmActivity extends FragmentActivity {
                 }
                 finish();
             } else {
+                setResult(RESULT_CANCELED);
                 progressBar.setVisibility(View.GONE);
                 textStatus.setText(R.string.mdm_loading_error);
             }

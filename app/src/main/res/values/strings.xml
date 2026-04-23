@@ -396,6 +396,8 @@
     <string name="administrator_disabled">The given administrator component is not currently active disabled in the system.</string>
 
     <string name="mdm_loading_title">Loading configurations from your administrator</string>
+    <string name="mdm_loading_prerequisites">Preparing push token and location…</string>
+    <string name="mdm_loading_finalizing">Finalizing setup…</string>
     <string name="mdm_loading_error">Could not complete the configuration. Please contact your administrator.</string>
 
 </resources>
