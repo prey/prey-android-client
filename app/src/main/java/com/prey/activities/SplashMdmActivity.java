@@ -23,7 +23,6 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
 import com.prey.mdm.MdmKeyedAppStateReporter;
-import com.prey.mdm.MdmSetupPrerequisites;
 import com.prey.receivers.RestrictionsReceiver;
 
 public class SplashMdmActivity extends FragmentActivity {
@@ -55,14 +54,7 @@ public class SplashMdmActivity extends FragmentActivity {
                 Bundle restrictions = manager.getApplicationRestrictions();
                 if (restrictions != null && !restrictions.isEmpty()) {
                     RestrictionsReceiver.handleApplicationRestrictions(ctx, restrictions);
-                    if (PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey()) {
-                        publishProgress(getString(R.string.mdm_loading_prerequisites));
-                        boolean ready = new MdmSetupPrerequisites().waitUntilReady(ctx);
-                        if (ready) {
-                            publishProgress(getString(R.string.mdm_loading_finalizing));
-                        }
-                        return ready;
-                    }
+                    return PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey();
                 }
             } catch (Exception e) {
                 PreyLogger.e(String.format("Error SplashMdmActivity: %s", e.getMessage()), e);
@@ -79,7 +71,7 @@ public class SplashMdmActivity extends FragmentActivity {
 
         @Override
         protected void onPostExecute(Boolean registered) {
-            if (registered && new MdmSetupPrerequisites().isReady(getApplicationContext())) {
+            if (registered) {
                 PreyConfig.getPreyConfig(getApplicationContext()).setProtectReady(true);
                 MdmKeyedAppStateReporter.reportSetupLinked(getApplicationContext());
                 // Signal completion to caller (provisioning setup wizard or LoginActivity)
