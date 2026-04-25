@@ -20,8 +20,8 @@ android {
 
         targetSdk 35
 
-        versionCode 404
-        versionName '2.6.16'
+        versionCode 413
+        versionName '2.6.17'
 
         multiDexEnabled true
 
@@ -49,6 +49,12 @@ android {
         buildConfig = true
     }
     namespace 'com.prey'
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 
@@ -74,12 +80,14 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.code.gson:gson:2.13.1'
     implementation 'androidx.biometric:biometric:1.2.0-alpha05'
+    implementation 'androidx.enterprise:enterprise-feedback:1.1.0'
     implementation "androidx.work:work-runtime:2.8.1"
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.14.1'
     testImplementation 'androidx.test:core:1.6.1'
     testImplementation 'androidx.test.ext:junit:1.2.1'
+    testImplementation 'androidx.enterprise:enterprise-feedback-testing:1.1.0'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 

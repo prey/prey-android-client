@@ -43,6 +43,16 @@ public class PreyEmail {
         }
     }
 
+    // Account types searched, in preference order, to resolve the user's work email:
+    //   - "com.google": Google work account (work profile under Android Enterprise,
+    //     Google Endpoint Manager, managed Google Play).
+    //   - "com.microsoft.workaccount": Microsoft work account used by Intune
+    //     (Company Portal / Authenticator) on AAD-joined / Entra ID enrollments.
+    private static final String[] WORK_ACCOUNT_TYPES = {
+            "com.google",
+            "com.microsoft.workaccount"
+    };
+
     @SuppressLint("NewApi")
     public static String getEmail(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR) {
@@ -62,12 +72,13 @@ public class PreyEmail {
     @SuppressLint("NewApi")
     private static Account getAccount(Context context,AccountManager accountManager) {
         if (PreyConfig.getPreyConfig(context).isEclairOrAbove()) {
-            Account[] accounts = accountManager.getAccountsByType("com.google");
-            if (accounts.length > 0) {
-                return accounts[0];
-            }else{
-                PreyLogger.d("account length 0");
+            for (String type : WORK_ACCOUNT_TYPES) {
+                Account[] accounts = accountManager.getAccountsByType(type);
+                if (accounts.length > 0) {
+                    return accounts[0];
+                }
             }
+            PreyLogger.d("account length 0");
         }else {
             PreyLogger.d("account bajo eckair");
         }
