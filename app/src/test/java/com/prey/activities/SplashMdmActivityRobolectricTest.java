@@ -212,7 +212,7 @@ public class SplashMdmActivityRobolectricTest {
     }
 
     @Test
-    public void givenRegistrationSucceededWithoutConfirmedPushToken_whenPostExecute_thenDoesNotEmitLinkedKeyedState()
+    public void givenRegistrationSucceededWithoutConfirmedPushToken_whenPostExecute_thenStillEmitsLinkedKeyedState()
             throws Exception {
         FakeKeyedAppStatesReporter reporter = new FakeKeyedAppStatesReporter();
         MdmKeyedAppStateReporter.setFactoryForTests(context -> new MdmKeyedAppStateReporter(reporter));
@@ -223,9 +223,9 @@ public class SplashMdmActivityRobolectricTest {
 
             invokeOnPostExecute(activity, Boolean.TRUE);
 
-            assertEquals(0, reporter.getNumberOfUploads());
-            assertEquals(Activity.RESULT_CANCELED, shadow.getResultCode());
-            assertFalse(activity.isFinishing());
+            assertEquals(1, reporter.getNumberOfUploads());
+            assertEquals(Activity.RESULT_OK, shadow.getResultCode());
+            assertTrue(activity.isFinishing());
         } finally {
             MdmKeyedAppStateReporter.resetFactoryForTests();
         }
