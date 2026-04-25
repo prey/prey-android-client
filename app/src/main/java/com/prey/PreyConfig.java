@@ -660,14 +660,12 @@ public class PreyConfig {
                 String registration = FileConfigReader.getInstance(ctx).getGcmIdPrefix() + token;
                 PreyLogger.d("registerC2dm registration:" + registration);
                 PreyHttpResponse response = PreyWebServices.getInstance().setPushRegistrationId(ctx, registration);
+                PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
                 if (response != null) {
                     PreyLogger.d("registerC2dm response:" + response.toString());
-                    if (response.getStatusCode() == java.net.HttpURLConnection.HTTP_OK) {
-                        PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
-                        PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
-                        PreyConfig.getPreyConfig(ctx).setTimeC2dm();
-                    }
                 }
+                PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
+                PreyConfig.getPreyConfig(ctx).setTimeC2dm();
             } catch (Exception e) {
                 PreyLogger.e("registerC2dm error:"+e.getMessage(),e);
             }

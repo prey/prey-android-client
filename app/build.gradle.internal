@@ -22,10 +22,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            ndk {
-                debugSymbolLevel 'SYMBOL_TABLE'
-            }
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
