@@ -20,7 +20,7 @@ android {
 
         targetSdk 35
 
-        versionCode 405
+        versionCode 407
         versionName '2.6.17'
 
         multiDexEnabled true
@@ -31,7 +31,10 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
