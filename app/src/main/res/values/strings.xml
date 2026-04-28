@@ -395,4 +395,7 @@
     <string name="restriction_description_skip_manual_permissions">(Optional) Skips Device Admin and Accessibility prompts. Prey Lock will be unavailable; only native MDM wipe will work.</string>
     <string name="administrator_disabled">The given administrator component is not currently active disabled in the system.</string>
 
+    <string name="mdm_loading_title">Loading configurations from your administrator</string>
+    <string name="mdm_loading_error">Could not complete the configuration. Please contact your administrator.</string>
+
 </resources>

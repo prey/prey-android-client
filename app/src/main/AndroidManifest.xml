@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.prey"
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="internalOnly"
   >
@@ -53,9 +52,9 @@
     <!-- This app has permission to register and receive message -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <permission android:name="com.prey.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <permission android:name="${applicationId}.permission.C2D_MESSAGE" android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.prey.permission.C2D_MESSAGE" />
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
     <!-- This app has permission to camera -->
     <uses-permission android:name="android.permission.CAMERA" />
@@ -100,7 +99,6 @@
                 android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:launchMode="singleInstance"
             android:noHistory="true"
             android:exported="true"
                 android:name=".activities.LoginActivity">
@@ -505,6 +503,11 @@
             </intent-filter>
             <meta-data android:name="android.accessibilityservice" android:resource="@xml/accessibilityservice"/>
         </service>
+
+        <activity
+            android:name=".activities.SplashMdmActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
 
     </application>
 

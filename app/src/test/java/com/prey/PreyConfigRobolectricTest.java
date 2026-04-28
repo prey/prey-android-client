@@ -6,15 +6,22 @@
  ******************************************************************************/
 package com.prey;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowAccountManager;
 
 import androidx.test.core.app.ApplicationProvider;
+
+import java.lang.reflect.Field;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -32,10 +39,18 @@ public class PreyConfigRobolectricTest {
 
     private Context context;
     private PreyConfig preyConfig;
+    private AccountManager accountManager;
+    private ShadowAccountManager shadowAccountManager;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         context = ApplicationProvider.getApplicationContext();
+        // PreyConfig caches a static singleton tied to the first Context it saw.
+        // Reset it so each test re-initializes against the current Robolectric
+        // application context (otherwise AccountManager lookups may hit a stale ctx).
+        Field cached = PreyConfig.class.getDeclaredField("cachedInstance");
+        cached.setAccessible(true);
+        cached.set(null, null);
         preyConfig = PreyConfig.getPreyConfig(context);
         // Clear previous values to ensure test isolation
         preyConfig.setMdmSerialNumber("");
@@ -43,6 +58,27 @@ public class PreyConfigRobolectricTest {
         preyConfig.setMdmDeviceName("");
         preyConfig.setMdmOrganizationId("");
         preyConfig.setMdmSkipManualPermissions(false);
+        // Register fake authenticators so addAccountExplicitly() accounts are
+        // visible to getAccountsByType() under API 26+ visibility rules.
+        accountManager = AccountManager.get(context);
+        shadowAccountManager = Shadows.shadowOf(accountManager);
+        shadowAccountManager.addAuthenticator("com.google");
+        shadowAccountManager.addAuthenticator("com.microsoft.workaccount");
+        clearWorkAccounts();
+    }
+
+    @After
+    public void tearDown() {
+        clearWorkAccounts();
+    }
+
+    private void clearWorkAccounts() {
+        for (Account account : accountManager.getAccountsByType("com.google")) {
+            accountManager.removeAccountExplicitly(account);
+        }
+        for (Account account : accountManager.getAccountsByType("com.microsoft.workaccount")) {
+            accountManager.removeAccountExplicitly(account);
+        }
     }
 
     // =========================================================================
@@ -192,6 +228,75 @@ public class PreyConfigRobolectricTest {
         String result = preyConfig.buildDeviceName("Google Pixel 9");
 
         assertEquals("CEO-Phone-2026", result);
+    }
+
+    // =========================================================================
+    // buildDeviceName with a Google work-profile account available
+    // =========================================================================
+
+    @Test
+    public void givenGoogleAccount_whenBuildingName_thenEmailIsUsed() {
+        accountManager.addAccountExplicitly(new Account("user@company.com", "com.google"), null, null);
+
+        String result = preyConfig.buildDeviceName("samsung SM-A145R");
+
+        assertEquals("user@company.com", result);
+    }
+
+    @Test
+    public void givenGoogleAccountAndMdmDeviceName_whenBuildingName_thenMdmDeviceNameWins() {
+        preyConfig.setMdmDeviceName("Office Phone 001");
+        accountManager.addAccountExplicitly(new Account("user@company.com", "com.google"), null, null);
+
+        String result = preyConfig.buildDeviceName("samsung SM-A145R");
+
+        assertEquals("Office Phone 001", result);
+    }
+
+    @Test
+    public void givenGoogleAccountAndSerialNumber_whenBuildingName_thenSerialNumberWins() {
+        preyConfig.setMdmSerialNumber("R1YX100J1ON");
+        accountManager.addAccountExplicitly(new Account("user@company.com", "com.google"), null, null);
+
+        String result = preyConfig.buildDeviceName("samsung SM-A145R");
+
+        assertEquals("samsung SM-A145R - R1YX100J1ON", result);
+    }
+
+    // =========================================================================
+    // buildDeviceName with a Microsoft/Intune work account available
+    // =========================================================================
+
+    @Test
+    public void givenIntuneAccount_whenBuildingName_thenEmailIsUsed() {
+        accountManager.addAccountExplicitly(
+                new Account("user@company.onmicrosoft.com", "com.microsoft.workaccount"), null, null);
+
+        String result = preyConfig.buildDeviceName("samsung SM-A145R");
+
+        assertEquals("user@company.onmicrosoft.com", result);
+    }
+
+    @Test
+    public void givenGoogleAndIntuneAccounts_whenBuildingName_thenGoogleAccountIsPreferred() {
+        accountManager.addAccountExplicitly(new Account("user@company.com", "com.google"), null, null);
+        accountManager.addAccountExplicitly(
+                new Account("user@company.onmicrosoft.com", "com.microsoft.workaccount"), null, null);
+
+        String result = preyConfig.buildDeviceName("samsung SM-A145R");
+
+        assertEquals("user@company.com", result);
+    }
+
+    @Test
+    public void givenIntuneAccountAndMdmDeviceName_whenBuildingName_thenMdmDeviceNameWins() {
+        preyConfig.setMdmDeviceName("Office Phone 001");
+        accountManager.addAccountExplicitly(
+                new Account("user@company.onmicrosoft.com", "com.microsoft.workaccount"), null, null);
+
+        String result = preyConfig.buildDeviceName("samsung SM-A145R");
+
+        assertEquals("Office Phone 001", result);
     }
 
 }

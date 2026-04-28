@@ -567,13 +567,13 @@ public class PreyConfig {
 
     public boolean isThisDeviceAlreadyRegisteredWithPrey(boolean notifyUser) {
         String deviceId = getString(PreyConfig.DEVICE_ID, null);
-        boolean isVerified = (deviceId != null && !"".equals(deviceId));
+        boolean isVerified = (deviceId != null && !deviceId.isEmpty());
         return isVerified;
     }
 
     public boolean isThisDeviceAlreadyRegisteredWithPrey() {
         String deviceID = getDeviceId();
-        return deviceID != null && !"".equals(deviceID);
+        return deviceID != null && !deviceID.isEmpty();
     }
 
     public String getSimSerialNumber(){
@@ -611,7 +611,7 @@ public class PreyConfig {
             String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
             boolean isTimeC2dm=PreyConfig.getPreyConfig(ctx).isTimeC2dm();
             PreyLogger.d("registerC2dm deviceId:"+deviceId+" isTimeC2dm:"+isTimeC2dm);
-            if (deviceId != null && !"".equals(deviceId)) {
+            if (deviceId != null && !deviceId.isEmpty()) {
                  if (!isTimeC2dm) {
                     String token = null;
                     try {
@@ -653,7 +653,7 @@ public class PreyConfig {
 
     public static void sendToken(Context ctx,String token) {
         PreyLogger.d("registerC2dm send token:"+token);
-        if(token!=null && !"null".equals(token) && !"".equals(token) && UtilConnection.isInternetAvailable(ctx)) {
+        if(token!=null && !"null".equals(token) && !token.isEmpty() && UtilConnection.isInternetAvailable(ctx)) {
             try {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
@@ -1192,7 +1192,7 @@ public class PreyConfig {
             // Retrieve the accuracy value from storage
             float acc = getFloat(PreyConfig.AWARE_ACC, 0f);
             // Check if the latitude or longitude values are empty or null
-            if (lat == null || "".equals(lat) || lng == null || "".equals(lng)) {
+            if (lat == null || lat.isEmpty() || lng == null || lng.isEmpty()) {
                 // If either value is empty or null, return null
                 return null;
             }
@@ -1752,12 +1752,16 @@ public class PreyConfig {
      */
     public String buildDeviceName(String defaultName) {
         String mdmDeviceName = getMdmDeviceName();
-        if (mdmDeviceName != null && !"".equals(mdmDeviceName)) {
+        if (mdmDeviceName != null && !mdmDeviceName.isEmpty()) {
             return mdmDeviceName;
         }
         String serialNumber = getMdmSerialNumber();
-        if (serialNumber != null && !"".equals(serialNumber)) {
+        if (serialNumber != null && !serialNumber.isEmpty()) {
             return defaultName + " - " + serialNumber;
+        }
+        String workEmail = resolveWorkEmail();
+        if (workEmail != null && !workEmail.isEmpty()) {
+            return workEmail;
         }
         return defaultName;
     }
@@ -1770,7 +1774,7 @@ public class PreyConfig {
      */
     public String resolveImei() {
         String mdmImei = getMdmImei();
-        if (mdmImei != null && !"".equals(mdmImei)) {
+        if (mdmImei != null && !mdmImei.isEmpty()) {
             return mdmImei;
         }
         return new PreyPhone(ctx).getHardware().getAndroidDeviceId();
@@ -1787,6 +1791,8 @@ public class PreyConfig {
             PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, apiKey, deviceType, nameDevice);
             if (accountData != null) {
                 PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
+                PreyConfig.getPreyConfig(ctx).setNotificationId("");
+                PreyConfig.getPreyConfig(ctx).setRegisterC2dm(false);
                 // Register C2DM
                 PreyConfig.getPreyConfig(ctx).registerC2dm();
                 // Get the email associated with the account
@@ -1883,6 +1889,17 @@ public class PreyConfig {
      */
     public void setMdmDeviceName(String deviceName) {
         saveString(MDM_DEVICE_NAME, deviceName);
+    }
+
+    /**
+     * Resolves the user's work email from the first Google account registered
+     * on the device — typically the work profile account under Android Enterprise
+     * (work profile apps see the work Google account, not the personal one).
+     *
+     * @return The work email, or null if no account is available.
+     */
+    public String resolveWorkEmail() {
+        return PreyEmail.getEmail(ctx);
     }
 
     /**

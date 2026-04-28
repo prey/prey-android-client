@@ -116,7 +116,7 @@ public class SimpleCameraActivity extends Activity implements OrientationManager
             Class clsCamera;
             clsCamera = Class.forName("android.hardware.Camera");
             Method methodGetNumberOfCameras = clsCamera.getMethod("getNumberOfCameras", noparams);
-            numberOfCamerasInt = (Integer) methodGetNumberOfCameras.invoke(null, null);
+            numberOfCamerasInt = (Integer) methodGetNumberOfCameras.invoke(null);
         } catch (Exception e) {
             PreyLogger.e("report error:" + e.getMessage(), e);
         }

@@ -9,6 +9,7 @@ package com.prey.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.RestrictionsManager;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -25,6 +26,8 @@ import com.prey.services.PreyLockHtmlService;
 import com.prey.services.PreyLockService;
 
 public class LoginActivity extends Activity {
+    private static final String EXTRA_LAUNCHED_AS_SETUP_ACTION =
+            "com.google.android.apps.work.clouddpc.EXTRA_LAUNCHED_AS_SETUP_ACTION";
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -56,10 +59,14 @@ public class LoginActivity extends Activity {
         startup();
     }
 
+    private int mdmRetryCount = 0;
+    private static final int MDM_MAX_RETRIES = 10;
+    private static final int MDM_RETRY_DELAY_MS = 2000;
+
     private void startup() {
         Intent intentLock = null;
         String unlockPass = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
-        if (unlockPass != null && !"".equals(unlockPass)) {
+        if (unlockPass != null && !unlockPass.isEmpty()) {
             boolean canDrawOverlays = PreyPermission.canDrawOverlays(getApplicationContext());
             boolean accessibility = PreyPermission.isAccessibilityServiceEnabled(getApplicationContext());
             if (PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() &&
@@ -79,11 +86,26 @@ public class LoginActivity extends Activity {
             }
         }
         boolean ready = PreyConfig.getPreyConfig(this).getProtectReady();
-        if (isThereBatchInstallationKey() && !ready) {
+        if (!ready && hasMdmSetupKey()) {
+            showMdmSplash();
+        } else if (!ready && isProvisioningSetupAction() && mdmRetryCount < MDM_MAX_RETRIES) {
+            // SetupAction launched during provisioning but managed config not yet available — retry
+            mdmRetryCount++;
+            PreyLogger.d(String.format("LoginActivity: waiting for managed config (retry %d/%d)", mdmRetryCount, MDM_MAX_RETRIES));
+            new android.os.Handler().postDelayed(this::startup, MDM_RETRY_DELAY_MS);
+        } else if (isThereBatchInstallationKey() && !ready) {
             showLoginBatch();
         } else {
             showLogin();
         }
+    }
+
+    private boolean isProvisioningSetupAction() {
+        Intent intent = getIntent();
+        if (intent != null && intent.getBooleanExtra(EXTRA_LAUNCHED_AS_SETUP_ACTION, false)) {
+            return true;
+        }
+        return getCallingActivity() != null;
     }
 
     private void showLogin() {
@@ -132,9 +154,46 @@ public class LoginActivity extends Activity {
         ctx.startActivity(popup);
     }
 
+    private boolean hasMdmSetupKey() {
+        if (PreyConfig.getPreyConfig(this).isThisDeviceAlreadyRegisteredWithPrey()) {
+            return false;
+        }
+        try {
+            RestrictionsManager manager = (RestrictionsManager) getSystemService(Context.RESTRICTIONS_SERVICE);
+            Bundle restrictions = manager.getApplicationRestrictions();
+            if (restrictions != null && restrictions.containsKey("setup_key")) {
+                String setupKey = restrictions.getString("setup_key");
+                return setupKey != null && !setupKey.isEmpty();
+            }
+        } catch (Exception e) {
+            PreyLogger.e(String.format("Error hasMdmSetupKey: %s", e.getMessage()), e);
+        }
+        return false;
+    }
+
+    private static final int MDM_SETUP_REQUEST = 100;
+
+    private void showMdmSplash() {
+        Intent intent = new Intent(LoginActivity.this, SplashMdmActivity.class);
+        if (isProvisioningSetupAction()) {
+            intent.putExtra(EXTRA_LAUNCHED_AS_SETUP_ACTION, true);
+        }
+        startActivityForResult(intent, MDM_SETUP_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MDM_SETUP_REQUEST && resultCode == RESULT_OK) {
+            // Propagate result to provisioning setup wizard (SetupAction)
+            setResult(RESULT_OK);
+            finish();
+        }
+    }
+
     private boolean isThereBatchInstallationKey() {
         String apiKeyBatch = PreyConfig.getPreyConfig(LoginActivity.this).getApiKeyBatch();
-        return (apiKeyBatch != null && !"".equals(apiKeyBatch));
+        return (apiKeyBatch != null && !apiKeyBatch.isEmpty());
     }
 
 }
