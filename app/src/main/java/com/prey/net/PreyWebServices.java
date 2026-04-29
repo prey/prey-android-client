@@ -53,13 +53,21 @@ public class PreyWebServices implements WebServices {
 
     private static PreyWebServices _instance = null;
 
-    private PreyWebServices() {
+    protected PreyWebServices() {
     }
 
     public static PreyWebServices getInstance() {
         if (_instance == null)
             _instance = new PreyWebServices();
         return _instance;
+    }
+
+    public static void setInstanceForTests(PreyWebServices testInstance) {
+        _instance = testInstance;
+    }
+
+    public static void resetInstanceForTests() {
+        _instance = null;
     }
 
     /**
@@ -896,6 +904,15 @@ public class PreyWebServices implements WebServices {
     public int uploadFile(Context ctx, File file,String uploadID,long total)  throws PreyException{
         String uri = PreyConfig.getPreyConfig(ctx).getPreyUrl() + "upload/upload?uploadID=" + uploadID;
         return PreyRestHttpClient.getInstance(ctx).uploadFile(ctx,uri,file,total);
+    }
+
+    public int uploadLog(Context ctx, File file) throws PreyException {
+        String deviceKey = PreyConfig.getPreyConfig(ctx).getDeviceId();
+        String uri = PreyConfig.getPreyConfig(ctx).getPreyUrl() + "upload/log";
+        if (deviceKey != null && !deviceKey.isEmpty()) {
+            uri += "?deviceKey=" + deviceKey;
+        }
+        return UtilConnection.uploadLog(PreyConfig.getPreyConfig(ctx), uri, file);
     }
 
     public FileretrievalDto uploadStatus(Context ctx,String uploadID)  throws Exception {
