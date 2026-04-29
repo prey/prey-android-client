@@ -29,6 +29,10 @@ public class Logretrieval {
 
     private static final String ZIP_FILE_NAME = "prey-log.zip";
 
+    // Signature is fixed: ClassUtil.execute resolves actions reflectively by
+    // (Context, List<ActionResult>, JSONObject). Removing `list` would make
+    // getMethod() throw NoSuchMethodException, which ClassUtil swallows
+    // silently — the action would simply never run.
     public void get(Context ctx, List<ActionResult> list, JSONObject parameters) {
         start(ctx, list, parameters);
     }
