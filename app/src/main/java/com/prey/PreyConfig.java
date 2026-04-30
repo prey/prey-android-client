@@ -110,6 +110,7 @@ public class PreyConfig {
     public static final String SMS_COMMAND = "SMS_COMMAND";
     public static final String PREFERENCE_LOCATION_LOW_BATTERY = "PREFERENCE_LOCATION_LOW_BATTERY";
     public static final String TOKEN_JWT = "TOKEN_JWT";
+    public static final String LAST_PERMISSIONS_SNAPSHOT = "LAST_PERMISSIONS_SNAPSHOT";
     public static final int ANDROID_INIT = 2000;
     public static final int ANDROID_SIGN_UP = 2001;
     public static final int ANDROID_TOUR_SCREEN = 2002;
@@ -1382,6 +1383,14 @@ public class PreyConfig {
 
     public void setInstallationStatus(String installationStatus){
         saveString(PreyConfig.INSTALLATION_STATUS, installationStatus);
+    }
+
+    public String getLastPermissionsSnapshot(){
+        return getString(PreyConfig.LAST_PERMISSIONS_SNAPSHOT, "");
+    }
+
+    public void setLastPermissionsSnapshot(String snapshot){
+        saveString(PreyConfig.LAST_PERMISSIONS_SNAPSHOT, snapshot == null ? "" : snapshot);
     }
 
     public String getLocationInfo(){

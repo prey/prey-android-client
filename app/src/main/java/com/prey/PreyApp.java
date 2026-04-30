@@ -70,6 +70,8 @@ public class PreyApp extends Application {
         } catch (Exception e) {
             PreyLogger.e(String.format("Error FirebaseApp: %s", e.getMessage()), e);
         }
+        PermissionsWatcher.start(getApplicationContext());
+        PermissionsReporter.sendIfChanged(getApplicationContext());
         PreyController.startPrey(getApplicationContext());
     }
 

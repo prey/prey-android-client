@@ -44,6 +44,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.prey.PermissionsReporter;
 import com.prey.PreyAccountData;
 import com.prey.PreyApp;
 import com.prey.PreyConfig;
@@ -173,6 +174,7 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         PreyConfig.getPreyConfig(this).setCapsLockOn(false);
         PreyConfig.getPreyConfig(getApplicationContext()).setVerificateBiometric(false);
         resolveRestrictions(this);
+        PermissionsReporter.sendIfChanged(getApplicationContext());
     }
 
     protected void onDestroy() {
