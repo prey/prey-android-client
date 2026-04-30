@@ -61,7 +61,7 @@ public class RestrictionsReceiver extends BroadcastReceiver {
         }
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
 
-        PreyLogger.d(String.format("saveRestrictionValues restrictions: %s", restrictions.toString()));
+        PreyLogger.d(String.format("restrictions: %s", restrictions.toString()));
         saveStringRestriction(restrictions, "enterprise_name", value -> preyConfig.setMdmOrganizationId(value));
         saveStringRestriction(restrictions, "serial_number", value -> preyConfig.setMdmSerialNumber(value));
         saveStringRestriction(restrictions, "device_name", value -> preyConfig.setMdmDeviceName(value));
@@ -69,7 +69,7 @@ public class RestrictionsReceiver extends BroadcastReceiver {
 
         if (restrictions.containsKey("skip_manual_permissions")) {
             boolean skip = restrictions.getBoolean("skip_manual_permissions", false);
-            PreyLogger.d(String.format("saveRestrictionValues skip_manual_permissions: %s", skip));
+            PreyLogger.d(String.format("skip_manual_permissions: %s", skip));
             preyConfig.setMdmSkipManualPermissions(skip);
         }
     }
