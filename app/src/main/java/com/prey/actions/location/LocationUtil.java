@@ -211,10 +211,17 @@ public class LocationUtil {
         PreyLocation preyLocation = null;
         Intent intentLocation = new Intent(ctx, LocationUpdatesService.class);
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
                 ctx.startService(intentLocation);
-            } else {
-                ctx.startService(intentLocation);
+            } catch (IllegalStateException e) {
+                // Android 12+ throws BackgroundServiceStartNotAllowedException
+                // (a subclass of IllegalStateException) when the app is in the
+                // background. There's no point ringing the alarm here —
+                // getPreyLocationPlayService is the preferred path that uses
+                // FusedLocationProviderClient directly and works without a
+                // service. Return null so the caller falls through to it.
+                PreyLogger.d("getPreyLocationAppServiceOreo skipped: " + e.getMessage());
+                return null;
             }
             int i = 0;
             PreyLocationManager.getInstance(ctx).setLastLocation(null);
@@ -236,7 +243,11 @@ public class LocationUtil {
             PreyLogger.e(String.format("Error getPreyLocationAppServiceOreo:%s", e.getMessage()), e);
             throw e;
         } finally {
-            ctx.stopService(intentLocation);
+            try {
+                ctx.stopService(intentLocation);
+            } catch (Exception ignored) {
+                // stopService can also throw on a service that never started.
+            }
         }
         return preyLocation;
     }
@@ -248,13 +259,24 @@ public class LocationUtil {
                         && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
             Intent intentLocation = new Intent(ctx, LocationService.class);
             try {
-                ctx.startService(intentLocation);
+                try {
+                    ctx.startService(intentLocation);
+                } catch (IllegalStateException e) {
+                    // BackgroundServiceStartNotAllowedException on Android 12+.
+                    // The Play Services path (getPreyLocationPlayService) does
+                    // not need a service and is the right fallback.
+                    PreyLogger.d("getPreyLocationAppService skipped: " + e.getMessage());
+                    return null;
+                }
                 preyLocation = waitLocation(ctx, method, asynchronous, maximum);
             } catch (Exception e) {
                 PreyLogger.e(String.format("getPreyLocationAppService e:%s", e.getMessage()), e);
                 throw e;
             } finally {
-                ctx.stopService(intentLocation);
+                try {
+                    ctx.stopService(intentLocation);
+                } catch (Exception ignored) {
+                }
             }
         }
         return preyLocation;

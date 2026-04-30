@@ -7,7 +7,7 @@
 package com.prey.receivers;
 
 import com.prey.PreyLogger;
-import com.prey.beta.services.PreyBetaRunnerService;
+import com.prey.beta.actions.PreyBetaActionsRunnner;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,11 +17,15 @@ public class AlarmScheduledReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        // Same fix as PreyBetaController.startPrey: skip the startService hop
+        // that throws BackgroundServiceStartNotAllowedException on Android 12+
+        // and run the actions runner directly. BroadcastReceivers grant a
+        // brief execution window that is enough for the runner to spin up
+        // its own thread.
         try {
-            Intent intentRunner = new Intent(context, PreyBetaRunnerService.class);
-            context.startService(intentRunner);
-        }catch (Exception e){
-            PreyLogger.e("Error PreyBetaRunnerService:"+e.getMessage(),e);
+            new PreyBetaActionsRunnner(null).run(context);
+        } catch (Exception e) {
+            PreyLogger.e("Error PreyBetaRunnerService:" + e.getMessage(), e);
         }
     }
 

@@ -24,21 +24,18 @@ public class PreyBetaController {
         PreyLogger.d("startPrey:"+config.isThisDeviceAlreadyRegisteredWithPrey());
         if (config.isThisDeviceAlreadyRegisteredWithPrey()) {
             config.setRun(true);
-            final Context context = ctx;
-            new Thread(new Runnable() {
-                public void run() {
-                    try{
-                        context.stopService(new Intent(context, PreyBetaRunnerService.class));
-                        Intent intentStart = new Intent(context, PreyBetaRunnerService.class);
-                        if (cmd != null) {
-                            intentStart.putExtra("cmd", cmd);
-                        }
-                        context.startService(intentStart);
-                    }catch (Exception e){
-                        PreyLogger.e("error:"+e.getMessage(),e);
-                    }
-                }
-            }).start();
+            // Run the actions runner directly instead of going through
+            // startService(PreyBetaRunnerService). On Android 12+ that startService
+            // call throws BackgroundServiceStartNotAllowedException whenever this
+            // entry point fires from background (FCM, boot receiver, app onCreate
+            // while the app is not visible). The service was a no-op proxy
+            // anyway: PreyBetaRunnerService.onStart just spawned the same runner
+            // we now spawn here. Equivalent behavior, no foreground requirement.
+            try {
+                new com.prey.beta.actions.PreyBetaActionsRunnner(cmd).run(ctx);
+            } catch (Exception e) {
+                PreyLogger.e("error startPrey:" + e.getMessage(), e);
+            }
         }
     }
 

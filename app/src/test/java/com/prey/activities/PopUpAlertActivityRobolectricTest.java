@@ -7,10 +7,14 @@
 package com.prey.activities;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Application;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
@@ -29,6 +33,7 @@ import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -165,6 +170,99 @@ public class PopUpAlertActivityRobolectricTest {
                                 PopUpAlertActivity.POPUP_PREY + "_3")
                 )
         );
+    }
+
+    // =========================================================================
+    // Dialog window leak — second class of leak from the same activity:
+    // popup.show() leaves the AlertDialog attached to the Activity's Window;
+    // when finish() is invoked from a receiver (or anywhere else) without
+    // dismissing the dialog first, Android logs WindowLeaked. The fix holds
+    // the dialog as a field and dismisses it in onDestroy.
+    // =========================================================================
+
+    @Test
+    public void onCreate_showsTheAlertDialog() throws Exception {
+        ActivityController<PopUpAlertActivity> controller = buildController(21);
+        try {
+            controller.create();
+
+            Dialog popup = readPopupField(controller.get());
+            assertNotNull("Activity must hold the dialog as a field so onDestroy can dismiss it", popup);
+            assertTrue(
+                    "Dialog must be visible after onCreate",
+                    popup.isShowing()
+            );
+        } finally {
+            controller.destroy();
+        }
+    }
+
+    @Test
+    public void onDestroy_dismissesTheDialog_preventingWindowLeak() throws Exception {
+        ActivityController<PopUpAlertActivity> controller = buildController(22);
+        controller.create();
+        Dialog popup = readPopupField(controller.get());
+        assertTrue("Sanity: dialog should be showing before destroy", popup.isShowing());
+
+        controller.destroy();
+
+        // The fix nulls the dismiss listener and dismisses the dialog. After
+        // destroy, the dialog must not be showing — otherwise Android emits
+        // WindowLeaked for the still-attached DecorView.
+        assertFalse(
+                "Dialog must be dismissed before the Activity's window is torn down",
+                popup.isShowing()
+        );
+    }
+
+    @Test
+    public void receiverDrivenFinish_thenDestroy_doesNotLeakDialogWindow() throws Exception {
+        // This reproduces the exact field log: a popup_prey broadcast arrives,
+        // the receiver calls finish(), and the lifecycle proceeds to onDestroy
+        // with the dialog still attached. Without the fix the dialog would
+        // remain showing and Android would log WindowLeaked.
+        ActivityController<PopUpAlertActivity> controller = buildController(23);
+        controller.create();
+        Dialog popup = readPopupField(controller.get());
+        assertTrue(popup.isShowing());
+
+        // Simulate the broadcast that the receiver listens for. This also
+        // exercises the full lifecycle: the receiver calls finish(), the
+        // controller drives the destroy.
+        Intent broadcast = new Intent(PopUpAlertActivity.POPUP_PREY + "_23");
+        ApplicationProvider.getApplicationContext().sendBroadcast(broadcast);
+        org.robolectric.shadows.ShadowLooper.idleMainLooper();
+        controller.destroy();
+
+        assertFalse(
+                "Receiver-driven finish() path must still leave the dialog dismissed",
+                popup.isShowing()
+        );
+    }
+
+    @Test
+    public void onDestroy_isSafeWhenDialogWasAlreadyDismissed() throws Exception {
+        // The dismiss listener calls finish() — meaning the dismiss path can
+        // already have fired by the time onDestroy runs. onDestroy must be
+        // idempotent: dismissing an already-dismissed dialog is a no-op,
+        // never an exception.
+        ActivityController<PopUpAlertActivity> controller = buildController(24);
+        controller.create();
+        Dialog popup = readPopupField(controller.get());
+        // Detach the dismiss listener so dismiss() doesn't recursively trigger
+        // finish() before we've had a chance to drive destroy ourselves.
+        popup.setOnDismissListener(null);
+        popup.dismiss();
+        assertFalse(popup.isShowing());
+
+        // Must not throw.
+        controller.destroy();
+    }
+
+    private static Dialog readPopupField(PopUpAlertActivity activity) throws Exception {
+        Field f = PopUpAlertActivity.class.getDeclaredField("popup");
+        f.setAccessible(true);
+        return (Dialog) f.get(activity);
     }
 
     // =========================================================================

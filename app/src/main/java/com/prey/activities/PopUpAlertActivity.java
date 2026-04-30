@@ -27,6 +27,8 @@ public class PopUpAlertActivity extends PreyActivity {
     private int notificationId = 0;
     public static final String POPUP_PREY = "popup_prey";
 
+    private Dialog popup;
+
     private final BroadcastReceiver close_prey_receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -64,7 +66,7 @@ public class PopUpAlertActivity extends PreyActivity {
                 finish();
             }
         });
-        Dialog popup = alertBuilder.create();
+        popup = alertBuilder.create();
         popup.setOnDismissListener(new DialogInterface.OnDismissListener() {
             public void onDismiss(DialogInterface dialog) {
                 finish();
@@ -93,6 +95,22 @@ public class PopUpAlertActivity extends PreyActivity {
 
     @Override
     protected void onDestroy() {
+        // Dismiss the dialog before the Activity window is torn down. Without
+        // this, the receiver-driven finish() path destroys the Activity while
+        // the dialog is still attached, and Android logs WindowLeaked. The
+        // dismiss listener (which calls finish()) is unhooked first to avoid
+        // bouncing through finish() while we're already on the destroy path.
+        if (popup != null) {
+            popup.setOnDismissListener(null);
+            if (popup.isShowing()) {
+                try {
+                    popup.dismiss();
+                } catch (IllegalArgumentException ignored) {
+                    // Window already detached — nothing to clean up.
+                }
+            }
+            popup = null;
+        }
         // Each unregister is wrapped independently: the matching registerReceiver
         // calls in onCreate are guarded with their own try/catch, so one may have
         // succeeded while the other failed. Sharing a try would let the first
