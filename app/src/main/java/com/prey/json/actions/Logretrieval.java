@@ -57,7 +57,7 @@ public class Logretrieval {
         try {
             PreyLogger.d("Logretrieval started");
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
-                    ctx, "processed", messageId,
+                    ctx, messageId,
                     UtilJson.makeMapParam("start", "logretrieval", "started", reason));
 
             // Drain any in-flight log entries so the zip captures the

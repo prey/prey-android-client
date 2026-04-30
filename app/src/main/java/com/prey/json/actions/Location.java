@@ -61,7 +61,7 @@ public class Location extends JsonAction{
         PreyLocationManager.getInstance(ctx).setLastLocation(null);
         PreyConfig.getPreyConfig(ctx).setLocation(null);
         PreyConfig.getPreyConfig(ctx).setLocationInfo("");
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("get", "location", "started",reason));
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "location", "started",reason));
         PreyLogger.d(this.getClass().getName());
         int i = 0;
         int maximum = LocationUtil.MAXIMUM_OF_ATTEMPTS;
@@ -125,9 +125,9 @@ public class Location extends JsonAction{
             i++;
         }
         if (data==null){
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"failed", messageId, UtilJson.makeMapParam("get", "location", "failed",PreyConfig.getPreyConfig(ctx).getLocationInfo()));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "location", "failed",PreyConfig.getPreyConfig(ctx).getLocationInfo()));
         }else{
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("get", "location", "stopped",reason));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "location", "stopped",reason));
         }
         try {
             String nameDevice = Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_name");

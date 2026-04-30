@@ -157,7 +157,7 @@ public class ReportService extends IntentService {
 				}
 			} catch (Exception e) {
 				PreyLogger.e(String.format("Error report:%s", e.getMessage()), e);
-				PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "failed", null, UtilJson.makeMapParam("get", "report", "failed", e.getMessage()));
+				PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, null, UtilJson.makeMapParam("get", "report", "failed", e.getMessage()));
 			}
 		}
 		return listData;

@@ -53,7 +53,7 @@ public class Alert extends JsonAction {
             PreyLogger.d(String.format("Error:%s", e.getMessage()));
         }
         try {
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("cancel", "alert", "stopped", null));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("cancel", "alert", "stopped", null));
         } catch (Exception e) {
             PreyLogger.d(String.format("Error:%s", e.getMessage()));
         }

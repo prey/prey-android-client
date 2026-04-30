@@ -15,3 +15,4 @@ local.properties
 *.keystore
 app/src/main/res/values/google_maps_api.xml
 keystore.properties
+/.claude/worktrees
