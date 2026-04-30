@@ -52,6 +52,7 @@ public class PreyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        PreyLogger.init(getApplicationContext());
         try {
             String unlockPass = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
             if (unlockPass != null && !"".equals(unlockPass)) {

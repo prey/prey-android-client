@@ -650,6 +650,47 @@ public class UtilConnection {
         return responseCode;
     }
 
+    public static int uploadLog(PreyConfig preyConfig, String page, File file) {
+        int responseCode = 0;
+        HttpURLConnection connection = null;
+        OutputStream output = null;
+        InputStream input = null;
+        FileInputStream fileInput = null;
+        PreyLogger.d("uploadLog page:" + page + " file:" + file.getName() + " length:" + file.length());
+        try {
+            URL url = new URL(page);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.addRequestProperty("Origin", "android:com.prey");
+            connection.addRequestProperty("Content-Type", "application/zip");
+            connection.addRequestProperty("Authorization", getAuthorization(preyConfig));
+            connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
+            connection.setRequestProperty("Content-Length", "" + file.length());
+
+            output = connection.getOutputStream();
+            fileInput = new FileInputStream(file);
+            input = new BufferedInputStream(fileInput);
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = input.read(buffer)) > 0) {
+                output.write(buffer, 0, length);
+            }
+            output.flush();
+            responseCode = connection.getResponseCode();
+            PreyLogger.d("uploadLog responseCode:" + responseCode + " responseMessage:" + connection.getResponseMessage());
+        } catch (Exception e) {
+            PreyLogger.e("error uploadLog:" + e.getMessage(), e);
+            responseCode = 0;
+        } finally {
+            try { if (input != null) input.close(); } catch (IOException ignored) {}
+            try { if (fileInput != null) fileInput.close(); } catch (IOException ignored) {}
+            try { if (output != null) output.close(); } catch (IOException ignored) {}
+            if (connection != null) connection.disconnect();
+        }
+        return responseCode;
+    }
+
     /**
      * Method check if you have internet
      *
