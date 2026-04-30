@@ -166,6 +166,20 @@ public class PreyRestHttpClient {
         return response;
     }
 
+    public PreyHttpResponse jsonMethodAutenticationOnce(String url, String method, JSONObject jsonParam, int timeoutMs) {
+        PreyHttpResponse response = null;
+        try {
+            PreyLogger.d(String.format("Sending (once, %dms) using %s - URI:%s - parameters:%s", timeoutMs, method, url, (jsonParam == null ? "" : jsonParam.toString())));
+            response = UtilConnection.connectionJsonAuthorizationOnce(PreyConfig.getPreyConfig(ctx), url, method, jsonParam, timeoutMs);
+            if (response != null) {
+                PreyLogger.d(String.format("Response from server:%s", response.toString()));
+            }
+        } catch (Exception e) {
+            PreyLogger.e(String.format("jsonMethodAutenticationOnce:%s error:%s", method, e.getMessage()), e);
+        }
+        return response;
+    }
+
     public int uploadFile(Context ctx,String url, File file,long total) {
         return UtilConnection.uploadFile(PreyConfig.getPreyConfig(ctx), url, file,total);
     }

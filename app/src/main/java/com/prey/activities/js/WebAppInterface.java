@@ -927,6 +927,9 @@ public class WebAppInterface {
                 json.put("code", preyName.getCode());
                 json.put("error", preyName.getError());
                 json.put("name", preyName.getName());
+                if (preyName.getCode() != HttpURLConnection.HTTP_OK) {
+                    showRenameErrorAlert();
+                }
             }
             out = json.toString();
             PreyLogger.d(String.format("rename out:%s", out));
@@ -934,6 +937,26 @@ public class WebAppInterface {
             PreyLogger.e(String.format("rename error:%s", e.getMessage()), e);
         }
         return out;
+    }
+
+    private void showRenameErrorAlert() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+                    alertDialog.setTitle(R.string.error_title);
+                    alertDialog.setMessage("Error renaming device");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    alertDialog.show();
+                } catch (Exception e) {
+                    PreyLogger.e(String.format("showRenameErrorAlert error:%s", e.getMessage()), e);
+                }
+            }
+        });
     }
 
     @JavascriptInterface
