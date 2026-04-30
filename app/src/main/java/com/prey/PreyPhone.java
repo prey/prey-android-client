@@ -54,9 +54,14 @@ public class PreyPhone {
     public static String TAG = "memory";
 
     private void init() {
+        // WiFi-related state is intentionally NOT populated here. Half of the
+        // call sites (PreyConfig.getAndroidDeviceIdFromPreyPhone, sendPreyHttpData,
+        // PrivateIp, PreyTelephonyManager) only consume hardware/IP/telephony,
+        // and updateListWifi() / updateWifi() were forcing wifiMgr.getScanResults()
+        // for them. That call gets attributed to our UID by the BatteryStats
+        // service, inflating the WifiScanTime metric the OEM (and end users)
+        // see in the battery breakdown. Defer to first access on the getters.
         updateHardware();
-        updateListWifi();
-        updateWifi();
         update3g();
     }
 
@@ -264,11 +269,17 @@ public class PreyPhone {
     }
 
     public List<Wifi> getListWifi() {
+        if (listWifi == null) {
+            updateListWifi();
+        }
         return listWifi;
     }
 
 
     public Wifi getWifi() {
+        if (wifi == null) {
+            updateWifi();
+        }
         return wifi;
     }
 
