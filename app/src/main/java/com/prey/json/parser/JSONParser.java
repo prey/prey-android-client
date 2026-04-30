@@ -37,7 +37,17 @@ public class JSONParser {
         String json=null;
         try{
             PreyHttpResponse response=PreyRestHttpClient.getInstance(ctx).get(uri,null);
-            try{sb=response.getResponseAsString();}catch(Exception e){PreyLogger.e("Error:"+e.getMessage(),e);}
+            // Response is null whenever the underlying HTTP call exhausted its
+            // retries (transient I/O, 5xx, no internet). Treat that as "no
+            // instructions to run" instead of NPE-ing into the catch below —
+            // the stack trace that produced was pure noise in production logs.
+            if (response != null) {
+                try {
+                    sb = response.getResponseAsString();
+                } catch (Exception e) {
+                    PreyLogger.e("Error:" + e.getMessage(), e);
+                }
+            }
             if (sb!=null)
                 json = sb.trim();
         }catch(Exception e){

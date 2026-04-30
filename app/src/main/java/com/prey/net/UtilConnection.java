@@ -22,6 +22,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -32,6 +33,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -137,6 +140,7 @@ public class UtilConnection {
                     delay=true;
                     retry++;
                 }else{
+                    try {
                     if (uri.indexOf("https:") >= 0) {
                         connection = (HttpsURLConnection) url.openConnection();
                     } else {
@@ -276,6 +280,23 @@ public class UtilConnection {
                         PreyLogger.d("Failed retry " + retry + "/" + RETRIES);
                     }
                     delay = true;
+                    } catch (IOException ioe) {
+                        // The pre-existing retry loop only re-armed itself for HTTP
+                        // status codes. Transient TCP failures (stale keep-alive
+                        // connections, momentary RST, read timeouts) used to escape
+                        // straight to the outer catch and never retried, even though
+                        // the server would have happily served the next attempt.
+                        // Route them through the same retry counter as HTTP errors.
+                        if (!isTransientIOException(ioe)) {
+                            throw ioe;
+                        }
+                        PreyLogger.d("Transient I/O on " + uri
+                                + " (retry " + (retry + 1) + "/" + RETRIES + "): "
+                                + ioe.getMessage());
+                        safeDisconnect(connection);
+                        retry++;
+                        delay = true;
+                    }
                 }
 
             } while (retry < RETRIES);
@@ -285,6 +306,42 @@ public class UtilConnection {
         }
 
         return response;
+    }
+
+    /**
+     * True for I/O failures that are typically resolved by retrying:
+     *  - {@link EOFException}: the server closed a pooled keep-alive connection
+     *    after our request was already in flight. AOSP's bundled okhttp surfaces
+     *    this as "unexpected end of stream".
+     *  - {@link SocketException}: connection reset, broken pipe, ECONNREFUSED
+     *    on a momentarily unreachable peer.
+     *  - {@link SocketTimeoutException}: read timeout under transient congestion.
+     *  - Any IOException whose message matches the known stale-connection
+     *    string from the bundled okhttp ("unexpected end of stream").
+     * Other IOExceptions (e.g. SSL handshake failures, malformed responses)
+     * propagate so the caller can decide.
+     */
+    static boolean isTransientIOException(IOException ioe) {
+        if (ioe == null) return false;
+        if (ioe instanceof EOFException) return true;
+        if (ioe instanceof SocketException) return true;
+        if (ioe instanceof SocketTimeoutException) return true;
+        String msg = ioe.getMessage();
+        if (msg != null && msg.contains("unexpected end of stream")) return true;
+        Throwable cause = ioe.getCause();
+        if (cause instanceof IOException && cause != ioe) {
+            return isTransientIOException((IOException) cause);
+        }
+        return false;
+    }
+
+    private static void safeDisconnect(HttpURLConnection connection) {
+        if (connection == null) return;
+        try {
+            connection.disconnect();
+        } catch (Exception ignored) {
+            // Disconnect is best-effort during error recovery.
+        }
     }
 
     public static boolean pageOffline(String uri){
