@@ -91,4 +91,21 @@ public class PopUpAlertActivity extends PreyActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        // Each unregister is wrapped independently: the matching registerReceiver
+        // calls in onCreate are guarded with their own try/catch, so one may have
+        // succeeded while the other failed. Sharing a try would let the first
+        // failure short-circuit the second unregister and leak that receiver.
+        try {
+            unregisterReceiver(close_prey_receiver);
+        } catch (IllegalArgumentException ignored) {
+        }
+        try {
+            unregisterReceiver(popup_prey_receiver);
+        } catch (IllegalArgumentException ignored) {
+        }
+        super.onDestroy();
+    }
+
 }
