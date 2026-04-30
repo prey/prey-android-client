@@ -54,10 +54,12 @@ public class PreyUtils {
         } catch (Exception e) {
             PreyLogger.e("Error:"+e.getMessage(),e);
         }
-        try{
-            name= Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_name");
-        }catch (Exception e) {
-            PreyLogger.e("Error:"+e.getMessage(),e);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            try {
+                name = Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_name");
+            } catch (Exception e) {
+                PreyLogger.e("Error:" + e.getMessage(), e);
+            }
         }
         if (name != null && !"".equals(name)) {
             newName = name;

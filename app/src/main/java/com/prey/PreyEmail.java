@@ -61,7 +61,7 @@ public class PreyEmail {
             if (account != null) {
                 return account.name;
             }else{
-                PreyLogger.d("account nulo");
+                PreyLogger.d("Empty account");
             }
         }else{
             PreyLogger.d("sdk menor");

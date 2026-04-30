@@ -75,23 +75,51 @@ public class PreyLogger {
     }
 
     public static void d(String message) {
+        String tagged = withCallerTag(message);
         if (PreyConfig.LOG_DEBUG_ENABLED) {
-            Log.d(PreyConfig.TAG, message);
+            Log.d(PreyConfig.TAG, tagged);
         }
-        enqueue("D", message, null);
+        enqueue("D", tagged, null);
     }
 
     public static void i(String message) {
-        Log.i(PreyConfig.TAG, message);
-        enqueue("I", message, null);
+        String tagged = withCallerTag(message);
+        Log.i(PreyConfig.TAG, tagged);
+        enqueue("I", tagged, null);
     }
 
     public static void e(final String message, Throwable e) {
+        String tagged = withCallerTag(message);
         if (e != null)
-            Log.e(PreyConfig.TAG, message, e);
+            Log.e(PreyConfig.TAG, tagged, e);
         else
-            Log.e(PreyConfig.TAG, message);
-        enqueue("E", message, e);
+            Log.e(PreyConfig.TAG, tagged);
+        enqueue("E", tagged, e);
+    }
+
+    private static String withCallerTag(String message) {
+        String caller = callerMethodName();
+        if (caller == null) return message == null ? "" : message;
+        return "[" + caller + "] " + (message == null ? "" : message);
+    }
+
+    /**
+     * Walks the current thread's stack and returns the method name of the
+     * first frame outside PreyLogger — i.e. the function that invoked d/i/e.
+     */
+    private static String callerMethodName() {
+        try {
+            StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+            String selfClass = PreyLogger.class.getName();
+            for (StackTraceElement frame : stack) {
+                String cls = frame.getClassName();
+                if (cls.equals("java.lang.Thread")) continue;
+                if (cls.equals(selfClass)) continue;
+                return frame.getMethodName();
+            }
+        } catch (Throwable ignored) {
+        }
+        return null;
     }
 
     /**
