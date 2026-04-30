@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Created by Carlos Yaconi
+ * Created by Orlando Aliaga
  * Copyright 2015 Prey Inc. All rights reserved.
  * License: GPLv3
  * Full license at "/LICENSE"
@@ -11,22 +11,22 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.prey.PreyConfig;
-import com.prey.actions.ActionsRunnner;
+import com.prey.PreyLogger;
+import com.prey.actions.ActionsRunner;
 import com.prey.actions.observer.ActionsController;
 
 /**
  * This class wraps Prey execution as a services, allowing the OS to kill it and
  * starting it again in case of low resources. This way we ensure Prey will be
  * running until explicity stop it.
+ *
+ * @author Carlos Yaconi H.
+ *
  */
 public class PreyRunnerService extends Service {
 
     private final IBinder mBinder = new LocalBinder();
     public static boolean running = false;
-    public static long startedAt = 0;
-    public static long interval = 0;
-    public static long pausedAt = 0;
 
     /**
      * Class for clients to access. Because we know this service always runs in
@@ -40,15 +40,27 @@ public class PreyRunnerService extends Service {
 
     @Override
     public void onCreate() {
-        ActionsRunnner exec = new ActionsRunnner();
+        super.onCreate();
+    }
+
+    @Override
+    public void onStart(Intent intent, int startId) {
+        super.onStart(intent, startId);
+        String cmd=null;
+        try{
+            if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey("cmd")) {
+                cmd = intent.getExtras().getString("cmd");
+            }
+        }catch(Exception e){
+            PreyLogger.e("Error:"+e.getMessage(),e);
+        }
+        PreyLogger.d("PreyRunnerService has been started...:"+cmd);
         running = true;
-        startedAt = System.currentTimeMillis();
-        exec.run(PreyRunnerService.this);
+        new Thread(new ActionsRunner(PreyRunnerService.this, cmd)).start();
     }
 
     @Override
     public void onDestroy() {
-        PreyConfig preyConfig = PreyConfig.getPreyConfig(PreyRunnerService.this);
         ActionsController.getInstance(PreyRunnerService.this).finishRunningJosb();
         running = false;
     }

@@ -13,7 +13,7 @@ import com.google.android.gms.gcm.GcmListenerService;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.beta.actions.PreyBetaController;
+import com.prey.actions.PreyController;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -49,7 +49,7 @@ public class PreyGcmListenerService extends GcmListenerService {
     private void handleMessageBeta(Context context, String body, String version, String cmd) {
         PreyLogger.d("Push notification received, waking up Prey right now!");
         PreyLogger.d("Push message received " + body + " version:" + version);
-        PreyBetaController.startPrey(context, cmd);
+        PreyController.startPrey(context, cmd);
     }
 
 }

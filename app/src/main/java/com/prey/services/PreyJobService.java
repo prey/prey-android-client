@@ -19,7 +19,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyScheduled;
 import com.prey.PreyUtils;
-import com.prey.beta.actions.PreyBetaActionsRunner;
+import com.prey.actions.ActionsRunner;
 
 @TargetApi(21)
 public class PreyJobService extends JobService {
@@ -51,7 +51,7 @@ public class PreyJobService extends JobService {
             if (resulCode == JobScheduler.RESULT_SUCCESS) {
                 PreyLogger.d("SCHEDULE resulCode success["+minutes+"]");
                 try {
-                    PreyBetaActionsRunner.getInstructionsNewThread(ctx, null,false);
+                    ActionsRunner.getInstructionsNewThread(ctx, null,false);
                 } catch (Exception e){
                 }
             } else {
@@ -72,7 +72,7 @@ public class PreyJobService extends JobService {
     public boolean onStartJob(final JobParameters jobParameters) {
         PreyLogger.d("SCHEDULE onStartJob");
         try {
-            PreyBetaActionsRunner.getInstructionsNewThread(getApplicationContext(), null,false);
+            ActionsRunner.getInstructionsNewThread(getApplicationContext(), null,false);
         } catch (Exception e){
             PreyLogger.e("Error:"+e.getMessage(),e);
         }

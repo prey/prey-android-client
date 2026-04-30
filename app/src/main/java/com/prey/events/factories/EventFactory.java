@@ -42,7 +42,7 @@ import com.prey.actions.location.LocationUtil;
 import com.prey.actions.location.PreyLocation;
 import com.prey.actions.triggers.BatteryTriggerReceiver;
 import com.prey.actions.triggers.SimTriggerReceiver;
-import com.prey.beta.actions.PreyBetaController;
+import com.prey.actions.PreyController;
 import com.prey.events.Event;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.UtilConnection;
@@ -126,7 +126,7 @@ public class EventFactory {
                 if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
                     PreyLogger.d("getEvent wifiState connected");
                     info.put("connected", "wifi");
-                    PreyBetaController.startPrey(ctx);
+                    PreyController.startPrey(ctx);
                 }
                 if (wifiState == WifiManager.WIFI_STATE_DISABLED) {
                     PreyLogger.d("getEvent mobile connected");
@@ -159,7 +159,7 @@ public class EventFactory {
                     }
                 }
                 if (connected) {
-                    PreyBetaController.startPrey(ctx);
+                    PreyController.startPrey(ctx);
                 }
             }
         }
@@ -167,7 +167,7 @@ public class EventFactory {
             PreyLogger.d("EventFactory USER_PRESENT");
             int minuteScheduled = PreyConfig.getPreyConfig(ctx).getMinuteScheduled();
             if (minuteScheduled > 0) {
-                PreyBetaController.startPrey(ctx, null);
+                PreyController.startPrey(ctx, null);
             }
             return null;
         }

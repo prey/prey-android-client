@@ -21,7 +21,7 @@ import android.os.Build;
 import com.prey.FileConfigReader;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.beta.actions.PreyBetaController;
+import com.prey.actions.PreyController;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 
@@ -62,7 +62,7 @@ public class C2DMReceiver extends BroadcastReceiver {
         } catch(Exception e){
             PreyLogger.e("Error:"+e.getMessage(),e);
         }
-        PreyBetaController.startPrey(context,cmd);
+        PreyController.startPrey(context,cmd);
     }
 
     private void handleRegistration(Context context, Intent intent) {
@@ -101,7 +101,7 @@ public class C2DMReceiver extends BroadcastReceiver {
                     PreyLogger.d("response:"+response.toString());
                 }
                 PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
-                PreyBetaController.startPrey(ctx);
+                PreyController.startPrey(ctx);
             } catch (Exception e) {
                 PreyLogger.e("Failed registering to CD2M: " + e.getLocalizedMessage(), e);
             }

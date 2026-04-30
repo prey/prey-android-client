@@ -25,7 +25,7 @@ import com.prey.actions.report.ReportScheduled;
 import com.prey.actions.report.ReportService;
 import com.prey.actions.triggers.TriggerController;
 import com.prey.activities.LoginActivity;
-import com.prey.beta.actions.PreyBetaController;
+import com.prey.actions.PreyController;
 import com.prey.events.factories.EventFactory;
 import com.prey.events.receivers.EventReceiver;
 import com.prey.net.PreyWebServices;
@@ -69,7 +69,7 @@ public class PreyApp extends Application {
         } catch (Exception e) {
             PreyLogger.e(String.format("Error FirebaseApp: %s", e.getMessage()), e);
         }
-        PreyBetaController.startPrey(getApplicationContext());
+        PreyController.startPrey(getApplicationContext());
     }
 
     public void run(final Context ctx) {
