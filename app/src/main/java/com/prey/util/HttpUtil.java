@@ -31,7 +31,7 @@ public class HttpUtil {
             in = conn.getInputStream();
             contents = convertStreamToString(in);
         } catch (Exception e) {
-            PreyLogger.e("getContents error:"+e.getMessage(),e);
+            PreyLogger.e("error:"+e.getMessage(),e);
         } finally {
             if(in!=null){
                 try {

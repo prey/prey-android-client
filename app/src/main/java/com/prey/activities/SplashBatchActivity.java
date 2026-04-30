@@ -32,20 +32,20 @@ public class SplashBatchActivity extends FragmentActivity {
 
     @Override
     public void onResume() {
-        PreyLogger.d("onResume of SplashBatchActivity");
+   
         super.onResume();
         new SplashBatchActivity.TokenBatchTask().execute();
     }
 
     @Override
     public void onPause() {
-        PreyLogger.d("onPause of SplashBatchActivity");
+   
         super.onPause();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        PreyLogger.d("onCreate of SplashBatchActivity");
+   
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

@@ -54,7 +54,7 @@ public class PreyRunnerService extends Service {
         }catch(Exception e){
             PreyLogger.e("Error:"+e.getMessage(),e);
         }
-        PreyLogger.d("PreyRunnerService has been started...:"+cmd);
+        PreyLogger.d("has been started...:"+cmd);
         running = true;
         new Thread(new ActionsRunner(PreyRunnerService.this, cmd)).start();
     }

@@ -103,7 +103,7 @@ public class Alert extends JsonAction {
                 new AlertThread(ctx, alert, messageId,jobId,fullscreen_notification).start();
             }
         } catch (Exception e) {
-            PreyLogger.e(String.format("Error, causa:%s" , e.getMessage()), e);
+            PreyLogger.e(String.format("Error, cause:%s" , e.getMessage()), e);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "alert", "failed", e.getMessage()));
         }
     }

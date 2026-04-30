@@ -32,7 +32,7 @@ public class JSONParser {
     }
 
     public List<JSONObject> getJSONFromUrl(Context ctx, String uri) {
-        PreyLogger.d("getJSONFromUrl:" + uri);
+        PreyLogger.d("uri:" + uri);
         String sb=null;
         String json=null;
         try{
@@ -140,7 +140,7 @@ public class JSONParser {
                 jObj = new JSONObject(command);
                 listaJson.add(jObj);
             } catch (JSONException e) {
-                PreyLogger.e("JSON Parser, Error parsing data " + e.toString(), e);
+                PreyLogger.e("Error parsing data " + e.toString(), e);
             }
         }
         PreyLogger.d("json:" + json);

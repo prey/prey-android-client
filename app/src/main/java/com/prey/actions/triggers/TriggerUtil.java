@@ -70,10 +70,10 @@ public class TriggerUtil {
                 String fechaSt = sdf_d.format(now);
                 int fecha = Integer.parseInt(fechaSt);
                 if (fecha > until) {
-                    PreyLogger.d("fecha>until");
+                    PreyLogger.d("date>until");
                     return false;
                 } else {
-                    PreyLogger.d("fecha<=until");
+                    PreyLogger.d("date<=until");
                 }
             } catch (Exception e) {
                 PreyLogger.e("Error:"+e.getMessage(),e);

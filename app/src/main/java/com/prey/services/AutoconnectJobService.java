@@ -47,7 +47,7 @@ public class AutoconnectJobService extends JobService {
 
     @Override
     public boolean onStartJob(final JobParameters jobParameters) {
-        PreyLogger.d("AUTO onStartJob");
+        PreyLogger.d("AUTO");
         new Thread(new Runnable() {
             public void run() {
                 new AutoConnectService().run(getApplicationContext());
@@ -60,7 +60,7 @@ public class AutoconnectJobService extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
-        PreyLogger.d("AUTO onStopJob");
+        PreyLogger.d("AUTO");
         jobFinished(jobParameters, false);
         return false;
     }

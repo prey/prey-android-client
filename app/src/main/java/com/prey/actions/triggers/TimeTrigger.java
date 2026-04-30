@@ -35,13 +35,13 @@ public class TimeTrigger {
 
     public static void updateTrigger(Context ctx, TriggerDto trigger) throws TriggerException{
         String triggerName = trigger.getName();
-        PreyLogger.d("TimeTrigger triggerName:" + triggerName + " id:" + trigger.id);
+        PreyLogger.d("triggerName:" + triggerName + " id:" + trigger.id);
         List<TriggerEventDto> listEvents = TriggerParse.TriggerEvents(trigger.getEvents());
         Date now = new Date();
-        PreyLogger.d("TimeTrigger now:" + EXACT_TIME_FORMAT_SDF.format(now));
+        PreyLogger.d("now:" + EXACT_TIME_FORMAT_SDF.format(now));
         for (int j = 0; listEvents != null && j < listEvents.size(); j++) {
             TriggerEventDto event = listEvents.get(j);
-            PreyLogger.d("TimeTrigger event.type:" + event.type + " ");
+            PreyLogger.d("event.type:" + event.type + " ");
             if(REPEAT_RANGE_TIME.equals(event.type)){
                 try {
                     JSONObject json = new JSONObject(event.info);
@@ -147,9 +147,9 @@ public class TimeTrigger {
                         int intUntil=Integer.parseInt(dateUntilSt);
                         int intNow=Integer.parseInt(dateNowSt);
                         int intFrom=Integer.parseInt(dateFromSt);
-                        PreyLogger.d("Trigger TimeTrigger intUntil:"+intUntil);
-                        PreyLogger.d("Trigger TimeTrigger intNow:"+intNow);
-                        PreyLogger.d("Trigger TimeTrigger intFrom:"+intFrom);
+                        PreyLogger.d("intUntil:"+intUntil);
+                        PreyLogger.d("intNow:"+intNow);
+                        PreyLogger.d("intFrom:"+intFrom);
                         if(intNow>intUntil) {
                             throw new TriggerException(4,"The execution range dates doesn't make sense");
                         }
@@ -171,31 +171,31 @@ public class TimeTrigger {
                     JSONObject json = new JSONObject(event.info);
                     String dateTime = null;
                     dateTime = json.getString("date");
-                    PreyLogger.d("TimeTrigger dateTime:" + dateTime);
+                    PreyLogger.d("dateTime:" + dateTime);
                     Date date = EXACT_TIME_FORMAT_SDF.parse(dateTime);
                     if(now.getTime()<=date.getTime()) {
-                        PreyLogger.d("TimeTrigger format:" + EXACT_TIME_FORMAT_SDF.format(date));
+                        PreyLogger.d("format:" + EXACT_TIME_FORMAT_SDF.format(date));
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTimeInMillis(date.getTime());
-                        PreyLogger.d("TimeTrigger format:" + EXACT_TIME_FORMAT_SDF.format(calendar.getTime()));
+                        PreyLogger.d("format:" + EXACT_TIME_FORMAT_SDF.format(calendar.getTime()));
                         Intent intent = new Intent(ctx, TimeTriggerReceiver.class);
                         intent.putExtra("trigger_id", "" + trigger.id);
                         PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, (trigger.id + ADD_TRIGGER_ID), intent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
                         AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(ctx.ALARM_SERVICE);
                         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
-                            PreyLogger.d("TimeTrigger----------set");
+                            PreyLogger.d("----------set");
                             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                         } else {
                             if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
-                                PreyLogger.d("TimeTrigger----------setExact");
+                                PreyLogger.d("----------setExact");
                                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                             } else {
-                                PreyLogger.d("TimeTrigger----------setExactAndAllowWhileIdle");
+                                PreyLogger.d("----------setExactAndAllowWhileIdle");
                                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                             }
                         }
                     }else{
-                        PreyLogger.d("Trigger TimeTrigger----------Date is less ");
+                        PreyLogger.d("----------Date is less ");
                         throw new TriggerException(3,"Expired trigger");
                     }
                 } catch (TriggerException te) {
@@ -225,17 +225,17 @@ public class TimeTrigger {
                         String dateNowSt= REPEAT_TIME_FORMAT_SDF.format(now);
                         int intUntil=Integer.parseInt(dateUntilSt);
                         int intNow=Integer.parseInt(dateNowSt);
-                        PreyLogger.d("Trigger TimeTrigger intUntil:"+intUntil);
-                        PreyLogger.d("Trigger TimeTrigger intNow:"+intNow);
+                        PreyLogger.d("intUntil:"+intUntil);
+                        PreyLogger.d("intNow:"+intNow);
                         if(dateUntil!=null&&intNow>intUntil) {
-                            PreyLogger.d("Trigger TimeTrigger The execution range dat");
+                            PreyLogger.d("The execution range dat");
                             throw new TriggerException(4,"The execution range dates doesn't make sense");
                         }
                     }
                     String hourSt = json.getString("hour");
                     String minuteSt = json.getString("minute");
                     String secondSt = json.getString("second");
-                    PreyLogger.d("Trigger TimeTrigger hour:" + hourSt + " minute:" + minuteSt + " second:" + secondSt+" until:"+until);
+                    PreyLogger.d("hour:" + hourSt + " minute:" + minuteSt + " second:" + secondSt+" until:"+until);
                     int hour =0;
                     try{hour=Integer.parseInt(hourSt);}catch (Exception e){
                         PreyLogger.e("Error:"+e.getMessage(),e);
@@ -262,7 +262,7 @@ public class TimeTrigger {
                         calender.set(Calendar.MINUTE, minute);
                         calender.set(Calendar.SECOND, 0);
                         calender.set(Calendar.MILLISECOND, 0);
-                        PreyLogger.d("Trigger TimeTrigger array DAY_OF_WEEK:" + day);
+                        PreyLogger.d("array DAY_OF_WEEK:" + day);
                         calender.set(Calendar.DAY_OF_WEEK, day);
                         Intent intent = new Intent(ctx, TimeTriggerReceiver.class);
                         intent.putExtra("trigger_id", "" + trigger.id);

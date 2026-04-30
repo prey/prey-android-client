@@ -16,7 +16,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        PreyLogger.d("FIREBASE onMessageReceived" );
+        PreyLogger.d("FIREBASE" );
         if (remoteMessage.getData().size() > 0) {
             final String text= remoteMessage.getData().toString();
             PreyLogger.d("FIREBASE data:"+text);

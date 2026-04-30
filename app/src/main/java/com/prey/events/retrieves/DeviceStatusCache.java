@@ -26,7 +26,7 @@ public class DeviceStatusCache {
             lastUpdatedAt = System.currentTimeMillis();
             return fresh;
         } catch (Throwable t) {
-            PreyLogger.e("DeviceStatusCache build error, returning cache: " + t.getMessage(), t);
+            PreyLogger.e("build error, returning cache: " + t.getMessage(), t);
             return lastJson;
         }
     }

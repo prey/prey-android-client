@@ -54,7 +54,7 @@ public class LocationService extends Service {
 
     @Override
     public void onCreate() {
-        PreyLogger.d("LocationService is going to be started...");
+        PreyLogger.d("is going to be started...");
         try {
             androidLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
@@ -86,12 +86,12 @@ public class LocationService extends Service {
                     PreyLogger.d("Fused Location provider has been started.");
                 }
             } else {
-                PreyLogger.d("___________ask for permission LocationService ACCESS_FINE_LOCATION");
+                PreyLogger.d("ask for permission ACCESS_FINE_LOCATION");
             }
         }catch (Exception e){
-            PreyLogger.e("Error LocationService.onCreate"+e.getMessage(),e);
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
-        PreyLogger.d("LocationService has been started...");
+        PreyLogger.d("has been started...");
     }
 
     @Override
@@ -144,18 +144,18 @@ public class LocationService extends Service {
                 statusAsString = "Out of service";
             else if (status == LocationProvider.TEMPORARILY_UNAVAILABLE)
                 statusAsString = "Temporarily Unavailable";
-            PreyLogger.d("[LocationService] GPS Location provider status has changed: [" + statusAsString + "].");
+            PreyLogger.d("GPS Location provider status has changed: [" + statusAsString + "].");
 
         }
 
         public void onProviderEnabled(String provider) {
-            PreyLogger.d("[LocationService] GPS Location Provider has been enabled: " + provider);
+            PreyLogger.d("GPS Location Provider has been enabled: " + provider);
             //androidLocationManager.removeUpdates(gpsLocationListener);
             //androidLocationManager.requestLocationUpdates(provider, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_INTERVAL, PreyConfig.LOCATION_PROVIDERS_MIN_REFRESH_DISTANCE, gpsLocationListener);
         }
 
         public void onProviderDisabled(String provider) {
-            PreyLogger.d("[LocationService] GPS Location Provider has been disabled: " + provider);
+            PreyLogger.d("GPS Location Provider has been disabled: " + provider);
         }
 
         public void onLocationChanged(Location location) {
@@ -171,15 +171,15 @@ public class LocationService extends Service {
                 statusAsString = "Out of service";
             else if (status == LocationProvider.TEMPORARILY_UNAVAILABLE)
                 statusAsString = "Temporarily Unavailable";
-            PreyLogger.d("[LocationService] Network Location provider status has changed: [" + statusAsString + "].");
+            PreyLogger.d("Network Location provider status has changed: [" + statusAsString + "].");
         }
 
         public void onProviderEnabled(String provider) {
-            PreyLogger.d("[LocationService] Network Location Provider has been enabled: " + provider);
+            PreyLogger.d("Network Location Provider has been enabled: " + provider);
         }
 
         public void onProviderDisabled(String provider) {
-            PreyLogger.d("[LocationService] Network Location Provider has been disabled: " + provider);
+            PreyLogger.d("Network Location Provider has been disabled: " + provider);
         }
 
         public void onLocationChanged(Location location) {
@@ -195,15 +195,15 @@ public class LocationService extends Service {
                 statusAsString = "Out of service";
             else if (status == LocationProvider.TEMPORARILY_UNAVAILABLE)
                 statusAsString = "Temporarily Unavailable";
-            PreyLogger.d(String.format("[LocationService] Network Location provider status has changed: [%s].", statusAsString));
+            PreyLogger.d(String.format("Network Location provider status has changed: [%s].", statusAsString));
         }
 
         public void onProviderEnabled(String provider) {
-            PreyLogger.d(String.format("[LocationService] Passive Location Provider has been enabled: %s", provider));
+            PreyLogger.d(String.format("Passive Location Provider has been enabled: %s", provider));
         }
 
         public void onProviderDisabled(String provider) {
-            PreyLogger.d(String.format("[LocationService] Passive Location Provider has been disabled: %s", provider));
+            PreyLogger.d(String.format("Passive Location Provider has been disabled: %s", provider));
         }
 
         public void onLocationChanged(Location location) {
@@ -220,15 +220,15 @@ public class LocationService extends Service {
                 statusAsString = "Out of service";
             else if (status == LocationProvider.TEMPORARILY_UNAVAILABLE)
                 statusAsString = "Temporarily Unavailable";
-            PreyLogger.d(String.format("[LocationService] Network Location provider status has changed: [%s].", statusAsString));
+            PreyLogger.d(String.format("Network Location provider status has changed: [%s].", statusAsString));
         }
 
         public void onProviderEnabled(String provider) {
-            PreyLogger.d(String.format("[LocationService] Fused Location Provider has been enabled: %s", provider));
+            PreyLogger.d(String.format("Fused Location Provider has been enabled: %s", provider));
         }
 
         public void onProviderDisabled(String provider) {
-            PreyLogger.d(String.format("[LocationService] Fused Location Provider has been disabled: %s", provider));
+            PreyLogger.d(String.format("Fused Location Provider has been disabled: %s", provider));
         }
 
         public void onLocationChanged(Location location) {

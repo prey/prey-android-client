@@ -27,7 +27,7 @@ public class PrivateIp extends JsonAction {
     }
 
     public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("Ejecuting PrivateIp Data.");
+        PreyLogger.d("Executing.");
         List<HttpDataService> listResult = super.get(ctx, list, parameters);
         return listResult;
     }

@@ -28,7 +28,7 @@ public class ChromeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PreyLogger.d("ChromeActivity: onCreate");
+   
         try {
             getSupportActionBar().hide();
         }catch (Exception e){
@@ -40,7 +40,7 @@ public class ChromeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        PreyLogger.d("ChromeActivity: onResume");
+   
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
@@ -62,7 +62,7 @@ public class ChromeActivity extends AppCompatActivity {
 
     protected void onDestroy() {
         super.onDestroy();
-        PreyLogger.d("ChromeActivity: onDestroy");
+   
     }
 
 }

@@ -30,7 +30,7 @@ import java.util.List;
 public class Detach {
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.i("Detach");
+        PreyLogger.i("");
         boolean expired=false;
         try {
             expired = UtilJson.getBoolean(parameters, "expired");
@@ -39,7 +39,7 @@ public class Detach {
         }
         if(expired) {
             PreyConfig.getPreyConfig(ctx).setInstallationStatus("DEL");
-            PreyLogger.d(String.format("Detach expired:%b" , expired));
+            PreyLogger.d(String.format("expired:%b" , expired));
             Detach.detachDevice(ctx,true,false,false,expired);
         }else {
             Detach.detachDevice(ctx);
@@ -51,7 +51,7 @@ public class Detach {
     }
 
     public static String detachDevice(Context ctx,boolean openApplication,boolean removePermissions,boolean removeCache,boolean expired){
-        PreyLogger.d("detachDevice");
+        
         String error=null;
         try {
             PreyConfig.getPreyConfig(ctx).unregisterC2dm(false);

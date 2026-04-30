@@ -19,7 +19,7 @@ import java.util.List;
 public class Triggers {
 
     public void start(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("starting Triggers");
+        PreyLogger.d("Triggers");
         try {
             //Wait before executing.
             Thread.sleep(2000);
@@ -30,7 +30,7 @@ public class Triggers {
     }
 
     public void stop(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("stop Triggers");
+        PreyLogger.d("Triggers");
         TriggerController.getInstance().run(ctx);
     }
 }

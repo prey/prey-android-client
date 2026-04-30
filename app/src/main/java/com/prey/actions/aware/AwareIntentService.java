@@ -30,10 +30,10 @@ public class AwareIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        PreyLogger.d("AWARE AwareIntentService");
+        PreyLogger.d("AWARE");
         GeofencingEvent event = GeofencingEvent.fromIntent(intent);
         if (event != null) {
-            PreyLogger.d("AWARE AwareIntentService event:"+(event.getGeofenceTransition()== Geofence.GEOFENCE_TRANSITION_ENTER?"GEOFENCING_IN":"GEOFENCING_OUT"));
+            PreyLogger.d("AWARE event:"+(event.getGeofenceTransition()== Geofence.GEOFENCE_TRANSITION_ENTER?"GEOFENCING_IN":"GEOFENCING_OUT"));
             if (event.hasError()) {
                 onError(event.getErrorCode());
             } else {
@@ -54,12 +54,12 @@ public class AwareIntentService extends IntentService {
             }
         }
         if(GeofenceController.GEOFENCING_OUT.equals(transition)) {
-            PreyLogger.d("AWARE notifyGeofenceTransition transition:"+transition);
+            PreyLogger.d("AWARE transition:"+transition);
             try {
                 AwareController.sendAware(context,new PreyLocation(location));
                 AwareController.getInstance().run(context);
             } catch (Exception e) {
-                PreyLogger.e("AWARE notifyGeofenceTransition error:" + e.getMessage(), e);
+                PreyLogger.e("AWARE error:" + e.getMessage(), e);
             }
         }
     }

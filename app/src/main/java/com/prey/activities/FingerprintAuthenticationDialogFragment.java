@@ -104,7 +104,7 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
     @Override
     public void onPause() {
         super.onPause();
-        PreyLogger.d("onPause");
+   
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if(mFingerprintUiHelper!=null) {
                 mFingerprintUiHelper.cancel();
@@ -115,7 +115,7 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
 
     @Override
     public void authenticationFailed(String error) {
-        PreyLogger.d("authenticationFailed");
+   
         if(mFingerprintUiHelper!=null) {
             Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_SHORT).show();
         }
@@ -123,7 +123,7 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
 
     @Override
     public void authenticationSuccess(FingerprintManager.AuthenticationResult result) {
-        PreyLogger.d("authenticationSuccess");
+   
         boolean prefsBiometric=PreyConfig.getPreyConfig(getActivity()).getPrefsBiometric();
         if(prefsBiometric) {
             PreyConfig.getPreyConfig(getActivity()).setTimePasswordOk();
@@ -164,7 +164,7 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
     }
 
     private void updateStage() {
-        PreyLogger.d("updateStage:"+(mStage==Stage.FINGERPRINT?"FINGERPRINT":"PASSWORD"));
+        PreyLogger.d(""+(mStage==Stage.FINGERPRINT?"FINGERPRINT":"PASSWORD"));
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         switch (mStage) {

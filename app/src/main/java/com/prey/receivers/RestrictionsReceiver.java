@@ -37,13 +37,13 @@ public class RestrictionsReceiver extends BroadcastReceiver {
             // Check if application restrictions are not null
             if (applicationRestrictions != null) {
                 // Log the application restrictions
-                PreyLogger.d(String.format("RestrictionsReceiver restrictions applied: %s", applicationRestrictions.toString()));
+                PreyLogger.d(String.format("restrictions applied: %s", applicationRestrictions.toString()));
                 // Persist managed config values, but defer setup registration until the
                 // explicit setup flow launches SplashMdmActivity.
                 saveRestrictionValues(context, applicationRestrictions);
             } else {
                 // Log if no application restrictions are found
-                PreyLogger.d("RestrictionsReceiver no restrictions found");
+                PreyLogger.d("no restrictions found");
             }
         }
     }
@@ -61,7 +61,7 @@ public class RestrictionsReceiver extends BroadcastReceiver {
         }
         PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
 
-        PreyLogger.d(String.format("saveRestrictionValues restrictions: %s", restrictions.toString()));
+        PreyLogger.d(String.format("restrictions: %s", restrictions.toString()));
         saveStringRestriction(restrictions, "enterprise_name", value -> preyConfig.setMdmOrganizationId(value));
         saveStringRestriction(restrictions, "serial_number", value -> preyConfig.setMdmSerialNumber(value));
         saveStringRestriction(restrictions, "device_name", value -> preyConfig.setMdmDeviceName(value));
@@ -69,7 +69,7 @@ public class RestrictionsReceiver extends BroadcastReceiver {
 
         if (restrictions.containsKey("skip_manual_permissions")) {
             boolean skip = restrictions.getBoolean("skip_manual_permissions", false);
-            PreyLogger.d(String.format("saveRestrictionValues skip_manual_permissions: %s", skip));
+            PreyLogger.d(String.format("skip_manual_permissions: %s", skip));
             preyConfig.setMdmSkipManualPermissions(skip);
         }
     }
@@ -85,7 +85,7 @@ public class RestrictionsReceiver extends BroadcastReceiver {
         if (restrictions.containsKey(key)) {
             String value = restrictions.getString(key);
     
-            PreyLogger.d(String.format("saveStringRestriction %s: %s", key, value));
+            PreyLogger.d(String.format("%s: %s", key, value));
             if (value != null && !"".equals(value)) {
                 setter.accept(value);
             }
@@ -105,10 +105,10 @@ public class RestrictionsReceiver extends BroadcastReceiver {
         }
         boolean registered = PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey();
 
-        PreyLogger.d(String.format("getSetupKey registered: %s", registered));
+        PreyLogger.d(String.format("registered: %s", registered));
         if (!registered && restrictions.containsKey("setup_key")) {
             String setupKey = restrictions.getString("setup_key");
-            PreyLogger.d(String.format("getSetupKey setup_key: %s", setupKey));
+            PreyLogger.d(String.format("setup_key: %s", setupKey));
             if (setupKey != null && !"".equals(setupKey)) {
                 return setupKey;
             }

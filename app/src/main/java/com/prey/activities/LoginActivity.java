@@ -71,12 +71,12 @@ public class LoginActivity extends Activity {
             boolean accessibility = PreyPermission.isAccessibilityServiceEnabled(getApplicationContext());
             if (PreyConfig.getPreyConfig(getApplicationContext()).isMarshmallowOrAbove() &&
                     (canDrawOverlays||accessibility)) {
-                PreyLogger.d("Login Boot finished. PreyLockService");
+                PreyLogger.d("Boot finished. PreyLockService");
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    PreyLogger.d("login 2");
+                    PreyLogger.d("2");
                     intentLock = new Intent(getApplicationContext(), PreyLockHtmlService.class);
                 } else {
-                    PreyLogger.d("login 3");
+                    PreyLogger.d("3");
                     intentLock = new Intent(getApplicationContext(), PreyLockService.class);
                 }
                 getApplicationContext().startService(intentLock);
@@ -91,7 +91,7 @@ public class LoginActivity extends Activity {
         } else if (!ready && isProvisioningSetupAction() && mdmRetryCount < MDM_MAX_RETRIES) {
             // SetupAction launched during provisioning but managed config not yet available — retry
             mdmRetryCount++;
-            PreyLogger.d(String.format("LoginActivity: waiting for managed config (retry %d/%d)", mdmRetryCount, MDM_MAX_RETRIES));
+            PreyLogger.d(String.format("waiting for managed config (retry %d/%d)", mdmRetryCount, MDM_MAX_RETRIES));
             new android.os.Handler().postDelayed(this::startup, MDM_RETRY_DELAY_MS);
         } else if (isThereBatchInstallationKey() && !ready) {
             showLoginBatch();
@@ -118,9 +118,9 @@ public class LoginActivity extends Activity {
                 intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
             } else {
                 boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
-                PreyLogger.d(String.format("LoginActivity: canDrawOverlays:%b", canDrawOverlays));
+                PreyLogger.d(String.format("canDrawOverlays:%b", canDrawOverlays));
                 boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
-                PreyLogger.d(String.format("LoginActivity: isAdminActive:%b", isAdminActive));
+                PreyLogger.d(String.format("isAdminActive:%b", isAdminActive));
                 boolean configurated = canDrawOverlays && isAdminActive;
                 if (configurated) {
                     intent = new Intent(LoginActivity.this, SignInActivity.class);
@@ -166,7 +166,7 @@ public class LoginActivity extends Activity {
                 return setupKey != null && !setupKey.isEmpty();
             }
         } catch (Exception e) {
-            PreyLogger.e(String.format("Error hasMdmSetupKey: %s", e.getMessage()), e);
+            PreyLogger.e(String.format("Error: %s", e.getMessage()), e);
         }
         return false;
     }

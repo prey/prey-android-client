@@ -60,13 +60,12 @@ public class ReportService extends IntentService {
 		int interval = -1;
 		List<HttpDataService> listData = new ArrayList<HttpDataService>();
 		boolean isAirplaneModeOn = PreyPhone.isAirplaneModeOn(ctx);
-		PreyLogger.d(String.format("AWARE AwareController init isAirplaneModeOn:%s", isAirplaneModeOn));
+		PreyLogger.d(String.format("REPORT isAirplaneModeOn:%s", isAirplaneModeOn));
 		boolean isTimeNextReport = PreyConfig.getPreyConfig(ctx).isTimeNextReport();
-		PreyLogger.d(String.format("REPORT init isTimeNextReport:%s", isTimeNextReport));
+		PreyLogger.d(String.format("REPORT isTimeNextReport:%s", isTimeNextReport));
 		// Only proceed if location awareness is enabled and airplane mode is not on
 		if (!isAirplaneModeOn && isTimeNextReport) {
 			try {
-				PreyLogger.d("REPORT _____________start ReportService");
 				try {
 					interval = Integer.parseInt(PreyConfig.getPreyConfig(ctx).getIntervalReport());
 				} catch (Exception ee) {

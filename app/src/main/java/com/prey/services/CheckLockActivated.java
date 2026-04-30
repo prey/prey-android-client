@@ -46,7 +46,7 @@ public class CheckLockActivated extends Service {
                             break;
                         }
                     } catch (Exception e) {
-                        PreyLogger.e("CheckLockActivated Error:" + e.getMessage(), e);
+                        PreyLogger.e("Error:" + e.getMessage(), e);
                     }
                 }
             }

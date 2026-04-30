@@ -38,7 +38,7 @@ public class Report {
             reason = "{\"device_job_id\":\"" + jobId + "\"}";
         }
         long lastReportStartDate = new Date().getTime();
-        PreyLogger.d(String.format("____lastReportStartDate:%s", lastReportStartDate));
+        PreyLogger.d(String.format("lastReportStartDate:%s", lastReportStartDate));
         PreyConfig.getPreyConfig(ctx).setLastReportStartDate(lastReportStartDate);
         PreyConfig.getPreyConfig(ctx).setMissing(true);
         int interval = 0;
@@ -66,7 +66,7 @@ public class Report {
         PreyConfig.getPreyConfig(ctx).setExcludeReport(exclude);
         PreyConfig.getPreyConfig(ctx).removeTimeNextReport();
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "report", "started",reason));
-        PreyLogger.d("________start ReportScheduled");
+        PreyLogger.d("start ReportScheduled");
         ReportScheduled.getInstance(ctx).run();
         if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             ReportJobService.schedule(ctx);
@@ -74,7 +74,7 @@ public class Report {
     }
 
     public void stop(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("________stop Report");
+        PreyLogger.d("Report");
         String messageId = null;
         try {
             messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID);

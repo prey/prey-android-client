@@ -46,7 +46,7 @@ public class ReportJobService extends JobService {
 
     @Override
     public boolean onStartJob(final JobParameters jobParameters) {
-        PreyLogger.d("REPORT onStartJob");
+        PreyLogger.d("REPORT");
         new Thread(new Runnable() {
             public void run() {
                 new ReportService().run(getApplicationContext());
@@ -59,7 +59,7 @@ public class ReportJobService extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
-        PreyLogger.d("REPORT onStopJob");
+        PreyLogger.d("REPORT");
         jobFinished(jobParameters, false);
         return false;
     }

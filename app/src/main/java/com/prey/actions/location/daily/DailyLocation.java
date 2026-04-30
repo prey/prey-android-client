@@ -35,7 +35,7 @@ public class DailyLocation {
         String dailyLocation = PreyConfig.getPreyConfig(context).getDailyLocation();
         String nowDailyLocation = PreyConfig.FORMAT_SDF_AWARE.format(new Date());
         boolean isAirplaneModeOn = PreyPhone.isAirplaneModeOn(context);
-        PreyLogger.d(String.format("DailyLocation run isAirplaneModeOn:%s", isAirplaneModeOn));
+        PreyLogger.d(String.format("isAirplaneModeOn:%s", isAirplaneModeOn));
         if (!nowDailyLocation.equals(dailyLocation) && !isAirplaneModeOn) {
             PreyLocationManager.getInstance(context).setLastLocation(null);
             try {

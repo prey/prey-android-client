@@ -18,9 +18,7 @@ public class AlarmReportReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
-            PreyLogger.d("______________________________");
-            PreyLogger.d("______________________________");
-            PreyLogger.d("----------AlarmReportReceiver onReceive");
+            PreyLogger.d("AlarmReportReceiver");
             final  Context ctx=context;
             new Thread() {
                 public void run() {
@@ -28,7 +26,7 @@ public class AlarmReportReceiver extends BroadcastReceiver {
                 }
             }.start();
         }catch(Exception e){
-            PreyLogger.e("_______AlarmReportReceiver error:"+e.getMessage(),e);
+            PreyLogger.e("error:"+e.getMessage(),e);
         }
     }
 

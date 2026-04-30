@@ -46,7 +46,7 @@ public class WipeThread extends Thread {
             }
         }catch(Exception e){
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","failed",e.getMessage()));
-            PreyLogger.e("Error Wipe:"+e.getMessage(), e);
+            PreyLogger.e("Error:"+e.getMessage(), e);
         }
         try{
             if (wipe&&preyConfig.isFroyoOrAbove()){
@@ -56,7 +56,7 @@ public class WipeThread extends Thread {
             }
         }catch(Exception e){
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start","wipe","failed",e.getMessage()));
-            PreyLogger.e("Error Wipe:"+e.getMessage(), e);
+            PreyLogger.e("Error:"+e.getMessage(), e);
         }
     }
 

@@ -32,14 +32,14 @@ public class Location extends JsonAction{
     public static final String DATA_ID = "geo";
 
     public List<HttpDataService> report(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("Ejecuting Location Report.");
+        PreyLogger.d("Executing.");
         PreyLocationManager.getInstance(ctx).setLastLocation(null);
         List<HttpDataService> listResult=super.report(ctx, list, parameters);
         return listResult;
     }
 
     public  List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("Ejecuting Location Get.");
+        PreyLogger.d("Executing.");
         String messageId = null;
         try {
             messageId = UtilJson.getString(parameters, PreyConfig.MESSAGE_ID);
@@ -71,7 +71,7 @@ public class Location extends JsonAction{
         boolean send;
         boolean first = true;
         boolean isAirplaneModeOn = PreyPhone.isAirplaneModeOn(ctx);
-        PreyLogger.d(String.format("Location get isAirplaneModeOn:%s", isAirplaneModeOn));
+        PreyLogger.d(String.format("isAirplaneModeOn:%s", isAirplaneModeOn));
         while (i < maximum && !isAirplaneModeOn) {
             send = false;
             try {
@@ -147,7 +147,7 @@ public class Location extends JsonAction{
     }
 
     public  List<HttpDataService> start(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("Ejecuting Location Start.");
+        PreyLogger.d("Executing.");
         List<HttpDataService> listResult=super.get(ctx, list, parameters);
         return listResult;
     }
@@ -168,7 +168,7 @@ public class Location extends JsonAction{
     }
 
     public  List<HttpDataService> start_location_aware(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("AWARE start_location_aware:");
+        PreyLogger.d("AWARE");
         AwareController.getInstance().init(ctx);
         return null;
     }

@@ -40,7 +40,6 @@ public class PinNativeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.super_lock);
-        PreyLogger.d("PinNativeActivity: onCreate");
         editTextPin = (EditText) findViewById(R.id.editTextPin);
         textViewPin = (TextView) findViewById(R.id.textViewPin);
         button_Super_Lock_Unlock = (Button) findViewById(R.id.button_Super_Lock_Unlock);
@@ -97,7 +96,7 @@ public class PinNativeActivity extends Activity {
     protected void onResume() {
         super.onResume();
         String pinActivated = PreyConfig.getPreyConfig(getApplicationContext()).getPinActivated();
-        PreyLogger.d("PinNativeActivity unlock:" + pinActivated);
+        PreyLogger.d("unlock:" + pinActivated);
         if (pinActivated == null || "".equals(pinActivated)) {
             Intent intent = new Intent(getApplicationContext(), CloseActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

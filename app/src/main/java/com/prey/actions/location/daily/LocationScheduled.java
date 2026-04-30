@@ -39,15 +39,15 @@ public class LocationScheduled {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
             AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
-                PreyLogger.d("DAILY----------LocationScheduled setRepeating");
+                PreyLogger.d("setRepeating");
                 alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * minute, pendingIntent);
             } else {
-                PreyLogger.d("DAILY----------LocationScheduled setInexactRepeating");
+                PreyLogger.d("setInexactRepeating");
                 alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * minute, pendingIntent);
             }
-            PreyLogger.d(String.format("DAILY----------start [%s] LocationScheduled", minute));
+            PreyLogger.d(String.format("Start [%s]", minute));
         } catch (Exception e) {
-            PreyLogger.e(String.format("DAILY----------Error LocationScheduled :%s", e.getMessage()), e);
+            PreyLogger.e(String.format("Error :%s", e.getMessage()), e);
         }
     }
 }

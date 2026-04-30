@@ -48,24 +48,24 @@ public class FingerprintHelper extends   FingerprintManager.AuthenticationCallba
     @Override
     public void onAuthenticationError(int errorCode, CharSequence errString) {
         listener.authenticationFailed("AuthenticationError : "+errString);
-        PreyLogger.d("onAuthenticationError");
+   
     }
 
     @Override
     public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
         listener.authenticationFailed("AuthenticationHelp : "+helpString);
-        PreyLogger.d("onAuthenticationHelp");
+   
     }
 
     @Override
     public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
         listener.authenticationSuccess(result);
-        PreyLogger.d("onAuthenticationSucceeded");
+   
     }
 
     @Override
     public void onAuthenticationFailed() {
         listener.authenticationFailed("Authentication Failed!");
-        PreyLogger.d("onAuthenticationFailed");
+   
     }
 }

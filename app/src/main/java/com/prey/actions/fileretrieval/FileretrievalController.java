@@ -35,12 +35,11 @@ public class FileretrievalController {
     }
 
     public void run(Context ctx){
-        PreyLogger.d("______________ FileretrievalController run _____________________");
         boolean connect = false;
         int j=0;
         do {
             connect = (PreyConfig.getPreyConfig(ctx).isConnectionExists()|| PreyWifiManager.getInstance(ctx).isOnline());
-            PreyLogger.d("______________ FileretrievalController connect:+"+connect);
+            PreyLogger.d("Connected: +"+connect);
             if (connect) {
                 break;
             } else {
@@ -54,19 +53,19 @@ public class FileretrievalController {
             for (int i = 0; list != null && i < list.size(); i++) {
                 FileretrievalDto dto = list.get(i);
                 String fileId = dto.getFileId();
-                PreyLogger.d("id:" + dto.getFileId() + " " + dto.getPath());
+                PreyLogger.d("Id:" + dto.getFileId() + " " + dto.getPath());
                 try {
                     FileretrievalDto dtoStatus = PreyWebServices.getInstance().uploadStatus(ctx, fileId);
-                    PreyLogger.d("dtoStatus:" + dtoStatus.getStatus());
+                    PreyLogger.d("status:" + dtoStatus.getStatus());
                     if (dtoStatus.getStatus() == 1) {
                         datasource.deleteFileretrieval(fileId);
                     }
                     if (dtoStatus.getStatus() == 2 || dtoStatus.getStatus() == 0) {
                         long total = dtoStatus.getTotal();
                         File file = new File(Environment.getExternalStorageDirectory() + "/" + dto.getPath());
-                        PreyLogger.d("total:"+total+" size:"+dtoStatus.getSize()+" length:"+file.length());
+                        PreyLogger.d("Total :"+total+" size:"+dtoStatus.getSize()+" length:"+file.length());
                         int responseCode = PreyWebServices.getInstance().uploadFile(ctx, file, fileId, total);
-                        PreyLogger.d("responseCode:" + responseCode);
+                        PreyLogger.d("ResponseCode:" + responseCode);
                         if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
                             datasource.deleteFileretrieval(fileId);
                         }
@@ -75,7 +74,7 @@ public class FileretrievalController {
                         datasource.deleteFileretrieval(fileId);
                     }
                 } catch (Exception e) {
-                    PreyLogger.e("FileretrievalController Error:" + e.getMessage(),e);
+                    PreyLogger.e("Error:" + e.getMessage(),e);
                 }
             }
         }

@@ -18,7 +18,7 @@ public class SimTriggerReceiver extends TriggerReceiver {
 
     public void onReceive(Context context, final Intent intent) {
         if (intent != null) {
-            PreyLogger.d("Trigger SimTriggerReceiver:" + intent.getAction());
+            PreyLogger.d("Trigger:" + intent.getAction());
             String action = intent.getAction();
             String state = intent.getExtras().getString(EXTRA_SIM_STATE);
             if (state == null) {

@@ -75,23 +75,57 @@ public class PreyLogger {
     }
 
     public static void d(String message) {
+        String tagged = withCallerTag(message);
         if (PreyConfig.LOG_DEBUG_ENABLED) {
-            Log.d(PreyConfig.TAG, message);
+            Log.d(PreyConfig.TAG, tagged);
         }
-        enqueue("D", message, null);
+        enqueue("D", tagged, null);
     }
 
     public static void i(String message) {
-        Log.i(PreyConfig.TAG, message);
-        enqueue("I", message, null);
+        String tagged = withCallerTag(message);
+        Log.i(PreyConfig.TAG, tagged);
+        enqueue("I", tagged, null);
     }
 
     public static void e(final String message, Throwable e) {
+        String tagged = withCallerTag(message);
         if (e != null)
-            Log.e(PreyConfig.TAG, message, e);
+            Log.e(PreyConfig.TAG, tagged, e);
         else
-            Log.e(PreyConfig.TAG, message);
-        enqueue("E", message, e);
+            Log.e(PreyConfig.TAG, tagged);
+        enqueue("E", tagged, e);
+    }
+
+    private static String withCallerTag(String message) {
+        String tag = callerTag();
+        String body = message == null ? "" : message;
+        if (tag == null) return body;
+        return tag + " " + body;
+    }
+
+    /**
+     * Walks the current thread's stack and returns "[SimpleClass][method]" for
+     * the first frame outside PreyLogger — i.e. the call site of d/i/e.
+     */
+    private static String callerTag() {
+        try {
+            StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+            String selfClass = PreyLogger.class.getName();
+            for (StackTraceElement frame : stack) {
+                String cls = frame.getClassName();
+                if (cls.equals("java.lang.Thread")) continue;
+                if (cls.equals("dalvik.system.VMStack")) continue;
+                if (cls.equals(selfClass)) continue;
+                int dot = cls.lastIndexOf('.');
+                String simple = dot >= 0 ? cls.substring(dot + 1) : cls;
+                int dollar = simple.indexOf('$');
+                if (dollar >= 0) simple = simple.substring(0, dollar);
+                return "[" + simple + "][" + frame.getMethodName() + "]";
+            }
+        } catch (Throwable ignored) {
+        }
+        return null;
     }
 
     /**

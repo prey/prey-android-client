@@ -45,7 +45,6 @@ public class ReportActivity extends FragmentActivity implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, this);
         setContentView(R.layout.report);
-        PreyLogger.d("ReportActivity: onCreate");
         loadUrl();
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(R.id.map);
@@ -89,7 +88,6 @@ public class ReportActivity extends FragmentActivity implements OnMapReadyCallba
     }
 
     public void settings(){
-        PreyLogger.d("ReportActivity: settings");
         myWebView = (WebView) findViewById(R.id.install_browserReport);
         WebSettings settings = myWebView.getSettings();
         myWebView.setBackgroundColor(0x00000000);
@@ -105,7 +103,7 @@ public class ReportActivity extends FragmentActivity implements OnMapReadyCallba
     public String getUrl(Context ctx){
         String lng="es".equals(Locale.getDefault().getLanguage())?"es":"en";
         String url = CheckPasswordHtmlActivity.URL_ONB+"#/"+lng+"/report";
-        PreyLogger.d("ReportActivity url: "+url);
+        PreyLogger.d("url: "+url);
         return url;
     }
 

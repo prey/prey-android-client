@@ -35,23 +35,23 @@ public class AutoConnectScheduled {
         try {
             PreyConfig.getPreyConfig(context).setAutoConnect(true);
             String minuteSt = "10";//PreyConfig.getPreyConfig(context).getIntervalAutoConnect();
-            PreyLogger.d("----------AutoConnect Scheduled start minute:" + minuteSt);
+            PreyLogger.d("Start minute:" + minuteSt);
             if (PreyConfig.getPreyConfig(context).getAutoConnect() && minuteSt != null && !"".equals(minuteSt)) {
                 int minute = Integer.parseInt(minuteSt);
                 Intent intent = new Intent(context, AutoConnectAlarmReceiver.class);
                 pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
                 alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
-                    PreyLogger.d("----------AutoConnect Scheduled setRepeating AutoConnect: " + minute);
+                    PreyLogger.d("SetRepeating AutoConnect: " + minute);
                     alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * minute, pendingIntent);
                 } else {
-                    PreyLogger.d("----------AutoConnect Scheduled setInexactRepeating AutoConnect: " + minute);
+                    PreyLogger.d("SetInexactRepeating AutoConnect: " + minute);
                     alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * minute, pendingIntent);
                 }
-                PreyLogger.d("----------AutoConnect Scheduled start AutoConnect [" + minute + "] AutoConnectScheduled");
+                PreyLogger.d("Start AutoConnect [" + minute + "]");
             }
         } catch (Exception e) {
-            PreyLogger.d("----------AutoConnect Scheduled Error AutoConnectScheduled :" + e.getMessage());
+            PreyLogger.d("Error :" + e.getMessage());
         }
     }
 

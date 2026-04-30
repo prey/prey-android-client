@@ -28,26 +28,26 @@ public abstract class TriggerReceiver extends BroadcastReceiver {
     public void execute(Context context, String name) {
         TriggerDataSource dataSource = new TriggerDataSource(context);
         List<TriggerDto> listTrigger = dataSource.getAllTriggers();
-        PreyLogger.d("Trigger TriggerReceiver onReceive name:" + name);
-        PreyLogger.d("Trigger TriggerReceiver onReceive listTrigger.size():" + (listTrigger == null ? -1 : listTrigger.size()));
+        PreyLogger.d("Trigger name:" + name);
+        PreyLogger.d("Trigger listTrigger.size():" + (listTrigger == null ? -1 : listTrigger.size()));
         for (int i = 0; listTrigger != null && i < listTrigger.size(); i++) {
             TriggerDto trigger = listTrigger.get(i);
             List<TriggerEventDto> listEvents = TriggerParse.TriggerEvents(trigger.getEvents());
             for (int j = 0; listEvents != null && j < listEvents.size(); j++) {
                 TriggerEventDto event = listEvents.get(j);
-                PreyLogger.d("Trigger TriggerReceiver onReceive name:" + name+" event.type:"+event.type);
+                PreyLogger.d("Trigger name:" + name+" event.type:"+event.type);
                 if (name.equals(event.type)) {
                     boolean process = true;
                     boolean haveRange = TriggerUtil.haveRange(listEvents);
-                    PreyLogger.d("Trigger TriggerReceiver  haveRange:" + haveRange);
+                    PreyLogger.d("Trigger haveRange:" + haveRange);
                     if (haveRange) {
                         boolean validRange = TriggerUtil.validRange(listEvents);
-                        PreyLogger.d("Trigger TriggerReceiver  validRange:" + validRange);
+                        PreyLogger.d("Trigger validRange:" + validRange);
                         process = validRange;
                     }
                     try {
                         if (process) {
-                            PreyLogger.d("Trigger TriggerReceiver triggerName trigger.getActions():" + trigger.getActions());
+                            PreyLogger.d("Trigger triggerName trigger.getActions():" + trigger.getActions());
                             executeActions(context, trigger.getActions());
                         }
                     } catch (Exception e) {
@@ -63,7 +63,7 @@ public abstract class TriggerReceiver extends BroadcastReceiver {
         for (int z = 0; listActions != null && z < listActions.size(); z++) {
             final TriggerActionDto actionDto = listActions.get(z);
             int delay = actionDto.delay;
-            PreyLogger.d("triggerName TriggerReceiver delay:" + delay);
+            PreyLogger.d("triggerName delay:" + delay);
             if (delay > 0) {
                 Thread.sleep(delay * 1000);
             }

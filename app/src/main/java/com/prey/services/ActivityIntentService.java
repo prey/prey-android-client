@@ -19,8 +19,8 @@ public class ActivityIntentService extends IntentService {
     }
     @Override
     public void onCreate() {
+        PreyLogger.d("ActivityIntentService");
         super.onCreate();
-        PreyLogger.d("ActivityIntentService onCreate");
     }
 
     @Override

@@ -278,7 +278,7 @@ public class UtilConnection {
 
             } while (retry < RETRIES);
         }catch(Exception e){
-            PreyLogger.e("error util:"+e.getMessage(),e);
+            PreyLogger.e("error:"+e.getMessage(),e);
             throw e;
         }
 
@@ -425,7 +425,7 @@ public class UtilConnection {
             int responseCode = connection.getResponseCode();
             return convertPreyHttpResponse(responseCode, connection);
         } catch (Exception e) {
-            PreyLogger.e(String.format("connectionJsonOnce error url:%s error:%s", uri, e.getMessage()), e);
+            PreyLogger.e(String.format("error url:%s error:%s", uri, e.getMessage()), e);
             return null;
         } finally {
             if (connection != null) connection.disconnect();
@@ -599,11 +599,11 @@ public class UtilConnection {
 
                     if (total<=0)
                         break;
-                    PreyLogger.d("uploadFile total:"+total+" length:"+length+" read:"+read);
+                    PreyLogger.d("total:"+total+" length:"+length+" read:"+read);
                 }while(total  > 0);
 
             }
-            PreyLogger.d("uploadFile read:"+read);
+            PreyLogger.d("read:"+read);
 
 
             while ((length = input.read(buffer)) > 0) {
@@ -617,10 +617,10 @@ public class UtilConnection {
             output.flush();
             String responseMessage = connection.getResponseMessage();
             responseCode = connection.getResponseCode();
-            PreyLogger.d("uploadFile responseCode:"+responseCode+" responseMessage:"+responseMessage);
+            PreyLogger.d("responseCode:"+responseCode+" responseMessage:"+responseMessage);
 
         } catch (Exception e) {
-            PreyLogger.e("error upload:"+e.getMessage(),e);
+            PreyLogger.e("error:"+e.getMessage(),e);
             responseCode=0;
         } finally {
             try {
@@ -654,7 +654,7 @@ public class UtilConnection {
         OutputStream output = null;
         InputStream input = null;
         FileInputStream fileInput = null;
-        PreyLogger.d("uploadLog page:" + page + " file:" + file.getName() + " length:" + file.length());
+        PreyLogger.d("page:" + page + " file:" + file.getName() + " length:" + file.length());
         try {
             URL url = new URL(page);
             connection = (HttpURLConnection) url.openConnection();
@@ -676,9 +676,9 @@ public class UtilConnection {
             }
             output.flush();
             responseCode = connection.getResponseCode();
-            PreyLogger.d("uploadLog responseCode:" + responseCode + " responseMessage:" + connection.getResponseMessage());
+            PreyLogger.d("responseCode:" + responseCode + " responseMessage:" + connection.getResponseMessage());
         } catch (Exception e) {
-            PreyLogger.e("error uploadLog:" + e.getMessage(), e);
+            PreyLogger.e("error:" + e.getMessage(), e);
             responseCode = 0;
         } finally {
             try { if (input != null) input.close(); } catch (IOException ignored) {}
@@ -727,7 +727,7 @@ public class UtilConnection {
             conn.connect();
             response = new PreyHttpResponse(conn);
         } catch (Exception e) {
-            PreyLogger.d("error postJson:"+e.getMessage());
+            PreyLogger.d("error:"+e.getMessage());
         } finally {
             if (writer!=null){
                 try{writer.close();} catch (Exception e) {}

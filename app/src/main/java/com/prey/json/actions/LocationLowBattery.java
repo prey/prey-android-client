@@ -21,7 +21,7 @@ import java.util.List;
 public class LocationLowBattery extends JsonAction {
 
     public List<HttpDataService> get(Context ctx, List<ActionResult> list, JSONObject parameters) {
-        PreyLogger.d("Ejecuting LocationLowBattery Data.");
+        PreyLogger.d("Executing.");
         List<HttpDataService> listResult=super.get(ctx, list, parameters);
         return listResult;
     }

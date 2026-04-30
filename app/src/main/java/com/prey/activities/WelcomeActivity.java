@@ -23,14 +23,12 @@ public class WelcomeActivity extends FragmentActivity {
 
     @Override
     public void onResume() {
-        PreyLogger.d("onResume of WelcomeActivity");
         super.onResume();
         menu();
     }
 
     @Override
     public void onPause() {
-        PreyLogger.d("onPause of WelcomeActivity");
         super.onPause();
     }
 
@@ -44,12 +42,10 @@ public class WelcomeActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        PreyLogger.d("onCreate of WelcomeActivity");
         menu();
     }
 
     public void menu() {
-        PreyLogger.d("menu WelcomeActivity");
         String email = PreyConfig.getPreyConfig(this).getEmail();
         if(email==null||"".equals(email)){
             PreyLogger.d("email:"+email);
@@ -67,7 +63,6 @@ public class WelcomeActivity extends FragmentActivity {
     }
 
     public void ready() {
-        PreyLogger.d("ready WelcomeActivity");
         Intent intent = null;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);

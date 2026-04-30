@@ -58,7 +58,7 @@ public class PermissionInformationActivity extends PreyActivity {
 
     private void showScreen() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PreyLogger.d("PermissionInformationActivity: Build.VERSION_CODES >=M");
+            PreyLogger.d("Build.VERSION_CODES >=M");
             boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
             boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
             boolean canAccessCamera = PreyPermission.canAccessCamera(this);
@@ -72,7 +72,7 @@ public class PermissionInformationActivity extends PreyActivity {
         boolean skipManualPermissions = PreyConfig.getPreyConfig(this).isMdmSkipManualPermissions();
         if (FroyoSupport.getInstance(this).isAdminActive() || skipManualPermissions) {
                 if (skipManualPermissions) {
-                    PreyLogger.d("PermissionInformationActivity: skipping device admin prompt (MDM managed)");
+                    PreyLogger.d("skipping device admin prompt (MDM managed)");
                 }
                 Intent intentPermission = null;
                 boolean canDrawOverlays = skipManualPermissions || PreyPermission.canDrawOverlays(this);
@@ -125,7 +125,7 @@ public class PermissionInformationActivity extends PreyActivity {
 
     @TargetApi(Build.VERSION_CODES.M)
     public void askForPermissionAndroid7() {
-        PreyLogger.d("PermissionInformationActivity: askForPermissionAndroid7");
+   
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
         startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
         startOverlayService();
@@ -134,7 +134,7 @@ public class PermissionInformationActivity extends PreyActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        PreyLogger.d("PermissionInformationActivity: onRequestPermissionsResult");
+   
         boolean canAccessFineLocation = PreyPermission.canAccessFineLocation(this);
         boolean canAccessCoarseLocation = PreyPermission.canAccessCoarseLocation(this);
         boolean canAccessCamera = PreyPermission.canAccessCamera(this);
@@ -163,7 +163,7 @@ public class PermissionInformationActivity extends PreyActivity {
     }
 
     private void startOverlayService() {
-        PreyLogger.d("PermissionInformationActivity: startOverlayService");
+   
         Intent intentOverlay = new Intent(getApplicationContext(), PreyOverlayService.class);
         startService(intentOverlay);
     }

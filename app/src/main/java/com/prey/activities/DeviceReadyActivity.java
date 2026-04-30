@@ -47,7 +47,7 @@ public class DeviceReadyActivity extends AppCompatActivity
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.device_ready);
-        PreyLogger.d("onCreate of DeviceReadyActivity");
+   
         final Typeface titilliumWebBold = Typeface.createFromAsset(getAssets(), "fonts/Titillium_Web/TitilliumWeb-Bold.ttf");
         final Typeface magdacleanmonoRegular = Typeface.createFromAsset(getAssets(), "fonts/MagdaClean/magdacleanmono-regular.ttf");
         TextView textView3_1=(TextView)findViewById(R.id.textView3_1);

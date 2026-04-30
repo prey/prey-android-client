@@ -42,7 +42,7 @@ public class IncrementWorker extends Worker {
     @Override
     public Result doWork() {
         // Log a debug message to indicate the start of the work
-        PreyLogger.d("AWARE WORK doWork");
+        PreyLogger.d("AWARE WORK");
         // Get the application context
         Context context = getApplicationContext();
         try {
@@ -58,10 +58,10 @@ public class IncrementWorker extends Worker {
             }
             return Result.success();
         } catch (NumberFormatException e) {
-            PreyLogger.e(String.format("----------Error IncrementWorker:%s", e.getMessage()), e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
             return Result.failure();
         } catch (Throwable throwable) {
-            PreyLogger.e(String.format("----------Error IncrementWorker:%s", throwable.getMessage()), throwable);
+            PreyLogger.e(String.format("Error:%s", throwable.getMessage()), throwable);
             return Result.failure();
         }
     }

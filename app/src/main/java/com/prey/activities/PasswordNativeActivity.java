@@ -37,7 +37,7 @@ public class PasswordNativeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.lock_android7);
-        PreyLogger.d("PasswordActivity2: onCreate");
+   
         final EditText editText = (EditText) findViewById(R.id.EditText_Lock_Password);
         final Button unlockButton = findViewById(R.id.Button_Lock_Unlock);
         final ImageView imageLock = findViewById(R.id.ImageView_Lock_AccessDenied);
@@ -87,7 +87,7 @@ public class PasswordNativeActivity extends Activity {
                 try {
                     String unlock = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
                     String key = editText.getText().toString().trim();
-                    PreyLogger.d("PasswordActivity2 unlock key:" + key + " unlock:" + unlock);
+                    PreyLogger.d("unlock key:" + key + " unlock:" + unlock);
                     if (unlock != null && unlock.equals(key)) {
                         PreyConfig.getPreyConfig(getApplicationContext()).setUnlockPass("");
                         new Thread() {
@@ -114,7 +114,7 @@ public class PasswordNativeActivity extends Activity {
     protected void onResume() {
         super.onResume();
         String unlock = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
-        PreyLogger.d("PasswordActivity2 unlock:" + unlock);
+        PreyLogger.d("unlock:" + unlock);
         if (unlock == null || "".equals(unlock)) {
             Intent intent = new Intent(getApplicationContext(), CloseActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

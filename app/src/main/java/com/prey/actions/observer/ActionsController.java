@@ -99,7 +99,7 @@ public class ActionsController {
     public List<HttpDataService> runActionJson(Context ctx, List<JSONObject> jsonObjectList) {
         List<HttpDataService> listData = new ArrayList<HttpDataService>();
         int size = jsonObjectList == null ? -1 : jsonObjectList.size();
-        PreyLogger.d(String.format("runActionJson size:%s", size));
+        PreyLogger.d(String.format("size:%s", size));
         try {
             for (int i = 0; jsonObjectList != null && i < jsonObjectList.size(); i++) {
                 JSONObject jsonObject = jsonObjectList.get(i);
@@ -137,7 +137,7 @@ public class ActionsController {
             }
             return listData;
         } catch (JSONException e) {
-            PreyLogger.e("Error, causa:" + e.getMessage(), e);
+            PreyLogger.e("Error, cause:" + e.getMessage(), e);
         }
         return null;
     }

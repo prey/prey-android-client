@@ -51,13 +51,13 @@ public class PreyLockHtmlService extends Service{
 
     public void onCreate() {
         super.onCreate();
-        PreyLogger.d("PreyLockHtmlService onCreate");
+   
     }
 
     public void onStart(Intent intent, int startId) {
         super.onStart(intent,startId);
         final Context ctx=this;
-        PreyLogger.d("PreyLockHtmlService onStart");
+   
         final String unlock= PreyConfig.getPreyConfig(ctx).getUnlockPass();
         if(unlock!=null&&!"".equals(unlock)) {
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -120,7 +120,7 @@ public class PreyLockHtmlService extends Service{
 
     public void onDestroy() {
         super.onDestroy();
-        PreyLogger.d("PreyLockHtmlService onDestroy");
+   
     }
 
 }

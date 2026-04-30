@@ -57,7 +57,7 @@ public class SplashMdmActivity extends FragmentActivity {
                     return PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey();
                 }
             } catch (Exception e) {
-                PreyLogger.e(String.format("Error SplashMdmActivity: %s", e.getMessage()), e);
+                PreyLogger.e(String.format("Error: %s", e.getMessage()), e);
             }
             return false;
         }

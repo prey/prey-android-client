@@ -71,7 +71,7 @@ public class VideoActivity extends Activity implements SurfaceHolder.Callback {
     }
 
     public void stop() {
-        PreyLogger.d("stop");
+   
         recorder.stop();
         recording = false;
         initRecorder();

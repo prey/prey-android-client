@@ -43,7 +43,7 @@ public class Tree {
             PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
         }
         try{
-            PreyLogger.d("Tree started");
+            PreyLogger.d("started");
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "tree", "started",reason));
             int depth = 1;
             try {
@@ -60,12 +60,12 @@ public class Tree {
             JSONObject jsonTree = new JSONObject();
             jsonTree.put("tree", array.toString());
             PreyHttpResponse response=PreyWebServices.getInstance().sendTree(ctx, jsonTree);
-            PreyLogger.d(String.format("Tree stopped response:%d", response.getStatusCode()));
+            PreyLogger.d(String.format("stopped response:%d", response.getStatusCode()));
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("get", "tree", "stopped",reason));
-            PreyLogger.d("Tree stopped");
+            PreyLogger.d("stopped");
         } catch (Exception e) {
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "tree", "failed", e.getMessage()));
-            PreyLogger.d("Tree failed:"+e.getMessage());
+            PreyLogger.d("failed:"+e.getMessage());
         }
     }
 
@@ -124,7 +124,7 @@ public class Tree {
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("Error getFilesRecursiveJSON:" + e.getMessage(), e);
+            PreyLogger.e("Error:" + e.getMessage(), e);
         }
         return array;
     }
@@ -157,7 +157,7 @@ public class Tree {
                 count += numberOfFilesInTheFolder(file);
             } else if (!file.getName().contains("trashed")) {
                 count++;
-                PreyLogger.d(String.format("Tree count:%d %s", count, file.getPath()));
+                PreyLogger.d(String.format("count:%d %s", count, file.getPath()));
             }
         }
         return count;

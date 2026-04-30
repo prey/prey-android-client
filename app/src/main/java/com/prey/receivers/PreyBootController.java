@@ -97,7 +97,7 @@ public class PreyBootController extends BroadcastReceiver {
                     // Check if application restrictions are not null
                     if (applicationRestrictions != null) {
                         // Log the application restrictions
-                        PreyLogger.d(String.format("RestrictionsReceiver restrictions applied: %s", applicationRestrictions.toString()));
+                        PreyLogger.d(String.format("restrictions applied: %s", applicationRestrictions.toString()));
                         // Handle the application restrictions
                         RestrictionsReceiver.handleApplicationRestrictions(context, applicationRestrictions);
                     }

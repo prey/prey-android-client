@@ -36,13 +36,13 @@ public class WelcomeBatchActivity extends FragmentActivity {
 
     @Override
     public void onResume() {
-        PreyLogger.d("onResume of WelcomeBatchActivity");
+   
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        PreyLogger.d("onPause of WelcomeBatchActivity");
+   
         super.onPause();
     }
 
