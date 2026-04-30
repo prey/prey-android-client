@@ -115,6 +115,7 @@ public class PreyLogger {
             for (StackTraceElement frame : stack) {
                 String cls = frame.getClassName();
                 if (cls.equals("java.lang.Thread")) continue;
+                if (cls.equals("dalvik.system.VMStack")) continue;
                 if (cls.equals(selfClass)) continue;
                 int dot = cls.lastIndexOf('.');
                 String simple = dot >= 0 ? cls.substring(dot + 1) : cls;

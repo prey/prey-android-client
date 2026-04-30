@@ -7,9 +7,7 @@
 
 package com.prey;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.os.Build;
@@ -691,9 +689,7 @@ public class PreyConfig {
         try {
             if (updatePrey)
                 PreyWebServices.getInstance().setPushRegistrationId(ctx, "");
-            Intent unregIntent = new Intent("com.google.android.c2dm.intent.UNREGISTER");
-            unregIntent.putExtra("app", PendingIntent.getBroadcast(this.ctx, 0, new Intent(), PendingIntent.FLAG_IMMUTABLE));
-            this.ctx.startService(unregIntent);
+            FirebaseMessaging.getInstance().deleteToken();
         }catch(Exception e){
             PreyLogger.e("Error:"+e.getMessage(),e);
         }
