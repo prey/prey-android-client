@@ -55,7 +55,7 @@ public class Logretrieval {
         }
         File zipFile = null;
         try {
-            PreyLogger.d("Logretrieval started");
+            PreyLogger.d("started");
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
                     ctx, messageId,
                     UtilJson.makeMapParam("start", "logretrieval", "started", reason));
@@ -70,18 +70,18 @@ public class Logretrieval {
             }
             zipFile = buildZip(ctx, segments);
             int responseCode = PreyWebServices.getInstance().uploadLog(ctx, zipFile);
-            PreyLogger.d(String.format("Logretrieval responseCode uploadLog:%d", responseCode));
+            PreyLogger.d(String.format("responseCode uploadLog:%d", responseCode));
             if (responseCode != HttpURLConnection.HTTP_OK && responseCode != HttpURLConnection.HTTP_CREATED) {
                 throw new Exception("upload failed: " + responseCode);
             }
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
                     ctx, UtilJson.makeMapParam("start", "logretrieval", "stopped", reason));
-            PreyLogger.d("Logretrieval stopped");
+            PreyLogger.d("stopped");
         } catch (Exception e) {
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(
                     ctx, messageId,
                     UtilJson.makeMapParam("start", "logretrieval", "failed", e.getMessage()));
-            PreyLogger.d(String.format("Logretrieval failed:%s", e.getMessage()));
+            PreyLogger.d(String.format("failed:%s", e.getMessage()));
         } finally {
             if (zipFile != null) zipFile.delete();
         }

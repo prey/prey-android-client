@@ -30,7 +30,7 @@ public class BlockAppUninstallCheckBoxPreference extends CheckBoxPreference {
     @Override
     public void setChecked(boolean checked) {
         super.setChecked(checked);
-        PreyLogger.d("LOCK BlockAppUninstallCheckBoxPreference:" + checked);
+        PreyLogger.d("LOCK checked:" + checked);
         PreyConfig.getPreyConfig(getContext()).setBlockAppUninstall(checked);
     }
 

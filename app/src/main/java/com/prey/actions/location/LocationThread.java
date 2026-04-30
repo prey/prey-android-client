@@ -30,7 +30,7 @@ public class LocationThread extends Thread {
     }
 
     public void run() {
-        PreyLogger.d("run location thread");
+        PreyLogger.d("Starting thread");
         HttpDataService data = LocationUtil.dataLocation(ctx,null,false);
         if(data!=null){
             Map<String, String> parametersMap = data.getDataList();

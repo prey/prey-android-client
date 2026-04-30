@@ -27,7 +27,7 @@ public class TriggerDataSource {
             try {
                 dbHelper.updateTrigger(trigger);
             } catch (Exception e1) {
-                PreyLogger.e("Trigger error db update:" + e1.getMessage(), e1);
+                PreyLogger.e("error db update:" + e1.getMessage(), e1);
             }
         }
     }

@@ -59,31 +59,31 @@ public class LocationUpdatesService  extends Service {
     }
 
     public void startForegroundService(final Context ctx) {
-        PreyLogger.d("LocationUpdatesService Start foreground service.");
+        PreyLogger.d("Start foreground service.");
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(ctx);
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 mLocation = locationResult.getLastLocation();
-                PreyLogger.d( "LocationUpdatesService New location_: " + mLocation);
+                PreyLogger.d("New location: " + mLocation);
                 PreyLocationManager.getInstance(ctx).setLastLocation(new PreyLocation(mLocation));
                 stop();
             }
         };
         try {
             createLocationRequest();
-        } catch (Exception e) {PreyLogger.e( "LocationUpdatesService error:" + e.getMessage(),e);}
+        } catch (Exception e) {PreyLogger.e("Error:" + e.getMessage(),e);}
         try {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper());
         } catch (SecurityException unlikely) {
-             PreyLogger.e( "LocationUpdatesService error " + unlikely.getMessage(),unlikely);
+             PreyLogger.e("Error " + unlikely.getMessage(),unlikely);
         }
         getLastLocation(ctx);
     }
 
     private void createLocationRequest() {
-        PreyLogger.d( "LocationUpdatesService createLocationRequest: " );
+        PreyLogger.d( "" );
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
@@ -91,25 +91,25 @@ public class LocationUpdatesService  extends Service {
     }
 
     private void getLastLocation(final Context ctx) {
-        PreyLogger.d( "LocationUpdatesService getLastLocation" );
+        PreyLogger.d( "" );
         try {
             mFusedLocationClient.getLastLocation()
                     .addOnCompleteListener(new OnCompleteListener<Location>() {
                         @Override
                         public void onComplete(@NonNull Task<Location> task) {
-                            PreyLogger.d( "LocationUpdatesService onComplete" );
+                            PreyLogger.d( "" );
                             if (task.isSuccessful() && task.getResult() != null) {
                                 mLocation = task.getResult();
-                                PreyLogger.d("LocationUpdatesService mLocation lat :"+round(mLocation.getLatitude())+" lng:"+round(mLocation.getLongitude())+" acc:"+round(mLocation.getAccuracy()));
+                                PreyLogger.d("Location lat: "+round(mLocation.getLatitude())+" lng: "+round(mLocation.getLongitude())+" acc: "+round(mLocation.getAccuracy()));
                                 PreyLocationManager.getInstance(ctx).setLastLocation(new PreyLocation(mLocation));
                             } else {
-                                PreyLogger.d("LocationUpdatesService Failed to get location.");
+                                PreyLogger.d("Failed to get location.");
                             }
                         }
                     });
             stop();
         } catch (SecurityException unlikely) {
-            PreyLogger.e( "LocationUpdatesService error:" + unlikely.getMessage(),unlikely);
+            PreyLogger.e( "error:" + unlikely.getMessage(),unlikely);
         }
     }
 
@@ -131,17 +131,17 @@ public class LocationUpdatesService  extends Service {
     }
 
     private void stop() {
-        PreyLogger.d( "LocationUpdatesService stop" );
+        PreyLogger.d( "" );
         try {
             if(mLocationCallback!=null)
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         } catch (Exception e) {
-            PreyLogger.e( "error." + e.getMessage(),e);
+            PreyLogger.e("Error." + e.getMessage(),e);
         }
         try {
             stopSelf();
         } catch (Exception e) {
-            PreyLogger.e( "error." + e.getMessage(),e);
+            PreyLogger.e("Error." + e.getMessage(),e);
         }
     }
 

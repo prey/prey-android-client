@@ -37,7 +37,7 @@ public class PreyOverlayService extends Service {
         final Context ctx=this;
 
         new Thread() {
-            PreyLogger.d("PreyOverlayService");
+       
 
             public void run() {
                 int i=0;

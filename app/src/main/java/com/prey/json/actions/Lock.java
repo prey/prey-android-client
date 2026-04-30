@@ -76,7 +76,7 @@ public class Lock extends JsonAction {
             }
             lock(ctx, unlock, messageId, reason,jobId);
         } catch (Exception e) {
-            PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
+            PreyLogger.e("Error:" + e.getMessage(), e);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage()));
         }
     }
@@ -157,7 +157,7 @@ public class Lock extends JsonAction {
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
+            PreyLogger.e("Error:" + e.getMessage(), e);
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "lock", "failed", e.getMessage()));
         }
     }
@@ -173,10 +173,10 @@ public class Lock extends JsonAction {
     }
 
     public void lock(final Context ctx, String unlock,final String messageId,final String reason,String device_job_id) {
-        PreyLogger.d(String.format("lock unlock:%s messageId:%s reason:%s",unlock,messageId,reason));
+        PreyLogger.d(String.format("unlock:%s messageId:%s reason:%s",unlock,messageId,reason));
         PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
         PreyConfig.getPreyConfig(ctx).setLock(true);
-        PreyLogger.d("lock 1");
+        PreyLogger.d("1");
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             boolean accessibility=PreyPermission.isAccessibilityServiceEnabled(ctx);
             boolean canDrawOverlays=PreyPermission.canDrawOverlays(ctx);
@@ -184,10 +184,10 @@ public class Lock extends JsonAction {
                 if (canDrawOverlays) {
                     Intent intentPreyLock = null;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        PreyLogger.d("lock 2");
+                        PreyLogger.d("2");
                         intentPreyLock = new Intent(ctx, PreyLockHtmlService.class);
                     } else {
-                        PreyLogger.d("lock 3");
+                        PreyLogger.d("3");
                         intentPreyLock = new Intent(ctx, PreyLockService.class);
                     }
                     ctx.startService(intentPreyLock);
@@ -195,7 +195,7 @@ public class Lock extends JsonAction {
                     ctx.startService(intentCheckLock);
                 }
                 if (accessibility) {
-                        PreyLogger.d("lock 4");
+                        PreyLogger.d("4");
                         PreyConfig.getPreyConfig(ctx).setOverLock(false);
                         Intent intentAccessibility = new Intent(ctx, AppAccessibilityService.class);
                         ctx.startService(intentAccessibility);
@@ -211,11 +211,11 @@ public class Lock extends JsonAction {
                 //Lock immediately, as if the lock screen timeout has expired
                 FroyoSupport.getInstance(ctx).lockNow();
             } else {
-                PreyLogger.d("lock 5");
+                PreyLogger.d("5");
                 Lock.lockWhenYouNocantDrawOverlays(ctx);
             }
         }else{
-            PreyLogger.d("lock 6");
+            PreyLogger.d("6");
             Lock.lockOld(ctx);
         }
         new Thread(new Runnable() {
@@ -224,7 +224,7 @@ public class Lock extends JsonAction {
                     Thread.sleep(2000);
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "lock", "started", reason));
                 }catch(Exception e){
-                    PreyLogger.e("Error sendNotifyAction:"+e.getMessage(),e);
+                    PreyLogger.e("Error:"+e.getMessage(),e);
                 }
             }
         }).start();
@@ -234,12 +234,12 @@ public class Lock extends JsonAction {
         new Thread(new Runnable() {
             public void run() {
                 String unlockPass=PreyConfig.getPreyConfig(context).getUnlockPass();
-                PreyLogger.d("sendUnLock unlockPass:" + unlockPass);
+                PreyLogger.d("unlockPass:" + unlockPass);
                 if (unlockPass!=null && !"".equals(unlockPass)) {
                     if (PreyConfig.getPreyConfig(context).isMarshmallowOrAbove() && PreyPermission.canDrawOverlays(context)) {
-                        PreyLogger.d("sendUnLock nothing");
+                        PreyLogger.d("nothing");
                     } else {
-                        PreyLogger.d("sendUnLock deleteUnlockPass");
+                        PreyLogger.d("deleteUnlockPass");
                         PreyConfig.getPreyConfig(context).setUnlockPass("");
                         Intent intentClose = new Intent(context, CloseActivity.class);
                         intentClose.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -268,14 +268,14 @@ public class Lock extends JsonAction {
         boolean accessibility=PreyPermission.isAccessibilityServiceEnabled(ctx);
         boolean canDrawOverlays=PreyPermission.canDrawOverlays(ctx);
         String unlockPass=PreyConfig.getPreyConfig(ctx).getUnlockPass();
-        PreyLogger.d(String.format("DeviceAdmin lockWhenYouNocantDrawOverlays unlockPass: %s accessibility: %s canDrawOverlays: %s",unlockPass,accessibility,canDrawOverlays));
+        PreyLogger.d(String.format("unlockPass: %s accessibility: %s canDrawOverlays: %s",unlockPass,accessibility,canDrawOverlays));
         boolean isAccessibilityServiceEnabled=PreyPermission.isAccessibilityServiceEnabled(ctx);
         if (unlockPass!=null && !"".equals(unlockPass)) {
             if (!canDrawOverlays(ctx) &&!isAccessibilityServiceEnabled) {
                     boolean isPatternSet = isPatternSet(ctx);
                     boolean isPassOrPinSet = isPassOrPinSet(ctx);
-                    PreyLogger.d("CheckLockActivated isPatternSet:" + isPatternSet);
-                    PreyLogger.d("CheckLockActivated  isPassOrPinSet:" + isPassOrPinSet);
+                    PreyLogger.d("isPatternSet:" + isPatternSet);
+                    PreyLogger.d("isPassOrPinSet:" + isPassOrPinSet);
                     if (isPatternSet || isPassOrPinSet) {
                         FroyoSupport.getInstance(ctx).lockNow();
                         new Thread(new EventManagerRunner(ctx, new Event(Event.NATIVE_LOCK))).start();
@@ -284,7 +284,7 @@ public class Lock extends JsonAction {
                             FroyoSupport.getInstance(ctx).changePasswordAndLock(PreyConfig.getPreyConfig(ctx).getUnlockPass(), true);
                             new Thread(new EventManagerRunner(ctx, new Event(Event.NATIVE_LOCK))).start();
                         } catch (Exception e) {
-                            PreyLogger.e("Error FroyoSupport changePasswordAndLock:"+e.getMessage(),e);
+                            PreyLogger.e("Error:"+e.getMessage(),e);
                         }
                     }
             }
@@ -295,19 +295,19 @@ public class Lock extends JsonAction {
         boolean accessibility=PreyPermission.isAccessibilityServiceEnabled(ctx);
         boolean canDrawOverlays=PreyPermission.canDrawOverlays(ctx);
         String unlockPass=PreyConfig.getPreyConfig(ctx).getUnlockPass();
-        PreyLogger.d("DeviceAdmin lockWhenYouNocantDrawOverlays unlockPass1:" + unlockPass+" accessibility:" + accessibility+" canDrawOverlays:"+canDrawOverlays);
+        PreyLogger.d("unlockPass1:" + unlockPass+" accessibility:" + accessibility+" canDrawOverlays:"+canDrawOverlays);
         if (unlockPass!=null && !"".equals(unlockPass)) {
             boolean isPatternSet = isPatternSet(ctx);
             boolean isPassOrPinSet = isPassOrPinSet(ctx);
-            PreyLogger.d("CheckLockActivated isPatternSet:" + isPatternSet);
-            PreyLogger.d("CheckLockActivated  isPassOrPinSet:" + isPassOrPinSet);
+            PreyLogger.d("isPatternSet:" + isPatternSet);
+            PreyLogger.d("isPassOrPinSet:" + isPassOrPinSet);
             if (isPatternSet || isPassOrPinSet) {
                 FroyoSupport.getInstance(ctx).lockNow();
             } else {
                 try {
                     FroyoSupport.getInstance(ctx).changePasswordAndLock(PreyConfig.getPreyConfig(ctx).getUnlockPass(), true);
                 } catch (Exception e) {
-                    PreyLogger.e("error lockold:"+e.getMessage(),e);
+                    PreyLogger.e("error:"+e.getMessage(),e);
                 }
             }
         }

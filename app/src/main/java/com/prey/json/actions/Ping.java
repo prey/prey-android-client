@@ -31,7 +31,7 @@ public class Ping extends JsonAction {
             eventStatus.setAlwaysSend(true);
             new Thread(new EventManagerRunner(ctx, eventStatus)).start();
         }catch (Exception e){
-            PreyLogger.e("error ping:"+e.getMessage(),e);
+            PreyLogger.e("error:"+e.getMessage(),e);
         }
         return null;
     }

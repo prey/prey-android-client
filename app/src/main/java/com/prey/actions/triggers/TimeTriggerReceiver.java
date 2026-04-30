@@ -15,10 +15,10 @@ public class TimeTriggerReceiver extends TriggerReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        PreyLogger.d("Trigger TimeTriggerReceiver:");
+        PreyLogger.d("Trigger:");
         try {
             final String triggerId = intent.getExtras().getString("trigger_id");
-            PreyLogger.d("Trigger Receiver trigger_id:" + triggerId);
+            PreyLogger.d("Trigger trigger_id:" + triggerId);
             TriggerDataSource dataSource = new TriggerDataSource(context);
             TriggerDto trigger = dataSource.getTrigger(triggerId);
             if (trigger != null) {

@@ -21,7 +21,7 @@ public class PreyController {
 
     public static void startPrey(Context ctx, final String cmd) {
         PreyConfig config = PreyConfig.getPreyConfig(ctx);
-        PreyLogger.d("startPrey:"+config.isThisDeviceAlreadyRegisteredWithPrey());
+        PreyLogger.d(""+config.isThisDeviceAlreadyRegisteredWithPrey());
         if (config.isThisDeviceAlreadyRegisteredWithPrey()) {
             config.setRun(true);
             final Context context = ctx;

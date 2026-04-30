@@ -611,7 +611,7 @@ public class PreyPhone {
                 dataState = tManager.getDataState();
             }
         }catch (Exception e){
-            PreyLogger.e("Error getDataState:"+e.getMessage(),e);
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
         return dataState;
     }
@@ -660,7 +660,7 @@ public class PreyPhone {
         // Get the current airplane mode setting from the system settings
         boolean isAirplaneModeOn = Settings.Global.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) == 1;
         // Log the result for debugging purposes
-        PreyLogger.d(String.format("isAirplaneModeOn: %s", isAirplaneModeOn));
+        PreyLogger.d(String.format("%s", isAirplaneModeOn));
         // Return the result
         return isAirplaneModeOn;
     }

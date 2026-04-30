@@ -90,7 +90,7 @@ public class SimpleVideoActivity extends Activity implements
                     .postAutentication(uri, parameters, entityFiles);
             PreyLogger.d("status line:" + preyHttpResponse.getStatusCode());
         } catch (Exception e) {
-            PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
+            PreyLogger.e("Error cause:" + e.getMessage() + e.getMessage(), e);
         }
     }
 
@@ -125,7 +125,7 @@ public class SimpleVideoActivity extends Activity implements
             mMediaRecorder.prepare();
             mMediaRecorder.start();
         } catch (Exception e) {
-            PreyLogger.e("causa: " + e.getMessage(), e);
+            PreyLogger.e("cause: " + e.getMessage(), e);
         }
     }
 
@@ -182,7 +182,6 @@ public class SimpleVideoActivity extends Activity implements
 
     @SuppressWarnings("rawtypes")
     private Camera getCameraGingerbreadOrAbove(Context ctx) {
-        PreyLogger.d("getCameraGingerbreadOrAbove");
         Camera mCamera = null;
         try {
             Class noparams[] = {};

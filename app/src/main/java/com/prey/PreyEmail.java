@@ -39,7 +39,7 @@ public class PreyEmail {
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
+            PreyLogger.e("Error cause:" + e.getMessage() + e.getMessage(), e);
         }
     }
 
@@ -64,7 +64,7 @@ public class PreyEmail {
                 PreyLogger.d("Empty account");
             }
         }else{
-            PreyLogger.d("sdk menor");
+            PreyLogger.d("sdk lower");
         }
         return null;
     }
@@ -80,7 +80,7 @@ public class PreyEmail {
             }
             PreyLogger.d("account length 0");
         }else {
-            PreyLogger.d("account bajo eckair");
+            PreyLogger.d("account below eckair");
         }
         return null;
     }

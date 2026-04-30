@@ -37,7 +37,7 @@ public class PreyAccessibilityService extends Service {
                 while(run){
                     try{Thread.sleep(1000);
                         boolean isAccessibility= PreyPermission.isAccessibilityServiceEnabled(ctx);
-                        PreyLogger.d("PreyAccessibilityService ["+i+"]"+isAccessibility);
+                        PreyLogger.d("["+i+"]"+isAccessibility);
                         if(isAccessibility){
                             run=false;
                             Intent intentActivity = null;

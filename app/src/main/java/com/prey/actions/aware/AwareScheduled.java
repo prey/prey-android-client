@@ -38,15 +38,15 @@ public class AwareScheduled {
             pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
             alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
-                PreyLogger.d("----------setRepeating");
+                PreyLogger.d("SetRepeating");
                 alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * minute, pendingIntent);
             } else {
-                PreyLogger.d("----------setInexactRepeating");
+                PreyLogger.d("SetInexactRepeating");
                 alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * minute, pendingIntent);
             }
-            PreyLogger.d(String.format("----------start aware [%s] AwareScheduled", minute));
+            PreyLogger.d(String.format("Start aware [%s]", minute));
         } catch (Exception e) {
-            PreyLogger.e(String.format("----------Error AwareScheduled :%s", e.getMessage()), e);
+            PreyLogger.e(String.format("Error :%s", e.getMessage()), e);
         }
     }
 
@@ -55,7 +55,7 @@ public class AwareScheduled {
             try {
                 alarmMgr.cancel(pendingIntent);
             } catch (Exception e) {
-                PreyLogger.d(String.format("----------Error AwareScheduled :%s", e.getMessage()));
+                PreyLogger.d(String.format("Error :%s", e.getMessage()));
             }
         }
     }

@@ -117,7 +117,7 @@ public class PreyRestHttpClient {
             if(response!=null)
                 httpResult=response.getStatusCode();
         } catch (Exception e) {
-            PreyLogger.e("postJson error:" + e.getMessage(), e);
+            PreyLogger.e("error:" + e.getMessage(), e);
         }
         return httpResult;
     }
@@ -132,7 +132,7 @@ public class PreyRestHttpClient {
                 PreyLogger.d(String.format("Response from server:%s", response.toString()));
             }
         } catch (Exception e) {
-            PreyLogger.e(String.format("jsonMethod:%s error:%s", method, e.getMessage()), e);
+            PreyLogger.e(String.format("method:%s error:%s", method, e.getMessage()), e);
         } finally {
             if (connection != null)
                 connection.disconnect();
@@ -150,7 +150,7 @@ public class PreyRestHttpClient {
                 PreyLogger.d(String.format("Response from server:%s", response.toString()));
             }
         } catch (Exception e) {
-            PreyLogger.e(String.format("jsonMethodAutentication:%s error:%s", method, e.getMessage()), e);
+            PreyLogger.e(String.format("method:%s error:%s", method, e.getMessage()), e);
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -168,7 +168,7 @@ public class PreyRestHttpClient {
                 PreyLogger.d(String.format("Response from server:%s", response.toString()));
             }
         } catch (Exception e) {
-            PreyLogger.e(String.format("jsonMethodAutenticationOnce:%s error:%s", method, e.getMessage()), e);
+            PreyLogger.e(String.format("method:%s error:%s", method, e.getMessage()), e);
         }
         return response;
     }

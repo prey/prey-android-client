@@ -48,12 +48,12 @@ public class TriggerController {
                 try {
                     listWeb = TriggerParse.getJSONFromUrl(ctx);
                 } catch (Exception e) {
-                    PreyLogger.e("error TriggerController get json:"+e.getMessage(),e);
+                    PreyLogger.e("error get json:"+e.getMessage(),e);
                 }
                 updateTriggers(ctx, listWeb, listBD, dataSource);
             }
         } catch (Exception e) {
-            PreyLogger.e("error TriggerController run:"+e.getMessage(),e);
+            PreyLogger.e("error:"+e.getMessage(),e);
         }
     }
 
@@ -107,7 +107,7 @@ public class TriggerController {
                     TimeTrigger.updateTrigger(ctx, trigger);
                 }catch (TriggerException te) {
                     listStop.add(trigger);
-                    PreyLogger.d("TimeTrigger listRun exception id:"+trigger.id+" ,state:"+te.code);
+                    PreyLogger.d("listRun exception id:"+trigger.id+" ,state:"+te.code);
                 }
             }
             String infoStop = "[";
@@ -142,7 +142,7 @@ public class TriggerController {
                 sendNotify(ctx, UtilJson.makeMapParam("start", "triggers", "started", infoAdd));
             }
         } catch (Exception e) {
-            PreyLogger.e("error run"+e.getMessage(),e);
+            PreyLogger.e("error "+e.getMessage(),e);
         }
     }
 

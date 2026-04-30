@@ -50,13 +50,13 @@ public class SignUpActivity extends Activity {
     private String htmTerms="";
 
     public void onResume() {
-        PreyLogger.d("onResume of SignUpActivity");
+   
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        PreyLogger.d("onPause of SignUpActivity");
+   
         super.onPause();
     }
 
@@ -71,7 +71,7 @@ public class SignUpActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setContentView(R.layout.signup);
-        PreyLogger.d("onCreate of SignUpActivity");
+   
         final EditText nameText=((EditText)findViewById(R.id.editTextName));
         final EditText emailText=((EditText)findViewById(R.id.editTextEmailAddress));
         final EditText passwordText=((EditText)findViewById(R.id.editTextPassword));

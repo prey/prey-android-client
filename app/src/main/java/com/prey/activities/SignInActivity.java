@@ -49,13 +49,13 @@ public class SignInActivity extends Activity {
 
     @Override
     public void onResume() {
-        PreyLogger.d("onResume of SignInActivity");
+   
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        PreyLogger.d("onPause of SignInActivity");
+        PreyLogger.d("");
         super.onPause();
     }
 
@@ -70,7 +70,6 @@ public class SignInActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setContentView(R.layout.signin);
-        PreyLogger.d("onCreate of SignInActivity");
         Button buttonSignin = (Button) findViewById(R.id.buttonSignin);
         final EditText emailText=((EditText)findViewById(R.id.editTextEmailAddress));
         final EditText passwordText=((EditText)findViewById(R.id.editTextPassword));

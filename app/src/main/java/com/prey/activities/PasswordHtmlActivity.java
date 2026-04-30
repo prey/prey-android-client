@@ -28,7 +28,7 @@ public class PasswordHtmlActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.webview);
-        PreyLogger.d("PasswordHtmlActivity: onCreate");
+   
         myWebView = (WebView) findViewById(R.id.install_browser);
         myWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -64,7 +64,7 @@ public class PasswordHtmlActivity extends Activity {
         super.onResume();
         String unlockPass = PreyConfig.getPreyConfig(getApplicationContext()).getUnlockPass();
         boolean isLock = unlockPass != null && !"".equals(unlockPass);
-        PreyLogger.d("PasswordHtmlActivity isLock:" + isLock);
+        PreyLogger.d("isLock:" + isLock);
         if (!isLock) {
             finishAffinity();
         }

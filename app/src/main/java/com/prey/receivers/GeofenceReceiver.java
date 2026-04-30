@@ -27,13 +27,13 @@ public class GeofenceReceiver extends BroadcastReceiver {
             GeofencingEvent event = GeofencingEvent.fromIntent(intent);
             if (event != null) {
                 if (event.hasError()) {
-                    PreyLogger.d("GEO GeofenceReceiver hasError:" +event.toString());
+                    PreyLogger.d("GEO hasError:" +event.toString());
                 } else {
                     notifyGeofenceTransition(context,  event.getGeofenceTransition(), event.getTriggeringGeofences(), event.getTriggeringLocation());
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("GEO GeofenceReceiver error:" + e.getMessage(), e);
+            PreyLogger.e("GEO error:" + e.getMessage(), e);
         }
     }
 

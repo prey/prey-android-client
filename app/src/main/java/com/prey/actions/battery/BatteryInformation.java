@@ -67,7 +67,7 @@ public class BatteryInformation {
                 i++;
             }
         } catch (InterruptedException e) {
-            PreyLogger.d("Error, causa:" + e.getMessage());
+            PreyLogger.d("Error, cause:" + e.getMessage());
         }
         HttpDataService data = null;
         if (battery != null) {

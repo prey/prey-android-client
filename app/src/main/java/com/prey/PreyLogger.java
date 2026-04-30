@@ -98,16 +98,17 @@ public class PreyLogger {
     }
 
     private static String withCallerTag(String message) {
-        String caller = callerMethodName();
-        if (caller == null) return message == null ? "" : message;
-        return "[" + caller + "] " + (message == null ? "" : message);
+        String tag = callerTag();
+        String body = message == null ? "" : message;
+        if (tag == null) return body;
+        return tag + " " + body;
     }
 
     /**
-     * Walks the current thread's stack and returns the method name of the
-     * first frame outside PreyLogger — i.e. the function that invoked d/i/e.
+     * Walks the current thread's stack and returns "[SimpleClass][method]" for
+     * the first frame outside PreyLogger — i.e. the call site of d/i/e.
      */
-    private static String callerMethodName() {
+    private static String callerTag() {
         try {
             StackTraceElement[] stack = Thread.currentThread().getStackTrace();
             String selfClass = PreyLogger.class.getName();
@@ -115,7 +116,11 @@ public class PreyLogger {
                 String cls = frame.getClassName();
                 if (cls.equals("java.lang.Thread")) continue;
                 if (cls.equals(selfClass)) continue;
-                return frame.getMethodName();
+                int dot = cls.lastIndexOf('.');
+                String simple = dot >= 0 ? cls.substring(dot + 1) : cls;
+                int dollar = simple.indexOf('$');
+                if (dollar >= 0) simple = simple.substring(0, dollar);
+                return "[" + simple + "][" + frame.getMethodName() + "]";
             }
         } catch (Throwable ignored) {
         }

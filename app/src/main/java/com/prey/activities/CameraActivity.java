@@ -41,7 +41,7 @@ public class CameraActivity extends PreyActivity {
                         .setCancelable(true).create();
                 popup.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     public void onDismiss(DialogInterface dialog) {
-                        PreyLogger.d("CameraActivity onDismiss");
+                   
                         PreyStatus.getInstance().setTakenPicture(true);
                         finish();
                     }

@@ -16,7 +16,7 @@ public class BatteryTriggerReceiver extends TriggerReceiver {
 
     public void onReceive(final Context context, final Intent intent) {
         if (intent != null) {
-            PreyLogger.d("Trigger BatteryTriggerReceiver:" + intent.getAction());
+            PreyLogger.d("Trigger:" + intent.getAction());
             String action = intent.getAction();
             String name = "";
             if (EventFactory.ACTION_POWER_DISCONNECTED.equals(action))

@@ -30,7 +30,7 @@ public abstract class JsonAction {
             list.add(result);
             dataToBeSent.add(data);
         } catch (Exception e) {
-            PreyLogger.e("Error causa:" + e.getMessage() + e.getMessage(), e);
+            PreyLogger.e("Error cause:" + e.getMessage() + e.getMessage(), e);
         }
         return dataToBeSent;
     }

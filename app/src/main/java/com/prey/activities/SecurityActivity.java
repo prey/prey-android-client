@@ -44,12 +44,12 @@ public class SecurityActivity extends AppCompatActivity {
             PreyLogger.e("Error:"+e.getMessage(),e);
         }
         setContentView(R.layout.webview);
-        PreyLogger.d("SecurityActivity: onCreate");
+   
         security();
     }
 
     public void settings() {
-        PreyLogger.d("CheckPasswordHtmlActivity: settings");
+   
         myWebView = (WebView) findViewById(R.id.install_browser);
         myWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -69,7 +69,7 @@ public class SecurityActivity extends AppCompatActivity {
     }
 
     public void security() {
-        PreyLogger.d("CheckPasswordHtmlActivity: tryReport");
+   
         String lng = PreyUtils.getLanguage();
         String url = CheckPasswordHtmlActivity.URL_ONB + "#/" + lng + "/security";
         settings();

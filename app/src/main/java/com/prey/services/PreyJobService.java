@@ -70,7 +70,7 @@ public class PreyJobService extends JobService {
 
     @Override
     public boolean onStartJob(final JobParameters jobParameters) {
-        PreyLogger.d("SCHEDULE onStartJob");
+        PreyLogger.d("SCHEDULE");
         try {
             ActionsRunner.getInstructionsNewThread(getApplicationContext(), null,false);
         } catch (Exception e){
@@ -81,7 +81,7 @@ public class PreyJobService extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
-        PreyLogger.d("SCHEDULE onStopJob");
+        PreyLogger.d("SCHEDULE");
         return true;
     }
 }

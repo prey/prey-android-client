@@ -46,20 +46,20 @@ public class AutoConnectService extends IntentService {
     }
 
     public void run(Context ctx) {
-        PreyLogger.d("AUTO Service run");
+        PreyLogger.d("AUTO");
         boolean cerrar = false;
         boolean haveNetwork = haveNetworkConnection(ctx);
         if (haveNetwork) {
             AutoconnectConfig.getAutoconnectConfig(ctx);
         }
-        PreyLogger.d("AUTO Service haveNetwork:" + haveNetwork);
+        PreyLogger.d("AUTO haveNetwork:" + haveNetwork);
         if (!haveNetwork) {
             boolean wifiConnected = false;
             boolean mobileConnected = false;
             updateConnectedFlags(ctx);
-            PreyLogger.d("AUTO Service wifiConnected:" + wifiConnected);
+            PreyLogger.d("AUTO wifiConnected:" + wifiConnected);
             mWifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
-            PreyLogger.d("AUTO Service mWifiManager.isWifiEnabled():" + mWifiManager.isWifiEnabled());
+            PreyLogger.d("AUTO mWifiManager.isWifiEnabled():" + mWifiManager.isWifiEnabled());
             if (!mWifiManager.isWifiEnabled()) {
                 mWifiManager.setWifiEnabled(true);
                 try {
@@ -67,7 +67,7 @@ public class AutoConnectService extends IntentService {
                 } catch (Exception e) {
                     PreyLogger.e("Error:"+e.getMessage(),e);
                 }
-                PreyLogger.d("AUTO Service mWifiManager.isWifiEnabled():" + mWifiManager.isWifiEnabled());
+                PreyLogger.d("AUTO mWifiManager.isWifiEnabled():" + mWifiManager.isWifiEnabled());
                 cerrar = true;
             }
             List<ScanResult> results = null;
@@ -76,7 +76,7 @@ public class AutoConnectService extends IntentService {
                 mWifiManager.reconnect();
                 mWifiManager.startScan();
                 results = mWifiManager.getScanResults();
-                PreyLogger.d("AUTO Service results intento[" + j + "] tamanio" + results.size());
+                PreyLogger.d("AUTO results attempt[" + j + "] size" + results.size());
                 j++;
                 if (results.size() == 0) {
                     try {
@@ -92,7 +92,7 @@ public class AutoConnectService extends IntentService {
                 final String ssid = scan.SSID;
                 AutoConnectBlacklist.getInstance().print();
                 if ("[ESS]".equals(scan.capabilities) && !AutoConnectBlacklist.getInstance().contains(ssid)&& !ssid.equals("Prey-Guest")) {
-                    PreyLogger.d("AUTO Service SSID:" + ssid + " capabilities:" + scan.capabilities + " ");
+                    PreyLogger.d("AUTO SSID:" + ssid + " capabilities:" + scan.capabilities + " ");
                     if(!openList.contains(ssid))
                         openList.add(ssid);
                 }
@@ -104,7 +104,7 @@ public class AutoConnectService extends IntentService {
                 }
             };
             Collections.sort(openList, comp);
-            PreyLogger.d("AUTO Service openList size:" + (openList==null?0:openList.size()));
+            PreyLogger.d("AUTO openList size:" + (openList==null?0:openList.size()));
             for (int i = 0; openList != null && i < openList.size(); i++) {
                 String ssid = openList.get(i);
                 int networkId = connect(ctx, ssid);
@@ -114,51 +114,51 @@ public class AutoConnectService extends IntentService {
                     PreyLogger.e("Error:"+e.getMessage(),e);
                 }
                 haveNetwork = haveNetworkConnection(ctx);
-                PreyLogger.d("AUTO Service haveNetwork["+i+"][" + ssid + "]:" + haveNetwork);
+                PreyLogger.d("AUTO haveNetwork["+i+"][" + ssid + "]:" + haveNetwork);
                 if (haveNetwork) {
                     JSONObject jsnobject = null;
                     try {
                         String device=PreyConfig.getPreyConfig(ctx).getDeviceId();
                         String uri = "https://solid.preyproject.com/api/v2/devices/"+device+"/status.json";
                         URL url = new URL(uri);
-                        PreyLogger.d("AUTO Service url["+i+"][" + ssid + "]:" + url);
+                        PreyLogger.d("AUTO url["+i+"][" + ssid + "]:" + url);
                         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                         connection.setConnectTimeout(3000);
                         connection.addRequestProperty("Authorization", UtilConnection.getAuthorization(PreyConfig.getPreyConfig(ctx)));
                         int responseCode = connection.getResponseCode();
-                        PreyLogger.d("AUTO Service responseCode["+i+"][" + ssid + "]:" + responseCode);
+                        PreyLogger.d("AUTO responseCode["+i+"][" + ssid + "]:" + responseCode);
                         PreyHttpResponse response = UtilConnection.convertPreyHttpResponse(responseCode, connection);
                         String responseAsString = null;
                         if (response != null) {
                             responseAsString = response.getResponseAsString();
-                            PreyLogger.d("AUTO Service responseAsString["+i+"][" + ssid + "]:" + responseAsString);
+                            PreyLogger.d("AUTO responseAsString["+i+"][" + ssid + "]:" + responseAsString);
                         }
                         if (responseAsString != null) {
                             jsnobject = new JSONObject(responseAsString);
                         }
-                        PreyLogger.d("AUTO Service jsnobject["+i+"][" + ssid + "]:" + jsnobject);
+                        PreyLogger.d("AUTO jsnobject["+i+"][" + ssid + "]:" + jsnobject);
                     } catch (Exception e) {
-                        PreyLogger.d("AUTO Service error["+i+"][" + ssid + "]:" + e.getMessage());
+                        PreyLogger.d("AUTO error["+i+"][" + ssid + "]:" + e.getMessage());
                     }
                     if (jsnobject != null) {
                         break;
                     } else {
                         WifiManager wifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
                         wifiManager.removeNetwork(networkId);
-                        PreyLogger.d("AUTO Service removeNetwork ["+i+"][" + ssid + "]:" + networkId);
+                        PreyLogger.d("AUTO removeNetwork ["+i+"][" + ssid + "]:" + networkId);
                         AutoConnectBlacklist.getInstance().add(ssid);
                     }
                 }
             }
             if (cerrar) {
-                PreyLogger.d("AUTO Service mWifiManager.isWifiEnabled():" + mWifiManager.isWifiEnabled());
-                PreyLogger.d("AUTO Service mWifiManager.isWifiEnabled():" + mWifiManager.isWifiEnabled());
+                PreyLogger.d("AUTO mWifiManager.isWifiEnabled():" + mWifiManager.isWifiEnabled());
+                PreyLogger.d("AUTO mWifiManager.isWifiEnabled():" + mWifiManager.isWifiEnabled());
             }
         }
     }
 
     public int connect(Context ctx,String networkSSID) {
-        PreyLogger.d("AUTO Service connect:" + networkSSID);
+        PreyLogger.d("AUTO networkSSID:" + networkSSID);
         WifiManager wifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
         WifiConfiguration config = new WifiConfiguration();
         config.SSID = "\"".concat(networkSSID).concat("\"");

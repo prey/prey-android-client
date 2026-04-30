@@ -48,7 +48,7 @@ public class DeviceStatusSnapshot {
             ap.put("security", wifiMap.get("security"));
             status.put("active_access_point", ap);
         } catch (Exception e) {
-            PreyLogger.e("DeviceStatusSnapshot wifi error: " + e.getMessage(), e);
+            PreyLogger.e("wifi error: " + e.getMessage(), e);
         }
     }
 
@@ -59,12 +59,12 @@ public class DeviceStatusSnapshot {
                 try {
                     mobileInternet = PreyPhone.getNetworkClass(ctx);
                 } catch (Exception e) {
-                    PreyLogger.e("DeviceStatusSnapshot networkClass error: " + e.getMessage(), e);
+                    PreyLogger.e("networkClass error: " + e.getMessage(), e);
                 }
             }
             status.put("mobile_internet", mobileInternet == null ? "" : mobileInternet);
         } catch (Exception e) {
-            PreyLogger.e("DeviceStatusSnapshot mobile error: " + e.getMessage(), e);
+            PreyLogger.e("mobile error: " + e.getMessage(), e);
         }
     }
 
@@ -72,7 +72,7 @@ public class DeviceStatusSnapshot {
         try {
             status.put("online", true);
         } catch (Exception e) {
-            PreyLogger.e("DeviceStatusSnapshot online error: " + e.getMessage(), e);
+            PreyLogger.e("online error: " + e.getMessage(), e);
         }
     }
 
@@ -92,7 +92,7 @@ public class DeviceStatusSnapshot {
             batteryJson.put("percentage_remaining", Integer.toString(battery.getLevel()));
             status.put("battery_status", batteryJson);
         } catch (Exception e) {
-            PreyLogger.e("DeviceStatusSnapshot battery error: " + e.getMessage(), e);
+            PreyLogger.e("battery error: " + e.getMessage(), e);
         }
     }
 
@@ -102,7 +102,7 @@ public class DeviceStatusSnapshot {
             String uptime = uptimeData.getSingleData();
             status.put("uptime", uptime);
         } catch (Exception e) {
-            PreyLogger.e("DeviceStatusSnapshot uptime error: " + e.getMessage(), e);
+            PreyLogger.e("uptime error: " + e.getMessage(), e);
         }
     }
 }

@@ -20,8 +20,8 @@ public class AppAccessibilityService extends AccessibilityService {
 
     @Override
     public void onCreate() {
+        PreyLogger.d("AppAccessibilityService");
         super.onCreate();
-        PreyLogger.d("AppAccessibilityService onCreate");
     }
 
     @Override
@@ -50,7 +50,7 @@ public class AppAccessibilityService extends AccessibilityService {
                 }
             }
         }catch (Exception e){
-            PreyLogger.e("Error onAccessibilityEvent:"+e.getMessage(),e);
+            PreyLogger.e("Error:"+e.getMessage(),e);
         }
     }
 

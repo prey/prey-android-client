@@ -47,7 +47,7 @@ public class AwareJobService extends JobService {
 
     @Override
     public boolean onStartJob(final JobParameters jobParameters) {
-        PreyLogger.d("AWARE onStartJob");
+        PreyLogger.d("AWARE");
         new Thread(new Runnable() {
             public void run() {
                 AwareController.getInstance().init(getApplicationContext());
@@ -60,7 +60,7 @@ public class AwareJobService extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
-        PreyLogger.d("AWARE onStopJob");
+        PreyLogger.d("AWARE");
         jobFinished(jobParameters, false);
         return false;
     }

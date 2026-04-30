@@ -334,7 +334,7 @@ public class PreyConfig {
             editor.remove(key);
             editor.commit();
         }catch(Exception e){
-            PreyLogger.e("removeKey:"+e.getMessage(),e);
+            PreyLogger.e(e.getMessage(),e);
         }
     }
 
@@ -610,16 +610,16 @@ public class PreyConfig {
        // synchronized(PreyConfig.class) {
             String deviceId = PreyConfig.getPreyConfig(ctx).getDeviceId();
             boolean isTimeC2dm=PreyConfig.getPreyConfig(ctx).isTimeC2dm();
-            PreyLogger.d("registerC2dm deviceId:"+deviceId+" isTimeC2dm:"+isTimeC2dm);
+            PreyLogger.d("deviceId:"+deviceId+" isTimeC2dm:"+isTimeC2dm);
             if (deviceId != null && !deviceId.isEmpty()) {
                  if (!isTimeC2dm) {
                     String token = null;
                     try {
                         token = FirebaseInstanceId.getInstance().getToken();
-                        PreyLogger.d("registerC2dm token2:" + token);
+                        PreyLogger.d("token2:" + token);
                         sendToken(ctx, token);
                     } catch (Exception e) {
-                        PreyLogger.e("registerC2dm error:" + e.getMessage(), e);
+                        PreyLogger.e("error:" + e.getMessage(), e);
                         try {
                             FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
                                 public void onSuccess(InstanceIdResult instanceIdResult) {
@@ -652,22 +652,22 @@ public class PreyConfig {
     }
 
     public static void sendToken(Context ctx,String token) {
-        PreyLogger.d("registerC2dm send token:"+token);
+        PreyLogger.d("send token:"+token);
         if(token!=null && !"null".equals(token) && !token.isEmpty() && UtilConnection.isInternetAvailable(ctx)) {
             try {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
                 String registration = FileConfigReader.getInstance(ctx).getGcmIdPrefix() + token;
-                PreyLogger.d("registerC2dm registration:" + registration);
+                PreyLogger.d("registration:" + registration);
                 PreyHttpResponse response = PreyWebServices.getInstance().setPushRegistrationId(ctx, registration);
                 PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
                 if (response != null) {
-                    PreyLogger.d("registerC2dm response:" + response.toString());
+                    PreyLogger.d("response:" + response.toString());
                 }
                 PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
                 PreyConfig.getPreyConfig(ctx).setTimeC2dm();
             } catch (Exception e) {
-                PreyLogger.e("registerC2dm error:"+e.getMessage(),e);
+                PreyLogger.e("error:"+e.getMessage(),e);
             }
         }
     }
@@ -1167,7 +1167,7 @@ public class PreyConfig {
     }
 
     public void setAwareDate(String awareDate){
-        PreyLogger.d("AWARE setAwareDate ["+awareDate+"]");
+        PreyLogger.d("AWARE ["+awareDate+"]");
         saveString(PreyConfig.AWARE_DATE, awareDate);
     }
 
@@ -1187,7 +1187,7 @@ public class PreyConfig {
                 lat = getString(PreyConfig.AWARE_LAT, "");
                 lng = getString(PreyConfig.AWARE_LNG, "");
             } catch (Exception e) {
-                PreyLogger.e(String.format("Error getLocationAware:%s", e.getMessage()), e);
+                PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
             }
             // Retrieve the accuracy value from storage
             float acc = getFloat(PreyConfig.AWARE_ACC, 0f);
@@ -1204,7 +1204,7 @@ public class PreyConfig {
             // Return the PreyLocation object
             return location;
         } catch (Exception e) {
-            PreyLogger.e(String.format("Error getLocationAware:%s", e.getMessage()), e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
             return null;
         }
     }
@@ -1452,7 +1452,7 @@ public class PreyConfig {
 
     public String getInputWebview() {
         String inputWebview=getString(INPUT_WEBVIEW, "");
-        PreyLogger.d("getInputWebview:"+inputWebview);
+        PreyLogger.d("inputWebview:"+inputWebview);
         return inputWebview;
     }
     public void setInputWebview(String inputWebview) {
@@ -1683,7 +1683,7 @@ public class PreyConfig {
     }
 
     public void setDailyLocation(String dailyLocation){
-        PreyLogger.d(String.format("DAILY setDailyLocation [%s]", dailyLocation));
+        PreyLogger.d(String.format("DAILY [%s]", dailyLocation));
         saveString(PreyConfig.DAILY_LOCATION, dailyLocation);
     }
 
@@ -1694,7 +1694,7 @@ public class PreyConfig {
     }
 
     public void setMinutesToQueryServer(int minutesToQueryServer) {
-        PreyLogger.d(String.format("setMinutesToQueryServer [%s]", minutesToQueryServer));
+        PreyLogger.d(String.format("[%s]", minutesToQueryServer));
         saveInt(PreyConfig.MINUTES_TO_QUERY_SERVER, minutesToQueryServer);
     }
 
@@ -1947,7 +1947,7 @@ public class PreyConfig {
      */
     public boolean isTimeNextReport() {
         long timeNextReport = getLong(TIME_NEXT_REPORT, 0);
-        PreyLogger.d("REPORT timeNextReport:"+timeNextReport);
+        PreyLogger.d("REPORT next:"+timeNextReport);
         if (timeNextReport == 0)
             return true;
         long timeNow = new Date().getTime();

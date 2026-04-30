@@ -107,7 +107,7 @@ public class PreyWebServices implements WebServices {
                 xml = response.getResponseAsString();
                 PreyLogger.d("code:" + response.getStatusCode() + " xml:" + xml);
             }else{
-                PreyLogger.d("response nulo");
+                PreyLogger.d("response null");
             }
 
         } catch (Exception e) {
@@ -212,7 +212,7 @@ public class PreyWebServices implements WebServices {
     }
 
     public PreyAccountData registerNewDeviceToAccount(Context ctx, String email, String password, String deviceType) throws Exception {
-        PreyLogger.d("registerNewDeviceToAccount email:" + email + " password:" + password);
+        PreyLogger.d("email:" + email + " password:" + password);
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         HashMap<String, String> parameters = new HashMap<String, String>();
         PreyHttpResponse response = null;
@@ -221,7 +221,7 @@ public class PreyWebServices implements WebServices {
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
             String lang = Locale.getDefault().getLanguage();
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.json?lang=").concat(lang);
-            PreyLogger.d("_____url:" + url);
+            PreyLogger.d("url:" + url);
             response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, email, password);
             PreyLogger.d("response:" + response);
             if (response != null) {
@@ -318,9 +318,9 @@ public class PreyWebServices implements WebServices {
         PreyHttpResponse response = PreyWebServices.getInstance().sendPreyHttpData(ctx, dataToBeSent);
         if (response != null ) {
             int code=response.getStatusCode();
-            PreyLogger.d("setPushRegistrationId code:"+code);
+            PreyLogger.d("code:"+code);
             if ( code == HttpURLConnection.HTTP_OK ) {
-                PreyLogger.d("setPushRegistrationId c2dm registry id set succesfully");
+                PreyLogger.d("c2dm registry id set succesfully");
             }
         }
         return response;
@@ -338,7 +338,7 @@ public class PreyWebServices implements WebServices {
     }
 
     public boolean checkPassword2(Context ctx, String apikey, String password, String password2) throws Exception {
-        PreyLogger.d(String.format("checkPassword2 password:%s password2:%s", password, password2));
+        PreyLogger.d(String.format("password:%s password2:%s", password, password2));
         String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
         String url=PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("authenticate");
         HashMap<String, String> parameters = new HashMap<String, String>();
@@ -421,7 +421,7 @@ public class PreyWebServices implements WebServices {
             throw new PreyException(json);
         }
 
-        PreyLogger.d("____[token]_________________apikey:"+apikey+" password:"+password);
+        PreyLogger.d("[token] apikey:"+apikey+" password:"+password);
         getToken(ctx,apikey,password);
 
         return response;
@@ -441,7 +441,7 @@ public class PreyWebServices implements WebServices {
             PreyLogger.d("tokenJwt:" + tokenJwt);
             PreyConfig.getPreyConfig(ctx).setTokenJwt(tokenJwt);
         }else{
-            PreyLogger.d("token: nulo");
+            PreyLogger.d("token: null");
         }
         } catch (Exception e) {
             PreyLogger.e("error:"+e.getMessage(),e);
@@ -700,7 +700,7 @@ public class PreyWebServices implements WebServices {
             parameters.put("name", event.getName());
             parameters.put("info", event.getInfo());
             parameters.put("status", jsonObject.toString());
-            PreyLogger.d("EVENT sendPreyHttpEvent url:" + url);
+            PreyLogger.d("EVENT url:" + url);
             PreyLogger.d("EVENT name:" + event.getName() + " info:" + event.getInfo());
             PreyLogger.d("EVENT status:" + jsonObject.toString());
             preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
@@ -865,7 +865,7 @@ public class PreyWebServices implements WebServices {
                 }
             }
         }catch(Exception e){
-            PreyLogger.e("Error, causa:" + e.getMessage(), e);
+            PreyLogger.e("Error, cause:" + e.getMessage(), e);
             return null;
         }
         return sb;
@@ -874,7 +874,7 @@ public class PreyWebServices implements WebServices {
     public JSONObject getStatus(Context ctx) throws PreyException {
         JSONObject jsnobject =null;
         String url = getDeviceUrlApiv2(ctx).concat("/status.json");
-        PreyLogger.d("getStatus url:"+url);
+        PreyLogger.d("url:"+url);
         PreyHttpResponse response=null;
         PreyRestHttpClient preyRestHttpClient=PreyRestHttpClient.getInstance(ctx);
         try{
@@ -889,7 +889,7 @@ public class PreyWebServices implements WebServices {
                 }
             }
         }catch(Exception e){
-            PreyLogger.e("Error, causa:" + e.getMessage(), e);
+            PreyLogger.e("Error, cause:" + e.getMessage(), e);
             return null;
         }
         return jsnobject;
@@ -920,7 +920,7 @@ public class PreyWebServices implements WebServices {
         PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).get(uri,null);
         if(response!=null) {
             String responseAsString = response.getResponseAsString();
-            PreyLogger.d("uploadStatus resp:" + responseAsString);
+            PreyLogger.d("resp:" + responseAsString);
             if (response.getStatusCode() == HttpURLConnection.HTTP_OK) {
                 if (responseAsString != null) {
                     JSONObject jsnobject = new JSONObject(response.getResponseAsString());
@@ -987,13 +987,13 @@ public class PreyWebServices implements WebServices {
             if(response!=null) {
                 String out = response.getResponseAsString();
                 if (out != null && !"".equals(out) && out.indexOf("Invalid") < 0) {
-                    PreyLogger.d("getNameDevice:" + out);
+                    PreyLogger.d(out);
                     JSONObject jsnobject = new JSONObject(out);
                     name = jsnobject.getString("name");
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("error getNameDevice:" + e.getMessage(), e);
+            PreyLogger.e("error:" + e.getMessage(), e);
         }
         return name;
     }
@@ -1097,7 +1097,7 @@ public class PreyWebServices implements WebServices {
                 }
             }
         }catch(Exception e){
-            PreyLogger.e("Error, causa:" + e.getMessage(), e);
+            PreyLogger.e("Error, cause:" + e.getMessage(), e);
             return null;
         }
         return sb;
@@ -1140,15 +1140,15 @@ public class PreyWebServices implements WebServices {
             PreyConfig config=PreyConfig.getPreyConfig(ctx);
             String deviceKey = config.getDeviceId();
             String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey).concat("/validate.json");
-            PreyLogger.d("validateName name:"+name);
+            PreyLogger.d("name:"+name);
             JSONObject jsonParam=new JSONObject();
             jsonParam.put("name", name);
             jsonParam.put("lang", Locale.getDefault().getLanguage());
             PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url,UtilConnection.REQUEST_METHOD_POST,jsonParam);
-            PreyLogger.d("validateName getStatusCode:"+response.getStatusCode());
+            PreyLogger.d("getStatusCode:"+response.getStatusCode());
             preyName.setCode(response.getStatusCode());
         }catch(Exception e){
-            PreyLogger.d("validateName error validate:" + e.getMessage());
+            PreyLogger.d("error validate:" + e.getMessage());
         }
         return preyName;
     }
@@ -1172,7 +1172,7 @@ public class PreyWebServices implements WebServices {
 
             if (statusCode != HttpURLConnection.HTTP_OK) {
                 String fallbackUrl = fallbackBaseUrl.concat(suffix);
-                PreyLogger.d(String.format("renameName falling back to:%s", fallbackUrl));
+                PreyLogger.d(String.format("falling back to:%s", fallbackUrl));
                 statusCode = sendRenameRequest(ctx, fallbackUrl, jsonParam, timeoutMs);
             }
 
@@ -1190,11 +1190,11 @@ public class PreyWebServices implements WebServices {
         PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx)
                 .jsonMethodAutenticationOnce(url, UtilConnection.REQUEST_METHOD_PUT, jsonParam, timeoutMs);
         if (response == null) {
-            PreyLogger.d(String.format("renameName url:%s no response (timeout/network)", url));
+            PreyLogger.d(String.format("url:%s no response (timeout/network)", url));
             return -1;
         }
         int statusCode = response.getStatusCode();
-        PreyLogger.d(String.format("renameName url:%s status:%s body:%s", url, statusCode, response.getResponseAsString()));
+        PreyLogger.d(String.format("url:%s status:%s body:%s", url, statusCode, response.getResponseAsString()));
         return statusCode;
     }
 
@@ -1266,7 +1266,7 @@ public class PreyWebServices implements WebServices {
         try {
             statusCode = response.getStatusCode();
         } catch (Exception e) {
-            PreyLogger.e("Error validateToken:" + e.getMessage(), e);
+            PreyLogger.e("Error:" + e.getMessage(), e);
         }
         return statusCode == 200;
     }

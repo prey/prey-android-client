@@ -23,9 +23,9 @@ public class AlertReceiver extends BroadcastReceiver {
         int notificationId = intent.getIntExtra("notificationId", 0);
         final String messageId = intent.getStringExtra("messageId");
         final String reason = intent.getStringExtra("reason");
-        PreyLogger.d("AlertReceiver notificationId:" + notificationId);
+        PreyLogger.d("notificationId:" + notificationId);
         String popupIntent=PopUpAlertActivity.POPUP_PREY+"_"+notificationId;
-        PreyLogger.d("AlertReceiver popup intent:"+popupIntent);
+        PreyLogger.d("popup intent:"+popupIntent);
         context.sendBroadcast(new Intent(popupIntent));
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(notificationId);

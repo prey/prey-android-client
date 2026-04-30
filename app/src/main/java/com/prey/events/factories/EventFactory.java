@@ -66,7 +66,7 @@ public class EventFactory {
     public static final int NOTIFICATION_ID = 888;
 
     public static Event getEvent(final Context ctx, Intent intent) {
-        String message = "getEvent[" + intent.getAction() + "]";
+        String message = "[" + intent.getAction() + "]";
         PreyLogger.d(message);
         if (BOOT_COMPLETED.equals(intent.getAction())) {
             notification(ctx);
@@ -121,19 +121,19 @@ public class EventFactory {
         if (WIFI_STATE_CHANGED.equals(intent.getAction())) {
             JSONObject info = new JSONObject();
             int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
-            PreyLogger.d("getEvent ___wifiState:" + wifiState);
+            PreyLogger.d("___wifiState:" + wifiState);
             try {
                 if (wifiState == WifiManager.WIFI_STATE_ENABLED) {
-                    PreyLogger.d("getEvent wifiState connected");
+                    PreyLogger.d("wifiState connected");
                     info.put("connected", "wifi");
                     PreyController.startPrey(ctx);
                 }
                 if (wifiState == WifiManager.WIFI_STATE_DISABLED) {
-                    PreyLogger.d("getEvent mobile connected");
+                    PreyLogger.d("mobile connected");
                     info.put("connected", "mobile");
                 }
             } catch (Exception e) {
-                PreyLogger.e("Error getEvent:" + e.getMessage(), e);
+                PreyLogger.e("Error:" + e.getMessage(), e);
             }
             return new Event(Event.WIFI_CHANGED, info.toString());
         }
@@ -164,7 +164,7 @@ public class EventFactory {
             }
         }
         if (USER_PRESENT.equals(intent.getAction())) {
-            PreyLogger.d("EventFactory USER_PRESENT");
+            PreyLogger.d("USER_PRESENT");
             int minuteScheduled = PreyConfig.getPreyConfig(ctx).getMinuteScheduled();
             if (minuteScheduled > 0) {
                 PreyController.startPrey(ctx, null);
@@ -177,14 +177,14 @@ public class EventFactory {
     public static void sendLocationAware(final Context ctx) {
         try {
             boolean isTimeLocationAware = PreyConfig.getPreyConfig(ctx).isTimeLocationAware();
-            PreyLogger.d("sendLocation isTimeLocationAware:" + isTimeLocationAware);
+            PreyLogger.d("isTimeLocationAware:" + isTimeLocationAware);
             if (!isTimeLocationAware) {
                 PreyLocation locationNow = LocationUtil.getLocation(ctx, null, false);
                 AwareController.sendAware(ctx, locationNow);
                 GeofenceController.verifyGeozone(ctx, locationNow);
             }
         } catch (Exception e) {
-            PreyLogger.e("Error sendLocation:" + e.getMessage(), e);
+            PreyLogger.e("Error:" + e.getMessage(), e);
         }
     }
 

@@ -84,7 +84,7 @@ public class PreyConnectivityManager {
             android.net.NetworkInfo wifi = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             return wifi.isConnected();
         } catch (Exception e) {
-            PreyLogger.d("Error isWifiConnected:" + e.getMessage());
+            PreyLogger.d("Error:" + e.getMessage());
             return false;
         }
     }

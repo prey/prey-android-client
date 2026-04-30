@@ -28,7 +28,7 @@ public class PreyDisablePowerOptionsService extends Service {
     BroadcastReceiver mReceiver;
 
     public PreyDisablePowerOptionsService() {
-        PreyLogger.d("PreyDisablePowerOptionsService  create ________");
+        PreyLogger.d("create");
         mReceiver = new PreyDisablePowerOptionsReceiver();
     }
 
@@ -39,7 +39,7 @@ public class PreyDisablePowerOptionsService extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
-        PreyLogger.d("PreyDisablePowerOptionsService  onStart ________disablePowerOptions:" + disablePowerOptions);
+        PreyLogger.d("disablePowerOptions:" + disablePowerOptions);
         if (disablePowerOptions) {
             IntentFilter intentfilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             registerReceiver(mReceiver, intentfilter);
@@ -48,7 +48,7 @@ public class PreyDisablePowerOptionsService extends Service {
 
     @TargetApi(Build.VERSION_CODES.ECLAIR)
     public void onDestroy() {
-        PreyLogger.d("PreyDisablePowerOptionsService  onDestroy__________");
+   
         try {
             unregisterReceiver(mReceiver);
         } catch (IllegalArgumentException e) {
@@ -63,7 +63,7 @@ public class PreyDisablePowerOptionsService extends Service {
 
     public int onStartCommand(Intent intent, int i, int j) {
         boolean disablePowerOptions = PreyConfig.getPreyConfig(getApplicationContext()).isDisablePowerOptions();
-        PreyLogger.d("PreyDisablePowerOptionsService  onStartCommand disablePowerOptions:" + disablePowerOptions);
+        PreyLogger.d("disablePowerOptions:" + disablePowerOptions);
         if (disablePowerOptions) {
             IntentFilter closeDialog = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             registerReceiver(mReceiver, closeDialog);
@@ -80,7 +80,7 @@ public class PreyDisablePowerOptionsService extends Service {
     }
 
     private void schedule() {
-        PreyLogger.d("PreyDisablePowerOptionsService  schedule_________");
+   
         Intent intent = new Intent(getApplicationContext(), AlarmDisablePowerReceiver.class);
         PendingIntent alarmDisablePower = PendingIntent.getBroadcast(getApplicationContext(), 1, intent, PendingIntent.FLAG_MUTABLE);
         AlarmManager alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);

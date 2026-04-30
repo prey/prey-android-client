@@ -66,7 +66,7 @@ public class AwareController {
             PreyStatus.getInstance().initConfig(ctx);
             // Check if location awareness is enabled in the Prey configuration
             boolean isLocationAware = PreyConfig.getPreyConfig(ctx).getAware();
-            PreyLogger.d(String.format("AWARE AwareController init isLocationAware:%s", isLocationAware));
+            PreyLogger.d(String.format("AWARE isLocationAware:%s", isLocationAware));
             if (!isLocationAware) {
                 removeGeofence(ctx);
                 //The last event is added
@@ -75,9 +75,9 @@ public class AwareController {
             }
             // Check if airplane mode is currently enabled on the device
             boolean isAirplaneModeOn = PreyPhone.isAirplaneModeOn(ctx);
-            PreyLogger.d(String.format("AWARE AwareController init isAirplaneModeOn:%s", isAirplaneModeOn));
+            PreyLogger.d(String.format("AWARE isAirplaneModeOn:%s", isAirplaneModeOn));
             boolean isTimeLocationAware = PreyConfig.getPreyConfig(ctx).isTimeLocationAware();
-            PreyLogger.d(String.format("AWARE AwareController init isTimeLocationAware:%s", isTimeLocationAware));
+            PreyLogger.d(String.format("AWARE isTimeLocationAware:%s", isTimeLocationAware));
             // Only proceed if location awareness is enabled and airplane mode is not on
             if (!isAirplaneModeOn && isTimeLocationAware) {
                 PreyLocationManager.getInstance(ctx).setLastLocation(null);
@@ -99,9 +99,9 @@ public class AwareController {
                     locationAware = PreyLocationManager.getInstance(ctx).getLastLocation();
                     if (locationAware != null) {
                         locationAware.setMethod("native");
-                        PreyLogger.d(String.format("AWARE init[%s]:%s", i, locationAware.toString()));
+                        PreyLogger.d(String.format("AWARE [%s]:%s", i, locationAware.toString()));
                     } else {
-                        PreyLogger.d(String.format("AWARE init[%s] null", i));
+                        PreyLogger.d(String.format("AWARE [%s] null", i));
                     }
                     if (locationAware != null && locationAware.getLat() != 0 && locationAware.getLng() != 0) {
                         break;
@@ -132,7 +132,7 @@ public class AwareController {
     }
 
     public void run(final Context ctx) {
-        PreyLogger.d("AWARE AwareController run");
+        PreyLogger.d("AWARE");
         try {
             int loiteringDelay= FileConfigReader.getInstance(ctx).getGeofenceLoiteringDelay();
             int notificationResponsiveness= FileConfigReader.getInstance(ctx).getGeofenceNotificationResponsiveness();

@@ -159,7 +159,7 @@ public class PreyUtils {
         } catch (Exception e) {
             isGooglePlayServicesAvailable = false;
         }
-        PreyLogger.d(String.format("isGooglePlayServicesAvailable:%s", isGooglePlayServicesAvailable));
+        PreyLogger.d(String.format("%s", isGooglePlayServicesAvailable));
         return isGooglePlayServicesAvailable;
     }
 

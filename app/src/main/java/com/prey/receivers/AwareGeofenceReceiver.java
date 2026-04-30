@@ -24,22 +24,22 @@ public class AwareGeofenceReceiver extends BroadcastReceiver {
         try {
             GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
             if (geofencingEvent==null) {
-                PreyLogger.d( "AWARE AwareGeofenceReceiver geofencingEvent null");
+                PreyLogger.d( "AWARE geofencingEvent null");
                 return;
             }
             if (geofencingEvent.hasError()) {
-                PreyLogger.d( "AWARE AwareGeofenceReceiver hasError:" +geofencingEvent.toString());
+                PreyLogger.d( "AWARE hasError:" +geofencingEvent.toString());
                 return;
             }
             int geofenceTransition = geofencingEvent.getGeofenceTransition();
-            PreyLogger.d( "AWARE AwareGeofenceReceiver onReceive :"+ (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT?"EXIT":"ENTER"));
+            PreyLogger.d( "AWARE "+ (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT?"EXIT":"ENTER"));
             if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
                 Location location=geofencingEvent.getTriggeringLocation();
                 try {
                     AwareController.sendAware(context,new PreyLocation(location));
                     AwareController.getInstance().run(context);
                 } catch (Exception e) {
-                    PreyLogger.e("AWARE AwareGeofenceReceiver error:" + e.getMessage(), e);
+                    PreyLogger.e("AWARE error:" + e.getMessage(), e);
                 }
             }
         } catch (Exception e) {

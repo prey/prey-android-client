@@ -25,14 +25,14 @@ import com.prey.services.PreyLockHtmlService;
 public class CustomWebView {
 
     public static void callDispatchKeyEvent(final Context ctx,KeyEvent event){
-        PreyLogger.d("callDispatchKeyEvent:"+event.getKeyCode());
+        PreyLogger.d(""+event.getKeyCode());
         if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
             String page = PreyConfig.getPreyConfig(ctx).getPage();
             String apikey = PreyConfig.getPreyConfig(ctx).getApiKey();
             String inputWebview = PreyConfig.getPreyConfig(ctx).getInputWebview();
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-            PreyLogger.d("CustomWebView dispatchKeyEvent Enter page:" + page + " inputWebview:" + inputWebview);
+            PreyLogger.d("dispatchKeyEvent Enter page:" + page + " inputWebview:" + inputWebview);
             if ("setting".equals(page)) {
                 try {
                     boolean isPasswordOk = PreyWebServices.getInstance().checkPassword(ctx, apikey, inputWebview);

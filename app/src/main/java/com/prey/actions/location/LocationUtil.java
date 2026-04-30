@@ -51,12 +51,11 @@ public class LocationUtil {
         try {
             final PreyLocation preyLocation = getLocation(ctx, messageId, asynchronous, maximum);
             if (preyLocation != null && (preyLocation.getLat() != 0 && preyLocation.getLng() != 0)) {
-                PreyLogger.d(String.format("locationData:%s %s %s", preyLocation.getLat(), preyLocation.getLng(), preyLocation.getAccuracy()));
+                PreyLogger.d(String.format("%s %s %s", preyLocation.getLat(), preyLocation.getLng(), preyLocation.getAccuracy()));
                 PreyConfig.getPreyConfig(ctx).setLocation(preyLocation);
                 PreyLocationManager.getInstance(ctx).setLastLocation(preyLocation);
                 data = convertData(preyLocation);
             } else {
-                PreyLogger.d("locationData else:");
                 return null;
             }
         } catch (Exception e) {
@@ -84,7 +83,7 @@ public class LocationUtil {
     public static PreyLocation getLocation(Context ctx, String messageId, boolean asynchronous, int maximum) throws Exception {
         PreyLocation preyLocation = null;
         boolean isAirplaneModeOn = PreyPhone.isAirplaneModeOn(ctx);
-        PreyLogger.d(String.format("PreyLocation getLocation isAirplaneModeOn:%s", isAirplaneModeOn));
+        PreyLogger.d(String.format("isAirplaneModeOn:%s", isAirplaneModeOn));
         /**
          * Proceed with location retrieval only if airplane mode is not enabled.
          * This is because location services are typically disabled in airplane mode.
@@ -181,7 +180,7 @@ public class LocationUtil {
 
     public static PreyLocation getPreyLocationPlayService(final Context ctx, String method, boolean asynchronous, PreyLocation preyLocationOld) throws Exception {
         PreyLocation preyLocation = null;
-        PreyLogger.d("getPreyLocationPlayService");
+        PreyLogger.d("PreyLocation");
         final PreyGooglePlayServiceLocation play = new PreyGooglePlayServiceLocation();
         try {
             new Thread(new Runnable() {
@@ -198,7 +197,7 @@ public class LocationUtil {
                 preyLocation = new PreyLocation(currentLocation, method);
             }
         } catch (Exception e) {
-            PreyLogger.d(String.format("Error getPreyLocationPlayService:%s", e.getMessage()));
+            PreyLogger.d(String.format("Error:%s", e.getMessage()));
             throw e;
         } finally {
             if (play != null)
@@ -219,7 +218,7 @@ public class LocationUtil {
             int i = 0;
             PreyLocationManager.getInstance(ctx).setLastLocation(null);
             while (i < MAXIMUM_OF_ATTEMPTS2) {
-                PreyLogger.d(String.format("getPreyLocationAppServiceOreo[%d]:", i));
+                PreyLogger.d(String.format("[%d]:", i));
                 try {
                     Thread.sleep(SLEEP_OF_ATTEMPTS[i] * 1000);
                 } catch (Exception e) {
@@ -233,7 +232,7 @@ public class LocationUtil {
                 i++;
             }
         } catch (Exception e) {
-            PreyLogger.e(String.format("Error getPreyLocationAppServiceOreo:%s", e.getMessage()), e);
+            PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
             throw e;
         } finally {
             ctx.stopService(intentLocation);
@@ -251,7 +250,7 @@ public class LocationUtil {
                 ctx.startService(intentLocation);
                 preyLocation = waitLocation(ctx, method, asynchronous, maximum);
             } catch (Exception e) {
-                PreyLogger.e(String.format("getPreyLocationAppService e:%s", e.getMessage()), e);
+                PreyLogger.e(String.format("e:%s", e.getMessage()), e);
                 throw e;
             } finally {
                 ctx.stopService(intentLocation);
@@ -266,7 +265,7 @@ public class LocationUtil {
         if (location != null && location.isValid()) {
             preyLocation = location;
             preyLocation.setMethod(method);
-            PreyLogger.d(String.format("getPreyLocationAppService:%s", preyLocation.toString()));
+            PreyLogger.d(String.format("%s", preyLocation.toString()));
         }
         return preyLocation;
     }

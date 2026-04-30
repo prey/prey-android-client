@@ -44,7 +44,7 @@ public class Wifi extends JsonAction {
             parametersMap.put("netmask", wifiPhone.getNetmask());
             data.addDataListAll(parametersMap);
         } catch (Exception e) {
-            PreyLogger.e("Error:" + e.getMessage() + e.getMessage(), e);
+            PreyLogger.e("Error:" + e.getMessage(), e);
         }
         return data;
     }

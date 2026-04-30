@@ -23,8 +23,7 @@ public class AlarmLocationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
-            PreyLogger.d("DAILY______________________________");
-            PreyLogger.d("DAILY----------AlarmLocationReceiver onReceive");
+            PreyLogger.d("Daily location");
             final Context ctx = context;
             new Thread() {
                 public void run() {
@@ -32,7 +31,7 @@ public class AlarmLocationReceiver extends BroadcastReceiver {
                 }
             }.start();
         } catch (Exception e) {
-            PreyLogger.e(String.format("DAILY AlarmLocationReceiver error:%s", e.getMessage()), e);
+            PreyLogger.e(String.format("Daily location error:%s", e.getMessage()), e);
         }
     }
 

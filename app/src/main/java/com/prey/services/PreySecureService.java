@@ -46,7 +46,7 @@ public class PreySecureService extends Service {
 
     public void onCreate() {
         super.onCreate();
-        PreyLogger.d("PreySecureService onCreate");
+   
     }
 
     private WebView myWebView = null;
@@ -54,7 +54,7 @@ public class PreySecureService extends Service {
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         final Context ctx = this;
-        PreyLogger.d("PreySecureService onStart");
+   
         boolean canDrawOverlays = PreyPermission.canDrawOverlays(ctx);
         if (!canDrawOverlays) {
             stopSelf();
@@ -62,15 +62,15 @@ public class PreySecureService extends Service {
         }
         long time = PreyConfig.getPreyConfig(this).getTimeSecureLock();
         long now = new Date().getTime();
-        PreyLogger.d(String.format("PreyDisablePowerOptionsReceiver time:%s now:%s <%s", time, now, (now < time)));
+        PreyLogger.d(String.format("time:%s now:%s <%s", time, now, (now < time)));
         if (now < time) {
-            PreyLogger.d("PreySecureService close");
+            PreyLogger.d("close");
             stopSelf();
             return;
         }
         boolean viewSecure = PreyConfig.getPreyConfig(this).getViewSecure();
         if (!viewSecure) {
-            PreyLogger.d("PreySecureService viewSecure stopSelf");
+            PreyLogger.d("viewSecure stopSelf");
             stopSelf();
             return;
         }
@@ -153,7 +153,7 @@ public class PreySecureService extends Service {
 
     public void onDestroy() {
         super.onDestroy();
-        PreyLogger.d("PreySecureService onDestroy");
+   
         PreyConfig.getPreyConfig(this).setOpenSecureService(false);
         if (view != null) {
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -173,7 +173,7 @@ public class PreySecureService extends Service {
     }
 
     public void close() {
-        PreyLogger.d("PreySecureService close");
+   
         stopSelf();
     }
 

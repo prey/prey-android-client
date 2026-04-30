@@ -42,7 +42,7 @@ public class PreyStorageService extends Service {
                     try {
                         Thread.sleep(1000);
                         boolean isStorage = PreyPermission.isExternalStorageManager(ctx);
-                        PreyLogger.d(String.format("PreyStorageService: %b", isStorage));
+                        PreyLogger.d(String.format("%b", isStorage));
                         if (isStorage) {
                             run = false;
                             Intent intentActivity = new Intent(ctx, CheckPasswordHtmlActivity.class);

@@ -65,7 +65,7 @@ public class ActionsRunner implements Runnable {
             } catch (Exception e) {
                 PreyLogger.e("Error:" + e.getMessage(), e);
             }
-            PreyLogger.d("ActionsRunner finished");
+            PreyLogger.d("finished");
         }
         ctx.stopService(new Intent(ctx, PreyRunnerService.class));
     }
@@ -76,10 +76,10 @@ public class ActionsRunner implements Runnable {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    PreyLogger.d("_________New Thread");
+                    PreyLogger.d("New Thread");
                     ActionsRunner.getInstructions(context,close);
                 } catch (PreyException e) {
-                    PreyLogger.e("_________getInstructionsNewThread:"+e.getMessage(),e);
+                    PreyLogger.e(e.getMessage(),e);
                 }
             }
         }).start();
@@ -87,8 +87,6 @@ public class ActionsRunner implements Runnable {
     }
 
     private static List<JSONObject> getInstructions(Context ctx,boolean close) throws PreyException {
-        PreyLogger.d("______________________________");
-        PreyLogger.d("_______getInstructions________");
         List<JSONObject> jsonObject = null;
         try {
             if(close) {

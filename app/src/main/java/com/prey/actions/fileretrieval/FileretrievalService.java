@@ -24,7 +24,6 @@ public class FileretrievalService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        PreyLogger.d("***************onHandleIntent");
         FileretrievalController.getInstance().run(getApplicationContext());
         stopSelf();
     }

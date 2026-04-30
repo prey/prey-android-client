@@ -24,8 +24,8 @@ public class TriggerGeoReceiver extends TriggerReceiver {
     public void onReceive(Context context, int geoId, String transition) {
         TriggerDataSource dataSource = new TriggerDataSource(context);
         List<TriggerDto> listTrigger = dataSource.getAllTriggers();
-        PreyLogger.d("Trigger  onReceive geoId:" + geoId + " transition:" + transition);
-        PreyLogger.d("Trigger  onReceive listTrigger.size():" + (listTrigger == null ? -1 : listTrigger.size()));
+        PreyLogger.d("Trigger geoId:" + geoId + " transition:" + transition);
+        PreyLogger.d("Trigger listTrigger.size():" + (listTrigger == null ? -1 : listTrigger.size()));
         for (int i = 0; listTrigger != null && i < listTrigger.size(); i++) {
             TriggerDto trigger = listTrigger.get(i);
             String triggerName = trigger.getName();
@@ -42,9 +42,9 @@ public class TriggerGeoReceiver extends TriggerReceiver {
                             boolean process = true;
                             boolean haveRange = TriggerUtil.haveRange(listEvents);
                             if (haveRange) {
-                                PreyLogger.d("Trigger TriggerReceiver  haveRange:" + haveRange);
+                                PreyLogger.d("Trigger haveRange:" + haveRange);
                                 boolean validRange = TriggerUtil.validRange(listEvents);
-                                PreyLogger.d("Trigger TriggerReceiver  validRange:" + validRange);
+                                PreyLogger.d("Trigger validRange:" + validRange);
                                 process = validRange;
                             }
                             if (process) {

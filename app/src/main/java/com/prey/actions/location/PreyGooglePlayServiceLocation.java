@@ -119,7 +119,7 @@ public class PreyGooglePlayServiceLocation implements
                         mGoogleApiClient, mLocationRequest, this);
                 Looper.loop();
             }catch (Exception e){
-                    PreyLogger.d("Error startLocationUpdates: "+e.getMessage());
+                    PreyLogger.d("Error: "+e.getMessage());
             }
         }
     }

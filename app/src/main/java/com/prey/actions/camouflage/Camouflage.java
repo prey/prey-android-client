@@ -21,7 +21,7 @@ import android.content.Context;
 public class Camouflage {
 
     public static void hide(Context ctx, List<ActionResult> lista, JSONObject parameters) {
-        PreyLogger.d("started hide");
+        PreyLogger.d("started");
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
@@ -40,12 +40,12 @@ public class Camouflage {
         }
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "camouflage", "started",reason));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(true);
-        PreyLogger.d("stopped hide");
+        PreyLogger.d("stopped");
         PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_hide");
     }
 
     public static void unhide(Context ctx, List<ActionResult> lista, JSONObject parameters) {
-        PreyLogger.d("started unhide");
+        PreyLogger.d("started");
         String messageId = null;
         try {
             messageId = parameters.getString(PreyConfig.MESSAGE_ID);
@@ -64,7 +64,7 @@ public class Camouflage {
         }
         PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "camouflage", "stopped",reason));
         PreyConfig.getPreyConfig(ctx).setCamouflageSet(false);
-        PreyLogger.d("stopped unhide");
+        PreyLogger.d("stopped");
         PreyConfig.getPreyConfig(ctx).setLastEvent("camouflage_unhide");
     }
 

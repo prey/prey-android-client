@@ -94,7 +94,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
         try {
             if (camera != null) {
                 camera.takePicture(shutterCallback, rawCallback, jpegCallback);
-                PreyLogger.d("PreReportActivity open takePicture()");
+                PreyLogger.d("open takePicture()");
             }
         } catch (Exception e) {
             PreyLogger.e("Error:"+e.getMessage(),e);
@@ -148,12 +148,12 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
 
     Camera.PictureCallback jpegCallback = new Camera.PictureCallback() {
         public void onPictureTaken(byte[] data, Camera camera) {
-            PreyLogger.d("PreReportActivity camera jpegCallback");
+            PreyLogger.d("camera jpegCallback");
             dataImagen = resizeImage(data);
             try {
                 //Get route with Android 12 support
                 String path = getExternalFilesDir(null).toString()  + "/Prey/";
-                PreyLogger.d("PreReportActivity path:" + path);
+                PreyLogger.d("path:" + path);
                 try {
                     new File(path).mkdir();
                 } catch (Exception e) {
@@ -172,7 +172,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
                     }
                 }
             } catch (Exception e) {
-                PreyLogger.e("PreReportActivity camera jpegCallback err" + e.getMessage(), e);
+                PreyLogger.e("camera jpegCallback err" + e.getMessage(), e);
             }
         }
     };
@@ -194,7 +194,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-        PreyLogger.d("PreReportActivity camera setPreviewDisplay()");
+        PreyLogger.d("camera setPreviewDisplay()");
         mHolder = holder;
         try {
             if (camera != null)
@@ -205,7 +205,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
-        PreyLogger.d("PreReportActivity camera surfaceDestroyed()");
+        PreyLogger.d("camera surfaceDestroyed()");
         if (camera != null) {
             try {
                 camera.stopPreview();
@@ -231,7 +231,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
             Bitmap resized = Bitmap.createScaledBitmap(original, PHOTO_WIDTH, PHOTO_HEIGHT, true);
             Bitmap resized2 =null;
             Matrix matrix = new Matrix();
-            PreyLogger.d("SimpleCameraActivity focus :"+focus+" screenIntOrientation:"+screenIntOrientation);
+            PreyLogger.d("focus :"+focus+" screenIntOrientation:"+screenIntOrientation);
             if(screenIntOrientation==CODE_PORTRAIT ){
                 if ("front".equals(focus)) {
                     matrix.postRotate(90);
@@ -274,7 +274,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
         PreyLocation preyLocation = null;
         @Override
         protected void onPreExecute() {
-            PreyLogger.d("PreReportActivity antes camera");
+            PreyLogger.d("before camera");
             try {
                 progressDialog = new ProgressDialog(PreReportActivity.this);
                 progressDialog.setMessage(getApplicationContext().getText(R.string.pre_report_camera1).toString());
@@ -328,7 +328,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
                     }
                     f++;
                 }
-                PreyLogger.d("PreReportActivity Camera 1 size:" + (dataImagen == null ? -1 : dataImagen.length));
+                PreyLogger.d("Camera 1 size:" + (dataImagen == null ? -1 : dataImagen.length));
             } catch (Exception e) {
                 PreyLogger.e("Camera 1 error:" + e.getMessage(), e);
             }
@@ -365,7 +365,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
                     }
                     b++;
                 }
-                PreyLogger.d("PreReportActivity Camera 2 size:" + (dataImagen == null ? -1 : dataImagen.length));
+                PreyLogger.d("Camera 2 size:" + (dataImagen == null ? -1 : dataImagen.length));
             } catch (Exception e) {
                 PreyLogger.e("Camera 2 error:" + e.getMessage(), e);
             }
@@ -415,7 +415,7 @@ public class PreReportActivity extends Activity implements SurfaceHolder.Callbac
         }
         @Override
         protected void onPostExecute(Void unused) {
-            PreyLogger.d("PreReportActivity post camera");
+            PreyLogger.d("post camera");
             try {
                 if (progressDialog != null)
                     progressDialog.dismiss();

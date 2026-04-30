@@ -29,17 +29,17 @@ public class GeofenceIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         try {
-            PreyLogger.d("GEO GeofenceIntentService");
+            PreyLogger.d("GEO");
             GeofencingEvent event = GeofencingEvent.fromIntent(intent);
             if (event != null) {
                 if (event.hasError()) {
-                    PreyLogger.d("GEO GeofenceIntentService hasError:" +event.toString());
+                    PreyLogger.d("GEO hasError:" +event.toString());
                 } else {
                     notifyGeofenceTransition(getApplicationContext(),  event.getGeofenceTransition(), event.getTriggeringGeofences(), event.getTriggeringLocation());
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("GEO GeofenceIntentService error:" + e.getMessage(), e);
+            PreyLogger.e("GEO error:" + e.getMessage(), e);
         }
         stopSelf();
     }

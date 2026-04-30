@@ -152,7 +152,7 @@ public class CameraSourcePreview extends ViewGroup {
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             return true;
         }
-        PreyLogger.d("isPortraitMode returning false by default");
+        PreyLogger.d("returning false by default");
         return false;
     }
 

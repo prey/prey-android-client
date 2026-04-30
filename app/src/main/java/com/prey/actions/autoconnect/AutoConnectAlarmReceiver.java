@@ -17,9 +17,6 @@ public class AutoConnectAlarmReceiver  extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
-            PreyLogger.d("______________________________");
-            PreyLogger.d("______________________________");
-            PreyLogger.d("----------AutoConnect AlarmReceiver onReceive");
             final Context ctx = context;
             new Thread() {
                 public void run() {
@@ -27,7 +24,7 @@ public class AutoConnectAlarmReceiver  extends BroadcastReceiver {
                 }
             }.start();
         } catch (Exception e) {
-            PreyLogger.e("AutoConnect AlarmReceiver error:" + e.getMessage(), e);
+            PreyLogger.e("error:" + e.getMessage(), e);
         }
     }
 

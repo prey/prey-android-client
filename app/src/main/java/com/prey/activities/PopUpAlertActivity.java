@@ -30,7 +30,7 @@ public class PopUpAlertActivity extends PreyActivity {
     private final BroadcastReceiver close_prey_receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            PreyLogger.d("PopUpAlertActivity close_prey_receiver finish");
+            PreyLogger.d("close_prey_receiver finish");
             finish();
         }
     };
@@ -38,7 +38,7 @@ public class PopUpAlertActivity extends PreyActivity {
     private final BroadcastReceiver popup_prey_receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            PreyLogger.d("PopUpAlertActivity popup_prey_receiver finish");
+            PreyLogger.d("popup_prey_receiver finish");
             PreyConfig.getPreyConfig(context).setNoficationPopupId(0);
             finish();
             }
@@ -83,7 +83,7 @@ public class PopUpAlertActivity extends PreyActivity {
     protected void onResume() {
         super.onResume();
         int noficationPopupId = PreyConfig.getPreyConfig(this).getNoficationPopupId();
-        PreyLogger.d("PopUpAlertActivity onResume noficationPopupId:" + noficationPopupId);
+        PreyLogger.d("noficationPopupId:" + noficationPopupId);
         if (noficationPopupId == 0) {
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY);

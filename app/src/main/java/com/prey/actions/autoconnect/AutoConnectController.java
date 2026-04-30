@@ -27,14 +27,14 @@ public class AutoConnectController {
     public void initJob(Context ctx) {
         try{
             boolean isAutoconnect=PreyConfig.getPreyConfig(ctx).getAutoConnect();
-            PreyLogger.d("AUTO AutoConnectController initJob:"+isAutoconnect);
+            PreyLogger.d("isAutoconnect:"+isAutoconnect);
             if (isAutoconnect) {
                 if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
                     AutoconnectJobService.schedule(ctx);
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("AUTO error:" + e.getMessage(), e);
+            PreyLogger.e("Error:" + e.getMessage(), e);
         }
     }
 

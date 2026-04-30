@@ -52,7 +52,7 @@ public class EventThread extends Thread {
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("EVENT Error EventThread:" + e.getMessage(),e);
+            PreyLogger.e("EVENT Error:" + e.getMessage(),e);
         }
     }
 

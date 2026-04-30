@@ -34,7 +34,7 @@ public class RunBackgroundCheckBoxPreference extends CheckBoxPreference {
     @Override
     public void setChecked(boolean checked) {
         super.setChecked(checked);
-        PreyLogger.d("RunBackgroundCheckBoxPreference:" + checked);
+        PreyLogger.d("checked:" + checked);
         Context ctx=getContext();
         if(checked){
             notifyReady(ctx);
@@ -52,7 +52,7 @@ public class RunBackgroundCheckBoxPreference extends CheckBoxPreference {
             try {
                 ctx.stopService(new Intent(ctx, PreyNotificationForeGroundService.class));
             } catch (Exception e) {
-                PreyLogger.e("notifyCancel:" + e.getMessage(), e);
+                PreyLogger.e(e.getMessage(), e);
             }
         }
     }
