@@ -16,7 +16,7 @@ import android.os.Bundle;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
-import com.prey.beta.actions.PreyBetaController;
+import com.prey.actions.PreyController;
 import com.prey.json.actions.Report;
 import com.prey.preferences.RunBackgroundCheckBoxPreference;
 import com.prey.services.PreyDisablePowerOptionsService;
@@ -82,7 +82,7 @@ public class PreyBootController extends BroadcastReceiver {
             new Thread() {
                 public void run() {
                     try {
-                        PreyBetaController.startPrey(ctx);
+                        PreyController.startPrey(ctx);
                     } catch (Exception e) {
                         PreyLogger.e("Error:"+e.getMessage(),e);
                     }

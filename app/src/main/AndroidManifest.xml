@@ -406,7 +406,6 @@
         <service android:name=".actions.location.LocationUpdatesService" />
         <service android:name=".services.PreyBootService" />
         <service android:name=".services.PreyRunnerService" />
-        <service android:name=".beta.services.PreyBetaRunnerService" />
         <service android:name=".actions.report.ReportService" />
         <service android:name=".actions.geofences.GeofenceIntentService" />
         <service android:name=".actions.aware.AwareIntentService" />

@@ -10,7 +10,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import com.prey.PreyLogger;
-import com.prey.beta.actions.PreyBetaController;
+import com.prey.actions.PreyController;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -27,7 +27,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 cmd = null;
             }
             PreyLogger.d("FIREBASE cmd:"+cmd);
-            PreyBetaController.startPrey(this,cmd);
+            PreyController.startPrey(this,cmd);
         }
     }
 

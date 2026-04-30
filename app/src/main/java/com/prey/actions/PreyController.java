@@ -4,16 +4,16 @@
  * License: GPLv3
  * Full license at "/LICENSE"
  ******************************************************************************/
-package com.prey.beta.actions;
+package com.prey.actions;
 
 import android.content.Context;
 import android.content.Intent;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.beta.services.PreyBetaRunnerService;
+import com.prey.services.PreyRunnerService;
 
-public class PreyBetaController {
+public class PreyController {
 
     public static void startPrey(Context ctx) {
         startPrey(ctx, null);
@@ -28,8 +28,8 @@ public class PreyBetaController {
             new Thread(new Runnable() {
                 public void run() {
                     try{
-                        context.stopService(new Intent(context, PreyBetaRunnerService.class));
-                        Intent intentStart = new Intent(context, PreyBetaRunnerService.class);
+                        context.stopService(new Intent(context, PreyRunnerService.class));
+                        Intent intentStart = new Intent(context, PreyRunnerService.class);
                         if (cmd != null) {
                             intentStart.putExtra("cmd", cmd);
                         }
@@ -43,8 +43,7 @@ public class PreyBetaController {
     }
 
     public static void stopPrey(Context ctx) {
-        ctx.stopService(new Intent(ctx, PreyBetaRunnerService.class));
+        ctx.stopService(new Intent(ctx, PreyRunnerService.class));
     }
 
 }
-

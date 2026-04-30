@@ -7,7 +7,7 @@
 package com.prey.receivers;
 
 import com.prey.PreyLogger;
-import com.prey.beta.services.PreyBetaRunnerService;
+import com.prey.services.PreyRunnerService;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,10 +18,10 @@ public class AlarmScheduledReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
-            Intent intentRunner = new Intent(context, PreyBetaRunnerService.class);
+            Intent intentRunner = new Intent(context, PreyRunnerService.class);
             context.startService(intentRunner);
         }catch (Exception e){
-            PreyLogger.e("Error PreyBetaRunnerService:"+e.getMessage(),e);
+            PreyLogger.e("Error PreyRunnerService:"+e.getMessage(),e);
         }
     }
 

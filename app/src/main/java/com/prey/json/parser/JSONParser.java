@@ -41,12 +41,11 @@ public class JSONParser {
             if (sb!=null)
                 json = sb.trim();
         }catch(Exception e){
-            PreyLogger.e("Error, causa:" + e.getMessage(), e);
+            PreyLogger.e("error:" + e.getMessage(), e);
             return null;
         }
         if(sb!=null) {
-            PreyLogger.d("_______cmd________");
-            PreyLogger.d(sb);
+            PreyLogger.d("data: " + sb);
         }
         //json = "[{\"command\":\"history\",\"target\":\"call\",\"options\":{}}]";
         //json = "[{\"command\":\"history\",\"target\":\"sms\",\"options\":{}}]";

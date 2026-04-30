@@ -4,7 +4,7 @@
  * License: GPLv3
  * Full license at "/LICENSE"
  ******************************************************************************/
-package com.prey.beta.actions;
+package com.prey.actions;
 
 import java.util.List;
 
@@ -15,25 +15,22 @@ import android.content.Intent;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
-import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionsController;
 import com.prey.activities.CheckPasswordHtmlActivity;
-import com.prey.beta.services.PreyBetaRunnerService;
+import com.prey.services.PreyRunnerService;
 import com.prey.exceptions.PreyException;
 import com.prey.json.parser.JSONParser;
-import com.prey.managers.PreyConnectivityManager;
-import com.prey.managers.PreyTelephonyManager;
 import com.prey.net.PreyWebServices;
 import com.prey.net.UtilConnection;
 
-public class PreyBetaActionsRunner implements Runnable {
+public class ActionsRunner implements Runnable {
 
     private Context ctx;
 
     private String cmd;
     private String messageId;
 
-    public PreyBetaActionsRunner(Context context, String cmd) {
+    public ActionsRunner(Context context, String cmd) {
         this.ctx = context;
         this.cmd = cmd;
     }
@@ -51,7 +48,7 @@ public class PreyBetaActionsRunner implements Runnable {
                 if (connection) {
                     try {
                         if (cmd == null || "".equals(cmd)) {
-                            jsonObject = PreyBetaActionsRunner.getInstructions(ctx,true);
+                            jsonObject = ActionsRunner.getInstructions(ctx,true);
                         } else {
                             jsonObject = getInstructionsNewThread(ctx, cmd,true);
                         }
@@ -59,18 +56,18 @@ public class PreyBetaActionsRunner implements Runnable {
                         PreyLogger.e("Error:"+e.getMessage(),e);
                     }
                     if (jsonObject == null || jsonObject.size() == 0) {
-                        PreyLogger.d("nothing");
+                        PreyLogger.d("Empty response");
                     } else {
-                        PreyLogger.d("runInstructions");
+                        PreyLogger.d("RunInstructions");
                         runInstructions(jsonObject);
                     }
                 }
             } catch (Exception e) {
-                PreyLogger.e("Error, because:" + e.getMessage(), e);
+                PreyLogger.e("Error:" + e.getMessage(), e);
             }
-            PreyLogger.d("Prey execution has finished!!");
+            PreyLogger.d("ActionsRunner finished");
         }
-        ctx.stopService(new Intent(ctx, PreyBetaRunnerService.class));
+        ctx.stopService(new Intent(ctx, PreyRunnerService.class));
     }
 
     public static List<JSONObject> getInstructionsNewThread(Context ctx, String cmd,final boolean close) throws PreyException {
@@ -80,7 +77,7 @@ public class PreyBetaActionsRunner implements Runnable {
             public void run() {
                 try {
                     PreyLogger.d("_________New Thread");
-                    PreyBetaActionsRunner.getInstructions(context,close);
+                    ActionsRunner.getInstructions(context,close);
                 } catch (PreyException e) {
                     PreyLogger.e("_________getInstructionsNewThread:"+e.getMessage(),e);
                 }
