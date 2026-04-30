@@ -24,15 +24,36 @@ public class AlertReceiver extends BroadcastReceiver {
         final String messageId = intent.getStringExtra("messageId");
         final String reason = intent.getStringExtra("reason");
         PreyLogger.d("AlertReceiver notificationId:" + notificationId);
-        String popupIntent=PopUpAlertActivity.POPUP_PREY+"_"+notificationId;
-        PreyLogger.d("AlertReceiver popup intent:"+popupIntent);
+        String popupIntent = PopUpAlertActivity.POPUP_PREY + "_" + notificationId;
+        PreyLogger.d("AlertReceiver popup intent:" + popupIntent);
         context.sendBroadcast(new Intent(popupIntent));
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(notificationId);
-        new Thread() {
+
+        // Tell the system to keep this receiver active while we POST the
+        // "stopped" notify. Without this, onReceive returns immediately, the
+        // popup activity finishes, and the process drops to "cached" — at
+        // which point Android (and aggressive OEM battery managers) can kill
+        // it BEFORE the worker thread finishes the HTTP request, silently
+        // losing the action_stopped event on the server side.
+        //
+        // The worker uses sendNotifyActionResultPreyHttpSync (instead of the
+        // default async variant) so we can call result.finish() only after
+        // the POST has actually completed. If we used the async variant the
+        // post would still race the OOM killer.
+        final PendingResult pendingResult = goAsync();
+        Thread worker = new Thread(new Runnable() {
+            @Override
             public void run() {
-                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(context, "processed", messageId, UtilJson.makeMapParam("start", "alert", "stopped", reason));
+                try {
+                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttpSync(
+                            context, "processed", messageId,
+                            UtilJson.makeMapParam("start", "alert", "stopped", reason));
+                } finally {
+                    pendingResult.finish();
+                }
             }
-        }.start();
+        }, "prey-alert-stopped-notify");
+        worker.start();
     }
 }

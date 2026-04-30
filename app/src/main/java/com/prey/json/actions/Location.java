@@ -128,6 +128,10 @@ public class Location extends JsonAction{
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"failed", messageId, UtilJson.makeMapParam("get", "location", "failed",PreyConfig.getPreyConfig(ctx).getLocationInfo()));
         }else{
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("get", "location", "stopped",reason));
+            // Stamp the freshness timestamp ONLY on the stopped path: that's
+            // the same condition that produced sendPreyHttpData(...) above,
+            // so "last sent" means "we actually pushed location to the server".
+            PreyConfig.getPreyConfig(ctx).setLastLocationSentAt(System.currentTimeMillis());
         }
         try {
             String nameDevice = Settings.Secure.getString(ctx.getContentResolver(), "bluetooth_name");

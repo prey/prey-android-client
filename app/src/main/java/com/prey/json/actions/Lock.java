@@ -26,6 +26,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.actions.HttpDataService;
+import com.prey.actions.location.LocationTracker;
 import com.prey.actions.observer.ActionResult;
 import com.prey.activities.CloseActivity;
 import com.prey.activities.PasswordHtmlActivity;
@@ -174,6 +175,8 @@ public class Lock extends JsonAction {
 
     public void lock(final Context ctx, String unlock,final String messageId,final String reason,String device_job_id) {
         PreyLogger.d(String.format("lock unlock:%s messageId:%s reason:%s",unlock,messageId,reason));
+        // Same side-channel as Alert/Alarm: async location report when stale.
+        LocationTracker.maybeSendRecentLocation(ctx);
         PreyConfig.getPreyConfig(ctx).setUnlockPass(unlock);
         PreyConfig.getPreyConfig(ctx).setLock(true);
         PreyLogger.d("lock 1");

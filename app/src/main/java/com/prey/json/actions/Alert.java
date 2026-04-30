@@ -15,6 +15,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.alert.AlertThread;
+import com.prey.actions.location.LocationTracker;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
 import com.prey.json.UtilJson;
@@ -98,6 +99,11 @@ public class Alert extends JsonAction {
     }
 
     public void startAlert(Context ctx, String alert, String messageId,String jobId,boolean fullscreen_notification) {
+        // Side-channel: emit a fresh location report alongside the alert so
+        // the panel sees where the device is at the moment of the trigger,
+        // unless we already pushed one within the last 5 minutes. Async,
+        // never blocks the alert itself.
+        LocationTracker.maybeSendRecentLocation(ctx);
         try {
             if (alert != null && !"".equals(alert)) {
                 new AlertThread(ctx, alert, messageId,jobId,fullscreen_notification).start();

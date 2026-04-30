@@ -102,6 +102,7 @@ public class PreyConfig {
     public static final String INTERVAL_REPORT = "INTERVAL_REPORT";
     public static final String EXCLUDE_REPORT = "EXCLUDE_REPORT";
     public static final String LAST_REPORT_START_DATE = "LAST_REPORT_START_DATE";
+    public static final String LAST_LOCATION_SENT_AT = "LAST_LOCATION_SENT_AT";
     public static final String TIMEOUT_REPORT = "TIMEOUT_REPORT";
     public static final String INTERVAL_AWARE = "INTERVAL_AWARE";
     public static final String TIME_SECURE_LOCK = "TIME_SECURE_LOCK";
@@ -935,6 +936,14 @@ public class PreyConfig {
 
     public long getLastReportStartDate(){
         return getLong(PreyConfig.LAST_REPORT_START_DATE, 0);
+    }
+
+    public void setLastLocationSentAt(long lastLocationSentAt) {
+        saveLong(PreyConfig.LAST_LOCATION_SENT_AT, lastLocationSentAt);
+    }
+
+    public long getLastLocationSentAt() {
+        return getLong(PreyConfig.LAST_LOCATION_SENT_AT, 0);
     }
 
     public void setTimeSecureLock(long timeSecureLock){

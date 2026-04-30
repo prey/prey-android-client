@@ -737,18 +737,29 @@ public class PreyWebServices implements WebServices {
     public void sendNotifyActionResultPreyHttp(final Context ctx,final String status,final String correlationId,final Map<String, String> params) {
         new Thread() {
             public void run() {
-        PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
-        String response = null;
+                sendNotifyActionResultPreyHttpSync(ctx, status, correlationId, params);
+            }
+        }.start();
+    }
+
+    /**
+     * Synchronous variant of {@link #sendNotifyActionResultPreyHttp(Context,
+     * String, String, Map)}. Use this from a caller that already controls
+     * its own thread / lifetime — e.g. a BroadcastReceiver inside a
+     * {@code goAsync()} window — so the caller can guarantee the POST
+     * actually completed before releasing whatever was keeping the process
+     * alive. The async variant fires-and-forgets via a new Thread, which is
+     * fine for callers that have nothing protecting the process from being
+     * killed in cached state.
+     */
+    public void sendNotifyActionResultPreyHttpSync(Context ctx, String status, String correlationId, Map<String, String> params) {
         try {
             String url = getResponseUrlJson(ctx);
             PreyConfig.postUrl = null;
-            PreyHttpResponse httpResponse = PreyRestHttpClient.getInstance(ctx).postAutenticationCorrelationId(url, status,correlationId,params);
-            response = httpResponse.toString();
+            PreyRestHttpClient.getInstance(ctx).postAutenticationCorrelationId(url, status, correlationId, params);
         } catch (Exception e) {
-            PreyLogger.e("error:"+e.getMessage(),e);
+            PreyLogger.e("error:" + e.getMessage(), e);
         }
-            }
-        }.start();
     }
 
     public PreyHttpResponse sendPreyHttpReport(Context ctx, List<HttpDataService> dataToSend) {

@@ -17,6 +17,7 @@ import com.prey.PreyLogger;
 import com.prey.PreyStatus;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.alarm.AlarmThread;
+import com.prey.actions.location.LocationTracker;
 import com.prey.actions.observer.ActionResult;
 import com.prey.json.JsonAction;
 import com.prey.json.UtilJson;
@@ -48,6 +49,8 @@ public class Alarm extends JsonAction {
         } catch (Exception e) {
             PreyLogger.e(String.format("Error:%s" , e.getMessage()), e);
         }
+        // Same side-channel as Alert: async location report when stale.
+        LocationTracker.maybeSendRecentLocation(ctx);
         new AlarmThread(ctx, sound, messageId, jobId).start();
     }
 
