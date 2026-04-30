@@ -37,12 +37,13 @@ public class PreyOverlayService extends Service {
         final Context ctx=this;
 
         new Thread() {
+            PreyLogger.d("PreyOverlayService");
+
             public void run() {
                 int i=0;
                 boolean run=true;
             while(run){
                     try{Thread.sleep(1000);
-                        PreyLogger.d("["+i+"] PreyOverlayService");
                         if(canDrawOverlays()){
                             run=false;
                             NotificationManager nManager = ((NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE));
