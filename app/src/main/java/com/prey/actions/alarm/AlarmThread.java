@@ -56,7 +56,7 @@ public class AlarmThread extends Thread {
             mp.start();
             Mp3OnCompletionListener mp3Listener = new Mp3OnCompletionListener();
             mp.setOnCompletionListener(mp3Listener);
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("start", "alarm", "started",reason));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "alarm", "started",reason));
             start = true;
             int i = 0;
             while (PreyStatus.getInstance().isAlarmStart() && i < 80) {
@@ -72,13 +72,13 @@ public class AlarmThread extends Thread {
             PreyConfig.getPreyConfig(ctx).setLastEvent("alarm_finished");
         } catch (Exception e) {
             PreyLogger.e("failed alarm: " + e.getMessage(),e);
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"failed", messageId, UtilJson.makeMapParam("start", "alarm", "failed", e.getMessage()));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "alarm", "failed", e.getMessage()));
         } finally {
             if (mp != null)
                 mp.release();
         }
         if (start) {
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("stop", "alarm", "stopped",reason));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("stop", "alarm", "stopped",reason));
         }
         PreyLogger.d("stopped alarm");
     }

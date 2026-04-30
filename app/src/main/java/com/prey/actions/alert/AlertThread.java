@@ -161,7 +161,7 @@ public class AlertThread extends Thread {
                     notificationManager.notify(notificationId, builder.build());
                 }
             }
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "started", reason));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "alert", "started", reason));
             PreyConfig.getPreyConfig(ctx).setNextAlert(true);
         } catch (Exception e) {
             PreyLogger.e("failed alert: " + e.getMessage(), e);
@@ -189,9 +189,9 @@ public class AlertThread extends Thread {
                 new Thread() {
                     public void run() {
                         String reason = null;
-                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "started", reason));
+                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "alert", "started", reason));
                         try{sleep(2000);}catch (Exception e){PreyLogger.e("Error sleep:"+e.getMessage(),e);}
-                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "alert", "stopped", reason));
+                        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "alert", "stopped", reason));
                     }
                 }.start();
             }

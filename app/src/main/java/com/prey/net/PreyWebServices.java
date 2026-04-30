@@ -703,8 +703,7 @@ public class PreyWebServices implements WebServices {
             PreyLogger.d("EVENT sendPreyHttpEvent url:" + url);
             PreyLogger.d("EVENT name:" + event.getName() + " info:" + event.getInfo());
             PreyLogger.d("EVENT status:" + jsonObject.toString());
-            String status = jsonObject.toString();
-            preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters);
+            preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
             if(preyHttpResponse!=null) {
                 String jsonString = preyHttpResponse.getResponseAsString();
                 if (jsonString != null && jsonString.length() > 0) {
@@ -734,10 +733,7 @@ public class PreyWebServices implements WebServices {
         return response;
     }
 
-    public void sendNotifyActionResultPreyHttp(Context ctx, String correlationId, Map<String, String> params) {
-        sendNotifyActionResultPreyHttp(ctx,null,correlationId,params);
-    }
-    public void sendNotifyActionResultPreyHttp(final Context ctx,final String status,final String correlationId,final Map<String, String> params) {
+    public void sendNotifyActionResultPreyHttp(final Context ctx,final String correlationId,final Map<String, String> params) {
         new Thread() {
             public void run() {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
@@ -745,7 +741,7 @@ public class PreyWebServices implements WebServices {
         try {
             String url = getResponseUrlJson(ctx);
             PreyConfig.postUrl = null;
-            PreyHttpResponse httpResponse = PreyRestHttpClient.getInstance(ctx).postAutenticationCorrelationId(url, status,correlationId,params);
+            PreyHttpResponse httpResponse = PreyRestHttpClient.getInstance(ctx).postAutenticationCorrelationId(url, correlationId,params);
             response = httpResponse.toString();
         } catch (Exception e) {
             PreyLogger.e("error:"+e.getMessage(),e);

@@ -104,7 +104,7 @@ public class Lock extends JsonAction {
             PreyConfig.getPreyConfig(ctx).deleteUnlockPass();
             if(PreyConfig.getPreyConfig(ctx).isMarshmallowOrAbove()){
                 Thread.sleep(1000);
-                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId,UtilJson.makeMapParam("start", "lock", "stopped",reason));
+                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId,UtilJson.makeMapParam("start", "lock", "stopped",reason));
                 Thread.sleep(2000);
                 boolean canAccessibility = PreyPermission.isAccessibilityServiceEnabled(ctx);
                 boolean canDrawOverlays=PreyPermission.canDrawOverlays(ctx);
@@ -222,7 +222,7 @@ public class Lock extends JsonAction {
             public void run() {
                 try {
                     Thread.sleep(2000);
-                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "lock", "started", reason));
+                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "lock", "started", reason));
                 }catch(Exception e){
                     PreyLogger.e("Error sendNotifyAction:"+e.getMessage(),e);
                 }

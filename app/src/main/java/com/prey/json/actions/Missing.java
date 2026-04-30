@@ -32,7 +32,7 @@ public class Missing {
         } catch (Exception e) {
             PreyLogger.e("stopService:" + e.getMessage(), e);
         }
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "missing", "started", reason));
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId,UtilJson.makeMapParam("start", "missing", "started", reason));
         try {
             PreyHttpResponse response = PreyWebServices.getInstance().setMissing(ctx, "true");
             if (response != null) {
@@ -40,7 +40,7 @@ public class Missing {
                 PreyLogger.d("Missing code:" + code);
                 if (code == HttpURLConnection.HTTP_OK || code == HttpURLConnection.HTTP_CREATED) {
                     new Report().get(ctx, list, parameters);
-                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "missing", "stopped", reason));
+                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId,UtilJson.makeMapParam("start", "missing", "stopped", reason));
                 } else {
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("start", "missing", "failed", "code:" + code));
                 }
@@ -59,7 +59,7 @@ public class Missing {
         } catch (Exception e) {
             PreyLogger.e("stopService:" + e.getMessage(), e);
         }
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("stop", "missing", "started", reason));
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId,UtilJson.makeMapParam("stop", "missing", "started", reason));
         try {
             PreyHttpResponse response = PreyWebServices.getInstance().setMissing(ctx, "false");
             if (response != null) {
@@ -67,7 +67,7 @@ public class Missing {
                 PreyLogger.d("Missing code:" + code);
                 if (code == HttpURLConnection.HTTP_OK|| code == HttpURLConnection.HTTP_CREATED) {
                     new Report().stop(ctx, list, parameters);
-                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("stop", "missing", "stopped", reason));
+                    PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId,UtilJson.makeMapParam("stop", "missing", "stopped", reason));
                 } else {
                     PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, UtilJson.makeMapParam("stop", "missing", "failed", "code:" + code));
                 }

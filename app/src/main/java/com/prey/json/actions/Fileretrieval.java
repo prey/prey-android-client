@@ -46,7 +46,7 @@ public class Fileretrieval {
         }
         try {
             PreyLogger.d("Fileretrieval started");
-            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "fileretrieval", "started",reason));
+            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("start", "fileretrieval", "started",reason));
             String path = parameters.getString("path");
             String fileId = parameters.getString("file_id");
             if(fileId==null||"".equals(fileId)||"null".equals(fileId)){

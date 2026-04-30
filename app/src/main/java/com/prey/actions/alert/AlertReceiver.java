@@ -31,7 +31,7 @@ public class AlertReceiver extends BroadcastReceiver {
         manager.cancel(notificationId);
         new Thread() {
             public void run() {
-                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(context, "processed", messageId, UtilJson.makeMapParam("start", "alert", "stopped", reason));
+                PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(context, messageId, UtilJson.makeMapParam("start", "alert", "stopped", reason));
             }
         }.start();
     }

@@ -65,7 +65,7 @@ public class Report {
         PreyConfig.getPreyConfig(ctx).setIntervalReport("" + interval);
         PreyConfig.getPreyConfig(ctx).setExcludeReport(exclude);
         PreyConfig.getPreyConfig(ctx).removeTimeNextReport();
-        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx,"processed", messageId, UtilJson.makeMapParam("get", "report", "started",reason));
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, messageId, UtilJson.makeMapParam("get", "report", "started",reason));
         PreyLogger.d("________start ReportScheduled");
         ReportScheduled.getInstance(ctx).run();
         if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
