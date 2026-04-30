@@ -393,6 +393,47 @@ public class UtilConnection {
         return connectionJson(preyConfig,uri,method,jsonParam,"Basic " + getCredentials(preyConfig.getApiKey(), "X"));
     }
 
+    public static PreyHttpResponse connectionJsonAuthorizationOnce(PreyConfig preyConfig, String uri, String method, JSONObject jsonParam, int timeoutMs) {
+        return connectionJsonOnce(preyConfig, uri, method, jsonParam, "Basic " + getCredentials(preyConfig.getApiKey(), "X"), timeoutMs);
+    }
+
+    /**
+     * Single-attempt JSON request with a custom timeout. Unlike {@link #connectionJson},
+     * this does not retry and returns the response regardless of status code so callers
+     * can implement their own fallback logic.
+     */
+    public static PreyHttpResponse connectionJsonOnce(PreyConfig config, String uri, String method, JSONObject jsonParam, String authorization, int timeoutMs) {
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL(uri);
+            connection = uri.startsWith("https") ? (HttpsURLConnection) url.openConnection() : (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod(method);
+            connection.setUseCaches(USE_CACHES);
+            connection.setConnectTimeout(timeoutMs);
+            connection.setReadTimeout(timeoutMs);
+            connection.setRequestProperty("Content-Type", "application/json");
+            if (authorization != null) {
+                connection.setRequestProperty("Authorization", authorization);
+            }
+            connection.setRequestProperty("User-Agent", getUserAgent(config));
+            connection.setRequestProperty("Origin", "android:com.prey");
+            connection.connect();
+            if (jsonParam != null) {
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+                writer.write(jsonParam.toString());
+                writer.close();
+            }
+            int responseCode = connection.getResponseCode();
+            return convertPreyHttpResponse(responseCode, connection);
+        } catch (Exception e) {
+            PreyLogger.e(String.format("connectionJsonOnce error url:%s error:%s", uri, e.getMessage()), e);
+            return null;
+        } finally {
+            if (connection != null) connection.disconnect();
+        }
+    }
+
     /**
      * Sends a JSON request to the specified URI and returns the response.
      *

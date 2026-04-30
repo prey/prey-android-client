@@ -53,6 +53,9 @@ public class PreyWebServices implements WebServices {
 
     private static PreyWebServices _instance = null;
 
+    private static final String RENAME_FALLBACK_BASE_URL = "https://panel.preyproject.com/";
+    private static final int RENAME_TIMEOUT_MS = 3000;
+
     private PreyWebServices() {
     }
 
@@ -1141,78 +1144,40 @@ public class PreyWebServices implements WebServices {
         PreyName preyName = new PreyName();
         try {
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-            PreyConfig config = PreyConfig.getPreyConfig(ctx);
-            String deviceKey = config.getDeviceId();
-            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices/").concat(deviceKey).concat("/events.json");
-            JSONObject jsonInfo = new JSONObject();
-            jsonInfo.put("new_name", name);
+            String deviceKey = PreyConfig.getPreyConfig(ctx).getDeviceId();
+            String suffix = apiv2.concat("devices/").concat(deviceKey).concat(".json");
             JSONObject jsonParam = new JSONObject();
-            jsonParam.put("name", "device_renamed");
-            jsonParam.put("info", jsonInfo);
-            PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx).jsonMethodAutentication(url, UtilConnection.REQUEST_METHOD_POST, jsonParam);
-            PreyLogger.d(String.format("renameName:%s", response.getStatusCode()));
-            preyName.setCode(response.getStatusCode());
-            if (response.getStatusCode() == HttpURLConnection.HTTP_OK) {
-                String out = response.getResponseAsString();
-                PreyConfig.getPreyConfig(ctx).setDeviceName(name);
-                PreyLogger.d(String.format("renameName:%s", out));
+            jsonParam.put("name", name);
+
+            String primaryUrl = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(suffix);
+            int statusCode = sendRenameRequest(ctx, primaryUrl, jsonParam);
+
+            if (statusCode != HttpURLConnection.HTTP_OK) {
+                String fallbackUrl = RENAME_FALLBACK_BASE_URL.concat(suffix);
+                PreyLogger.d(String.format("renameName falling back to:%s", fallbackUrl));
+                statusCode = sendRenameRequest(ctx, fallbackUrl, jsonParam);
             }
-            if (response.getStatusCode() == 422) {
-                String out = response.getResponseAsString();
-                PreyLogger.d(String.format("renameName:%s", out));
-                JSONObject outJson = new JSONObject(out);
-                String name_available_error = "";
-                String name_available = "";
-                if (out.indexOf("\"title\"") > 0) {
-                    JSONArray array2 = outJson.getJSONArray("title");
-                    for (int i = 0; array2 != null && i < array2.length(); i++) {
-                        try {
-                            String outJson1 = (String) array2.getString(i);
-                            if ("".equals(name_available_error)) {
-                                String s = outJson1.substring(0, 1).toUpperCase();
-                                name_available_error = s + outJson1.substring(1);
-                            } else {
-                                name_available_error += ", " + outJson1;
-                            }
-                        } catch (Exception e) {
-                            name_available_error = e.getMessage();
-                        }
-                    }
-                } else {
-                    JSONArray array1 = outJson.getJSONArray("name_available_error");
-                    for (int i = 0; array1 != null && i < array1.length(); i++) {
-                        try {
-                            String outJson1 = (String) array1.getString(i);
-                            if ("".equals(name_available_error)) {
-                                name_available_error = outJson1;
-                            } else {
-                                name_available_error += ", " + outJson1;
-                            }
-                        } catch (Exception e) {
-                            name_available_error = e.getMessage();
-                        }
-                    }
-                    JSONArray array2 = outJson.getJSONArray("name_available");
-                    for (int i = 0; array2 != null && i < array2.length(); i++) {
-                        try {
-                            String outJson2 = (String) array2.getString(i);
-                            if ("".equals(name_available)) {
-                                name_available = outJson2;
-                            } else {
-                                name_available += ", " + outJson2;
-                            }
-                        } catch (Exception e) {
-                            name_available_error = e.getMessage();
-                        }
-                    }
-                }
-                preyName.setError(name_available_error);
-                preyName.setName(name_available);
+
+            preyName.setCode(statusCode);
+            if (statusCode == HttpURLConnection.HTTP_OK) {
+                PreyConfig.getPreyConfig(ctx).setDeviceName(name);
             }
         } catch (Exception e) {
-            PreyLogger.d(String.format("error validate:%s", e.getMessage()));
+            PreyLogger.e(String.format("error rename:%s", e.getMessage()), e);
         }
         return preyName;
+    }
+
+    private int sendRenameRequest(Context ctx, String url, JSONObject jsonParam) {
+        PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx)
+                .jsonMethodAutenticationOnce(url, UtilConnection.REQUEST_METHOD_PUT, jsonParam, RENAME_TIMEOUT_MS);
+        if (response == null) {
+            PreyLogger.d(String.format("renameName url:%s no response (timeout/network)", url));
+            return -1;
+        }
+        int statusCode = response.getStatusCode();
+        PreyLogger.d(String.format("renameName url:%s status:%s body:%s", url, statusCode, response.getResponseAsString()));
+        return statusCode;
     }
 
     /**
