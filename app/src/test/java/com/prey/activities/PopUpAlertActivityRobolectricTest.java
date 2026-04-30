@@ -9,6 +9,7 @@ package com.prey.activities;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Application;
@@ -263,6 +264,94 @@ public class PopUpAlertActivityRobolectricTest {
         Field f = PopUpAlertActivity.class.getDeclaredField("popup");
         f.setAccessible(true);
         return (Dialog) f.get(activity);
+    }
+
+    // =========================================================================
+    // onResume redirect guard — every focus return used to re-fire the
+    // CLEAR_TASK launch into LoginActivity, piling work onto system_server
+    // exactly when focus events need to be dispatched. The guard makes the
+    // redirect one-shot and finishes the activity so onResume cannot fire
+    // again on the same instance.
+    // =========================================================================
+
+    @Test
+    public void onResume_withZeroPopupId_redirectsExactlyOnceAndFinishes() {
+        // Set popup id to 0 so the redirect branch fires.
+        preyConfig.setNoficationPopupId(0);
+        ActivityController<PopUpAlertActivity> controller = buildController(31);
+        try {
+            ShadowApplication shadowApp = Shadows.shadowOf(
+                    (Application) ApplicationProvider.getApplicationContext());
+            controller.create();
+            // Drain the activities queued so far (the CheckPasswordHtmlActivity
+            // launch is what we want to count discretely).
+            drainStartedActivities(shadowApp);
+
+            controller.start().resume();
+
+            Intent first = shadowApp.getNextStartedActivity();
+            assertNotNull(
+                    "onResume must redirect to LoginActivity when popup id is 0",
+                    first
+            );
+            assertTrue(
+                    "Redirect should target LoginActivity with CLEAR_TASK semantics",
+                    first.getComponent().getClassName().contains("LoginActivity")
+            );
+            assertEquals(
+                    "Redirect must include CLEAR_TASK to wipe the popup task",
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK,
+                    first.getFlags() & Intent.FLAG_ACTIVITY_CLEAR_TASK
+            );
+            assertTrue(
+                    "Activity must finish itself so onResume cannot re-fire on the same instance",
+                    controller.get().isFinishing()
+            );
+
+            // Drive a second resume — under the old code this re-launched
+            // LoginActivity with CLEAR_TASK every time, which was the ANR
+            // amplifier. The guard must prevent it.
+            controller.pause().resume();
+            assertNull(
+                    "Subsequent onResume must NOT fire another redirect — "
+                            + "repeated CLEAR_TASK launches under load are what triggered "
+                            + "the FocusEvent ANR",
+                    shadowApp.getNextStartedActivity()
+            );
+        } finally {
+            controller.destroy();
+        }
+    }
+
+    @Test
+    public void onResume_withNonZeroPopupId_doesNotRedirect() {
+        // setUp already sets popupId to 1, so the guard branch should NOT fire.
+        ActivityController<PopUpAlertActivity> controller = buildController(32);
+        try {
+            ShadowApplication shadowApp = Shadows.shadowOf(
+                    (Application) ApplicationProvider.getApplicationContext());
+            controller.create();
+            drainStartedActivities(shadowApp);
+
+            controller.start().resume();
+
+            assertNull(
+                    "onResume must not redirect while a notification popup is in progress",
+                    shadowApp.getNextStartedActivity()
+            );
+            assertFalse(
+                    "Activity must remain visible to actually show the popup",
+                    controller.get().isFinishing()
+            );
+        } finally {
+            controller.destroy();
+        }
+    }
+
+    private static void drainStartedActivities(ShadowApplication shadowApp) {
+        while (shadowApp.getNextStartedActivity() != null) {
+            // drain queue
+        }
     }
 
     // =========================================================================

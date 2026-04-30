@@ -28,6 +28,7 @@ public class PopUpAlertActivity extends PreyActivity {
     public static final String POPUP_PREY = "popup_prey";
 
     private Dialog popup;
+    private boolean redirectingToLogin;
 
     private final BroadcastReceiver close_prey_receiver = new BroadcastReceiver() {
         @Override
@@ -84,12 +85,25 @@ public class PopUpAlertActivity extends PreyActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // The redirect must fire at most once per Activity instance. Without
+        // the guard, every focus return (rotation, dialog cover, return from
+        // background, etc.) re-evaluates the condition and asks system_server
+        // for a CLEAR_TASK relaunch. Under load that piles work onto the
+        // system right when a focus event needs to be dispatched, which is
+        // the canonical recipe for "Waited 5000ms for FocusEvent" ANRs.
+        if (redirectingToLogin) {
+            return;
+        }
         int noficationPopupId = PreyConfig.getPreyConfig(this).getNoficationPopupId();
         PreyLogger.d("PopUpAlertActivity onResume noficationPopupId:" + noficationPopupId);
         if (noficationPopupId == 0) {
+            redirectingToLogin = true;
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
+            // Tear ourselves down explicitly so the framework doesn't bring
+            // us back onResume during the task-clear handshake.
+            finish();
         }
     }
 
