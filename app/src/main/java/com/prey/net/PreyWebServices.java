@@ -1141,6 +1141,11 @@ public class PreyWebServices implements WebServices {
     }
 
     public PreyName renameName(final Context ctx, String name){
+        String primaryBaseUrl = PreyConfig.getPreyConfig(ctx).getPreyUrl();
+        return renameName(ctx, name, primaryBaseUrl, RENAME_FALLBACK_BASE_URL, RENAME_TIMEOUT_MS);
+    }
+
+    PreyName renameName(Context ctx, String name, String primaryBaseUrl, String fallbackBaseUrl, int timeoutMs) {
         PreyName preyName = new PreyName();
         try {
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
@@ -1149,13 +1154,13 @@ public class PreyWebServices implements WebServices {
             JSONObject jsonParam = new JSONObject();
             jsonParam.put("name", name);
 
-            String primaryUrl = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(suffix);
-            int statusCode = sendRenameRequest(ctx, primaryUrl, jsonParam);
+            String primaryUrl = primaryBaseUrl.concat(suffix);
+            int statusCode = sendRenameRequest(ctx, primaryUrl, jsonParam, timeoutMs);
 
             if (statusCode != HttpURLConnection.HTTP_OK) {
-                String fallbackUrl = RENAME_FALLBACK_BASE_URL.concat(suffix);
+                String fallbackUrl = fallbackBaseUrl.concat(suffix);
                 PreyLogger.d(String.format("renameName falling back to:%s", fallbackUrl));
-                statusCode = sendRenameRequest(ctx, fallbackUrl, jsonParam);
+                statusCode = sendRenameRequest(ctx, fallbackUrl, jsonParam, timeoutMs);
             }
 
             preyName.setCode(statusCode);
@@ -1168,9 +1173,9 @@ public class PreyWebServices implements WebServices {
         return preyName;
     }
 
-    private int sendRenameRequest(Context ctx, String url, JSONObject jsonParam) {
+    private int sendRenameRequest(Context ctx, String url, JSONObject jsonParam, int timeoutMs) {
         PreyHttpResponse response = PreyRestHttpClient.getInstance(ctx)
-                .jsonMethodAutenticationOnce(url, UtilConnection.REQUEST_METHOD_PUT, jsonParam, RENAME_TIMEOUT_MS);
+                .jsonMethodAutenticationOnce(url, UtilConnection.REQUEST_METHOD_PUT, jsonParam, timeoutMs);
         if (response == null) {
             PreyLogger.d(String.format("renameName url:%s no response (timeout/network)", url));
             return -1;
