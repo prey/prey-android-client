@@ -1,9 +1,12 @@
 /*******************************************************************************
- * MdmDebugReporter — temporary helper to send arbitrary status events to the
- * Prey MDM server's open debug endpoint. Used during the AMAPI integration
- * bring-up when ADB / logcat is not available on the test device.
+ * MdmDebugReporter sends best-effort debug events to the Prey MDM server.
  *
- * Remove this class (and its callers) once the integration is verified.
+ * It is intended as a persistent diagnostic utility for enrollment and setup
+ * flows where ADB / logcat is unavailable or impractical on the target device.
+ *
+ * The reporter is disabled by default. It becomes active only when
+ * BuildConfig.MDM_DEBUG_URL is provided by the selected Gradle build config.
+ * When no URL is configured, send() is a no-op and never breaks callers.
  ******************************************************************************/
 package com.prey.mdm;
 
