@@ -22,8 +22,12 @@ import androidx.fragment.app.FragmentActivity;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
+import com.prey.mdm.MdmDebugReporter;
 import com.prey.mdm.MdmKeyedAppStateReporter;
 import com.prey.receivers.RestrictionsReceiver;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SplashMdmActivity extends FragmentActivity {
     private static final String EXTRA_LAUNCHED_AS_SETUP_ACTION =
@@ -40,6 +44,7 @@ public class SplashMdmActivity extends FragmentActivity {
         setContentView(R.layout.splash_mdm);
         textStatus = (TextView) findViewById(R.id.text_mdm_status);
         progressBar = (ProgressBar) findViewById(R.id.progress_mdm);
+        MdmDebugReporter.send(this, "splash_oncreate");
         new MdmRegistrationTask().execute();
     }
 
@@ -52,12 +57,27 @@ public class SplashMdmActivity extends FragmentActivity {
                 publishProgress(getString(R.string.mdm_loading_title));
                 RestrictionsManager manager = (RestrictionsManager) ctx.getSystemService(Context.RESTRICTIONS_SERVICE);
                 Bundle restrictions = manager.getApplicationRestrictions();
+                Map<String, Object> bgInfo = new HashMap<>();
+                bgInfo.put("restrictions_null", restrictions == null);
+                bgInfo.put("restrictions_empty", restrictions == null || restrictions.isEmpty());
+                if (restrictions != null) {
+                    bgInfo.put("restrictions_keys", restrictions.keySet().toString());
+                    bgInfo.put("has_setup_key", restrictions.containsKey("setup_key"));
+                }
+                MdmDebugReporter.send(ctx, "splash_dobg_start", bgInfo);
                 if (restrictions != null && !restrictions.isEmpty()) {
                     RestrictionsReceiver.handleApplicationRestrictions(ctx, restrictions);
-                    return PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey();
+                    boolean registered = PreyConfig.getPreyConfig(ctx).isThisDeviceAlreadyRegisteredWithPrey();
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("registered", registered);
+                    MdmDebugReporter.send(ctx, "splash_dobg_done", result);
+                    return registered;
                 }
             } catch (Exception e) {
                 PreyLogger.e(String.format("Error SplashMdmActivity: %s", e.getMessage()), e);
+                Map<String, Object> err = new HashMap<>();
+                err.put("error", e.getMessage());
+                MdmDebugReporter.send(ctx, "splash_dobg_error", err);
             }
             return false;
         }
@@ -71,19 +91,31 @@ public class SplashMdmActivity extends FragmentActivity {
 
         @Override
         protected void onPostExecute(Boolean registered) {
+            Map<String, Object> postInfo = new HashMap<>();
+            postInfo.put("registered", registered);
+            postInfo.put("launched_as_setup_action", wasLaunchedAsSetupAction());
+            postInfo.put("calling_activity_null", getCallingActivity() == null);
+            MdmDebugReporter.send(getApplicationContext(), "splash_postexecute", postInfo);
             if (registered) {
                 PreyConfig.getPreyConfig(getApplicationContext()).setProtectReady(true);
+                // Emit the keyedAppState. setStatesImmediate is async (IPC to
+                // clouddpc); if we finish() the activity right away, the
+                // pipeline can drop the state mid-flight — AMAPI's webhook
+                // ends up never receiving `mdm_setup=linked` even though Prey
+                // successfully registered with the backend. Defer the
+                // setResult+finish a bit so the IPC has time to flush.
+                MdmDebugReporter.send(getApplicationContext(), "calling_reportSetupLinked");
                 MdmKeyedAppStateReporter.reportSetupLinked(getApplicationContext());
-                // Signal completion to caller (provisioning setup wizard or LoginActivity)
-                setResult(RESULT_OK);
-                // Android Device Policy setup actions may not set a callingActivity,
-                // so rely on the official setup-action intent extra instead.
-                if (!wasLaunchedAsSetupAction() && getCallingActivity() == null) {
-                    Intent intent = new Intent(SplashMdmActivity.this, CheckPasswordHtmlActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-                finish();
+                new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                    setResult(RESULT_OK);
+                    if (!wasLaunchedAsSetupAction() && getCallingActivity() == null) {
+                        Intent intent = new Intent(SplashMdmActivity.this, CheckPasswordHtmlActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                    MdmDebugReporter.send(getApplicationContext(), "splash_finishing_after_delay");
+                    finish();
+                }, 750);
             } else {
                 setResult(RESULT_CANCELED);
                 progressBar.setVisibility(View.GONE);
