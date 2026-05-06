@@ -28,10 +28,12 @@ import org.robolectric.Shadows;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.shadows.ShadowLooper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.time.Duration;
 
 import androidx.enterprise.feedback.FakeKeyedAppStatesReporter;
 import androidx.test.core.app.ApplicationProvider;
@@ -85,6 +87,7 @@ public class SplashMdmActivityRobolectricTest {
         drainStartedActivities(shadow);
 
         invokeOnPostExecute(activity, Boolean.TRUE);
+        flushPostExecuteDelay();
 
         Intent nextIntent = shadow.getNextStartedActivity();
         assertNotNull("Should navigate to the main screen when there is no caller", nextIntent);
@@ -118,6 +121,7 @@ public class SplashMdmActivityRobolectricTest {
         shadow.setCallingActivity(new ComponentName(context, LoginActivity.class));
 
         invokeOnPostExecute(activity, Boolean.TRUE);
+        flushPostExecuteDelay();
 
         assertEquals(
                 "Result code should be RESULT_OK so the caller can continue the setup flow",
@@ -140,6 +144,7 @@ public class SplashMdmActivityRobolectricTest {
         activity.getIntent().putExtra("com.google.android.apps.work.clouddpc.EXTRA_LAUNCHED_AS_SETUP_ACTION", true);
 
         invokeOnPostExecute(activity, Boolean.TRUE);
+        flushPostExecuteDelay();
 
         assertEquals(
                 "Result code should be RESULT_OK for Android Device Policy setup actions",
@@ -174,6 +179,7 @@ public class SplashMdmActivityRobolectricTest {
             HeadlessSplashMdmActivity activity = createHeadlessActivity();
 
             invokeOnPostExecute(activity, Boolean.TRUE);
+            flushPostExecuteDelay();
 
             assertEquals("Splash should acknowledge setup completion to the MDM once registration succeeds", 1, reporter.getNumberOfUploads());
         } finally {
@@ -222,6 +228,7 @@ public class SplashMdmActivityRobolectricTest {
             ShadowActivity shadow = Shadows.shadowOf(activity);
 
             invokeOnPostExecute(activity, Boolean.TRUE);
+            flushPostExecuteDelay();
 
             assertEquals(1, reporter.getNumberOfUploads());
             assertEquals(Activity.RESULT_OK, shadow.getResultCode());
@@ -282,6 +289,10 @@ public class SplashMdmActivityRobolectricTest {
         while (shadow.getNextStartedActivity() != null) {
             // drain queue
         }
+    }
+
+    private void flushPostExecuteDelay() {
+        ShadowLooper.shadowMainLooper().idleFor(Duration.ofMillis(800));
     }
 
     // =========================================================================
