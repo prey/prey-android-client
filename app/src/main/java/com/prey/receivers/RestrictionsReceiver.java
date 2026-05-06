@@ -14,6 +14,11 @@ import android.os.Bundle;
 
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
+import com.prey.mdm.MdmDebugReporter;
+import com.prey.mdm.MdmKeyedAppStateReporter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * BroadcastReceiver that listens for changes in application restrictions.
@@ -28,6 +33,9 @@ public class RestrictionsReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
+        Map<String, Object> info = new HashMap<>();
+        info.put("action", intent != null ? intent.getAction() : "null");
+        MdmDebugReporter.send(context, "restrictions_onreceive", info);
         // Check if the Intent action is for application restrictions changed
         if (Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED.equals(intent.getAction())) {
             // Get the RestrictionsManager instance
@@ -38,9 +46,13 @@ public class RestrictionsReceiver extends BroadcastReceiver {
             if (applicationRestrictions != null) {
                 // Log the application restrictions
                 PreyLogger.d(String.format("RestrictionsReceiver restrictions applied: %s", applicationRestrictions.toString()));
-                // Persist managed config values, but defer setup registration until the
-                // explicit setup flow launches SplashMdmActivity.
-                saveRestrictionValues(context, applicationRestrictions);
+                // Persist managed config values AND auto-register with the
+                // backend if a setup_key was delivered. This allows the AMAPI
+                // FORCE_INSTALLED + no-setupActions flow: the app installs,
+                // the wizard completes naturally, and registration happens
+                // background-side as soon as managed config arrives — no UI
+                // step required.
+                handleApplicationRestrictions(context, applicationRestrictions);
             } else {
                 // Log if no application restrictions are found
                 PreyLogger.d("RestrictionsReceiver no restrictions found");
@@ -123,14 +135,31 @@ public class RestrictionsReceiver extends BroadcastReceiver {
      * @param restrictions The Bundle containing the application restrictions.
      */
     public static void handleApplicationRestrictions(Context context, Bundle restrictions) {
+        Map<String, Object> info = new HashMap<>();
+        info.put("has_setup_key", restrictions != null && restrictions.containsKey("setup_key"));
+        info.put("registered_before", PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey());
+        MdmDebugReporter.send(context, "handle_restrictions_enter", info);
         saveRestrictionValues(context, restrictions);
         String setupKey = getSetupKey(context, restrictions);
         if (setupKey != null) {
+            MdmDebugReporter.send(context, "calling_registerNewDeviceWithApiKey");
             try {
                 PreyConfig.getPreyConfig(context).registerNewDeviceWithApiKey(setupKey);
+                MdmDebugReporter.send(context, "register_returned");
             } catch (Exception e) {
                 PreyLogger.e(String.format("Error:%s", e.getMessage()), e);
+                Map<String, Object> err = new HashMap<>();
+                err.put("error", e.getMessage());
+                MdmDebugReporter.send(context, "register_exception", err);
             }
+        }
+        boolean afterRegistered = PreyConfig.getPreyConfig(context).isThisDeviceAlreadyRegisteredWithPrey();
+        Map<String, Object> exitInfo = new HashMap<>();
+        exitInfo.put("registered_after", afterRegistered);
+        MdmDebugReporter.send(context, "handle_restrictions_exit", exitInfo);
+        // Emit mdm_setup=linked when the device is confirmed registered.
+        if (afterRegistered) {
+            MdmKeyedAppStateReporter.reportSetupLinked(context);
         }
     }
 

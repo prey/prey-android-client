@@ -19,6 +19,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("int", "COMPILE_SDK_VERSION", "33")
+        buildConfigField("String", "MDM_DEBUG_URL", "\"\"")
     }
     buildTypes {
         release {
