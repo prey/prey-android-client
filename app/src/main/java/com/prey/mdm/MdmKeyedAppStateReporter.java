@@ -34,10 +34,15 @@ public class MdmKeyedAppStateReporter {
     }
 
     public static void reportSetupLinked(Context context) {
+        MdmDebugReporter.send(context, "reportSetupLinked_enter");
         try {
             factory.create(context).reportSetupLinked();
+            MdmDebugReporter.send(context, "reportSetupLinked_ok");
         } catch (RuntimeException e) {
             PreyLogger.e("Error reporting keyed app state", e);
+            java.util.Map<String, Object> err = new java.util.HashMap<>();
+            err.put("error", e.getClass().getName() + ": " + e.getMessage());
+            MdmDebugReporter.send(context, "reportSetupLinked_error", err);
         }
     }
 

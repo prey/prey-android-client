@@ -130,7 +130,7 @@ public class LoginActivityRobolectricTest {
     }
 
     @Test
-    public void givenSetupActionLaunch_whenStartupShowsMdmSplash_thenPropagatesSetupActionExtra() {
+    public void givenSetupActionLaunch_whenStartupShowsMdmSplash_thenForwardsResultToSplash() {
         Bundle restrictions = new Bundle();
         restrictions.putString("setup_key", "valid-setup-key");
         setApplicationRestrictions(restrictions);
@@ -142,13 +142,18 @@ public class LoginActivityRobolectricTest {
         LoginActivity activity = controller.create().get();
 
         ShadowActivity shadow = Shadows.shadowOf(activity);
-        ShadowActivity.IntentForResult next = shadow.getNextStartedActivityForResult();
+        Intent next = shadow.getNextStartedActivity();
 
-        assertNotNull("Should start SplashMdmActivity for result", next);
+        assertNotNull("Should start SplashMdmActivity directly", next);
         assertTrue(
                 "Splash intent should preserve the setup-action hint",
-                next.intent.getBooleanExtra(EXTRA_LAUNCHED_AS_SETUP_ACTION, false)
+                next.getBooleanExtra(EXTRA_LAUNCHED_AS_SETUP_ACTION, false)
         );
+        assertTrue(
+                "Splash intent should forward the result to the original SetupAction caller",
+                (next.getFlags() & Intent.FLAG_ACTIVITY_FORWARD_RESULT) != 0
+        );
+        assertTrue("LoginActivity should finish after handing off to SplashMdmActivity", activity.isFinishing());
     }
 
     @Test

@@ -20,13 +20,14 @@ android {
 
         targetSdk 35
 
-        versionCode 413
-        versionName '2.6.17'
+        versionCode 415
+        versionName '2.6.19'
 
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("int", "COMPILE_SDK_VERSION", "35")
+        buildConfigField("String", "MDM_DEBUG_URL", "\"\"")
     }
 
     buildTypes {

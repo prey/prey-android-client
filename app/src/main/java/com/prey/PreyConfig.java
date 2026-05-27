@@ -33,6 +33,7 @@ import com.prey.actions.location.PreyLocation;
 import com.prey.activities.FeedbackActivity;
 import com.prey.json.actions.Location;
 import com.prey.managers.PreyConnectivityManager;
+import com.prey.mdm.MdmDeviceInfoReporter;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.net.UtilConnection;
@@ -1791,6 +1792,7 @@ public class PreyConfig {
             PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, apiKey, deviceType, nameDevice);
             if (accountData != null) {
                 PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
+                MdmDeviceInfoReporter.report(ctx, apiKey, accountData.getDeviceId(), nameDevice);
                 PreyConfig.getPreyConfig(ctx).setNotificationId("");
                 PreyConfig.getPreyConfig(ctx).setRegisterC2dm(false);
                 // Register C2DM

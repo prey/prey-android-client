@@ -96,10 +96,9 @@
 
         <!-- Exported added for android 12 -->
         <activity
-                android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:noHistory="true"
+            android:excludeFromRecents="true"
             android:exported="true"
                 android:name=".activities.LoginActivity">
             <intent-filter>
