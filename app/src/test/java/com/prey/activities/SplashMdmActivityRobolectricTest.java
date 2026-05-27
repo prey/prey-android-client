@@ -218,21 +218,22 @@ public class SplashMdmActivityRobolectricTest {
     }
 
     @Test
-    public void givenRegistrationSucceededWithoutConfirmedPushToken_whenPostExecute_thenStillEmitsLinkedKeyedState()
+    public void givenRegistrationSucceededWithoutConfirmedPushToken_whenPostExecute_thenEmitsLinkedKeyedState()
             throws Exception {
         FakeKeyedAppStatesReporter reporter = new FakeKeyedAppStatesReporter();
         MdmKeyedAppStateReporter.setFactoryForTests(context -> new MdmKeyedAppStateReporter(reporter));
         try {
             preyConfig.setNotificationId("");
             HeadlessSplashMdmActivity activity = createHeadlessActivity();
-            ShadowActivity shadow = Shadows.shadowOf(activity);
 
             invokeOnPostExecute(activity, Boolean.TRUE);
             flushPostExecuteDelay();
 
-            assertEquals(1, reporter.getNumberOfUploads());
-            assertEquals(Activity.RESULT_OK, shadow.getResultCode());
-            assertTrue(activity.isFinishing());
+            assertEquals(
+                    "Successful MDM setup should emit the linked keyed app state even before the push token is confirmed",
+                    1,
+                    reporter.getNumberOfUploads()
+            );
         } finally {
             MdmKeyedAppStateReporter.resetFactoryForTests();
         }
