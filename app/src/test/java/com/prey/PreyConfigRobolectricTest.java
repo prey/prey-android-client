@@ -21,10 +21,15 @@ import org.robolectric.shadows.ShadowAccountManager;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import com.prey.net.PreyHttpResponse;
+import com.prey.net.WebServices;
+
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -162,6 +167,15 @@ public class PreyConfigRobolectricTest {
         assertEquals("", preyConfig.getMdmOrganizationId());
     }
 
+    @Test
+    public void givenExistingOrganizationId_whenUpdatedToEmpty_thenReturnsEmptyString() {
+        preyConfig.setMdmOrganizationId("prey-inc");
+
+        preyConfig.setMdmOrganizationId("");
+
+        assertEquals("", preyConfig.getMdmOrganizationId());
+    }
+
     // =========================================================================
     // MDM Skip Manual Permissions
     // =========================================================================
@@ -218,6 +232,20 @@ public class PreyConfigRobolectricTest {
         String result = preyConfig.buildDeviceName("samsung SM-A145R");
 
         assertEquals("samsung SM-A145R", result);
+    }
+
+    @Test
+    public void givenDeviceNotRegistered_whenRegisteringWithApiKey_thenUsesInjectedWebServicesAndKeepsDeviceUnregisteredOnNullAccountData() throws Exception {
+        FakeRegistrationWebServices webServices = new FakeRegistrationWebServices();
+        preyConfig.setWebServices(webServices);
+
+        preyConfig.registerNewDeviceWithApiKey("setup-key-123");
+
+        assertEquals(1, webServices.registerCalls);
+        assertEquals("setup-key-123", webServices.apiKey);
+        assertNull(preyConfig.getDeviceId());
+        assertNull(preyConfig.getApiKey());
+        assertEquals("", preyConfig.getEmail());
     }
 
     @Test
@@ -297,6 +325,38 @@ public class PreyConfigRobolectricTest {
         String result = preyConfig.buildDeviceName("samsung SM-A145R");
 
         assertEquals("Office Phone 001", result);
+    }
+
+    private static final class FakeRegistrationWebServices implements WebServices {
+        private int registerCalls;
+        private String apiKey;
+
+        @Override
+        public org.json.JSONObject getStatus(Context ctx) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public PreyHttpResponse sendPreyHttpData(Context ctx, ArrayList<com.prey.actions.HttpDataService> dataToSend) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public PreyHttpResponse sendLocation(Context ctx, org.json.JSONObject jsonParam) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public PreyAccountData registerNewDeviceWithApiKeyEmail(Context ctx, String apiKey, String deviceType, String name) {
+            registerCalls++;
+            this.apiKey = apiKey;
+            return null;
+        }
+
+        @Override
+        public String getEmail(Context ctx) {
+            throw new AssertionError("getEmail should not be called when account data is null");
+        }
     }
 
 }

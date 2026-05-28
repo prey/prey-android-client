@@ -8,6 +8,7 @@ package com.prey.net;
 
 import android.content.Context;
 
+import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
@@ -48,5 +49,15 @@ public interface WebServices {
      * @return A {@link PreyHttpResponse} object representing the server's response.
      */
     public PreyHttpResponse sendLocation(Context ctx,JSONObject jsonParam);
+
+    /**
+     * Registers a device using an API key and returns account data when registration succeeds.
+     */
+    public PreyAccountData registerNewDeviceWithApiKeyEmail(Context ctx, String apiKey, String deviceType, String name) throws Exception;
+
+    /**
+     * Returns the email associated with the current remote profile.
+     */
+    public String getEmail(Context ctx);
 
 }
