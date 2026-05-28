@@ -8,6 +8,7 @@ package com.prey.net;
 
 import android.content.Context;
 
+import com.prey.PreyAccountData;
 import com.prey.PreyConfig;
 import com.prey.actions.HttpDataService;
 import com.prey.exceptions.PreyException;
@@ -30,6 +31,8 @@ public class FakeWebServices implements WebServices {
 
     private PreyHttpResponse preyHttpResponse;
     private JSONObject status;
+    private PreyAccountData accountData;
+    private String email;
 
     /**
      * Sets the status JSON object to be returned by {@link #getStatus(Context)}.
@@ -49,6 +52,14 @@ public class FakeWebServices implements WebServices {
      */
     public void setPreyHttpResponse(PreyHttpResponse preyHttpResponse) {
         this.preyHttpResponse = preyHttpResponse;
+    }
+
+    public void setAccountData(PreyAccountData accountData) {
+        this.accountData = accountData;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     /**
@@ -95,6 +106,16 @@ public class FakeWebServices implements WebServices {
     @Override
     public PreyHttpResponse sendLocation(Context ctx, JSONObject jsonParam) {
         return preyHttpResponse;
+    }
+
+    @Override
+    public PreyAccountData registerNewDeviceWithApiKeyEmail(Context ctx, String apiKey, String deviceType, String name) {
+        return accountData;
+    }
+
+    @Override
+    public String getEmail(Context ctx) {
+        return email;
     }
 
 }
