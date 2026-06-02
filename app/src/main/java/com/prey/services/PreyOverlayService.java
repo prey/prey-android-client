@@ -20,7 +20,6 @@ import com.prey.PreyPermission;
 import com.prey.R;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.PermissionInformationActivity;
-import com.prey.activities.WelcomeActivity;
 
 public class PreyOverlayService extends Service {
 

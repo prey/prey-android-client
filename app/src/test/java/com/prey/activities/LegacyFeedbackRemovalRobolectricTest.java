@@ -92,4 +92,22 @@ public class LegacyFeedbackRemovalRobolectricTest {
                 PackageManager.GET_META_DATA
         );
     }
+
+    @Test(expected = PackageManager.NameNotFoundException.class)
+    public void welcomeActivityIsNotDeclaredInManifest() throws PackageManager.NameNotFoundException {
+        Context context = ApplicationProvider.getApplicationContext();
+        context.getPackageManager().getActivityInfo(
+                new ComponentName(context.getPackageName(), "com.prey.activities.WelcomeActivity"),
+                PackageManager.GET_META_DATA
+        );
+    }
+
+    @Test(expected = PackageManager.NameNotFoundException.class)
+    public void deviceReadyActivityIsNotDeclaredInManifest() throws PackageManager.NameNotFoundException {
+        Context context = ApplicationProvider.getApplicationContext();
+        context.getPackageManager().getActivityInfo(
+                new ComponentName(context.getPackageName(), "com.prey.activities.DeviceReadyActivity"),
+                PackageManager.GET_META_DATA
+        );
+    }
 }
