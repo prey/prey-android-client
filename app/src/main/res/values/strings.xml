@@ -8,21 +8,6 @@
     <string name="menu_title_5">They’ll allow Prey to protect your phone and help you control it if it ever gets lost or stolen. Your information and privacy are safe with us.</string>
     <string name="menu_button_1">ACTIVATE PROTECTION</string>
 
-    <string name="signin_subtitle">prey account</string>
-    <string name="signin_title">SIGN IN</string>
-    <string name="field_email_signin">email</string>
-    <string name="field_password_signin">password</string>
-    <string name="button_signin">ACCESS TO MY ACCOUNT</string>
-    <string name="link_signin">don\’t have an account?</string>
-
-    <string name="signup_subtitle">prey account</string>
-    <string name="signup_title">SIGN UP</string>
-    <string name="field_name_signup">your name</string>
-    <string name="field_email_signup">email</string>
-    <string name="field_password_signup">password</string>
-    <string name="button_signup">CREATE MY NEW ACCOUNT</string>
-    <string name="link_signup">already have an account?</string>
-
     <string name="permission_error_title_1">current device status</string>
     <string name="permission_error_title_2">NOT PROTECTED.</string>
     <string name="permission_error_title_3">Prey utilizes the Device Administrator permission for its Remote Wipe and Lock features.\nGranting permission allows you to activate our data protection tools remotely to counter data theft.\nThe Remote Wipe lets you execute a data wipe on a lost device, while our Lock feature blocks access to it with a lock screen and a custom password.</string>

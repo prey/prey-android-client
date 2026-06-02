@@ -139,7 +139,7 @@ public class LoginActivity extends Activity {
                 PreyLogger.d(String.format("LoginActivity: isAdminActive:%b", isAdminActive));
                 boolean configurated = canDrawOverlays && isAdminActive;
                 if (configurated) {
-                    intent = new Intent(LoginActivity.this, SignInActivity.class);
+                    intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);
                 } else {
                     intent = new Intent(LoginActivity.this, OnboardingActivity.class);
                 }

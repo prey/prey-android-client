@@ -38,4 +38,58 @@ public class LegacyFeedbackRemovalRobolectricTest {
                 PackageManager.GET_META_DATA
         );
     }
+
+    @Test(expected = PackageManager.NameNotFoundException.class)
+    public void signUpActivityIsNotDeclaredInManifest() throws PackageManager.NameNotFoundException {
+        Context context = ApplicationProvider.getApplicationContext();
+        context.getPackageManager().getActivityInfo(
+                new ComponentName(context.getPackageName(), "com.prey.activities.SignUpActivity"),
+                PackageManager.GET_META_DATA
+        );
+    }
+
+    @Test(expected = PackageManager.NameNotFoundException.class)
+    public void signInActivityIsNotDeclaredInManifest() throws PackageManager.NameNotFoundException {
+        Context context = ApplicationProvider.getApplicationContext();
+        context.getPackageManager().getActivityInfo(
+                new ComponentName(context.getPackageName(), "com.prey.activities.SignInActivity"),
+                PackageManager.GET_META_DATA
+        );
+    }
+
+    @Test(expected = PackageManager.NameNotFoundException.class)
+    public void setupActivityIsNotDeclaredInManifest() throws PackageManager.NameNotFoundException {
+        Context context = ApplicationProvider.getApplicationContext();
+        context.getPackageManager().getActivityInfo(
+                new ComponentName(context.getPackageName(), "com.prey.activities.SetupActivity"),
+                PackageManager.GET_META_DATA
+        );
+    }
+
+    @Test(expected = PackageManager.NameNotFoundException.class)
+    public void passwordActivityIsNotDeclaredInManifest() throws PackageManager.NameNotFoundException {
+        Context context = ApplicationProvider.getApplicationContext();
+        context.getPackageManager().getActivityInfo(
+                new ComponentName(context.getPackageName(), "com.prey.activities.PasswordActivity"),
+                PackageManager.GET_META_DATA
+        );
+    }
+
+    @Test(expected = PackageManager.NameNotFoundException.class)
+    public void simpleVideoActivityIsNotDeclaredInManifest() throws PackageManager.NameNotFoundException {
+        Context context = ApplicationProvider.getApplicationContext();
+        context.getPackageManager().getActivityInfo(
+                new ComponentName(context.getPackageName(), "com.prey.activities.SimpleVideoActivity"),
+                PackageManager.GET_META_DATA
+        );
+    }
+
+    @Test(expected = PackageManager.NameNotFoundException.class)
+    public void videoActivityIsNotDeclaredInManifest() throws PackageManager.NameNotFoundException {
+        Context context = ApplicationProvider.getApplicationContext();
+        context.getPackageManager().getActivityInfo(
+                new ComponentName(context.getPackageName(), "com.prey.activities.VideoActivity"),
+                PackageManager.GET_META_DATA
+        );
+    }
 }

@@ -19,12 +19,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.prey.PreyLogger;
-import com.prey.events.Event;
-import com.prey.events.manager.EventManagerRunner;
-import com.prey.exceptions.PreyException;
-import com.prey.net.PreyWebServices;
 import com.prey.PreyStatus;
 import com.prey.R;
+import com.prey.events.Event;
+import com.prey.events.manager.EventManagerRunner;
+import com.prey.net.PreyWebServices;
 
 public class PasswordActivity extends PreyActivity {
 
@@ -37,16 +36,15 @@ public class PasswordActivity extends PreyActivity {
             public void onClick(View v) {
                 final String passwordtyped = pass1.getText().toString();
                 final Context ctx = getApplicationContext();
-                if (passwordtyped.equals(""))
+                if (passwordtyped.equals("")) {
                     Toast.makeText(ctx, R.string.preferences_password_length_error, Toast.LENGTH_LONG).show();
-                else {
-                    if (passwordtyped.length() < 6 || passwordtyped.length() > 32) {
-                        Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range, "6", "32"), Toast.LENGTH_LONG).show();
+                } else if (passwordtyped.length() < 6 || passwordtyped.length() > 32) {
+                    Toast.makeText(ctx, ctx.getString(R.string.error_password_out_of_range, "6", "32"), Toast.LENGTH_LONG).show();
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        new CheckPassword().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, passwordtyped);
                     } else {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                            new CheckPassword().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,passwordtyped);
-                        else
-                            new CheckPassword().execute(passwordtyped);
+                        new CheckPassword().execute(passwordtyped);
                     }
                 }
             }
@@ -59,8 +57,8 @@ public class PasswordActivity extends PreyActivity {
     protected class CheckPassword extends AsyncTask<String, Void, Void> {
         ProgressDialog progressDialog = null;
         boolean isPasswordOk = false;
-        boolean keepAsking = true;
         String error = null;
+
         @Override
         protected void onPreExecute() {
             try {
@@ -69,9 +67,10 @@ public class PasswordActivity extends PreyActivity {
                 progressDialog.setIndeterminate(true);
                 progressDialog.setCancelable(false);
                 progressDialog.show();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
+
         @Override
         protected Void doInBackground(String... password) {
             try {
@@ -83,6 +82,7 @@ public class PasswordActivity extends PreyActivity {
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(Void unused) {
             try {
@@ -90,11 +90,11 @@ public class PasswordActivity extends PreyActivity {
                     progressDialog.dismiss();
                 }
             } catch (Exception e) {
-                PreyLogger.e("Error:"+e.getMessage(),e);
+                PreyLogger.e("Error:" + e.getMessage(), e);
             }
-            if (error != null)
+            if (error != null) {
                 Toast.makeText(PasswordActivity.this, error, Toast.LENGTH_LONG).show();
-            else if (!isPasswordOk) {
+            } else if (!isPasswordOk) {
                 wrongPasswordIntents++;
                 if (wrongPasswordIntents == 3) {
                     Toast.makeText(PasswordActivity.this, R.string.password_intents_exceed, Toast.LENGTH_LONG).show();
@@ -111,5 +111,4 @@ public class PasswordActivity extends PreyActivity {
             }
         }
     }
-
 }

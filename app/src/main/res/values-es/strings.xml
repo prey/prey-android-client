@@ -10,21 +10,6 @@
     <string name="menu_title_5">Estos permisos permitirán a Prey proteger tu teléfono y ayudarte a controlarlo si se llega a perder o te lo roban. Tu información y privacidad están a salvo con nosotros.</string>
     <string name="menu_button_1">ACTIVAR PROTECCIÓN</string>
 
-    <string name="signin_subtitle">cuenta Prey</string>
-    <string name="signin_title">INGRESAR</string>
-    <string name="field_email_signin">correo</string>
-    <string name="field_password_signin">contraseña</string>
-    <string name="button_signin">INGRESAR A MI CUENTA</string>
-    <string name="link_signin">¿No tienes cuenta aún?</string>
-
-    <string name="signup_subtitle">cuenta Prey</string>
-    <string name="signup_title">REGÍSTRATE</string>
-    <string name="field_name_signup">tu nombre</string>
-    <string name="field_email_signup">correo</string>
-    <string name="field_password_signup">contraseña</string>
-    <string name="button_signup">CREAR MI NUEVA CUENTA</string>
-    <string name="link_signup">¿Ya tienes una cuenta?</string>
-
     <string name="permission_error_title_1">estado de tu dispositivo</string>
     <string name="permission_error_title_2">DESPROTEGIDO.</string>
     <string name="permission_error_title_3">Prey utiliza el Permiso de Administrador de Dispositivo para su funciones de Borrado Remoto y Bloqueo.\nActivar el permiso te permitirá utilizar estas funcione de manera remota para combatir el robo de información.\nCon el Borrado Remoto puedes eliminar los datos de un equipo perdido, mientras que la función de Bloqueo impide el acceso con una pantalla de bloqueo y una contraseña.</string>

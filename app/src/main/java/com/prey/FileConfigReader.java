@@ -90,14 +90,6 @@ public class FileConfigReader {
         return BuildConfig.RADIUS_AWARE;
     }
 
-    public String getPreyTerms() {
-        return BuildConfig.PREY_TERMS;
-    }
-
-    public String getPreyTermsEs() {
-        return BuildConfig.PREY_TERMS_ES;
-    }
-
     public String getPreyForgot() {
         return BuildConfig.PREY_FORGOT;
     }
