@@ -80,11 +80,7 @@ public class PermissionInformationActivity extends PreyActivity {
                     askForPermissionAndroid7();
                     startOverlayService();
                 }else{
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        intentPermission = new Intent(PermissionInformationActivity.this, CheckPasswordHtmlActivity.class);
-                    } else {
-                        intentPermission = new Intent(PermissionInformationActivity.this, LoginActivity.class);
-                    }
+                    intentPermission = new Intent(PermissionInformationActivity.this, CheckPasswordHtmlActivity.class);
                 }
                 PreyConfig.getPreyConfig(PermissionInformationActivity.this).setProtectReady(true);
                 new Thread() {
@@ -150,12 +146,7 @@ public class PermissionInformationActivity extends PreyActivity {
                     askForAdminActive();
                 } else {
                         finish();
-                        Intent intent = null;
-                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            intent = new Intent(this, CheckPasswordHtmlActivity.class);
-                        }else{
-                            intent = new Intent(this, CheckPasswordActivity.class);
-                        }
+                        Intent intent = new Intent(this, CheckPasswordHtmlActivity.class);
                         startActivity(intent);
                 }
             }

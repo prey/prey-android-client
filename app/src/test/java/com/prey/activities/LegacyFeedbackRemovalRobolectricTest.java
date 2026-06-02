@@ -110,4 +110,22 @@ public class LegacyFeedbackRemovalRobolectricTest {
                 PackageManager.GET_META_DATA
         );
     }
+
+    @Test(expected = PackageManager.NameNotFoundException.class)
+    public void checkPasswordActivityIsNotDeclaredInManifest() throws PackageManager.NameNotFoundException {
+        Context context = ApplicationProvider.getApplicationContext();
+        context.getPackageManager().getActivityInfo(
+                new ComponentName(context.getPackageName(), "com.prey.activities.CheckPasswordActivity"),
+                PackageManager.GET_META_DATA
+        );
+    }
+
+    @Test(expected = PackageManager.NameNotFoundException.class)
+    public void preyConfigurationActivityIsNotDeclaredInManifest() throws PackageManager.NameNotFoundException {
+        Context context = ApplicationProvider.getApplicationContext();
+        context.getPackageManager().getActivityInfo(
+                new ComponentName(context.getPackageName(), "com.prey.activities.PreyConfigurationActivity"),
+                PackageManager.GET_META_DATA
+        );
+    }
 }

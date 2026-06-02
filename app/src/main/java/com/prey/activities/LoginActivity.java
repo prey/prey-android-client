@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.RestrictionsManager;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -125,26 +124,7 @@ public class LoginActivity extends Activity {
     }
 
     private void showLogin() {
-        Intent intent = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);
-        } else {
-            boolean registered = PreyConfig.getPreyConfig(this).isThisDeviceAlreadyRegisteredWithPrey();
-            if (registered) {
-                intent = new Intent(LoginActivity.this, CheckPasswordActivity.class);
-            } else {
-                boolean canDrawOverlays = PreyPermission.canDrawOverlays(this);
-                PreyLogger.d(String.format("LoginActivity: canDrawOverlays:%b", canDrawOverlays));
-                boolean isAdminActive = FroyoSupport.getInstance(this).isAdminActive();
-                PreyLogger.d(String.format("LoginActivity: isAdminActive:%b", isAdminActive));
-                boolean configurated = canDrawOverlays && isAdminActive;
-                if (configurated) {
-                    intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);
-                } else {
-                    intent = new Intent(LoginActivity.this, OnboardingActivity.class);
-                }
-            }
-        }
+        Intent intent = new Intent(LoginActivity.this, CheckPasswordHtmlActivity.class);
         if (PreyConfig.getPreyConfig(this).isChromebook()) {
             intent = new Intent(LoginActivity.this, ChromeActivity.class);
         }

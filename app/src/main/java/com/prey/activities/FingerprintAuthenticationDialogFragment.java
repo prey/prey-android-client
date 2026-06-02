@@ -27,7 +27,6 @@ import android.widget.Toast;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
-import com.prey.PreyStatus;
 import com.prey.R;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
@@ -127,9 +126,8 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
         boolean prefsBiometric=PreyConfig.getPreyConfig(getActivity()).getPrefsBiometric();
         if(prefsBiometric) {
             PreyConfig.getPreyConfig(getActivity()).setTimePasswordOk();
-            Intent intent = new Intent(getActivity(), PreyConfigurationActivity.class);
+            Intent intent = new Intent(getActivity(), PanelWebActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
             getActivity().startActivity(intent);
             getActivity().finish();
         }else{
@@ -274,8 +272,7 @@ public class FingerprintAuthenticationDialogFragment  extends DialogFragment   i
             } else {
                 PreyLogger.d("from:"+from);
                 if("setting".equals(from)) {
-                    Intent intent = new Intent(mCtx, PreyConfigurationActivity.class);
-                    PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
+                    Intent intent = new Intent(mCtx, PanelWebActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     mCtx.startActivity(intent);
                     new Thread(new EventManagerRunner(mCtx, new Event(Event.APPLICATION_OPENED))).start();

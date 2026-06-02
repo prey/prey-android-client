@@ -26,22 +26,11 @@ public class PreyStatus {
         return instance;
     }
 
-    private boolean preyConfigurationActivityResume = false;
-
     private boolean preyPopUpOnclick = false;
 
     private boolean isTakenPicture = false;
 
     private boolean isAlarmStart = false;
-
-    public boolean isPreyConfigurationActivityResume() {
-        return preyConfigurationActivityResume;
-    }
-
-    public void setPreyConfigurationActivityResume(
-            boolean preyConfigurationActivityResume) {
-        this.preyConfigurationActivityResume = preyConfigurationActivityResume;
-    }
 
     public boolean isAlarmStart() {
         return isAlarmStart;
