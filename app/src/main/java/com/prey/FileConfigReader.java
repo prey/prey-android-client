@@ -6,32 +6,14 @@
  ******************************************************************************/
 package com.prey;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 import android.content.Context;
-import android.content.res.Resources.NotFoundException;
 
 public class FileConfigReader {
 
     private static FileConfigReader _instance = null;
-    private Properties properties;
 
     private FileConfigReader(Context ctx) {
-        try {
-            PreyLogger.d("Loading config properties from file...");
-            properties = new Properties();
-            InputStream is = ctx.getResources().openRawResource(R.raw.config);
-            properties.load(is);
-            is.close();
-            PreyLogger.d("Config: " + properties);
-
-        } catch (NotFoundException e) {
-            PreyLogger.e("Config file wasn't found", e);
-        } catch (IOException e) {
-            PreyLogger.e("Couldn't read config file", e);
-        }
+        PreyLogger.d("Config BuildConfig PREY_PANEL=" + BuildConfig.PREY_PANEL);
     }
 
     public static FileConfigReader getInstance(Context ctx) {
@@ -41,91 +23,91 @@ public class FileConfigReader {
     }
 
     public String getPreyCampaign() {
-        return properties.getProperty("prey-campaign");
+        return BuildConfig.PREY_CAMPAIGN;
     }
 
     public String getPreyPanel() {
-        return properties.getProperty("prey-panel");
+        return BuildConfig.PREY_PANEL;
     }
 
     public String getGcmIdPrefix() {
-        return properties.getProperty("gcm-id-prefix");
+        return BuildConfig.GCM_ID_PREFIX;
     }
 
     public String getPreyDomain() {
-        return properties.getProperty("prey-domain");
+        return BuildConfig.PREY_DOMAIN;
     }
 
     public String getPreySubdomain() {
-        return properties.getProperty("prey-subdomain");
+        return BuildConfig.PREY_SUBDOMAIN;
     }
 
     public String getEmailFeedback() {
-        return properties.getProperty("email-feedback");
+        return BuildConfig.EMAIL_FEEDBACK;
     }
 
     public String getSubjectFeedback() {
-        return properties.getProperty("subject-feedback");
+        return BuildConfig.SUBJECT_FEEDBACK;
     }
 
     public String getApiV2() {
-        return properties.getProperty("api-v2");
+        return BuildConfig.API_V2;
     }
 
     public boolean isScheduled() {
-        return Boolean.parseBoolean(properties.getProperty("scheduled"));
+        return BuildConfig.SCHEDULED;
     }
 
     public int getMinuteScheduled() {
-        return Integer.parseInt(properties.getProperty("minute-scheduled"));
+        return BuildConfig.MINUTE_SCHEDULED;
     }
 
     public int getTimeoutReport() {
-        return Integer.parseInt(properties.getProperty("timeout-report"));
+        return BuildConfig.TIMEOUT_REPORT;
     }
 
     public int getGeofenceMaximumAccuracy() {
-        return Integer.parseInt(properties.getProperty("geofence-maximum-accuracy"));
+        return BuildConfig.GEOFENCE_MAXIMUM_ACCURACY;
     }
 
     public String getPreyJwt() {
-        return properties.getProperty("prey-jwt");
+        return BuildConfig.PREY_JWT;
     }
 
     public String getPreyGooglePlay(){
-        return properties.getProperty("prey-google-play");
+        return BuildConfig.PREY_GOOGLE_PLAY;
     }
 
     public int getGeofenceLoiteringDelay() {
-        return Integer.parseInt(properties.getProperty("geofence-loitering-delay"));
+        return BuildConfig.GEOFENCE_LOITERING_DELAY;
     }
 
     public int getDistanceLocation() {
-        return Integer.parseInt(properties.getProperty("distance-location"));
+        return BuildConfig.DISTANCE_LOCATION;
     }
 
     public int getGeofenceNotificationResponsiveness() {
-        return Integer.parseInt(properties.getProperty("geofence-notification-responsiveness"));
+        return BuildConfig.GEOFENCE_NOTIFICATION_RESPONSIVENESS;
     }
 
     public int getDistanceAware() {
-        return Integer.parseInt(properties.getProperty("distance-aware"));
+        return BuildConfig.DISTANCE_AWARE;
     }
 
     public int getRadiusAware() {
-        return Integer.parseInt(properties.getProperty("radius-aware"));
+        return BuildConfig.RADIUS_AWARE;
     }
 
     public String getPreyTerms() {
-        return properties.getProperty("prey-terms");
+        return BuildConfig.PREY_TERMS;
     }
 
     public String getPreyTermsEs() {
-        return properties.getProperty("prey-terms-es");
+        return BuildConfig.PREY_TERMS_ES;
     }
 
     public String getPreyForgot() {
-        return properties.getProperty("prey-forgot");
+        return BuildConfig.PREY_FORGOT;
     }
 
     /**
@@ -133,6 +115,6 @@ public class FileConfigReader {
      * @return true o false
      */
     public boolean getOpenPin() {
-        return Boolean.parseBoolean(properties.getProperty("open-pin"));
+        return BuildConfig.OPEN_PIN;
     }
 }

@@ -174,12 +174,17 @@ public class PreyWebServices implements WebServices {
         parameters.put("model_name", model);
         parameters.put("vendor_name", vendor);
 
+        String mdmProvisionedBy = preyConfig.getMdmProvisionedBy();
+        if (mdmProvisionedBy != null && !mdmProvisionedBy.isEmpty()) {
+            parameters.put("mdm_provisioned_by", mdmProvisionedBy);
+        }
         String mdmOrgId = preyConfig.getMdmOrganizationId();
         if (mdmOrgId != null && !mdmOrgId.isEmpty()) {
             parameters.put("enterprise_name", mdmOrgId);
         }
 
         parameters = increaseData(ctx, parameters);
+
         parameters.put("physical_address", PreyConfig.getPreyConfig(ctx).resolveImei());
         String lang=Locale.getDefault().getLanguage();
         parameters.put("lang",lang);

@@ -1846,6 +1846,31 @@ public class PreyConfig {
     }
 
     /**
+     * Key for storing the MDM provisioning marker and distinguish an MDM-provisioned device from
+     * a manual Play Store install. Forwarded to the panel verbatim on
+     * registration.
+     */
+    public static final String MDM_PROVISIONED_BY = "MDM_PROVISIONED_BY";
+
+    /**
+     * Retrieves the MDM provisioning marker received from MDM restrictions.
+     *
+     * @return The marker value, or an empty string if not set.
+     */
+    public String getMdmProvisionedBy() {
+        return getString(MDM_PROVISIONED_BY, "");
+    }
+
+    /**
+     * Sets the MDM provisioning marker in the configuration.
+     *
+     * @param marker The marker value to set.
+     */
+    public void setMdmProvisionedBy(String marker) {
+        saveString(MDM_PROVISIONED_BY, marker);
+    }
+
+    /**
      * Key for storing the serial number received from MDM restrictions in the configuration.
      */
     public static final String SERIAL_NUMBER = "SERIAL_NUMBER";
