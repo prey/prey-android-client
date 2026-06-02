@@ -1,0 +1,54 @@
+String asBuildConfigString(String value) {
+    return "\"${value.replace("\\", "\\\\").replace("\"", "\\\"")}\""
+}
+
+ext.resolveStringOverride = { Project project, String propertyName, String envName, String defaultValue ->
+    if (project.hasProperty(propertyName)) {
+        return project.property(propertyName)?.toString() ?: defaultValue
+    }
+    String envValue = System.getenv(envName)
+    return envValue != null ? envValue : defaultValue
+}
+
+ext.preyBuildConfigValues = [
+        PREY_PANEL                            : "panel",
+        PREY_JWT                              : "session",
+        PREY_CAMPAIGN                         : "login?utm_source=aplicacion-android&utm_medium=boton-login&utm_campaign=login-from-app&embeddable=true",
+        PREY_GOOGLE_PLAY                      : "https://play.google.com/store/apps/details?id=com.prey",
+        PREY_SUBDOMAIN                        : "solid",
+        PREY_DOMAIN                           : "preyproject.com",
+        API_V2                                : "api/v2/",
+        SCHEDULED                             : false,
+        MINUTE_SCHEDULED                      : 5,
+        TIMEOUT_REPORT                        : 60,
+        GCM_ID_PREFIX                         : "FCM__",
+        EMAIL_FEEDBACK                        : "android-feedback@preyproject.com",
+        SUBJECT_FEEDBACK                      : "prey android feedback",
+        PREY_TERMS                            : "https://preyproject.com/terms-mobile/",
+        PREY_TERMS_ES                         : "https://preyproject.com/es/terminos-mobile/",
+        PREY_FORGOT                           : "https://panel.preyproject.com/forgot",
+        GEOFENCE_MAXIMUM_ACCURACY             : 900,
+        GEOFENCE_LOITERING_DELAY              : 60000,
+        GEOFENCE_NOTIFICATION_RESPONSIVENESS  : 60000,
+        DISTANCE_LOCATION                     : 100,
+        DISTANCE_AWARE                        : 120,
+        RADIUS_AWARE                          : 250,
+        OPEN_PIN                              : false,
+]
+
+ext.applySharedPreyBuildConfig = { config, overrides = [:] ->
+    Map<String, Object> resolvedValues = new LinkedHashMap<>(preyBuildConfigValues)
+    overrides.each { key, value ->
+        resolvedValues.put(key.toString(), value)
+    }
+
+    resolvedValues.each { key, value ->
+        if (value instanceof Boolean) {
+            config.buildConfigField "boolean", key, value.toString()
+        } else if (value instanceof Integer) {
+            config.buildConfigField "int", key, value.toString()
+        } else {
+            config.buildConfigField "String", key, asBuildConfigString(value)
+        }
+    }
+}

@@ -75,6 +75,7 @@ public class RestrictionsReceiver extends BroadcastReceiver {
 
         PreyLogger.d(String.format("saveRestrictionValues restrictions: %s", restrictions.toString()));
         saveStringRestriction(restrictions, "enterprise_name", value -> preyConfig.setMdmOrganizationId(value));
+        saveStringRestriction(restrictions, "mdm_provisioned_by", value -> preyConfig.setMdmProvisionedBy(value));
         saveStringRestriction(restrictions, "serial_number", value -> preyConfig.setMdmSerialNumber(value));
         saveStringRestriction(restrictions, "device_name", value -> preyConfig.setMdmDeviceName(value));
         saveStringRestriction(restrictions, "imei", value -> preyConfig.setMdmImei(value));

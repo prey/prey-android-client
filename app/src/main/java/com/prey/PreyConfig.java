@@ -33,7 +33,6 @@ import com.prey.actions.location.PreyLocation;
 import com.prey.activities.FeedbackActivity;
 import com.prey.json.actions.Location;
 import com.prey.managers.PreyConnectivityManager;
-import com.prey.mdm.MdmDeviceInfoReporter;
 import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.net.UtilConnection;
@@ -1789,16 +1788,15 @@ public class PreyConfig {
             String nameDevice = buildDeviceName(PreyUtils.getNameDevice(ctx));
             PreyLogger.d(String.format("apikey:%s type:%s nameDevice:%s", apiKey, deviceType, nameDevice));
             // Register the device with the API key, device type, and name
-            PreyAccountData accountData = PreyWebServices.getInstance().registerNewDeviceWithApiKeyEmail(ctx, apiKey, deviceType, nameDevice);
+            PreyAccountData accountData = getWebServices().registerNewDeviceWithApiKeyEmail(ctx, apiKey, deviceType, nameDevice);
             if (accountData != null) {
                 PreyConfig.getPreyConfig(ctx).saveAccount(accountData);
-                MdmDeviceInfoReporter.report(ctx, apiKey, accountData.getDeviceId(), nameDevice);
                 PreyConfig.getPreyConfig(ctx).setNotificationId("");
                 PreyConfig.getPreyConfig(ctx).setRegisterC2dm(false);
                 // Register C2DM
                 PreyConfig.getPreyConfig(ctx).registerC2dm();
                 // Get the email associated with the account
-                String email = PreyWebServices.getInstance().getEmail(ctx);
+                String email = getWebServices().getEmail(ctx);
                 PreyConfig.getPreyConfig(ctx).setEmail(email);
                 PreyConfig.getPreyConfig(ctx).setRunBackground(true);
                 RunBackgroundCheckBoxPreference.notifyReady(ctx);
@@ -1845,6 +1843,31 @@ public class PreyConfig {
     public void setMdmOrganizationId(String organizationId) {
         // Save the organization ID to the configuration
         saveString(ORGANIZATION_ID, organizationId);
+    }
+
+    /**
+     * Key for storing the MDM provisioning marker and distinguish an MDM-provisioned device from
+     * a manual Play Store install. Forwarded to the panel verbatim on
+     * registration.
+     */
+    public static final String MDM_PROVISIONED_BY = "MDM_PROVISIONED_BY";
+
+    /**
+     * Retrieves the MDM provisioning marker received from MDM restrictions.
+     *
+     * @return The marker value, or an empty string if not set.
+     */
+    public String getMdmProvisionedBy() {
+        return getString(MDM_PROVISIONED_BY, "");
+    }
+
+    /**
+     * Sets the MDM provisioning marker in the configuration.
+     *
+     * @param marker The marker value to set.
+     */
+    public void setMdmProvisionedBy(String marker) {
+        saveString(MDM_PROVISIONED_BY, marker);
     }
 
     /**
