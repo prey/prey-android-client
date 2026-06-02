@@ -30,7 +30,6 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.prey.actions.aware.AwareController;
 import com.prey.actions.location.PreyLocation;
-import com.prey.activities.FeedbackActivity;
 import com.prey.json.actions.Location;
 import com.prey.managers.PreyConnectivityManager;
 import com.prey.net.PreyHttpResponse;
@@ -87,7 +86,6 @@ public class PreyConfig {
     public static final String LOW_BATTERY_DATE = "LOW_BATTERY_DATE";
     public static final String PREVIOUS_SSID = "PREVIOUS_SSID";
     public static final String ERROR = "ERROR";
-    public static final String FLAG_FEEDBACK = "FLAG_FEEDBACK";
     public static final String INSTALLATION_DATE = "INSTALLATION_DATE";
     public static final String PREFS_ACCOUNT_VERIFIED = "PREFS_ACCOUNT_VERIFIED";
     public static final String EMAIL = "EMAIL";
@@ -797,18 +795,6 @@ public class PreyConfig {
 
     public String getEmailBatch() {
         return PreyBatch.getInstance(this.ctx).getEmailBatch();
-    }
-
-    public int getFlagFeedback() {
-        return getInt(PreyConfig.FLAG_FEEDBACK, 0);
-    }
-
-    public void setFlagFeedback(int flagFeedback) {
-        saveInt(PreyConfig.FLAG_FEEDBACK, flagFeedback);
-    }
-
-    public boolean showFeedback() {
-        return FeedbackActivity.showFeedback(getLong(PreyConfig.INSTALLATION_DATE, 0), getFlagFeedback());
     }
 
     public void setAccountVerified(boolean accountVerified) {

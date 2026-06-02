@@ -248,21 +248,6 @@
             android:launchMode="singleTask"
                 android:name=".activities.PopUpAlertActivity" />
         <activity
-
-                android:clearTaskOnLaunch="true"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"
-                android:name=".activities.FeedbackActivity" />
-        <activity
-
-                android:clearTaskOnLaunch="true"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"
-                android:name=".activities.FormFeedbackActivity" />
-
-        <activity
                 android:clearTaskOnLaunch="true"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"

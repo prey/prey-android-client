@@ -72,18 +72,6 @@
     <string name="ok">OK</string> 
     <string name="cancel">Cancel</string>
 
-    <string name="feedback_principal_title">Is everything alright, dear?</string>
-    <string name="feedback_principal_message">It seems you\'ve been using Prey for a while now. Would you tell us what you think about it?</string>
-     <string name="feedback_principal_button1">I Love It</string> 
-    <string name="feedback_principal_button2">It Needs Improvements</string> 
-    <string name="feedback_principal_button3">No, thanks</string> 
-    <string name="feedback_form_title">Drop us a line</string>
-     <string name="feedback_form_message">What would you change about Prey if you could?</string>
-     <string name="feedback_form_field_hint_comment"></string> 
-    <string name="feedback_form_button1">OK, send</string>
-     <string name="feedback_form_button2">NO, thanks</string>
-     <string name="feedback_form_send_email">Send Email</string>
-
     <string name="preferences_password_old">Current password</string> 
     <string name="preferences_password_new">New password</string>
      <string name="preferences_password_confirm">Confirm password</string> 

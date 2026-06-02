@@ -42,14 +42,6 @@ public class FileConfigReader {
         return BuildConfig.PREY_SUBDOMAIN;
     }
 
-    public String getEmailFeedback() {
-        return BuildConfig.EMAIL_FEEDBACK;
-    }
-
-    public String getSubjectFeedback() {
-        return BuildConfig.SUBJECT_FEEDBACK;
-    }
-
     public String getApiV2() {
         return BuildConfig.API_V2;
     }

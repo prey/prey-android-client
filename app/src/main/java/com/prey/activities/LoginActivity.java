@@ -160,16 +160,6 @@ public class LoginActivity extends Activity {
         finish();
     }
 
-    private boolean isThisDeviceAlreadyRegisteredWithPrey() {
-        return PreyConfig.getPreyConfig(LoginActivity.this).isThisDeviceAlreadyRegisteredWithPrey(false);
-    }
-
-    private void showFeedback(Context ctx) {
-        Intent popup = new Intent(ctx, FeedbackActivity.class);
-        popup.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        ctx.startActivity(popup);
-    }
-
     private boolean hasMdmSetupKey() {
         if (PreyConfig.getPreyConfig(this).isThisDeviceAlreadyRegisteredWithPrey()) {
             return false;
