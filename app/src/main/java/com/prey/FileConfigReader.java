@@ -42,14 +42,6 @@ public class FileConfigReader {
         return BuildConfig.PREY_SUBDOMAIN;
     }
 
-    public String getEmailFeedback() {
-        return BuildConfig.EMAIL_FEEDBACK;
-    }
-
-    public String getSubjectFeedback() {
-        return BuildConfig.SUBJECT_FEEDBACK;
-    }
-
     public String getApiV2() {
         return BuildConfig.API_V2;
     }
@@ -96,14 +88,6 @@ public class FileConfigReader {
 
     public int getRadiusAware() {
         return BuildConfig.RADIUS_AWARE;
-    }
-
-    public String getPreyTerms() {
-        return BuildConfig.PREY_TERMS;
-    }
-
-    public String getPreyTermsEs() {
-        return BuildConfig.PREY_TERMS_ES;
     }
 
     public String getPreyForgot() {
