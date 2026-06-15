@@ -170,18 +170,23 @@ public class SplashMdmActivityRobolectricTest {
     }
 
     @Test
-    public void givenRegistrationSucceeded_whenPostExecute_thenEmitsLinkedKeyedState()
+    public void givenRegistrationSucceeded_whenPostExecute_thenEmitsDeviceKeyKeyedState()
             throws Exception {
         FakeKeyedAppStatesReporter reporter = new FakeKeyedAppStatesReporter();
         MdmKeyedAppStateReporter.setFactoryForTests(context -> new MdmKeyedAppStateReporter(reporter));
         try {
             preyConfig.setNotificationId("push-token");
+            preyConfig.setDeviceId("dvc-123");
             HeadlessSplashMdmActivity activity = createHeadlessActivity();
 
             invokeOnPostExecute(activity, Boolean.TRUE);
             flushPostExecuteDelay();
 
-            assertEquals("Splash should acknowledge setup completion to the MDM once registration succeeds", 1, reporter.getNumberOfUploads());
+            assertEquals("Splash should publish the Prey device key once registration succeeds", 1, reporter.getNumberOfUploads());
+            assertEquals(
+                    "dvc-123",
+                    reporter.getUploadedKeyedAppStatesByKey().get(MdmKeyedAppStateReporter.DEVICE_KEY_STATE_KEY).getData()
+            );
         } finally {
             MdmKeyedAppStateReporter.resetFactoryForTests();
         }
@@ -218,21 +223,26 @@ public class SplashMdmActivityRobolectricTest {
     }
 
     @Test
-    public void givenRegistrationSucceededWithoutConfirmedPushToken_whenPostExecute_thenEmitsLinkedKeyedState()
+    public void givenRegistrationSucceededWithoutConfirmedPushToken_whenPostExecute_thenEmitsDeviceKeyKeyedState()
             throws Exception {
         FakeKeyedAppStatesReporter reporter = new FakeKeyedAppStatesReporter();
         MdmKeyedAppStateReporter.setFactoryForTests(context -> new MdmKeyedAppStateReporter(reporter));
         try {
             preyConfig.setNotificationId("");
+            preyConfig.setDeviceId("dvc-123");
             HeadlessSplashMdmActivity activity = createHeadlessActivity();
 
             invokeOnPostExecute(activity, Boolean.TRUE);
             flushPostExecuteDelay();
 
             assertEquals(
-                    "Successful MDM setup should emit the linked keyed app state even before the push token is confirmed",
+                    "Successful MDM setup should emit the device key keyed app state even before the push token is confirmed",
                     1,
                     reporter.getNumberOfUploads()
+            );
+            assertEquals(
+                    "dvc-123",
+                    reporter.getUploadedKeyedAppStatesByKey().get(MdmKeyedAppStateReporter.DEVICE_KEY_STATE_KEY).getData()
             );
         } finally {
             MdmKeyedAppStateReporter.resetFactoryForTests();

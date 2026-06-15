@@ -75,7 +75,6 @@ public class RestrictionsReceiver extends BroadcastReceiver {
 
         PreyLogger.d(String.format("saveRestrictionValues restrictions: %s", restrictions.toString()));
         saveStringRestriction(restrictions, "enterprise_name", value -> preyConfig.setMdmOrganizationId(value));
-        saveStringRestriction(restrictions, "mdm_provisioned_by", value -> preyConfig.setMdmProvisionedBy(value));
         saveStringRestriction(restrictions, "serial_number", value -> preyConfig.setMdmSerialNumber(value));
         saveStringRestriction(restrictions, "device_name", value -> preyConfig.setMdmDeviceName(value));
         saveStringRestriction(restrictions, "imei", value -> preyConfig.setMdmImei(value));
@@ -158,9 +157,8 @@ public class RestrictionsReceiver extends BroadcastReceiver {
         Map<String, Object> exitInfo = new HashMap<>();
         exitInfo.put("registered_after", afterRegistered);
         MdmDebugReporter.send(context, "handle_restrictions_exit", exitInfo);
-        // Emit mdm_setup=linked when the device is confirmed registered.
         if (afterRegistered) {
-            MdmKeyedAppStateReporter.reportSetupLinked(context);
+            MdmKeyedAppStateReporter.reportDeviceKey(context, PreyConfig.getPreyConfig(context).getDeviceId());
         }
     }
 

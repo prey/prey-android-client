@@ -98,14 +98,14 @@ public class SplashMdmActivity extends FragmentActivity {
             MdmDebugReporter.send(getApplicationContext(), "splash_postexecute", postInfo);
             if (registered) {
                 PreyConfig.getPreyConfig(getApplicationContext()).setProtectReady(true);
-                // Emit the keyedAppState. setStatesImmediate is async (IPC to
-                // clouddpc); if we finish() the activity right away, the
-                // pipeline can drop the state mid-flight — AMAPI's webhook
-                // ends up never receiving `mdm_setup=linked` even though Prey
-                // successfully registered with the backend. Defer the
-                // setResult+finish a bit so the IPC has time to flush.
-                MdmDebugReporter.send(getApplicationContext(), "calling_reportSetupLinked");
-                MdmKeyedAppStateReporter.reportSetupLinked(getApplicationContext());
+                // Emit the device key keyedAppState before finishing. The
+                // enterprise-feedback IPC is async, so give it a short delay
+                // to flush before this setup activity exits.
+                MdmDebugReporter.send(getApplicationContext(), "calling_reportDeviceKey");
+                MdmKeyedAppStateReporter.reportDeviceKey(
+                        getApplicationContext(),
+                        PreyConfig.getPreyConfig(getApplicationContext()).getDeviceId()
+                );
                 new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
                     setResult(RESULT_OK);
                     if (!wasLaunchedAsSetupAction() && getCallingActivity() == null) {
