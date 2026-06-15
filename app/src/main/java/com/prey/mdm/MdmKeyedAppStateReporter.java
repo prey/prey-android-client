@@ -46,7 +46,7 @@ public class MdmKeyedAppStateReporter {
     }
 
     public void reportDeviceKey(String deviceKey) {
-        if (deviceKey == null || "".equals(deviceKey)) {
+        if (deviceKey == null || deviceKey.length() == 0) {
             return;
         }
         reporter.setStatesImmediate(
