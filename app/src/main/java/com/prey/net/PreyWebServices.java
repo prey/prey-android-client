@@ -169,20 +169,8 @@ public class PreyWebServices implements WebServices {
         parameters.put("device_type", deviceType);
         parameters.put("os", "Android");
         parameters.put("os_version", Build.VERSION.RELEASE);
-        parameters.put("referer_device_id", "");
-        parameters.put("plan", "free");
         parameters.put("model_name", model);
         parameters.put("vendor_name", vendor);
-
-        String mdmProvisionedBy = preyConfig.getMdmProvisionedBy();
-        if (mdmProvisionedBy != null && !mdmProvisionedBy.isEmpty()) {
-            parameters.put("mdm_provisioned_by", mdmProvisionedBy);
-        }
-        String mdmOrgId = preyConfig.getMdmOrganizationId();
-        if (mdmOrgId != null && !mdmOrgId.isEmpty()) {
-            parameters.put("enterprise_name", mdmOrgId);
-        }
-
         parameters = increaseData(ctx, parameters);
 
         parameters.put("physical_address", PreyConfig.getPreyConfig(ctx).resolveImei());
