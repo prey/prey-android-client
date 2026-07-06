@@ -26,6 +26,8 @@ public class AlarmLocationReceiver extends BroadcastReceiver {
             PreyLogger.d("DAILY______________________________");
             PreyLogger.d("DAILY----------AlarmLocationReceiver onReceive");
             final Context ctx = context;
+            // Re-arm the next check first so a failure below never breaks the schedule.
+            LocationScheduled.getInstance().scheduleNext(ctx);
             new Thread() {
                 public void run() {
                     new DailyLocation().run(ctx);

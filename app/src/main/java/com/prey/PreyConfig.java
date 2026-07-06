@@ -1673,6 +1673,20 @@ public class PreyConfig {
         saveString(PreyConfig.DAILY_LOCATION, dailyLocation);
     }
 
+    public static final String LOCATION_SCHEDULE = "LOCATION_SCHEDULE";
+
+    /**
+     * @return the raw {@code location_schedule} JSON from status.json, or "" when unset.
+     */
+    public String getLocationSchedule(){
+        return getString(PreyConfig.LOCATION_SCHEDULE, "");
+    }
+
+    public void setLocationSchedule(String locationSchedule){
+        PreyLogger.d(String.format("DAILY setLocationSchedule [%s]", locationSchedule));
+        saveString(PreyConfig.LOCATION_SCHEDULE, locationSchedule);
+    }
+
     public static final String MINUTES_TO_QUERY_SERVER = "MINUTES_TO_QUERY_SERVER";
 
     public int getMinutesToQueryServer() {

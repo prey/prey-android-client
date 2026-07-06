@@ -81,6 +81,18 @@ public class PreyStatus {
                     aware = false;
                 }
                 try {
+                    JSONObject jsnobjectLocal = jsnobjectSettings.getJSONObject("local");
+                    if (jsnobjectLocal.has("location_schedule")
+                            && !jsnobjectLocal.isNull("location_schedule")) {
+                        String locationSchedule = jsnobjectLocal.getJSONObject("location_schedule").toString();
+                        PreyConfig.getPreyConfig(ctx).setLocationSchedule(locationSchedule);
+                    } else {
+                        PreyConfig.getPreyConfig(ctx).setLocationSchedule("");
+                    }
+                }catch(Exception e){
+                    PreyConfig.getPreyConfig(ctx).setLocationSchedule("");
+                }
+                try {
                     JSONObject jsnobjectGlobal = jsnobjectSettings.getJSONObject("global");
                     autoconnect = jsnobjectGlobal.getBoolean("auto_connect");
                 }catch(Exception e){
