@@ -6,6 +6,7 @@
  ******************************************************************************/
 package com.prey.barcodereader;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -32,6 +33,7 @@ import com.prey.PreyStatus;
 import com.prey.PreyUtils;
 import com.prey.R;
 import com.prey.actions.aware.AwareController;
+import com.prey.activities.BackNavigationCompat;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.activities.LoginActivity;
 import com.prey.activities.PermissionInformationActivity;
@@ -50,6 +52,7 @@ public class BarcodeActivity extends Activity   {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BackNavigationCompat.register(this, this::goBack);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_barcode);
         statusMessage = (TextView) findViewById(R.id.status_message);
@@ -78,8 +81,17 @@ public class BarcodeActivity extends Activity   {
         });
     }
 
+    /**
+     * Only reached below Android 13; from there on the platform routes back to the
+     * callback registered in {@code onCreate}. Both paths run {@link #goBack()}.
+     */
+    @SuppressLint("GestureBackNavigation") // Still the only back path on API < 33.
     @Override
     public void onBackPressed() {
+        goBack();
+    }
+
+    private void goBack() {
         Intent intent =null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent = new Intent(getApplicationContext(), CheckPasswordHtmlActivity.class);

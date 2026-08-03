@@ -14,6 +14,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.prey.PreyLogger;
@@ -27,17 +28,29 @@ public class SecurityActivity extends AppCompatActivity {
 
     private WebView myWebView = null;
 
-    public void onBackPressed() {
-        Intent intent = null;
-        intent = new Intent(getApplication(), CheckPasswordHtmlActivity.class);
-        startActivity(intent);
-        finish();
+    /**
+     * Back returns to the password screen rather than exiting. Registered through
+     * AndroidX's dispatcher, which covers both the pre-Android 13 path and the
+     * OnBackInvokedCallback path the manifest opts into with
+     * {@code enableOnBackInvokedCallback}; overriding {@code onBackPressed} no longer
+     * runs on Android 13+.
+     */
+    private void registerBackNavigation() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(getApplication(), CheckPasswordHtmlActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        registerBackNavigation();
         try {
             getSupportActionBar().hide();
         }catch (Exception e){
