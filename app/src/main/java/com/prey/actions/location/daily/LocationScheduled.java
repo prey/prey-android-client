@@ -10,10 +10,16 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import com.prey.PreyLogger;
 
 public class LocationScheduled {
+
+    /** Minutes between daily-location checks. */
+    private static final int INTERVAL_MINUTES = 15;
+
+    private static final long INTERVAL_MILLIS = 1000L * 60 * INTERVAL_MINUTES;
 
     private static LocationScheduled instance = null;
 
@@ -28,24 +34,46 @@ public class LocationScheduled {
     }
 
     /**
-     * Method that prepares an alarm to send the daily location
+     * Arms an immediate first daily-location check. Called at app start. The alarm re-arms
+     * itself from {@link AlarmLocationReceiver} so it survives Doze without a repeating alarm.
      *
      * @param context
      */
     public void run(Context context) {
+        scheduleAt(context, System.currentTimeMillis());
+    }
+
+    /**
+     * Arms the next daily-location check {@code INTERVAL_MINUTES} from now. Called by the
+     * receiver on each fire so exactly one alarm is ever pending.
+     *
+     * @param context
+     */
+    public void scheduleNext(Context context) {
+        scheduleAt(context, System.currentTimeMillis() + INTERVAL_MILLIS);
+    }
+
+    /**
+     * Schedules a single wake-up alarm at {@code triggerAtMillis}. Uses
+     * {@code setAndAllowWhileIdle} on API 23+ so the alarm fires even in Doze (no exact-alarm
+     * permission needed); on older APIs Doze does not exist so {@code setExact} is used.
+     */
+    private void scheduleAt(Context context, long triggerAtMillis) {
         try {
-            int minute = 15;
             Intent intent = new Intent(context, AlarmLocationReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
             AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
-                PreyLogger.d("DAILY----------LocationScheduled setRepeating");
-                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * minute, pendingIntent);
-            } else {
-                PreyLogger.d("DAILY----------LocationScheduled setInexactRepeating");
-                alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * minute, pendingIntent);
+            if (alarmMgr == null) {
+                PreyLogger.d("DAILY----------LocationScheduled no AlarmManager");
+                return;
             }
-            PreyLogger.d(String.format("DAILY----------start [%s] LocationScheduled", minute));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmMgr.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
+            } else {
+                alarmMgr.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
+            }
+            PreyLogger.d(String.format("DAILY----------LocationScheduled scheduled at [%s]", triggerAtMillis));
         } catch (Exception e) {
             PreyLogger.e(String.format("DAILY----------Error LocationScheduled :%s", e.getMessage()), e);
         }
