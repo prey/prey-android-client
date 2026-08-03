@@ -84,6 +84,19 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
     public static String URL_ONB = "file:///android_asset/html/index.html";
 
     public static final String CLOSE_PREY = "close_prey";
+
+    /**
+     * Broadcasts {@link #CLOSE_PREY} to this app only. The receivers listening for it
+     * are registered as {@code RECEIVER_NOT_EXPORTED}, so scoping the intent to our own
+     * package keeps the send side from being visible to other apps too — an implicit
+     * broadcast is delivered to any app with a matching receiver.
+     */
+    public static void broadcastClosePrey(Context context) {
+        Intent intent = new Intent(CLOSE_PREY);
+        intent.setPackage(context.getPackageName());
+        context.sendBroadcast(intent);
+    }
+
     private final BroadcastReceiver close_prey_receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -138,16 +151,17 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity {
         }
         setContentView(R.layout.webview);
         PreyLogger.d("CheckPasswordHtmlActivity: onCreate");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(close_prey_receiver, new IntentFilter(CLOSE_PREY), RECEIVER_EXPORTED);
-        } else {
-            registerReceiver(close_prey_receiver, new IntentFilter(CLOSE_PREY));
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(restriction_receiver, new IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED), RECEIVER_EXPORTED);
-        } else {
-            registerReceiver(restriction_receiver, new IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED));
-        }
+        // CLOSE_PREY is only ever broadcast from inside the app (PictureUtil,
+        // WebAppInterface, PreySecureService, PreyBetaActionsRunner), so it must not
+        // be exported: an exported receiver lets any installed app dismiss this
+        // password screen. Same-package broadcasts are still delivered.
+        ContextCompat.registerReceiver(this, close_prey_receiver, new IntentFilter(CLOSE_PREY),
+                ContextCompat.RECEIVER_NOT_EXPORTED);
+        // Sent by the system when the EMM changes app restrictions, so this one has
+        // to stay exported to be delivered.
+        ContextCompat.registerReceiver(this, restriction_receiver,
+                new IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED),
+                ContextCompat.RECEIVER_EXPORTED);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());

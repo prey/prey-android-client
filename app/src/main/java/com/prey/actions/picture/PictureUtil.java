@@ -119,7 +119,7 @@ public class PictureUtil {
             myKillerBundle.putInt("kill",1);
             intentCamera.putExtras(myKillerBundle);
             ctx.startActivity(intentCamera);
-            ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
+            CheckPasswordHtmlActivity.broadcastClosePrey(ctx);
         } catch (Exception e) {
             PreyLogger.e("report error:" + e.getMessage(), e);
             PreyFirebaseCrashlytics.getInstance(ctx).recordException(e);

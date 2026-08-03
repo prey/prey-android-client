@@ -655,7 +655,7 @@ public class WebAppInterface {
                         } catch (Exception e) {
                             PreyLogger.e("Error sleep:"+e.getMessage(),e);
                         }
-                        ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
+                        CheckPasswordHtmlActivity.broadcastClosePrey(ctx);
 
                 }
             }.start();
