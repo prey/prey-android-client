@@ -44,17 +44,9 @@ import static org.junit.Assert.fail;
 @Config(sdk = 30)
 public class LayoutConfigurationCoverageRobolectricTest {
 
-    /**
-     * Configurations an activity can now land in on a large screen. The sdk level
-     * is irrelevant here — what matters is that the qualifier no longer matches
-     * the {@code -port} folders, which is the state API 36 makes reachable.
-     */
-    private static final String[] LARGE_SCREEN_LANDSCAPE_QUALIFIERS = {
-            "land",
-            "sw600dp-land",
-            "sw720dp-land",
-            "xlarge-land",
-    };
+    // The configurations under test are the @Config qualifiers on each method. What
+    // matters about them is that they no longer match the -port folders, which is the
+    // state API 36 makes reachable on large screens.
 
     // =========================================================================
     // welcomebatch — the layout that regressed
@@ -99,20 +91,47 @@ public class LayoutConfigurationCoverageRobolectricTest {
     }
 
     /**
-     * Resolves every {@code R.layout} entry under the current configuration and
-     * reports all misses at once, so a failure names each offending layout rather
-     * than only the first one.
+     * Name prefixes of layouts that come from AppCompat, Material and other AndroidX
+     * libraries. {@code R.layout} holds the merged resources of every dependency, and
+     * some library layouts are scoped to one configuration on purpose —
+     * {@code material_clock_period_toggle_land} exists only for landscape, and the
+     * library's own code only reaches for it there. Sweeping those would report a
+     * failure that is not ours to fix.
+     * <p>
+     * Verified against the current dependency set: these cover all 108 third-party
+     * layouts and exclude none of the 38 the app owns. If a dependency later adds a
+     * config-scoped layout under a new prefix, this fails naming that layout — a cheap,
+     * obvious fix, and the right direction to fail in, since the alternative would be to
+     * silently stop covering the app's own layouts.
+     * <p>
+     * Keep in sync with the copy in {@code LargeScreenBehaviorInstrumentedTest}.
+     */
+    private static final String[] THIRD_PARTY_LAYOUT_PREFIXES = {
+            "abc_", "m3_", "material_", "mtrl_", "design_", "notification_",
+            "select_dialog", "support_", "preference", "browser_actions",
+            "custom_dialog", "expand_button", "image_frame", "test_",
+            "fingerprint_dialog", "ime_",
+    };
+
+    /**
+     * Resolves every layout the app owns under the current configuration and reports all
+     * misses at once, so a failure names each offending layout rather than only the first.
      */
     private void assertEveryLayoutResolves(String qualifiers) {
         Resources resources = resources();
         List<String> missing = new ArrayList<>();
         int checked = 0;
+        int skipped = 0;
 
         for (Field field : R.layout.class.getFields()) {
             int id;
             try {
                 id = field.getInt(null);
             } catch (IllegalAccessException e) {
+                continue;
+            }
+            if (isThirdPartyLayout(field.getName())) {
+                skipped++;
                 continue;
             }
             checked++;
@@ -123,28 +142,24 @@ public class LayoutConfigurationCoverageRobolectricTest {
             }
         }
 
-        assertTrue("Expected to find layouts to check", checked > 0);
+        assertTrue("Expected to find app-owned layouts to check", checked > 0);
         if (!missing.isEmpty()) {
             fail(String.format(
-                    "%d layout(s) do not resolve under \"%s\" — they exist only under a "
-                            + "narrower qualifier and will throw Resources.NotFoundException "
-                            + "when shown in that configuration. Add a base res/layout variant "
-                            + "for: %s",
-                    missing.size(), qualifiers, missing));
+                    "%d of %d app layout(s) do not resolve under \"%s\" (%d library layouts "
+                            + "skipped) — they exist only under a narrower qualifier and will throw "
+                            + "Resources.NotFoundException when shown in that configuration. Add a "
+                            + "base res/layout variant for: %s",
+                    missing.size(), checked, qualifiers, skipped, missing));
         }
     }
 
-    /**
-     * Reports which configurations each qualifier under test actually stands for,
-     * so a future reader can tell the sweep is not silently passing on a
-     * configuration that still matches the {@code -port} folders.
-     */
-    @Test
-    public void largeScreenLandscapeQualifiersAreDeclared() {
-        assertTrue(
-                "The sweep must cover at least a phone landscape and a large-screen landscape case",
-                LARGE_SCREEN_LANDSCAPE_QUALIFIERS.length >= 2
-        );
+    private static boolean isThirdPartyLayout(String layoutName) {
+        for (String prefix : THIRD_PARTY_LAYOUT_PREFIXES) {
+            if (layoutName.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Resources resources() {

@@ -27,9 +27,11 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * On-device checks for the two behaviours Android 16 (API 36) changed for this app.
@@ -53,20 +55,44 @@ public class LargeScreenBehaviorInstrumentedTest {
     // Configuration the run is actually exercising
     // =========================================================================
 
+    /**
+     * Asserts that the portrait lock really is being ignored, which is the premise every
+     * other test here rests on.
+     * <p>
+     * PanelWebActivity declares {@code screenOrientation="portrait"} in the manifest, so
+     * on a large screen running API 36 it should come up in landscape anyway. If it comes
+     * up portrait, the platform is still honouring the lock and this run is not exercising
+     * the change at all.
+     * <p>
+     * The preconditions are assumptions rather than assertions on purpose: on a phone AVD,
+     * or with the tablet rotated to portrait, this reports as skipped instead of passed, so
+     * a green suite cannot be mistaken for coverage it did not provide. The layout sweeps
+     * below still run either way — plain landscape is enough to catch the welcomebatch
+     * class of bug.
+     */
     @Test
-    public void displayIsLargeEnoughToBeMeaningful() {
+    public void portraitLockIsIgnoredOnThisDisplay() {
         Configuration config = resources().getConfiguration();
         int smallestWidthDp = config.smallestScreenWidthDp;
-        boolean landscape = config.orientation == Configuration.ORIENTATION_LANDSCAPE;
 
-        // Not an assertion about the app — a report of what this device covers, so a
-        // green run on a phone AVD is not mistaken for coverage of the API 36 change.
-        assertTrue(
-                String.format("smallestScreenWidthDp=%d orientation=%s — run this on a "
-                                + "tablet AVD (>=600dp) to exercise the API 36 orientation change",
-                        smallestWidthDp, landscape ? "landscape" : "portrait"),
-                smallestWidthDp > 0
-        );
+        assumeTrue(
+                String.format("smallestScreenWidthDp=%d is below 600 — run on a tablet AVD to "
+                        + "exercise the API 36 orientation change", smallestWidthDp),
+                smallestWidthDp >= 600);
+        assumeTrue(
+                "Device is in portrait, so an ignored portrait lock is indistinguishable from "
+                        + "an honoured one; rotate the AVD to landscape",
+                config.orientation == Configuration.ORIENTATION_LANDSCAPE);
+
+        try (ActivityScenario<PanelWebActivity> scenario =
+                     ActivityScenario.launch(PanelWebActivity.class)) {
+            scenario.onActivity(activity -> assertEquals(
+                    String.format("PanelWebActivity asks for portrait, but on a %ddp display "
+                                    + "running API 36 that request must be ignored",
+                            smallestWidthDp),
+                    Configuration.ORIENTATION_LANDSCAPE,
+                    activity.getResources().getConfiguration().orientation));
+        }
     }
 
     // =========================================================================
@@ -83,17 +109,39 @@ public class LargeScreenBehaviorInstrumentedTest {
         );
     }
 
+    /**
+     * Name prefixes of layouts that come from AppCompat, Material and other AndroidX
+     * libraries. {@code R.layout} holds the merged resources of every dependency, and some
+     * library layouts are scoped to one configuration on purpose —
+     * {@code material_clock_period_toggle_land} exists only for landscape, and the library
+     * only reaches for it there — so sweeping them reports failures that are not ours.
+     * <p>
+     * Keep in sync with the copy in {@code LayoutConfigurationCoverageRobolectricTest},
+     * which documents how the list was verified against the dependency set.
+     */
+    private static final String[] THIRD_PARTY_LAYOUT_PREFIXES = {
+            "abc_", "m3_", "material_", "mtrl_", "design_", "notification_",
+            "select_dialog", "support_", "preference", "browser_actions",
+            "custom_dialog", "expand_button", "image_frame", "test_",
+            "fingerprint_dialog", "ime_",
+    };
+
     @Test
     public void everyLayoutResolvesInThisConfiguration() {
         Resources resources = resources();
         List<String> missing = new ArrayList<>();
         int checked = 0;
+        int skipped = 0;
 
         for (Field field : R.layout.class.getFields()) {
             int id;
             try {
                 id = field.getInt(null);
             } catch (IllegalAccessException e) {
+                continue;
+            }
+            if (isThirdPartyLayout(field.getName())) {
+                skipped++;
                 continue;
             }
             checked++;
@@ -104,12 +152,23 @@ public class LargeScreenBehaviorInstrumentedTest {
             }
         }
 
-        assertTrue("Expected to find layouts to check", checked > 0);
+        assertTrue("Expected to find app-owned layouts to check", checked > 0);
         if (!missing.isEmpty()) {
             fail(String.format(
-                    "%d layout(s) do not resolve on this device (smallestScreenWidthDp=%d): %s",
-                    missing.size(), resources.getConfiguration().smallestScreenWidthDp, missing));
+                    "%d of %d app layout(s) do not resolve on this device "
+                            + "(smallestScreenWidthDp=%d, %d library layouts skipped): %s",
+                    missing.size(), checked,
+                    resources.getConfiguration().smallestScreenWidthDp, skipped, missing));
         }
+    }
+
+    private static boolean isThirdPartyLayout(String layoutName) {
+        for (String prefix : THIRD_PARTY_LAYOUT_PREFIXES) {
+            if (layoutName.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // =========================================================================
