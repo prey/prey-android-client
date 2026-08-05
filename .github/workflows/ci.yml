@@ -128,18 +128,10 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           arch: x86_64
-          script: |
-            if [ "${{ matrix.api-level }}" -ge 36 ]; then
-              # The runner's AVD is phone-sized, and the API 36 orientation change only
-              # applies from 600dp of smallest width up. Without this the large-screen
-              # tests report as skipped and the job passes having covered nothing.
-              # 1600dp / (240/160) = 1066dp of smallest width, in landscape.
-              adb shell wm size 2560x1600
-              adb shell wm density 240
-              adb shell wm set-ignore-orientation-request true
-              adb shell dumpsys window displays | grep -m1 ignoreOrientationRequest
-            fi
-            ./gradlew connectedDebugAndroidTest
+          # One line on purpose: this action runs each line of an inline script in its
+          # own shell, so a multi-line `if` here fails to parse. The script forces a
+          # large-screen configuration on API 36 and leaves older levels phone-sized.
+          script: .github/scripts/run-instrumented-tests.sh ${{ matrix.api-level }}
 
       - name: Upload instrumented test results
         if: always()
