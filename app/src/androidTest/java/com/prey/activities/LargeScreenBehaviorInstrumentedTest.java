@@ -11,6 +11,7 @@ import android.app.Instrumentation;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.view.KeyEvent;
 
 import com.prey.R;
@@ -64,17 +65,24 @@ public class LargeScreenBehaviorInstrumentedTest {
      * up portrait, the platform is still honouring the lock and this run is not exercising
      * the change at all.
      * <p>
-     * The preconditions are assumptions rather than assertions on purpose: on a phone AVD,
-     * or with the tablet rotated to portrait, this reports as skipped instead of passed, so
-     * a green suite cannot be mistaken for coverage it did not provide. The layout sweeps
-     * below still run either way — plain landscape is enough to catch the welcomebatch
-     * class of bug.
+     * The preconditions are assumptions rather than assertions on purpose: below API 36, on
+     * a phone-sized display, or with the device in portrait, this reports as skipped instead
+     * of passed, so a green suite cannot be mistaken for coverage it did not provide. The
+     * layout sweeps below still run either way — plain landscape is enough to catch the
+     * welcomebatch class of bug, on any API level.
      */
     @Test
     public void portraitLockIsIgnoredOnThisDisplay() {
         Configuration config = resources().getConfiguration();
         int smallestWidthDp = config.smallestScreenWidthDp;
 
+        // Below API 36 the platform still honours the lock, so the assertion below would be
+        // wrong rather than merely uninformative. This matters for CI, which runs the suite
+        // on an older API level too, to cover BackNavigationCompat's pre-Android 13 path.
+        assumeTrue(
+                String.format("API %d is below 36, where the portrait lock is still honoured",
+                        Build.VERSION.SDK_INT),
+                Build.VERSION.SDK_INT >= 36);
         assumeTrue(
                 String.format("smallestScreenWidthDp=%d is below 600 — run on a tablet AVD to "
                         + "exercise the API 36 orientation change", smallestWidthDp),
