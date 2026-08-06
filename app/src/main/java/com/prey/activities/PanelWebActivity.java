@@ -6,6 +6,7 @@
  ******************************************************************************/
 package com.prey.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,16 +28,25 @@ public class PanelWebActivity extends Activity {
     private final Activity activity = this;
     private WebView myWebView = null;
 
+    /**
+     * Only reached below Android 13; from there on the platform routes back to the
+     * callback registered in {@code onCreate}. Both paths run {@link #goBack()}.
+     */
+    @SuppressLint("GestureBackNavigation") // Still the only back path on API < 33.
     public void onBackPressed() {
+        goBack();
+    }
+
+    private void goBack() {
         Intent intent = null;
         intent = new Intent(getApplication(), CheckPasswordHtmlActivity.class);
         startActivity(intent);
         finish();
-
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BackNavigationCompat.register(this, this::goBack);
         setContentView(R.layout.panelweb);
         this.setContentView(R.layout.activity_webview);
         myWebView = (WebView) findViewById(R.id.install_browser);

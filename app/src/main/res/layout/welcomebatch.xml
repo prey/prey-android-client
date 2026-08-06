@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Created by Carlos Yaconi
+  Copyright 2012 Fork Ltd. All rights reserved.
+  License: GPLv3
+  Full license at "/LICENSE"
+
+  Default (orientation-agnostic) variant. The layout-*-port variants keep the
+  original portrait spacing; this one is what gets used in landscape, which is
+  now reachable on large screens because Android 16 (API 36) ignores the
+  portrait lock requested by WelcomeBatchActivity. The logo is centered instead
+  of pushed down with a fixed top margin so it stays on screen at any height.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#1e2938"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:importantForAccessibility="no"
+        android:maxHeight="180dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/prey_logo_b_mono2" />
+
+</LinearLayout>

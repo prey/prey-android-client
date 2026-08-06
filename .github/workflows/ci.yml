@@ -1,11 +1,16 @@
 # Android CI Pipeline
-# Runs 3 jobs in parallel:
+# Runs in parallel:
 #   - Lint: static analysis (~2 min)
 #   - Unit Tests: Robolectric tests on JVM, no emulator needed (~1 min)
-#   - Instrumented Tests: runs on Android emulator (~8-10 min)
+#   - Instrumented Tests: one emulator per API level in the matrix (~8-10 min each)
 # Total time is the slowest job (~10 min).
 # If the emulator job is unstable in CI, you can safely disable it
 # and rely on Robolectric tests only.
+#
+# The instrumented job runs on two API levels on purpose. API 36 is what the app
+# targets, and it is where the large-screen orientation change applies. API 30 is
+# kept because part of the code only runs below Android 13 — BackNavigationCompat
+# falls back to onBackPressed there — so dropping it would leave that path untested.
 
 name: CI
 
@@ -85,8 +90,12 @@ jobs:
           path: app/build/reports/tests/testDebugUnitTest/
 
   instrumented-test:
-    name: Instrumented Tests (Emulator)
+    name: Instrumented Tests (API ${{ matrix.api-level }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        api-level: [30, 36]
     steps:
       - uses: actions/checkout@v4
 
@@ -117,13 +126,17 @@ jobs:
       - name: Run instrumented tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
+          api-level: ${{ matrix.api-level }}
           arch: x86_64
-          script: ./gradlew connectedDebugAndroidTest
+          # One line on purpose: this action runs each line of an inline script in its
+          # own shell, so a multi-line `if` here fails to parse. The script forces a
+          # large-screen configuration on API 36 and leaves older levels phone-sized.
+          script: .github/scripts/run-instrumented-tests.sh ${{ matrix.api-level }}
 
       - name: Upload instrumented test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: instrumented-test-results
+          # Per API level: upload-artifact@v4 rejects two uploads under one name.
+          name: instrumented-test-results-api${{ matrix.api-level }}
           path: app/build/reports/androidTests/connected/

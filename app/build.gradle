@@ -13,13 +13,13 @@ task checkstyle(type: Checkstyle) {
 
 android {
     namespace 'com.prey'
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.prey"
         minSdk = 21
 
-        targetSdk = 35
+        targetSdk = 36
 
         versionCode = 417
         versionName = '2.6.20'
@@ -27,7 +27,7 @@ android {
         multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("int", "COMPILE_SDK_VERSION", "35")
+        buildConfigField("int", "COMPILE_SDK_VERSION", "36")
         buildConfigField("String", "MDM_DEBUG_URL", "\"\"")
         applySharedPreyBuildConfig(delegate)
     }

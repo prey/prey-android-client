@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,17 +33,29 @@ import java.util.Locale;
 public class ReportActivity extends FragmentActivity implements OnMapReadyCallback, OnMapsSdkInitializedCallback {
     private WebView myWebView = null;
 
-    public void onBackPressed() {
-        Intent intent = null;
-        intent = new Intent(getApplication(), CheckPasswordHtmlActivity.class);
-        startActivity(intent);
-        finish();
+    /**
+     * Back returns to the password screen rather than exiting. Registered through
+     * AndroidX's dispatcher, which covers both the pre-Android 13 path and the
+     * OnBackInvokedCallback path the manifest opts into with
+     * {@code enableOnBackInvokedCallback}; overriding {@code onBackPressed} no longer
+     * runs on Android 13+.
+     */
+    private void registerBackNavigation() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(getApplication(), CheckPasswordHtmlActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        registerBackNavigation();
         MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, this);
         setContentView(R.layout.report);
         PreyLogger.d("ReportActivity: onCreate");
