@@ -3,6 +3,11 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply from: "${projectDir}/build-config-fields.gradle"
 
+// IMPORTANT: this flavor stays on SDK 33 on purpose. The wipe capability we rely
+// on is blocked at higher target API levels, so do NOT bump compileSdk/targetSdk
+// here when raising them in build.gradle (Play) or build.gradle.dev. This build
+// is distributed through an internal process, not Google Play, so it is not
+// subject to Play's target API level requirement.
 android {
     namespace = 'com.prey'
     compileSdk = 33

@@ -7,6 +7,7 @@
 package com.prey.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -35,10 +36,20 @@ public class PermissionInformationActivity extends PreyActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Deliberately swallows back: the user must complete the permission flow
+        // through the screen's own buttons. Registering a callback that does nothing
+        // is what keeps that true on Android 13+, where onBackPressed is not called.
+        BackNavigationCompat.register(this, () -> {
+        });
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
+    /**
+     * Only reached below Android 13, where {@code enableOnBackInvokedCallback} is
+     * ignored. Empty on purpose — see the callback registered in {@code onCreate}.
+     */
+    @SuppressLint("GestureBackNavigation") // Still the only back path on API < 33.
     @Override
     public void onBackPressed() {
     }

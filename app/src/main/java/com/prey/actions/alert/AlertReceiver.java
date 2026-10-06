@@ -26,7 +26,12 @@ public class AlertReceiver extends BroadcastReceiver {
         PreyLogger.d("AlertReceiver notificationId:" + notificationId);
         String popupIntent=PopUpAlertActivity.POPUP_PREY+"_"+notificationId;
         PreyLogger.d("AlertReceiver popup intent:"+popupIntent);
-        context.sendBroadcast(new Intent(popupIntent));
+        // Scoped to this app: PopUpAlertActivity registers for it as
+        // RECEIVER_NOT_EXPORTED, and an implicit broadcast would otherwise be
+        // visible to any app with a matching receiver.
+        Intent popupBroadcast = new Intent(popupIntent);
+        popupBroadcast.setPackage(context.getPackageName());
+        context.sendBroadcast(popupBroadcast);
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(notificationId);
         new Thread() {

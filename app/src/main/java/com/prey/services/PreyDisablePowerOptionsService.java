@@ -18,6 +18,8 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
 
+import androidx.core.content.ContextCompat;
+
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.receivers.AlarmDisablePowerReceiver;
@@ -42,7 +44,7 @@ public class PreyDisablePowerOptionsService extends Service {
         PreyLogger.d("PreyDisablePowerOptionsService  onStart ________disablePowerOptions:" + disablePowerOptions);
         if (disablePowerOptions) {
             IntentFilter intentfilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-            registerReceiver(mReceiver, intentfilter);
+            registerCloseSystemDialogsReceiver(intentfilter);
         }
     }
 
@@ -66,9 +68,22 @@ public class PreyDisablePowerOptionsService extends Service {
         PreyLogger.d("PreyDisablePowerOptionsService  onStartCommand disablePowerOptions:" + disablePowerOptions);
         if (disablePowerOptions) {
             IntentFilter closeDialog = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-            registerReceiver(mReceiver, closeDialog);
+            registerCloseSystemDialogsReceiver(closeDialog);
         }
         return START_STICKY;
+    }
+
+    /**
+     * ACTION_CLOSE_SYSTEM_DIALOGS is delivered by the system, so the receiver stays
+     * exported. The flag itself is what matters here: from Android 14 on,
+     * registerReceiver without one throws SecurityException, which took this
+     * service down with it every time the disable-power-options feature was on.
+     * <p>
+     * Note the broadcast has not been sent to apps since Android 12, so this only
+     * still does anything below that.
+     */
+    private void registerCloseSystemDialogsReceiver(IntentFilter filter) {
+        ContextCompat.registerReceiver(this, mReceiver, filter, ContextCompat.RECEIVER_EXPORTED);
     }
 
     public void onTaskRemoved(Intent rootIntent) {
