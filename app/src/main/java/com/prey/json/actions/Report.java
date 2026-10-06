@@ -111,6 +111,12 @@ public class Report {
         try {
             JSONObject parameters = new JSONObject();
             parameters.put("interval", intervalReport);
+            // Keep the reports the user excluded (e.g. picture) when restarting after boot,
+            // otherwise get() overwrites the stored exclude and pictures are taken again
+            String exclude = PreyConfig.getPreyConfig(ctx).getExcludeReport();
+            if (exclude != null && !"".equals(exclude)) {
+                parameters.put("exclude", exclude);
+            }
             new Report().get(ctx, null, parameters);
         } catch (Exception e) {
             PreyLogger.e("Error:"+e.getMessage(),e);
