@@ -95,7 +95,7 @@ public class PreyBetaActionsRunner implements Runnable {
         List<JSONObject> jsonObject = null;
         try {
             if(close) {
-                ctx.sendBroadcast(new Intent(CheckPasswordHtmlActivity.CLOSE_PREY));
+                CheckPasswordHtmlActivity.broadcastClosePrey(ctx);
             }
             jsonObject = PreyWebServices.getInstance().getActionsJsonToPerform(ctx);
         } catch (PreyException e) {

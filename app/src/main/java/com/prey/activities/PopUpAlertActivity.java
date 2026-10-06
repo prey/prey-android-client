@@ -16,6 +16,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
+
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
@@ -72,8 +74,17 @@ public class PopUpAlertActivity extends PreyActivity {
         });
         popup.show();
         try {
-            registerReceiver(close_prey_receiver, new IntentFilter(CheckPasswordHtmlActivity.CLOSE_PREY));
-            registerReceiver(popup_prey_receiver, new IntentFilter(POPUP_PREY + "_" + notificationId));
+            // Both actions are broadcast from inside the app only (AlertReceiver for
+            // the popup, PreySecureService and friends for CLOSE_PREY), so they must
+            // not be exported. Without an explicit flag these registrations throw
+            // SecurityException from Android 14 on, and the catch below turned that
+            // into a silent failure: the popup could no longer be closed remotely.
+            ContextCompat.registerReceiver(this, close_prey_receiver,
+                    new IntentFilter(CheckPasswordHtmlActivity.CLOSE_PREY),
+                    ContextCompat.RECEIVER_NOT_EXPORTED);
+            ContextCompat.registerReceiver(this, popup_prey_receiver,
+                    new IntentFilter(POPUP_PREY + "_" + notificationId),
+                    ContextCompat.RECEIVER_NOT_EXPORTED);
         } catch (Exception e) {
             PreyLogger.d(String.format("Error receiver:%s", e.getMessage()));
         }
