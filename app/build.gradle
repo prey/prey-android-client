@@ -4,6 +4,12 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'checkstyle'
 apply from: "${projectDir}/build-config-fields.gradle"
 
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withInputStream { keystoreProperties.load(it) }
+}
+
 task checkstyle(type: Checkstyle) {
     source 'src/main/java', 'src/test/java'
     include '**/*.java'
@@ -32,8 +38,23 @@ android {
         applySharedPreyBuildConfig(delegate)
     }
 
+    signingConfigs {
+        // keystore.properties is gitignored; without it release builds stay unsigned
+        if (keystorePropertiesFile.exists()) {
+            release {
+                storeFile = file(keystoreProperties['storeFile'])
+                storePassword = keystoreProperties['storePassword']
+                keyAlias = keystoreProperties['keyAlias']
+                keyPassword = keystoreProperties['keyPassword']
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.release
+            }
             minifyEnabled = false
             proguardFiles(getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro')
         }
