@@ -21,8 +21,8 @@ android {
 
         targetSdk = 36
 
-        versionCode = 417
-        versionName = '2.6.20'
+        versionCode = 419
+        versionName = '2.6.22'
 
         multiDexEnabled = true
 
