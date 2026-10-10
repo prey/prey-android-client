@@ -29,6 +29,7 @@ import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowLooper;
+import org.robolectric.shadows.ShadowPausedAsyncTask;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -67,6 +68,9 @@ public class SplashMdmActivityRobolectricTest {
         preyConfig = PreyConfig.getPreyConfig(context);
         preyConfig.setDeviceId("");
         preyConfig.setApiKey("");
+        // onCreate's real MdmRegistrationTask would race the result each test drives
+        // via invokeOnPostExecute; never run it. Robolectric resets this per test.
+        ShadowPausedAsyncTask.overrideExecutor(task -> { });
     }
 
     @After
